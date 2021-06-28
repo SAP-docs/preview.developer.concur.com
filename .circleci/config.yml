@@ -1,121 +1,63 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/test-repo
+    working_directory: ~/concur/developer.concur.com
     docker:
-      - image: cimg/ruby:2.7.1-node
-    environment:
-      BUNDLE_PATH: ~/repo/vendor/bundle 
+      - image: circleci/ruby:2.5.1
     steps:
       - checkout
       - restore_cache:
           keys:
-            - rubygems-v1-{{ checksum "Gemfile.lock" }}
-            - rubygems-v1-fallback
-      #- run: 
-       #   name: "Setup custom environment variables"
-        #  command: echo 'export Widdershins_Template="./api-explorer/templates/openapi3-copy"' >> $BASH_ENV
-
-      - run: sudo apt-get install python3
-      - run: sudo apt-get update 
-      - run: sudo apt-get install -y python3-pip 
-      - run: sudo pip3 install pipenv 
-      - run: pipenv install
-      - run: pipenv install Unipath
-      - run:
-          name: Widdershins Install and Execution.
-          command: |
-                sudo npm install -g widdershins
-                cd ./src/api-explorer/ && find . -name \*.json -type f -exec widdershins \{\} -o \{\}.md --omitHeader \;
-      - run:
-          name: Add Underscore V3.0
-          command: pipenv run python ./src/api-explorer/v3-0/z_underscore_v3_0.py
-      - run:
-          name: Add Underscore V3.1
-          command: pipenv run python ./src/api-explorer/v3-1/z_underscore_v3_1.py
-      - run:
-          name: Add Underscore V3.2
-          command: pipenv run python ./src/api-explorer/v3-2/z_underscore_v3_2.py
-      - run:
-          name: Add Underscore V4.0
-          command: pipenv run python ./src/api-explorer/v4-0/z_underscore_v4_0.py
-      - run:
-          name: Move From Dev Center To Slate
-          command: pipenv run python ./z_dc_to_slate.py
-      - run:
-          name: Adjust Tags and Content
-          command: pipenv run python ./src/Slate-API-Explorer-Reference/slate/source/includes/z_update_swagger_tags.py
-      - run:
-          name: Add Version Folders 3.0, 3.1, 3.2 and 4.0 
-          command:  cd ./src/Slate-API-Explorer-Reference/slate/source/includes/ && echo "# Version 3.1"  >> _Vendors.swagger2.json.md && echo "# Version 3.2"  >> _RequestGroupConfigurations.swagger2.json.md &&  echo "# Version 4.0" >> _ConnectionRequests32.swagger.json.md
-          
-      - run:
-              name: Build Fresh Slate Static Files
-              no_output_timeout: 20m
-              command: cd ./src/Slate-API-Explorer-Reference/slate && bundle install && bundle exec middleman build
-      - run:
-          name: Move Static Files Back To Dev Center
-          command: pipenv run python ./z_slate-to-dc-file-transfer.py
-      - run:
-          name: Remove Erroneous Scope Tags
-          command: pipenv run python ./z_remove-scope-desc.py
-      - run:
-          name: install dependencies
-          command: |
-                gem update --system
-                gem install bundler   
-      - run:
-          name: Bundle Install
-          command: bundle check || bundle install
+          - devcenter-deps-{{ .Branch }}-{{ checksum "Gemfile" }}
+          - devcenter-deps-preview-      
+      - run: bundle install 
       - save_cache:
-          key: rubygems-v1-{{ checksum "Gemfile.lock" }}
+          key: devcenter-deps-{{ .Branch }}-{{ checksum "Gemfile" }}
           paths:
-            - vendor/bundle
-      - run:
-          name: Jekyll build
-          command: bundle exec jekyll build
-      #- run:
-       #   name: HTMLProofer tests
-        #  command: |
-         #   bundle exec htmlproofer ./_site \
-          #  --allow-hash-href \
-           # --check-html \
-            #--disable-external
+          - ~/.bundle      
+      - run: ./build/write_branch.sh
+      - run: ./build/write_commit.sh
+      - run: ./build/write_forms.sh
+      - run: bundle exec jekyll build
       - persist_to_workspace:
           root: ./
           paths:
             - _site
-  deploy:
+
+  deploy_preview:
     docker:
-      - image: node:8.10.0
+      - image: cgswong/aws:aws
     steps:
-      - checkout 
       - attach_workspace:
           at: ./
-      - run:
-          name: Disable jekyll builds
-          command: touch ./_site/.nojekyll
-      - run:
-          name: Install and configure dependencies
-          command: | 
-                npm install -g --silent gh-pages@2.0.1
-                git config user.email "jaron.manyama@concur.com"
-                git config user.name "Jaron Manyama"
-      - run:
-          name: Deploy docs to gh-pages branch
-          command: gh-pages --dotfiles --message "[skip ci] Updates" --dist ./_site
-      - add_ssh_keys:
-          fingerprints:
-            - 5a:c7:12:8e:d9:74:2b:9c:c8:cb:ae:1c:0b:f3:21:65
+      - run: aws s3 sync ./_site s3://preview-developer-concur-com --delete --region us-west-2 --output text
+  deploy_livesite:
+    docker:
+      - image: cgswong/aws:aws
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: aws s3 sync ./_site s3://livesite-developer-concur-com --delete --region us-west-2 --output text
 
-workflows:         
+workflows:
   version: 2
-  test-deploy:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: main
+  build_deploy:
+      jobs:
+        - build:
+            filters:
+              branches:
+                only: 
+                  - preview
+                  - livesite
+        - deploy_preview:
+            filters:
+              branches:
+                only: preview
+            requires:
+              - build
+        - deploy_livesite:
+            filters:
+              branches:
+                only: livesite
+            requires:
+              - build
