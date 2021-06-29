@@ -13,21 +13,21 @@ This call-out differs from the in-bound SAP Concur web services in the following
 * The supplier configures and maintains the public web service interface. This guide specifies the request and response format required by SAP Concur.
 
 ### Contents
-* [Overview](#overview)
-* [Product Restrictions](#product-restrictions)
+* [Overview](#introduction)
+* [Product Restrictions](#introduction-product-restrictions)
 * [Supported Operations](#supported-ops)
 * [Non-Functional Requirements](#nonfunctional-requirements)
   * [Response Times](#response-times)
   * [Emergency Technical Contact](#emergency-tech-contact)
   * [Testing Environment](#testing-enviro)
-  * [Security](#security)
+  * [Security](#introduction-security)
 * [URLs](#urls)
 * [Handling of HTML](#handling-html)
 * [Message Structure](#message-structure)
   * [Requests](#requests)
   * [Responses](#responses)
 
-### <a name="product-restrictions"></a>Product Restrictions
+### <a name="product-restrictions"></a>Introduction - Product Restrictions
 Hotel Service 2 API inventory is not accessible from the SAP Concur mobile app. SAP Concur products are highly configurable, and not all clients will have access to all features.
 
 ### <a name="supported-ops"></a>Supported Operations
@@ -51,7 +51,7 @@ The Hotel supplier needs to provide emergency technical contact email that will 
 ### <a name="testing-enviro"></a>Testing Environment
 To allow SAP Concur performing testing, the Hotel Supplier needs to provide testing URL or specify properties for testing in production URL. SAP Concur needs to be able to perform test bookings with testing credit cards.
 
-### <a name="security"></a>Security
+### <a name="security"></a>Introduction - Security
 
 #### PCI DSS Compliance
 As sensitive data and payment card details are transferred via API, the Hotel Suppliers need to comply with PCI DSS standard. SAP Concur is compliant with PCI DSS standard and undergoes regular security audits.

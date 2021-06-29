@@ -3,24 +3,24 @@
 
 A post reservation sell request is sent when a Travel user attempts to book a ground transportation reservation.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-	* [Airport](#airport)
-    * [Train Station](#train-station)
+* [Request](#post-a-reservation-sell-request-request)
+  * [Request Schema](#post-reservation-request-body)
+	* [Airport](#post-reservation-airport-elements)
+    * [Train Station](#post-reservation-train-station-elements)
    * [Credit Card](#credit-card)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-    * [Error](#error)
+  * [Request Example](#post-a-reservation-sell-xml-example-request)
+* [Response](#post-reservation-response)
+  * [Response Schema](#post-reservation-content-body)
+    * [Error](#post-a-reservation-sell-request-error-elements)
 	* [Primary Passenger](#primary-passenger)
-	* [Rate Information](#rate-info)
+	* [Rate Information](#post-reservation-rate-information-elements)
 	* [Vehicle](#vehicle-schema)
 	* [Vendor](#vendor-schema)
 	* [Form of Payment](#form-payment)
-	* [Reply Credit Card](#reply-credit-card)
-  * [Response Example](#res-example)
+	* [Reply Credit Card](#post-a-reservation-sell-request-credit-card-elements)
+  * [Response Example](#post-a-reservation-sell-request-xml-example-of-successful-response)
 
-#### <a name="request"></a>Request
+#### <a name="request"></a>Post A Reservation Sell Request - Request
 
 #### Supported Accept Types
 application/xml
@@ -39,7 +39,7 @@ Authentication header with Base64 encoded basic authentication credentials (logi
 
 Authorization: Basic {Base64 encoded LoginID:Password}
 
-#### <a name="req-schema"></a>Request Body
+#### <a name="req-schema"></a>Post Reservation - Request Body
 The request will contain a **CC_LimoSellRequest** parent element, containing the following child elements.
 
 #### CorporateClient
@@ -221,7 +221,7 @@ The details of the extra stop arrangement, if available.
 #### RequestedDriver
 The name of the requested driver, if available.
 
-#### <a name="airport"></a>Airport Elements
+#### <a name="airport"></a>Post Reservation - Airport Elements
 
 #### AirportCode
 The IATA code for the airport.
@@ -232,7 +232,7 @@ Flight:	The flight information. This parent element contains the following child
 * ArrivalDateTime:	The flight arrival time. Only provided for the PickupLocation element. **Format:** 2015-05-19T18:00:00
 * DepartureDateTime:	The flight departure time. Only provided for the DropoffLocation element. **Format:** 2015-05-19T18:00:00
 
-#### <a name="train-station"></a>Train Station Elements
+#### <a name="train-station"></a>Post Reservation - Train Station Elements
 
 #### StationCode
 The station code.
@@ -256,7 +256,7 @@ The train information. This parent element contains the following child elements
 * DepartureDateTime:	The train arrival time. Only provided for the PickupLocation element. **Format:** 2015-05-19T18:00:00
 
 
-#### <a name="credit-card"></a>Credit Card Elements
+#### <a name="credit-card"></a>Post A Reservation Sell Request - Credit Card Elements
 
 #### Type
 The card type.
@@ -285,7 +285,7 @@ The country of the billing address of the car.
 #### PostalCode
 The postal code of the billing address of the car.
 
-#### <a name="req-example"></a>XML Example Request
+#### <a name="req-example"></a>Post A Reservation Sell - XML Example Request
 
 ```http
 POST /concur/groundtransportation HTTPS/1.1
@@ -360,13 +360,13 @@ Content-Length: {length of content body}
 </CC_LimoSellRequest>
 ```
 
-#### <a name="response"></a>Response
+#### <a name="response"></a>Post Reservation - Response
 The supplier responds to the Sell request by returning the details of the booked reservation.
 
 #### Supported Content Types
 application/xml
 
-#### <a name="res-schema"></a>Content Body
+#### <a name="res-schema"></a>Post Reservation - Content Body
 The response will include a **CC_LimoSellReply** parent element, with the following child elements:
 
 
@@ -403,7 +403,7 @@ The response will include a **CC_LimoSellReply** parent element, with the follow
 |  ProviderFeedback |  N |  Any additional feedback from the supplier. |
 |  AccountingInfo |  N |  The accounting information for the reservation. This parent element contains one or more **AccountingField** elements: **AccountingField1** through **AccountingField5**. These fields contain detailed accounting information. |
 
-#### <a name="error"></a>Error Elements
+#### <a name="error"></a>Post A Reservation Sell Request - Error Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -422,7 +422,7 @@ The response will include a **CC_LimoSellReply** parent element, with the follow
 |  CellPhone |  The contact's cell phone number. |
 |  EmailAddress |  The contact's email address. |
 
-#### <a name="rate-info"></a>Rate Information Elements
+#### <a name="rate-info"></a>Post Reservation - Rate Information Elements
 
 |Element Name|Required?|Data Type|Description|
 |------------|-----------------|---------|-----------|
@@ -467,7 +467,7 @@ The response will include a **CC_LimoSellReply** parent element, with the follow
 |  Check |  If present, the passenger will pay with a check. |
 |  DirectBilling |  If present, the passenger will pay through direct billing. |
 
-#### <a name="reply-credit-card"></a>Reply Credit Card Elements
+#### <a name="reply-credit-card"></a>Post a reservation - Reply Credit Card Elements
 
 |Element Name| Required? |Description|
 |------------|------|------------------------|
@@ -475,7 +475,7 @@ The response will include a **CC_LimoSellReply** parent element, with the follow
 | Number | Y | The card number. |
 | Expiration | Y| The card expiration date. Format: 2013-02-19 |
 
-#### <a name="res-example"></a>XML Example of Successful Response
+#### <a name="res-example"></a>Post A Reservation Sell Request - XML Example of Successful Response
 
 ```http
 HTTPS/1.1 200 OK

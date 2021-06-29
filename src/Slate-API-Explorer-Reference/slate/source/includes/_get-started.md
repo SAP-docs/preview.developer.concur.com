@@ -7,7 +7,7 @@
 * [Regional Availability](#regional-availability)
 * [Explore the API](#explore-the-api)
   * [Prerequisites](#prerequisites)
-  * [Acquire an Access Token](#retrieve-a-user-access-token)
+  * [Acquire an Access Token](#receipts-v4-retrieve-a-user-access-token)
   * [Explore the API in JavaScript](#explore-the-api-in-javascript)
 
 ### Receipts v4 - Overview
@@ -61,7 +61,7 @@ Once you have registered your application, read about the [API endpoints](/api-r
   <img src="https://run.pstmn.io/button.svg" alt="Run in Postman">
 </a>
 
-#### Retrieve a User Access Token
+#### Receipts v4 - Retrieve a User Access Token
 
 Before making requests to the Receipts API, you must [obtain an access token from the Authentication API](https://developer.concur.com/api-reference/authentication/getting-started.html).
 

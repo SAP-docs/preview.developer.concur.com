@@ -4,9 +4,9 @@
 
 Supplier companies provide travel services to users. The Suppliers resource can be used to retrieve information about suppliers.
 
-* [Retrieve all suppliers based on search criteria](#get)
-* [Retrieve a single supplier by ID](#getID)
-* [Schema](#schema)
+* [Retrieve all suppliers based on search criteria](#retrieve-all-suppliers-based-on-search-criteria)
+* [Retrieve a single supplier by ID](#retrieve-a-single-supplier-by-id)
+* [Schema](#suppliers-v3-schema)
 
 #### <a name="get"></a>Retrieve all suppliers based on search criteria
 
@@ -48,7 +48,7 @@ Name | Type | Format | Description
 
 
 
-#### <a name="schema"></a>Schema
+#### <a name="schema"></a>Suppliers v3 - Schema
 
 
 #### <a name="suppliers"></a>Suppliers

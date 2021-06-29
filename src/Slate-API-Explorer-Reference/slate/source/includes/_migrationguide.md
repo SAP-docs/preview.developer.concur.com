@@ -3,9 +3,9 @@
 
 * [Base URIs](#base_uris)
 * [Exchanging a Token](#exchangetoken)
-* [Response Codes](#migration-response_codes)
+* [Response Codes](#migration-response-codes)
 
-Existing applications that use the [Pre-2017 Authorization (Deprecated)](/slate-ui-build/api-reference.html#pre-2017-authorization-deprecated) framework need to move to support the new Oauth2 Bearer Tokens. Applications will need to migrate their existing users who already have connected to it to obtain new Oauth2 tokens without requiring users to reauthorize. This can be done by exchanging an old access token for a new refresh token.
+Existing applications that use the [Pre-2017 Authorization (Deprecated)](#pre-2017-authorization-deprecated) framework need to move to support the new Oauth2 Bearer Tokens. Applications will need to migrate their existing users who already have connected to it to obtain new Oauth2 tokens without requiring users to reauthorize. This can be done by exchanging an old access token for a new refresh token.
 
 ### <a name="base_uris"></a>Base URIs
 
@@ -20,7 +20,7 @@ The new Oauth2 `accessToken` has a one hour lifetime. Once expired, applications
 This is significantly different from how the deprecated /net2/Oauth2's method of handling access tokens. Partner's would have to store the new Oauth2 `refreshToken` instead of the old access token. Before making a call to any of Concur's new v4 APIs, it is advisable to request for a new `accessToken` before making the API call.
 
 **Step 1: Obtain Application Token**
-Clients can exchange OLD tokens for NEW Oauth2 tokens by calling the `exchangeRefreshToken/me` endpoint. In order to call this endpoint, you would first need to obtain an Application Token by calling the `/v0/token` endpoint with the [client_credentials](https://developer.concur.com/slate-ui/build/api-reference.html#client_credentials-grant) grant.
+Clients can exchange OLD tokens for NEW Oauth2 tokens by calling the `exchangeRefreshToken/me` endpoint. In order to call this endpoint, you would first need to obtain an Application Token by calling the `/v0/token` endpoint with the [client_credentials](#client_credentials) grant.
 
 The endpoint also supports a parameter called "returnType=companyToken"  This parameter allows a partner who already has what is known as a "WSAdmin" token for a client, to exchange that token for a Company level refresh token.
 

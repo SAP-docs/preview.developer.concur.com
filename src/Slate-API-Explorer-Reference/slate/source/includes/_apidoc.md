@@ -2,9 +2,9 @@
 
 ### Special Note: (Please Read First)
 
-If you are an existing partner with an existing app, please read both the [Migration to Oauth2 Tokens](/slate-ui/build/api-reference.html#migrating-old-tokens-to-new-oauth2-bearer-tokens) and [Getting Started](/slate-ui/build/api-reference.html#getting-started) documentation first. If you have any questions, please contact your Partner Enablement team representative before proceeding.
+If you are an existing partner with an existing app, please read both the [Migration to Oauth2 Tokens](#migrating-old-tokens-to-new-oauth2-bearer-tokens) and [Getting Started](#getting-started) documentation first. If you have any questions, please contact your Partner Enablement team representative before proceeding.
 
-* [Overview]()
+* [Overview](#authentication)
 * [Tokens](#access_token)
   * [Obtaining a token](#obtain_token)
   * [Refreshing a token](#refresh_token)

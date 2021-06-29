@@ -12,14 +12,14 @@ This callout differs from the standard SAP Concur web services in the following 
 
 ### Contents
 * [Process Flow](#fetch-attendee-process-flow)
-* [Products and Editions](#fetch-attendee-products-editions)
+* [Products and Editions](#fetch-attendee-products-and-editions)
 * [Product Restrictions](#fetch-attendee-product-restrictions)
 * [Callout Details](#concur-connect-callout-details)
 * [Fetch Attendee Process Overview](#fetch-attendee-process-overview)
   * [Security](#fetch-attendee-security)
   * [Authentication](#fetch-attendee-authentication)
   * [Functions](#fetch-attendee-functions)
-* [Installation Process](#installation-process)
+* [Installation Process](#fetch-attendee-installation-process)
   * [SAP Concur Configuration](#concur-config)
   * [Responses and Errors](#responses-errors)
 
@@ -78,7 +78,7 @@ Refer to the **Installation Process** for more information.
 
 [Version 3.0: Post Attendee Search Request](#post-an-event-notification-request)
 
-#### <a name="installation-process"></a>Installation Process
+#### <a name="installation-process"></a>Fetch Attendee - Installation Process
 
 The installation process includes installing the application connector, and registering it with SAP Concur.
 

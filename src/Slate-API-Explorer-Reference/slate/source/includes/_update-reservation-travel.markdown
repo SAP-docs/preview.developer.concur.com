@@ -414,4 +414,3 @@ Content-Type: application/xml
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
 
-# Direct Connect - Hotel v2

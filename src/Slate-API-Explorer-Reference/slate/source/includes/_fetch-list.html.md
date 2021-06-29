@@ -12,14 +12,14 @@ This callout differs from the inbound SAP Concur web services in the following w
 
 ### Contents
 * [Process Flow](#fetch-list-callout-process-flow)
-* [Products and Editions](#fetch-list-callout-products-editions)
+* [Products and Editions](#fetch-list-callout-products-and-editions)
 * [Product Restrictions](#fetch-list-callout-product-restrictions)
 * [Fetch List Process Overview](#fetch-list-callout-process-overview)
 * [Security](#fetch-list-callout-security)
 * [Authentication](#fetch-list-callout-authentication)
 * [Functions](#fetch-list-callout-functions)
 * [Concur Expense Configuration](#concur-expense-config)
-* [Responses and Errors](#fetch-list-callout-responses-errors)
+* [Responses and Errors](#fetch-list-callout-responses-and-errors)
 
 #### <a name="process-flow"></a>Fetch List Callout - Process Flow
 

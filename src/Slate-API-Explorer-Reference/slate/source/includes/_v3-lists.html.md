@@ -2,22 +2,22 @@
 ## Lists v3
 
 
-The Lists API allows you to view your configured lists within SAP Concur products, and create new lists. The lists are shared between multiple SAP Concur products. Use the [List Items API](/api-reference/common/list-item/v3.list-item.html) to manage the items in the lists.
+The Lists API allows you to view your configured lists within SAP Concur products, and create new lists. The lists are shared between multiple SAP Concur products. Use the [List Items API](#list-item-v3) to manage the items in the lists.
 
-* [Products and Editions](#products-editions)
-* [Scope Usage](#scope-usage)
-* [Get All Lists](#get)
-* [Create a New List](#post)
+* [Products and Editions](#lists-v3-products-and-editions)
+* [Scope Usage](#lists-v3-scope-usage)
+* [Get All Lists](#lists-v3-get-all-lists)
+* [Create a New List](#lists-v3-create-a-new-list)
 * [Get a Single List by ID](#get-2)
-* [Update List](#put) **Deprecated**
-* [Schema](#schema)
+* [Update List](#lists-v3-update-list) **Deprecated**
+* [Schema](#lists-v3-schema)
   * [CreateResponse](#create-response)
   * [ListGet](#list-get)
   * [ListGetCollection](#list-get-collection)
   * [ListPost](#list-post)
   * [ListPut](#list-put)
 
-#### <a name="products-editions"></a>Products and Editions
+#### <a name="products-editions"></a>Lists v3 - Products and Editions
 
 * Concur Expense Professional Edition
 * Concur Expense Standard Edition
@@ -26,13 +26,13 @@ The Lists API allows you to view your configured lists within SAP Concur product
 * Concur Request Professional Edition
 * Concur Request Standard Edition
 
-#### <a name="scope-usage"></a>Scope Usage
+#### <a name="scope-usage"></a>Lists v3 - Scope Usage
 
 Name|Description|Endpoint
 ---|---|---
 `LIST`|Use and update lists configured by your company.|GET, POST
 
-#### <a name="get"></a>Get All Lists
+#### <a name="get"></a>Lists v3 - Get All Lists
 
 Returns all lists based on the search criteria.
 
@@ -90,7 +90,7 @@ fetch('https://www.concursolutions.com/api/v3.0/common/lists',
 }
 ```
 
-#### <a name="post"></a>Create a New List
+#### <a name="post"></a>Lists v3 - Create a New List
 
 Creates a new list.
 
@@ -205,7 +205,7 @@ fetch('https://www.concursolutions.com/api/v3.0/common/lists/{id}',
 }
 ```
 
-#### <a name="put"></a>Update List
+#### <a name="put"></a>Lists v3 - Update List
 
 >**DEPRECATED**: 05/19/2016 UNSUPPORTED: 11/19/2016. Updates list specified in the URL. Only the fields provided in the supplied object will be updated, missing fields will not be altered.
 
@@ -252,7 +252,7 @@ fetch('https://www.concursolutions.com/api/v3.0/common/lists/{id}',
 
 ```
 
-### <a name="schema"></a>Schema
+### <a name="schema"></a>Lists v3 - Schema
 
 #### <a name="create-response"></a>CreateResponse
 

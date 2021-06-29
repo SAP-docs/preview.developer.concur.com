@@ -1,6 +1,13 @@
 
 ## Expense Group Configurations v1.1
 
+<div id="attn-depr">
+<p><b>This API has been deprecated.</b></p>
+
+<p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+</div>
+
+Learn more in the [API Lifecycle & Deprecation Policy.](/tools-support/deprecation-policy.html)
 
 
 The Expense Group Configuration contains the list of Expense Polices, Expense Types and Payment Types for the Expense Group the user specified in the OAuth access token is assigned to.

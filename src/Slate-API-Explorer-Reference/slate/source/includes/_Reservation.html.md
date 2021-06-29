@@ -388,7 +388,7 @@ Message to reserve a hotel.
 
 ---
 
-### <a name="response"></a>Response
+### <a name="response"></a>Reservation - Response
 
 The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceeds this limit shall be dropped.
 

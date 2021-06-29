@@ -4,9 +4,9 @@
 
 Gets details of locations that are used by Concur and that are valid at the user's company.
 
-* [Retrieve details of locations that are used by Concur and that are valid at the user's company](#get)
-* [Retrieve details of a specified location](#getID)
-* [Schema](#schema)
+* [Retrieve details of locations that are used by Concur and that are valid at the user's company](#retrieve-details-of-locations-that-are-used-by-concur-and-that-are-valid-at-the-user-39-s-company)
+* [Retrieve details of a specified location](#retrieve-details-of-a-specified-location)
+* [Schema](#locations-v3-schema)
 
 Location v1.1 has been deprecated and can be found [here](#v1dot1.locations).
 
@@ -41,7 +41,7 @@ Name|Type|Format|Description
 ---|---|---|---
 `id`|`string`|`path`|**Required** The ID of the location.
 
-#### <a name="schema"></a>Schema
+#### <a name="schema"></a>Locations v3 - Schema
 
 #### <a name="locations"></a>Locations
 

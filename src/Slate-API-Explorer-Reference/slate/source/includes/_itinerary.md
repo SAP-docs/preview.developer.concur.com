@@ -1,5 +1,7 @@
 
-## Itinerary Service
+## Itinerary API - Overview & Getting Started
+
+### Itinerary Service
 
 
 * [Overview](#itinerary-overview)
@@ -23,9 +25,9 @@ Version 1.0
 
 #### <a name="itinres"></a>Resources
 
-[Trip](/api-reference/travel/itinerary/trip/trip-resource.html)
+[Trip](#trip-endpoint)
 
-[Booking](/api-reference/travel/itinerary/booking/booking-resource.html)
+[Booking](#booking-endpoint)
 
 #### <a name="itin-concepts"></a>Concepts
 

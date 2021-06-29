@@ -4,13 +4,13 @@
 
 Retrieves a collection of opportunities for a specified trip or for all trips that fall within a date range.
 
-* [Retrieve a collection of opportunities for a specified trip or for all trips that fall within a date range](#retrieve-all-connection-requests-that-match-the-triplink-supplier-id)
+* [Retrieve a collection of opportunities for a specified trip or for all trips that fall within a date range](#retrieve-connection-requests-that-match-the-triplink-supplier-id)
 * [Schema](#opportunities-schema)
 
 ### Version
 3.0
 
-#### <a name="get"></a>Retrieve all connection requests that match the TripLink supplier ID
+#### <a name="get"></a>Retrieve connection requests that match the TripLink supplier ID
 
     GET  https://www.concursolutions.com/api/v3.0/insights/opportunities
 
@@ -53,4 +53,4 @@ Name | Type | Format | Description
 `URI`	|	`string`	|	-	|	The URI to the resource.					
 
 
-# Invoice Docs
+# Invoice

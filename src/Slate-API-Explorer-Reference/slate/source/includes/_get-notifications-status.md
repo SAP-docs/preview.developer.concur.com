@@ -4,10 +4,10 @@
 Retrieves the list of event notifications that are in the supplied status.
 
 * [Request](#get-notifications-by-status-request)
-  * [Request Example](#get-notifications-by-status-request-example)
+  * [Request Example](#get-notifications-status-xml-example-request)
 * [Response](#get-notifications-by-status-response)
   * [Schema](#get-notifications-by-status-schema)
-  * [Response Examples](#get-notifications-by-status-response-examples)
+  * [Response Examples](#xml-example-of-successful-response)
 
 ### <a name="request"></a>Get notifications by status - Request
 
@@ -36,7 +36,7 @@ The OAuth consumer must have one of the following user roles in SAP Concur: Comp
 
 application/xml
 
-####  <a name="req-example"></a>XML Example Request
+####  <a name="req-example"></a>Get Notifications Status - XML Example Request
 
 ```http
 GET https://www.concursolutions.com/api/platform/notifications/v1.0/notification?status=FAILED HTTP/1.1
@@ -51,7 +51,7 @@ Accept: application/xml
 * application/xml
 * application/json
 
-#### <a name="schema"></a>SGet notifications by status - Schema
+#### <a name="schema"></a>Get notifications by status - Schema
 This request will return a **NotificationsList** parent element with a **Notification** child element for each failed notification. The **Notification** elements will have a **Failure** child element if the notification is failed.
 
 #### Failure Elements

@@ -4,10 +4,10 @@
 
 The Cancel Reservation operation is sent to the supplier to cancel a travel reservation on behalf of a user. The Ground Transportation direct connect sends the relevant information to a URI that the travel supplier maintains.  The standard location is: `https://{servername}/concur/groundtransportation`. This URI is configured by the supplier when registering the partner application.
 
-* [Response Schema](#res-schema)
+* [Response Schema](#cancel-a-reservation-response-schema)
   * [Rate Information](#rate-info)
   * [Reply Credit Card](#reply-credit-card)
-* [Example](#example)
+* [Example](#cancel-a-reservation-example-of-successful-response)
 
 #### Request
 
@@ -59,7 +59,7 @@ The supplier responds to the request by supplying the full reservation details, 
 
 * application/xml
 
-#### <a name="res-schema"></a>Response Schema
+#### <a name="res-schema"></a>Cancel A Reservation - Response Schema
 The response will include a CC_LimoCancelReply parent element, with the following child elements:
 
 
@@ -125,7 +125,7 @@ The response will include a CC_LimoCancelReply parent element, with the followin
 |Number |Y  |The card number.|
 |Expiration |Y  |The card expiration date. Format: 2013-02-19|
 
-#### <a name="example"></a>Example of Successful Response
+#### <a name="example"></a>Cancel A Reservation - Example of Successful Response
 ```http
 HTTPS/1.1 200 OK
 Content-Type: application/xml

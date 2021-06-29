@@ -16,11 +16,11 @@
 
 This resource is used to retrieve and update information about a budget that spans a single fiscal year. Each budget has multiple details that correspond to fiscal periods - months, quarters, or a single period for a yearly budget.
 
-* [GET All Budget Items](#getall)
-* [GET a Budget Item](#get)
-* [POST a Budget Item](#post)
-* [DELETE a Budget Item](#delete)
-* [Schema](#schema)
+* [GET All Budget Items](#get-all-budget-items)
+* [GET a Budget Item](#get-a-budget-item)
+* [POST a Budget Item](#post-a-budget-item)
+* [DELETE a Budget Item](#delete-a-budget-item-header)
+* [Schema](#budget-item-schema)
   * [Budget Item Header List](#budgetItemHeaderList)
   * [Budget Item Header](#budgetItemHeader)
   * [Budget Item Detail](#budgetItemDetail)
@@ -30,13 +30,13 @@ This resource is used to retrieve and update information about a budget that spa
   * [Expense Type](#expenseType)
   * [Budget Tracking Value](#budgetTrackingValue)
   * [Budget Item Balance](#budgetItemBalance)
-  * [Fiscal Year](#fiscalYear)
-  * [Fiscal Period](#fiscalPeriod)
+  * [Fiscal Year](#budget-item-fiscalyear)
+  * [Fiscal Period](#budget-item-fiscalperiod)
   * [Date Range](#dateRange)
-  * [Budget Item Response](#budgetItemResponse)
-  * [Error Response](#errorResponse)
-  * [Error Message](#errorMessage)
-* [Response Headers](#responseHeaders)
+  * [Budget Item Response](#budgetitemresponse)
+  * [Error Response](#budget-item-error-response)
+  * [Error Message](#budget-item-error-message)
+* [Response Headers](#budget-item-response-headers)
 
 ### <a name="getall"></a>GET All Budget Items
 
@@ -974,7 +974,7 @@ concur-correlationid: 86a0d9fe-9e98-43c3-89d8-a2917dd844cb
 
 ```
 
-### <a name="schema"></a>Schema
+### <a name="schema"></a>Budget Item - Schema
 
 #### <a name="budgetItemHeaderList"></a>PagedBudgetItemHeaderList
 
@@ -1048,7 +1048,7 @@ Name|Type|Format|Description
 `unExpensedAmount`|`decimal`|-|**READ ONLY** The amount of unexpensed items like travel bookings, quick expenses, or e-receipts.
 `unExpensedSettings`|`string`|-|**READ ONLY** The company's budget setting for unexpensed items. Applies to all budgets for the company. Supported values: `SHOW_UNSUBMITTED_EXPENSES_AS_PENDING`, `SHOW_UNSUBMITTED_EXPENSES_BALANCE`, `DO_NOT_SHOW_UNSUBMITTED_EXPENSES`
 
-### <a name="budgetPerson"></a>BudgetPerson
+#### <a name="budgetPerson"></a>BudgetPerson
 
 Provide externalUserCUUID or email or employee ID of the user for looking up the person.
 
@@ -1103,7 +1103,7 @@ Name|Type|Format|Description
 `workflowState`|`string`|-|**READ ONLY** Supported values: `UNSUBMITTED`, `UNSUBMITTED_HELD`, `SUBMITTED`, `APPROVED`, `PROCESSED`, `PAID`.
 `id`|`string`|-|The unique identifier for this particular budget balance bucket..
 
-#### <a name="fiscalYear"></a>FiscalYear
+#### <a name="fiscalYear"></a>Budget Item - FiscalYear
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -1123,7 +1123,7 @@ Name|Type|Format|Description
 `fiscalPeriods`|`array`|[`fiscalPeriod`](#fiscalPeriod)	|**READ ONLY** The list of all Fiscal Periods in this Fiscal Year.
 `displayName`|`string`|-|**READ ONLY** Display name for fiscal year. For date range budget item we use this field to display.
 
-#### <a name="fiscalPeriod"></a>FiscalPeriod
+#### <a name="fiscalPeriod"></a>Budget Item - FiscalPeriod
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -1161,14 +1161,14 @@ Name|Type|Format|Description
 `success`|`boolean`|-|`True` or `False` for success or failure.
 `budgetItemHeaderId`|`guid`|-|The key of the created/updated/removed budget item header.
 
-#### <a name="errorResponse"></a>Error Response
+#### <a name="errorResponse"></a>Budget Item - Error Response
 
 Name|Type|Format|Description
 ---|---|---|---
 `status`|`boolean`|-|`False` if there was an error.
 `errorMessageList`|`array`|[`errorMessage`](#errorMessage)|List of all errors detected.
 
-#### <a name="errorMessage"></a>Error Message
+#### <a name="errorMessage"></a>Budget Item - Error Message
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -1176,7 +1176,7 @@ Name|Type|Format|Description
 `errorCode`|`String`|-|Text code for this error.
 `errorMessage`|`String`|-|Plain language error message.
 
-#### <a name="responseHeaders"></a>Response Headers
+#### <a name="responseHeaders"></a>Budget Item - Response Headers
 
 * `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 * [RFC 7231 Allow](https://tools.ietf.org/html/rfc7231#section-7.4.1)

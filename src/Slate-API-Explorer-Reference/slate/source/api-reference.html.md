@@ -4,7 +4,6 @@ title: API Reference
 includes:
   - getting-started
   - apidoc
-  - authorization-pre-2017
   - company-auth
   - migrationguide
   - oauth2-migration-best-practices
@@ -32,7 +31,6 @@ includes:
   - v3-lists
   - v3-list-item
   - v3-locations
-  - v1dot1.locations
   - suppliers-resource
   - ground-transportation
   - cancel-reservation
@@ -40,7 +38,6 @@ includes:
   - post-reservation-sell
   - post-transportation-search
   - update-reservation-supplier
-  - update-reservation-travel
   - Introduction
   - Use-cases
   - Headers
@@ -56,9 +53,6 @@ includes:
   - xsd-schema
   - expense-allocations
   - v3-attendee-types
-  - v1.attendee-types
-  - v2.attendees
-  - v1.attendees
   - digital-tax-invoice
   - v3-attendees
   - company-card-transaction-resource
@@ -68,21 +62,14 @@ includes:
   - expense-form-field
   - expense-form
   - expense-group-configurations
-  - v1dot1.expense-entry
-  - v1dot1.report-full-details
   - expense-itemization
-  - v1dot1.expense-itemization
   - integration-status
   - post-report-exceptions
   - post-report-submission
   - post-report-workflow-action
   - v3-reports
-  - v2.reports
-  - v1dot1.reports-list
   - expense-report-get
   - v1-payment-batches
-  - v1.user
-  - v1.getting-started
   - v4-quick-expense
   - v4-financial-integration
   - v4-financial-integration-service-use-cases
@@ -107,6 +94,14 @@ includes:
   - v1-image
   - v3-image
   - v4-get-started
+  - v4.endpoints.request-resources
+  - v4.endpoints.workflow-resources
+  - v4.endpoints.expected-expense-resources
+  - v4.endpoints.cashadvance-resources
+  - v4.endpoints.policy-resources
+  - v4.endpoints.travel-agency-resources
+  - v4.endpoints.schemas
+  - v4.response-codes
   - v2-profile-service
   - v2-profile-resource
   - v1-loyalty-program-resource
@@ -120,6 +115,45 @@ includes:
   - locale-codes
   - spend-category-codes
   - deprecated
+  - v1.attendees
+  - v2.attendees
+  - v1.attendee-types
+  - authorization-pre-2017
+  - v1dot1.expense-itemization
+  - v1dot1.expense-entry
+  - v2.expense-entry-attendee
+  - v1dot1.expense-group-configurations
+  - v1dot1.reports
+  - v1dot1.reports-list
+  - v1dot1.report-full-details
+  - v1dot1.locations
+  - v2.reports
+  - hotel
+  - hotel-direct-connect-codes
+  - post-availability-search
+  - post-booking-rule-search
+  - post-hotel-search
+  - post-new-reservation
+  - post-reservation-cancellation
+  - post-reservation-query
+  - post-reservation-update
+  - v1.list-item
+  - v1.list-resource
+  - v1.list-resource-get
+  - v3.receipts
+  - v3.request
+  - v1.notification-user-resource
+  - v1.notification-company-resource
+  - v1.user
+  - v1.getting-started
+  - v1.profile-resource
+  - trip-approval-resource
+  - custom-list-items
+  
+  
+  
+
+
   
 toc_footers:
   - <a id="toc-size" href='/developer.concur.com'>Back To Developer Center</a>

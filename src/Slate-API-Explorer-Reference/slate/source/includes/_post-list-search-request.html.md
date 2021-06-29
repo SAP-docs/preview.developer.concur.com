@@ -1,14 +1,14 @@
 
 ## Post a list search request
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-  * [Request Examples](#req-examples)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-  * [Response Examples](#res-examples)
+* [Request](#post-a-list-search-request)
+  * [Request Schema](#post-a-list-search-request-schema)
+  * [Request Examples](#xml-example-request-for-single-level-list)
+* [Response](#post-a-list-search-response)
+  * [Response Schema](#post-a-list-search-response-schema)
+  * [Response Examples](#post-a-list-search-request-xml-example-of-response-with-no-results)
 
-### <a name="request"></a>Request
+### <a name="request"></a>Post A List Search - Request
 
 ### Supported Accept Types
 application/xml
@@ -26,7 +26,7 @@ Authorization header with Basic authorization for endpoint. Refer to [**Authenti
 ### Request Headers - Optional
 None
 
-### <a name="req-schema"></a>Request Schema
+### <a name="req-schema"></a>Post A List Search - Request Schema
 The request will contain a **fetch-list-request** parent element, containing the following child elements.
 
 |  Element |  Description |
@@ -100,13 +100,13 @@ Content-Length: {length of content body}
  </fetch-list-request>
 ```
 
-### <a name="response"></a>Response
+### <a name="response"></a>Post a list search - Response
 
 ### Supported Content Types
 
 application/xml
 
-### <a name="res-schema"></a>Response Schema
+### <a name="res-schema"></a>Post a list search - Response Schema
 
 The application connector responds to the Fetch list web service request by returning all list items that match the search criteria.
 
@@ -119,7 +119,7 @@ The response will include a **fetch-list-response** parent element, with an **it
 | `text` |**Required** The list item text.|
 | `match-value` |**Required** The value that matched the search term.|
 
-####  <a name="res-examples"></a>XML Example of Response with Results
+####  <a name="res-examples"></a>Post a list search request - XML Example of Response with Results
 
 ```http
 HTTPS/1.1 200 OK
@@ -148,7 +148,7 @@ Content-Length: {length of content body}
 </fetch-list-response>
 ```
 
-####  XML Example of Response with No Results
+####  Post a list search - XML Example of Response with No Results
 
 ```http
 HTTPS/1.1 200 OK

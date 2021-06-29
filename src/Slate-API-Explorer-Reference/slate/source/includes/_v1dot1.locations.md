@@ -1,8 +1,10 @@
 ## Locations v1.1
 
-This API has been deprecated.
+<div id="attn-depr">
+<p><b>This API has been deprecated.</b></p>
 
-Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.
+<p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+</div>
 
 Learn more in the [API Lifecycle & Deprecation Policy.](/tools-support/deprecation-policy.html)
 
@@ -10,13 +12,13 @@ Learn more in the [API Lifecycle & Deprecation Policy.](/tools-support/deprecati
 
 The valid city location codes in Concur. These location codes are used in the Post requests for the Expense Report service, when the City field is provided/required. The location codes vary by client, and cannot be used across multiple clients.
 
-## URI
+### URI
 
 ```
 https://www.concursolutions.com/api/expense/expensereport/v1.1/Locations
 ```
 
-## Get a list of locations
+### Get a list of locations
 
 Retrieves a list of valid city location codes.
 

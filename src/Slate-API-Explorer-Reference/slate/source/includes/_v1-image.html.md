@@ -1,6 +1,13 @@
 
 ## Image v1
 
+<div id="attn-depr">
+<p><b>This API has been deprecated.</b></p>
+
+<p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+</div>
+
+Learn more in the [API Lifecycle & Deprecation Policy.](/tools-support/deprecation-policy.html)
 
 
 * [Post an image](#post-image)

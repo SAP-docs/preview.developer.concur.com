@@ -2,15 +2,15 @@
 ## Post an attendee search request
 
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-    * [Custom Fields for Healthcare Provider Attendees](#custom-fields)
-  * [Response Example](#res-example)
+* [Request](#post-an-attendee-search-request)
+  * [Request Schema](#post-an-attendee-search-request-request-schema)
+  * [Request Example](#post-an-attendee-search-request-xml-example-request)
+* [Response](#post-an-attendee-search-request-response)
+  * [Response Schema](#post-an-attendee-search-request-response)
+    * [Custom Fields for Healthcare Provider Attendees](#custom-fields-for-healthcare-provider-attendees)
+  * [Response Example](#post-fetch-attendee-xml-example-of-successful-response)
 
-### <a name="request"></a>Request
+### <a name="request"></a>Post an attendee search request - Request
 
 ### URI
 
@@ -28,7 +28,7 @@ The application connector responds to the Fetch Attendee request by returning al
 
 Required. Authorization header with Basic authorization for endpoint. Refer to [Authentication][2] for more information.
 
-### <a name="req-schema"></a>Request Schema
+### <a name="req-schema"></a>Post an attendee search request - Request Schema
 
 The request body contains an **AttendeeSearchRequest** parent element with an **Attendee** child element. The **Attendee** elements contain the values entered on the search form.
 
@@ -49,7 +49,7 @@ The request body contains an **AttendeeSearchRequest** parent element with an **
 |  Suffix |  Attendee's name suffix. Maximum length is 32 characters. |
 |  Title |  Attendee's title. Maximum length is 32 characters. |
 
-####  <a name="req-example"></a>XML Example Request
+####  <a name="req-example"></a>Post an attendee search request - XML Example Request
 
 ```http
 POST /concur/attendee/v1.0/fetch HTTPS/1.1
@@ -99,7 +99,7 @@ Content-Length: {length of content body}
 </AttendeeSearchRequest>
 ```
 
-###  <a name="response"></a>Response
+###  <a name="response"></a>Post an attendee search request - Response
 
 ### Supported Content Types
 
@@ -151,7 +151,7 @@ The **Attendee** child element must contain all of the elements described below.
 * When implementing the search logic, the search criteria should use logical AND between the fields, not logical OR. For example, if in the search dialog the user specifies Doe in the last name field and Acme in the company field, the connector must return only records where the Acme company has contacts with the last name of Doe. It must not return records for contacts with the last name Doe who belong to another company such as Apex.
 * If the application connector does not respond or returns an error, the user is notified in a popup window within Expense. SAP Concur will not resend the request unless the user manually initiates the search again.
 
-####  <a name="res-example"></a>XML Example of Successful Response
+####  <a name="res-example"></a>Post Fetch Attendee - XML Example of Successful Response
 
 ```http
 HTTPS/1.1 200 OK

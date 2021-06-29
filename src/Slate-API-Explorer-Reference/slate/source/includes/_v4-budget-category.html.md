@@ -14,17 +14,17 @@
 
 This resource is used to retrieve and update budget categories which are collections of expense types used for budget matching.  Each budget item header may have one Budget Category.  If it does, only line items with expense types contained in that Budget Category will be accumulated to the budget.
 
-* [GET All Budget Categories](#getall)
-* [GET a Budget Category](#get)
-* [POST a Budget Category](#post)
-* [DELETE a Budget Category](#delete)
-* [GET All Valid Expense Types](#getExpTypes)
-* [Schema](#schema)
+* [GET All Budget Categories](#get-all-budget-categories)
+* [GET a Budget Category](#get-a-budget-category)
+* [POST a Budget Category](#post-a-budget-category)
+* [DELETE a Budget Category](#delete-a-budget-category)
+* [GET All Valid Expense Types](#get-all-valid-expense-types)
+* [Schema](#budget-category-schema)
   * [Budget Category](#budgetCategory)
   * [Expense Type](#expenseType)
-  * [Error Response](#errorResponse)
-  * [Error Message](#errorMessage)
-* [Response Headers](#responseHeaders)
+  * [Error Response](#budget-category-error-response)
+  * [Error Message](#budget-category-error-message)
+* [Response Headers](#budget-category-response-headers)
 
 ### <a name="getall"></a>GET All Budget Categories
 
@@ -576,7 +576,7 @@ concur-correlationid: 7afa7091-bc4e-4408-8248-a67f9e24a023
 ]
 ```
 
-### <a name="schema"></a>Schema
+### <a name="schema"></a>Budget Category - Schema
 
 #### <a name="budgetCategory"></a>BudgetCategory
 
@@ -598,14 +598,14 @@ Name|Type|Format|Description
 `name`	|	`string`	|	-	|**READ ONLY** The name for this expense type if it maps to an expense type set up in SAP Concur.
 `id`	|	`string`	|	-	|	The budget service's key for this object. If this field is not supplied, the service will use an existing expense type entry if one exists.
 
-#### <a name="errorResponse"></a>Error Response
+#### <a name="errorResponse"></a>Budget Category - Error Response
 
 Name|Type|Format|Description
 ---|---|---|---
 `status`|`boolean`|-|`False` if there was an error.
 `errorMessageList`|`array`|[`errorMessage`](#errorMessage)|List of all errors detected.
 
-#### <a name="errorMessage"></a>Error Message
+#### <a name="errorMessage"></a>Budget Category - Error Message
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -613,7 +613,7 @@ Name|Type|Format|Description
 `errorCode`|`String`|-|Text code for this error.
 `errorMessage`|`String`|-|Plain language error message.
 
-#### <a name="responseHeaders"></a>Response Headers
+#### <a name="responseHeaders"></a>Budget Category - Response Headers
 
 * `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 * [RFC 7231 Allow](https://tools.ietf.org/html/rfc7231#section-7.4.1)

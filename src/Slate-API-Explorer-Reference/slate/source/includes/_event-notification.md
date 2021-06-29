@@ -13,7 +13,7 @@ This callout differs from the standard SAP Concur web services in the following 
 
 ### Contents
 * [Process Flow](#event-notifications-process-flow)
-* [Products and Editions](#event-notifications-products-editions)
+* [Products and Editions](#event-notifications-products-and-editions)
 * [Example Use Case](#example-use-case)
 * [Product Restrictions](#product-restrictions)
 * [Event Notification Process Overview](#event-notification-process)

@@ -3,18 +3,19 @@
 
 
 ### Authentication 
+<div id="attn-depr">
+<p><b>This API has been deprecated.</b></p>
 
-This API has been deprecated.
+<p>Deprecation Date: 02/04/2017</p>
+</div>
 
-Deprecation Date: 02/04/2017
-
-If you are a new partner or an existing one creating a new app, please refer to the [new authentication version documentation](/slate-ui/build/api-reference.html/authentication/getting-started.html).
+If you are a new partner or an existing one creating a new app, please refer to the [new authentication version documentation](#getting-started).
 
 Please contact your Partner Enablement representative before starting any new development to ensure a smooth and successful certification process.
 
 
 
-* [Access tokens](#access-tokens)
+* [Access tokens](#pre-2017-authorization-access-tokens)
 	* [Verb and URIs](#verbs-and-uris)
 	* [Keys and Secrets](#keys-and-secrets)
 	* [Getting an access token](#getting-access-token)
@@ -27,7 +28,7 @@ Please contact your Partner Enablement representative before starting any new de
 	* [AppCenter flow](#app-center)
 	* [Auto-Connect flow](#auto-connect)
 
-### <a name="access-tokens"></a>Access tokens
+### <a name="access-tokens"></a>Pre-2017 Authorization - Access tokens
 An access token is a long-lived token used to make API calls.
 
 ### <a name="verbs-and-uris"></a>Verb and URIs

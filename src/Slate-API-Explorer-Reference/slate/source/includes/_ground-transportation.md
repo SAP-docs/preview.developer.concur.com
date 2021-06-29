@@ -13,18 +13,18 @@ This callout differs from the inbound SAP Concur web services in the following w
 
 **NOTE**: This direct connect was originally designed to work with Limo providers, but can support all types of ground transportation.
 
-* [Products and Editions](#products-editions)
-* [Product Restrictions](#product-restrictions)
+* [Products and Editions](#ground-transportation-products-and-editions)
+* [Product Restrictions](#ground-transportation-product-restrictions)
 * [Configuration Process](#config-process)
-* [Authentication](#authentication)
+* [Authentication](#ground-transportation-authentication)
 * [Operations](#operations)
 * [GDS Sell Formats](#gds-sell-formats)
 
-### <a name="products-editions"></a>Products and Editions
+### <a name="products-editions"></a>Ground Transportation - Products and Editions
 * Concur Travel Professional Edition
 * Concur Travel Standard Edition
 
-#### <a name="product-restrictions"></a>Product Restrictions
+#### <a name="product-restrictions"></a>Ground Transportation - Product Restrictions
 
 This direct connect is only available to Travel Suppliers with Ground Transportation inventory. This direct connect is not supported in the SAP Concur mobile application.
 
@@ -58,7 +58,7 @@ This callout can also be used to perform the following operations:
 * Update the Ground Transportation Reservation with the Supplier
 * Update the Ground Transportation Reservation with Travel
 
-#### <a name="authentication"></a>Authentication
+#### <a name="authentication"></a>Ground Transportation - Authentication
 Authentication between SAP Concur and the application connector is performed using OAuth.
 
 #### <a name="operations"></a>Operations

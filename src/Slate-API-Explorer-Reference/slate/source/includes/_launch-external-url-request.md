@@ -3,13 +3,13 @@
 
 SAP Concur will send a request with the information in an encoded query string when the user clicks the button.
 
-* [Request](#request)
+* [Request](#launch-an-external-url-request)
   * [Request Schema](#req-schema)
-  * [Authentication](#authentication)
-  * [Example](#req-example)
-* [Response](#response)
+  * [Authentication](#launch-an-external-url-authentication)
+  * [Example](#launch-an-external-url-xml-example-request)
+* [Response](#launch-an-external-url-response)
 
-### <a name="request"></a>Request
+### <a name="request"></a>Launch An External URL - Request
 
 #### URI
 The Launch External URL callout launches the URI for the application connector, which can be in a custom location for each client. The standard location is:
@@ -38,7 +38,7 @@ https://{servername}/concur/form/v1.0/get?xcompanydomain={URL-encoded company do
 |  nonce |  The URL-encoded GUID used to generate the signature. |
 |  signature |  The URL-encoded signature hash. |
 
-#### <a name="authentication"></a>Authentication
+#### <a name="authentication"></a>Launch An External URL - Authentication
 To authenticate the request, the developer of the page in the application connector will need to generate an auth signature and compare it with the one passed in the query string.
 
 When the request is received by the connector:
@@ -63,7 +63,7 @@ If the signature hashes match then you know the credentials are valid and the re
 * The order of the query parameters is not important, but the values in the base signature string must be combined in the correct order to generate the signature hash correctly.
 
 
-####  <a name="req-example"></a>XML Example Request
+####  <a name="req-example"></a>Launch An External URL - XML Example Request
 
 ```
 GET https://{URL to your custom connector and endpoint}
@@ -74,7 +74,7 @@ GET https://{URL to your custom connector and endpoint}
     &signature={URL-encoded signature hash}
 ```
 
-###  <a name="response"></a>Response
+###  <a name="response"></a>Launch An External URL - Response
 
 ### Content Body
 The application connector does not directly respond to the Launch External URL request. The application connector completes any updates to SAP Concur using the Inbound Web Services. The Launch External URL functionality monitors the external window, and when the window is closed, it redraws the form the user launched from to display any updated values.

@@ -52,7 +52,7 @@ The Trip Approval resource allows clients to approve or reject trips. Clients se
 
 [2]: #travel-profile-v2
 
-[3]: /api-reference/request/v3.request.html
+[3]: #request-v3
 
-[4]: /api-reference/travel/trip-approval/trip-approval-resource.html
+[4]: #trip-approval-v1
 

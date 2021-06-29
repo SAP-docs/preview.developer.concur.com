@@ -4,25 +4,25 @@
 
 A post transportation search request is sent when the Travel user searches for ground transportation.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-    * [Pickup Location](#pickup-location)
-    * [Dropoff Location](#dropoff-location)
-    * [Discount Code](#discount-code)
-    * [Airport](#airport)
-    * [Flight](#flight)
-    * [Train Station](#train-station)
-    * [Train](#train)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-    * [Error](#error)
-    * [Limo](#limo)
-    * [Vendor](#vendor)
-    * [Form of Payment](#form-payment)
-    * [Rate Information](#rate-info)
-* [Examples](#examples)
+* [Request](#post-a-transportation-search-request)
+  * [Request Schema](#post-a-transportation-search-request-body)
+    * [Pickup Location](#post-a-transportation-search-pickuplocation-elements)
+    * [Dropoff Location](#post-a-transportation-search-dropofflocation-elements)
+    * [Discount Code](#post-a-transportation-search-discountcode-elements)
+    * [Airport](#post-a-transportation-search-airport-elements)
+    * [Flight](#post-a-transportation-search-flight-elements)
+    * [Train Station](#post-a-transportation-search-train-station-elements)
+    * [Train](#post-a-transportation-search-train-elements)
+* [Response](#post-a-transportation-search-response)
+  * [Response Schema](#post-a-transportation-search-content-body)
+    * [Error](#post-a-transportation-search-error-elements)
+    * [Limo](#post-a-transportation-search-limo-elements)
+    * [Vendor](#post-a-transportation-search-vendor-elements)
+    * [Form of Payment](#post-a-transportation-search-formofpayment-elements)
+    * [Rate Information](#post-a-transportation-search-rate-information-elements)
+* [Examples](#post-a-transportation-search-examples)
 
-#### <a name="request"></a>Request
+#### <a name="request"></a>Post a transportation search - Request
 
 #### URI                                                                                
 
@@ -40,7 +40,7 @@ application/xml
 #### Authorization Header
 Authorization header with OAuth credentials.
 
-#### <a name="req-schema"></a>Request Body
+#### <a name="req-schema"></a>Post a transportation search - Request Body
 The request will contain a **CC_LimoSearchRequest** parent element, containing the following child elements.
 
 **ServiceType**: The type of service requested. Will contain one of the following values:
@@ -63,7 +63,7 @@ If this value is not provided by the user, it will default to 100.
 
 **PickupLocation**: The pick up location. This parent element contains the following child elements:
 
-#### <a name="pickup-location"></a>PickupLocation Elements
+#### <a name="pickup-location"></a>Post a transportation search - PickupLocation Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -79,7 +79,7 @@ If this value is not provided by the user, it will default to 100.
 
 **DropoffLocation**: The drop off location. This parent element contains the following child elements:
 
-#### <a name="dropoff-location"></a>DropoffLocation Elements
+#### <a name="dropoff-location"></a>Post a transportation search - DropoffLocation Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -146,7 +146,7 @@ zh-tw: Traditional Chinese
 
 **DiscountCode**: The discount code information. This parent element contains the following child elements:
 
-#### <a name="discount-code"></a>DiscountCode Elements
+#### <a name="discount-code"></a>post-a-transportation-search - DiscountCode Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -154,13 +154,13 @@ zh-tw: Traditional Chinese
 |  VendorCode |  The user's vendor code. |
 |  DiscountNumber |  The user's discount number. |
 
-#### <a name="airport"></a>Airport Elements
+#### <a name="airport"></a>Post a transportation search - Airport Elements
 
 **AirportCode**: The <a href="http://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code" target="blank">IATA Code</a> for the airport.
 
 **Flight**: The flight information. This parent element contains the following child elements:
 
-#### <a name="flight"></a>Flight Elements
+#### <a name="flight"></a>Post a transportation search - Flight Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -169,7 +169,7 @@ zh-tw: Traditional Chinese
 |  ArrivalDateTime |  The flight arrival time. Only provided for the PickupLocation element. **Format**: 2015-05-19T18:00:00 |
 |  DepartureDateTime |  The flight departure time. Only provided for the DropoffLocation element. **Format**: 2015-05-19T18:00:00 |
 
-#### <a name="train-station"></a>Train Station Elements
+#### <a name="train-station"></a>Post a transportation search - Train Station Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -179,7 +179,7 @@ zh-tw: Traditional Chinese
 |  State |  The state the station is located in. Preferably 2 characters, max 10 characters. |
 |  Train |  The train information. This parent element contains the following child elements.
 
-#### <a name="train"></a>Train Elements
+#### <a name="train"></a>Post a transportation search - Train Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -189,19 +189,19 @@ zh-tw: Traditional Chinese
 |  ArrivalDateTime |  The train arrival time. Only provided for the PickupLocation element. **Format**: 2015-05-19T18:00:00 |
 |  DepartureDateTime |  The train departure time. Only provided for the DropoffLocation element. **Format**: 2015-05-19T18:00:00 |
 
-####  <a name="response"></a>Response
+####  <a name="response"></a>Post a transportation search - Response
 
 The supplier responds to the Limo Search request by returning the details of an available reservation that matches the search criteria.
 
 #### Content Types
 application/xml
 
-#### <a name="res-schema"></a>Content Body                                                                                              
+#### <a name="res-schema"></a>Post a transportation search - Content Body                                                                                              
 The response will include a **CC_LimoSearchReply** parent element, with the following child elements:  
 
 **Error**: The error information, if an error occurred. Required. This parent element contains the following child elements:
 
-#### <a name="error"></a>Error Elements
+#### <a name="error"></a>Post a transportation searh - Error Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -213,7 +213,7 @@ The response will include a **CC_LimoSearchReply** parent element, with the foll
 
 **Limos**: This parent element contains a **Limo** child element with the available reservation information. Refer to the Limo Elements table for the details of the child elements of the **Limo** element.
 
-#### <a name="limo"></a>Limo Elements
+#### <a name="limo"></a>Post a transportation search - Limo Elements
 
 **RateInfo**: The rate information for the limo. Refer to the Rate Information Elements table for more information. Required.
 
@@ -242,7 +242,7 @@ The response will include a **CC_LimoSearchReply** parent element, with the foll
 
 **Vendor**: The reservation vendor. Required. This parent element contains the following child elements:
 
-#### <a name="vendor"></a>Vendor Elements
+#### <a name="vendor"></a>Post a transportation search - Vendor Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -252,7 +252,7 @@ The response will include a **CC_LimoSearchReply** parent element, with the foll
 
 **AcceptedFops**: The accepted forms of payment. Required. This parent element contains the **FormOfPayment** child element. The **FormOfPayment** element contains the allowed forms of payment. The possible child elements are:
 
-#### <a name="form-payment"></a>FormOfPayment Elements
+#### <a name="form-payment"></a>Post a transportation search - FormOfPayment Elements
 
 |  Element    |  Description |
 |-----------|-----------|
@@ -261,7 +261,7 @@ The response will include a **CC_LimoSearchReply** parent element, with the foll
 |  Check |  This element will appear if the Check form of payment is accepted. |
 |  DirectBilling |  This element will appear if the Direct Billing form of payment is accepted. |
 
-#### <a name="rate-info"></a>Rate Information Elements
+#### <a name="rate-info"></a>Post a transportation search - Rate Information Elements
 
 |  Element |  Required? |  Description |
 |----------|------------|--------------|
@@ -282,7 +282,7 @@ The response will include a **CC_LimoSearchReply** parent element, with the foll
 |  OptionalExtraStopCharge |  N |  The charge for any additional stops. |
 |  OptionalExtraTimeCharge |  N |  The charge for each additional hour. |
 
-#### <a name="examples"></a>Examples
+#### <a name="examples"></a>Post a transportation search - Examples
 
 ####  XML Example Request
 

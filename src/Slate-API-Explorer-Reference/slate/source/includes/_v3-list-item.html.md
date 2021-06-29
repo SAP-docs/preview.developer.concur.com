@@ -4,12 +4,12 @@
 
 The SAP Concur List Item API provides an automated solution to clients who would like to add, update, or delete list items. Use of the API is subject to some limitations on the volume of List data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of List values involves a large volume. 
 
-* [Retrieve all list items based on the search criteria](#get)
-* [Retrieve a list item by ID](#getID)
-* [Create a new list item](#post)
-* [Update a list item](#put)
-* [Delete a list item](#delete)
-* [Schema](#schema)
+* [Retrieve all list items based on the search criteria](#retrieve-all-list-items-based-on-the-search-criteria)
+* [Retrieve a list item by ID](#retrieve-a-list-item-by-id)
+* [Create a new list item](#create-a-new-list-item)
+* [Update a list item](#update-a-list-item)
+* [Delete a list item](#delete-a-list-item)
+* [Schema](#list-item-v3-schema)
 
 #### Version
 
@@ -94,7 +94,7 @@ Name|Type|Format|Description
 `id`|`string`|`path`|**Required** The unique identifier of the listitem to delete
 `listId`|`string`|`query`|**Required** The unique identifier of the list associated with a listitem to be deleted
 
-#### <a name="schema"></a>Schema
+#### <a name="schema"></a>List Item v3 - Schema
 
 ### <a name="listitems"></a>List Items
 

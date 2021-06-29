@@ -3,15 +3,15 @@
 
 ### Menu
 
-* [Getting Started](#getting-started-request-v4)
-* [Request](./v4.endpoints.request-resources.html)
-* [Workflow](./v4.endpoints.workflow-resources.html)
-* [Expected Expense](./v4.endpoints.expected-expense-resources.html)
-* [Request Cash Advance](./v4.endpoints.cashadvance-resources.html)
-* [Request Policy](./v4.endpoints.policy-resources.html)
-* [Travel Agency](./v4.endpoints.travel-agency-resources.html)
-* [Schema](./v4.endpoints.schemas.html)
-* [HTTP Status Codes](./v4.response-codes.html)
+* [Getting Started](#get-started)
+* [Request](#request-v4-request-resources)
+* [Workflow](#request-v4-workflow-resources)
+* [Expected Expense](#request-v4-expected-expense-resources)
+* [Request Cash Advance](#request-v4-request-cash-advance-resources)
+* [Request Policy](#request-v4-request-policy-resources)
+* [Travel Agency](#request-v4-travel-agency-resources)
+* [Schema](#request-v4-endpoints-schema)
+* [HTTP Status Codes](#request-v4-http-status-codes)
 * [Run in Postman](https://app.getpostman.com/run-collection/8273d843078f0bcf0823)
 
 Concur Request automates the spend request and approval process for both travel and everyday expenses, giving you the data you need to accurately track and better control spending. By increasing visibility into planned expenses and up-to-date budget data, you can make strategic spending decisions before any spending actually occurs. The Request API provides many possibilities, particularly Requests creation and transition into the approval workflow.
@@ -82,4 +82,3 @@ This API supports both company level and user level access tokens.
 * The `userId` parameter is not required.
 * Requires the Web Service Admin role to call the API.
 
-# Travel Profile

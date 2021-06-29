@@ -13,8 +13,8 @@
 
 This resource is used to retrieve information about Budget's tracking fields for an entity. Every entity may have a specific set of budget tracking fields and every budget may enable any or all of the budget tracking fields. If there are tracking fields associated, the budgets get matched to the product only when the tracking field conditions are met.
 
-* [GET All budget tracking fields for an entity](#getall)
-* [Schema](#schema)
+* [GET All budget tracking fields for an entity](#get-all-budget-tracking-fields)
+* [Schema](#budget-tracking-schema)
   * [Budget Tracking Field](#budgetTracking)
 
 #### <a name="getall"></a>GET All Budget Tracking Fields
@@ -168,7 +168,7 @@ concur-correlationid: 86a0d9fe-9e98-43c3-89d8-a2917dd844cb
 ]
 ```
 
-#### <a name="schema"></a>Schema
+#### <a name="schema"></a>Budget Tracking - Schema
 
 #### <a name="budgetTracking"></a>Budget Tracking Field
 

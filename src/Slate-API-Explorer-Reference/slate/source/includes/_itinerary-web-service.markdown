@@ -1,8 +1,10 @@
 
-## Itinerary Web Service (TMC/Third-Party)
+## Itinierary API Usage
+
+### Itinerary Web Service (TMC/Third-Party)
 
 
-The SAP Concur Itinerary Web Service allows Travel Management Companies (TMC), SAP Concur clients, and third-party developers to view and create travel related events in the Concur Travel system. TMCs can post bookings for any travel type. This web service can also be used by SAP Concur clients and third-party developers to request trip information for SAP Concur users. The public Itinerary XSD can be found [here.](/api-reference/travel/itinerary/ItinServices_Public_0.xsd)  In addition, the GetList XSD can be found [here.](/api-reference/travel/itinerary/GetListOfItinerariesImport_v1_1.xsd)
+The SAP Concur Itinerary Web Service allows Travel Management Companies (TMC), SAP Concur clients, and third-party developers to view and create travel related events in the Concur Travel system. TMCs can post bookings for any travel type. This web service can also be used by SAP Concur clients and third-party developers to request trip information for SAP Concur users. The public Itinerary XSD can be found [here.](/images/ItinServices_Public_0.xsd)  In addition, the GetList XSD can be found [here.](/images/GetListOfItinerariesImport_v1_1.xsd)
 
 * [GET List of Itineraries](#getlist)
 * [GET Itinerary Details](#getdetails)

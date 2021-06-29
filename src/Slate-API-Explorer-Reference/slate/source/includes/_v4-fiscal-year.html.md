@@ -15,14 +15,14 @@
 The Fiscal Calendar is used both for Reporting and Budget. A fiscal year can start and end at any date as long as the end date is after the start date and does not span more than two years. Fiscal years cannot overlap. Fiscal periods cannot overlap and are limited to 24 per fiscal year.
 
 * [GET All Fiscal Years](#getall)
-* [GET a Fiscal Year](#get)
-* [POST a Fiscal Year](#post)
-* [DELETE a Fiscal Year](#delete)
-* [Schema](#schema)
-  * [Fiscal Year](#fiscalYear)
-  * [Fiscal Period](#fiscalPeriod)
-  * [Error Response](#errorResponse)
-  * [Error Message](#errorMessage)
+* [GET a Fiscal Year](#get-a-fiscal-year)
+* [POST a Fiscal Year](#post-fiscal-year-s)
+* [DELETE a Fiscal Year](#delete-a-fiscal-year)
+* [Schema](#fiscal-year-schema)
+  * [Fiscal Year](#get-a-fiscalyear)
+  * [Fiscal Period](#get-a-fiscalperiod)
+  * [Error Response](#budget-v4-error-response)
+  * [Error Message](#budget-v4-error-message)
 
 ### <a name="getall"></a>GET All Fiscal Years
 
@@ -619,9 +619,9 @@ Content-Length: 1270
 concur-correlationid: eb7cf20a-3481-45a5-808c-98b8ef7fe805
 ```
 
-### <a name="schema"></a>Schema
+### <a name="schema"></a>Fiscal Year - Schema
 
-#### <a name="fiscalYear"></a>FiscalYear
+#### <a name="fiscalYear"></a>Get a FiscalYear
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -640,7 +640,7 @@ Name|Type|Format|Description
 `fiscalPeriods`	|	`array`	|	[`fiscalPeriod`](#fiscalPeriod)	|**READ ONLY** The list of all fiscal periods in this fiscal year.
 `displayName` | `string`| - |**READ ONLY** Display name for fiscal year. For date range budget item we use this field to display.
 
-#### <a name="fiscalPeriod"></a>FiscalPeriod
+#### <a name="fiscalPeriod"></a>Get a - FiscalPeriod
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -654,14 +654,14 @@ Name|Type|Format|Description
 `id`	|	`string`	|	-	|	The budget service's key for this object.
 `spendDate` |   `date`  |   -   |**READ ONLY** If the current date is after this fiscal period's start date, this field shows the current date.
 
-#### <a name="errorResponse"></a>Error Response
+#### <a name="errorResponse"></a>Budget v4 - Error Response
 
 Name|Type|Format|Description
 ---|---|---|---
 `status`|`boolean`|-|`False` if there was an error.
 `errorMessageList`|`array`|[`errorMessage`](#errorMessage)|List of all errors detected.
 
-#### <a name="errorMessage"></a>Error Message
+#### <a name="errorMessage"></a>Budget v4 - Error Message
 
 Name|Type|Format|Description
 ---|---|---|---

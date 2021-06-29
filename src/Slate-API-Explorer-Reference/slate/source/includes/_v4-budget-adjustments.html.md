@@ -16,10 +16,10 @@
 This resource is used to add budget adjustments. Each budget item detail may have one or more budget adjustments and adjustments can be made to manually add or subtract the budget, spent or pending balances.
 
 * [Create a Budget Adjustment](#create-budget-adjustment)
-* [Schema](#schema)
+* [Schema](#budget-adjustments-schema)
   * [Budget Adjustment](#budgetAdjustment)
-  * [Error Response](#errorResponse)
-  * [Error Message](#errorMessage)
+  * [Error Response](#budget-adjustments-error-response)
+  * [Error Message](#budget-adjustments-error-message)
 
 #### <a name="create-budget-adjustment"></a>Create a Budget Adjustment
 
@@ -175,7 +175,7 @@ concur-correlationid: 561ce34c-6542-4bae-82a2-aa6ccd8c6b22
 }
 ```
 
-### <a name="schema"></a>Schema
+### <a name="schema"></a>Budget Adjustments - Schema
 
 #### <a name="budgetAdjustment"></a>Budget Adjustment
 
@@ -191,14 +191,14 @@ Name|Type|Format|Description
 `description`|`string`|-|A user-friendly description of the adjustment.
 `transactionDate`|`date`|`YYYY-MM-DD`|**Required if amount type is either SPENT_AMOUNT or PENDING_AMOUNT** The transaction date of adjusted spend. Must be within the fiscal period.
 
-#### <a name="errorResponse"></a>Error Response
+#### <a name="errorResponse"></a>Budget Adjustments - Error Response
 
 Name|Type|Format|Description
 ---|---|---|---
 `status`|`boolean`|-|`False` if there was an error.
 `errorMessageList`|`array`|[`errorMessage`](#errorMessage)|List of all errors detected.
 
-#### <a name="errorMessage"></a>Error Message
+#### <a name="errorMessage"></a>Budget Adjustments - Error Message
 
 Name|Type|Format|Description
 ---|---|---|---

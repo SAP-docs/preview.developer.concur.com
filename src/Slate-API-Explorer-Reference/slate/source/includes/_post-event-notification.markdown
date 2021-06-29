@@ -2,13 +2,13 @@
 ## Post an event notification request
 
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Example](#res-example)
+* [Request](#post-an-event-notification-request)
+  * [Request Schema](#post-an-event-notification-request-request-schema)
+  * [Request Example](#post-an-event-notification-request-xml-example-request)
+* [Response](#post-an-event-notification-request-response)
+  * [Response Example](#post-an-event-notification-request-example-of-successful-response)
 
-### <a name="request"></a>Request
+### <a name="request"></a>Post an event notification - Request
 
 ### Supported Accept Types
 * application/xml
@@ -27,7 +27,7 @@ Authorization header with Basic authorization for endpoint. Refer to [Authentica
 ### Request Headers - Optional
 None
 
-### <a name="req-schema"></a>Request Schema
+### <a name="req-schema"></a>Post an event notification request - Request Schema
 The request will include a **Notification** parent element, with the following child elements:
 
 |Element |Description |
@@ -38,7 +38,7 @@ The request will include a **Notification** parent element, with the following c
 | EventDateTime | When the event happened. Format: YYYY-MM-DD |
 | Context | Message that the callout can use to provide the developer some context for the callout. |
 
-###  <a name="req-example"></a>XML Example Request
+###  <a name="req-example"></a>Post an event notification request - XML Example Request
 
 ```http
 POST /concur/v1.0/notify HTTPS/1.1
@@ -56,7 +56,7 @@ Authorization: Basic Y29uY3VyOmNvbmN1cg==
 </Notification>
 ```
 
-### <a name="response"></a>Response
+### <a name="response"></a>Post an event notification request - Response
 
 ### Supported Content Types
 * application/txt
@@ -64,7 +64,7 @@ Authorization: Basic Y29uY3VyOmNvbmN1cg==
 ### Content Body
 The application connector responds with an HTTP 200 code when it successfully receives the notification.
 
-###  <a name="res-example"></a>Example of Successful Response
+###  <a name="res-example"></a>Post an event notification request - Example of Successful Response
 
     HTTPS 200 Success
 

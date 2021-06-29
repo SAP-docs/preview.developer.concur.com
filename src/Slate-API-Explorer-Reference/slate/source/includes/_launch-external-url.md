@@ -17,26 +17,26 @@ This callout differs from the standard SAP Concur web services in the following 
 * The client Expense administrator must configure a new form field and add the field to the desired form before this service can be used.
 
 #### Contents
-* [Process Flow](#process-flow)
-* [Products and Editions](#products-editions)
-* [Product Restrictions](#product-restrictions)
-* [Callout Details](#concur-connect-callout-details)
-* [Launch URL Process Overview](#launch-url-process-overview)
-* [Security](#security)
-* [Authentication](#authentication)
-* [Functions](#functions)
-* [Concur Expense Configuration](#concur-expense-config)
-* [Responses and Errors](#responses-errors)
+* [Process Flow](#launch-external-url-callout-process-flow)
+* [Products and Editions](#launch-external-url-callout-products-and-editions)
+* [Product Restrictions](#launch-external-url-callout-product-restrictions)
+* [Callout Details](#launch-external-url-callout-callout-details)
+* [Launch URL Process Overview](#launch-external-url-process-overview)
+* [Security](#launch-external-url-callout-security)
+* [Authentication](#launch-external-url-callout-authentication)
+* [Functions](#launch-external-url-callout-functions)
+* [Concur Expense Configuration](#launch-external-url-callout-concur-expense-configuration)
+* [Responses and Errors](#launch-external-url-callout-responses-and-errors)
 
-#### <a name="process-flow"></a>Process Flow
+#### <a name="process-flow"></a>Launch External URL Callout - Process Flow
 
 ![Process Flow for Launch External Service](./images/launch-external-url.png)
 
-####
+#### Launch External URL Callout - Products and Editions
 
 * Concur Expense Professional Edition
 
-####
+#### Launch External URL Callout - Product Restrictions
 
 This callout is not supported in the SAP Concur mobile application.
 
@@ -48,11 +48,11 @@ Partner developers must determine which configurations are required for their so
 
 Existing clients can work with SAP Concur Integration Services to create custom applications that work with their configuration.
 
-####
+#### Launch External URL Callout - Callout Details
 
 Information on how to download, install, and configure the application connector is included in [Callouts and Application Connectors](#callouts-and-application-connectors).
 
-####
+#### Launch External URL Callout - Process Overview
 
 The configuration process has the following steps:
 
@@ -72,7 +72,7 @@ Once the configuration is complete, the callout uses the following process:
 8. The user or the application connector closes the window and returns to SAP Concur.
 9. SAP Concur reloads the page the user came from in order to display any updated field values.
 
-####
+#### Launch External URL Callout - Security
 
 SAP Concur will make calls to the application connector's endpoint using SSL. During configuration, SAP Concur will connect to the application connector to validate that its hostname and access credentials are valid.
 
@@ -80,16 +80,16 @@ In the code SAP Concur provides for a sample application connector, credentials 
 
 Expense will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. You will need to install the signed certificate before SAP Concur can access the connector.
 
-####
+#### Launch External URL Callout - Authentication
 
 SAP Concur sends requests to the application connector using anonymous authorization (no username and password are provided) over HTTPS.
 
 The application connector can validate the authenticity of the query by generating a signature hash from the provided variables and comparing it with the passed in values, including the signature hash that SAP Concur supplies. Two of the required variables for the signature hash are username and password, which are entered in SAP Concur on the **Register Application Connector** page in **Web Services** under **Administration**. The application connector must use the same username and password pair to generate it's validation signature hash.
 
-####
+#### Launch External URL Callout - Functions
 [Launch External URL Request][4]
 
-####
+#### Launch External URL Callout - Concur Expense Configuration
 
 An Expense text form field must be configured as the Launch URL control type and the form field must be added to the desired form before this callout can be used. The Launch URL control type will not appear in the list until a partner application using the Launch External URL API has been registered and enabled for the company. The administrator must select either a single-line or a multi-line control type, depending on the data that will be placed in the field.
 
@@ -99,7 +99,7 @@ An Expense text form field must be configured as the Launch URL control type and
 * **It is also only available to be configured at the Expense Entry-level fields.**
 * **This Callout cannot be used with Standard Edition clients or from a Travel or Invoice field.**
 
-####
+#### Launch External URL Callout - Responses and Errors
 
 Refer to the [HTTP Codes](#http-status-codes) page for details of the common responses and errors.
  

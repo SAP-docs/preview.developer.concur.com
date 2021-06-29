@@ -2,21 +2,22 @@
 ## Post a reservation detail search
 
 
-* [Response Schema](#res-schema)
-  * [Error](#error)
+* [Response Schema](#post-a-reservation-detail-search-response-schema)
+  * [Error](#error-child-elements)
   * [Primary Passenger Child](#primary-passenger-child)
   * [Pickup Location](#pickup-location)
   * [Dropoff Location](#dropoff-location)
   * [Vehicle Child](#vehicle-child)
   * [Vendor Child](#vendor-child)
   * [Form of Payment Child](#form-payment-child)
-  * [Rate Information](#rate-info)
-  * [Reply Credit Card](#reply-credit-card)
+  * [Rate Information](#post-a-reservation-rate-information-elements)
+  * [Reply Credit Card](#post-a-reservation-reply-credit-card-elements)
   * [Airport](#airport)
   * [Flight Child](#flight-child)
   * [Train Station](#train-station)
   * [Train Child](#train-child)
-* [Example](#example)
+* [Example](#post-reservation-xml-example-of-successful-response
+)
 
 #### Request
 
@@ -73,7 +74,7 @@ The supplier responds to the request by supplying the full reservation details.
 
 application/xml
 
-#### <a name="res-schema"></a>Response Schema
+#### <a name="res-schema"></a>Post a reservation detail search - Response Schema
 
 The response will include a CC_LimoReservationDetailReply parent element, with the following child elements:
 
@@ -183,7 +184,7 @@ The response will include a CC_LimoReservationDetailReply parent element, with t
 |Check |  | |If present, the passenger will pay with a check. |
 |DirectBilling |  | |If present, the passenger will pay through direct billing. |
 
-#### <a name="rate-info"></a>Rate Information Elements
+#### <a name="rate-info"></a>Post a reservation - Rate Information Elements
 
 |Element Name|Required/Optional|Data Type|Description|
 |------------|-----------------|---------|-----------|
@@ -204,7 +205,7 @@ The response will include a CC_LimoReservationDetailReply parent element, with t
 |OptionalExtraStopCharge	|N|	|The charge for any additional stops.|
 |OptionalExtraTimeCharge	|N|	|The charge for each additional hour.|
 
-#### <a name="reply-credit-card"></a>Reply Credit Card Elements
+#### <a name="reply-credit-card"></a>Post a reservation - Reply Credit Card Elements
 
 |Element Name|Required/Optional|Data Type|Description|
 |------------|-----------------|---------|-----------|
@@ -248,7 +249,7 @@ The response will include a CC_LimoReservationDetailReply parent element, with t
 |ArrivalDateTime| | |The train arrival time. Only provided for the PickupLocation element. Format: 2015-05-19T18:00:00|
 |DepartureDateTime| | |The train departure time. Only provided for the DropoffLocation element. Format: 2015-05-19T18:00:00|
 
-#### <a name="example"></a>XML Example of Successful Response
+#### <a name="example"></a>Post Reservation - XML Example of Successful Response
 
 ```shell
 HTTPS/1.1 200 OK

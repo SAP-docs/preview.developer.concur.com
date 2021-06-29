@@ -12,7 +12,7 @@ The Purchase Orders API gives SAP Concur clients the ability to leverage externa
 * [Access Token Usage](#purchase-orders-v3-access-token-usage)
 * [Create a New Purchase Order](#create-a-new-purchase-order)
 * [Update Purchase Order Line Item with Receipt Information](#put-receipts)
-* [Update an Existing Purchase Order](#update-an-existing-purchase-order)
+* [Update an Existing Purchase Order](#purchase-orders-v3-update-an-existing-purchase-order)
 * [Get an Existing Purchase Order](#purchase-orders-v3-get-an-existing-purchase-order)
 * [Schema](#purchase-orders-v3-schema)
 * [Response Schema](#schema-response)

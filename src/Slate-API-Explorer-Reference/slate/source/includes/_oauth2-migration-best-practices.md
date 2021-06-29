@@ -3,7 +3,7 @@
 * [Old World Authentication](#old-authentication)
 * [New World Authentication](#new-authentication)
   * [Oauth2](#oauth2)
-  * [Getting Started](#getting-started)
+  * [Getting Started](#2-oauth2-migration-getting-started)
   * [Token Management](#token-management)
   * [Old Auth v.s. New Auth Diagram](#old-v-new-diagram)
 
@@ -22,7 +22,7 @@
   - Unlike the old world auth, access tokens have a 1 hour expiry and refresh tokens have a 6 months expiry. This is in accordance to the best practice of using short lived tokens.
   - This would mean that clients would need to perform token management.
 
-#### <a id="migration-start" name="getting-started"></a>2. Getting Started
+#### <a id="migration-start" name="getting-started"></a>2. Oauth2 Migration - Getting Started
   - Getting clientID / clientSecret
     - Work with SAP Concur's implementation team to obtain a new oauth2 `client_id` and `client_secret` and to define the scope of client's application.
     - Process will take no longer than 48 hours.

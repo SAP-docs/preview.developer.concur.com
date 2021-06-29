@@ -4,34 +4,34 @@
 
 This request is sent when the Travel user updates an existing ground transportation reservation.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-    * [Booker](#booker)
-    * [Primary Passenger](#primary-passenger)
-    * [Pickup Location](#pickup-location)
-    * [Dropoff Location](#dropoff-location)
-    * [Discount Code](#discount-code)
+* [Request](#update-reservation-with-supplier-request)
+  * [Request Schema](#update-reservation-with-supplier-request-body)
+    * [Booker](#update-reservation-with-supplier-booker-elements)
+    * [Primary Passenger](#update-reservation-with-supplier-primarypassenger-elements)
+    * [Pickup Location](#update-reservation-with-supplier-pickuplocation-elements)
+    * [Dropoff Location](#update-reservation-with-supplier-dropofflocation-elements)
+    * [Discount Code](#update-reservation-with-supplier-discountcode-elements)
     * [Form of Payment](#req-form-payment)
     * [Airport](#req-airport)
     * [Flight](#req-flight)
     * [Train Station](#req-train-station)
     * [Train](#req-train)
-    * [Credit Card](#credit-card)
-* [Response](#response)
-  * [Response Schema](#response-schema)
-    * [Error](#error)
-    * [Vehicle](#vehicle)
-    * [Rate Information](#rate-info)
-    * [Vendor](#vendor)
+    * [Credit Card](#update-reservation-with-supplier-credit-card-elements)
+* [Response](#update-reservation-with-supplier-response)
+  * [Response Schema](#update-reservation-with-supplier-response-schema)
+    * [Error](#update-reservation-with-supplier-error-elements)
+    * [Vehicle](#update-reservation-with-supplier-vehicle-elements)
+    * [Rate Information](#update-reservation-with-supplier-rate-information-elements)
+    * [Vendor](#update-reservation-with-supplier-vendor-elements)
     * [Form of Payment](#res-form-payment)
     * [Airport](#res-airport)
     * [Flight](#res-flight)
     * [Train Station](#res-train-station)
     * [Train](#res-train)
-    * [Reply Credit Card](#reply-credit-card)
+    * [Reply Credit Card](#update-reservation-with-supplier-reply-credit-card-elements)
 * [Examples](#examples)
 
-#### <a name="request"></a>Request
+#### <a name="request"></a>Update Reservation With Supplier - Request
 
 #### URI
 
@@ -52,7 +52,7 @@ Authentication header with Base64 encoded basic authentication credentials (logi
 
 Authorization: Basic {Base64 encoded LoginID:Password}
 
-#### <a name="req-schema"></a>Request Body
+#### <a name="req-schema"></a>Update Reservation With Supplier - Request Body
 
 The request will contain a **CC_LimoUpdateRequest** parent element, containing the following child elements:
 
@@ -82,7 +82,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 |  DropoffServiceArrangement |   |  The details of the dropoff arrangement, if available. |
 |  ExtraStopArrangement |   |  The details of the extra stop arrangement, if available. |
 
-#### <a name="booker"></a>Booker Elements
+#### <a name="booker"></a>Update Reservation With Supplier - Booker Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -90,7 +90,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 | EmailAddress | The user's email address. |
 | Phone | The user's contact number. |
 
-#### <a name="primary-passenger"></a>PrimaryPassenger Elements
+#### <a name="primary-passenger"></a>Update Reservation With Supplier - PrimaryPassenger Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -101,7 +101,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 |  CellPhone |  The contact's cell phone number. |
 |  EmailAddress |  The contact's email address. |
 
-#### <a name="pickup-location"></a>PickupLocation Elements
+#### <a name="pickup-location"></a>Update Reservation With Supplier - PickupLocation Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -115,7 +115,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 |  PostalCode |  The location postal code. |
 |  ExtraNotes |  Additional notes about the location. Example: Ring doorbell, Holiday Inn, etc. |
 
-#### <a name="dropoff-location"></a>DropoffLocation Elements
+#### <a name="dropoff-location"></a>Update Reservation With Supplier - DropoffLocation Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -129,7 +129,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 |  PostalCode |  The location postal code. |
 |  ExtraNotes |  Additional notes about the location. Example: Apartment Building, gravel driveway, etc. |
 
-#### <a name="discount-code"></a>DiscountCode Elements
+#### <a name="discount-code"></a>Update Reservation With Supplier - DiscountCode Elements
 
 |Element Name|Description|
 |------------|--------------------------|
@@ -182,7 +182,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 |ArrivalDateTime |The train arrival time. Only provided for the PickupLocation element. Format: 2015-05-19T18:00:00|
 |DepartureDateTime |The train departure time. Only provided for the DropoffLocation element. Format: 2015-05-19T18:00:00|
 
-#### <a name="credit-card"></a>Credit Card Elements
+#### <a name="credit-card"></a>Update Reservation With Supplier - Credit Card Elements
 
 |Element Name|Description|
 |------------|--------------------------|
@@ -196,14 +196,14 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 | Country | The country of the billing address of the car. |
 | PostalCode | The postal code of the billing address of the car. |
 
-#### <a name="response"></a>Response
+#### <a name="response"></a>Update Reservation With Supplier - Response
 
 The supplier responds to the update request with the reservation details.
 
 #### Content Types
 application/xml
 
-#### <a name="res-schema"></a>Response Schema
+#### <a name="res-schema"></a>Update Reservation With Supplier - Response Schema
 
 The response will include a **CC_LimoUpdateReply** parent element, with the following child elements:
 
@@ -240,7 +240,7 @@ The response will include a **CC_LimoUpdateReply** parent element, with the foll
 |  ProviderFeedback |  N |  Any additional feedback from the supplier. |
 |  AccountingInfo |  N |  The accounting information for the reservation. This parent element contains one or more **AccountingField** elements: **AccountingField1** through **AccountingField5**. These fields contain detailed accounting information. |
 
-#### <a name="error"></a>Error Elements
+#### <a name="error"></a>Update Reservation With Supplier - Error Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -248,7 +248,7 @@ The response will include a **CC_LimoUpdateReply** parent element, with the foll
 | ErrorSource | The source of the error. |
 | ErrorDescription | The additional error information. |
 
-#### <a name="vehicle"></a>Vehicle Elements
+#### <a name="vehicle"></a>Update Reservation With Supplier - Vehicle Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -257,7 +257,7 @@ The response will include a **CC_LimoUpdateReply** parent element, with the foll
 |  MaxPassengers |  The maximum number of passengers for the car. Must be greater than zero. |
 |  VehicleID |  Information to identify the specific vehicle. |
 
-#### <a name="rate-info"></a>Rate Information Elements
+#### <a name="rate-info"></a>Update Reservation With Supplier - Rate Information Elements
 
 |Element Name|Required?|Data Type|Description|
 |------------|-----------------|---------|-----------|
@@ -278,7 +278,7 @@ The response will include a **CC_LimoUpdateReply** parent element, with the foll
 |OptionalExtraStopCharge	|N|	|The charge for any additional stops.|
 |OptionalExtraTimeCharge	|N|	|The charge for each additional hour.|
 
-#### <a name="vendor"></a>Vendor Elements
+#### <a name="vendor"></a>Update Reservation With Supplier - Vendor Elements
 
 |  Element |  Description |
 |-------------|----------------------|
@@ -331,7 +331,7 @@ The response will include a **CC_LimoUpdateReply** parent element, with the foll
 |ArrivalDateTime |The train arrival time. Only provided for the PickupLocation element. Format: 2015-05-19T18:00:00|
 |DepartureDateTime |The train departure time. Only provided for the DropoffLocation element. Format: 2015-05-19T18:00:00|
 
-#### <a name="reply-credit-card"></a>Reply Credit Card Elements
+#### <a name="reply-credit-card"></a>Update Reservation With Supplier - Reply Credit Card Elements
 
 |Element Name| Required? |Description|
 |------------|------|------------------------|
@@ -616,3 +616,5 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
+
+# Direct Connect - Hotel v2

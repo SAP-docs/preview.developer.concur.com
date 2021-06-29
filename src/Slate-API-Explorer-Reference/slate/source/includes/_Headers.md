@@ -6,7 +6,7 @@
 SAP Concur will send the user-name and password in both the HTTP header and the SOAP header. If the username and password generates an authentication error, then SAP Concur expects an HTTP 403 response.
 
 * [HTTP Headers](#http)
-  * [Troubleshooting](#troubleshooting)
+  * [Troubleshooting](#http-headers-troubleshooting)
 * [Soap Header](#soap)
 * [OTA Message Headers](#ota-message)
   * [Request Message Headers](#request-message)
@@ -38,7 +38,7 @@ Supported Soapactions:
 |`read`|Used to perform Read Itinerary |
 |`cancel`|Used to perform Cancel |
 
-### <a name="troubleshooting"></a>Troubleshooting
+### <a name="troubleshooting"></a>HTTP Headers - Troubleshooting
 
 In order to assist with troubleshooting, SAP Concur provides a unique correlationId in the request header. The key to look for is `correlationid`. This unique code can be used during troubleshooting as it identifies the API call in the log files. You should record this information in your own API call logs as well so that you can pass this information on to the SAP Concur support team.
 
