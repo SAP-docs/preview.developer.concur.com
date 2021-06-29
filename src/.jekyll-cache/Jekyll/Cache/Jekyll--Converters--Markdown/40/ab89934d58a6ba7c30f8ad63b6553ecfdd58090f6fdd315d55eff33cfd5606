@@ -1,0 +1,138 @@
+I"<ul>
+  <li><a href="#learn">Learn</a></li>
+  <li><a href="#phases">Phased Development Approaches</a></li>
+  <li><a href="#integration">Integration</a>
+    <ul>
+      <li><a href="#quick-connect">Quick Connect</a></li>
+      <li><a href="#profile">Company Profile</a></li>
+      <li><a href="#integration-extract">Financial posting via Extract</a></li>
+      <li><a href="#integration-manage-lists">Manage lists of Cost Object codes</a></li>
+      <li><a href="#integration-vendor-data">Add and update Vendor data</a></li>
+      <li><a href="#integration-purchase-order">Send Purchase Order data to SAP Concur</a> (Invoice Only)</li>
+      <li><a href="#integration-purchase-order-receipt">Send Purchase Order Receipt data to SAP Concur</a> (Invoice Only)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Thank you for your interest in an App Center Partnership to develop an ERP integration between SAP Concur’s products and your chosen ERP brand. The App Center Certification Program requires each desired ERP Brand to be certified. The certified application must support the Expense &amp; Invoice products for both of SAP Concur’s Editions (Standard + Professional Edition). Unless noted as <em>Optional</em> all portions are required.</p>
+
+<h2 id="learn"><a name="learn"></a>Learn</h2>
+
+<p>Use the following resources to get familiar with the SAP Concur product and then submit expense reports or invoices in your own sandbox. This will better position you to conduct end-to-end testing and be able to correlate a User’s experience to what you obtain via the APIs.</p>
+
+<ul>
+  <li><strong>Shared Technical Services Videos</strong> at <a href="http://www.concurtraining.com/prdeployment/sts">http://www.concurtraining.com/prdeployment/sts</a> - The videos found here will help you understand the unique types of transactions that can occur in the Expense product and their resulting impacts on the financial picture in the extract file.</li>
+</ul>
+
+<h2 id="phased-development-approaches"><a name="phases"></a>Phased Development Approaches</h2>
+
+<p>There is a likelihood the ERP integration components will need to be certified in a phased approach. If necessary, the phases are to be completed as specified below. Standard and Professional Editions must be supported with each phase. You cannot go to production with support for only one of the edition types since you will not know which edition type customers will use. The phases are to be done in this sequence and must include:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Phase 1</th>
+      <th>Phase 2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Quick Connect</td>
+      <td>Manage lists of Cost Object codes</td>
+    </tr>
+    <tr>
+      <td>Company Profile</td>
+      <td>Add and update Vendor data</td>
+    </tr>
+    <tr>
+      <td>Financial posting via Financial Integration Service</td>
+      <td>Send Purchase Order data to SAP Concur</td>
+    </tr>
+    <tr>
+      <td>-</td>
+      <td>Send Purchase Order Receipt data to SAP Concur</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="integration"><a name="integration"></a>Integration</h2>
+
+<h3 id="quick-connect"><a name="quick-connect"></a>Quick Connect</h3>
+
+<p><a href="./quick-connect-scope-for-enterprise-apps.html">Quick Connect Scope for Enterprise Apps</a></p>
+
+<p><strong>Quick Connect</strong> describes the process customers use to connect their SAP Concur site with an App Center Partner’s Enterprise application. See the separate Quick Connect scope document for details to guide you through the development of this required piece to your certified application.</p>
+
+<h3 id="company-profile"><a name="profile"></a>Company Profile</h3>
+
+<p><a href="/api-reference/profile/v1.company.html#erp-integration">Profile Company API v1 ERP Integration</a></p>
+
+<h3 id="financial-posting-via-extract"><a name="integration-extract"></a>Financial posting via Extract</h3>
+
+<p><strong>Professional Edition</strong>: Typical code flow is listed in the <a href="/api-reference/common/extracts/v1.extracts.html#erp-integration">Extracts v1 API ERP Integration</a>.</p>
+
+<p><strong>Standard Edition</strong>: Typical code flow is listed in the  <a href="/api-reference/expense/payment-batch/v1.payment-batches.html#erp-integration">Payment Batches v1 API ERP Integration</a></p>
+
+<p>Differences exist between Standard &amp; Professional in regards to how the client code obtains the data / extract file so it is important to first determine the Edition Type as noted in the <a href="#profile">Company Profile</a> section.</p>
+
+<p>The integration is slightly different depending on Expense or Invoice.</p>
+
+<ul>
+  <li><strong>Expense</strong>: Standard Accounting Extract</li>
+  <li><strong>Invoice</strong>: Payment Requests Accounting Extract</li>
+</ul>
+
+<h4 id="optional">Optional</h4>
+
+<p>If a customer requests that the ERP Partner obtain images to be added to their GL, use the <a href="/api-reference/image/v1.image.html#get-image-url">Image v1 API</a>.</p>
+
+<p>The GET Report Details API request will produce an Entry ID that will be used in this API request. The result will produce a URL that the ERP Partner can use in a separate browser session to render the image. This URL is short-lived (15 minutes). If the URL expires, then the ERP Partner can retry the same call to get another URI to render the image.</p>
+
+<blockquote>
+  <p>For the purposes of this API, the parameter variable {id} is acquired from the v2 GET Report Details API: <code class="language-plaintext highlighter-rouge">EntryID</code>.</p>
+</blockquote>
+
+<h3 id="manage-lists-of-cost-object-codes"><a name="integration-manage-lists"></a>Manage lists of Cost Object codes</h3>
+
+<p><a href="/api-reference/common/list-item/v3.list-item.html">List Item v3 API</a></p>
+
+<p>The integration is different depending on Expense or Invoice:</p>
+
+<ul>
+  <li>
+    <p><strong>Invoice</strong>: <strong>Required</strong> Use of the List API is required for the Invoice integration (e.g. for the custom list values that are part of the Vendor Master records).</p>
+  </li>
+  <li>
+    <p><strong>Expense</strong>: <em>Optional</em> Use of the List API is not required for the Expense integration at this time.</p>
+  </li>
+</ul>
+
+<p>The List API should be executed in an asynchronous manner. Here are two documents that illustrates asynchronous execution:</p>
+
+<ul>
+  <li><a href="https://spring.io/guides/gs/async-method/">https://spring.io/guides/gs/async-method/</a></li>
+  <li><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/">https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/concepts/async/</a></li>
+</ul>
+
+<h3 id="add-and-update-vendor-data"><a name="integration-vendor-data"></a>Add and update Vendor data</h3>
+
+<p><a href="/api-reference/invoice/v3.vendor.html">Vendor v3 API</a></p>
+
+<p>Invoice Only: <strong>Required</strong> for the basic integration and <strong>Required</strong> for the advanced integration.</p>
+
+<h3 id="send-purchase-order-data-to-sap-concur"><a name="integration-purchase-order"></a>Send Purchase Order data to SAP Concur</h3>
+
+<p><a href="/api-reference/invoice/v3.purchase-order.html">Purchase Order v3 API</a></p>
+
+<p>Invoice Only: <strong>Optional</strong> for the basic integration and <strong>Required</strong> for the advanced integration.</p>
+
+<h3 id="send-purchase-order-receipt-data-to-sap-concur"><a name="integration-purchase-order-receipt"></a>Send Purchase Order Receipt data to SAP Concur</h3>
+
+<p><a href="/api-reference/invoice/v3.purchase-order.html#schema-receipt">Purchase Order v3 API Receipt Schema</a></p>
+
+<p>Invoice Only: <strong>Optional</strong> for the basic integration and <strong>Required</strong> for the advanced integration.</p>
+
+<ul>
+  <li><strong>Training Toolkit</strong> at <a href="http://www.concurtraining.com/">http://www.concurtraining.com/</a> - These resources help you learn the SAP Concur product basics, administration and reporting.</li>
+</ul>
+:ET

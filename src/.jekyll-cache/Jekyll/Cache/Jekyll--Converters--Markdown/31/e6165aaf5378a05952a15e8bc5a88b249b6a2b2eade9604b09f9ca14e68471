@@ -1,0 +1,1297 @@
+I"…<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>The SAP Concur List Item API provides an automated solution to clients who would like to retrieve and add list items. Use of the API is subject to some limitations on the volume of list data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of list values involves a large volume.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#get-list-item-ID">Retrieve List Items by ID</a></li>
+  <li><a href="#post-list-item">Create a List Item</a></li>
+  <li><a href="#put-list-item">Update a List Item</a></li>
+  <li><a href="#children-list-item-ID">Retrieve Children of a List Item</a></li>
+  <li><a href="#children-list-ID">Retrieve First Level Children of a List</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#schema-list-item">List Item</a></li>
+      <li><a href="#schema-list-item-create">List Item Create</a></li>
+      <li><a href="#schema-list-item-update">List Item Update</a></li>
+      <li><a href="#schema-list-item-member-list">List Item Member List</a></li>
+      <li><a href="#schema-paged-resources-list-item">Paged Resources List Item</a></li>
+      <li><a href="#schema-message">Message</a></li>
+      <li><a href="#schema-page-metadata">Page Metadata</a></li>
+      <li><a href="#schema-link">Link</a></li>
+      <li><a href="#schema-error-message">Error Message</a></li>
+      <li><a href="#schema-validation-error">Validation Error</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="prior-versions">Prior Versions</h2>
+
+<ul>
+  <li>List Items v3 documentation is available <a href="https://developer.concur.com/api-reference/common/list-item/v3.list-item.html">here</a>.</li>
+  <li>List Items v1 documentation is available <a href="https://developer.concur.com/api-reference/common/list-item/v1.list-item.html">here</a>.</li>
+</ul>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="./v4-list-item-process-flow.png" alt="A process flow diagram of the List Item API" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+  <li>Concur Invoice Professional Edition</li>
+  <li>Concur Invoice Standard Edition</li>
+  <li>Concur Request Professional Edition</li>
+  <li>Concur Request Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spend.listitem.read</code></td>
+      <td>Read-only access to spend list items.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spend.listitem.write</code></td>
+      <td>Read and write access to spend list items.</td>
+      <td>GET, POST, PUT</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+<p>Users must be an Expense, Invoice, Shared or Request Configuration Administrator in order to perform POST and PUT actions.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports both company level and user level access tokens.</p>
+
+<h2 id="retrieve-list-items-by-id"><a name="get-list-item-ID"></a>Retrieve List Items by ID</h2>
+
+<p>Retrieve a list item by ID.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.listitem.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /list/v4/items/<span class="o">{</span>itemId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept-Language</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Language code. Default: <code class="language-plaintext highlighter-rouge">en</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">company-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Company UUID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier of the consumer making the API calls. Minimum length: 6 characters</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur employee UUID of the caller.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">itemId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The unique identifier of the list item (SYNC_GUID).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.2">RFC 7232 If-None-Match</a></li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a> - Entity does not exist</li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-2.3">RFC 7232 ETag</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item">List Item</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET https://us.api.concursolutions.com/list/v4/items/{itemId}
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer {token}
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 663d7795-fc21-4d98-ba31-87be20aeacd2
+content-length: 360
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 14:07:25 GMT
+etag: <span class="s2">"0950be10ca5a9f5069898e2468db6e137"</span>
+cache-control: no-cache, private
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"63b7fbd9-ae08-0840-abdb-62b0b9160081"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM-SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"parentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"hasChildren"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"lists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="create-a-list-item"><a name="post-list-item"></a>Create a List Item</h2>
+
+<p>Create a list item with the provided request body.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.listitem.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /list/v4/items
+</code></pre></div></div>
+
+<h5 id="parameters-1">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept-Language</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Language code. Default: <code class="language-plaintext highlighter-rouge">en</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">company-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Company UUID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier of the consumer making the API calls. Minimum length: 6 characters</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur employee UUID of the caller.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listItem</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List Item object that is created for the company.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item-create">List Item Create</a></li>
+</ul>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.13">415 Unsupported Media Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.2">RFC 7231 Location</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item">List Item</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET https://us.api.concursolutions.com/list/v4/lists
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+</span></code></pre></div></div>
+<p>Example 1:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"listId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Example 2:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"listId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"parentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 201
+concur-correlationid: 85b8deb7-db84-4dfb-bdca-d4bccb2ef06e
+content-length: 282
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 13:47:25 GMT
+location: http://localhost:5000/list/v4/items/7c6d0435-c4d1-8b48-8492-7e7b625e148d
+cache-control: no-cache, private
+</code></pre></div></div>
+<p>Example 1:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"parentId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"hasChildren"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"lists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>Example 2:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"63b7fbd9-ae08-0840-abdb-62b0b9160081"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM-SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"parentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"hasChildren"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"lists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="update-a-list-item"><a name="put-list-item"></a>Update a List Item</h2>
+
+<p>Update a list item with provided request body.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.listitem.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-4">Request</h3>
+
+<h4 id="uri-2">URI</h4>
+
+<h5 id="template-2">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /list/v4/items/<span class="o">{</span>itemId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-2">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept-Language</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Language code. Default: <code class="language-plaintext highlighter-rouge">en</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">company-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Company UUID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier of the consumer making the API calls. Minimum length: 6 characters</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur employee UUID of the caller.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">itemId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The unique identifier of the list item (SYNC_GUID).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listItem</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List Item object that is updated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item-update">List Item Update</a></li>
+</ul>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="status-codes-2">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a> - Entity does not exist</li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.13">415 Unsupported Media Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-5">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload-4">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item">List Item</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">PUT https://us.api.concursolutions.com/list/v4/items/7c6d0435-c4d1-8b48-8492-7e7b625e148d
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+</span></code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM UPDATED"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 27abed5d-20cc-4edf-81b6-3e2dbf70ba39
+content-length: 289
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 14:16:21 GMT
+cache-control: no-cache, private
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM UPDATED"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"parentId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"hasChildren"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"lists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="retrieve-children-of-a-list-item"><a name="children-list-item-ID"></a>Retrieve Children of a List Item</h2>
+
+<p>Allows you to retrieve children for a given list item.</p>
+
+<h3 id="scopes-3">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.listitem.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-6">Request</h3>
+
+<h4 id="uri-3">URI</h4>
+
+<h5 id="template-3">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /list/v4/items/<span class="o">{</span>itemId<span class="o">}</span>/children?page<span class="o">={</span>page<span class="o">}</span>&amp;sortBy<span class="o">={</span>sortBy<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-3">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept-Language</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Language code. Default: <code class="language-plaintext highlighter-rouge">en</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">company-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Company UUID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier of the consumer making the API calls. Minimum length: 6 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur Employee UUID of the caller.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">endDate</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hasChildren</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays items with children.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isDeleted</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays deleted items.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">itemId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The unique identifier of the list item (SYNC_GUID).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">page</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>Page number starting from 1. Default: <code class="language-plaintext highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">shortCode</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCodeOrValue</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">value</code> or <code class="language-plaintext highlighter-rouge">shortCode</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sortBy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Field to sort by. Supported values: <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">shortCode</code>. Default: <code class="language-plaintext highlighter-rouge">value</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sortDirection</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Sort direction. Supported values: <code class="language-plaintext highlighter-rouge">asc</code>, <code class="language-plaintext highlighter-rouge">desc</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">startDate</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">value</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-6">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.2">RFC 7232 If-None-Match</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h3 id="response-6">Response</h3>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-7">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-2.3">RFC 7232 ETag</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload-5">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item">List Item</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example-3">Example</h3>
+
+<h4 id="request-7">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET https://us.api.concursolutions.com/list/v4/items/7c6d0435-c4d1-8b48-8492-7e7b625e148d/children?page=1&amp;sortBy=value
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer {token}
+</span></code></pre></div></div>
+
+<h4 id="response-7">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 50dcec14-c984-479c-84e2-186a7e62f87e
+content-length: 449
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 14:27:13 GMT
+etag: <span class="s2">"05cb0f0ed5a73bedf1e8cd4171e360e41"</span>
+cache-control: no-cache, private
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"63b7fbd9-ae08-0840-abdb-62b0b9160081"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM-SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND LEVEL ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"hasChildren"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"80edb3fa-c15e-a34a-b97f-f2ec291ab44f"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"page"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"totalElements"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"totalPages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"number"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="retrieve-first-level-children-items-of-a-list"><a name="children-list-ID"></a>Retrieve First Level Children Items of a List</h2>
+
+<p>Allows you to retrieve the first level list items for a given List ID.</p>
+
+<h3 id="scopes-4">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.listitem.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-8">Request</h3>
+
+<h4 id="uri-4">URI</h4>
+
+<h5 id="template-4">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /list/v4/lists/<span class="o">{</span>listId<span class="o">}</span>/children?page<span class="o">={</span>page<span class="o">}</span>&amp;sortBy<span class="o">={</span>sortBy<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-4">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept-Language</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Language code. Default: <code class="language-plaintext highlighter-rouge">en</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">company-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Company UUID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier of the consumer making the API calls. Minimum length: 6 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur Employee UUID of the caller.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">endDate</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hasChildren</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays items with children.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isDeleted</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays deleted items.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The unique identifier of the list (SYNC_GUID).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">page</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>Page number starting from 1. Default: <code class="language-plaintext highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">shortCode</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCodeOrValue</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">value</code> or <code class="language-plaintext highlighter-rouge">shortCode</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sortBy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Field to sort by. Supported values: <code class="language-plaintext highlighter-rouge">value</code>, <code class="language-plaintext highlighter-rouge">shortCode</code>. Default: <code class="language-plaintext highlighter-rouge">value</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sortDirection</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Sort direction. Supported values: <code class="language-plaintext highlighter-rouge">asc</code>, <code class="language-plaintext highlighter-rouge">desc</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">startDate</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter capabilities for <code class="language-plaintext highlighter-rouge">value</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-8">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.2">RFC 7232 If-None-Match</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h3 id="response-8">Response</h3>
+
+<h4 id="status-codes-4">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-9">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-2.3">RFC 7232 ETag</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload-6">Payload</h4>
+
+<ul>
+  <li><a href="#schema-list-item">List Item</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example-4">Example</h3>
+
+<h4 id="request-9">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET https://us.api.concursolutions.com/list/v4/lists/7c6d0435-c4d1-8b48-8492-7e7b625e148d/children?page=1&amp;sortBy=value
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer {token}
+</span></code></pre></div></div>
+
+<h4 id="response-9">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 50dcec14-c984-479c-84e2-186a7e62f87e
+content-length: 449
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 14:27:13 GMT
+etag: <span class="s2">"05cb0f0ed5a73bedf1e8cd4171e360e41"</span>
+cache-control: no-cache, private
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+  </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"63b7fbd9-ae08-0840-abdb-62b0b9160081"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM-FIRST LEVEL ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST LEVEL ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST LEVEL ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"hasChildren"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7c6d0435-c4d1-8b48-8492-7e7b625e148d"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"page"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"totalElements"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"totalPages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"number"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="list-item"><a name="schema-list-item"></a>List Item</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td>The unique identifier of the list item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>List item long code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>List item short code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>List item value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">parentId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td>The unique identifier of the parent list item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td>The unique identifier of the list that contains the list item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">level</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>Level of the list item within the list.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hasChildren</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the list item has children.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lists</code></td>
+      <td><a href="#schema-list-item-member-list"><code class="language-plaintext highlighter-rouge">ListItemMemberList</code></a></td>
+      <td>-</td>
+      <td>The unique identifiers of the lists that contains the list item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isDeleted</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the list item is deleted.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="list-item-create"><a name="schema-list-item-create"></a>List Item Create</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td><strong>Required</strong> The unique identifier of the list that contains the list item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">parentId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td>The unique identifier of parent list item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List item short code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List item value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="list-item-update"><a name="schema-list-item-update"></a>List Item Update</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">shortCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List item short code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List item value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="list-item-member-list"><a name="schema-list-item-member-list"></a>List Item Member List</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td>The unique identifier of the list that contains the list item.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="paged-resources-list-item"><a name="schema-paged-resources-list-item"></a>Paged Resources List Item</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">content</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-list-item"><code class="language-plaintext highlighter-rouge">ListItem</code></a></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">page</code></td>
+      <td><a href="#schema-page-metadata"><code class="language-plaintext highlighter-rouge">PageMetadata</code></a></td>
+      <td>-</td>
+      <td>Metadata for the page of data returned</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">links</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-link"><code class="language-plaintext highlighter-rouge">Link</code></a></td>
+      <td>Metadata for the page of data returned</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-message"><a name="schema-error-message"></a>Error Message</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">error</code></td>
+      <td><a href="#schema-message"><code class="language-plaintext highlighter-rouge">Message</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The detailed error message.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">httpStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The http response code and phrase for the response.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The URI of the attempted request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date-time</code></td>
+      <td><strong>Required</strong> The time when the error was captured.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">validationErrors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-validation-error"><code class="language-plaintext highlighter-rouge">ValidationError</code></a></td>
+      <td>The validation error messages.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="validation-error"><a name="schema-validation-error"></a>Validation Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The detailed message of the validation error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The type of validation that failed.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="message"><a name="schema-message"></a>Message</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">msg</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The detailed error message.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The identifier of the error.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="page-metadata"><a name="schema-page-metadata"></a>Page Metadata</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The page number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">size</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The page size.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">totalElements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The number of total elements.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">totalPages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The number of total pages.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="link"><a name="schema-link"></a>Link</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The link relation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The link href.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

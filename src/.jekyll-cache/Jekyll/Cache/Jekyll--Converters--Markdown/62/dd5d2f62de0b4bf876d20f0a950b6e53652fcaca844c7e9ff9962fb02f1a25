@@ -1,0 +1,494 @@
+I"i<ul>
+  <li><a href="#base_uris">Base URIs</a></li>
+  <li><a href="#exchangetoken">Exchanging a Token</a></li>
+  <li><a href="#response_codes">Response Codes</a></li>
+</ul>
+
+<p>Existing applications that use the <a href="/api-reference/authentication/authorization-pre-2017.html">Pre-2017 Authorization (Deprecated)</a> framework need to move to support the new Oauth2 Bearer Tokens. Applications will need to migrate their existing users who already have connected to it to obtain new Oauth2 tokens without requiring users to reauthorize. This can be done by exchanging an old access token for a new refresh token.</p>
+
+<h2 id="base-uris"><a name="base_uris"></a>Base URIs</h2>
+
+<p>When making API calls, the appropriate base URI for the user’s geolocation should be used. See the <a href="/platform/base-uris.html">Base URIs</a> page for the full list.</p>
+
+<h2 id="exchanging-a-token"><a name="exchangetoken"></a>Exchanging a Token</h2>
+
+<p>In order to support new Oauth2, applications need to exchange old access token for new <code class="language-plaintext highlighter-rouge">accessToken</code> and <code class="language-plaintext highlighter-rouge">refreshToken</code> pair. Once obtained, applications should store these <code class="language-plaintext highlighter-rouge">refreshTokens</code> as part of users authorization data.</p>
+
+<p>The new Oauth2 <code class="language-plaintext highlighter-rouge">accessToken</code> has a one hour lifetime. Once expired, applications would need to call Oauth2’s <code class="language-plaintext highlighter-rouge">/v0/token</code> endpoint using a <code class="language-plaintext highlighter-rouge">refresh_grant</code>, passing in the user’s <code class="language-plaintext highlighter-rouge">refreshtoken</code> to obtain a fresh <code class="language-plaintext highlighter-rouge">accessToken</code>.</p>
+
+<p>This is significantly different from how the deprecated /net2/Oauth2’s method of handling access tokens. Partner’s would have to store the new Oauth2 <code class="language-plaintext highlighter-rouge">refreshToken</code> instead of the old access token. Before making a call to any of Concur’s new v4 APIs, it is advisable to request for a new <code class="language-plaintext highlighter-rouge">accessToken</code> before making the API call.</p>
+
+<p><strong>Step 1: Obtain Application Token</strong>
+Clients can exchange OLD tokens for NEW Oauth2 tokens by calling the <code class="language-plaintext highlighter-rouge">exchangeRefreshToken/me</code> endpoint. In order to call this endpoint, you would first need to obtain an Application Token by calling the <code class="language-plaintext highlighter-rouge">/v0/token</code> endpoint with the <a href="https://developer.concur.com/api-reference/authentication/apidoc.html#client_credentials">client_credentials</a> grant.</p>
+
+<p>The endpoint also supports a parameter called “returnType=companyToken”  This parameter allows a partner who already has what is known as a “WSAdmin” token for a client, to exchange that token for a Company level refresh token.</p>
+
+<p><strong>Step 2: Call exchangeRefreshToken</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">POST /appmgmt/v0/legacyApps/{OLDConsumerKey}/exchangeRefreshToken/me</code></p>
+
+<p>If you are exchanging a WSAdmin token for a new Company level refresh token:</p>
+
+<p><code class="language-plaintext highlighter-rouge">POST /appmgmt/v0/legacyApps/{OLDConsumerKey}/exchangeRefreshToken/me?returnType=companyToken</code></p>
+
+<p><strong>Request Header</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Authorization</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Bearer &lt;accessToken&gt;</code></td>
+      <td><strong>Required</strong> The NEW client_credentials accessToken.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Request Body</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">token</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td> </td>
+      <td><strong>Required</strong> The OLD refreshToken</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">secret</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td> </td>
+      <td><strong>Required</strong> The NEW application client_secret</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Sample Curl:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;accessToken&gt;'</span> <span class="nt">-d</span> <span class="s1">'{"token": "1_oaCof444CaiNXg1FFG$Perr19qIo", "secret": "12345"}'</span> <span class="nt">-X</span> POST https://us.api.concursolutions.com/appmgmt/v0/legacyApps/Bwu0mvTHtKYAnBb3Pgu9AW/exchangeRefreshToken/me
+</code></pre></div></div>
+
+<p>successful call, responds with</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">200</span><span class="w"> </span><span class="err">OK</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8c844478-745c-4c45-adf7-1e2777a50dbf"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"created"</span><span class="p">:</span><span class="w"> </span><span class="mi">1479407196809</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"expired"</span><span class="p">:</span><span class="w"> </span><span class="mi">1494959196809</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"EXPRPT"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"LIST"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"BANK"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"CCARD"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{</span><span class="se">\"</span><span class="s2">userid</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">7934467f-dcd1-4631-ba34-3ebd28343e8f</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">cid</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">3a55c75e-ac1e-4515-845c-0a4978452828</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">ptype</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">user</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">userURI</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">https://us.api.concursolutions.com/profile-service/v1/users/7934467f-dcd1-4631-ba34-3ebd28343e8f</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">scope</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">EXPRPT LIST BANK CCARD</span><span class="se">\"</span><span class="s2">}"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Sample Curl for WSAdmin token exchange for Company level refreh token:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;accessToken&gt;'</span> <span class="nt">-d</span> <span class="s1">'{"token": "1_oaCof444CaiNXg1FFG$Perr19qIo", "secret": "12345"}'</span> <span class="nt">-X</span> POST https://us.api.concursolutions.com/appmgmt/v0/legacyApps/Bwu0mvTHtKYAnBb3Pgu9AW/exchangeRefreshToken/me?returnType<span class="o">=</span>companyToken
+</code></pre></div></div>
+
+<p>successful call, responds with</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">200</span><span class="w"> </span><span class="err">OK</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8c844478-745c-4c45-adf7-1e2777a50dbf"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"created"</span><span class="p">:</span><span class="w"> </span><span class="mi">1479407196809</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"expired"</span><span class="p">:</span><span class="w"> </span><span class="mi">1494959196809</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"EXPRPT"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"LIST"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"BANK"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"CCARD"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{</span><span class="se">\"</span><span class="s2">userid</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">7934467f-dcd1-4631-ba34-3ebd28343e8f</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">cid</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">3a55c75e-ac1e-4515-845c-0a4978452828</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">ptype</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">company</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">userURI</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">https://us.api.concursolutions.com/profile-service/v1/users/7934467f-dcd1-4631-ba34-3ebd28343e8f</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">scope</span><span class="se">\"</span><span class="s2">:</span><span class="se">\"</span><span class="s2">EXPRPT LIST BANK CCARD</span><span class="se">\"</span><span class="s2">}"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Step 3: Obtain New Access Token</strong></p>
+
+<p>Once you have the NEW <code class="language-plaintext highlighter-rouge">refreshToken</code> from the response (<code class="language-plaintext highlighter-rouge">8c844478-745c-4c45-adf7-1e2777a50dbf</code>) you can then proceed to call <code class="language-plaintext highlighter-rouge">/v0/token</code> using the refresh grant to obtain a NEW Oauth2 <code class="language-plaintext highlighter-rouge">accessToken</code>.</p>
+
+<p>Sample Curl:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="s1">'https://us.api.concursolutions.com/oauth2/v0/token'</span> <span class="nt">-d</span> <span class="s1">'client_id=3a55c75e-ac1e-4515-845c-0a4978452828&amp;client_secret=12345&amp;grant_type=refresh_token&amp;refresh_token=8c844478-745c-4c45-adf7-1e2777a50dbf'</span>
+</code></pre></div></div>
+
+<p>successful call, responds with:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">200</span><span class="w"> </span><span class="err">OK</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EXPRPT LIST BANK CCARD"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJ0...demo...eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjE0NTU2MTQzNDYifQ.eyJjb25jdXIuc2NvcGVzIjpbIkVYUFJQVCIsIkxJU1QiLCJCQU5LIiwiQ0NBUkQiXSwiYXVkIjoiKiIsImNvbmN1ci5wcm9maWxlIjoiaHR0cHM6Ly91cy1ycWEzLmFwaS5jb25jdXJzb2x1dGlvbnMuY29tL3Byb2ZpbGUvdjEvcHJpY2lwYWxzLzc5NmI0NjdmLWRjZDEtNDYzMS1iYTg1LTNlYmQyOGIzNmU4ZiIsImNvbmN1ci52ZXJzaW9uIjoyLCJjb25jdXIudHlwZSI6InVzZXIiLCJjb25jdXIuYXBwIjoiaHR0cHM6Ly91cy1ycWEzLmFwaS5jb25jdXJzb2x1dGlvbnMuY29tL3Byb2ZpbGUvdjEvYXBwcy9lMDEwZTI1ZC1iNGNlLTRjZTMtYTdlNiLCJzdWIiOiI3OTZiNDY3Zi1kY2QxLTQ2MzEtYmE4NS0zZWJkMjhiMzZlOGYiLCJpc3MiOiJodHRwczovL3VzLXJxYTMuYXBpLmNvbmN1cnNvbHV0aW9ucy5jb20iLCJleHAiOjE0Nzk0MTU4NjksImxlZ2FjeV9hcHBsaWNhdGlvbl9pZCI6MTUwMDA2MzY1OSwidXNlclVSSSI6Imh0dHBzOi8vdXMtcnFhMy5hcGkuY29uY3Vyc29sdXRpb25zLmNvbS9wcm9maWxlLXNlcnZpY2UvdjEvdXNlcnMvNzk2YjQ2N2YtZGNkMS00NjMxLWJhODUtM2ViZDI4YjM2ZThmIiwidXNlcnV1aWQiOiI3OTZiNDY3Zi1kY2QxLTQ2MzEtYmE4NS0zZWJkMjhiMzZlOGYiLCJuYmYiOjE0Nzk0MTIyNjksImh0dHBzOi8vYXBpLmNvbmN1cnNvbHV0aW9ucyiaHR0cHM6Ly91cy1ycWEzLmFwaS5jb25jdXJzb2x1dGlvbnMuY29tL3Byb2ZpbGUvdjEvYXBwcy9lMDEwZTI1ZC1iNGNlLTRjZTMtYTdlNC1iNjcwY2IxYWRjYjAiLCJodHRwczovL2FwaS5jb25jdXJzb2x1dGlvbnMuY29tL3Njb3BlcyI6WyJFWFBSUFQiLCJMSVNUIiwiQkFOSyIsIkNDQVJEIl0sImlhdCI6MTQ3OTQxMjI2OX0.I4EeqKZbpfFonitGBZnLBb20NwMjZNNp5e1d3-BRsepEcJSVCVYIV9HAB2EkkopvoLJsAittiZgD0iDwuh2WVgUt_c4QGzNc_-rXRtCIeKyPQRvxUZNQ7y5RTqEQFNo7hrtXiNZ-yV30zlbijP-12XU5Cu4n2VXgRKxvcCUr5j0RcovUc6O0aOR7VTzj4ZbiDdijOEtmKWGluAYyfIlz8XF2aErAB5Jff2fr9UvgHgtbleYV7eBSesvd9hJEk4S-OAtmFoJwLDECLtLcBKyeHnPEe7LmkLYShcflWG2_tYk4ysPIMG6ne5kRNxJKsDbkMItjpXhujBEGi7YIPWtFWQ"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"31456dcd-b46a-4292-b2d3-f97033338487"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"geolocation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="response-codes"><a name="response_codes"></a>Response Codes</h2>
+
+<h5 id="http-status-returned-by-exchangeaccesstoken">HTTP Status returned by exchangeAccessToken</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>HTTP Status</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>200</td>
+      <td>OK - Successful call, response is in body.</td>
+    </tr>
+    <tr>
+      <td>400</td>
+      <td>Bad Request - see list of responses below.</td>
+    </tr>
+    <tr>
+      <td>404</td>
+      <td>Not Found</td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>Server Error, error message is in body.</td>
+    </tr>
+    <tr>
+      <td>503</td>
+      <td>Server Timed Out, error message is in body.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="exchangeaccesstoken-response-codes">exchangeAccessToken Response Codes</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>CODE</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OK</td>
+      <td>OK - Successful call, response is in body.</td>
+    </tr>
+    <tr>
+      <td>INVALIDSCOPES</td>
+      <td>One or more scopes requested are not a subset of the allowed scopes.</td>
+    </tr>
+    <tr>
+      <td>INVALIDAPP</td>
+      <td>Application is invalid</td>
+    </tr>
+    <tr>
+      <td>INVALIDTOKEN</td>
+      <td>Bad or expired token</td>
+    </tr>
+    <tr>
+      <td>UNAUTHORIZED</td>
+      <td>Invalid credentials</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="http-status-returned-by-oauth2">HTTP Status returned by oauth2</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>HTTP Status</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>200</td>
+      <td>OK - Successful call, response is in body.</td>
+    </tr>
+    <tr>
+      <td>400</td>
+      <td>Bad Request <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>401</td>
+      <td>Unauthorized <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>403</td>
+      <td>Forbidden <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>404</td>
+      <td>Not Found <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>Server Error, error message is in body.</td>
+    </tr>
+    <tr>
+      <td>503</td>
+      <td>Server Timed Out, error message is in body.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>4xx class errors have a JSON response with the following fields</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;number&gt;</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;error&gt;</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error_description"</span><span class="p">:</span><span class="w"> </span><span class="err">&lt;error_description&gt;</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="token">/token</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Error</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>5</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Incorrect credentials. Please Retry</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Account is disabled. Please contact support</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Account is disabled. Please contact support</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Logon Denied. Please contact support</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Logon Denied. Please contact support</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Account Locked. Please contact support</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>user lives elsewhere</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Incorrect credentials. Please Retry</td>
+    </tr>
+    <tr>
+      <td>51</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>username was not supplied</td>
+    </tr>
+    <tr>
+      <td>52</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>password was not supplied</td>
+    </tr>
+    <tr>
+      <td>53</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_client</code></td>
+      <td>company is not enabled for this client</td>
+    </tr>
+    <tr>
+      <td>54</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_scope</code></td>
+      <td>requested scope exceeds granted scope</td>
+    </tr>
+    <tr>
+      <td>55</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>we don’t know this email</td>
+    </tr>
+    <tr>
+      <td>56</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">otp</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>57</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">channel_type</code> missing</td>
+    </tr>
+    <tr>
+      <td>58</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">channel_handle</code> missing</td>
+    </tr>
+    <tr>
+      <td>59</td>
+      <td><code class="language-plaintext highlighter-rouge">access_denied</code></td>
+      <td>client disabled</td>
+    </tr>
+    <tr>
+      <td>60</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>these are not the grants you are looking for</td>
+    </tr>
+    <tr>
+      <td>61</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_client</code></td>
+      <td>client not found</td>
+    </tr>
+    <tr>
+      <td>62</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">client_id</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>63</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">client_secret</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>64</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_client</code></td>
+      <td>Incorrect credentials. Please Retry</td>
+    </tr>
+    <tr>
+      <td>65</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">grant_type</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>80</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>invalid channel type</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>bad channel handle</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>otp not found</td>
+    </tr>
+    <tr>
+      <td>84</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>fact verification failed</td>
+    </tr>
+    <tr>
+      <td>85</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>otp verification failed</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>backend does not know about this username</td>
+    </tr>
+    <tr>
+      <td>101</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>code was not supplied</td>
+    </tr>
+    <tr>
+      <td>102</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">redirect_uri</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>103</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>code is bad or expired</td>
+    </tr>
+    <tr>
+      <td>104</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td><code class="language-plaintext highlighter-rouge">redirect_uri</code> does not match the previous grant</td>
+    </tr>
+    <tr>
+      <td>105</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>this grant was not issued to you!</td>
+    </tr>
+    <tr>
+      <td>106</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">refresh_token</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>107</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>refresh disallowed for app</td>
+    </tr>
+    <tr>
+      <td>108</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>bad or expired refresh token</td>
+    </tr>
+    <tr>
+      <td>109</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">loginid</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>115</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>unauthenticated client will not be issued token!</td>
+    </tr>
+    <tr>
+      <td>117</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>nonce is mandatory for this <code class="language-plaintext highlighter-rouge">response_type</code></td>
+    </tr>
+    <tr>
+      <td>118</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>display is invalid</td>
+    </tr>
+    <tr>
+      <td>119</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>prompt is invalid</td>
+    </tr>
+    <tr>
+      <td>119</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>prompt must be set to consent for <code class="language-plaintext highlighter-rouge">offline_access</code></td>
+    </tr>
+  </tbody>
+</table>
+:ET

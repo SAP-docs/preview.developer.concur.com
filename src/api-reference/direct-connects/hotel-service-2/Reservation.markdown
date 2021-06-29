@@ -53,10 +53,8 @@ Message to reserve a hotel.
     * [Room Stays](#res-room-stays)
     * [Room Stay](#room-stay)
     * [Rate Plan](#res-rate-plan)
-    * [RoomRates](#room-rates)
-    * [RoomRate](#room-rate)
-    * [Rates](#rates)
-    * [Rate](#rate)
+    * [Cancel Penalty](#cancel-penalty)
+    * [Penalty Description](#penalty-description)
 
 ## <a name="request"></a>Request
 
@@ -73,7 +71,7 @@ Message to reserve a hotel.
                     PrimaryLangID="de" AltLangID="de">
       <POS>
         <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
+          <RequestorID Type="4" ID="s1"></RequestorID>
         </Source>
       </POS>
       <HotelReservations>
@@ -85,15 +83,15 @@ Message to reserve a hotel.
                   <Guarantee GuaranteeType="CC/DC/Voucher">
                     <GuaranteesAccepted>
                       <GuaranteeAccepted>
-                        <PaymentCard CardCode="VI" ExpireDate="1027">
+                        <PaymentCard CardCode="VI" ExpireDate="1018">
                           <CardType Code="VI">VISA</CardType>
                           <CardHolderName>Jane Doe</CardHolderName>
                           <Address>
                             <StreetNmbr>600 13TH ST NE</StreetNmbr>
                             <CityName>WASHINGTON</CityName>
                             <PostalCode>20002</PostalCode>
-                            <StateProv StateCode="DC">District of Columbia</StateProv>
-                            <CountryName Code="US">United States of America</CountryName>
+                            <StateProv StateCode="DC"></StateProv>
+                            <CountryName>US</CountryName>
                           </Address>
                           <SeriesCode>
                             <PlainText>xxx</PlainText>
@@ -127,14 +125,14 @@ Message to reserve a hotel.
                         <GivenName>JANE</GivenName>
                         <Surname>DOE</Surname>
                       </PersonName>
-                      <Telephone PhoneNumber="703-555-6100"></Telephone>
+                      <Telephone PhoneNumber="703-837-6100"></Telephone>
                       <Email>jane.doe@example.com</Email>
                       <Address>
                         <AddressLine>209 Madison St Suite 400</AddressLine>
                         <CityName>Alexandria</CityName>
                         <PostalCode>22314</PostalCode>
                         <StateProv StateCode="VA"></StateProv>
-                        <CountryName Code="US">United States of America</CountryName>
+                        <CountryName Code="US">USA</CountryName>
                       </Address>
                       <CitizenCountryName Code="US"></CitizenCountryName>
                     </Customer>
@@ -161,8 +159,8 @@ Message to reserve a hotel.
         <TPA_Extensions>
           <NotifyEmails>
             <NotifyEmails>jane.doe@example.com</NotifyEmails>
-            <NotifyEmails>arranger@example.com</NotifyEmails>
-            <NotifyEmails>manager@example.com</NotifyEmails>
+            <NotifyEmails>a@b.cz</NotifyEmails>
+            <NotifyEmails>d@f.cz</NotifyEmails>
           </NotifyEmails>
           <CustomFields>
             <CustomField Name="trip1" Value="value1t"></CustomField>
@@ -224,7 +222,7 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |--------------------|-------------------|-------------|
-|`GuaranteeType`|`stringLength1to32`|**Required** `CC/DC/Voucher` will be sent if credit card present, `None` otherwise.|
+|`GuaranteeType`|`stringLength1to32`|**Required** Refer to `GuaranteeType` in [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html).|
 |`GuaranteesAccepted`|`complex`|**Required** Guarantee and payment information.|
 
 #### <a name="guarantees-accepted"></a>GuaranteesAccepted
@@ -243,7 +241,7 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |----------------|-------------------|-------------|
-|`CardCode`|`upperCaseAlphaLength1to2`|Issuer code. Example: `AX`, `CA`, `DC`, `DS`, `JC`, `VI`. Map to AMEX, Mastercard, Diners Club, Discover, JCB, Visa|
+|`CardCode`|`upperCaseAlphaLength1to2`|Issuer code. Example: `MC`, `VI`, `AX`.|
 |`ExpireDate`|`MMYYDate`|Indicates the ending date.|
 |`CardType`|`stringLength1to32`|**Required** Payment card type. Example: `MasterCard`|
 |`CardHolderName`|`stringLength1to32`|**Required** Card holder name.|
@@ -296,7 +294,7 @@ Message to reserve a hotel.
 |`BirthDate`|`date`|Customer's birthday.|
 |`PersonName`|`complex`|Element representing a customer's name.|
 |`Telephone`|`complex`|Element representing a telephone number.|
-|`Email`|`stringLength1to128`|Email address.|
+|`Email`|`stringLength1to32`|Email address.|
 |`Address`|`complex`|Refer to `Address` in [Search](/api-reference/direct-connects/hotel-service-2/Search.html).|
 |`CitizenCountryName`|`complex`|ISO 3166 representation of the user's country as defined in their SAP Concur Profile.|
 
@@ -304,7 +302,7 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |-------------|-------------------|-------------|
-|`NamePrefix`|`stringLength1to16`|Salutation of honorific. List subject to change. Example values: `Mr`, `Mrs`, `Ms`, `Miss`, `Dr`, `Rev`, `Sir`, `Lord`, `Lady`, `Dr Mr`, `Dr Mrs`, `Dr Ms`, `Prof Mr`, `Prof Mrs`, `Prof Ms`, `Prof Dr Mr`, `Prof Dr Mrs`, `Prof Dr Ms`. **Note:** Prefixes can be specified in any of the languages supported by Concur Travel.|
+|`NamePrefix`|`stringLength1to16`|Salutation of honorific. Supported values: `Mr`, `Mrs`, `Ms`, `Miss`, `Dr`, `Rev`, `Sir`, `Lord`, `Lady`, `Dr Mr`, `Dr Mrs`, `Dr Ms`, `Prof Mr`, `Prof Mrs`, `Prof Ms`, `Prof Dr Mr`, `Prof Dr Mrs`, `Prof Dr Ms`|
 |`GivenName`|`stringLength1to64`|Given name, first name or names.|
 |`Surname`|`stringLength1to64`|**Required** Family name, last name. May also be used for full name if the sending system does not have the ability to separate a full name into its parts. Example: the surname element may be used to pass the full name.|
 
@@ -346,7 +344,7 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |---------------|----------|-------------|
-|`ProgramCode`|`stringLength1to32`|**Required** Always `HotelLoyaltyProgram` for hotels|
+|`ProgramCode`|`stringLength1to32`|**Required** The code or name of the reward program. Example: `HotelLoyaltyProgram`|
 |`AccountID`|`stringLength1to64`|**Required** The account identification number for this particular member in this particular program.|
 
 #### <a name="comments-two"></a>Comments
@@ -373,7 +371,7 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |--------------|--------- |-------------|
-|`NotifyEmails`|`stringLength1to128`|**Required** There will be one (1) `NotifyEmails` element per email address in the configuration.|
+|`NotifyEmails`|`stringLength1to32`|**Required** There will be one (1) `NotifyEmails` element per email address in the configuration.|
 
 #### <a name="custom-fields"></a>CustomFields
 
@@ -432,6 +430,35 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
                 <RoomRate>
                   <Rates>
                     <Rate>
+                      <PaymentPolicies>
+                        <GuaranteePayment>
+                          <AcceptedPayments>
+                            <AcceptedPayment>
+                              <PaymentCard>
+                                <CardType>VISA</CardType>
+                              </PaymentCard>
+                            </AcceptedPayment>
+                          </AcceptedPayments>
+                        </GuaranteePayment>
+                        <GuaranteePayment>
+                          <AcceptedPayments>
+                            <AcceptedPayment>
+                              <PaymentCard>
+                                <CardType>Mastercard</CardType>
+                              </PaymentCard>
+                            </AcceptedPayment>
+                          </AcceptedPayments>
+                        </GuaranteePayment>
+                        <GuaranteePayment>
+                          <AcceptedPayments>
+                            <AcceptedPayment>
+                              <PaymentCard>
+                                <CardType>AmericanExpress</CardType>
+                              </PaymentCard>
+                            </AcceptedPayment>
+                          </AcceptedPayments>
+                        </GuaranteePayment>
+                      </PaymentPolicies>
                       <Total AmountAfterTax="185.00" AmountBeforeTax="85.00" CurrencyCode="EUR"/>
                     </Rate>
                   </Rates>
@@ -497,8 +524,8 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
 
 |Value|Description|
 |-----------|----------|
-|`Cancelled`|The item is cancelled.|
-|`Committed`|The item is reserved.|
+|`Cancelled`|-|
+|`Committed`|-|
 |`Unsuccessful`|-|
 |`Reserved`|The item is reserved.|
 
@@ -508,7 +535,7 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
 |---------|------------|-------------|
 |`HotelReservation`|`complex`|**Required** A reference to identify the booking.|
 
-#### <a name="res-hotel-reservation"></a>HotelReservation
+#### <a name="hotel-reservation"></a>HotelReservation
 
 |Name|Type|Description|
 |---------|------------|-------------|
@@ -529,10 +556,10 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
 |-------|-------------|
 |`14`|Reservation ID used in subsequent calls (`Itinerary`, `Cancel`).|
 |`15`|Cancellation number, displayed in UI, proof of cancellation. |
-|`40`|Hotel Reservation System Confirmation number (for future use).|
+|`40`|Confirmation number for future use (not used now).|
 |`1000`|Cancellation/modification code. This will be rendered on itinerary page and can be used to change the reservation outside of the SAP Concur system. SAP Concur-specific OTA extension. |
 
-#### <a name="res-room-stays"></a>RoomStays
+#### <a name="room-stays"></a>RoomStays
 
 |Name|Type|Description|
 |---------|------------|-------------|
@@ -543,35 +570,22 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
 |Name|Type|Description|
 |---------|------------|-------------|
 |`RatePlans`|`complex`|**Required** A collection of rate plans associated with a particular room stay.|
-|`Timespan`|`complex`|**Required** Refer to `TimeSpan` in [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html).|
-|`BasicPropertyInfo`|`complex`|**Required** See [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html).|
 
-#### <a name="res-rate-plan"></a>RatePlan
+#### <a name="rate-plan"></a>RatePlan
 
 |Name|Type|Description|
 |---------|------------|-------------|
-|`CancelPenalties`|`complex`| Refer to `CancelPenalties` in [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html).|
+|`CancelPenalties`|`complex`|Collection of cancellation penalties.|
+|`CancelPolicyIndicator`|`boolean`|If `true`, indicates a cancel policy exists. If `false`, no cancel policy exists. Typically this indicator is used when details are not being sent.|
 
-#### <a name="room-rates"></a>RoomRates
-
-|Name|Type|Description|
-|------------------------|--------------------|-------------|
-|`RoomRate`|`complex`|**Required** `RoomRate` used for reservation. SAP Concur only expects one (1) `RoomRate`.|
-
-#### <a name="room-rate"></a>RoomRate
+#### <a name="cancel-penalty"></a>CancelPenalty
 
 |Name|Type|Description|
-|------------------------|--------------------|-------------|
-|`Rates`|`complex`|**Required** SAP Concur only expects one (1) `Rates`.|
+|---------|------------|-------------|
+|`PenaltyDescription`|`complex`|Text description of the penalty in a given language. Maximum elements: `9`|
 
-#### <a name="rates"></a>Rates
-
-|Name|Type|Description|
-|------------------------|--------------------|-------------|
-|`Rate`|`complex`|**Required** Contains the payment policy for the given room. SAP Concur only expects one (1) `Rate`.|
-
-#### <a name="rate"></a>Rate
+#### <a name="penalty-description"></a>PenaltyDescription
 
 |Name|Type|Description|
-|------------------------|--------------------|-------------|
-|`Total`|`complex`|**Required** A description of the rate. Refer to `Total` in [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html#total).|
+|---------|------------|-------------|
+|`Text`|`formattedTextTextType`|Formatted text content.|

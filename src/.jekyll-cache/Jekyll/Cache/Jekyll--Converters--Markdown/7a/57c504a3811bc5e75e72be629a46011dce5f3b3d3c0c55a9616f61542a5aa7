@@ -1,0 +1,326 @@
+I"}6<p>SAP Concur will send the user-name and password in both the HTTP header and the SOAP header. If the username and password generates an authentication error, then SAP Concur expects an HTTP 403 response.</p>
+
+<ul>
+  <li><a href="#http">HTTP Headers</a>
+    <ul>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+    </ul>
+  </li>
+  <li><a href="#soap">Soap Header</a></li>
+  <li><a href="#ota-message">OTA Message Headers</a>
+    <ul>
+      <li><a href="#request-message">Request Message Headers</a></li>
+      <li><a href="#response-message">Response Message Headers</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="http-headers"><a name="http"></a>HTTP Headers</h1>
+
+<p>SAP Concur will send the following HTTP headers in every request.  The contents of the Authentication header will be repeated in the SOAP payload. Please note that some libraries used to handle the requests may be case sensitive.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Authorization</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>A Base64 encoded string in the form of <code class="language-plaintext highlighter-rouge">Basic &lt;username:password&gt;</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SOAPAction</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The message type. The action will always be sent in lowercase. Example: <code class="language-plaintext highlighter-rouge">search</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Content-Type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>All communication with the HS2 API is by way of a <code class="language-plaintext highlighter-rouge">application/xml</code> content type.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur will always set the <code class="language-plaintext highlighter-rouge">Accept</code> header to <code class="language-plaintext highlighter-rouge">application/xml</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Accept-Charset</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>SAP Concur will always set the <code class="language-plaintext highlighter-rouge">Accept-Charset</code> header to <code class="language-plaintext highlighter-rouge">utf-8</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>This unique code can be used during troubleshooting as it identifies the API call in the log files.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-traveleruuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>UUID that identifies the traveler within concur. Only sent when available.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concur-loginid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Login ID of traveler within concur. Only sent when available.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Supported Soapactions:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Soapaction</th>
+      <th>Functionality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">search</code></td>
+      <td>Used to perform Search</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">availability</code></td>
+      <td>Used to perform Availability</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">detail</code></td>
+      <td>Used to perform Hotel Description</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">book</code></td>
+      <td>Used to perform Reservation</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">read</code></td>
+      <td>Used to perform Read Itinerary</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cancel</code></td>
+      <td>Used to perform Cancel</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="troubleshooting"><a name="troubleshooting"></a>Troubleshooting</h2>
+
+<p>In order to assist with troubleshooting, SAP Concur provides a unique correlationId in the request header. The key to look for is <code class="language-plaintext highlighter-rouge">correlationid</code>. This unique code can be used during troubleshooting as it identifies the API call in the log files. You should record this information in your own API call logs as well so that you can pass this information on to the SAP Concur support team.</p>
+
+<p>Example HTTP Header from network capture:</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">Accept: application/xml
+Accept-Charset: utf-8
+Authorization: *******************
+concur-correlationid: A75CE5BC-90BA-4BF8-8DEA-69FA2E66E936
+concur-loginid: abc@concur.com
+concur-traveleruuid: &lt;valid uuid&gt;
+Content-Type: application/xml; charset="utf-8"
+SOAPAction: search
+Accept-Encoding: gzip
+</span></code></pre></div></div>
+
+<h1 id="soap-header"><a name="soap"></a>Soap Header</h1>
+
+<p>The Soap header nested in the Envelope will contain an authentication element.</p>
+
+<p><strong>authentication</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> Contains the authentication details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">password</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> Contains the authentication details.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Sample:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Header</span> <span class="na">xmlns=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;authentication</span> <span class="na">xmlns=</span><span class="s">"http://www.concur.com/webservice/auth"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;userid&gt;</span>testLogin123<span class="nt">&lt;/userid&gt;</span>
+    <span class="nt">&lt;password&gt;</span>xxxxxxxxxxxx<span class="nt">&lt;/password&gt;</span>
+  <span class="nt">&lt;/authentication&gt;</span>
+<span class="nt">&lt;/Header&gt;</span>
+</code></pre></div></div>
+<p>Login and password are provided by the Hotel supplier for SAP Concur as API consumer, not per customer.</p>
+
+<h1 id="ota-message-headers"><a name="ota-message"></a>OTA Message Headers</h1>
+
+<p>Every message must contain the following required attributes and elements.  On top of these each message may specify extra attributes and elements. Refer to a specific messages’ page for details.</p>
+
+<h2 id="request-message-headers"><a name="request-message"></a>Request Message Headers</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EchoToken</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stringLength1to128</code></td>
+      <td><strong>Required</strong> A reference for additional message identification, assigned by the requesting host system.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Version</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td><strong>Required</strong> The OpenTravel message version indicated by a decimal value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PrimaryLangID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The primary language preference for the message encoded as ISO 639-1.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AltLangID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The alternate language for a customer or message encoded as ISO 639-1.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">POS</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td><strong>Required</strong> Point of Sale (POS) identifies the party or connection channel making the request.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>POS</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Sources</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td><strong>Required</strong> This holds the details about the requestor.  Max Occurrence: 10</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Source</strong></p>
+
+<p>SAP Concur will always send the ISO Currency.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ISOCurrency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">alphaLength3</code></td>
+      <td><strong>Required</strong> Currency code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RequestorID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td>An identifier of the entity making the request Examples: ATA/IATA/ID number, Electronic Reservation Service Provider (ERSP), Association of British Travel Agents (ABTA)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>RequestorID</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stringLength1to32</code></td>
+      <td><strong>Required</strong> Supported value: <code class="language-plaintext highlighter-rouge">1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stringLength1to32</code></td>
+      <td><strong>Required</strong> The requestor ID.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="response-message-headers"><a name="response-message"></a>Response Message Headers</h2>
+
+<p>The supplier is required to respond with the following attributes and elements in the root of any message. Each message may specify extra attributes and elements. Refer to a specific messages’ page for details.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EchoToken</code></td>
+      <td><code class="language-plaintext highlighter-rouge">stringLength1to128</code></td>
+      <td><strong>Required</strong> A reference for additional message identification, assigned by the requesting host system. When a request message includes an echo token the corresponding response message MUST include an echo token with an identical value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">datetime</code></td>
+      <td><strong>Required</strong> Timestamp of the response operation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Version</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td><strong>Required</strong> The OpenTravel message version indicated by a decimal value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PrimaryLangID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The primary language preference for the message encoded as ISO 639-1.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AltLangID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> The alternate language for a customer or message encoded as ISO 639-1.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Success / Error</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td><strong>Required</strong> Indicates Success Or Error.  Refer to the <a href="/api-reference/direct-connects/hotel-service-2/Error-handling.html">Error Handling</a> page for more details.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

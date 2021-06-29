@@ -1,0 +1,143 @@
+I""<blockquote>
+  <p>Note: The scopes related to this documentation are currently limited to Early Access developers at this time.  Once the Early Access phase has been completed, all developers that are interested in pursuing this integration will be given the scope in their Development app.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#integration">Integration</a></li>
+  <li><a href="#quick-connect">Quick Connect</a></li>
+  <li><a href="#profile">Company Profile</a></li>
+  <li><a href="#Topics-to-complete-prior-to-obtaining-invoices">Topics to complete prior to obtaining invoices</a></li>
+  <li><a href="#Update-Vendor-Payment-Method-field">Update Vendor Payment Method field</a></li>
+  <li><a href="#Overview-Scopes-and-Obtaining-Invoices-pending-payment">Overview, Scopes, and Obtaining Invoices pending payment</a></li>
+  <li><a href="#Discounts">Discounts on invoices</a></li>
+  <li><a href="#Updating-a-payment-with-status">Updating a payment with status</a></li>
+  <li><a href="#learn">Learn</a></li>
+</ul>
+
+<p>The Payment Provider App Category streamlines the Invoice Payment process for SAP-Concur customers. The Payment Provider Partner’s certified app will obtain Invoice data from our customers’ Concur site by using the “Quick Connect” process and executing their app using Concur’s Invoice APIs. To be certified, the Partner must support both Editions of SAP-Concur Invoice: Standard Edition and Professional Edition.</p>
+
+<h2 id="integration"><a name="integration"></a>Integration</h2>
+
+<h3 id="quick-connect"><a name="quick-connect"></a>Quick Connect</h3>
+
+<p><a href="./quick-connect-scope-for-enterprise-apps.html">Quick Connect Scope for Enterprise Apps</a></p>
+
+<p><strong>Quick Connect</strong> describes the process customers use to connect their Concur site with an App Center Partner’s Enterprise application. See the separate Quick Connect scope document for details to guide you through the development of this required piece to your certified application.</p>
+
+<h3 id="company-profile"><a name="profile"></a>Company Profile</h3>
+
+<p><a href="/api-reference/profile/v1.company.html#get">Profile Company API v1</a></p>
+
+<h3 id="topics-to-complete-prior-to-obtaining-invoices"><a name="Topics-to-complete-prior-to-obtaining-invoices"></a>Topics to complete prior to obtaining invoices</h3>
+
+<p><strong>These topics should be completed prior to obtaining Invoices pending payment:</strong></p>
+
+<h4 id="topic-1-update-the-field-called-payment-method-type-within-the-sap-concur-invoice-vendor-record">Topic 1: Update the field called, “Payment Method Type” within the SAP-Concur Invoice Vendor record</h4>
+
+<p>In order to pay a customer’s invoices, the SAP-Concur Invoice Vendor record must have the value of <strong>PAYPVD</strong> populated within the “Payment Method Type” field.  This can be populated in 3 ways, one of which is via API.  The Partner and customer need to agree who will be responsible for updating the Vendors initially and on an on-going basis. Here are the methods the Vendor (aka Supplier) record can be updated:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Option</th>
+      <th>Technique</th>
+      <th>Owner responsible for update</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Option 1</td>
+      <td>File import-On-Demand Import via an Excel template within the SAP-Concur Invoice product</td>
+      <td>Customer completes</td>
+    </tr>
+    <tr>
+      <td>Option 2</td>
+      <td>File import-Scheduled Import via a csv file</td>
+      <td>Customer completes</td>
+    </tr>
+    <tr>
+      <td>Option 3</td>
+      <td>App integration</td>
+      <td>Customer and Partner need to coordinate since Vendor master data most likely resides in their ERP</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="update-vendor-payment-method-field"><a name="Update-Vendor-Payment-Method-field"></a>Update Vendor Payment Method field</h3>
+
+<p><a href="/api-reference/invoice/v3.vendor.html#put">Vendor Update API v3</a></p>
+
+<h4 id="topic-2-customer-ensures-the-vendor-contact-email-addresses-exist-within-the-sap-concur-invoice-vendor-record-for-the-vendors-that-the-partner-will-pay">Topic 2: Customer ensures the Vendor Contact Email addresses exist within the SAP-Concur Invoice Vendor record for the Vendors that the Partner will pay</h4>
+
+<p>Confirm that the customer adminsitrator has created a Concur Audit Rule to require the Vendor (Supplier) email address has been populated for those Vendor invoices that will be paid via this integration. The Customer can take the following steps to create the Audit Rule:</p>
+
+<h4 id="audit-rule-step-1">Audit Rule step 1:</h4>
+
+<ol>
+  <li>Navigate to the Administration menu, then Invoice, then Audit Rules.</li>
+  <li>Click New</li>
+  <li>Enter the information as appropriate (see below)</li>
+  <li>Click Next</li>
+</ol>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Name:         Vendor Supplier Contact Email
+Event:        Payment Request Submit
+Editable By:  This depends on the customer configuration
+Applies To:   This depends on the customer configuration
+Active:       Yes
+</code></pre></div></div>
+
+<h4 id="audit-rule-step-2-create-condition">Audit Rule step 2: Create Condition</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Data Object:  Vendor Remittance Address
+Field:        Contact Email
+Operator:     Is Blank
+Operator:     And
+Data Object:  Request
+Field:        Pay Method Type
+Operator:     Equal
+Value:        Payment Provider
+</code></pre></div></div>
+
+<p>Click Next</p>
+
+<h4 id="audit-rule-step-3">Audit Rule step 3:</h4>
+
+<blockquote>
+  <p>The Exception Level can be adjusted if desired.  99 is a hard stop rule.</p>
+</blockquote>
+
+<p>Click New</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Exception Code:   EMAIL
+Exception Level:  99
+Message:          The Vendor Email Address is required for all invoices that are from Vendors that will be paid by the Partner.
+Editable By:      This depends on the customer configuration
+</code></pre></div></div>
+
+<h3 id="overview-scopes-and-obtaining-invoices-pending-payment"><a name="Overview-Scopes-and-Obtaining-Invoices-pending-payment"></a>Overview Scopes and Obtaining Invoices pending payment</h3>
+
+<p><a href="/api-reference/invoice/v1.invoice-pay.html">Overview, Scopes, an Obtaining Invoices pending payment</a></p>
+
+<h3 id="discounts-on-invoices"><a name="Discounts"></a>Discounts on invoices</h3>
+
+<p><a href="/api-reference/invoice/v3.payment-request.html#get">Payment Request Reference</a> and <a href="/api-explorer/v3-0/PaymentRequest.html">Payment Request Explorer</a></p>
+
+<p>If the customer wants invoices paid early in order to take advantage of the Vendor’s discount terms, the customer and partner will need to work together. The customer will need to configure search queries within the administrative tool called, “Invoice Processor”. The search parameters will based on invoice due date and Payment Method Type field.  The search query parameters need to include enough days to allow the customer and partner to meet the invoice terms. Once the customer administrator final-approves those invoices, the Partner will be able to obtain the invoices that are pending payment. In order to obtain the discount terms, the Partner will have to use the GET Payment Request API using the invoice ID from the GET Payments response.</p>
+
+<blockquote>
+  <p>Note: the customer and partner need to discuss how the customer manages the discounts within the SAP-Concur Invoice product. The customer may elect to adjust the invoice amount field and then add credited line items within the invoice to reflect the discount.  In this case, the partner will <strong>not</strong> need to compute the discount and will just use the value in the Invoice Amount field.</p>
+</blockquote>
+
+<h3 id="updating-a-payment-with-status"><a name="Updating-a-payment-with-status"></a>Updating a payment with status</h3>
+
+<p><a href="/api-reference/invoice/v4.invoice-pay.html#schema-payment-update">Updating a payment with status</a></p>
+
+<h2 id="learn"><a name="learn"></a>Learn</h2>
+
+<p>Use the following resources to get familiar with the Concur product and then submit expense reports or invoices in your own sandbox. This will better position you to conduct end-to-end testing and be able to correlate a User’s experience to what you obtain via the APIs.</p>
+
+<ul>
+  <li><strong>Training Toolkit</strong> at <a href="http://www.concurtraining.com/">http://www.concurtraining.com/</a> - These resources help you learn the Concur product basics, administration and reporting.</li>
+</ul>
+:ET

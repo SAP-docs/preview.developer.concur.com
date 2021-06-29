@@ -1,0 +1,177 @@
+I"V <div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<p>The Expense Group Configuration contains the list of Expense Polices, Expense Types and Payment Types for the Expense Group the user specified in the OAuth access token is assigned to.</p>
+
+<h2 id="resource-uri">Resource URI</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/expensereport/v1.1/ExpenseGroupConfiguration/
+</code></pre></div></div>
+
+<h2 id="get-an-expense-group-configuration">Get an expense group configuration</h2>
+
+<p>Retrieves the list of Expense Polices, Expense Types and Payment Types for the Expense Group the user specified in the OAuth access token is assigned to. Each Expense Policy contains a list of valid Expense Types. The Payment Types are associated with the user’s Expense Group and apply to all the returned policies. Only the payment types that are valid for the <a href="/api-reference/expense/expense-report/v1dot1.expense-entry.html">Post Expense Entry</a> endpoint are returned.</p>
+
+<p><strong>NOTE</strong>: The Concur Expense product is highly configurable, and each client may have a unique set of payment types. If a payment type is not included in the response, it is not available for use with this client.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="parameters">Parameters</h4>
+
+<p>None</p>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li>Authorization - Authorization header with OAuth token for valid Concur user.</li>
+  <li>Accept - application/xml</li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="payload">Payload</h4>
+
+<p>This request will return an <strong>ExpenseGroupConfiguration</strong> parent element. The <strong>ExpenseGroupConfiguration</strong> has a <strong>PaymentTypes</strong> child element and a <strong>PolicyAndExpenseTypesList</strong> child element.</p>
+
+<p>The <strong>PaymentTypes</strong> child element has a <strong>PaymentType</strong> child element for each configured payment type. The <strong>PolicyAndExpenseTypesList</strong> child element has a <strong>PolicyandExpenseTypes</strong> child element for each policy configured for this expense group.</p>
+
+<h4 id="paymenttype-elements">PaymentType elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PaymentTypeID</td>
+      <td>The encrypted key for the payment type. This is the unique identifier for the payment type.</td>
+    </tr>
+    <tr>
+      <td>PaymentTypeName</td>
+      <td>The name of the payment type.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="policyandexpensetypes-elements">PolicyandExpenseTypes elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PolicyKey</td>
+      <td>The ID value of the policy.</td>
+    </tr>
+    <tr>
+      <td>PolicyName</td>
+      <td>The name of the policy.</td>
+    </tr>
+    <tr>
+      <td>ExpenseTypes</td>
+      <td>The parent element for the list of expense types in the policy. It contains an <strong>ExpenseType</strong> child element for each expense type in the policy.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="expensetype-elements">ExpenseType elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ExpKey</td>
+      <td>The expense type key.</td>
+    </tr>
+    <tr>
+      <td>ExpName</td>
+      <td>The label of the expense type.</td>
+    </tr>
+    <tr>
+      <td>ParentExpKey</td>
+      <td>The code of the expense type’s parent.</td>
+    </tr>
+    <tr>
+      <td>ParentExpName</td>
+      <td>The label of the expense type’s parent.</td>
+    </tr>
+    <tr>
+      <td>SpendCategory</td>
+      <td>The spend category assigned to the expense type for reporting purposes.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples">Examples</h2>
+
+<h3 id="xml-example-request">XML example request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/expense/expensereport/v1.1/ExpenseGroupConfiguration/ HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="xml-example-of-successful-response">XML example of successful response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ExpenseGroupConfiguration</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;PaymentTypes&gt;</span>
+    <span class="nt">&lt;PaymentType&gt;</span>
+      <span class="nt">&lt;PaymentTypeID&gt;</span>nr74tQrD8PorkF6yvS0Sm8ZeSGsw<span class="nt">&lt;/PaymentTypeID&gt;</span>
+      <span class="nt">&lt;PaymentTypeName&gt;</span>Cash<span class="nt">&lt;/PaymentTypeName&gt;</span>
+    <span class="nt">&lt;/PaymentType&gt;</span>
+    <span class="nt">&lt;PaymentType&gt;</span>
+      <span class="nt">&lt;PaymentTypeID&gt;</span>nr7AuTtrvkXwLOzEejFruFO$sN7eo<span class="nt">&lt;/PaymentTypeID&gt;</span>
+      <span class="nt">&lt;PaymentTypeName&gt;</span>Company Paid<span class="nt">&lt;/PaymentTypeName&gt;</span>
+    <span class="nt">&lt;/PaymentType&gt;</span>
+  <span class="nt">&lt;/PaymentTypes&gt;</span>
+  <span class="nt">&lt;PolicyAndExpenseTypesList&gt;</span>
+    <span class="nt">&lt;PolicyAndExpenseTypes&gt;</span>
+      <span class="nt">&lt;PolicyKey&gt;</span>ndrF8hjzl9FhH1Lvs0EuK1gi7LISbetxc<span class="nt">&lt;/PolicyKey&gt;</span>
+      <span class="nt">&lt;PolicyName&gt;</span>CA Expense Policy<span class="nt">&lt;/PolicyName&gt;</span>
+      <span class="nt">&lt;ExpenseTypes&gt;</span>
+        <span class="nt">&lt;ExpenseType&gt;</span>
+          <span class="nt">&lt;ExpKey&gt;</span>BUSPR<span class="nt">&lt;/ExpKey&gt;</span>
+          <span class="nt">&lt;ExpName&gt;</span>Promotional Items<span class="nt">&lt;/ExpName&gt;</span>
+          <span class="nt">&lt;ParentExpKey&gt;</span>PROMO<span class="nt">&lt;/ParentExpKey&gt;</span>
+          <span class="nt">&lt;ParentExpName&gt;</span>Business Promotions<span class="nt">&lt;/ParentExpName&gt;</span>
+        <span class="nt">&lt;/ExpenseType&gt;</span>
+        <span class="nt">&lt;ExpenseType&gt;</span>
+          <span class="nt">&lt;ExpKey&gt;</span>TRDSH<span class="nt">&lt;/ExpKey&gt;</span>
+          <span class="nt">&lt;ExpName&gt;</span>Trade Shows<span class="nt">&lt;/ExpName&gt;</span>
+          <span class="nt">&lt;ParentExpKey&gt;</span>PROMO<span class="nt">&lt;/ParentExpKey&gt;</span>
+          <span class="nt">&lt;ParentExpName&gt;</span>Business Promotions<span class="nt">&lt;/ParentExpName&gt;</span>
+        <span class="nt">&lt;/ExpenseType&gt;</span>
+        <span class="nt">&lt;ExpenseType&gt;</span>
+          <span class="nt">&lt;ExpKey&gt;</span>LOCPH<span class="nt">&lt;/ExpKey&gt;</span>
+          <span class="nt">&lt;ExpName&gt;</span>Local Phone<span class="nt">&lt;/ExpName&gt;</span>
+          <span class="nt">&lt;ParentExpKey&gt;</span>COMMU<span class="nt">&lt;/ParentExpKey&gt;</span>
+          <span class="nt">&lt;ParentExpName&gt;</span>Communications<span class="nt">&lt;/ParentExpName&gt;</span>
+        <span class="nt">&lt;/ExpenseType&gt;</span>
+      <span class="nt">&lt;/ExpenseTypes&gt;</span>
+    <span class="nt">&lt;/PolicyAndExpenseTypes&gt;</span>
+  <span class="nt">&lt;/PolicyAndExpenseTypesList&gt;</span>
+<span class="nt">&lt;/ExpenseGroupConfiguration&gt;</span>
+</code></pre></div></div>
+:ET

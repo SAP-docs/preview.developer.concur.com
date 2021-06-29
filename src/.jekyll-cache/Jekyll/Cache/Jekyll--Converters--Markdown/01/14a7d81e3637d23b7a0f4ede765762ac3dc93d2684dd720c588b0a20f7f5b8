@@ -1,0 +1,1000 @@
+I"n�<p>The Purchase Orders API gives SAP Concur clients the ability to leverage external data to create and update approved purchase orders. Clients can build a direct connection to the Purchase Orders API which will create purchase orders for invoices to be associated to. It also allows clients to update created purchase orders when orders change, need to be closed, or identify and resolve matching exceptions on PO invoices.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is not available in the China Data center. This API is only available for direct integrations with an existing SAP Concur client. This API can only be used to create new purchase requests and get the details of the created purchase request. This API cannot update, edit, or delete purchase requests. All edits or processing of the purchase request after it is sent to SAP Concur and created must be done in SAP Concur.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#post">Create a New Purchase Order</a></li>
+  <li><a href="#put-receipts">Update Purchase Order Line Item with Receipt Information</a></li>
+  <li><a href="#put">Update an Existing Purchase Order</a></li>
+  <li><a href="#get">Get an Existing Purchase Order</a></li>
+  <li><a href="#schema">Schema</a></li>
+  <li><a href="#schema-response">Response Schema</a></li>
+  <li><a href="#schema-receipt">Receipt Schema</a></li>
+  <li><a href="#error-codes">Error Codes</a></li>
+</ul>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Invoice Professional Edition</li>
+  <li>Concur Invoice Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<p>Required Scopes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">INVPO</code></td>
+      <td>Create, update, and retrieve purchase orders.</td>
+      <td>POST, PUT, GET</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>SAP Concur clients must purchase Concur Invoice, Concur Purchase Order, and Concur Web Services in order to use this API. Concur Invoice with Concur Purchase Order must be configured before using this API.</p>
+
+<p>To create purchase orders, you need to supply a Vendor Code and Vendor Address Code. You can access <strong>Vendor Manager</strong> in Concur Invoice to see these values. If you need to get this data from SAP Concur using web services, you can use the <a href="/api-reference/invoice/v3.vendor.html">Vendor v3</a> API.</p>
+
+<p>If your purchase order form in SAP Concur has required custom fields that are tied to lists, you will need to supply the Item Code for the list items. You can access <strong>List Management</strong> in SAP Concur to see your list items and list item codes. If you need to get this data from SAP Concur using web services, you can use the <a href="/api-reference/common/list-item/v3.list-item.html">List Item v3</a> API to retrieve the <code class="language-plaintext highlighter-rouge">Level1Code</code> value for the list items.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API will work with both company or user access tokens. A company access token is required if the integration will create purchase orders for multiple requestors. Using a user access token to create purchase order results in the purchase order being assigned to the user that generated the user access token, not the user set in the payload. A user access token can be used for testing purposes.</p>
+
+<h2 id="create-a-new-purchase-order"><a name="post"></a>Create a New Purchase Order</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/v3.0/invoice/purchaseorders
+</code></pre></div></div>
+
+<p>Create or update a Purchase Order. Batch processing is not available using the Purchase Order API. Please use Import Jobs for batch updates.</p>
+
+<h3 id="payload">Payload</h3>
+
+<ul>
+  <li><a href="#schema-purchaseOrder">purchaseOrder</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"BillToAddress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Address1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Address2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add2"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Address3"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add3"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"City"</span><span class="p">:</span><span class="w"> </span><span class="s2">"city"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"CountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ExternalID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"billtoapi"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"billto"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"PostalCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55426"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"StateProvince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MN"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"CurrencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"OrderDate"</span><span class="p">:</span><span class="s2">"2011-08-12T20:17:46.384Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API101"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"IsTest"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"IsChangeOrder"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"LedgerCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"LineItem"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"Allocation"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"Amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"106.74"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"Percentage"</span><span class="p">:</span><span class="s2">"100.00000000"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"GrossAmount"</span><span class="p">:</span><span class="s2">"106.74"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"CreateDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-12-13 20:00:37.0"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"line 1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ExpenseType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Advertising"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ExternalID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API100line1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"IsReceiptRequired"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"LineNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"PurchaseOrderReceiptType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WQTY"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Quantity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"UnitOfMeasureCode"</span><span class="p">:</span><span class="s2">"DA"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"UnitPrice"</span><span class="p">:</span><span class="w"> </span><span class="s2">"106.74"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"poName"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"PolicyExternalID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PO"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"PurchaseOrderNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"API101"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"PurchaseRequestNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100001"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"RequestedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deo, John"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Shipping"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"ShipToAddress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"Address1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Address2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add2"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Address3"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add3"</span><span class="p">,</span><span class="w">    
+    </span><span class="nl">"City"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cityship"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"CountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ExternalID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Shiptoapi"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shiptoapi"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"PostalCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55426"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"StateProvince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MN"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"Status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Transmitted"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Tax"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"URI"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://www.concursolutions.com/api/v3.0/invoice/purchaseorders/purchaseorders/API101"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"VendorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VEN1"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"VendorAddressCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VEN1ADDR1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="response">Response</h3>
+
+<ul>
+  <li><a href="#schema-response">Response schema</a></li>
+</ul>
+
+<h2 id="update-purchase-order-line-item-with-receipt-information"><a name="put-receipts"></a>Update Purchase Order Line Item With Receipt Information</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/v3.0/invoice/purchaseorderreceipts
+</code></pre></div></div>
+
+<h3 id="payload-1">Payload</h3>
+
+<ul>
+  <li><a href="#schema-receipt">Receipt schema</a></li>
+</ul>
+
+<h3 id="response-1">Response</h3>
+
+<ul>
+  <li><a href="#schema-response">Response schema</a></li>
+</ul>
+
+<h2 id="update-an-existing-purchase-order"><a name="put"></a>Update an Existing Purchase Order</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /api/v3.0/invoice/purchaseorders
+</code></pre></div></div>
+
+<h3 id="payload-2">Payload</h3>
+
+<ul>
+  <li><a href="#schema-purchaseOrder">purchaseOrder</a></li>
+</ul>
+
+<h3 id="response-2">Response</h3>
+
+<ul>
+  <li><a href="#schema-response">Response schema</a></li>
+</ul>
+
+<h2 id="get-an-existing-purchase-order"><a name="get"></a>Get an Existing Purchase Order</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/v3.0/invoice/purchaseorders/{id}
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>{id}</td>
+      <td>The identifier for the purchase order.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="input">Input</h3>
+
+<p>None</p>
+
+<h3 id="response-3">Response</h3>
+
+<ul>
+  <li><a href="#schema-purchaseOrder">purchaseOrder</a></li>
+</ul>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="purchaseorder"><a name="schema-purchaseOrder"></a>purchaseOrder</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AmountWithoutVat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The net amount of the purchase order (excluding VAT).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BillToAddress</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#bill-to-address"><code class="language-plaintext highlighter-rouge">BillToAddress</code></a></td>
+      <td><strong>Required</strong> The customer’s billing address, which is where the vendor should send the bill.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CurrencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The 3-letter ISO 4217 currency code of the currency that is associated with the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Custom1 through Custom24</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A value that can be applied to a custom field that is part of the purchase order header form.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Description</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A description of the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DiscountPercentage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The discount from the vendor, if the discount terms are met.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DiscountTerms</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The net discount terms that the vendor offers, when discounts apply.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IsTest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code> / <code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If the purchase order is a test.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IsChangeOrder</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code> / <code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If the purchase order has a change order or not.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LedgerCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A code which indicates which company journal the Purchase Order is assigned to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LineItem</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#lineItem"><code class="language-plaintext highlighter-rouge">LineItem</code></a></td>
+      <td><strong>Required</strong> The line items in a purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> A name for the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NeededByDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date by which the purchase order must be fulfilled.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">OrderDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required</strong> The date when goods were ordered.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PaymentTerms</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The net payment terms that have been set up with a vendor.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PolicyExternalID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The external identifier of the policy that should be associated with the purchase order. The external Id is a property of the policy configuration screen. Clients will need to get these ID’s from the Implementation team if using professional version. For standard version the value is always <code class="language-plaintext highlighter-rouge">PO</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PoVendorTaxId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The vendor tax ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ProvincialTaxId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The vendor provincial tax ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PurchaseOrderNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The purchase order number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PurchaseRequestNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The related purchase request number that generated the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ReceiptType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The purchase order receipt type (Deprecated). Use the <code class="language-plaintext highlighter-rouge">PurchaseOrderReceiptType</code> at line item level instead.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RequestedBy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The person who requests the goods in the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RequestedDeliveryDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date the purchase order instructed the vendor to deliver the goods.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Shipping</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The total shipping cost for the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ShippingDescription</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A description of how the goods in the purchase order will ship. For example, via FedEx.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ShippingMethodKey</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A code that represents the shipping method used by the vendor. Maximum length: 10 characters</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ShippingTermsKey</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A code that represents the shipping terms that the vendor offers. Maximum length: 10 characters</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ShipToAddress</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#ship-to-address"><code class="language-plaintext highlighter-rouge">ShipToAddress</code></a></td>
+      <td><strong>Required</strong> The customer’s shipping address, which is where the vendor should ship the goods.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The current status of the purchase order. Default: <code class="language-plaintext highlighter-rouge">Transmitted</code>. Supported values: <code class="language-plaintext highlighter-rouge">Closed</code>, <code class="language-plaintext highlighter-rouge">Transmitted</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Tax</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The total tax for the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">URI</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI to the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VatAmountOne</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VatAmountTwo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VatRateOne</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VatRateTwo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VendorAccountNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The vendor account number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VendorAddressCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The code that identifies the vendor’s remit address for the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VendorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The code that identifies the vendor for the purchase order.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="billtoaddress"><a name="bill-to-address"></a>BillToAddress</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Address1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Address line 1 of the billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Address2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Address line 2 of the billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Address3</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Address line 3 of the billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">City</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The city of the billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CountryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The code of the country for the billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ExternalID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> A unique value supplied by the customer to identify a particular billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>An optional name that can be given to the  billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PostalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The postal code of the billing address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StateProvince</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The state or province of the billing address.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="lineitem"><a name="lineItem"></a>LineItem</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AccountCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The account code of the line item. A value must be supplied for either <code class="language-plaintext highlighter-rouge">ExpenseType</code> or <code class="language-plaintext highlighter-rouge">AccountCode</code>, but not both. This field is required if an <code class="language-plaintext highlighter-rouge">ExpenseType</code> value is not supplied.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Allocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#allocation"><code class="language-plaintext highlighter-rouge">Allocation</code></a></td>
+      <td>A list of the allocations that are associated with the line item. Allocation elements can be repeated within the same line items to represent multiple allocations.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AmountWithoutVat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The net amount of the line item (excluding VAT).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CreateDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date the line item was created.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Custom1 through Custom20</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A value that can be applied to a custom field 1 that is part of the purchase order line item form.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Description</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A description of the line item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ExpenseType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The expense type of the line item. A value must be supplied for either <code class="language-plaintext highlighter-rouge">ExpenseType</code> or <code class="language-plaintext highlighter-rouge">AccountCode</code>, but not both. This field is required if an <code class="language-plaintext highlighter-rouge">AccountCode</code> value is not supplied.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ExternalID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> A customer-supplied value that uniquely identifies the line item within the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IsReceiptRequired</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code> / <code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Indicates whether the line item requires a receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LineNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The line item number within the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Quantity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The quantity associated with the line item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PurchaseOrderReceiptType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Purchase order <code class="language-plaintext highlighter-rouge">ReceiptType</code> of the line item. If you are using Concur Receiving and need to enter Goods Receipts against the resulting PO lines use <code class="language-plaintext highlighter-rouge">QUANTITY_RECEIPT</code>. Default: <code class="language-plaintext highlighter-rouge">NONE</code>. Supported values: <code class="language-plaintext highlighter-rouge">QUANTITY_RECEIPT</code>, <code class="language-plaintext highlighter-rouge">NONE</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RequestedBy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The person who requests the goods in the line item of the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RequestedDeliveryDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date the line item of the purchase order instructed the vendor to deliver the goods.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SupplierPartID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Any number that might help to identify the line item. This could be a value such as the vendor’s part number or even the manufacturer number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Tax</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Any tax that is associated with the line item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">UnitOfMeasureCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unit of measure code of the line item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">UnitPrice</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The price of each item of the line item.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VatAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">VatRate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="allocation"><a name="allocation"></a>Allocation</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Amount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The total amount of the allocation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Custom1 through Custom20</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A value that can be applied to a custom field 1 that is part of the allocation form.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">GrossAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The allocation gross amount.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Percentage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The allocation percentage.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="shiptoaddress"><a name="ship-to-address"></a>ShipToAddress</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Address1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Address line 1 of the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Address2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Address line 2 of the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Address3</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Address line 3 of the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">City</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The city of the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CountryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The code of the country for the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ExternalID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> A unique value supplied by the customer to identify a particular shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>An optional name that can be given to the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PostalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The postal code of the shipping address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StateProvince</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The state or province of the shipping address.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="response-schema"><a name="schema-response"></a>Response Schema</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ErrorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A code that indicates why the purchase order was not processed successfully.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ErrorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A description of the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FieldCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A code that indicates which field caused an issue. This code typically appears only when a field is being validated against a field of a form type. Format: LEVEL CODE. The possible levels are: <code class="language-plaintext highlighter-rouge">Header</code>, <code class="language-plaintext highlighter-rouge">ShipTo</code>, <code class="language-plaintext highlighter-rouge">BillTo</code>, <code class="language-plaintext highlighter-rouge">LineItem</code>, <code class="language-plaintext highlighter-rouge">Allocation</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LineItemExternalID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The external ID of a line item that caused an error. If the error is related to an allocation, this field indicates the external ID of the line item that the allocation is associated with, and also indicates the allocation that caused of the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PurchaseOrderNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The purchase order number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">SUCCESS</code> / <code class="language-plaintext highlighter-rouge">FAILURE</code></td>
+      <td>The result of processing the purchase order.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="receipt-schema"><a name="schema-receipt"></a>Receipt Schema</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IsReceived</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Indicates whether the line item was received.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LineItemExternalID	</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> A customer-supplied value that uniquely identifies the line item within the purchase order.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PurchaseOrderNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The purchase order number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ReceivedDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date the line item was received.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ReceivedQuantity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The number of items that were received.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="error-codes"><a name="error-codes"></a>Error Codes</h2>
+
+<p>The web service will not return a 4xx HTTP response code for a batch operation even when every item in the batch failed to be created, updated or deleted. The client must inspect the response to look for warnings or errors with individual batch items.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1000</td>
+      <td>The PO number is missing or invalid.</td>
+    </tr>
+    <tr>
+      <td>2000</td>
+      <td>There was no vendor found for the supplied Vendor Code and Vendor Address Code.</td>
+    </tr>
+    <tr>
+      <td>3000</td>
+      <td>The Currency Code is missing or invalid.</td>
+    </tr>
+    <tr>
+      <td>4000</td>
+      <td>There was no policy found matching the supplied External Id.</td>
+    </tr>
+    <tr>
+      <td>4001</td>
+      <td>The policy does not support purchase orders.</td>
+    </tr>
+    <tr>
+      <td>4002</td>
+      <td>The policy cannot be changed on the purchase order.</td>
+    </tr>
+    <tr>
+      <td>5000</td>
+      <td>The purchase order does not contain any line items.</td>
+    </tr>
+    <tr>
+      <td>5001</td>
+      <td>The line item must contain expense type or account code, but not both.</td>
+    </tr>
+    <tr>
+      <td>5002</td>
+      <td>The line item expense type is invalid.</td>
+    </tr>
+    <tr>
+      <td>5003</td>
+      <td>The line item account code is invalid.</td>
+    </tr>
+    <tr>
+      <td>5004</td>
+      <td>The line item tax and unit price must both match positive or negative.</td>
+    </tr>
+    <tr>
+      <td>5500</td>
+      <td>The line item contains an allocation, but no allocation form is defined.</td>
+    </tr>
+    <tr>
+      <td>5501</td>
+      <td>The line item allocation amounts exceed the line item total.</td>
+    </tr>
+    <tr>
+      <td>5502</td>
+      <td>The distribution amounts for a line item must match the line item amount positive or negative.</td>
+    </tr>
+    <tr>
+      <td>5503</td>
+      <td>The distribution amounts for a line item cannot be zero.</td>
+    </tr>
+    <tr>
+      <td>5600</td>
+      <td>The external id for the line item is not unique across the purchase order.</td>
+    </tr>
+    <tr>
+      <td>6000</td>
+      <td>The Ship To Address is missing or invalid.</td>
+    </tr>
+    <tr>
+      <td>6001</td>
+      <td>The Bill To Address is missing or invalid.</td>
+    </tr>
+    <tr>
+      <td>8000</td>
+      <td>A required field is missing.</td>
+    </tr>
+    <tr>
+      <td>8001</td>
+      <td>A field’s value exceeds the maximum length allowed.</td>
+    </tr>
+    <tr>
+      <td>8002</td>
+      <td>A field’s value is not the correct data type.</td>
+    </tr>
+    <tr>
+      <td>8003</td>
+      <td>A field’s value is an invalid list item.</td>
+    </tr>
+    <tr>
+      <td>8004</td>
+      <td>A field’s value is an invalid connected list item.</td>
+    </tr>
+    <tr>
+      <td>8005</td>
+      <td>The Country Code is missing or invalid.</td>
+    </tr>
+    <tr>
+      <td>8006</td>
+      <td>A value was supplied for a field that is not part of the form.</td>
+    </tr>
+    <tr>
+      <td>9999</td>
+      <td>An unexpected error occurred.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

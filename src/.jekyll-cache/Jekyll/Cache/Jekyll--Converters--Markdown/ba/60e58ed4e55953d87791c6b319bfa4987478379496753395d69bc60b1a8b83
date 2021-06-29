@@ -1,0 +1,324 @@
+I"5<<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<h2 id="description">Description</h2>
+
+<p>The Hotel Services Direct Connect provides a method for Travel users to access hotel inventory.</p>
+
+<p>Once the hotel supplier has developed and certified their interface with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users.</p>
+
+<p>This callout differs from the inbound SAP Concur web services in the following ways:</p>
+
+<ul>
+  <li>It uses an outbound message where Travel calls a public facing API endpoint provided by the hotel supplier.</li>
+  <li>The supplier configures and maintains the public web service interface. This guide specifies the request and response format required by SAP Concur.</li>
+</ul>
+
+<h2 id="works-with-these-sap-concur-products">Works With These SAP Concur Products</h2>
+
+<ul>
+  <li><strong>Travel</strong> for Concur Professional/Premium</li>
+  <li><strong>Travel</strong> for Concur Standard</li>
+</ul>
+
+<h2 id="product-restrictions">Product Restrictions</h2>
+
+<p>This direct connect is only available to Travel Suppliers with Hotel inventory. This direct connect is not supported in the SAP Concur mobile application.</p>
+
+<p>SAP Concur products are highly configurable, and not all clients will have access to all features.</p>
+
+<p>Partner developers must determine which configurations are required for their solution prior to the application review process.</p>
+
+<h2 id="hotel-process-overview">Hotel Process Overview</h2>
+
+<p>The configuration process has the following steps:</p>
+
+<ol>
+  <li>The Hotel Supplier creates the application on their system that will accept the requests from SAP Concur and return the appropriate responses.</li>
+  <li>The Hotel Supplier creates the endpoint on their system that SAP Concur uses to access their inventory.</li>
+  <li>SAP Concur creates a production company for the Hotel Supplier.</li>
+  <li>The Hotel Supplier registers their application with SAP Concur by logging in to their production company.</li>
+  <li>SAP Concur and the Hotel Supplier validate the application:
+    <ul>
+      <li>The Hotel Supplier develops to the SAP Concur API and provides a test system.</li>
+      <li>The Hotel Supplier provides the URIs and credentials for their test system to SAP Concur.</li>
+      <li>SAP Concur sets up the vendor in the certification systems and runs a series of tests to validate the interaction between the two systems.</li>
+      <li>Once certification passes, the Hotel supplier sends SAP Concur the production URIs and credentials.</li>
+      <li>SAP Concur updates the production servers with the supplier’s production data and does a test booking. Upon successful completion, the supplier will be live in SAP Concur for any customer to enable.</li>
+    </ul>
+  </li>
+  <li>The Travel client opts in to the Hotel callout (within the Travel Configuration) to allow their users to view and book the available inventory.</li>
+</ol>
+
+<p>Once the configuration is complete, the callout uses the following process:</p>
+
+<ol>
+  <li>The user searches for hotels when creating an itinerary in Travel.</li>
+  <li>Travel sends the search request to the endpoint, using the Post HotelSearch.</li>
+  <li>The supplier returns the properties.</li>
+  <li>Travel sends a request for rates for some of the properties using the Post HotelAvail request. The number of properties is configurable with a current maximum of 25. More than one property may be specified in each Post HotelAvail request.</li>
+  <li>If the user chooses to reserve a hotel room, Travel sends the Post HotelBookingRule and shows the booking and cancellation policies to the user.</li>
+  <li>If the user accepts the policy, Travel sends the Post HotelRes.</li>
+  <li>Travel will send Post HotelItin requests to show the user their reservation. This will happen whenever the user views their itinerary.</li>
+</ol>
+
+<p>This callout can also be used to perform the following functions:</p>
+
+<ul>
+  <li>Get Hotel Availabililty on a Property that was not priced in the original request</li>
+  <li>Get the Reservation Details</li>
+  <li>Modify the Hotel Reservation</li>
+  <li>Cancel the Hotel Reservation</li>
+</ul>
+
+<h2 id="hotel-url-structure">Hotel URL Structure</h2>
+
+<p>The hotel direct connect sends the relevant information to a URL that the travel supplier maintains.</p>
+
+<p>A recommended URL structure is: <code class="language-plaintext highlighter-rouge">https://{servername}/concur/hotel/v1/</code></p>
+
+<p>The URL is provided by the supplier when registering the partner application.</p>
+
+<p>You can use either one endpoint for all messages, or a dedicated one for each message type. In that case you have to follow these rules:</p>
+
+<p>The only allowed difference between the endpoint URLs can be the message name (without OTA_ and RQ/RS):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{servername}/concur/hotel/v1/HotelSearch
+https://{servername}/concur/hotel/v1/HotelAvail
+</code></pre></div></div>
+
+<p>The variable part doesn’t need to be at the end:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{servername}/concur/hotel/HotelSearch/v1/
+https://{servername}/concur/hotel/HotelAvail/v1/
+</code></pre></div></div>
+
+<h2 id="security">Security</h2>
+
+<p>SAP Concur will make calls to the application connector’s endpoint using SSL. During configuration, SAP Concur will connect to the application connector to validate that its hostname and access credentials are valid.</p>
+
+<p>SAP Concur will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. If you are hosting the application connector, you will need to install the signed certificate before SAP Concur can access the connector.</p>
+
+<p>SAP Concur will use Http Basic authentication. The hotel supplier will need to provide credentials that SAP Concur will send to the supplier’s system for each message.</p>
+
+<h2 id="outbound-messages">Outbound Messages</h2>
+
+<p>The SAP Concur outbound message format is based upon a subset of the OTA2011B hotel standard. Please refer to the Function links below for the details of the request and response format.</p>
+
+<p>Please note the following general information about this format:</p>
+
+<ul>
+  <li>All messages are stateless; there is no session and a message may come from a different Travel IP address.</li>
+  <li>Preferred language will be sent in all requests. Hotel suppliers should make a best effort to return the users preferred language. If the users preferred language is not supported, a default language may be used instead.</li>
+  <li>A customer identifier will be sent in all requests. The intent of this is to provide customer specific data such as hotel preference and special customer discounts or policies.</li>
+  <li>Gzip compression is supported in requests and responses. This is controlled through the normal http gzip protocols and is not required.</li>
+  <li>All responses will be limited to an uncompressed size of 5MB and must return within 30 seconds.</li>
+  <li>For Production systems, the current IP address ranges are (you need to enable all of them):
+    <ul>
+      <li>12.129.29.0/24 and 12.129.32.0/22 (US data center)</li>
+      <li>84.14.175.224/27 and 62.23.83.128/25 (EU data center)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="functions">Functions</h2>
+
+<ul>
+  <li><a href="/api-reference/direct-connects/hotel/post-availability-search.html">Post Availability Search</a></li>
+  <li><a href="/api-reference/direct-connects/hotel/post-booking-rule-search.html">Post Booking Rule Search</a></li>
+  <li><a href="/api-reference/direct-connects/hotel/post-hotel-search.html">Post Hotel Search</a></li>
+  <li><a href="/api-reference/direct-connects/hotel/post-new-reservation.html">Post New Reservation</a></li>
+  <li><a href="/api-reference/direct-connects/hotel/post-reservation-cancellation.html">Post Reservation Cancellation</a></li>
+  <li><a href="/api-reference/direct-connects/hotel/post-reservation-update.html">Post Reservation Update</a></li>
+  <li><a href="/api-reference/direct-connects/hotel/post-reservation-query.html">Post Reservation Query</a></li>
+</ul>
+
+<h2 id="additional-information">Additional Information</h2>
+
+<ul>
+  <li><a href="/api-reference/direct-connects/hotel/hotel-direct-connect-codes.html">Hotel Direct Connect Codes</a></li>
+</ul>
+
+<h3 id="concur-travel-configuration">Concur Travel Configuration</h3>
+
+<p>The Travel clients opt in to the Hotel inventory using a setting in the Travel Configuration. Clients must contact SAP Concur to have this setting activated.</p>
+
+<h3 id="versioning">Versioning</h3>
+
+<p>In most cases, new versions of Hotel Services will involve adding support for various optional nodes and attributes in the OTA standards. These changes will be backwards compatible and should not require any mandatory changes and hotel suppliers will be upgrade automatically. In the situation where a change is implemented which cannot be made backwards compatible, suppliers will need to upgrade the Hotel Services interface by and provide a new set of hotel URIs. SAP Concur recommends that the version of the interface be part of the hotel URI provided by the hotel suppliers.</p>
+
+<h3 id="certification">Certification</h3>
+
+<p>The certification process will start once the vendor has completed their integration with the SAP Concur certification systems. Certification consists of running through several use cases on the certification servers and validating that in each scenario the correct response is sent. Typically, most potential issues are being worked out during the integration process and certification can be accomplished in a day or two. An example of a use case during certification would be a user searching and booking a property several months out, viewing an itinerary, changing the dates of the property, and then cancelling the reservation.</p>
+
+<h3 id="responses-and-errors">Responses and Errors</h3>
+
+<p>For error handling we don’t use any special message. Just return the appropriate response, only replace Success node with Errors and provide some error description. Please follow the OTA Code Table for error codes. Please provide as descriptive error text as possible. It will make tracing problems lot easier on both sides.</p>
+
+<h3 id="general-requirements">General Requirements</h3>
+
+<p>Information on format or value requirements that are used in multiple endpoints is included here.</p>
+
+<p><strong>Codes</strong></p>
+
+<p>All the codes used by the Hotel Direct Connect are documented in the <a href="/api-reference/direct-connects/hotel/hotel-direct-connect-codes.html">Hotel Direct Connect Codes</a>.</p>
+
+<p><strong>Corporate Identifier</strong></p>
+
+<p>The corporate identifier will be passed as RequestorID node. The values will be configured on setup. Please keep the Type compliant with  ID Type Codes.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;POS&gt;</span>
+  <span class="nt">&lt;Source</span> <span class="na">ISOCountry=</span><span class="s">"US"</span> <span class="na">ISOCurrency=</span><span class="s">"USD"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;RequestorID</span> <span class="na">Type=</span><span class="s">"4"</span> <span class="na">ID=</span><span class="s">"7777777"</span> <span class="na">ID_Context=</span><span class="s">"MyHotel"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Source&gt;</span>
+<span class="nt">&lt;/POS&gt;</span>
+</code></pre></div></div>
+
+<p>If a vendor requires additional identification of the client system (all calls to vendor will have the same value), you can provide a second RequestorID:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;POS&gt;</span>
+  <span class="nt">&lt;Source</span> <span class="na">ISOCountry=</span><span class="s">"US"</span> <span class="na">ISOCurrency=</span><span class="s">"USD"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;RequestorID</span> <span class="na">Type=</span><span class="s">"4"</span> <span class="na">ID=</span><span class="s">"7777777"</span> <span class="na">ID_Context=</span><span class="s">"MyHotel"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;RequestorID</span> <span class="na">Type=</span><span class="s">"7"</span> <span class="na">ID=</span><span class="s">"8172927"</span> <span class="na">ID_Context=</span><span class="s">"WholeTravel"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Source&gt;</span>
+<span class="nt">&lt;/POS&gt;</span>
+</code></pre></div></div>
+
+<p>Please keep the Type compliant with  ID Type Codes. The supported codes for the Requestor ID Type are: 1,2,3,4,5,7,9,13,18,21</p>
+
+<p><strong>ID Type Codes Table</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Customer</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>CRO (Customer Reservations Office)</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Corporation representative</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Company</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Travel agency</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Airline</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Wholesaler</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>Car rental</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>Group</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>Hotel</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>Tour operator</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>Cruise line</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>Internet broker</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td>Reservation</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>Cancellation</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>Other</td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>Profile</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>Associated reservation</td>
+    </tr>
+    <tr>
+      <td>26</td>
+      <td>Associated itinerary reservation</td>
+    </tr>
+    <tr>
+      <td>27</td>
+      <td>Associated shared reservation</td>
+    </tr>
+    <tr>
+      <td>32</td>
+      <td>Merchant</td>
+    </tr>
+    <tr>
+      <td>33</td>
+      <td>Acquirer</td>
+    </tr>
+    <tr>
+      <td>34</td>
+      <td>Master reference</td>
+    </tr>
+    <tr>
+      <td>35</td>
+      <td>Purged master reference</td>
+    </tr>
+    <tr>
+      <td>36</td>
+      <td>Parent reference</td>
+    </tr>
+    <tr>
+      <td>37</td>
+      <td>Child reference</td>
+    </tr>
+    <tr>
+      <td>38</td>
+      <td>Linked reference</td>
+    </tr>
+    <tr>
+      <td>39</td>
+      <td>Contract</td>
+    </tr>
+    <tr>
+      <td>40</td>
+      <td>Confirmation number</td>
+    </tr>
+  </tbody>
+</table>
+:ET

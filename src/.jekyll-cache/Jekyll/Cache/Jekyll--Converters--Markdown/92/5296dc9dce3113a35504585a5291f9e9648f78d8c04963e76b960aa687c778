@@ -1,0 +1,2096 @@
+I"'|<h1 id="trips">Trips</h1>
+
+<p>The Trips resource represents itineraries in the Concur Travel system. TripLink suppliers use this resource to display a subset of the full booking fields.</p>
+
+<h2 id="version">Version</h2>
+
+<p>1.1</p>
+
+<h2 id="uri">URI</h2>
+
+<p><code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/{query_parameters}</code></p>
+
+<h2 id="scope">Scope</h2>
+
+<p>In order to obtain itinerary data when making Itinerary API calls, the value of the OAuth scope parameter must be set to: <code class="language-plaintext highlighter-rouge">ITINER</code></p>
+
+<h2 id="operations">Operations</h2>
+
+<ul>
+  <li><a href="#getts">Get trip summaries</a>
+    <ul>
+      <li><a href="#getts-schema">Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#gettd">Get trip details</a>
+    <ul>
+      <li><a href="#gettd-schema">Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#postnt">Create a new trip</a>
+    <ul>
+      <li><a href="#postnt-request-schema">Request schema</a></li>
+      <li><a href="#postnt-response-schema">Response schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#postut">Update a trip</a></li>
+  <li><a href="#delete">Cancel a trip</a>
+    <ul>
+      <li><a href="#delete-schema">Schema</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="get-trip-summaries"><a name="getts"></a>Get Trip Summaries</h2>
+
+<p>The Get Itinerary Summaries endpoint is used for retrieving trip summaries for the traveler whose account is associated with the OAuth access token used to make the API call. This endpoint can also be used to get trip summaries for a different user or the whole company. This is usually done when a Travel Management Company (TMC) needs to get trip summaries on behalf of a user or company.</p>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ul>
+  <li>When extracting past data:
+    <ul>
+      <li>Extract a month of trip summaries to gauge volume. If hundreds are returned, then adjust extraction to weekly.</li>
+      <li>Do not extract more than a year of data at any given time regardless of the volume. For longer look backs, extract 6 month segments maximum at a time.</li>
+      <li>Do not multi-thread requests to retrieve multiple pages of data.  Concurrent requests will impact your application’s performance.</li>
+    </ul>
+  </li>
+  <li>Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.</li>
+  <li>This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and most bookings from your travel agency. Some customers may have multiple booking options which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.</li>
+</ul>
+
+<h2 id="request">Request</h2>
+
+<p>GET /travel/trip/v1.1/{query_parameters}</p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<p>All query parameters are optional.</p>
+
+<p>To identify a specific user by login ID or <code class="language-plaintext highlighter-rouge">XMLSyncID</code>, you can specify the following request parameters:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Parameter Name</th>
+      <th style="text-align: left">Parameter Type</th>
+      <th style="text-align: left">Data Type</th>
+      <th style="text-align: left">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td style="text-align: left">The URL-encoded start date (in Coordinated Universal Time, or UTC) for the trip. Format: YYYY-MM-DD. If no query parameters are provided, the start date is set to today’s date - 30 days. The request will only return trips that are ongoing during the provided dates, either starting on the date, or starting before the date and ongoing during the provided date.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td style="text-align: left">The URL-encoded UTC end date for the trip. Format: YYYY-MM-DD. If no query parameters are provided, the end date is set to today’s date + 12 months. The request will only return trips that are ongoing during the provided dates, either ending on the date, or starting before the date and ongoing during the provided date.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">createdAfterDate</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td style="text-align: left">The URL-encoded UTC date for when the trip was created. The query string will return trips created on or after this date. Used with the <code class="language-plaintext highlighter-rouge">createdBeforeDate</code> for finding trips created during a date range. Format: YYYY-MM-DD.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">createdBeforeDate</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td style="text-align: left">The URL-encoded UTC date for when the trip was created. The query string will return trips created on or before this date. Used with the <code class="language-plaintext highlighter-rouge">createdAfterDate</code> for finding trips created during a date range. Format: YYYY-MM-DD.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td style="text-align: left">The last modified UTC date of the trips and their associated bookings. This query string will return only the trips where the trip or any of its associated bookings have a last modified date that is greater or equal to the supplied time. The provided date/time can be anytime between now and the first date of trip creation in the database. The format is either the date or the date and time combined.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">bookingType</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td style="text-align: left">The trip includes at least one booking of this type. Format: <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Dining</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, <code class="language-plaintext highlighter-rouge">Parking</code>, <code class="language-plaintext highlighter-rouge">Rail</code>, or <code class="language-plaintext highlighter-rouge">Ride</code>.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">userid_type=login</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">userid</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td style="text-align: left">The <code class="language-plaintext highlighter-rouge">loginID</code> is the user’s SAP Concur login ID. This parameter can only be used if the OAuth consumer has one of the user roles listed above.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">userid_value</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">userid</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td style="text-align: left">The <code class="language-plaintext highlighter-rouge">userid_value</code> of ALL can be sent to get trip summaries for all users at the company. This parameter can only be used if the OAuth consumer has one of the user roles listed above.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">includeMetadata</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true/false</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td style="text-align: left">The <code class="language-plaintext highlighter-rouge">includeMetadata</code> query parameter combined with the <code class="language-plaintext highlighter-rouge">ItemsPerPage</code> and <code class="language-plaintext highlighter-rouge">Page</code> query parameters cause the response to be divided into pages. The response is wrapped in a <code class="language-plaintext highlighter-rouge">ConcurResponse</code> parent element, with both the response details and the paging metadata included. If the <code class="language-plaintext highlighter-rouge">ItemsPerPage</code> query parameter is not sent, the response will default to 200 if the <code class="language-plaintext highlighter-rouge">Page</code> query parameter is sent, or 1000 if the <code class="language-plaintext highlighter-rouge">Page</code> query parameter is not set. If the <code class="language-plaintext highlighter-rouge">Page</code> query parameter is not sent, the response will default to page 1.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">ItemsPerPage</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td style="text-align: left">The <code class="language-plaintext highlighter-rouge">includeMetadata</code> query parameter combined with the <code class="language-plaintext highlighter-rouge">ItemsPerPage</code> and <code class="language-plaintext highlighter-rouge">Page</code> query parameters will cause the response to be divided into pages. The response will be wrapped in a <code class="language-plaintext highlighter-rouge">ConcurResponse</code> parent element, with both the response details and the paging metadata included. If the <code class="language-plaintext highlighter-rouge">ItemsPerPage</code> query parameter is not sent, the response will default to 200 if the <code class="language-plaintext highlighter-rouge">Page</code> query parameter is sent, or 1000 if the <code class="language-plaintext highlighter-rouge">Page</code> query parameter is not set. If the <code class="language-plaintext highlighter-rouge">Page</code> query parameter is not sent, the response will default to page 1.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">includeVirtualTrip</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">flag</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td style="text-align: left">Virtual trips are segments booked offline through the Concur Request product. Set the <code class="language-plaintext highlighter-rouge">includeVirtualTrip</code> query parameter to 1 to include those trips in the list.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">includeCanceledTrips</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true/false</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td style="text-align: left">The <code class="language-plaintext highlighter-rouge">includeCanceledTrips</code> query parameter will cause the request to also return trips with a status of Canceled. When this query parameter is set to true, the response will include the <code class="language-plaintext highlighter-rouge">TripStatus</code> element.</td>
+    </tr>
+    <tr>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">includeGuestBookings</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">true/false</code></td>
+      <td style="text-align: left"><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td style="text-align: left">The <code class="language-plaintext highlighter-rouge">includeGuestBookings</code> query parameter will cause the request to show guest bookings if set to true. It is set to false by default.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Here are some examples of how to format GET requests using a combination of these query parameters:</p>
+
+<ul>
+  <li>To get trip summaries for the entire company:</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travel/trip/v1.1/?startDate={_startdate_}&amp;endDate={_enddate_}_&amp;_createdAfterDate={_date_}&amp;createdBeforeDate={_date_}&amp;lastModifiedDate={_date_}&amp;bookingType={_type_}&amp;userid_type=login&amp;userid_value=ALL
+</code></pre></div></div>
+<p>The access token used to make the API call must be associated with an account that has the Admin user role.</p>
+
+<ul>
+  <li>To get trip summaries for the account associated with the app making the call:</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travel/trip/v1.1/?startDate={_startdate_}&amp;endDate={_enddate_}_&amp;_createdAfterDate={_date_}&amp;createdBeforeDate={_date_}&amp;lastModifiedDate={_date_}&amp;bookingType={_type_}
+</code></pre></div></div>
+<p>The access token used to make the API call is associated with the account for the app making the call.</p>
+
+<ul>
+  <li>To get trip summaries for a user with the specified login credentials:</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travel/trip/v1.1/?startDate={_startdate_}&amp;endDate={_enddate_}_&amp;_createdAfterDate={_date_}&amp;createdBeforeDate={_date_}&amp;lastModifiedDate={_date_}&amp;bookingType={_type_}&amp;userid_type=login_id&amp;userid_value={_loginID_}
+</code></pre></div></div>
+
+<p>The access token used to make the API call is associated with the SAP Concur account with the specified login credentials.</p>
+
+<h3 id="headers">Headers</h3>
+
+<h4 id="authorization-header-required">Authorization Header (Required)</h4>
+
+<p><code class="language-plaintext highlighter-rouge">Authorization: OAuth {access_token}</code>
+Where <code class="language-plaintext highlighter-rouge">access_token</code> is the OAuth 2.0 access token of the user whose itinerary information you want to retrieve. If you want to access company-wide itinerary information, the SAP Concur user account associated with the OAuth 2.0 access token must have one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
+
+<h4 id="accept-header-optional">Accept Header (optional)</h4>
+
+<p>application/xml</p>
+
+<h3 id="get-trip-summaries-response-schema"><a name="getts-schema"></a>Get Trip Summaries Response Schema</h3>
+
+<p>The response returns an <code class="language-plaintext highlighter-rouge">ItineraryInfoList</code> parent element with an <code class="language-plaintext highlighter-rouge">ItineraryInfo</code> child element for each trip summary for the specified traveler. If the <code class="language-plaintext highlighter-rouge">includeMetadata</code> and <code class="language-plaintext highlighter-rouge">ItemsPerPage</code> query parameters are included in the request, the response will include a <code class="language-plaintext highlighter-rouge">ConnectResponse</code> parent element which contains a <code class="language-plaintext highlighter-rouge">MetaData</code> element with paging information and a <code class="language-plaintext highlighter-rouge">Data</code> element with an <code class="language-plaintext highlighter-rouge">ItineraryInfoList</code> child element. The response for this operation can be divided into pages for easier processing.</p>
+
+<h3 id="data-elements">Data Elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItineraryInfoList</code></td>
+      <td><code class="language-plaintext highlighter-rouge">element</code></td>
+      <td>Parent element with an <code class="language-plaintext highlighter-rouge">ItineraryInfo</code> child element for each trip summary for the specified traveler.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="itineraryinfolist-elements">ItineraryInfoList Elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItineraryInfo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">element</code></td>
+      <td>Parent element with the information about an itinerary for the specified user.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="itineraryinfo-elements">ItineraryInfo Elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TripId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Encrypted trip identifier value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TripName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Name of the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TripStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The status of the trip. This element only appears if the <code class="language-plaintext highlighter-rouge">includeCanceledTrips</code> query parameter is used in the request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StartDateLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The start date of the trip in the starting location’s timezone. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EndDateLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The end date of the trip in the ending location’s timezone. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateModifiedUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The UTC date that this trip was last modified. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">UserLoginId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The user’s login to SAP Concur. This element appears in the response of the GET /api/travel/trip/v1.1 operation when the OAuth 2.0 is access token is associated with an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Trip ID URI with encrypted ID.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="metadata-element">Metadata Element</h3>
+
+<p>The parent element of the paging information.</p>
+
+<h3 id="paging-elements">Paging Elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TotalPages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>The total number of pages the query returned.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TotalItems</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>The total number of itineraries the query returned.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CurrentPage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>The page number for the set of results in the current response.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItemsPerPage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>The number of items set to display per page.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PreviousPageURL</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The URI to the previous page of results. This element will be empty when there are no previous pages.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NextPageURL</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The URI to the next set of results. This element will be empty when there are no next pages.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples">Examples</h2>
+
+<h3 id="example-1-get-trip-summaries-by-start-and-end-date">Example 1: Get Trip Summaries by Start and End Date</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/api/travel/trip/v1.1/?startDate=2012%2F02%2F01&amp;endDate=2013%2F12%2F31</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="s">...</span>
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;ItineraryInfoList</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xmlns:xsd=</span><span class="s">"http://www.w3.org/2001/XMLSchema"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ItineraryInfo&gt;</span>
+        <span class="nt">&lt;TripId&gt;</span>naIzQJ0y2DBWjCIQOb2SHTsozwBsHDkdP<span class="nt">&lt;/TripId&gt;</span>
+        <span class="nt">&lt;TripName&gt;</span>Trip from Baltimore to New York<span class="nt">&lt;/TripName&gt;</span>
+        <span class="nt">&lt;StartDateLocal&gt;</span>2012-02-15T09:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+        <span class="nt">&lt;EndDateLocal&gt;</span>2012-02-21T17:30:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+        <span class="nt">&lt;UserLoginId&gt;</span>cm@example.com<span class="nt">&lt;/UserLoginId&gt;</span>
+        <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-02-14T17:13:07<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+        <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/naIzQJ0y2DBWjCIQOb2SHTsozwBsHDkdP<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;/ItineraryInfo&gt;</span>
+    <span class="nt">&lt;ItineraryInfo&gt;</span>
+        <span class="nt">&lt;TripId&gt;</span>I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL<span class="nt">&lt;/TripId&gt;</span>
+        <span class="nt">&lt;TripName&gt;</span>Trip from Baltimore to Seattle<span class="nt">&lt;/TripName&gt;</span>
+        <span class="nt">&lt;StartDateLocal&gt;</span>2012-03-26T09:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+        <span class="nt">&lt;EndDateLocal&gt;</span>2012-03-29T17:30:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+        <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-03-24T19:00:00<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+        <span class="nt">&lt;UserLoginId&gt;</span>cm@example.com<span class="nt">&lt;/UserLoginId&gt;</span>
+        <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;/ItineraryInfo&gt;</span>
+<span class="nt">&lt;/ItineraryInfoList&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-2-get-trip-summary-by-booking-type-and-start-date-request">Example 2: Get Trip Summary by Booking Type and Start Date Request</h3>
+
+<p>This request returns trip summaries for trips that started by the specified date for the specified booking type.</p>
+
+<h4 id="request-2">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/api/travel/trip/v1.1/?startDate=2015%2F01%2F01&amp;bookingType=Air</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="s">...</span>
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;ItineraryInfoList</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xmlns:xsd=</span><span class="s">"http://www.w3.org/2001/XMLSchema"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ItineraryInfo&gt;</span>
+        <span class="nt">&lt;TripId&gt;</span>I2uwiJJw8r7OwCIQOb2SHTsozwBsSie9W<span class="nt">&lt;/TripId&gt;</span>
+        <span class="nt">&lt;TripName&gt;</span>Trip by air from Seattle to San Francisco<span class="nt">&lt;/TripName&gt;</span>
+        <span class="nt">&lt;StartDateLocal&gt;</span>2015-01-01T12:30:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+        <span class="nt">&lt;EndDateLocal&gt;</span>2015-01-05T10:30:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+        <span class="nt">&lt;UserLoginId&gt;</span>cm@example.com<span class="nt">&lt;/UserLoginId&gt;</span>
+        <span class="nt">&lt;DateModifiedUtc&gt;</span>2014-12-23T11:10:00<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+        <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/
+        v1.1/I2uwiJJw8r7OwCIQOb2SHTsozwBsSie9W<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;/ItineraryInfo&gt;</span>
+<span class="nt">&lt;/ItineraryInfoList&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-3-get-trip-summary-by-created-date">Example 3: Get Trip Summary by Created Date</h3>
+
+<p>This requests returns trip summaries created after the specified date.</p>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/api/travel/trip/v1.1/?createdAfterDate=2015%2F02%2F13</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+</code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;ItineraryInfoList</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xmlns:xsd=</span><span class="s">"http://www.w3.org/2001/XMLSchema"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ItineraryInfo&gt;</span>
+        <span class="nt">&lt;TripId&gt;</span>BWjCIJJw8r7OwCIQOb2SHTsozwBsWlSie9<span class="nt">&lt;/TripId&gt;</span>
+        <span class="nt">&lt;TripName&gt;</span>Trip by air from Los Angeles to Mexico City<span class="nt">&lt;/TripName&gt;</span>
+        <span class="nt">&lt;StartDateLocal&gt;</span>2015-03-09T18:45:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+        <span class="nt">&lt;EndDateLocal&gt;</span>2015-03-30T08:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+        <span class="nt">&lt;UserLoginId&gt;</span>cm@example.com<span class="nt">&lt;/UserLoginId&gt;</span>
+        <span class="nt">&lt;DateModifiedUtc&gt;</span>2015-01-28T09:30:00<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+        <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/
+        v1.1/BWjCIJJw8r7OwCIQOb2SHTsozwBsWlSie9<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;/ItineraryInfo&gt;</span>
+<span class="nt">&lt;/ItineraryInfoList&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-4-get-trip-summary-with-paging">Example 4: Get Trip Summary with Paging</h3>
+
+<p>This request is used for dividing the response into pages for easier processing.</p>
+
+<h4 id="request-4">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/api/travel/trip/v1.1/?createdAfterDate=2012%2F02%2F01&amp;includeMetadata=true&amp;ItemsPerPage=2&amp;Page=1</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<p>The response returns a <code class="language-plaintext highlighter-rouge">ConnectResponse</code> parent element which contains a <code class="language-plaintext highlighter-rouge">MetaData</code> element with paging information and a <code class="language-plaintext highlighter-rouge">Data</code> element with an <code class="language-plaintext highlighter-rouge">ItineraryInfoList</code> child element.</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="nt">&lt;ConnectResponse&gt;</span>
+    <span class="nt">&lt;Metadata&gt;</span>
+        <span class="nt">&lt;Paging&gt;</span>
+            <span class="nt">&lt;TotalPages&gt;</span>38<span class="nt">&lt;/TotalPages&gt;</span>
+            <span class="nt">&lt;TotalItems&gt;</span>187<span class="nt">&lt;/TotalItems&gt;</span>
+            <span class="nt">&lt;CurrentPage&gt;</span>2<span class="nt">&lt;/CurrentPage&gt;</span>
+            <span class="nt">&lt;ItemsPerPage&gt;</span>2<span class="nt">&lt;/ItemsPerPage&gt;</span>
+            <span class="nt">&lt;PreviousPageURL&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/?
+                createdAfterDate=2012%2F02%2F01<span class="ni">&amp;amp;</span>
+                itemsPerPage=5<span class="ni">&amp;amp;</span>page=3<span class="ni">&amp;amp;</span>includeMetaData=true<span class="nt">&lt;/PreviousPageURL&gt;</span>
+            <span class="nt">&lt;NextPageURL&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/?
+                createdAfterDate=2012%2F02%2F01<span class="ni">&amp;amp;</span>
+                itemsPerPage=5<span class="ni">&amp;amp;</span>page=1<span class="ni">&amp;amp;</span>includeMetaData=true<span class="nt">&lt;/NextPageURL&gt;</span>
+        <span class="nt">&lt;/Paging&gt;</span>
+    <span class="nt">&lt;/Metadata&gt;</span>
+    <span class="nt">&lt;Data&gt;</span>
+        <span class="nt">&lt;ItineraryInfoList</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;ItineraryInfo&gt;</span>
+                <span class="nt">&lt;TripId&gt;</span>naIzQJ0y2DBWjCIQOb2SHTsozwBsHDkdP<span class="nt">&lt;/TripId&gt;</span>
+                <span class="nt">&lt;TripName&gt;</span>Trip from Baltimore to New York<span class="nt">&lt;/TripName&gt;</span>
+                <span class="nt">&lt;StartDateLocal&gt;</span>2012-02-15T09:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                <span class="nt">&lt;EndDateLocal&gt;</span>2012-02-21T17:30:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                <span class="nt">&lt;UserLoginId&gt;</span>cm@example.com<span class="nt">&lt;/UserLoginId&gt;</span>
+                <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-02-14T17:13:07<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/naIzQJ0y2DBWjCIQOb2SHTsozwBsHDkdP<span class="nt">&lt;/id&gt;</span>
+            <span class="nt">&lt;/ItineraryInfo&gt;</span>
+            <span class="nt">&lt;ItineraryInfo&gt;</span>
+                <span class="nt">&lt;TripId&gt;</span>I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL<span class="nt">&lt;/TripId&gt;</span>
+                <span class="nt">&lt;TripName&gt;</span>Trip from Baltimore to Seattle<span class="nt">&lt;/TripName&gt;</span>
+                <span class="nt">&lt;StartDateLocal&gt;</span>2012-03-26T09:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                <span class="nt">&lt;EndDateLocal&gt;</span>2012-03-29T17:30:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-03-24T19:00:00<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                <span class="nt">&lt;UserLoginId&gt;</span>cm@example.com<span class="nt">&lt;/UserLoginId&gt;</span>
+                <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL<span class="nt">&lt;/id&gt;</span>
+            <span class="nt">&lt;/ItineraryInfo&gt;</span>
+        <span class="nt">&lt;/ItineraryInfoList&gt;</span>
+    <span class="nt">&lt;/Data&gt;</span>
+<span class="nt">&lt;/ConnectResponse&gt;</span>
+</code></pre></div></div>
+
+<h2 id="get-trip-details"><a name="gettd"></a>Get Trip Details</h2>
+
+<p>The Get Itinerary Details endpoint is used for getting details for the specified trip. The elements included in the response vary as follows:</p>
+
+<ul>
+  <li>Some elements, such as <code class="language-plaintext highlighter-rouge">AirlineTickets</code> or <code class="language-plaintext highlighter-rouge">RailPayments</code>, appear only for bookings of the appropriate type. For example <code class="language-plaintext highlighter-rouge">AirlineTickets</code> appears in the response only for air bookings and <code class="language-plaintext highlighter-rouge">RailPayments</code>, for rail bookings.</li>
+  <li>Amount values, such as Rate or Tax, appear only if the requestor is the source of the booking. All other suppliers will not receive the amount elements associated with the bookings.</li>
+  <li>Some elements, such as <code class="language-plaintext highlighter-rouge">SabreDKNumber</code>, appear only if the booking was created by the relevant GDS.</li>
+  <li>Some elements are vendor-specific and appear only in responses for the associated vendor.</li>
+</ul>
+
+<p>This topic describes the full set of possible elements that can be returned. No itinerary can contain all of the possible elements, so the response will always be a subset of all the possible returned values.</p>
+
+<p>By default, when calling this API, the SAP Concur account associated with the OAuth access token used to make the API call should be the owner of the trip. This endpoint can also be used to get details for trips that the OAuth consumer does not own. This is most often done when a TMC needs to get trip details on behalf of a user. The TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.</p>
+
+<h2 id="request-5">Request</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /travel/trip/v1.1/trip_ID?[systemFormat=system_format|&amp;userid_type=login|&amp;user_id=login_ID]
+</code></pre></div></div>
+
+<h2 id="path-parameters">Path Parameters</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">trip_ID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong>: The identifier for the desired trip. This identifier is returned as the value of the ID element when getting trip summaries. For example, if the returned value of the ID element is I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL, then the URI for the request is <code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/I2uwiJJw8r7Owl3IWlSie9WIelxhAhwi</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="query-parameters-1">Query Parameters</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">systemFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: Format of the response for a different system. The supported value is Tripit. The format for the request URI using this query parameter is <code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/trip_ID?systemFormat=Tripit</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid_type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The type of user identification to use. Possible value is: login.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid_value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The user’s login ID. This parameter must be provided in conjunction with the <code class="language-plaintext highlighter-rouge">userid_type</code> parameter. The <code class="language-plaintext highlighter-rouge">userid_type</code> and <code class="language-plaintext highlighter-rouge">userid_value parameters</code> can only be used if the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard. The format for the request URI using the <code class="language-plaintext highlighter-rouge">userid_type</code> and <code class="language-plaintext highlighter-rouge">userid_value</code> query parameters is <code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/trip_ID?userid_type=login&amp;userid_value=login_ID</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="headers-1">Headers</h3>
+
+<h4 id="authorization-header-required-1">Authorization Header (Required)</h4>
+
+<p><code class="language-plaintext highlighter-rouge">Authorization: OAuth {access_token}</code><br />
+Where <code class="language-plaintext highlighter-rouge">access_token</code> is the OAuth 2.0 access token of the user whose itinerary information you want to retrieve. If you want to access company-wide itinerary information, the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
+
+<h4 id="accept-header-optional-1">Accept Header (Optional)</h4>
+
+<p>application/xml</p>
+
+<h2 id="get-trip-details-response-schema"><a name="gettd-schema"></a>Get Trip Details Response Schema</h2>
+<p>The response returns subset of the elements described in the following tables depending on the parameters used in the request and the status and details for the itinerary. The response can be formatted for TripIt, using the <code class="language-plaintext highlighter-rouge">systemformat</code> query string.</p>
+
+<h3 id="parent-elements">Parent Elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Trip ID URI with encrypted ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItinLocator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The itinerary locator. This element is now deprecated and only supported for backward compatibility.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ClientLocator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Represents the unique identifier of the trip in an external (non-Concur) system. Maximum length 32 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItinSourceName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The itinerary source. Format: TravelSupplier.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TripName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Name of the trip. Maximum length 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Comments</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Comments for this itinerary. Maximum length 512 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StartDateLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The start date of the trip in the starting location’s timezone. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EndDateLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The end date of the trip in the ending location’s timezone. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateCreatedUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The date that this trip was created, in UTC. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateModifiedUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The UTC date that this trip was last modified. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedVia</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The booking method for the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedByFirstName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The first name of the person who booked the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedByLastName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The last name of the person who booked the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateBookedLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The date the trip was booked, in the local time of the booking location. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CancelComments</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The comments provided if the itinerary is cancelled. Maximum length: 256 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Description</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The trip description. Maximum length: 512 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EndDateUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The end date of the trip, in UTC. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IsPersonal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>Whether the trip is a Business or Leisure trip. Format: true/false.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ProjectName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The associated project name for the trip. Maximum length: 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StartDateUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The start date of the trip, in UTC. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RuleViolations</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>The list of rule violations associated with the itinerary. This parent element contains a <code class="language-plaintext highlighter-rouge">RuleViolation</code> child element for each associated rule violation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The status of the itinerary. One of the following: 0- Confirmed; 1- Ticketed by agent; 2- Canceled.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Bookings</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>A parent element that contains a <code class="language-plaintext highlighter-rouge">Booking</code> child element for each booking associated with this itinerary.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="booking-element">Booking Element</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Segments</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of segments in this booking. The child elements included in this element vary depending on whether a TMC, SAP Concur client,  third-party developer, or TripLink supplier is requesting the itinerary details: <strong>For TMCs, clients, and third-party developers</strong>, the <code class="language-plaintext highlighter-rouge">Segments</code> element contains one or more <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, <code class="language-plaintext highlighter-rouge">Dining</code>, <code class="language-plaintext highlighter-rouge">Ride</code>, <code class="language-plaintext highlighter-rouge">Rail</code>, <code class="language-plaintext highlighter-rouge">Parking</code>, or <code class="language-plaintext highlighter-rouge">Travel</code> parent elements. <strong>For TripLink suppliers</strong>, the <code class="language-plaintext highlighter-rouge">Segments</code> element contains one or more <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, or <code class="language-plaintext highlighter-rouge">Ride</code> parent elements.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Passengers</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>Contains a <code class="language-plaintext highlighter-rouge">Passenger</code> child element for each included passenger. For more information on the <code class="language-plaintext highlighter-rouge">Passengers</code> element, see <a href="#postnt">Create a New Trip</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RecordLocator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier for a booking. This is often six alphanumeric characters, but can have other formats depending on the booking source.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookingSource</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The name of the booking source for this booking. A booking source is a textual name the system uses to track where a booking took place.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateModifiedUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The date the booking was last modified, in UTC. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateBookedLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The date the booking was created, in the booking location’s local time. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItinSourceName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The itinerary source. Format: TravelSupplier.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PassengerCount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>The number of passengers included in the booking.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples-1">Examples</h2>
+
+<h3 id="example-1-get-trip-details-for-a-trip-id">Example 1: Get Trip Details for a Trip ID</h3>
+
+<h4 id="request-6">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/api/travel/trip/v1.1/CNQR1234567890</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="s">...</span>
+</code></pre></div></div>
+
+<h4 id="response-4">Response</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/CNQR1234567890<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;ItinLocator&gt;</span>CNQR1234567890<span class="nt">&lt;/ItinLocator&gt;</span>
+    <span class="nt">&lt;ClientLocator&gt;</span>KK-CNQ-1M1P6-5HJ<span class="nt">&lt;/ClientLocator&gt;</span>
+    <span class="nt">&lt;ItinSourceName&gt;</span>ConcurTravel<span class="nt">&lt;/ItinSourceName&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+    <span class="nt">&lt;BookedVia&gt;</span>EveryGDS<span class="nt">&lt;/BookedVia&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;DateBookedLocal&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateBookedLocal&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Car&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>HK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T12:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>F1672664579<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;EndCityCode&gt;</span>SEA<span class="nt">&lt;/EndCityCode&gt;</span>
+                    <span class="nt">&lt;StartLocation&gt;</span>SEA<span class="nt">&lt;/StartLocation&gt;</span>
+                    <span class="nt">&lt;EndLocation&gt;</span>SEA<span class="nt">&lt;/EndLocation&gt;</span>
+                    <span class="nt">&lt;Class&gt;</span>E<span class="nt">&lt;/Class&gt;</span>
+                    <span class="nt">&lt;Body&gt;</span>C<span class="nt">&lt;/Body&gt;</span>
+                    <span class="nt">&lt;Transmission&gt;</span>M<span class="nt">&lt;/Transmission&gt;</span>
+                    <span class="nt">&lt;AirCondition&gt;</span>R<span class="nt">&lt;/AirCondition&gt;</span>
+                    <span class="nt">&lt;NumCars&gt;</span>1<span class="nt">&lt;/NumCars&gt;</span>
+                    <span class="nt">&lt;DiscountCode&gt;</span>346660<span class="nt">&lt;/DiscountCode&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>44.0000<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;TotalRate&gt;</span>44.0000<span class="nt">&lt;/TotalRate&gt;</span>
+                    <span class="nt">&lt;RateType&gt;</span>D<span class="nt">&lt;/RateType&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Fixed&gt;</span>
+                            <span class="nt">&lt;Description&gt;</span>Dropoff Fee<span class="nt">&lt;/Description&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>0.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DROPOFFFEE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                        <span class="nt">&lt;/Fixed&gt;</span>
+                        <span class="nt">&lt;RateWithAllowance&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>44.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>true<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DAYS<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>1.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceNumUnits&gt;</span>250.0000<span class="nt">&lt;/AllowanceNumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceAmount&gt;</span>0.2400<span class="nt">&lt;/AllowanceAmount&gt;</span>
+                            <span class="nt">&lt;AllowanceIsUnlimited&gt;</span>false<span class="nt">&lt;/AllowanceIsUnlimited&gt;</span>
+                        <span class="nt">&lt;/RateWithAllowance&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Car&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>ConcurCars<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>TravelSupplier<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Hotel&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>GK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>3364214265<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                    <span class="nt">&lt;RateCode&gt;</span>LV4<span class="nt">&lt;/RateCode&gt;</span>
+                    <span class="nt">&lt;Name&gt;</span>CONCUR HOTEL<span class="nt">&lt;/Name&gt;</span>
+                    <span class="nt">&lt;HotelPropertyId&gt;</span>CONQ<span class="nt">&lt;/HotelPropertyId&gt;</span>
+                    <span class="nt">&lt;CheckinTime&gt;</span>00:00<span class="nt">&lt;/CheckinTime&gt;</span>
+                    <span class="nt">&lt;CheckoutTime&gt;</span>00:00<span class="nt">&lt;/CheckoutTime&gt;</span>
+                    <span class="nt">&lt;NumPersons&gt;</span>1<span class="nt">&lt;/NumPersons&gt;</span>
+                    <span class="nt">&lt;NumRooms&gt;</span>1<span class="nt">&lt;/NumRooms&gt;</span>
+                    <span class="nt">&lt;CancellationPolicy&gt;</span>Cxl 1 day prior to Arrival<span class="nt">&lt;/CancellationPolicy&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>240.3500<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;RoomDescription&gt;</span>1 KING BED ACCESSIBLE ROOM - K1RRC<span class="nt">&lt;/RoomDescription&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Rate&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>240.3500<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>ROOMRATE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>H<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>3.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                        <span class="nt">&lt;/Rate&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Hotel&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>ConcurHotel<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;OriginalItinLocator&gt;</span>33491211<span class="nt">&lt;/OriginalItinLocator&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurTravel<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-2-get-trip-details-in-tripit-format">Example 2: Get Trip Details in TripIt Format</h3>
+
+<h4 id="request-7">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">GET</span> <span class="nn">/travel/trip/v1.1/73014481752?systemFormat=Tripit</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="s">...</span>
+</code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;Response&gt;</span>
+    <span class="nt">&lt;Trip&gt;</span>
+        <span class="nt">&lt;id&gt;</span>73014481752<span class="nt">&lt;/id&gt;</span>
+        <span class="nt">&lt;relative_url&gt;</span>/api/travel/trip/v1.1/73014481752<span class="nt">&lt;/relative_url&gt;</span>
+        <span class="nt">&lt;start_date&gt;</span>2013-08-21<span class="nt">&lt;/start_date&gt;</span>
+        <span class="nt">&lt;end_date&gt;</span>2013-08-24<span class="nt">&lt;/end_date&gt;</span>
+        <span class="nt">&lt;display_name&gt;</span>Strategy Team meeting<span class="nt">&lt;/display_name&gt;</span>
+        <span class="nt">&lt;is_private&gt;</span>true<span class="nt">&lt;/is_private&gt;</span>
+    <span class="nt">&lt;/Trip&gt;</span>
+    <span class="nt">&lt;AirObject&gt;</span>
+        <span class="nt">&lt;booking_site_conf_num&gt;</span>RL10001005<span class="nt">&lt;/booking_site_conf_num&gt;</span>
+        <span class="nt">&lt;booking_site_name&gt;</span>Concur Travel<span class="nt">&lt;/booking_site_name&gt;</span>
+        <span class="nt">&lt;booking_site_phone&gt;&lt;/booking_site_phone&gt;</span>
+        <span class="nt">&lt;booking_site_url&gt;</span>https://www.concursolutions.com<span class="nt">&lt;/booking_site_url&gt;</span>
+        <span class="nt">&lt;record_locator&gt;</span>4294993825<span class="nt">&lt;/record_locator&gt;</span>
+        <span class="nt">&lt;supplier_conf_num&gt;</span>CN10001005<span class="nt">&lt;/supplier_conf_num&gt;</span>
+        <span class="nt">&lt;supplier_contact&gt;&lt;/supplier_contact&gt;</span>
+        <span class="nt">&lt;supplier_email_address&gt;&lt;/supplier_email_address&gt;</span>
+        <span class="nt">&lt;supplier_name&gt;&lt;/supplier_name&gt;</span>
+        <span class="nt">&lt;supplier_phone&gt;&lt;/supplier_phone&gt;</span>
+        <span class="nt">&lt;supplier_url&gt;&lt;/supplier_url&gt;</span>
+        <span class="nt">&lt;is_purchased&gt;</span>1<span class="nt">&lt;/is_purchased&gt;</span>
+        <span class="nt">&lt;notes&gt;&lt;/notes&gt;</span>
+        <span class="nt">&lt;restrictions&gt;&lt;/restrictions&gt;</span>
+        <span class="nt">&lt;total_cost&gt;&lt;/total_cost&gt;</span>
+        <span class="nt">&lt;Segment&gt;</span>
+            <span class="nt">&lt;StartDateTime&gt;</span>
+                <span class="nt">&lt;date&gt;</span>2013-08-21<span class="nt">&lt;/date&gt;</span>
+                <span class="nt">&lt;time&gt;</span>07:45:00<span class="nt">&lt;/time&gt;</span>
+            <span class="nt">&lt;/StartDateTime&gt;</span>
+            <span class="nt">&lt;EndDateTime&gt;</span>
+                <span class="nt">&lt;date&gt;</span>2013-08-21<span class="nt">&lt;/date&gt;</span>
+                <span class="nt">&lt;time&gt;</span>13:03:00<span class="nt">&lt;/time&gt;</span>
+            <span class="nt">&lt;/EndDateTime&gt;</span>
+            <span class="nt">&lt;start_airport_code&gt;</span>PHX<span class="nt">&lt;/start_airport_code&gt;</span>
+            <span class="nt">&lt;start_gate&gt;</span>A11<span class="nt">&lt;/start_gate&gt;</span>
+            <span class="nt">&lt;start_terminal&gt;</span>4<span class="nt">&lt;/start_terminal&gt;</span>
+            <span class="nt">&lt;end_airport_code&gt;</span>ORD<span class="nt">&lt;/end_airport_code&gt;</span>
+            <span class="nt">&lt;end_gate&gt;</span>F8<span class="nt">&lt;/end_gate&gt;</span>
+            <span class="nt">&lt;end_terminal&gt;</span>2<span class="nt">&lt;/end_terminal&gt;</span>
+            <span class="nt">&lt;marketing_airline&gt;</span>US<span class="nt">&lt;/marketing_airline&gt;</span>
+            <span class="nt">&lt;marketing_flight_number&gt;</span>1<span class="nt">&lt;/marketing_flight_number&gt;</span>
+            <span class="nt">&lt;aircraft&gt;</span>320<span class="nt">&lt;/aircraft&gt;</span>
+            <span class="nt">&lt;duration&gt;&lt;/duration&gt;</span>
+            <span class="nt">&lt;distance&gt;</span>1433<span class="nt">&lt;/distance&gt;</span>
+            <span class="nt">&lt;notes&gt;&lt;/notes&gt;</span>
+            <span class="nt">&lt;seats&gt;&lt;/seats&gt;</span>
+            <span class="nt">&lt;service_class&gt;</span>Economy<span class="nt">&lt;/service_class&gt;</span>
+            <span class="nt">&lt;stops&gt;</span>Nonstop<span class="nt">&lt;/stops&gt;</span>
+        <span class="nt">&lt;/Segment&gt;</span>
+        <span class="nt">&lt;Segment&gt;</span>
+            <span class="nt">&lt;StartDateTime&gt;</span>
+                <span class="nt">&lt;date&gt;</span>2013-08-24<span class="nt">&lt;/date&gt;</span>
+                <span class="nt">&lt;time&gt;</span>13:55:00<span class="nt">&lt;/time&gt;</span>
+            <span class="nt">&lt;/StartDateTime&gt;</span>
+            <span class="nt">&lt;EndDateTime&gt;</span>
+                <span class="nt">&lt;date&gt;</span>2013-08-24<span class="nt">&lt;/date&gt;</span>
+                <span class="nt">&lt;time&gt;</span>16:58:00<span class="nt">&lt;/time&gt;</span>
+            <span class="nt">&lt;/EndDateTime&gt;</span>
+            <span class="nt">&lt;start_airport_code&gt;</span>ORD<span class="nt">&lt;/start_airport_code&gt;</span>
+            <span class="nt">&lt;start_gate&gt;&lt;/start_gate&gt;</span>
+            <span class="nt">&lt;start_terminal&gt;&lt;/start_terminal&gt;</span>
+            <span class="nt">&lt;end_airport_code&gt;</span>PHX<span class="nt">&lt;/end_airport_code&gt;</span>
+            <span class="nt">&lt;end_gate&gt;&lt;/end_gate&gt;</span>
+            <span class="nt">&lt;end_terminal&gt;&lt;/end_terminal&gt;</span>
+            <span class="nt">&lt;marketing_airline&gt;</span>US<span class="nt">&lt;/marketing_airline&gt;</span>
+            <span class="nt">&lt;marketing_flight_number&gt;</span>1728<span class="nt">&lt;/marketing_flight_number&gt;</span>
+            <span class="nt">&lt;aircraft&gt;</span>A320<span class="nt">&lt;/aircraft&gt;</span>
+            <span class="nt">&lt;duration&gt;&lt;/duration&gt;</span>
+            <span class="nt">&lt;distance&gt;&lt;/distance&gt;</span>
+            <span class="nt">&lt;notes&gt;&lt;/notes&gt;</span>
+            <span class="nt">&lt;seats&gt;&lt;/seats&gt;</span>
+            <span class="nt">&lt;service_class&gt;</span>Economy<span class="nt">&lt;/service_class&gt;</span>
+            <span class="nt">&lt;stops&gt;</span> stops<span class="nt">&lt;/stops&gt;</span>
+        <span class="nt">&lt;/Segment&gt;</span>
+        <span class="nt">&lt;Traveler&gt;</span>
+            <span class="nt">&lt;first_name&gt;</span>William<span class="nt">&lt;/first_name&gt;</span>
+            <span class="nt">&lt;middle_name&gt;&lt;/middle_name&gt;</span>
+            <span class="nt">&lt;last_name&gt;</span>Never<span class="nt">&lt;/last_name&gt;</span>
+            <span class="nt">&lt;frequent_traveler_num&gt;&lt;/frequent_traveler_num&gt;</span>
+            <span class="nt">&lt;frequent_traveler_supplier&gt;&lt;/frequent_traveler_supplier&gt;</span>
+            <span class="nt">&lt;ticket_num&gt;&lt;/ticket_num&gt;</span>
+        <span class="nt">&lt;/Traveler&gt;</span>
+    <span class="nt">&lt;/AirObject&gt;</span>
+<span class="nt">&lt;/Response&gt;</span>  
+</code></pre></div></div>
+
+<h2 id="create-a-new-trip"><a name="postnt"></a>Create a New Trip</h2>
+
+<p>This endpoint is used for creating a new trip. To create a new trip, the specified dates in the content body can only span the trip to be created and cannot span an existing trip. To create or update a trip on behalf of a user, the OAuth access token used to make the API call should be associated with the SAP Concur account of that user. The TripLink supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.</p>
+
+<h2 id="request-8">Request</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /travel/trip/v1.1?[userid_type=login&amp;user_id=login_ID]
+</code></pre></div></div>
+
+<h3 id="request-parameters">Request Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid_type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The type of user identification to use. Possible value is: <code class="language-plaintext highlighter-rouge">login_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid_value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The value for the user identification type. Currently the only available type is <code class="language-plaintext highlighter-rouge">login_id</code> so the value is the login credentials. This parameter must be provided in conjunction with the <code class="language-plaintext highlighter-rouge">userid_type</code> parameter. The <code class="language-plaintext highlighter-rouge">userid_type</code> and <code class="language-plaintext highlighter-rouge">userid_value</code> parameters can only be used if the user account associated with the OAuth 2.0 access token is associated with an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard. The format for the request URI using the <code class="language-plaintext highlighter-rouge">userid_type</code> and <code class="language-plaintext highlighter-rouge">userid_value</code> query parameters is <code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/trip_ID?userid_type=login&amp;userid_value=login_ID</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="headers-2">Headers</h2>
+
+<h3 id="authorization-header-required-2">Authorization Header (required)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Authorization: OAuth {access_token}</code></p>
+
+<p>Where <code class="language-plaintext highlighter-rouge">access_token</code> is the OAuth 2.0 access token of the user whose trip you want to create or update. If you want to access company-wide itinerary information, the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
+
+<h3 id="create-new-trip-request-schema"><a name="postnt-request-schema"></a>Create New Trip Request Schema</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Required or Optional</th>
+      <th>TripLink</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Itinerary</code></td>
+      <td>required</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">ItineraryType</code></td>
+      <td>The root element for a trip. For this endpoint, it contains the following elements: <code class="language-plaintext highlighter-rouge">ClientLocator</code>, <code class="language-plaintext highlighter-rouge">ItinSourceName</code>, <code class="language-plaintext highlighter-rouge">TripName</code>, <code class="language-plaintext highlighter-rouge">Comments</code>, <code class="language-plaintext highlighter-rouge">StartDateLocal</code>, <code class="language-plaintext highlighter-rouge">EndDateLocal</code>, <code class="language-plaintext highlighter-rouge">BookedByFirstName</code>, <code class="language-plaintext highlighter-rouge">BookedByLastName</code>, <code class="language-plaintext highlighter-rouge">Bookings</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TripName</code></td>
+      <td>required</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Name of the trip. Maximum length: 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TripStatus</code></td>
+      <td>required</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">unsignedByte</code></td>
+      <td>The status of the trip. One of the following: 0 - Confirmed; 1 - Ticketed; 2 - Canceled; 6 - Proposal; 7 - Booked Proposal. This element only appears if the <code class="language-plaintext highlighter-rouge">includeCanceledTrips</code> query parameter is used in the request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RecordLocator</code></td>
+      <td>required</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The unique identifier for a booking. This is often six alphanumeric characters, but can have other formats depending on the booking source.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookingSource</code></td>
+      <td>required</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The name of the booking source for this booking. A booking source is a textual name the system uses to track where a booking took place. This could be a GDS, OTA, Vendor code for a Supplier website, or Supplier Direct Connect API. For TripLink suppliers, this is the supplier’s name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">StartDateLocal</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The start date of the trip in the starting location’s timezone. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EndDateLocal</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The end date of the trip in the ending location’s timezone. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedByFirstName</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The first name of the person who booked the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedByLastName</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The last name of the person who booked the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Bookings</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>A parent element that contains a <code class="language-plaintext highlighter-rouge">Booking</code> child element for each booking associated with this itinerary.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Booking</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>A child element of the <code class="language-plaintext highlighter-rouge">Bookings</code> element which in turn contains the following child elements: <code class="language-plaintext highlighter-rouge">Segments</code>, <code class="language-plaintext highlighter-rouge">Passenger</code>s, <code class="language-plaintext highlighter-rouge">RecordLocator</code>, <code class="language-plaintext highlighter-rouge">BookingSource</code>, <code class="language-plaintext highlighter-rouge">DateModifiedUtc</code>, <code class="language-plaintext highlighter-rouge">DateBookedLocal</code>, <code class="language-plaintext highlighter-rouge">ItinSourceName</code>, and <code class="language-plaintext highlighter-rouge">PassengerCount</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Segments</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of segments in this booking. The child elements included in this element vary depending on whether a TMC, client, third-party developer, or TripLink supplier is requesting the itinerary details: <strong>For TMCs, clients, and third-party developers</strong>, the <code class="language-plaintext highlighter-rouge">Segments</code> element contains one or more <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, <code class="language-plaintext highlighter-rouge">Dining</code>, <code class="language-plaintext highlighter-rouge">Ride</code>, <code class="language-plaintext highlighter-rouge">Rail</code>, <code class="language-plaintext highlighter-rouge">Parking</code>, or <code class="language-plaintext highlighter-rouge">Travel</code> parent elements. For TripLink suppliers, the <code class="language-plaintext highlighter-rouge">Segments</code> element contains one or more <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, or <code class="language-plaintext highlighter-rouge">Ride</code> parent elements.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Comments</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Comments for the itinerary. Maximum length: 512 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItinSourceName</code></td>
+      <td>optional</td>
+      <td>N</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The itinerary source. Format: TravelSupplier.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookingOwner</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Indicates the tool that supplied the booking to Concur Travel.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Source</code></td>
+      <td>optional</td>
+      <td>N/A</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>This element is obsolete. It is supported for backward compatibility only.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateBookedLocal</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The date the booking was created, in the booking location’s local time. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FormOfPaymentName</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The name of the form of payment for the booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FormOfPaymentType</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The type of the form of payment.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TicketMailingAddress</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>The mailing address for the booked ticket, if available.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TicketPickupLocation</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>The pickup location for the booked ticket, if available.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TicketPickupNumber</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>The confirmation number for the booked ticket, if available.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AirfareQuotes</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of stored airfare quotes for this booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Airline Tickets</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of airline tickets for this booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Charges</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of charges for this booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MiscChargeOrders</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of miscellaneous air charges for this booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Passengers</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>Contains a <code class="language-plaintext highlighter-rouge">Passenger</code> child element for each included passenger. The <code class="language-plaintext highlighter-rouge">Passenger</code> child element in turn contains the following <strong>required child elements</strong>: <code class="language-plaintext highlighter-rouge">NameFirst</code>, <code class="language-plaintext highlighter-rouge">NameLast</code>, and the following <strong>optional elements</strong>: <code class="language-plaintext highlighter-rouge">NameMiddle</code>, <code class="language-plaintext highlighter-rouge">NamePrefix</code>, <code class="language-plaintext highlighter-rouge">NameRemark</code>, <code class="language-plaintext highlighter-rouge">NameSuffix</code>, <code class="language-plaintext highlighter-rouge">NameTitle</code>, <code class="language-plaintext highlighter-rouge">TextName</code>, and <code class="language-plaintext highlighter-rouge">FrequentTravelerProgram</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PassPrograms</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of pass programs for this booking. This parent element has a <code class="language-plaintext highlighter-rouge">PassProgram</code> child element for each pass program associated with the booking. The <code class="language-plaintext highlighter-rouge">PassProgram</code> parent element has the following child elements: <code class="language-plaintext highlighter-rouge">Amount</code>, <code class="language-plaintext highlighter-rouge">Name</code>, <code class="language-plaintext highlighter-rouge">Type</code>, <code class="language-plaintext highlighter-rouge">UserFirstName</code>, and <code class="language-plaintext highlighter-rouge">UserLastname</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PhoneNumbers</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of phone numbers associated with this booking. This parent element has a <code class="language-plaintext highlighter-rouge">PhoneNumberData</code> child element for each phone number associated with the booking. The <code class="language-plaintext highlighter-rouge">PhoneNumberData</code> parent element has the following child elements: <code class="language-plaintext highlighter-rouge">PassengerRPH</code>, <code class="language-plaintext highlighter-rouge">PhoneNumber</code>, <code class="language-plaintext highlighter-rouge">Type</code>, and <code class="language-plaintext highlighter-rouge">Description</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RailPayments</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of rail payments associated with rail segments in this booking. It has the following child elements: <code class="language-plaintext highlighter-rouge">RailPayment</code> that represents the payment information for a rail booking and <code class="language-plaintext highlighter-rouge">RailAdjustment</code> for the amount adjusted for a rail booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Segments</code></td>
+      <td>optional</td>
+      <td>Y</td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>List of segments in this booking. The child elements included in this element vary depending on whether a TMC, client, third-party developer, or TripLink supplier is requesting the itinerary details: <strong>For TMCs, clients, and third-party developers</strong>, the <code class="language-plaintext highlighter-rouge">Segments</code> element contains one or more <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, <code class="language-plaintext highlighter-rouge">Dining</code>, <code class="language-plaintext highlighter-rouge">Ride</code>, <code class="language-plaintext highlighter-rouge">Rail</code>, <code class="language-plaintext highlighter-rouge">Parking</code>, or <code class="language-plaintext highlighter-rouge">Travel</code> parent elements. <strong>For TripLink suppliers</strong>, the <code class="language-plaintext highlighter-rouge">Segments</code> element contains one or more <code class="language-plaintext highlighter-rouge">Air</code>, <code class="language-plaintext highlighter-rouge">Car</code>, <code class="language-plaintext highlighter-rouge">Hotel</code>, or <code class="language-plaintext highlighter-rouge">Ride</code> parent elements.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Delivery</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>The method this booking was delivered.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WaitListSegments</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>The segments that the traveler is waitlisted for this booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Warning</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>The warnings associated with the booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WebAddresses</code></td>
+      <td>optional</td>
+      <td>-</td>
+      <td>-</td>
+      <td>List of web addresses such as emails, pick-up URLs, and so on associated with this booking.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="create-new-trip-response-schema"><a name="postnt-response-schema"></a>Create New Trip Response Schema</h2>
+
+<p>The response returns an HTTP status code and if the trip is created successfully, it also returns the full posted trip details with the following additional elements inside the <code class="language-plaintext highlighter-rouge">Itinerary</code> parent element:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>TripLink</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Y</td>
+      <td>The URI including the trip ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItinLocator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Y</td>
+      <td>The Itinerary Locator value (trip ID without the URL). The <code class="language-plaintext highlighter-rouge">ItinLocator</code> value is used when updating an existing trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateModifiedUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>Y</td>
+      <td>The UTC formatted date that this booking was last modified.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedVia</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Y</td>
+      <td>The booking method or the GDS the itinerary was booked in.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateBookedLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>Y</td>
+      <td>The date, in the traveler’s local time, that the booking was made.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples-2">Examples</h2>
+
+<h3 id="example-1-tmc-creates-a-trip-for-user-using-their-login-credentials">Example 1: TMC Creates a Trip for User Using Their Login Credentials</h3>
+
+<p>This example shows how to create a trip for a user using their login credentials.</p>
+
+<h4 id="request-9">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/api/travel/trip/v1.1?userid_type=login_id&amp;userid_value=cm@example.com</span> <span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ClientLocator&gt;</span>KK-CNQ-1M1P6-5HJ<span class="nt">&lt;/ClientLocator&gt;</span>
+    <span class="nt">&lt;ItinSourceName&gt;</span>ConcurConnectAPI<span class="nt">&lt;/ItinSourceName&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Car&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>HK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T12:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>F1672664579<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;EndCityCode&gt;</span>SEA<span class="nt">&lt;/EndCityCode&gt;</span>
+                    <span class="nt">&lt;StartLocation&gt;</span>SEA<span class="nt">&lt;/StartLocation&gt;</span>
+                    <span class="nt">&lt;EndLocation&gt;</span>SEA<span class="nt">&lt;/EndLocation&gt;</span>
+                    <span class="nt">&lt;Class&gt;</span>E<span class="nt">&lt;/Class&gt;</span>
+                    <span class="nt">&lt;Body&gt;</span>C<span class="nt">&lt;/Body&gt;</span>
+                    <span class="nt">&lt;Transmission&gt;</span>M<span class="nt">&lt;/Transmission&gt;</span>
+                    <span class="nt">&lt;AirCondition&gt;</span>R<span class="nt">&lt;/AirCondition&gt;</span>
+                    <span class="nt">&lt;NumCars&gt;</span>1<span class="nt">&lt;/NumCars&gt;</span>
+                    <span class="nt">&lt;DiscountCode&gt;</span>346660<span class="nt">&lt;/DiscountCode&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>44.0000<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;TotalRate&gt;</span>44.0000<span class="nt">&lt;/TotalRate&gt;</span>
+                    <span class="nt">&lt;RateType&gt;</span>D<span class="nt">&lt;/RateType&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Fixed&gt;</span>
+                            <span class="nt">&lt;Description&gt;</span>Dropoff Fee<span class="nt">&lt;/Description&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>0.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DROPOFFFEE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                        <span class="nt">&lt;/Fixed&gt;</span>
+                        <span class="nt">&lt;RateWithAllowance&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>44.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>true<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DAYS<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>1.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceNumUnits&gt;</span>250.0000<span class="nt">&lt;/AllowanceNumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceAmount&gt;</span>0.2400<span class="nt">&lt;/AllowanceAmount&gt;</span>
+                            <span class="nt">&lt;AllowanceIsUnlimited&gt;</span>false<span class="nt">&lt;/AllowanceIsUnlimited&gt;</span>
+                        <span class="nt">&lt;/RateWithAllowance&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Car&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurConnectAPI<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Hotel&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>GK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>3364214265<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;RateCode&gt;</span>LV4<span class="nt">&lt;/RateCode&gt;</span>
+                    <span class="nt">&lt;Name&gt;</span>CONCUR HOTEL<span class="nt">&lt;/Name&gt;</span>
+                    <span class="nt">&lt;HotelPropertyId&gt;</span>CONQ<span class="nt">&lt;/HotelPropertyId&gt;</span>
+                    <span class="nt">&lt;CheckinTime&gt;</span>03:00 PM<span class="nt">&lt;/CheckinTime&gt;</span>
+                    <span class="nt">&lt;CheckoutTime&gt;</span>12:00 PM<span class="nt">&lt;/CheckoutTime&gt;</span>
+                    <span class="nt">&lt;NumPersons&gt;</span>1<span class="nt">&lt;/NumPersons&gt;</span>
+                    <span class="nt">&lt;NumRooms&gt;</span>1<span class="nt">&lt;/NumRooms&gt;</span>
+                    <span class="nt">&lt;CancellationPolicy&gt;</span>Cxl 1 day prior to Arrival<span class="nt">&lt;/CancellationPolicy&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>240.3500<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;RoomDescription&gt;</span>1 KING BED ACCESSIBLE ROOM - K1RRC<span class="nt">&lt;/RoomDescription&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Rate&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>240.3500<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>ROOMRATE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>H<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>3.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                        <span class="nt">&lt;/Rate&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Hotel&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;OriginalItinLocator&gt;</span>33491211<span class="nt">&lt;/OriginalItinLocator&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurConnectAPI<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+
+<h4 id="response-6">Response</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/CNQR1234567890<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;ItinLocator&gt;</span>CNQR1234567890<span class="nt">&lt;/ItinLocator&gt;</span>
+    <span class="nt">&lt;ClientLocator&gt;</span>KK-CNQ-1M1P6-5HJ<span class="nt">&lt;/ClientLocator&gt;</span>
+    <span class="nt">&lt;ItinSourceName&gt;</span>ConcurTravel<span class="nt">&lt;/ItinSourceName&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+    <span class="nt">&lt;BookedVia&gt;</span>EveryGDS<span class="nt">&lt;/BookedVia&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;DateBookedLocal&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateBookedLocal&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Car&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>HK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T12:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>F1672664579<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;EndCityCode&gt;</span>SEA<span class="nt">&lt;/EndCityCode&gt;</span>
+                    <span class="nt">&lt;StartLocation&gt;</span>SEA<span class="nt">&lt;/StartLocation&gt;</span>
+                    <span class="nt">&lt;EndLocation&gt;</span>SEA<span class="nt">&lt;/EndLocation&gt;</span>
+                    <span class="nt">&lt;Class&gt;</span>E<span class="nt">&lt;/Class&gt;</span>
+                    <span class="nt">&lt;Body&gt;</span>C<span class="nt">&lt;/Body&gt;</span>
+                    <span class="nt">&lt;Transmission&gt;</span>M<span class="nt">&lt;/Transmission&gt;</span>
+                    <span class="nt">&lt;AirCondition&gt;</span>R<span class="nt">&lt;/AirCondition&gt;</span>
+                    <span class="nt">&lt;NumCars&gt;</span>1<span class="nt">&lt;/NumCars&gt;</span>
+                    <span class="nt">&lt;DiscountCode&gt;</span>346660<span class="nt">&lt;/DiscountCode&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>44.0000<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;TotalRate&gt;</span>44.0000<span class="nt">&lt;/TotalRate&gt;</span>
+                    <span class="nt">&lt;RateType&gt;</span>D<span class="nt">&lt;/RateType&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Fixed&gt;</span>
+                            <span class="nt">&lt;Description&gt;</span>Dropoff Fee<span class="nt">&lt;/Description&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>0.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DROPOFFFEE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                        <span class="nt">&lt;/Fixed&gt;</span>
+                        <span class="nt">&lt;RateWithAllowance&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>44.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>true<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DAYS<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>1.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceNumUnits&gt;</span>250.0000<span class="nt">&lt;/AllowanceNumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceAmount&gt;</span>0.2400<span class="nt">&lt;/AllowanceAmount&gt;</span>
+                            <span class="nt">&lt;AllowanceIsUnlimited&gt;</span>false<span class="nt">&lt;/AllowanceIsUnlimited&gt;</span>
+                        <span class="nt">&lt;/RateWithAllowance&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Car&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>ConcurCars<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>TravelSupplier<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Hotel&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>GK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>3364214265<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                    <span class="nt">&lt;RateCode&gt;</span>LV4<span class="nt">&lt;/RateCode&gt;</span>
+                    <span class="nt">&lt;Name&gt;</span>CONCUR HOTEL<span class="nt">&lt;/Name&gt;</span>
+                    <span class="nt">&lt;HotelPropertyId&gt;</span>CONQ<span class="nt">&lt;/HotelPropertyId&gt;</span>
+                    <span class="nt">&lt;CheckinTime&gt;</span>00:00<span class="nt">&lt;/CheckinTime&gt;</span>
+                    <span class="nt">&lt;CheckoutTime&gt;</span>00:00<span class="nt">&lt;/CheckoutTime&gt;</span>
+                    <span class="nt">&lt;NumPersons&gt;</span>1<span class="nt">&lt;/NumPersons&gt;</span>
+                    <span class="nt">&lt;NumRooms&gt;</span>1<span class="nt">&lt;/NumRooms&gt;</span>
+                    <span class="nt">&lt;CancellationPolicy&gt;</span>Cxl 1 day prior to Arrival<span class="nt">&lt;/CancellationPolicy&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>240.3500<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;RoomDescription&gt;</span>1 KING BED ACCESSIBLE ROOM - K1RRC<span class="nt">&lt;/RoomDescription&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Rate&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>240.3500<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>ROOMRATE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>H<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>3.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                        <span class="nt">&lt;/Rate&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Hotel&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>ConcurHotel<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;OriginalItinLocator&gt;</span>33491211<span class="nt">&lt;/OriginalItinLocator&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurTravel<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-2-triplink-supplier-creates-a-trip">Example 2: TripLink Supplier Creates a Trip</h3>
+
+<p>This example shows how a TripLink supplier creates a trip.</p>
+
+<h4 id="request-10">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/api/travel/trip/v1.1/</span> <span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;TripStatus&gt;</span>HK<span class="nt">&lt;/TripStatus&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Car&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T12:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;EndCityCode&gt;</span>SEA<span class="nt">&lt;/EndCityCode&gt;</span>
+                <span class="nt">&lt;/Car&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Hotel&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>GK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;TimeZoneId&gt;</span>Pacific<span class="nt">&lt;/TimeZoneId&gt;</span>
+                    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                    <span class="nt">&lt;StartCity&gt;</span>Seattle<span class="nt">&lt;/StartCity&gt;</span>
+                    <span class="nt">&lt;StartCountry&gt;</span>US<span class="nt">&lt;/StartCountry&gt;</span>
+                <span class="nt">&lt;/Hotel&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+
+<h4 id="response-7">Response</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/CNQR1234567890<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;ItinLocator&gt;</span>CNQR1234567890<span class="nt">&lt;/ItinLocator&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;TripStatus&gt;</span>HK<span class="nt">&lt;/TripStatus&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+    <span class="nt">&lt;BookedVia&gt;</span>EveryGDS<span class="nt">&lt;/BookedVia&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;DateBookedLocal&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateBookedLocal&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Car&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T12:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;EndCityCode&gt;</span>SEA<span class="nt">&lt;/EndCityCode&gt;</span>
+                <span class="nt">&lt;/Car&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Hotel&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>GK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;TimeZoneId&gt;</span>Pacific<span class="nt">&lt;/TimeZoneId&gt;</span>
+                    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+                    <span class="nt">&lt;StartCity&gt;</span>Seattle<span class="nt">&lt;/StartCity&gt;</span>
+                    <span class="nt">&lt;StartCountry&gt;</span>US<span class="nt">&lt;/StartCountry&gt;</span>
+                <span class="nt">&lt;/Hotel&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-3-third-party-developer-creates-a-trip-using-the-access-token-used-to-make-the-api-call">Example 3: Third-Party Developer Creates a Trip Using the Access Token Used to Make the API Call</h3>
+
+<p>This example shows how to create a trip for a user whose account is associated with the access token used to make the API call.</p>
+
+<h4 id="request-11">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">https://www.concursolutions.com/api/travel/trip/v1.1</span> <span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">...</span>
+
+<span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;ClientLocator&gt;</span>KK-CNQ-1M1P6-5HJ<span class="nt">&lt;/ClientLocator&gt;</span>
+    <span class="nt">&lt;ItinSourceName&gt;</span>ConcurConnectAPI<span class="nt">&lt;/ItinSourceName&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;TripStatus&gt;</span>7<span class="nt">&lt;/TripStatus&gt;</span>
+    <span class="nt">&lt;TravelRequestId&gt;</span>3339<span class="nt">&lt;/TravelRequestId&gt;</span>
+    <span class="nt">&lt;CustomAttributes&gt;</span>
+        <span class="nt">&lt;CustomAttribute&gt;</span>
+            <span class="nt">&lt;ExternalId</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;DataType&gt;</span>Numeric<span class="nt">&lt;/DataType&gt;</span>
+            <span class="nt">&lt;Name&gt;</span>ProposalBatchSize<span class="nt">&lt;/Name&gt;</span>
+            <span class="nt">&lt;DisplayTitle</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;Data&gt;</span>3<span class="nt">&lt;/Data&gt;</span>
+            <span class="nt">&lt;DisplayOnItinerary&gt;</span>true<span class="nt">&lt;/DisplayOnItinerary&gt;</span>
+        <span class="nt">&lt;/CustomAttribute&gt;</span>
+        <span class="nt">&lt;CustomAttribute&gt;</span>
+            <span class="nt">&lt;ExternalId</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;DataType&gt;</span>Numeric<span class="nt">&lt;/DataType&gt;</span>
+            <span class="nt">&lt;Name&gt;</span>ProposalSequenceIndex<span class="nt">&lt;/Name&gt;</span>
+            <span class="nt">&lt;DisplayTitle</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;Data&gt;</span>1<span class="nt">&lt;/Data&gt;</span>
+            <span class="nt">&lt;DisplayOnItinerary&gt;</span>true<span class="nt">&lt;/DisplayOnItinerary&gt;</span>
+        <span class="nt">&lt;/CustomAttribute&gt;</span>
+    <span class="nt">&lt;/CustomAttributes&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Car&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>HK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T12:00:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>F1672664579<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;StartCityCode&gt;</span>SEA<span class="nt">&lt;/StartCityCode&gt;</span>
+                    <span class="nt">&lt;EndCityCode&gt;</span>SEA<span class="nt">&lt;/EndCityCode&gt;</span>
+                    <span class="nt">&lt;StartLocation&gt;</span>SEA<span class="nt">&lt;/StartLocation&gt;</span>
+                    <span class="nt">&lt;EndLocation&gt;</span>SEA<span class="nt">&lt;/EndLocation&gt;</span>
+                    <span class="nt">&lt;Class&gt;</span>E<span class="nt">&lt;/Class&gt;</span>
+                    <span class="nt">&lt;Body&gt;</span>C<span class="nt">&lt;/Body&gt;</span>
+                    <span class="nt">&lt;Transmission&gt;</span>M<span class="nt">&lt;/Transmission&gt;</span>
+                    <span class="nt">&lt;AirCondition&gt;</span>R<span class="nt">&lt;/AirCondition&gt;</span>
+                    <span class="nt">&lt;NumCars&gt;</span>1<span class="nt">&lt;/NumCars&gt;</span>
+                    <span class="nt">&lt;DiscountCode&gt;</span>346660<span class="nt">&lt;/DiscountCode&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>44.0000<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;TotalRate&gt;</span>44.0000<span class="nt">&lt;/TotalRate&gt;</span>
+                    <span class="nt">&lt;RateType&gt;</span>D<span class="nt">&lt;/RateType&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Fixed&gt;</span>
+                            <span class="nt">&lt;Description&gt;</span>Dropoff Fee<span class="nt">&lt;/Description&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>0.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DROPOFFFEE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                        <span class="nt">&lt;/Fixed&gt;</span>
+                        <span class="nt">&lt;RateWithAllowance&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>44.0000<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T12:00:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>true<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>DAYS<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>C<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>1.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceNumUnits&gt;</span>250.0000<span class="nt">&lt;/AllowanceNumUnits&gt;</span>
+                            <span class="nt">&lt;AllowanceAmount&gt;</span>0.2400<span class="nt">&lt;/AllowanceAmount&gt;</span>
+                            <span class="nt">&lt;AllowanceIsUnlimited&gt;</span>false<span class="nt">&lt;/AllowanceIsUnlimited&gt;</span>
+                        <span class="nt">&lt;/RateWithAllowance&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Car&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurConnectAPI<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments&gt;</span>
+                <span class="nt">&lt;Hotel&gt;</span>
+                    <span class="nt">&lt;Vendor&gt;</span>CQ<span class="nt">&lt;/Vendor&gt;</span>
+                    <span class="nt">&lt;Status&gt;</span>GK<span class="nt">&lt;/Status&gt;</span>
+                    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+                    <span class="nt">&lt;ConfirmationNumber&gt;</span>3364214265<span class="nt">&lt;/ConfirmationNumber&gt;</span>
+                    <span class="nt">&lt;RateCode&gt;</span>LV4<span class="nt">&lt;/RateCode&gt;</span>
+                    <span class="nt">&lt;Name&gt;</span>CONCUR HOTEL<span class="nt">&lt;/Name&gt;</span>
+                    <span class="nt">&lt;HotelPropertyId&gt;</span>CONQ<span class="nt">&lt;/HotelPropertyId&gt;</span>
+                    <span class="nt">&lt;CheckinTime&gt;</span>03:00 PM<span class="nt">&lt;/CheckinTime&gt;</span>
+                    <span class="nt">&lt;CheckoutTime&gt;</span>12:00 PM<span class="nt">&lt;/CheckoutTime&gt;</span>
+                    <span class="nt">&lt;NumPersons&gt;</span>1<span class="nt">&lt;/NumPersons&gt;</span>
+                    <span class="nt">&lt;NumRooms&gt;</span>1<span class="nt">&lt;/NumRooms&gt;</span>
+                    <span class="nt">&lt;CancellationPolicy&gt;</span>Cxl 1 day prior to Arrival<span class="nt">&lt;/CancellationPolicy&gt;</span>
+                    <span class="nt">&lt;DailyRate&gt;</span>240.3500<span class="nt">&lt;/DailyRate&gt;</span>
+                    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                    <span class="nt">&lt;RoomDescription&gt;</span>1 KING BED ACCESSIBLE ROOM - K1RRC<span class="nt">&lt;/RoomDescription&gt;</span>
+                    <span class="nt">&lt;Charges&gt;</span>
+                        <span class="nt">&lt;Rate&gt;</span>
+                            <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                            <span class="nt">&lt;Amount&gt;</span>240.3500<span class="nt">&lt;/Amount&gt;</span>
+                            <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T23:59:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+                            <span class="nt">&lt;IsPrimary&gt;</span>false<span class="nt">&lt;/IsPrimary&gt;</span>
+                            <span class="nt">&lt;SemanticsCode&gt;</span>ROOMRATE<span class="nt">&lt;/SemanticsCode&gt;</span>
+                            <span class="nt">&lt;SemanticsVendorType&gt;</span>H<span class="nt">&lt;/SemanticsVendorType&gt;</span>
+                            <span class="nt">&lt;PerUnit&gt;</span>DAY<span class="nt">&lt;/PerUnit&gt;</span>
+                            <span class="nt">&lt;NumUnits&gt;</span>3.0000<span class="nt">&lt;/NumUnits&gt;</span>
+                        <span class="nt">&lt;/Rate&gt;</span>
+                    <span class="nt">&lt;/Charges&gt;</span>
+                <span class="nt">&lt;/Hotel&gt;</span>
+            <span class="nt">&lt;/Segments&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>TravelBookings.com<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;OriginalItinLocator&gt;</span>33491211<span class="nt">&lt;/OriginalItinLocator&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurConnectAPI<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+
+<h4 id="response-8">Response</h4>
+<p>The response is the same as in Example 1.</p>
+
+<h2 id="update-a-trip"><a name="postut"></a>Update a Trip</h2>
+
+<p>Creates a new trip or updates an existing trip. A new trip will be created if the trip dates span no existing trip and the request doesn’t include a <code class="language-plaintext highlighter-rouge">tripId</code>. If a <code class="language-plaintext highlighter-rouge">tripId</code> is included in the URI it will update the specified trip. The full trip information is included in the update request, which replaces the existing trip.</p>
+
+<p>This endpoint can be used to create trips for a user that is not the OAuth consumer. This is most often done when a travel supplier or TMC needs to create a trip on behalf of a user. The supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.</p>
+
+<h2 id="cancel-a-trip"><a name="delete"></a>Cancel a Trip</h2>
+
+<p>This endpoint can be used to cancel all segments in a trip. To cancel a trip on behalf of a user, the OAuth access token used to make the API call should be associated with the SAP Concur account of that user. The TripLink supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.</p>
+
+<h2 id="request-12">Request</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /travel/trip/v1.1/cancel?tripid=trip_ID[&amp;userid_type=login&amp;userid_value=login_ID]
+</code></pre></div></div>
+
+<h3 id="path-parameters-1">Path Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cancel</code></td>
+      <td>required</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The URI path modifier for canceling a trip. The format for the request is <code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/cancel?tripid=trip_ID[&amp;userid_type=login&amp;userid_value=login_ID]</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="request-parameters-1">Request Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tripid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The identifier for the trip to be updated. For example, if the value of <code class="language-plaintext highlighter-rouge">tripid</code> is <code class="language-plaintext highlighter-rouge">I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL</code>, then the request is <code class="language-plaintext highlighter-rouge">POST /travel/trip/v1.1?tripid=I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid_type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The type of user identification to use. Possible value is: <code class="language-plaintext highlighter-rouge">login_id</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userid_value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Optional</strong>: The user’s login ID. This parameter must be provided in conjunction with the <code class="language-plaintext highlighter-rouge">userid_type</code> parameter. The <code class="language-plaintext highlighter-rouge">userid_type</code> and <code class="language-plaintext highlighter-rouge">userid_value</code> parameters can only be used if the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard. The format for the request URI using the <code class="language-plaintext highlighter-rouge">userid_type</code> and <code class="language-plaintext highlighter-rouge">userid_value</code> query parameters is <code class="language-plaintext highlighter-rouge">/travel/trip/v1.1/trip_ID?userid_type=login&amp;userid_value=login_ID</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="headers-3">Headers</h2>
+
+<h3 id="authorization-header-required-3">Authorization Header (Required)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">Authorization: OAuth {access_token}</code></p>
+
+<p>Where <code class="language-plaintext highlighter-rouge">access_token</code> is the OAuth 2.0 access token of the user whose trip you want to create or update. If you want to access company-wide itinerary information, the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
+
+<h3 id="request-content-body">Request Content Body</h3>
+
+<p>None.</p>
+
+<h3 id="cancel-trip-request-schema"><a name="delete-schema"></a>Cancel Trip Request Schema</h3>
+
+<p>The request returns the full trip details for the cancelled trip. If the request is successful, the response trip will not contain any segments because they have been cancelled. The response includes the following additional elements inside the <code class="language-plaintext highlighter-rouge">Itinerary</code> parent element:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The URI including the trip ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ItinLocator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The itinerary locator value (trip ID without the URL). The <code class="language-plaintext highlighter-rouge">ItinLocator</code> value is used when updating an existing trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateModifiedUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The UTC formatted date that this booking was last modified.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BookedVia</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>The GDS the itinerary was booked in.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DateBookedLocal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td>The date, in the traveler’s local time, that the booking was made.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples-3">Examples</h2>
+
+<h3 id="example-cancel-a-trip-with-a-specific-trip-id">Example: Cancel a Trip with a Specific Trip ID</h3>
+
+<h4 id="request-13">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/api/travel/trip/v1.1/cancel?tripId=CNQR1234567890</span> <span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="s">...</span>
+</code></pre></div></div>
+
+<h4 id="response-9">Response</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Itinerary</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travel/trip/2010/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/travel/trip/v1.1/CNQR1234567890<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;ItinLocator&gt;</span>CNQR1234567890<span class="nt">&lt;/ItinLocator&gt;</span>
+    <span class="nt">&lt;ClientLocator&gt;</span>KK-CNQ-1M1P6-5HJ<span class="nt">&lt;/ClientLocator&gt;</span>
+    <span class="nt">&lt;ItinSourceName&gt;</span>ConcurTravel<span class="nt">&lt;/ItinSourceName&gt;</span>
+    <span class="nt">&lt;TripName&gt;</span>Trip from Dallas to Seattle<span class="nt">&lt;/TripName&gt;</span>
+    <span class="nt">&lt;Comments</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;StartDateLocal&gt;</span>2013-12-21T07:25:00<span class="nt">&lt;/StartDateLocal&gt;</span>
+    <span class="nt">&lt;EndDateLocal&gt;</span>2013-12-24T23:59:00<span class="nt">&lt;/EndDateLocal&gt;</span>
+    <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+    <span class="nt">&lt;BookedVia&gt;</span>EveryGDS<span class="nt">&lt;/BookedVia&gt;</span>
+    <span class="nt">&lt;BookedByFirstName&gt;</span>Chris<span class="nt">&lt;/BookedByFirstName&gt;</span>
+    <span class="nt">&lt;BookedByLastName&gt;</span>Miller<span class="nt">&lt;/BookedByLastName&gt;</span>
+    <span class="nt">&lt;DateBookedLocal&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateBookedLocal&gt;</span>
+    <span class="nt">&lt;Bookings&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments/&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>C123456789<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>ConcurCars<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>TravelSupplier<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+        <span class="nt">&lt;Booking&gt;</span>
+            <span class="nt">&lt;Segments/&gt;</span>
+            <span class="nt">&lt;Passengers&gt;</span>
+                <span class="nt">&lt;Passenger&gt;</span>
+                    <span class="nt">&lt;NameFirst&gt;</span>Chris<span class="nt">&lt;/NameFirst&gt;</span>
+                    <span class="nt">&lt;NameLast&gt;</span>Miller<span class="nt">&lt;/NameLast&gt;</span>
+                <span class="nt">&lt;/Passenger&gt;</span>
+            <span class="nt">&lt;/Passengers&gt;</span>
+            <span class="nt">&lt;RecordLocator&gt;</span>0987654321<span class="nt">&lt;/RecordLocator&gt;</span>
+            <span class="nt">&lt;BookingSource&gt;</span>ConcurHotel<span class="nt">&lt;/BookingSource&gt;</span>
+            <span class="nt">&lt;DateModifiedUtc&gt;</span>2012-07-24T19:15:52<span class="nt">&lt;/DateModifiedUtc&gt;</span>
+            <span class="nt">&lt;DateBookedLocal&gt;</span>2013-11-10T13:01:00<span class="nt">&lt;/DateBookedLocal&gt;</span>
+            <span class="nt">&lt;OriginalItinLocator&gt;</span>33491211<span class="nt">&lt;/OriginalItinLocator&gt;</span>
+            <span class="nt">&lt;ItinSourceName&gt;</span>ConcurTravel<span class="nt">&lt;/ItinSourceName&gt;</span>
+            <span class="nt">&lt;PassengerCount&gt;</span>1<span class="nt">&lt;/PassengerCount&gt;</span>
+        <span class="nt">&lt;/Booking&gt;</span>
+    <span class="nt">&lt;/Bookings&gt;</span>
+<span class="nt">&lt;/Itinerary&gt;</span>
+</code></pre></div></div>
+:ET

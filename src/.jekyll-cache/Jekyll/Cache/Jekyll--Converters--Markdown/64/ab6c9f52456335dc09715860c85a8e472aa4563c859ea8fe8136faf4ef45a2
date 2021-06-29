@@ -1,0 +1,994 @@
+I"��<ul>
+  <li><a href="#audience">Target Audience</a></li>
+  <li><a href="#prerequisites">Prerequisites</a></li>
+  <li><a href="#objectives">Objectives</a></li>
+  <li><a href="#environment">Development Environment</a></li>
+  <li><a href="#scope">Application Scope</a>
+    <ul>
+      <li><a href="#oauth">Company Level OAuth</a></li>
+      <li><a href="#company-oauth-token">Obtain Company Level OAuth Token</a></li>
+      <li><a href="#definitions">Definitions</a></li>
+      <li><a href="#company-refresh-token">Obtain Company Level Refresh Token</a></li>
+      <li><a href="#company-access-token">Obtain Company Level Access Token</a></li>
+      <li><a href="#scope-management">Scopes &amp; Scope Management</a></li>
+      <li><a href="#geolocation">Geolocation</a></li>
+    </ul>
+  </li>
+  <li><a href="#unique-user">Unique User ID</a></li>
+  <li><a href="#request-api">Using the Request v4 API</a>
+    <ul>
+      <li><a href="#plan-trip">Traveler Plans Trip</a></li>
+      <li><a href="#travel-request">Make a Travel Request</a></li>
+      <li><a href="#agency-receives-request">Agency Receives Travel Request Notification</a></li>
+      <li><a href="#get-request">Get Travel Request Information</a></li>
+    </ul>
+  </li>
+  <li><a href="#agency-proposal">Agency Submits Proposal</a>
+    <ul>
+      <li><a href="#trip-status">Trip Status</a></li>
+    </ul>
+  </li>
+  <li><a href="#review-proposal">Reviewing a Proposal</a>
+    <ul>
+      <li><a href="#agency-notification">Agencies Receive Notification of Proposal Selected by Traveler</a></li>
+      <li><a href="#convert-proposal">Convert Proposal to Actual PNR</a></li>
+      <li><a href="#traveler-notified">Traveler Notified of Confirmed Booking and Receives Itinerary</a></li>
+      <li><a href="#cancel">Cancel Itinerary</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>The Request v4.0 API provides travel request information for a specified traveler. Request v4.0 allows applications to pull and post information about the traveler’s request for travel.</p>
+
+<h2 id="target-audience"><a name="audience"></a>Target Audience</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Audience</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Primary</strong></td>
+      <td>SAP Concur TMC Partners who plan to develop an SAP Concur certified application to support Request v4.0 API and agency proposal.</td>
+    </tr>
+    <tr>
+      <td><strong>Secondary</strong></td>
+      <td>SAP Concur customers who wish to develop an internal-only application to support Request v4.0. Internally developed applications do not require certification, however, most the specifications in this document should be considered best practices for SAP Concur application development and support.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="prerequisites"><a name="prerequisites"></a>Prerequisites</h2>
+
+<p>You should have some familiarity with core SAP Concur applications and services such as Concur Travel and Concur Request. The following list of technical knowledge and skills will aid in the development and certification of your application.</p>
+
+<ul>
+  <li>Business travel industry experience.</li>
+  <li>RESTful API / XML development, JSON, OAuth 2.0, and data structures.</li>
+</ul>
+
+<h2 id="objectives"><a name="objectives"></a>Objectives</h2>
+
+<p>After reading this document, you will have a better understanding of the following:</p>
+
+<ul>
+  <li>How to develop SAP Concur connectors (applications).</li>
+  <li>How to support the Request v4.0 API to:
+    <ul>
+      <li>Create a travel request.</li>
+      <li>Retrieve a list of travel request summaries based on desired parameters.</li>
+      <li>Retrieve a traveler’s specific request.</li>
+      <li>Submit traveler’s proposals.</li>
+      <li>Review traveler’s proposals.</li>
+      <li>Convert an accepted proposal to a passenger name record (PNR).</li>
+      <li>Cancel a proposal.</li>
+    </ul>
+  </li>
+  <li>Save/store the <code class="language-plaintext highlighter-rouge">concur-correlationid</code>.</li>
+  <li>Support travel request error conditions and messages.</li>
+  <li>Prepare for application certification.</li>
+  <li>Prepare for application enablement and deployment.</li>
+</ul>
+
+<h2 id="development-environment">Development Environment</h2>
+
+<p>The following is a general list of items necessary to build your application:</p>
+
+<ul>
+  <li>Professional Edition instance of Concur Request, Concur Travel or Concur Travel &amp; Expense.</li>
+  <li>Default travel configuration.</li>
+  <li>Default agency configuration with Concur-Sabre PCC.</li>
+  <li>Sandboxes may not have SAP Concur Travel booking capabilities, this is available upon request.</li>
+  <li>To POST a travel proposal within a company, that company’s instance must be activated.</li>
+  <li>A default development app with a unique Client ID, Client Secret, and applicable scopes.</li>
+  <li>Sandbox Admin credentials with Demo/Dev user credentials.</li>
+  <li>OPTIONAL: Access to RESTful development tool such as Postman or SoapUI to review JSON/XML requests.</li>
+</ul>
+
+<p><img src="images/1-sequence-diagram-travel-requestV4.png" alt="Sequence Diagram" /></p>
+
+<h2 id="application-scope"><a name="scope"></a>Application Scope</h2>
+
+<h3 id="company-level-oauth"><a name="oauth"></a>Company Level OAuth</h3>
+
+<p>Your application will obtain and store one company-level OAuth refresh token for each company that opts to uses your application.  You will obtain that authenticated refresh token via an authorized 24-hour single-use request token from SAP Concur. Your 24-hour request token allows you to obtain a six-month refresh token which that is keyed off a unique application identifier, application secret, and the company’s UUID.  The refresh token will be used repeatedly to obtain 60-minute access (bearer) tokens which that your application will use to conduct API calls to and from SAP Concur. If you plan to deploy your application across specific agencies or travel configurations within a single company, SAP Concur will provide that capability in the future via a new role or group.</p>
+
+<p><img src="images/2-company-authentication-flow.png" alt="Company Authentication Flow Diagram" /></p>
+
+<p>The following steps are necessary to obtain a company-level refresh token:</p>
+
+<ul>
+  <li>Obtain company name and company ID (also known as CliqID).</li>
+  <li>Authorized SAP Concur Consultants/PMs will generate 12-hour request tokens.</li>
+  <li>Use the 12-hour request token to generate a refresh token. You have up to five opportunities before the request token expires.</li>
+  <li>Store and reuse the <code class="language-plaintext highlighter-rouge">refresh_token</code> – a UUID4 identifier that allows your application to obtain fresh <code class="language-plaintext highlighter-rouge">access_tokens</code>.</li>
+  <li>Use the <code class="language-plaintext highlighter-rouge">access_tokens</code> (also known as bearer tokens) to make API calls.</li>
+</ul>
+
+<h3 id="obtain-company-level-oauth-token"><a name="company-oauth-token"></a>Obtain Company Level OAuth Token</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/oauth2/v0/token
+</code></pre></div></div>
+
+<h4 id="header">Header</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Content-Type:application/x-www-form-urlencoded
+</code></pre></div></div>
+
+<h4 id="body">Body</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client_id:c14f2547##############e94f235c39
+client_secret:1bfb####-#####################245ce
+grant_type:password
+username:3b#####################ecd
+password:fd44###################5d331
+credtype:authtoken
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "expires_in": 3600,
+    "scope": "openid TRVPRF PASSV COMPD EMERG TSAI TMCSP MEDIC UNUTX USER COMPANY NOTIF FOP TRVREQ ITINER user_read user.read company.read",
+    "token_type": "Bearer",
+    "access_token": "BYxVfClZpo-zw…",
+    "refresh_token":"a95caa0f-249a…",
+    "refresh_expires_in": 1517039403,
+    "id_token": "4n7i2-e9zP9qrpc4B…",
+    "geolocation": "https://us.api.concursolutions.com "
+}
+</code></pre></div></div>
+
+<h3 id="definitions"><a name="definitions"></a>Definitions</h3>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">expires_in</code> value is returned in seconds. Your <code class="language-plaintext highlighter-rouge">access_token</code> is valid for 60 minutes.</li>
+  <li>The scopes returned in the response are what your application has been registered to work with. Scopes are selectively enabled based on the functionality required. The values returned in the response should never change. If new scopes are added, your application will require recertification.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">token_type</code> – Bearer, which SAP Concur returns, is an industry standard. Bearer can be interpreted as “allow access to the bearer of this token.”</li>
+  <li>The <code class="language-plaintext highlighter-rouge">access_token</code>, a JWT, informs SAP Concur that the bearer of the returned token has been authorized to access the SAP Concur API and perform specific actions as specified by the scopes that have been granted. The <code class="language-plaintext highlighter-rouge">access_token</code> is valid for sixty minutes from the time of the response. If necessary, you may architect your application to scale up and use multiple access tokens to spawn multiple threads.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">refresh_token</code>, also a JWT, is the unique token that contains the information required to obtain a new <code class="language-plaintext highlighter-rouge">access_token</code> or <code class="language-plaintext highlighter-rouge">id_token</code>. Refresh tokens are good for a minimum of six months and are subject to strict storage requirements to ensure they are not compromised. Refresh tokens can also be revoked. Your application is expected to overwrite or replace your stored refresh tokens in case the response returns a different <code class="language-plaintext highlighter-rouge">refresh_token</code> value.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">refresh_expires_in</code> value is returned in epoch time. Use a library that provides conversion capability. For a UI version, navigate to https://www.epochconverter.com.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">id_token</code>, also a JWT, is returned. For company-level or enterprise-level applications like Travel Profile, there is no need to retrieve details of the company-level authenticated user. The information stored in the ID token JWT is necessary for User-level authentication based applications such as Uber or Triplink supplier applications like Avis or Marriot.</li>
+  <li>The geolocation value should be stored as your application’s base URI. Since SAP Concur has multiple data centers, it may be required to obtain and store data from customers who are hosted in EMEA as well as the US. If your application receives error code 16, “invalid request”, user lives elsewhere, your application must be able to submit a second request to “us.api.concursolutions.com” or “eu1.api.concursolutions.com” and store that geolocation. The geolocation also identifies for SAP Concur geographically where the user is stored.</li>
+  <li>Store the refresh token, access tokens, expiration date, and instance URL (geolocation) along with your internal information about the company’s profile.</li>
+</ul>
+
+<h3 id="obtain-company-level-refresh-token"><a name="company-refresh-token"></a>Obtain Company Level Refresh Token</h3>
+
+<p><img src="images/3-company-level-refresh-token.png" alt="Postman example request for company level refresh token" /></p>
+
+<ul>
+  <li>Username = Company GUID</li>
+  <li>Password = Request token</li>
+</ul>
+
+<p><strong>Important</strong>: Do not submit any HTTP requests with the above parameters in your request headers or the request will be rejected.</p>
+
+<p><img src="images/4-company-level-refresh-token.png" alt="Image showing various token, including company level refresh token" /></p>
+
+<h3 id="obtain-company-level-access-token"><a name="company-access-token"></a>Obtain Company Level Access Token</h3>
+
+<p>Store and manage the following:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Token_type</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Refresh_token</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Access_token</code></li>
+  <li>Expiration date</li>
+  <li>Geolocation</li>
+  <li><code class="language-plaintext highlighter-rouge">Refresh_token_expiration</code></li>
+</ul>
+
+<p><img src="images/5-company-level-refresh-token.png" alt="Postman collection to obtain company level refresh token" /></p>
+
+<p><img src="images/6-company-level-refresh-token.png" alt="Postman results for previous Postman call" /></p>
+
+<blockquote>
+  <p><strong>Note</strong>: In your application, always overwrite the refresh token that is returned by SAP Concur. You can validate or compare but overwriting the <code class="language-plaintext highlighter-rouge">refresh_token</code> from SAP Concur is best. This ensures that your refresh token is always valid.</p>
+</blockquote>
+
+<h3 id="scopes--scope-management"><a name="scope-management"></a>Scopes &amp; Scope Management</h3>
+
+<p>Travel applications normally have the following scopes registered:</p>
+
+<ul>
+  <li>openid</li>
+  <li>travelrequest.write</li>
+  <li>user.read</li>
+  <li>company.read</li>
+  <li>user_read</li>
+  <li>FOP</li>
+  <li>GHOST</li>
+  <li>ITINER</li>
+  <li>TRVREQ</li>
+  <li>TRVPRF</li>
+  <li>PASSV</li>
+  <li>EMERG</li>
+  <li>TSAI</li>
+  <li>TMCSP</li>
+  <li>MEDIC</li>
+  <li>UNUTX</li>
+  <li>USER</li>
+  <li>NOTIF</li>
+  <li>COMPD</li>
+  <li>COMPANY</li>
+</ul>
+
+<p>Explanations for these scopes are documented on developer.concur.com. If you wish to have your application include additional scopes or endpoints, you must have your application recertified.</p>
+
+<h3 id="geolocation"><a name="geolocation"></a>Geolocation</h3>
+
+<p>SAP Concur has multiple datacenters:</p>
+
+<ul>
+  <li>US = https://us.api.concursolutions.com</li>
+  <li>EMEA = https://emea.api.concursolutions.com</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Host Location</th>
+      <th>URL from refresh token based on host location of Company GUID</th>
+      <th>URL to use for Travel Profile</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EMEA</td>
+      <td>https://emea.api.concursolutions.com/oauth2/v0/token</td>
+      <td>https://emea.api.concursolutions.com/api/travelprofile/v2.0/profile</td>
+    </tr>
+    <tr>
+      <td>US</td>
+      <td>https://us.api.concursolutions.com/oauth2/v0/token</td>
+      <td>https://us.api.concursolutions.com/api/travelprofile/v2.0/profile</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="unique-user-id"><a name="unique-user"></a>Unique User ID</h2>
+
+<p>The UUID format is being used throughout the SAP Concur platform and new OAuth methodology. It is recommended that you adopt the SAP Concur UUID as the traveler’s unique identifier. Your application’s client (company) identifier, client secret, and authentication tokens are all in UUID format. Even error IDs are returned in UUID format.</p>
+
+<p>UUID v4 information can be found here: https://en.wikipedia.org/wiki/Universally_unique_identifier. This tool is also useful: https://www.uuidgenerator.net/.</p>
+
+<p>UUID is now available with every user record stored at SAP Concur. UUIDs are automatically generated whenever an employee or traveler record is created - even during 350 record type imports. And as the standard indicates, the UUID value (which is randomly generated) is guaranteed unique at SAP Concur. Because of this uniqueness, UUID can be used as a matching-fact and the unique identifier at SAP Concur. You no longer need to rely on XML Sync ID or Employee ID which are often not unique and is responsible for numerous user record errors and support queries. Login ID, still unique at SAP Concur, is widely adopted by SAP Concur Platform partner applications but has not be widely adopted with XML Profile Sync.
+We do not recommend using the old Sync ID associated with XML Profile Sync. We highly recommend transitioning to support SAP Concur UUID.</p>
+
+<p>UUID was exposed in the Travel Profile API and it was also made available in the PNR editing tool. The label and data in the travel profile response will look like this: e588fcc4-417f-4d6c-81de-6b51bfc9c90a SAP Concur UUID is required for the Request v4 API. It is the only element supported as its matching-fact.</p>
+
+<h2 id="using-the-request-v40-api"><a name="request-api"></a>Using the Request v4.0 API</h2>
+
+<h2 id="traveler-plans-trip"><a name="plan-trip"></a>Traveler Plans Trip</h2>
+
+<p>The traveler has to plan few aspects of travel, before creating or submitting the travel request. Below are a few things need to be planned.</p>
+
+<ul>
+  <li>Plan itinerary.</li>
+  <li>Plan hotel bookings.</li>
+  <li>Plan car rentals.</li>
+  <li>Specify the airlines to use.</li>
+</ul>
+
+<h3 id="make-a-travel-request"><a name="travel-request"></a>Make a Travel Request</h3>
+
+<p>Once the traveler has the plan ready, they can create the travel request by using Concur Request.</p>
+
+<h4 id="step-1-log-in-to-sap-concur">Step 1: Log in to SAP Concur</h4>
+
+<p>Once logged in, click the <strong>Request</strong> tab:</p>
+
+<p><img src="images/7-login-page-travel-req-v4.png" alt="SAP Concur page after log in" /></p>
+
+<h4 id="step-2-create-a-travel-request">Step 2: Create a Travel Request</h4>
+
+<p>Once you are logged in, select <strong>New Request</strong> under the <strong>Request</strong> tab and fill in the traveler details.</p>
+
+<p><strong>Request Header</strong>: Includes details for request policy, request name, travel start date, travel end date, and purpose of the travel.</p>
+
+<p><img src="images/8-request-header.png" alt="New Request Form UI" /></p>
+
+<p>Next you’ll fill in details for all the segments. This may include:</p>
+
+<p><strong>Air Segment</strong></p>
+
+<p><img src="images/9-air-segment.png" alt="Request UI showing air segments" /></p>
+
+<p><strong>Rail Segment</strong></p>
+
+<p><img src="images/10-rail-segment.jpg" alt="Request UI showing rail segments" /></p>
+
+<p><strong>Hotel Segment</strong></p>
+
+<p><img src="images/11-hotel-segment.jpg" alt="Request UI showing hotel segment" /></p>
+
+<p><strong>Car Segment</strong></p>
+
+<p><img src="images/12-car-segment.jpg" alt="Request UI showing car segment" /></p>
+
+<p>Click <strong>Submit Request</strong>. This request will be added to your <strong>Active Travel Requests</strong>.</p>
+
+<p><img src="images/13-all-travel-requests.png" alt="Request UI showing all active travel requests" /></p>
+
+<h3 id="agency-receives-travel-request-notification"><a name="agency-receives-request"></a>Agency Receives Travel Request Notification</h3>
+
+<p>Agencies that have subscribed to ESS services will be notified, once the traveler submits the travel request. Based on the <strong>Travel_Request_Id</strong> the agencies fetch the travel request details for a traveler.</p>
+
+<h3 id="get-travel-request-information"><a name="get-request"></a>Get Travel Request Information</h3>
+
+<h4 id="to-fetch-the-travelers-request-using-status-submitted-without-parsing-uuid">To fetch the traveler’s request using status “Submitted” without parsing UUID.</h4>
+
+<p><strong>NOTE</strong>: If no value for status is indicated, then by default it will return the response for “ALL ACTIVE” travel requests.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URI: GET
+/travelrequest/v4/requests?view=SUBMITTED
+Content-Type: application/json
+Authorization: Bearer 
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/8354DDF8F1C6374BAE25189266293CF9",
+            "id": "8354DDF8F1C6374BAE25189266293CF9",
+{
+    "data": [
+"approvalStatus": {
+                "code": "SUBMITTED",
+                "name": "Pending Travel Agency Update"
+            },
+            "approved": false,
+            "businessPurpose": "Leisure Trip",
+            "canceledPostApproval": false,
+            "closed": false,
+            "comment": "Bon voyage\n",
+            "creationDate": "2019-06-03T21:14:42.000Z",
+            "endDate": "2019-08-25",
+            "everSentBack": false,
+            "expenses": [],
+            "highestExceptionLevel": "NONE",
+            "name": "Dream Trip To Paris",
+            "owner": {
+                "href": "https://us.api.concursolutions.com/profile/v1/users/eaf089a5-1569-31ab-95d2-7ef8dc58354a",
+                "id": "eaf089a5-1569-31ab-95d2-7ef8dc58354a",
+                "template": "https://us.api.concursolutions.com/profile/v1/users/{id}",
+                "firstName": "William",
+                "middleInitial": "p",
+                "lastName": "Never2"
+            },
+            "pendingApproval": true,
+            "requestId": "3339",
+            "startDate": "2019-07-26",
+            "submitDate": "2019-06-03T21:29:50.000Z",
+            "totalApprovedAmount": {
+                "value": 12000,
+                "currency": "USD"
+            },
+            "totalPostedAmount": {
+                "value": 12000,
+                "currency": "USD"
+            },
+            "totalRemainingAmount": {
+                "value": 12000,
+                "currency": "USD"
+            },
+            "type": {
+                "code": "TRAVEL",
+                "label": "Travel"
+            }
+        },
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/C1CDF36851BF1645ABA76C92A91DE06E",
+            "id": "C1CDF36851BF1645ABA76C92A91DE06E",
+            "approvalStatus": {
+                "code": "SUBMITTED",
+                "name": "Pending Travel Agency Update"
+            },
+            "approved": false,
+            "businessPurpose": "Business Visit",
+            "canceledPostApproval": false,
+            "closed": false,
+            "comment": "Book a travel\n",
+            "creationDate": "2019-05-30T17:47:06.000Z",
+            "endDate": "2019-07-01",
+            "everSentBack": false,
+            "expenses": [],
+            "highestExceptionLevel": "NONE",
+            "name": "Book To California",
+            "owner": {
+                "href": "https://us.api.concursolutions.com/profile/v1/users/eaf089a5-1569-31ab-95d2-7ef8dc58354a",
+                "id": "eaf089a5-1569-31ab-95d2-7ef8dc58354a",
+                "template": "https://us.api.concursolutions.com/profile/v1/users/{id}",
+                "firstName": "William",
+                "middleInitial": "p",
+                "lastName": "Never2"
+            },
+            "pendingApproval": true,
+            "requestId": "3336",
+            "startDate": "2019-06-28",
+            "submitDate": "2019-05-30T17:51:31.000Z",
+            "totalApprovedAmount": {
+                "value": 400,
+                "currency": "USD"
+            },
+            "totalPostedAmount": {
+                "value": 400,
+                "currency": "USD"
+            },
+            "totalRemainingAmount": {
+                "value": 400,
+                "currency": "USD"
+            },
+            "type": {
+                "code": "TRAVEL",
+                "label": "Travel"
+            }
+        },
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/47ACF629CB38F54EAEAB227BFC4E09C8",
+            "id": "47ACF629CB38F54EAEAB227BFC4E09C8",
+            "approvalStatus": {
+                "code": "SUBMITTED",
+                "name": "Pending Travel Agency Update"
+            },
+            "approved": false,
+            "businessPurpose": "Buisness Travel",
+            "canceledPostApproval": false,
+            "closed": false,
+            "comment": "Travel\n",
+            "creationDate": "2019-05-30T17:48:49.000Z",
+            "endDate": "2019-07-01",
+            "everSentBack": false,
+            "expenses": [],
+            "highestExceptionLevel": "NONE",
+            "name": "Book to BLR",
+            "owner": {
+                "href": "https://us.api.concursolutions.com/profile/v1/users/eaf089a5-1569-31ab-95d2-7ef8dc58354a",
+                "id": "eaf089a5-1569-31ab-95d2-7ef8dc58354a",
+                "template": "https://us.api.concursolutions.com/profile/v1/users/{id}",
+                "firstName": "William",
+                "middleInitial": "p",
+                "lastName": "Never2"
+            },
+            "pendingApproval": true,
+            "requestId": "3337",
+            "startDate": "2019-06-28",
+            "submitDate": "2019-05-30T17:53:21.000Z",
+            "totalApprovedAmount": {
+                "value": 3000,
+                "currency": "USD"
+            },
+            "totalPostedAmount": {
+                "value": 3000,
+                "currency": "USD"
+            },
+            "totalRemainingAmount": {
+                "value": 3000,
+                "currency": "USD"
+            },
+            "type": {
+                "code": "TRAVEL",
+                "label": "Travel"
+            }
+        },
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/4A8BA47815C5034CB5493A1F5F57351F",
+            "id": "4A8BA47815C5034CB5493A1F5F57351F",
+            "approvalStatus": {
+                "code": "SUBMITTED",
+                "name": "Pending Travel Agency Update"
+            },
+            "approved": false,
+            "businessPurpose": "save",
+            "canceledPostApproval": false,
+            "closed": false,
+            "creationDate": "2019-05-28T19:25:42.000Z",
+            "endDate": "2019-06-12",
+            "everSentBack": false,
+            "expenses": [],
+            "highestExceptionLevel": "NONE",
+            "name": "Trip to Bangalore",
+            "owner": {
+                "href": "https://us.api.concursolutions.com/profile/v1/users/ba6a1658-7d6d-3659-b8a5-884319f6d724",
+                "id": "ba6a1658-7d6d-3659-b8a5-884319f6d724",
+                "template": "https://us.api.concursolutions.com/profile/v1/users/{id}",
+                "firstName": "William",
+                "middleInitial": "p",
+                "lastName": "Never"
+            },
+            "pendingApproval": true,
+            "requestId": "3334",
+            "startDate": "2019-06-04",
+            "submitDate": "2019-05-28T19:29:46.000Z",
+            "totalApprovedAmount": {
+                "value": 3000,
+                "currency": "USD"
+            },
+            "totalPostedAmount": {
+                "value": 3000,
+                "currency": "USD"
+            },
+            "totalRemainingAmount": {
+                "value": 3000,
+                "currency": "USD"
+            },
+            "type": {
+                "code": "TRAVEL",
+                "label": "Travel"
+            }
+        }
+    ],
+    "operations": [
+        {
+            "rel": "first",
+            "href": "https://us.api.concursolutions.com/v4/requests?view=ACTIVE&amp;limit=10&amp;start=0&amp;sortField=startDate&amp;sortOrder=DESC"
+        },
+        {
+            "rel": "last",
+            "href": "https://us.api.concursolutions.com/v4/requests?view=ACTIVE&amp;limit=10&amp;start=0&amp;sortField=startDate&amp;sortOrder=DESC"
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h4 id="to-view-the-travelers-profile-using-get-travel-profile-by-uuid">To view the traveler’s profile, using “GET Travel Profile by UUID.”</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URI: GET https://us.api.concursolutions.com/api/travelprofile/v2.0/profile?uuid=eaf089a5-1569-31ab-95d2-7ef8dc58354a
+Content-Type: application/xml
+Authorization: Bearer 
+</code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;ProfileResponse xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Status="Active" LoginId="wsadmin@pe30-connect.com" Unique=""&gt;
+    &lt;General&gt;
+        &lt;NamePrefix /&gt;
+        &lt;FirstName&gt;William&lt;/FirstName&gt;
+        &lt;MiddleName&gt;pe30&lt;/MiddleName&gt;
+        &lt;LastName&gt;Never&lt;/LastName&gt;
+        &lt;NameSuffix /&gt;
+        &lt;PreferredName /&gt;
+        &lt;JobTitle /&gt;
+        &lt;CompanyEmployeeID&gt;1000100010003&lt;/CompanyEmployeeID&gt;
+        &lt;PreferredLanguage&gt;en&lt;/PreferredLanguage&gt;
+        &lt;HasOpenBooking&gt;false&lt;/HasOpenBooking&gt;
+        &lt;CountryCode&gt;US&lt;/CountryCode&gt;
+        &lt;CompanyName&gt;SAP Concur TMC-130-PE&lt;/CompanyName&gt;
+        &lt;CompanyID&gt;283423&lt;/CompanyID&gt;
+        &lt;RuleClass&gt;Default Travel Class&lt;/RuleClass&gt;
+        &lt;TravelConfigID&gt;146793&lt;/TravelConfigID&gt;
+        &lt;UUID&gt;4b81eb15-da89-4964-987c-9a61ff01eb65&lt;/UUID&gt;
+    &lt;/General&gt;
+    &lt;Addresses /&gt;
+    &lt;EmailAddresses&gt;
+        &lt;EmailAddress Contact="true" Type="Business"&gt;wsadmin@pe30-connect.com&lt;/EmailAddress&gt;
+    &lt;/EmailAddresses&gt;
+    &lt;RatePreferences&gt;
+        &lt;AAARate&gt;false&lt;/AAARate&gt;
+        &lt;AARPRate&gt;false&lt;/AARPRate&gt;
+        &lt;GovtRate&gt;false&lt;/GovtRate&gt;
+        &lt;MilitaryRate&gt;false&lt;/MilitaryRate&gt;
+    &lt;/RatePreferences&gt;
+    &lt;Air&gt;
+        &lt;AirMemberships /&gt;
+        &lt;Seat&gt;
+            &lt;InterRowPositionCode&gt;DontCare&lt;/InterRowPositionCode&gt;
+            &lt;SectionPositionCode&gt;DontCare&lt;/SectionPositionCode&gt;
+        &lt;/Seat&gt;
+        &lt;AirOther /&gt;
+    &lt;/Air&gt;
+    &lt;Rail&gt;
+        &lt;Seat&gt;DontCare&lt;/Seat&gt;
+        &lt;Coach&gt;DontCare&lt;/Coach&gt;
+        &lt;NoiseComfort&gt;DontCare&lt;/NoiseComfort&gt;
+        &lt;Bed&gt;DontCare&lt;/Bed&gt;
+        &lt;BedCategory&gt;DontCare&lt;/BedCategory&gt;
+        &lt;Berth&gt;DontCare&lt;/Berth&gt;
+        &lt;Deck&gt;DontCare&lt;/Deck&gt;
+        &lt;SpaceType&gt;DontCare&lt;/SpaceType&gt;
+        &lt;FareSpaceComfort&gt;DontCare&lt;/FareSpaceComfort&gt;
+        &lt;SpecialMeals&gt;DontCare&lt;/SpecialMeals&gt;
+        &lt;Contingencies&gt;DontCare&lt;/Contingencies&gt;
+        &lt;RailMemberships /&gt;
+    &lt;/Rail&gt;
+    &lt;Car&gt;
+        &lt;CarSmokingCode&gt;DontCare&lt;/CarSmokingCode&gt;
+        &lt;CarGPS&gt;false&lt;/CarGPS&gt;
+        &lt;CarType&gt;DontCare&lt;/CarType&gt;
+        &lt;CarMemberships /&gt;
+        &lt;CarOther /&gt;
+        &lt;CarSkiRack&gt;false&lt;/CarSkiRack&gt;
+        &lt;CarTransmission&gt;DontCare&lt;/CarTransmission&gt;
+    &lt;/Car&gt;
+    &lt;Hotel&gt;
+        &lt;HotelSmokingCode&gt;DontCare&lt;/HotelSmokingCode&gt;
+        &lt;HotelMemberships /&gt;
+        &lt;RoomType&gt;DontCare&lt;/RoomType&gt;
+        &lt;PreferFoamPillows&gt;false&lt;/PreferFoamPillows&gt;
+        &lt;PreferCrib&gt;false&lt;/PreferCrib&gt;
+        &lt;PreferRollawayBed&gt;false&lt;/PreferRollawayBed&gt;
+        &lt;PreferGym&gt;false&lt;/PreferGym&gt;
+        &lt;PreferPool&gt;false&lt;/PreferPool&gt;
+        &lt;PreferRestaurant&gt;false&lt;/PreferRestaurant&gt;
+        &lt;PreferWheelchairAccess&gt;false&lt;/PreferWheelchairAccess&gt;
+        &lt;PreferAccessForBlind&gt;false&lt;/PreferAccessForBlind&gt;
+        &lt;PreferRoomService&gt;false&lt;/PreferRoomService&gt;
+        &lt;PreferEarlyCheckIn&gt;false&lt;/PreferEarlyCheckIn&gt;
+    &lt;/Hotel&gt;
+    &lt;Roles /&gt;
+    &lt;TSAInfo /&gt;
+&lt;/ProfileResponse&gt;
+</code></pre></div></div>
+
+<h4 id="to-view-the-travelers-expenses-fetch-all-active-travel-requests-using-get-tr-by-requests-by-statusactive">To view the traveler’s expenses fetch all active travel requests, using “Get TR by requests by status=ACTIVE.”</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+   "href":"https://us.api.concursolutions.com/travelrequest/v4/requests/8354DDF8F1C6374BAE266293CF9",
+"id": "8354DDF8F1C6374BAE25189266293CF9"
+approvalStatus": {
+                "code": "SUBMITTED",
+                "name": "Pending Travel Agency Update"
+ }
+</code></pre></div></div>
+
+<p>By passing the <code class="language-plaintext highlighter-rouge">travel_request_id</code> (id: “8354DDF8F1C6374BAE25189266293CF9”) you can get the expenses for a traveler.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URI: GET https://us.api.concursolutions.com/travelrequest/v4/requests/8354DDF8F1C6374BAE25189266293CF9
+Content-Type: application/json
+Authorization: Bearer 
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/8354DDF8F1C6374BAE25189266293CF9",
+    "id": "8354DDF8F1C6374BAE25189266293CF9",
+    "approvalStatus": {
+        "code": "SUBMITTED",
+        "name": "Pending Travel Agency Update"
+    },
+    "approved": false,
+    "businessPurpose": "Leisure Trip",
+    "canceledPostApproval": false,
+    "closed": false,
+    "creationDate": "2019-06-03T21:14:42.000Z",
+    "endDate": "2019-08-25",
+    "everSentBack": false,
+    "expensePolicy": {
+        "href": "https://us.api.concursolutions.com/expenseconfig/v4/users/null/context/TRAVELER/policies/DC9A8A67FE220F48BB1C0C7A625FB4CB",
+        "id": "DC9A8A67FE220F48BB1C0C7A625FB4CB",
+        "template": "https://us.api.concursolutions.com/expenseconfig/v4/users/null/context/TRAVELER/policies/{id}"
+    },
+    "expenses": [
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/expenses/04B6E512AC2FCD4FA66697D14CC964F5?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+            "id": "04B6E512AC2FCD4FA66697D14CC964F5",
+            "template": "https://us.api.concursolutions.com/travelrequest/v4/expenses/{id}?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab"
+        },
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/expenses/5B1B4B514CE60243AF70F53062DFAE5B?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+            "id": "5B1B4B514CE60243AF70F53062DFAE5B",
+            "template": "https://us.api.concursolutions.com/travelrequest/v4/expenses/{id}?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab"
+        },
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/expenses/B6D135D95C7E904988C6569410F8114B?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+            "id": "B6D135D95C7E904988C6569410F8114B",
+            "template": "https://us.api.concursolutions.com/travelrequest/v4/expenses/{id}?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab"
+        },
+        {
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/expenses/7F06BECD2A87F64F87F346C94C7D095D?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+            "id": "7F06BECD2A87F64F87F346C94C7D095D",
+            "template": "https://us.api.concursolutions.com/travelrequest/v4/expenses/{id}?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab"
+        }
+    ],
+    "lastModified": "2019-06-03T21:29:50.000Z",
+    "name": "Dream Trip To Paris",
+    "owner": {
+        "href": "https://us.api.concursolutions.com/profile/v1/users/613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+        "id": "613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+        "template": "https://us.api.concursolutions.com/profile/v1/users/{id}",
+        "firstName": "William",
+        "middleInitial": "p",
+        "lastName": "Never2"
+    },
+    "pendingApproval": true,
+    "policy": {
+        "id": "C61AF0EA030FF243ABA2C4C115E0EA50"
+    },
+    "requestId": "3339",
+    "startDate": "2019-07-26",
+    "submitDate": "2019-06-03T21:29:50.000Z",
+    "totalApprovedAmount": {
+        "value": 12000,
+        "currency": "USD"
+    },
+    "totalPostedAmount": {
+        "value": 12000,
+        "currency": "USD"
+    },
+    "totalRemainingAmount": {
+        "value": 12000,
+        "currency": "USD"
+    },
+    "travelAgency": {
+        "href": "https://us.api.concursolutions.com/travelrequest/v4/travelagencies/D8E1B4B94CA13B4DA1642147B600731B",
+        "id": "D8E1B4B94CA13B4DA1642147B600731B",
+        "template": "https://us.api.concursolutions.com/travelrequest/v4/travelagencies/{id}"
+    },
+    "type": {
+        "code": "TRAVEL",
+        "label": "Travel"
+    },
+    "operations": [
+        {
+            "rel": "recall",
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/8354DDF8F1C6374BAE25189266293CF9/recall?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab"
+        },
+        {
+            "rel": "cancel",
+            "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/8354DDF8F1C6374BAE25189266293CF9/cancel?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab"
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h4 id="to-get-the-travelers-request-expenses-by-passing-expense_id-and-user_id">To get the travelers request expenses, by passing <code class="language-plaintext highlighter-rouge">Expense_id</code> and <code class="language-plaintext highlighter-rouge">user_id</code>.</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URI: GET https://us.api.concursolutions.com/travelrequest/v4/expenses/B6D135D95C7E904988C6569410F8114B?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab
+</code></pre></div></div>
+
+<h4 id="response-4">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "href": "https://us.api.concursolutions.com/travelrequest/v4/expenses/B6D135D95C7E904988C6569410F8114B?userId=613cd9cd-9145-4806-ae6c-bfc7da54c9ab",
+    "id": "B6D135D95C7E904988C6569410F8114B",
+    "allocations": [
+        {
+            "allocationAmount": {
+                "value": 1000,
+                "currency": "USD"
+            },
+            "approvedAmount": {
+                "value": 1000,
+                "currency": "USD"
+            },
+            "allocationId": "52B89920BABD924B8FAAE9328B7B37C3",
+            "postedAmount": {
+                "value": 1000,
+                "currency": "USD"
+            },
+            "expenseId": "B6D135D95C7E904988C6569410F8114B",
+            "percentEdited": false,
+            "systemAllocation": true,
+            "percentage": 100
+        }
+    ],
+    "approvedAmount": {
+        "value": 1000,
+        "currency": "USD"
+    },
+    "exchangeRate": {
+        "value": 1,
+        "operation": "MULTIPLY"
+    },
+    "expenseType": {
+        "id": "CARRT",
+        "name": "Car Rental",
+        "href": "https://us.api.concursolutions.com/expenseconfig/v4/users/613cd9cd-9145-4806-ae6c-bfc7da54c9ab/context/TRAVELER/expensetypes/CARRT",
+        "expKey": null,
+        "formId": null,
+        "customFormId": null,
+        "hasSegment": null,
+        "formType": null,
+        "spendCategoryCode": null,
+        "expId": null,
+        "formula": null,
+        "agencyVisible": null,
+        "caRelated": null,
+        "spendExpenseCode": null
+    },
+    "postedAmount": {
+        "value": 1000,
+        "currency": "USD"
+    },
+    "remainingAmount": {
+        "value": 1000,
+        "currency": "USD"
+    },
+    "transactionAmount": {
+        "value": 1000,
+        "currency": "USD"
+    },
+    "transactionDate": "2019-07-26T00:00:00.000Z",
+    "tripData": {
+        "agencyBooked": true,
+        "selfBooked": false,
+        "tripType": "ONE_WAY",
+        "legs": [
+            {
+                "endDate": "2019-08-25",
+                "endLocation": {
+                    "id": "D0059541F7874D3A97F53ACD163FEB7E",
+                    "countryCode": "US",
+                    "countrySubDivisionCode": "US-WA",
+                    "city": "Seattle",
+                    "name": "Seattle",
+                    "lnKey": 83926
+                },
+                "endTime": "01:00",
+                "id": "11D37079654C4042AE5FC88D53D724F6",
+                "returnLeg": false,
+                "startDate": "2019-07-26",
+                "startLocation": {
+                    "id": "0BC6B782B77349898E2CA814F5B57C08",
+                    "countryCode": "US",
+                    "countrySubDivisionCode": "US-WA",
+                    "city": "Seattle",
+                    "name": "Seattle",
+                    "lnKey": 29857
+                },
+                "startLocationDetail": "Airport Drop off",
+                "startTime": "00:00"
+            }
+        ],
+        "segmentType": {
+            "category": "REQ_SEG_CARRT",
+            "code": "CARRT"
+        }
+    }
+}
+</code></pre></div></div>
+
+<h4 id="to-get-the-travelers-expense-type-details-by-passing-expensetype_id-and-user_id">To get the traveler’s expense type details, by passing <code class="language-plaintext highlighter-rouge">ExpenseType_id</code> and <code class="language-plaintext highlighter-rouge">user_id</code>.</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>URI: GET https://us.api.concursolutions.com/expenseconfig/v4/users/613cd9cd-9145-4806-ae6c-bfc7da54c9ab/context/TRAVELER/expensetypes/01025
+</code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "expenseTypeId": "01025",
+    "expenseCategoryCode": null,
+    "expenseCode": "OTHER",
+    "expenseCodeName": "Standard",
+    "hasChildren": false,
+    "isDeletable": true,
+    "isDeleted": false,
+    "isReadOnly": false,
+    "isSystemRecord": false,
+    "isUsedInItemizationConfig": false,
+    "isVisibilityCodeEditable": true,
+    "itemizationType": "NREQ",
+    "name": "Train",
+    "parentExpenseKey": "TRANS",
+    "parentName": "02. Transportation",
+    "showOnMobile": true,
+    "spendCategoryCode": "RAILX",
+    "spendCategoryName": "Train",
+    "visibilityCode": "ALWAYS",
+    "links": [
+        {
+            "rel": "self",
+            "href": "https://seapr1ecs.concurasp.com/expenseconfig/v4/users/613cd9cd-9145-4806-ae6c-bfc7da54c9ab/context/TRAVELER/expensetypes/01025"
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h2 id="agency-submits-proposals"><a name="agency-proposal"></a>Agency Submits Proposals</h2>
+
+<p>Agencies store the Travel Request and Expense details, and use that information to create proposals that will be shared with the traveler.</p>
+
+<p>TMCs can submit up to three proposals for a traveler for each travel request submitted.</p>
+
+<p>Prerequisites:</p>
+<ul>
+  <li>Sign in to your SAP Concur Travel and Expense User Profile.</li>
+  <li>Select <strong>Profile Settings</strong>.</li>
+  <li>Select <strong>Request Setting</strong> then <strong>Request Information</strong>.</li>
+  <li>In the <strong>Default Travel Agency</strong> drop down, select the agency.</li>
+</ul>
+
+<p><img src="images/14-default-travel-agency.png" alt="Set the default travel agency" /></p>
+
+<p>The following fields will help you submit proposals to a traveler.</p>
+
+<h4 id="proposalbatchsize">ProposalBatchSize</h4>
+
+<p>You can submit up to three proposals in a series known as <strong>batches</strong> per trip request. You need to pass the value in the <code class="language-plaintext highlighter-rouge">data</code> element for <code class="language-plaintext highlighter-rouge">ProposalBatchSize</code> and <code class="language-plaintext highlighter-rouge">ProposalSequenceIndex</code> for the number of proposals you are submitting in the POST.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Name&gt;ProposalBatchSize&lt;/Name&gt;
+     &lt;DisplayTitle /&gt;
+     &lt;Data&gt;3&lt;/Data&gt;
+     &lt;DisplayOnItinerary&gt;true&lt;/DisplayOnItinerary&gt;
+</code></pre></div></div>
+<p><img src="images/15-submit-proposal.png" alt="Code example showing proposal batch size and proposal sequence index" /></p>
+
+<p>Now, you can submit the proposal and see the response on the successful submission of a proposal.</p>
+
+<p>You now have the <code class="language-plaintext highlighter-rouge">ItinLocator</code>, <code class="language-plaintext highlighter-rouge">TripId</code>, and <code class="language-plaintext highlighter-rouge">TripLinkLocator</code> generated.</p>
+
+<h3 id="trip-status"><a name="trip-status"></a>Trip Status</h3>
+
+<p>You can track our proposals submitted by using Request ID. Log the Trip ID that is returned in the response and associate those Trip IDs with the Request IDs. Proposals are submitted as itineraries. The itineraries are identified by the value in the <code class="language-plaintext highlighter-rouge">TripStatus</code> element.</p>
+
+<p>A trip status of “7” indicates to our system this is a proposal.</p>
+
+<p><img src="images/16-triplink-locator.png" alt="Code example showing the itinerary, trip ID, and trip link locator, and trip status" /></p>
+
+<h2 id="reviewing-a-proposal"><a name="review-proposal"></a>Reviewing a Proposal</h2>
+
+<p>Traveler reviews and selects one of the three proposals.</p>
+
+<p><img src="images/17-submit-proposal-postman.png" alt="Postman example showing proposal submission" /></p>
+
+<p>Once you submit the proposal successfully, you can see the <strong>Agency Proposal</strong> option by logging into your Concur Travel account.</p>
+
+<p>You can see the proposal comparison for each category.</p>
+
+<p><strong>Air Proposal</strong></p>
+
+<p><img src="images/19-air-proposal.png" alt="Comparison screen showing flight options" /></p>
+
+<p><strong>Car Rental Proposal</strong></p>
+
+<p><img src="images/20-car-proposal.png" alt="Comparison screen showing car rental options" /></p>
+
+<p><strong>Hotel Proposal</strong></p>
+
+<p><img src="images/21-hotel-proposal.png" alt="Comparison screen showing hotel options" /></p>
+
+<p><strong>Note</strong>: Each travel proposal submitted, is associated with its <code class="language-plaintext highlighter-rouge">Travel_Request_Id</code> and <code class="language-plaintext highlighter-rouge">Trip_Id</code>. The traveler can select the proposals that best meets their needs.</p>
+
+<h3 id="agencies-receive-notification-of-proposal-selected-by-traveler"><a name="agency-notification"></a>Agencies Receive Notification of Proposal Selected by Traveler</h3>
+
+<p>Once the traveler selects one of the proposals, the agencies receives notification. It is then sent to ticketing, by setting <code class="language-plaintext highlighter-rouge">TripStatus</code> to “0 or 1.”</p>
+
+<p><img src="images/22-trip-status-ticketing.png" alt="Code example showing trip status" /></p>
+
+<h3 id="convert-proposal-to-actual-pnr"><a name="convert-proposal"></a>Convert Proposal to Actual PNR</h3>
+
+<p>Each travel proposal is submitted, based on its <code class="language-plaintext highlighter-rouge">Travel_Request_Id</code> and <code class="language-plaintext highlighter-rouge">Trip_Id</code>.</p>
+
+<p><img src="images/23-actual-pnr.png" alt="Code example showing PNR" /></p>
+
+<h3 id="traveler-notified-of-confirmed-booking-and-receives-itinerary"><a name="traveler-notified"></a>Traveler Notified of Confirmed Booking and Receives Itinerary</h3>
+
+<p>Itinerary appears in traveler’s trip library.</p>
+
+<p><img src="images/24-trip-library.png" alt="SAP Concur UI showing trip details in the trip library" /></p>
+
+<p><strong>Traveler’s Itinerary</strong></p>
+
+<p><img src="images/25-itinerary.png" alt="SAP Concur UI showing itinerary details" /></p>
+
+<h3 id="cancel-itinerary"><a name="cancel"></a>Cancel Itinerary</h3>
+
+<p>You can always cancel the itinerary if the traveler’s needs change.</p>
+:ET

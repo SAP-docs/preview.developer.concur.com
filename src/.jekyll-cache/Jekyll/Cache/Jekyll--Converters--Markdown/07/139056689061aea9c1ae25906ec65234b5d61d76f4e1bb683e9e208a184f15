@@ -1,0 +1,45 @@
+I"�<p>The goal of this document is to establish the flow for virtual / alternative payment methods in conjunction with booking hotels via Concur’s hotel API (HS2).   While doing so, it seeks to minimize complexity of implementation that often arises when configuration work needs to be done on both ends (Concur and supplier side).
+Since the payment solution is typically handled on suppliers’ side, the supplier should control which form of payment will be made available in Concur for each specific client and property by passing the form of payment to Concur. Concur will then offer the accepted payment method to users in the booking flow.</p>
+
+<h3 id="setup-on-hotel-supplier-side">SETUP ON HOTEL SUPPLIER SIDE</h3>
+
+<p>The payment agreement is typically made with the hotel supplier. There are multiple potential options which could be:</p>
+
+<ul>
+  <li>AirPlus Company Account or Amex BTA payment</li>
+  <li>Virtual card payment e.g. Amex vPay or AirPlus AIDA</li>
+  <li>Central Billing or billback agreements</li>
+</ul>
+
+<p>All mentioned payment methods are normally set up on hotel supplier side to ensure the payment method will be part of the reservation to the hotel and to guarantee acceptance at the hotel. Furthermore, the hotel supplier takes care of invoicing.</p>
+
+<h3 id="setup-on-concur-side">SETUP ON CONCUR SIDE</h3>
+
+<p>To make sure that the user can use the payment option that is set up on hotel supplier side the client needs to be identified at hotel supplier side. This happens with a client ID (Requestor ID). Requestor ID needs to be set up in Concur on a company (configuration) level.</p>
+
+<h3 id="booking-flow">BOOKING FLOW</h3>
+
+<p><strong>1.	Search request</strong></p>
+
+<p>Requestor ID is sent with OTA_HotelSearchRQ. Requestor IDs can only be supported on travel configuration level.</p>
+
+<p><strong>2.	Response from hotel supplier in OTA_HotelAvailRS</strong></p>
+
+<p>Virtual payment will be marked by the hotel supplier under Concur’s Availability endpoint, OTA_HotelAvailRS (as documented in the SAP Concur Developer Center for Direct Connect: Hotel Service 2). The element to be used will be ‘GuaranteeType’ and its value should be set to ‘none’.</p>
+
+<p><strong>3.	Display of payment options in Concur on Review and Reserve page</strong></p>
+
+<p>When guarantee type is set to ‘none’ the FOP selection will not be triggered in the Review and Reserve page, allowing the user to proceed with the reservation without having to specify a payment method.</p>
+
+<p><img src="./images/examples/No_guarantee.png" alt="./media/image1.png" /></p>
+
+<p><strong>4.	Descriptive Billing Data</strong></p>
+
+<p>For Company Account payment or virtual payment, descriptive billing data is required. Descriptive billing data is typically profile data (e.g. cost center or employee ID) or custom trip fields (e.g. project number). Those fields need to be mapped to reference data fields in Concur so that it can be sent to the hotel supplier with the reservation. In order to have this data passed in the reservation request, it is required to have them displayed at the start of booking. Descriptive billing data can be transmitted independently from the payment solution set up at hotel supplier. The field names can be individually defined by HotelService supplier. A client individual naming of custom fields will not be supported.</p>
+
+<p>Org units can also be integrated in this workflow. If enabled, they will be made available through our OTA_HotelSearchRQ and OTA_HotelResRQ call.</p>
+
+<p><strong>5.	Reservation</strong></p>
+
+<p>After the user has selected a rate with GuaranteeType marked as ‘none’ the reservation request will be sent with OTA_HotelResRQ. The OTA_HotelResRQ also contains descriptive billing information.</p>
+:ET

@@ -1,0 +1,1693 @@
+I"�p<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<p>Concur Travel Request is designed to help businesses control expenses by requiring employees to obtain approval before incurring expenses. The Travel Request resource provides the ability to view requests and update the workflow for travel requests.</p>
+
+<p>Requests version 1.0 retrieves a list of up to 1000 travel requests. The request can include one or multiple search terms. This resource supports the following operations:</p>
+
+<ul>
+  <li><a href="#a2">Get a list of travel requests</a></li>
+  <li><a href="#a3">Get travel request details</a></li>
+  <li><a href="#a4">Post a travel request header</a></li>
+  <li><a href="#a5">Post a travel request workflow action</a></li>
+</ul>
+
+<h2 id="version">Version</h2>
+
+<p>1.0</p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>The Travel Request web service supports the OAuth 2.0 authentication model. Any additional required elements for the web service requests are covered in the function documentation. Company-level token is not supported.</p>
+
+<h2 id="get-a-list-of-travel-requests"><a name="a2">Get a list of travel requests</a></h2>
+
+<h3 id="request">Request</h3>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>requestslist</td>
+      <td><strong>Required</strong> The requestslist keyword.</td>
+    </tr>
+    <tr>
+      <td>?status={status}</td>
+      <td>The <code class="language-plaintext highlighter-rouge">status</code> search term specifies which travel request or approval status to return. If no <code class="language-plaintext highlighter-rouge">status</code> value is sent, the default status of Active will be used. For a list of all statuses see <a href="#status-values">Status Values</a>.</td>
+    </tr>
+    <tr>
+      <td>?loginid={loginID}</td>
+      <td>The LoginID is the Concur login for a travel request owner that is not the OAuth consumer. This limits the response to travel requests owned by the specified user. If you use this with the TOAPPROVE or APPROVED Status search term, you should send the travel request approver’s login ID.</td>
+    </tr>
+    <tr>
+      <td>?modifiedafterdate={date}</td>
+      <td>This returns travel requests in which the associated dependents (header, entries, segments, allocations, attendees, comments ) were modified after the specified date and time. This search term can be used along with other search terms to narrow the results. The date and time (if desired) should be in UTC. The format is: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>?modifiedbeforedate={date}</td>
+      <td>This returns travel requests in which the associated dependents (header, entries, segments, allocations, attendees, comments ) were modified before the specified date and time.This search term can be used along with other search terms to narrow the results. The date and time (if desired) should be in UTC. The format is: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="status-values"><a name="status-values">Status Values</a></h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ACTIVE</td>
+      <td>Returns all active travel requests.</td>
+    </tr>
+    <tr>
+      <td>UNSUBMITTED</td>
+      <td>Returns unsubmitted travel requests.</td>
+    </tr>
+    <tr>
+      <td>PENDING</td>
+      <td>Returns submitted travel requests pending approval.</td>
+    </tr>
+    <tr>
+      <td>VALIDATED</td>
+      <td>Returns approved travel requests.</td>
+    </tr>
+    <tr>
+      <td>CANCELED</td>
+      <td>Returns cancelled travel requests.</td>
+    </tr>
+    <tr>
+      <td>CLOSED</td>
+      <td>Returns closed travel requests.</td>
+    </tr>
+    <tr>
+      <td>SUBMITTED</td>
+      <td>Returns submitted travel requests.</td>
+    </tr>
+    <tr>
+      <td>TOAPPROVE</td>
+      <td>Returns travel requests pending approval. If you use this search term with the Login ID search term, you should supply the approver’s login ID.</td>
+    </tr>
+    <tr>
+      <td>APPROVED</td>
+      <td>Returns approved travel requests. If you use this search term with the Login ID search term, you should supply the approver’s login ID.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="examples">Examples</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travelrequest/v1.0/requestslist/
+https://www.concursolutions.com/api/travelrequest/v1.0/requestslist?status={status}
+https://www.concursolutions.com/api/travelrequest/v1.0/requestslist?loginid={loginID}
+https://www.concursolutions.com/api/travelrequest/v1.0/requestslist?modifiedafterdate={date}
+https://www.concursolutions.com/api/travelrequest/v1.0/requestslist?modifiedafterdate=2012-01-01T00:00:00
+https://www.concursolutions.com/api/travelrequest/v1.0/requestslist?modifiedbeforedate={date}
+https://www.concursolutions.com//api/travelrequest/v1.0/requestslist?modifiedbeforedate=2012-01-01T00:00:00
+https://www.concursolutions.com/api/travelrequest/v1.0/requestslist?status={status}&amp;loginid={loginID}
+</code></pre></div></div>
+
+<h3 id="headers">Headers</h3>
+
+<h4 id="authorization-header">Authorization header</h4>
+
+<p>The authorization header must contain an OAuth token for a valid Concur user. The OAuth Consumer must have the following role: Web Services Administrator for Professional/Premium.</p>
+
+<h4 id="accept-header">Accept header</h4>
+
+<p>application/xml</p>
+
+<h3 id="response">Response</h3>
+
+<p>This request will return a <strong>RequestsWithCount</strong> parent element with the <strong>RequestsList</strong> and <strong>TotalCount</strong> child elements. The <strong>RequestsList</strong> parent element contains a <strong>RequestSummary</strong> child element for each travel request. The <strong>RequestSummary</strong> elements will have the following child elements.</p>
+
+<h4 id="requestsummary-elements">RequestSummary elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RequestID</td>
+      <td>The unique identifier for the travel request, which appears in the Concur UI.</td>
+    </tr>
+    <tr>
+      <td>RequestName</td>
+      <td>The name of the travel request.</td>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>The purpose of the travel request.</td>
+    </tr>
+    <tr>
+      <td>RequestCurrency</td>
+      <td>The <a href="http://en.wikipedia.org/wiki/ISO_4217">3-letter ISO 4217 currency code</a> for the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>RequestTotal</td>
+      <td>The total amount of the travel request.</td>
+    </tr>
+    <tr>
+      <td>RequestDate</td>
+      <td>The create date of the travel request.</td>
+    </tr>
+    <tr>
+      <td>StartDate</td>
+      <td>Start date of the travel request.</td>
+    </tr>
+    <tr>
+      <td>EndDate</td>
+      <td>End date of the travel request.</td>
+    </tr>
+    <tr>
+      <td>LastComment</td>
+      <td>The text of the most recent comment on the travel request.</td>
+    </tr>
+    <tr>
+      <td>RequestDetailsURL</td>
+      <td>The URL to access the travel request details.</td>
+    </tr>
+    <tr>
+      <td>RequestUserLoginID</td>
+      <td>The Login ID of the user this travel request belongs to.</td>
+    </tr>
+    <tr>
+      <td>ApproverLoginID</td>
+      <td>The Login ID of the user’s travel request approver.</td>
+    </tr>
+    <tr>
+      <td>EmployeeName</td>
+      <td>The name of the travel request owner.</td>
+    </tr>
+    <tr>
+      <td>ApprovalStatus</td>
+      <td>The travel request’s approval status, in the OAuth consumer’s language.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="get-travel-request-details"><a name="a3">Get travel request details</a></h2>
+
+<h3 id="request-1">Request</h3>
+
+<p>Retrieves the full set of information for the travel request. Includes the travel request Header, Segment, Entry, Allocation and Cash Advance details.</p>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<p><strong>requests/{<em>requestKey</em>}</strong>: The requests keyword and the identifier for the desired travel request. Required.</p>
+
+<h4 id="example">Example</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travelrequest/v1.0/requests/{requestKey}
+</code></pre></div></div>
+
+<p><strong>URI Source</strong>: The URI is provided in the <strong>ObjectURI</strong> element of the <a href="/api-reference/callouts/event-notification.html">Event Notification</a> request.</p>
+
+<h3 id="headers-1">Headers</h3>
+
+<h4 id="authorization-header-1">Authorization header</h4>
+
+<p>The authorization header must have an OAuth token for a valid Concur user. The OAuth consumer must have one of the following user roles in Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard. These roles allow the user to manage data for the entire company.</p>
+
+<h4 id="accept-header-1">Accept header</h4>
+
+<p>application/xml</p>
+
+<h3 id="response-1">Response</h3>
+
+<p>This request will return a <strong>TravelRequestDetails</strong> parent element with the following child elements.</p>
+
+<h4 id="travelrequestdetails-elements">TravelRequestDetails elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LoginID</td>
+      <td>The Concur Login ID of the travel request owner.</td>
+    </tr>
+    <tr>
+      <td>RequestID</td>
+      <td>The unique key for the travel request.</td>
+    </tr>
+    <tr>
+      <td>RequestKey</td>
+      <td>The encrypted database key for the travel request.</td>
+    </tr>
+    <tr>
+      <td>RequestName</td>
+      <td>The name of the travel request.</td>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>The information from the Purpose field.</td>
+    </tr>
+    <tr>
+      <td>CurrencyCode</td>
+      <td>The <a href="http://en.wikipedia.org/wiki/ISO_4217">3-letter ISO 4217 currency code</a> for the travel request currency. The travel request currency is defined as the travel request creator’s default reimbursement currency.</td>
+    </tr>
+    <tr>
+      <td>CreationDate</td>
+      <td>The date the travel request was created.</td>
+    </tr>
+    <tr>
+      <td>HasException</td>
+      <td>Whether the travel request has exceptions. Format: Y/N</td>
+    </tr>
+    <tr>
+      <td>EverSentBack</td>
+      <td>Whether the travel request has ever been sent back to the employee. Format: Y/N</td>
+    </tr>
+    <tr>
+      <td>EmployeeName</td>
+      <td>The first, middle (or middle initial), and last name of the employee who created the travel request.</td>
+    </tr>
+    <tr>
+      <td>ApprovalStatusName</td>
+      <td>The approval status of the travel request .</td>
+    </tr>
+    <tr>
+      <td>ApprovalStatusKey</td>
+      <td>The approval status key.</td>
+    </tr>
+    <tr>
+      <td>AuthorizedDate</td>
+      <td>The date the travel request was authorized. This element has an attribute named i:nil. If the value for this element is null, the i:nil attribute will be set to true. Format: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>SubmitDate</td>
+      <td>The date the travel request was submitted. Format: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>LastModifiedDate</td>
+      <td>The date the travel request was last modified. Format: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>SegmentCount</td>
+      <td>The number of segments in the travel request.</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom20</td>
+      <td>The details from the Custom fields. These may not have data, depending on configuration. If the custom field is a list field, the data will be returned as: (list item short code) list item name. List Field Example: <code class="language-plaintext highlighter-rouge">&lt;Custom1&gt;(1234) Project 1234&lt;/Custom1&gt;</code></td>
+    </tr>
+    <tr>
+      <td>TravelRequestPolicyKey</td>
+      <td>The unique identifier for the policy that applies to the travel request.</td>
+    </tr>
+    <tr>
+      <td>ExpensePolicyKey</td>
+      <td>The unique identifier of the Expense policy that is related to the travel request policy.</td>
+    </tr>
+    <tr>
+      <td>RequestTotal</td>
+      <td>The total amount of the travel request.</td>
+    </tr>
+    <tr>
+      <td>TotalApprovedAmount</td>
+      <td>The total amount of approved expenses in the travel request.</td>
+    </tr>
+    <tr>
+      <td>TotalRemainingAmount</td>
+      <td>The total amount remaining in the travel request.</td>
+    </tr>
+    <tr>
+      <td>ApprovalLimitDate</td>
+      <td>The date the travel request must be approved by. Appears only when integrated with Concur Travel.</td>
+    </tr>
+    <tr>
+      <td>AgencyOfficeKey</td>
+      <td>The Agency Office key.</td>
+    </tr>
+    <tr>
+      <td>AgencyOfficeName</td>
+      <td>The Agency Office name.</td>
+    </tr>
+    <tr>
+      <td>StartDate</td>
+      <td>The start date for the travel request.</td>
+    </tr>
+    <tr>
+      <td>EndDate</td>
+      <td>The end date for the travel request.</td>
+    </tr>
+    <tr>
+      <td>StartTime</td>
+      <td>The start time for the travel request.</td>
+    </tr>
+    <tr>
+      <td>EndTime</td>
+      <td>The end time for the travel request.</td>
+    </tr>
+    <tr>
+      <td>ExtensionOf</td>
+      <td>The ID of the initial travel request that this travel request is an extension of or adendum to.</td>
+    </tr>
+    <tr>
+      <td>WorkflowActionURL</td>
+      <td>The URL to post a workflow action to the travel request using the <a href="/api-reference/request/v1.request.html#a5">Post Request Workflow Action</a> function.</td>
+    </tr>
+    <tr>
+      <td>CommentCount</td>
+      <td>The number of comments associated with the travel request header.</td>
+    </tr>
+    <tr>
+      <td>CommentsList</td>
+      <td>This parent element has a Count attribute indicating the number of comments that are included in the travel request header. It has a <strong>Comment</strong> child element for each comment. Refer to the Comment Child Elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>ExceptionCount</td>
+      <td>The number of exceptions associated with the travel request header.</td>
+    </tr>
+    <tr>
+      <td>ExceptionsList</td>
+      <td>This parent element has a Count attribute indicating the number of exceptions that are included in the travel request entry. It has an <strong>Exception</strong> child element for each exception. Refer to the Exception Child Elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>EntriesList</td>
+      <td>This parent element has a Count attribute indicating the number of travel request entries that are included in the travel request. It has a <strong>RequestEntry</strong> child element for each entry. Refer to the RequestEntry Child Elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>CashAdvancesList</td>
+      <td>This parent element has a Count attribute indicating the number of cash advances that are included in the travel request. It has a <strong>CashAdvance</strong> child element for each cash advance. Refer to the CashAdvance Child Elements table for the full list of child elements.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="comment-elements">Comment elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Comment</td>
+      <td>The text of the travel request header comment.</td>
+    </tr>
+    <tr>
+      <td>FirstName</td>
+      <td>The first name of the person who made the comment.</td>
+    </tr>
+    <tr>
+      <td>LastName</td>
+      <td>The last name of the person who made the comment.</td>
+    </tr>
+    <tr>
+      <td>DateTime</td>
+      <td>Time, in GMT, when the user made the comment.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="exception-elements">Exception elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ExceptionCode</td>
+      <td>The system exception code defined for the exception. Example: BADCODE</td>
+    </tr>
+    <tr>
+      <td>ExceptionMessage</td>
+      <td>The user-facing message defined for the exception.</td>
+    </tr>
+    <tr>
+      <td>ExceptionLevel</td>
+      <td>The numeric level associated with the exception. Example: 99</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="requestentry-elements">RequestEntry elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RequestEntryKey</td>
+      <td>The unique identifier for the travel request entry.</td>
+    </tr>
+    <tr>
+      <td>EntryDescription</td>
+      <td>The text from the Description field for the entry.</td>
+    </tr>
+    <tr>
+      <td>TransactionDate</td>
+      <td>The date of the travel request entry.</td>
+    </tr>
+    <tr>
+      <td>RequestKey</td>
+      <td>The unique identifier for the travel request.</td>
+    </tr>
+    <tr>
+      <td>FormKey</td>
+      <td>The unique identifier for the travel request entry form.</td>
+    </tr>
+    <tr>
+      <td>ExpenseTypeKey</td>
+      <td>The unique identifier for the expense type.</td>
+    </tr>
+    <tr>
+      <td>ExpenseTypeName</td>
+      <td>The expense type name.</td>
+    </tr>
+    <tr>
+      <td>ExchangeRate</td>
+      <td>The exchange rate that applies to the entry.</td>
+    </tr>
+    <tr>
+      <td>ForeignAmount</td>
+      <td>The foreign currency amount of the travel request entry.</td>
+    </tr>
+    <tr>
+      <td>ForeignCurrencyName</td>
+      <td>The name of the currency for the foreign amount.</td>
+    </tr>
+    <tr>
+      <td>PostedAmount</td>
+      <td>The posted amount of the travel request entry in the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>ApprovedAmount</td>
+      <td>The approved amount of the travel request entry in the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>RemainingAmount</td>
+      <td>The remaining amount of the travel request entry in the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>LastModifiedDate</td>
+      <td>The date the entry was last modified. Format: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>OrgUnit1 through OrgUnit6</td>
+      <td>The details from the Org Unit custom fields. These may not have data, depending on configuration.</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom40</td>
+      <td>The details from the Custom fields. These may not have data, depending on configuration. If the custom field is a list field, the data will be returned as: (list item short code) list item name. List Field Example: <code class="language-plaintext highlighter-rouge">&lt;Custom1&gt;(1234) Project 1234&lt;/Custom1&gt;</code></td>
+    </tr>
+    <tr>
+      <td>AllocationsList</td>
+      <td>This parent element has an <strong>Allocation</strong> child element for each associated allocation. Refer to the Allocation child elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>CommentCount</td>
+      <td>The number of comments associated with the travel request entry.</td>
+    </tr>
+    <tr>
+      <td>CommentsList</td>
+      <td>This parent element has a Count attribute indicating the number of comments that are included in the travel request entry. It has a <strong>Comment</strong> child element for each comment. Refer to the Comment Child Elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>ExceptionCount</td>
+      <td>The number of exceptions associated with the travel request entry.</td>
+    </tr>
+    <tr>
+      <td>ExceptionsList</td>
+      <td>This parent element has a Count attribute indicating the number of exceptions that are included in the travel request entry. It has an <strong>Exception</strong> child element for each exception. Refer to the Exception Child Elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>SegmentCount</td>
+      <td>The number of segments associated with the travel request entry.</td>
+    </tr>
+    <tr>
+      <td>SegmentsList</td>
+      <td>This parent element contains a <strong>Segment</strong> child element for each segment associated with the travel request. Refer to the Segment Child Elements table for the full list of child elements.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="allocation-child-elements">Allocation child elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Custom1 through Custom20</td>
+      <td>The custom fields associated with the allocation. These may not have data, depending on your configuration. If the custom field is a list field, the data will be returned as: (list item short code) list item name. List Field Example: <code class="language-plaintext highlighter-rouge">&lt;Custom1&gt;(1234) Project 1234&lt;/Custom1&gt;</code></td>
+    </tr>
+    <tr>
+      <td>AllocationKey</td>
+      <td>The unique identifier for the allocation.</td>
+    </tr>
+    <tr>
+      <td>Percentage</td>
+      <td>The percentage of the expense that is included in this allocation.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="segment-child-elements">Segment child elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SegmentKey</td>
+      <td>The encrypted database primary key for the Segment table. The unique identifier for the segment.</td>
+    </tr>
+    <tr>
+      <td>SegmentType</td>
+      <td>The type of itinerary segment. Format: air, car, hotel, rail, dining, event, limo, taxi, parking, other</td>
+    </tr>
+    <tr>
+      <td>RecordLocator</td>
+      <td>Appears only when travel request is integrated with Concur Travel.</td>
+    </tr>
+    <tr>
+      <td>DepartureDate</td>
+      <td>The departure date of the segment.</td>
+    </tr>
+    <tr>
+      <td>DepartureTime</td>
+      <td>The departure time of the segment.</td>
+    </tr>
+    <tr>
+      <td>ArrivalDate</td>
+      <td>The arrival date of the segment.</td>
+    </tr>
+    <tr>
+      <td>ArrivalTime</td>
+      <td>The arrival time of the segment.</td>
+    </tr>
+    <tr>
+      <td>FromLocationName</td>
+      <td>The name of the starting location.</td>
+    </tr>
+    <tr>
+      <td>FromLocationDetail</td>
+      <td>The code of starting location.</td>
+    </tr>
+    <tr>
+      <td>ToLocationName</td>
+      <td>The name of the ending location.</td>
+    </tr>
+    <tr>
+      <td>ToLocationDetail</td>
+      <td>The code of the ending location.</td>
+    </tr>
+    <tr>
+      <td>FlightNumber</td>
+      <td>The flight number for air segments. Appears only when travel request is integrated with Concur Travel.</td>
+    </tr>
+    <tr>
+      <td>ClassOfServiceCode</td>
+      <td>The Class of Service Code from Concur Travel. Appears only when travel request is integrated with Concur Travel.</td>
+    </tr>
+    <tr>
+      <td>TripLocator</td>
+      <td>The unique identifier for the Concur Travel trip associated with this segment. Appears only when travel request is integrated with Concur Travel.</td>
+    </tr>
+    <tr>
+      <td>SegmentLocator</td>
+      <td>The unique identifier for Concur Travel segment associated with this segment. Appears only when travel request is integrated with Concur Travel.</td>
+    </tr>
+    <tr>
+      <td>ExchangeRate</td>
+      <td>The exchange rate that applies to the segment.</td>
+    </tr>
+    <tr>
+      <td>ForeignAmount</td>
+      <td>The foreign currency amount of the segment.</td>
+    </tr>
+    <tr>
+      <td>ForeignCurrencyName</td>
+      <td>The name of the currency for the foreign amount of the segment.</td>
+    </tr>
+    <tr>
+      <td>PostedAmount</td>
+      <td>The posted amount of the segment in the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>ApprovedAmount</td>
+      <td>The approved amount of the segment in the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>RemainingAmount</td>
+      <td>The remaining amount of the segment in the travel request currency.</td>
+    </tr>
+    <tr>
+      <td>IsAgencyBooked</td>
+      <td>Whether the air segment was agency booked. Format: Y/N.</td>
+    </tr>
+    <tr>
+      <td>IsSelfBooked</td>
+      <td>Whether the air segment was self booked. Format: Y/N</td>
+    </tr>
+    <tr>
+      <td>LastModifiedDate</td>
+      <td>The date the segment was last modified. Format: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom40</td>
+      <td>The custom fields associated with the segment. These may not have data, depending on your configuration. If the custom field is a list field, the data will be returned as: (list item short code) list item name. List Field Example: <code class="language-plaintext highlighter-rouge">&lt;Custom1&gt;(1234) Project 1234&lt;/Custom1&gt;</code></td>
+    </tr>
+    <tr>
+      <td>CommentCount</td>
+      <td>The number of comments associated with the segment.</td>
+    </tr>
+    <tr>
+      <td>CommentsList</td>
+      <td>This parent element has a Count attribute indicating the number of comments that are included in the segment. It has a <strong>Comment</strong> child element for each comment. Refer to the Comment Child Elements table for the full list of child elements.</td>
+    </tr>
+    <tr>
+      <td>ExceptionCount</td>
+      <td>The number of exceptions associated with the travel request segment.</td>
+    </tr>
+    <tr>
+      <td>ExceptionsList</td>
+      <td>This parent element has a Count attribute indicating the number of exceptions that are included in the travel request segment. It has an <strong>Exception</strong> child element for each exception. Refer to the Exception Child Elements table for the full list of child elements.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="cashadvance-child-elements">CashAdvance child elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CashAdvanceKey</td>
+      <td>The unique identifier for the cash advance.</td>
+    </tr>
+    <tr>
+      <td>AmountRequested</td>
+      <td>The amount requested in the cash advance, in the currency listed in the <strong>CurrencyCode</strong> element.</td>
+    </tr>
+    <tr>
+      <td>CurrencyCode</td>
+      <td>The <a href="http://en.wikipedia.org/wiki/ISO_4217">3-letter ISO 4217 currency code</a> for the cash advance currency.</td>
+    </tr>
+    <tr>
+      <td>CurrencyName</td>
+      <td>The name of the currency for the cash advance.</td>
+    </tr>
+    <tr>
+      <td>ExchangeRate</td>
+      <td>The exchange rate that applies to the cash advance.</td>
+    </tr>
+    <tr>
+      <td>RequestDate</td>
+      <td>Date of cash advance request from the detailed cash advance record.</td>
+    </tr>
+    <tr>
+      <td>IssueDate</td>
+      <td>The issue date for the cash advance.</td>
+    </tr>
+    <tr>
+      <td>StartingBalance</td>
+      <td>The initial balance for the cash advance.</td>
+    </tr>
+    <tr>
+      <td>ApprovalStatusName</td>
+      <td>The approval status of the cash advance.</td>
+    </tr>
+    <tr>
+      <td>ApprovalStatusKey</td>
+      <td>The unique identifier for the approval status of the cash advance.</td>
+    </tr>
+    <tr>
+      <td>EmployeeCurrencyCode</td>
+      <td>The <a href="http://en.wikipedia.org/wiki/ISO_4217">3-letter ISO 4217 currency code</a> for the employee’s currency (“home currency”).</td>
+    </tr>
+    <tr>
+      <td>EmployeeCurrencyName</td>
+      <td>The name of the employee’s currency (“home currency”).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples-1">Examples</h2>
+
+<h3 id="example-1-get-list-of-travel-requests">Example 1: Get list of travel requests</h3>
+
+<h4 id="request-2">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET api/travelrequest/v1.0/requestslist/?status=SUBMITTED HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth {access token}
+</code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;RequestsWithCount</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;RequestsList&gt;</span>
+    <span class="nt">&lt;RequestSummary&gt;</span>
+      <span class="nt">&lt;ApprovalStatus&gt;</span>Submitted <span class="ni">&amp;amp;</span> Pending Approval<span class="nt">&lt;/ApprovalStatus&gt;</span>
+      <span class="nt">&lt;ApproverLoginID&gt;</span>patdavis@example.com<span class="nt">&lt;/ApproverLoginID&gt;</span>
+      <span class="nt">&lt;RequestCurrency&gt;</span>USD<span class="nt">&lt;/RequestCurrency&gt;</span>
+      <span class="nt">&lt;EmployeeName&gt;</span>Chris Miller<span class="nt">&lt;/EmployeeName&gt;</span>
+      <span class="nt">&lt;LastComment</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Purpose&gt;</span>d<span class="nt">&lt;/Purpose&gt;</span>
+      <span class="nt">&lt;RequestDate&gt;</span>2013-03-07T08:25:57<span class="nt">&lt;/RequestDate&gt;</span>
+      <span class="nt">&lt;RequestDetailsUrl&gt;</span>https://www.concursolutions.com/api/travelrequest/v1.0/requests/nf0ma53XrNuqmoVSZesQZL99xN1xIg5dX<span class="nt">&lt;/RequestDetailsUrl&gt;</span>
+      <span class="nt">&lt;RequestID&gt;</span>APXT<span class="nt">&lt;/RequestID&gt;</span>
+      <span class="nt">&lt;RequestName&gt;</span>TVR-2861-2<span class="nt">&lt;/RequestName&gt;</span>
+      <span class="nt">&lt;RequestTotal&gt;</span>10.00000000<span class="nt">&lt;/RequestTotal&gt;</span>
+      <span class="nt">&lt;RequestUserLoginID&gt;</span>chrismiller@example.com<span class="nt">&lt;/RequestUserLoginID&gt;</span>
+    <span class="nt">&lt;/RequestSummary&gt;</span>
+  <span class="nt">&lt;/RequestsList&gt;</span>
+  <span class="nt">&lt;TotalCount&gt;</span>1<span class="nt">&lt;/TotalCount&gt;</span>
+<span class="nt">&lt;/RequestsWithCount&gt;</span>
+</code></pre></div></div>
+
+<h3 id="example-2-get-travel-request-details">Example 2: Get travel request details</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET api/travelrequest/v1.0/requests/nxxKgLlnROz3zHJBCRksaas23dsfs HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth {access token}
+</code></pre></div></div>
+
+<h3 id="response-3">Response</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;TravelRequestDetails</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;AgencyOfficeKey&gt;</span>1<span class="nt">&lt;/AgencyOfficeKey&gt;</span>
+  <span class="nt">&lt;AgencyOfficeName&gt;</span>Terrific Travel<span class="nt">&lt;/AgencyOfficeName&gt;</span>
+  <span class="nt">&lt;ApprovalLimitDate&gt;</span>2012-06-09T23:59:00<span class="nt">&lt;/ApprovalLimitDate&gt;</span>
+  <span class="nt">&lt;ApprovalStatusKey&gt;</span>Q_PEND<span class="nt">&lt;/ApprovalStatusKey&gt;</span>
+  <span class="nt">&lt;ApprovalStatusName&gt;</span>Submitted <span class="err">&amp;</span> Pending Approval<span class="nt">&lt;/ApprovalStatusName&gt;</span>
+  <span class="nt">&lt;AuthorizedDate</span> <span class="na">i:nil=</span><span class="s">"true"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;LastModifiedDate&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/LastModifiedDate&gt;</span>
+  <span class="nt">&lt;CashAdvancesList&gt;</span>
+    <span class="nt">&lt;CashAdvance&gt;</span>
+      <span class="nt">&lt;AmountRequested&gt;</span>400.000000<span class="nt">&lt;/AmountRequested&gt;</span>
+      <span class="nt">&lt;ApprovalStatusKey&gt;</span>A_NOTF<span class="nt">&lt;/ApprovalStatusKey&gt;</span>
+      <span class="nt">&lt;ApprovalStatusName&gt;</span>Not Submitted<span class="nt">&lt;/ApprovalStatusName&gt;</span>
+      <span class="nt">&lt;CashAdvanceKey&gt;</span>nu1p4xwRqDVwWEcRN5kzNh1OXXfiZ1z06<span class="nt">&lt;/CashAdvanceKey&gt;</span>
+      <span class="nt">&lt;CommentsList</span> <span class="na">i:type=</span><span class="s">"CommentsList"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;CurrencyCode&gt;</span>USD<span class="nt">&lt;/CurrencyCode&gt;</span>
+      <span class="nt">&lt;CurrencyName&gt;</span>US, Dollar<span class="nt">&lt;/CurrencyName&gt;</span>
+      <span class="nt">&lt;EmployeeCurrencyCode&gt;</span>MXN<span class="nt">&lt;/EmployeeCurrencyCode&gt;</span>
+      <span class="nt">&lt;EmployeeCurrencyName&gt;</span>Mexico, Peso<span class="nt">&lt;/EmployeeCurrencyName&gt;</span>
+      <span class="nt">&lt;ExchangeRate&gt;</span>1.00000000000000<span class="nt">&lt;/ExchangeRate&gt;</span>
+      <span class="nt">&lt;IssueDate</span> <span class="na">i:nil=</span><span class="s">"true"</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;RequestDate&gt;</span>2012-06-08T23:35:20<span class="nt">&lt;/RequestDate&gt;</span>
+      <span class="nt">&lt;StartingBalance&gt;</span>0.0<span class="nt">&lt;/StartingBalance&gt;</span>
+    <span class="nt">&lt;/CashAdvance&gt;</span>
+  <span class="nt">&lt;/CashAdvancesList&gt;</span>
+  <span class="nt">&lt;CommentCount&gt;</span>1<span class="nt">&lt;/CommentCount&gt;</span>
+  <span class="nt">&lt;CommentsList&gt;</span>
+    <span class="nt">&lt;Comments&gt;</span>
+      <span class="nt">&lt;Comment&gt;</span>Trip for Sales meeting to Dallas<span class="nt">&lt;/Comment&gt;</span>
+      <span class="nt">&lt;DateTime&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/DateTime&gt;</span>
+      <span class="nt">&lt;FirstName&gt;</span>Chris<span class="nt">&lt;/FirstName&gt;</span>
+      <span class="nt">&lt;LastName&gt;</span>Miller<span class="nt">&lt;/LastName&gt;</span>
+    <span class="nt">&lt;/Comments&gt;</span>
+  <span class="nt">&lt;/CommentsList&gt;</span>
+  <span class="nt">&lt;CreationDate&gt;</span>2012-06-08T23:33:39<span class="nt">&lt;/CreationDate&gt;</span>
+  <span class="nt">&lt;CurrencyCode&gt;</span>MXN<span class="nt">&lt;/CurrencyCode&gt;</span>
+  <span class="nt">&lt;EmployeeName&gt;</span>Miller, Chris<span class="nt">&lt;/EmployeeName&gt;</span>
+  <span class="nt">&lt;EndDate&gt;</span>9/25/2012<span class="nt">&lt;/EndDate&gt;</span>
+  <span class="nt">&lt;EndTime&gt;</span>11:59 PM<span class="nt">&lt;/EndTime&gt;</span>
+  <span class="nt">&lt;EntriesList&gt;</span>
+    <span class="nt">&lt;RequestEntry&gt;</span>
+      <span class="nt">&lt;AllocationCount&gt;</span>3<span class="nt">&lt;/AllocationCount&gt;</span>
+      <span class="nt">&lt;AllocationsList&gt;</span>
+        <span class="nt">&lt;Allocation&gt;</span>
+          <span class="nt">&lt;AllocationKey&gt;</span>nG$p6tMeoepRby4MJptMA6$sf4ucfZW7d5y<span class="nt">&lt;/AllocationKey&gt;</span>
+          <span class="nt">&lt;Percentage&gt;</span>33.33333334<span class="nt">&lt;/Percentage&gt;</span>
+          <span class="nt">&lt;Custom1&gt;</span>(7732)VIAJAR<span class="nt">&lt;/Custom1&gt;</span>
+          <span class="nt">&lt;Custom2&gt;</span>(881991)NUEVOS PROYECTOS<span class="nt">&lt;/Custom2&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5&gt;</span>(1234)Project 1234<span class="nt">&lt;/Custom5&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Allocation&gt;</span>
+        <span class="nt">&lt;Allocation&gt;</span>
+          <span class="nt">&lt;AllocationKey&gt;</span>nG$p6tMeoepRcrg7jyl$slxYxm43LBgtr0b<span class="nt">&lt;/AllocationKey&gt;</span>
+          <span class="nt">&lt;Percentage&gt;</span>33.33333333<span class="nt">&lt;/Percentage&gt;</span>
+          <span class="nt">&lt;Custom1&gt;</span>(7112)INFRAESTRUCTURA<span class="nt">&lt;/Custom1&gt;</span>
+          <span class="nt">&lt;Custom2&gt;</span>(223817)MODELO INFORMATICO<span class="nt">&lt;/Custom2&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5&gt;</span>(1234)Project 1234<span class="nt">&lt;/Custom5&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Allocation&gt;</span>
+        <span class="nt">&lt;Allocation&gt;</span>
+          <span class="nt">&lt;AllocationKey&gt;</span>nG$p6tMeoepRTFxjeJUFHAw$sDhH$prHfL$sd<span class="nt">&lt;/AllocationKey&gt;</span>
+          <span class="nt">&lt;Percentage&gt;</span>33.33333333<span class="nt">&lt;/Percentage&gt;</span>
+          <span class="nt">&lt;Custom1&gt;</span>(8826)FINANZAS<span class="nt">&lt;/Custom1&gt;</span>
+          <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5&gt;</span>(4321)Project 4321<span class="nt">&lt;/Custom5&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Allocation&gt;</span>
+      <span class="nt">&lt;/AllocationsList&gt;</span>
+      <span class="nt">&lt;ApprovedAmount&gt;</span>8947.77000000<span class="nt">&lt;/ApprovedAmount&gt;</span>
+      <span class="nt">&lt;CommentsList</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom1</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom5</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom11</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom21</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom22</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom23</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom24</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom25</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom26</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom27</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom28</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom29</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom30</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom31</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom32</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom33</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom34</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom35</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom36</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom37</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom38</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom39</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom40</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;EntryDescription</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ExceptionsList</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ExchangeRate&gt;</span>14.01220000000000<span class="nt">&lt;/ExchangeRate&gt;</span>
+      <span class="nt">&lt;ExpenseTypeKey&gt;</span>AIRFR<span class="nt">&lt;/ExpenseTypeKey&gt;</span>
+      <span class="nt">&lt;ExpenseTypeName&gt;</span>Boleto de Avion<span class="nt">&lt;/ExpenseTypeName&gt;</span>
+      <span class="nt">&lt;ForeignAmount&gt;</span>638.57000000<span class="nt">&lt;/ForeignAmount&gt;</span>
+      <span class="nt">&lt;ForeignCurrencyName&gt;</span>US, Dollar<span class="nt">&lt;/ForeignCurrencyName&gt;</span>
+      <span class="nt">&lt;LastModifiedDate&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/LastModifiedDate&gt;</span>
+      <span class="nt">&lt;PostedAmount&gt;</span>8947.77000000<span class="nt">&lt;/PostedAmount&gt;</span>
+      <span class="nt">&lt;RemainingAmount&gt;</span>8947.77000000<span class="nt">&lt;/RemainingAmount&gt;</span>
+      <span class="nt">&lt;RequestEntryKey&gt;</span>ntOaeqFud4aaO6NFSxH7X3TgNk3$pyqifM<span class="nt">&lt;/RequestEntryKey&gt;</span>
+      <span class="nt">&lt;SegmentCount&gt;</span>2<span class="nt">&lt;/SegmentCount&gt;</span>
+      <span class="nt">&lt;SegmentsList&gt;</span>
+        <span class="nt">&lt;Segment&gt;</span>
+          <span class="nt">&lt;ApprovedAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ArrivalDate&gt;</span>9/21/2012<span class="nt">&lt;/ArrivalDate&gt;</span>
+          <span class="nt">&lt;ArrivalTime&gt;</span>8:55 AM<span class="nt">&lt;/ArrivalTime&gt;</span>
+          <span class="nt">&lt;ClassOfServiceCode&gt;</span>S<span class="nt">&lt;/ClassOfServiceCode&gt;</span>
+          <span class="nt">&lt;CommentsList</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;DepartureDate&gt;</span>9/21/2012<span class="nt">&lt;/DepartureDate&gt;</span>
+          <span class="nt">&lt;DepartureTime&gt;</span>6:15 AM<span class="nt">&lt;/DepartureTime&gt;</span>
+          <span class="nt">&lt;ExceptionsList</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ExchangeRate</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;FlightNumber&gt;</span>1066<span class="nt">&lt;/FlightNumber&gt;</span>
+          <span class="nt">&lt;ForeignAmount&gt;</span>638.57000000<span class="nt">&lt;/ForeignAmount&gt;</span>
+          <span class="nt">&lt;ForeignCurrencyName&gt;</span>US, Dollar<span class="nt">&lt;/ForeignCurrencyName&gt;</span>
+          <span class="nt">&lt;FromLocationDetail&gt;</span>Juarez Intl, MEXICO<span class="nt">&lt;/FromLocationDetail&gt;</span>
+          <span class="nt">&lt;FromLocationName&gt;</span>Juarez Intl<span class="nt">&lt;/FromLocationName&gt;</span>
+          <span class="nt">&lt;IsAgencyBooked&gt;</span>Y<span class="nt">&lt;/IsAgencyBooked&gt;</span>
+          <span class="nt">&lt;IsSelfBooked&gt;</span>Y<span class="nt">&lt;/IsSelfBooked&gt;</span>
+          <span class="nt">&lt;PostedAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;RecordLocator</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;RemainingAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;SegmentKey&gt;</span>nLY990POOA2TVhHrpTZH$sxmlZ1S4s5nVf<span class="nt">&lt;/SegmentKey&gt;</span>
+          <span class="nt">&lt;SegmentLocator&gt;</span>1<span class="nt">&lt;/SegmentLocator&gt;</span>
+          <span class="nt">&lt;SegmentType&gt;</span>Air Ticket<span class="nt">&lt;/SegmentType&gt;</span>
+          <span class="nt">&lt;ToLocationDetail&gt;</span>Dallas Ft Worth Intl, Texas<span class="nt">&lt;/ToLocationDetail&gt;</span>
+          <span class="nt">&lt;ToLocationName&gt;</span>Dallas Ft Worth Intl<span class="nt">&lt;/ToLocationName&gt;</span>
+          <span class="nt">&lt;TripLocator&gt;</span>33519718<span class="nt">&lt;/TripLocator&gt;</span>
+          <span class="nt">&lt;LastModifiedDate&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/LastModifiedDate&gt;</span>
+          <span class="nt">&lt;Custom1</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom11</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom21</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom22</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom23</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom24</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom25</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom26</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom27</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom28</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom29</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom30</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom31</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom32</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom33</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom34</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom35</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom36</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom37</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom38</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom39</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom40</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Segment&gt;</span>
+        <span class="nt">&lt;Segment&gt;</span>
+          <span class="nt">&lt;ApprovedAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ArrivalDate&gt;</span>9/25/2012<span class="nt">&lt;/ArrivalDate&gt;</span>
+          <span class="nt">&lt;ArrivalTime&gt;</span>7:50 PM<span class="nt">&lt;/ArrivalTime&gt;</span>
+          <span class="nt">&lt;ClassOfServiceCode&gt;</span>S<span class="nt">&lt;/ClassOfServiceCode&gt;</span>
+          <span class="nt">&lt;CommentsList</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;DepartureDate&gt;</span>9/25/2012<span class="nt">&lt;/DepartureDate&gt;</span>
+          <span class="nt">&lt;DepartureTime&gt;</span>5:25 PM<span class="nt">&lt;/DepartureTime&gt;</span>
+          <span class="nt">&lt;ExceptionsList</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ExchangeRate</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;FlightNumber&gt;</span>481<span class="nt">&lt;/FlightNumber&gt;</span>
+          <span class="nt">&lt;ForeignAmount&gt;</span>638.57000000<span class="nt">&lt;/ForeignAmount&gt;</span>
+          <span class="nt">&lt;ForeignCurrencyName&gt;</span>US, Dollar<span class="nt">&lt;/ForeignCurrencyName&gt;</span>
+          <span class="nt">&lt;FromLocationDetail&gt;</span>Dallas Ft Worth Intl, Texas<span class="nt">&lt;/FromLocationDetail&gt;</span>
+          <span class="nt">&lt;FromLocationName&gt;</span>Dallas Ft Worth Intl<span class="nt">&lt;/FromLocationName&gt;</span>
+          <span class="nt">&lt;IsAgencyBooked&gt;</span>Y<span class="nt">&lt;/IsAgencyBooked&gt;</span>
+          <span class="nt">&lt;IsSelfBooked&gt;</span>Y<span class="nt">&lt;/IsSelfBooked&gt;</span>
+          <span class="nt">&lt;PostedAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;RecordLocator</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;RemainingAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;SegmentKey&gt;</span>nLY990POOA2XfRkUq$sJqRGxKI3ZK0$pn54<span class="nt">&lt;/SegmentKey&gt;</span>
+          <span class="nt">&lt;SegmentLocator&gt;</span>2<span class="nt">&lt;/SegmentLocator&gt;</span>
+          <span class="nt">&lt;SegmentType&gt;</span>Air Ticket<span class="nt">&lt;/SegmentType&gt;</span>
+          <span class="nt">&lt;ToLocationDetail&gt;</span>Juarez Intl, MEXICO<span class="nt">&lt;/ToLocationDetail&gt;</span>
+          <span class="nt">&lt;ToLocationName&gt;</span>Juarez Intl<span class="nt">&lt;/ToLocationName&gt;</span>
+          <span class="nt">&lt;TripLocator&gt;</span>33519718<span class="nt">&lt;/TripLocator&gt;</span>
+          <span class="nt">&lt;LastModifiedDate&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/LastModifiedDate&gt;</span>
+          <span class="nt">&lt;Custom1</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom11</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom21</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom22</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom23</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom24</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom25</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom26</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom27</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom28</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom29</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom30</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom31</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom32</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom33</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom34</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom35</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom36</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom37</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom38</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom39</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom40</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Segment&gt;</span>
+      <span class="nt">&lt;/SegmentsList&gt;</span>
+      <span class="nt">&lt;TransactionDate&gt;</span>2012-09-21T06:15:00<span class="nt">&lt;/TransactionDate&gt;</span>
+    <span class="nt">&lt;/RequestEntry&gt;</span>
+    <span class="nt">&lt;RequestEntry&gt;</span>
+      <span class="nt">&lt;AllocationCount&gt;</span>3<span class="nt">&lt;/AllocationCount&gt;</span>
+      <span class="nt">&lt;AllocationsList&gt;</span>
+        <span class="nt">&lt;Allocation&gt;</span>
+          <span class="nt">&lt;AllocationKey&gt;</span>nG$p6tMeoepROA$p19BXBVIKWPf6FyHoC2k<span class="nt">&lt;/AllocationKey&gt;</span>
+          <span class="nt">&lt;Percentage&gt;</span>33.33333334<span class="nt">&lt;/Percentage&gt;</span>
+          <span class="nt">&lt;Custom1&gt;</span>(7732)VIAJAR<span class="nt">&lt;/Custom1&gt;</span>
+          <span class="nt">&lt;Custom2&gt;</span>(881991)NUEVOS PROYECTOS<span class="nt">&lt;/Custom2&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5&gt;</span>(1234)Project 1234<span class="nt">&lt;/Custom5&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Allocation&gt;</span>
+        <span class="nt">&lt;Allocation&gt;</span>
+          <span class="nt">&lt;AllocationKey&gt;</span>nG$p6tMeoepRBwXZeblcbD8giw9LbZm2FT<span class="nt">&lt;/AllocationKey&gt;</span>
+          <span class="nt">&lt;Percentage&gt;</span>33.33333333<span class="nt">&lt;/Percentage&gt;</span>
+          <span class="nt">&lt;Custom1&gt;</span>(7112)INFRAESTRUCTURA<span class="nt">&lt;/Custom1&gt;</span>
+          <span class="nt">&lt;Custom2&gt;</span>(223817)MODELO INFORMATICO<span class="nt">&lt;/Custom2&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5&gt;</span>(1234)Project 1234<span class="nt">&lt;/Custom5&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Allocation&gt;</span>
+        <span class="nt">&lt;Allocation&gt;</span>
+          <span class="nt">&lt;AllocationKey&gt;</span>nG$p6tMeoepREmXR98pw3YLB4zFRxPasgE<span class="nt">&lt;/AllocationKey&gt;</span>
+          <span class="nt">&lt;Percentage&gt;</span>33.33333333<span class="nt">&lt;/Percentage&gt;</span>
+          <span class="nt">&lt;Custom1&gt;</span>(8826)FINANZAS<span class="nt">&lt;/Custom1&gt;</span>
+          <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5&gt;</span>(4321)Project 4321<span class="nt">&lt;/Custom5&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Allocation&gt;</span>
+      <span class="nt">&lt;/AllocationsList&gt;</span>
+      <span class="nt">&lt;ApprovedAmount&gt;</span>4764.15000000<span class="nt">&lt;/ApprovedAmount&gt;</span>
+      <span class="nt">&lt;CommentsList</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom1</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom5</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom11</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom21</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom22</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom23</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom24</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom25</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom26</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom27</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom28</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom29</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom30</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom31</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom32</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom33</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom34</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom35</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom36</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom37</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom38</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom39</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Custom40</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;EntryDescription</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ExceptionsList</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ExchangeRate&gt;</span>14.01220000000000<span class="nt">&lt;/ExchangeRate&gt;</span>
+      <span class="nt">&lt;ExpenseTypeKey&gt;</span>LODGE<span class="nt">&lt;/ExpenseTypeKey&gt;</span>
+      <span class="nt">&lt;ExpenseTypeName&gt;</span>Hotel/Lodging<span class="nt">&lt;/ExpenseTypeName&gt;</span>
+      <span class="nt">&lt;ForeignAmount&gt;</span>340.00000000<span class="nt">&lt;/ForeignAmount&gt;</span>
+      <span class="nt">&lt;ForeignCurrencyName&gt;</span>US, Dollar<span class="nt">&lt;/ForeignCurrencyName&gt;</span>
+      <span class="nt">&lt;LastModifiedDate&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/LastModifiedDate&gt;</span>
+      <span class="nt">&lt;PostedAmount&gt;</span>4764.15000000<span class="nt">&lt;/PostedAmount&gt;</span>
+      <span class="nt">&lt;RemainingAmount&gt;</span>4764.15000000<span class="nt">&lt;/RemainingAmount&gt;</span>
+      <span class="nt">&lt;RequestEntryKey&gt;</span>ntOaeqFud4tA34CjqKY3$pQOsBXl6Q4Qtd<span class="nt">&lt;/RequestEntryKey&gt;</span>
+      <span class="nt">&lt;SegmentCount&gt;</span>1<span class="nt">&lt;/SegmentCount&gt;</span>
+      <span class="nt">&lt;SegmentsList&gt;</span>
+        <span class="nt">&lt;Segment&gt;</span>
+          <span class="nt">&lt;ApprovedAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ArrivalDate&gt;</span>9/25/2012<span class="nt">&lt;/ArrivalDate&gt;</span>
+          <span class="nt">&lt;ArrivalTime&gt;</span>12:00 AM<span class="nt">&lt;/ArrivalTime&gt;</span>
+          <span class="nt">&lt;ClassOfServiceCode</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;CommentsList</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;DepartureDate&gt;</span>9/21/2012<span class="nt">&lt;/DepartureDate&gt;</span>
+          <span class="nt">&lt;DepartureTime&gt;</span>12:00 AM<span class="nt">&lt;/DepartureTime&gt;</span>
+          <span class="nt">&lt;ExceptionsList</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ExchangeRate</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;FlightNumber</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ForeignAmount&gt;</span>340.00000000<span class="nt">&lt;/ForeignAmount&gt;</span>
+          <span class="nt">&lt;ForeignCurrencyName&gt;</span>US, Dollar<span class="nt">&lt;/ForeignCurrencyName&gt;</span>
+          <span class="nt">&lt;FromLocationDetail</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;FromLocationName</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;IsAgencyBooked&gt;</span>Y<span class="nt">&lt;/IsAgencyBooked&gt;</span>
+          <span class="nt">&lt;IsSelfBooked&gt;</span>Y<span class="nt">&lt;/IsSelfBooked&gt;</span>
+          <span class="nt">&lt;PostedAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;RecordLocator</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;RemainingAmount</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;SegmentKey&gt;</span>nLY990POOA2Lqa0$pzpIwE6d0uU51z5DYo<span class="nt">&lt;/SegmentKey&gt;</span>
+          <span class="nt">&lt;SegmentLocator&gt;</span>47244773465<span class="nt">&lt;/SegmentLocator&gt;</span>
+          <span class="nt">&lt;SegmentType&gt;</span>Hotel Reservation<span class="nt">&lt;/SegmentType&gt;</span>
+          <span class="nt">&lt;ToLocationDetail</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;ToLocationName</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;TripLocator&gt;</span>33519718<span class="nt">&lt;/TripLocator&gt;</span>
+          <span class="nt">&lt;LastModifiedDate&gt;</span>2012-06-08T16:35:20<span class="nt">&lt;/LastModifiedDate&gt;</span>
+          <span class="nt">&lt;Custom1</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom2</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom5</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom11</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom21</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom22</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom23</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom24</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom25</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom26</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom27</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom28</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom29</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom30</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom31</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom32</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom33</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom34</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom35</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom36</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom37</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom38</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom39</span> <span class="nt">/&gt;</span>
+          <span class="nt">&lt;Custom40</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Segment&gt;</span>
+      <span class="nt">&lt;/SegmentsList&gt;</span>
+      <span class="nt">&lt;TransactionDate&gt;</span>2012-09-21T23:59:00<span class="nt">&lt;/TransactionDate&gt;</span>
+    <span class="nt">&lt;/RequestEntry&gt;</span>
+  <span class="nt">&lt;/EntriesList&gt;</span>
+  <span class="nt">&lt;EntryCount&gt;</span>2<span class="nt">&lt;/EntryCount&gt;</span>
+  <span class="nt">&lt;EverSentBack&gt;</span>N<span class="nt">&lt;/EverSentBack&gt;</span>
+  <span class="nt">&lt;ExceptionsList</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;ExpensePolicyKey&gt;</span>nI6NfRt2Vq7zSzFFgqVGNjeYFXkAxVGGN<span class="nt">&lt;/ExpensePolicyKey&gt;</span>
+  <span class="nt">&lt;ExtensionOf</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;HasException&gt;</span>N<span class="nt">&lt;/HasException&gt;</span>
+  <span class="nt">&lt;LoginID&gt;</span>cmiller@example.com<span class="nt">&lt;/LoginID&gt;</span>
+  <span class="nt">&lt;Purpose&gt;</span>Business trip to Dallas<span class="nt">&lt;/Purpose&gt;</span>
+  <span class="nt">&lt;RequestID&gt;</span>337E<span class="nt">&lt;/RequestID&gt;</span>
+  <span class="nt">&lt;RequestKey&gt;</span>nyc7eqM$pprGNOuRIDP6BkOiJ8BntYTrR3<span class="nt">&lt;/RequestKey&gt;</span>
+  <span class="nt">&lt;RequestName&gt;</span>Trip from Mexico City to Dallas<span class="nt">&lt;/RequestName&gt;</span>
+  <span class="nt">&lt;RequestTotal&gt;</span>13711.92000000<span class="nt">&lt;/RequestTotal&gt;</span>
+  <span class="nt">&lt;StartDate&gt;</span>9/21/2012<span class="nt">&lt;/StartDate&gt;</span>
+  <span class="nt">&lt;StartTime&gt;</span>6:15 AM<span class="nt">&lt;/StartTime&gt;</span>
+  <span class="nt">&lt;SubmitDate&gt;</span>2012-06-08T23:36:10<span class="nt">&lt;/SubmitDate&gt;</span>
+  <span class="nt">&lt;TotalApprovedAmount&gt;</span>13711.92000000<span class="nt">&lt;/TotalApprovedAmount&gt;</span>
+  <span class="nt">&lt;TotalRemainingAmount&gt;</span>13711.92000000<span class="nt">&lt;/TotalRemainingAmount&gt;</span>
+  <span class="nt">&lt;TravelRequestPolicyKey&gt;</span>n$snD$psI09k6NxQAgOnwgks76hOZdyLhDs<span class="nt">&lt;/TravelRequestPolicyKey&gt;</span>
+  <span class="nt">&lt;WorkflowActionURL&gt;</span>https:/www.concursolutions.com/api/travelrequest/v1.0/requests/n3cC3I7NpBss5U2Aofqvxao5t3hvFEQo/WorkFlowAction<span class="nt">&lt;/WorkflowActionURL&gt;</span>
+  <span class="nt">&lt;Custom1&gt;</span>(7732)VIAJAR<span class="nt">&lt;/Custom1&gt;</span>
+  <span class="nt">&lt;Custom2&gt;</span>(881991)NUEVOS PROYECTOS<span class="nt">&lt;/Custom2&gt;</span>
+  <span class="nt">&lt;Custom3</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom4</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom5</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom6</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom7</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom8</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom9</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom10</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom11</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom12</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom13</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom14</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom15</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom16</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom17</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom18</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom19</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;Custom20</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/TravelRequestDetails&gt;</span>
+</code></pre></div></div>
+
+<h2 id="post-travel-request-header"><a name="a4">Post travel request header</a></h2>
+
+<p>Posts the travel request header information for a new or existing travel request for the user specified in the OAuth access token. The travel request header contains classification information for the travel request.</p>
+
+<h3 id="request-4">Request</h3>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<p><strong>requests</strong>  The requests keyword. Required.</p>
+
+<p>Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travelrequest/v1.0/requests
+</code></pre></div></div>
+
+<p><strong>{<em>requestID</em>}</strong>: The unique identifier for the desired travel request. Supplied when updating an existing travel request. Optional.</p>
+
+<p>Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/travelrequest/v1.0/requests/{requestID}
+</code></pre></div></div>
+
+<p><strong>URI Source</strong>: The requestId value is returned by <a href="#a3">Get Request Details</a> function, and the <strong>Request-Url</strong> element in this function.</p>
+
+<h3 id="headers-2">Headers</h3>
+
+<h4 id="authorization-header-2">Authorization header</h4>
+
+<p>Authorization header with OAuth token for valid Concur user. Required.</p>
+
+<p>The OAuth consumer for this request must have the following role in Travel Request: Request User. This role allows the user to create travel requests.</p>
+
+<h4 id="content-type-header">Content-Type header</h4>
+
+<p>application/xml</p>
+
+<h3 id="request-body">Request body</h3>
+
+<p>This request should contain a <strong>Request</strong> parent element with the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Name</td>
+      <td>Y</td>
+      <td>The travel request name.</td>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>Depends on configuration</td>
+      <td>The business purpose of the travel request. Maximum length: 2000.</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>Depends on configuration</td>
+      <td>The travel request header comment.</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom20</td>
+      <td>Depends on configuration</td>
+      <td>The custom fields on the travel request Header form. May be required depending on configuration.<br />  <strong>NOTE</strong>: If any of the custom fields are configured to contain list values, please refer to the <a href="/api-reference/common/list-item/custom-list-items.html">Posting Custom List Items</a> page for information on how to correctly submit list item values.</td>
+    </tr>
+    <tr>
+      <td>StartDate</td>
+      <td>Depends on configuration</td>
+      <td>The start date for the travel request. Format: YYYY-MM-DD</td>
+    </tr>
+    <tr>
+      <td>StartTime</td>
+      <td>Depends on configuration</td>
+      <td>The start time for the travel request. Format: hh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>EndDate</td>
+      <td>Depends on configuration</td>
+      <td>The end date for the travel request. Format: YYYY-MM-DD</td>
+    </tr>
+    <tr>
+      <td>EndTime</td>
+      <td>Depends on configuration</td>
+      <td>The end time for the travel request. Format: hh:mm:ss</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>NOTE</strong>: Refer to the Travel Request Admin user interface for the list of required fields and formats.</p>
+
+<h3 id="xml-example-request">XML Example Request</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/travelrequest/v1.0/requests HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth {access token}
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Request</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Name&gt;</span>Request for Trip to Seattle<span class="nt">&lt;/Name&gt;</span>
+  <span class="nt">&lt;Purpose&gt;</span>Sales team meeting<span class="nt">&lt;/Purpose&gt;</span>
+  <span class="nt">&lt;Comment&gt;</span>NW Regional Sales team<span class="nt">&lt;/Comment&gt;</span>
+  <span class="nt">&lt;StartDate&gt;</span>2012-09-30<span class="nt">&lt;/StartDate&gt;</span>
+  <span class="nt">&lt;StartTime&gt;</span>3:15<span class="nt">&lt;/StartTime&gt;</span>
+  <span class="nt">&lt;EndDate&gt;</span>2012-10-05<span class="nt">&lt;/EndDate&gt;</span>
+  <span class="nt">&lt;EndTime&gt;</span>15:25<span class="nt">&lt;/EndTime&gt;</span>
+<span class="nt">&lt;/Request&gt;</span>
+</code></pre></div></div>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="supported-content-types">Supported Content Types</h4>
+
+<p>application/xml</p>
+
+<h4 id="response-body-root-elements">Response body root elements</h4>
+
+<p>This request will return a <strong>RequestStatus</strong> parent element with the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Status</td>
+      <td>The status of the travel request.</td>
+    </tr>
+    <tr>
+      <td>Request-Url</td>
+      <td>The URI to use when posting travel request header details to this travel request.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>If saving the travel request header triggers an exception, a <strong>RequestExceptions</strong> parent element will be provided, with a <strong>RequestException</strong> parent element for each exception. The <strong>RequestException</strong> element contains the following elements.</p>
+
+<h5 id="requestexception-child-elements">RequestException child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EventCode</td>
+      <td>The event that resulted in the exception.</td>
+    </tr>
+    <tr>
+      <td>ExceptionCod</td>
+      <td>The company-defined exception code.</td>
+    </tr>
+    <tr>
+      <td>ExceptionMessage</td>
+      <td>The company-defined exception message. In the case of the system MISREQFLD exception the message will list the required fields that are missing values.</td>
+    </tr>
+    <tr>
+      <td>ExceptionVisibility</td>
+      <td>Which users are able to see the exception.</td>
+    </tr>
+    <tr>
+      <td>IsCleared</td>
+      <td>Whether the exception has been cleared by the Request Processor.</td>
+    </tr>
+    <tr>
+      <td>SeverityLevel</td>
+      <td>A numeric value indicating the severity level of the exception. The value threshold is configurable.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-of-response-with-successful-travel-request-creation-and-exception">XML Example of Response with Successful Travel Request Creation and Exception</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;RequestStatus</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Request-Details-Url&gt;</span>https://www.concursolutions.com/api/travelrequest/v1.0/requests/nf0ma53XrN$s6z5iKRRANn6eIsW89aTe3m<span class="nt">&lt;/Request-Details-Url&gt;</span>
+  <span class="nt">&lt;Status&gt;</span>SUCCESS<span class="nt">&lt;/Status&gt;</span>
+  <span class="nt">&lt;RequestExceptions&gt;</span>
+    <span class="nt">&lt;RequestException&gt;</span>
+      <span class="nt">&lt;EventCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ExceptionCode&gt;</span>MISSREQFLD<span class="nt">&lt;/ExceptionCode&gt;</span>
+      <span class="nt">&lt;ExceptionErrorCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ExceptionVisibility&gt;</span>1<span class="nt">&lt;/ExceptionVisibility&gt;</span>
+      <span class="nt">&lt;IsCleared&gt;</span>N<span class="nt">&lt;/IsCleared&gt;</span>
+      <span class="nt">&lt;Message&gt;</span>Missing Required Fields:Custom 02,Custom 03,Cash Advance,<span class="nt">&lt;/Message&gt;</span>
+      <span class="nt">&lt;SeverityLevel&gt;</span>2147483647<span class="nt">&lt;/SeverityLevel&gt;</span>
+      <span class="nt">&lt;Type</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/RequestException&gt;</span>
+  <span class="nt">&lt;/RequestExceptions&gt;</span>
+<span class="nt">&lt;/RequestStatus&gt;</span>
+</code></pre></div></div>
+
+<h2 id="post-travel-request-workflow-action"><a name="a5">Post travel request workflow action</a></h2>
+
+<p>Posts a workflow action for the supplied travel request. The workflow action moves the travel request through the workflow process. The available actions are:</p>
+
+<ul>
+  <li><strong>Approve</strong>: The travel request is approved for the current workflow approver. The travel request will continue in the workflow, and may require additional approvals based on configuration.</li>
+  <li><strong>Send Back to Employee</strong>: The travel request is sent back to the employee for revision. This workflow action is used by the approvers and processors when they discover an error that must be corrected by the user. When the user resubmits the travel request, it goes through the entire workflow again.</li>
+  <li><strong>Recall to Employee</strong>: This workflow action is initiated by the employee, and is only available after the travel request has been submitted. This workflow action will rarely be used by developers, and may not be available to some clients due to configuration.</li>
+</ul>
+
+<h4 id="two-different-workflow-roles">Two different workflow roles</h4>
+
+<p>Each workflow action is associated with a workflow role. The System role is used when the workflow actions do not require a particular user to perform the action. Developers who want to evaluate a travel request programatically then supply a workflow action use the System role.</p>
+
+<p>The Approver role is used when the workflow step requires an individual to perform an action. Developers who want to present a list of travel requests to approve and send the workflow action when the travel requests have been evaluated by the approver use the Approver role. This role requires that a user with the correct Concur role (Request Approver, or Request Processor for Professional) authenticates using Standard OAuth before supplying the workflow action. The user must also have access (be a valid approver or processor) for the supplied Request Id.</p>
+
+<h3 id="request-5">Request</h3>
+
+<h4 id="request-parameters">Request parameters</h4>
+
+<p><strong>requests/{<em>workflowstepId</em>}/workflowaction</strong>: The requests and workflowaction keywords and the unique identifier for the desired workflow step. Required.</p>
+
+<p>Example: <code class="language-plaintext highlighter-rouge">https://www.concursolutions.com/api/travelrequest/v1.0/requests/{workflowstepId}/workflowaction</code></p>
+
+<p><strong>URI Source</strong>: The URI is the <strong>WorkflowStepURL</strong> element found in the response of the <a href="#a3">Get Request Details</a> endpoint. The workflowstepId must match the current workflow step of the travel request. Use the <a href="#a3">Get Requests Details</a> endpoint immediately prior to sending this request to guarantee that you have the current <strong>WorkflowStepURL</strong>.</p>
+
+<h4 id="headers-3">Headers</h4>
+
+<h5 id="authorization-header-3">Authorization header</h5>
+
+<p>Authorization header with OAuth token for valid Concur user. Required. The OAuth consumer must have one of the following user roles in Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard.</p>
+
+<h6 id="content-type-header-1">Content-Type header</h6>
+
+<p>application/xml</p>
+
+<h4 id="request-body-1">Request body</h4>
+
+<p>This request should contain a <strong>WorkflowAction</strong> parent element with the following child elements:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Element</td>
+      <td>Required (must contain value)?</td>
+      <td>Description</td>
+    </tr>
+    <tr>
+      <td>Action</td>
+      <td>Y</td>
+      <td>The name of the workflow action. Possible values are: <strong>Approve</strong>, ** Send Back to Employee<strong>, or **Recall to Employee</strong>. Must be one of the workflow actions available for the workflow step. Consult Request Admin, Workflow to learn details.</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>Y, for Send Back to Employee</td>
+      <td>Must be used with the Send Back to Employee workflow action. This comment is visible wherever travel request comments are available to the employee, approver, and/or processor.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-request-1">XML Example Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST api/travelrequest/v1.0/requests/nx2WRNzp18$wjehk%wqEL6EDHRwi9r$paQS1UqyL6a4qQ/workflowaction HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth {access token}
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;WorkflowAction</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Action&gt;</span>Approve<span class="nt">&lt;/Action&gt;</span>
+    <span class="nt">&lt;Comment&gt;</span>Approved via SAP Concur<span class="nt">&lt;/Comment&gt;</span>
+<span class="nt">&lt;/WorkflowAction&gt;</span>
+</code></pre></div></div>
+
+<h3 id="response-5">Response</h3>
+
+<h4 id="supported-content-types-1">Supported Content Types</h4>
+<p>application/xml</p>
+
+<h4 id="response-body-root-elements-1">Response body root elements</h4>
+
+<p>This request will return an <strong>ActionStatus</strong> parent element with the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Message</td>
+      <td>The error message. Only appears if a workflow action error was generated</td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>The status of the travel request workflow action.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-of-successful-response">XML Example of Successful Response</h4>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;ActionStatus</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Message&gt;</span>SUCCESS!<span class="nt">&lt;/Message&gt;</span>
+  <span class="nt">&lt;Status&gt;</span>SUCCESS!<span class="nt">&lt;/Status&gt;</span>
+<span class="nt">&lt;/ActionStatus&gt;</span>
+</code></pre></div></div>
+
+<h3 id="xml-example-of-a-response-with-a-failure">XML Example of a Response with a Failure</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;ActionStatus</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/travelrequest/2012/06"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Message&gt;</span>The action cannot be executed because the item has recently been changed. Please refresh your list and try again.<span class="nt">&lt;/Message&gt;</span>
+  <span class="nt">&lt;Status&gt;</span>FAILURE<span class="nt">&lt;/Status&gt;</span>
+<span class="nt">&lt;/ActionStatus&gt;</span>
+</code></pre></div></div>
+
+:ET

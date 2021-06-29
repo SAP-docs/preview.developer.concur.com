@@ -1,0 +1,183 @@
+
+## Budget v4 - Budget Tracking
+
+
+
+* [Getting Started](#budget-v4-getting-started)
+* [Fiscal Year](#budget-v4-fiscal-year-2020)
+* [Budget Category](#budget-v4-budget-category)
+* [Budget Item](#budget-v4-budget-item)
+* [Budget Tracking Field](#budget-v4-budget-tracking)
+* [Budget Adjustments](#budget-v4-budget-adjustments)
+
+
+This resource is used to retrieve information about Budget's tracking fields for an entity. Every entity may have a specific set of budget tracking fields and every budget may enable any or all of the budget tracking fields. If there are tracking fields associated, the budgets get matched to the product only when the tracking field conditions are met.
+
+* [GET All budget tracking fields for an entity](#getall)
+* [Schema](#schema)
+  * [Budget Tracking Field](#budgetTracking)
+
+#### <a name="getall"></a>GET All Budget Tracking Fields
+
+Retrieve budget tracking fields information that is setup in budget configuration. This information returned here like the field definition ID, is needed if you will be importing budgets with tracking field values using the post budget item resource. 
+
+### Scopes
+
+This API call requires one of the following scopes:
+
+* `budgetitem.read` - Refer to [Scope Usage](#budget-v4-getting-started) for full details.
+* `budgetitem.write` - Refer to [Scope Usage](#budget-v4-getting-started) for full details.
+
+### Request
+
+#### URI
+
+```http
+GET /budget/v4/budgetTrackingField
+```
+
+#### Template
+
+
+
+#### Parameters
+
+N/A
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) Successful call, response is in body.
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) The request was determined to be invalid by the server. Possibly a validation failed on the data that was sent in the payload. The response will have a list of validation errors in the body. See below for an example 400 response.
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) The user does not have the necessary permissions to perform the request.
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4) The resource could not be found or does not exist.
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1) Error message in response body.
+* [504 Gateway Timeout](https://tools.ietf.org/html/rfc7231#section-6.6.5) Error message in response body.
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7231 Allow](https://tools.ietf.org/html/rfc7231#section-7.4.1)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Expires](https://tools.ietf.org/html/rfc7234#section-5.3)
+* [RFC 7232 ETag](https://tools.ietf.org/html/rfc7232#section-2.3)
+* [RFC 7234 Pragma](https://tools.ietf.org/html/rfc7234#section-5.4)
+* [RFC 7231 Server](https://tools.ietf.org/html/rfc7231#section-7.4.2)
+* [RFC 7231 Vary](https://tools.ietf.org/html/rfc7231#section-7.1.4)
+
+#### Payload
+
+[Budget Tracking Field](#budgetTracking)
+
+<!--Request code is under Example, Response Code is under Request for even display in UI-->
+
+### Example
+
+```http
+GET https://us.api.concursolutions.com/budget/v4/budgetTrackingField
+Authorization: Bearer {token}
+Content-Type: application/json
+Accept: application/json
+```
+
+#### Request
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: no-store
+Connection: keep-alive
+Content-Length: 1371
+Content-Type: application/json;charset=utf-8
+Date: Fri, 21 Sep 2018 15:24:27 GMT
+Expires: Thu, 20 Sep 2018 15:24:27 GMT
+Pragma: no-cache
+Vary: Origin
+concur-correlationid: 86a0d9fe-9e98-43c3-89d8-a2917dd844cb
+```
+
+
+#### Response
+
+
+
+```json
+[
+   {
+        "budgetTrackingFieldName": "Cost Center",
+        "fieldType": "LIST",
+        "listSyncGuid": "8652CDF9C12B4051B8D180E20840CE9B",
+        "fieldId": "86309e0c-913c-47a5-9bcf-24a05342c718",
+        "budgetSequenceNumber": 2,
+        "connectedListSequenceNumber": 1,
+        "fieldDefinitionId":"19b07cff-4d36-44bd-acfe-befcfa607075"
+    },
+    {
+        "budgetTrackingFieldName": "Company",
+        "fieldType": "VARCHAR",
+        "listSyncGuid": null,
+        "fieldId": "d8f911a1-f298-4c65-b06b-710d482c9c46",
+        "budgetSequenceNumber": 1,
+        "connectedListSequenceNumber": 1,
+        "fieldDefinitionId":"ea2b82f3-ac18-4509-a748-842054f47f5f"
+    },
+    {
+        "budgetTrackingFieldName": "Department",
+        "fieldType": "LIST",
+        "listSyncGuid": "8652CDF9C12B4051B8D180E2084Q412",
+        "fieldId": "c4f721cb-8fc9-48cf-993e-5ea0edefcdbd",
+        "budgetSequenceNumber": 3,
+        "connectedListSequenceNumber": 1,
+        "fieldDefinitionId":"8b09cc4a-0274-4f2e-b223-3179f560c6bf"
+    },
+    {
+        "budgetTrackingFieldName": "Vendor",
+        "fieldType": "VARCHAR",
+        "listSyncGuid": null,
+        "fieldId": "bcc7ba39-a3a0-4267-84f4-1d5b439cce65",
+        "budgetSequenceNumber": 5,
+        "connectedListSequenceNumber": 1,
+        "fieldDefinitionId":"d543d38a-ef64-4585-8151-b2f909b7e2d3"
+    },
+    {
+        "budgetTrackingFieldName": "Region",
+        "fieldType": "MLIST",
+        "listSyncGuid": "8652CDF9C12B4051B8D180E20840CE9B",
+        "fieldId": "a2502b74-e3ce-4b30-a3a4-b6ceb68cf677",
+        "budgetSequenceNumber": 6,
+        "connectedListSequenceNumber": 1,
+        "fieldDefinitionId":"51c46189-110b-4de4-80ac-4cbae48625d6"
+    },
+    {
+        "budgetTrackingFieldName": "Country",
+        "fieldType": "VARCHAR",
+        "listSyncGuid": null,
+        "fieldId": "4ac122ad-8c0b-4076-bd41-49b09d576d5b",
+        "budgetSequenceNumber": 4,
+        "connectedListSequenceNumber": 1,
+        "fieldDefinitionId":"b5017eae-0b99-47df-8e0d-2f908292598a"
+    }
+]
+```
+
+#### <a name="schema"></a>Schema
+
+#### <a name="budgetTracking"></a>Budget Tracking Field
+
+Name|Type|Format|Description
+---|---|---|---
+`budgetTrackingFieldName`|`string`|-|The budget field tracking name.
+`fieldType`|`string`|-|The data type of this field or field collection. Supported values: `LIST`, `MLIST`, `VARCHAR`
+`listSyncGuid`|`string`|-|If the dataType of this item is `LIST` or `MLIST`, this is the ID of the list definition from SAP Concur's list service.
+`fieldId`|`string`|-|The budget service's key for this object.
+`budgetSequenceNumber`|`integer`|-|The sequence or the order in which the budget tracking field appears in the budget UI. This value can be used instead of fieldDefinitionId when importing budgets with POST resource. The budgetSequenceNumber is the the same as the code field when importing budgets. 
+`connectedListSequenceNumber`|`integer`|-|**READ ONLY** Indicates the level of the budget tracking field in a connected list.
+`fieldDefinitionId`|`string`|-|The budget service's key for this object's field definition ID. This value is required when using the Budget Item POST Resource to create or update a new budget using budget tracking fields.

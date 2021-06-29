@@ -1,0 +1,242 @@
+I"W=<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<ul>
+  <li><a href="#company">Obtain Company Token</a></li>
+  <li><a href="#usersbulk">Calling Users Bulk API</a></li>
+  <li><a href="#schema">Schema</a></li>
+</ul>
+
+<h2 id="obtain-company-token"><a name="company"></a>Obtain Company Token</h2>
+
+<p>Company is a top-level principal within SAP Concur and you would be able to obtain an access token and a refresh token on a company’s behalf just like you would be able to with a user. Only one authorization flow is currently available for obtaining tokens for a company, which is the <a href="/api-reference/authentication/apidoc.html#password_grant">Password grant</a>.</p>
+
+<p>For more information and instructions for obtaining a Company Token, please review the <a href="/https://developer.concur.com/api-reference/authentication/company-auth.html">Company Level Authentication</a></p>
+
+<h2 id="calling-users-bulk-api"><a name="usersbulk"></a>Calling Users Bulk API</h2>
+
+<p>This endpoint will retrieve a list of users that belong to a company and return basic company information together with the list of users.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET  /users/
+</span></code></pre></div></div>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">total</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The total number of users within the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">offset</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The offset to begin returning the list of users.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">limit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The number of user records to return in that call. Maximum: 1000</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">&lt;name_of_filter&gt;</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Filters results based on the desired field. Supported values: <code class="language-plaintext highlighter-rouge">isactive</code>, <code class="language-plaintext highlighter-rouge">loginid</code>, <code class="language-plaintext highlighter-rouge">lastname</code>, <code class="language-plaintext highlighter-rouge">employeeid</code>, <code class="language-plaintext highlighter-rouge">primaryemail</code>, <code class="language-plaintext highlighter-rouge">countrycode</code>, <code class="language-plaintext highlighter-rouge">id</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">
+</span><span class="nf">GET</span> <span class="nn">/users</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">us.api.concursolutions.com</span>
+
+</code></pre></div></div>
+
+<h5 id="sample-curl">Sample Curl:</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-v</span> <span class="nt">-X</span> GET <span class="nt">-H</span> <span class="s2">"Authorization: Bearer </span><span class="nv">$token</span><span class="s2">"</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+<span class="s1">'https://us.api.concursolutions.com/users/?offset=0&amp;limit=100&amp;isactive=true'</span>
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">200</span><span class="w"> </span><span class="err">OK</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"offset"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"company"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Company Name LLC"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"601 108th ave NE"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bellevue"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"98004"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"Items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"Active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"CountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"CellPhoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5551234567"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"PrimaryEmail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johndoe@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EmployeeID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johndoe@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"99BFFFC3-C0BE-44FF-A441-AE1FFFFFF75B8"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"PrimaryEmail"</span><span class="p">,</span><span class="w"> </span><span class="s2">"VerifiedEmail"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email5"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"OrganizationUnit"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"MiddleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"LastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"FirstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"LoginID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johndoe@gmail.com"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"Active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"CountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"CellPhoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"PrimaryEmail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"janedoe@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"EmployeeID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"janedoe@gmail.com"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"ID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55FFF504-C7B8-49FF-9E15-6248FFFFFCDB"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"PrimaryEmail"</span><span class="p">,</span><span class="w"> </span><span class="s2">"VerifiedEmail"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"email5"</span><span class="p">],</span><span class="w">
+      </span><span class="nl">"OrganizationUnit"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"MiddleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"LastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"FirstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jane"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"LoginID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"janedoe@gmail.com"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Items</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#user"><code class="language-plaintext highlighter-rouge">User</code></a></td>
+      <td><strong>Required</strong> Contains the Client, Users, Locations, Source Partner and Transaction.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NextPage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI of the next page of results, if any.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="user"><a name="user"></a>User</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Active</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>-</td>
+      <td>Indicates whether the user is currently active or not.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CellPhoneNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The cell phone number of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">EmployeeID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The employee ID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">FirstName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The first name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LastName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The last name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LoginID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The login ID of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">MiddleName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The middle name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">OrginzationUnit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The organization unit of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PrimaryEmail</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The primary email of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">URI</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI to the resource.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

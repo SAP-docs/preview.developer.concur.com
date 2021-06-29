@@ -1,0 +1,265 @@
+I"Ï'<p>The purpose of this API is to provide SAP Concurâ€™s partners the ability to message users through the web and mobile product.</p>
+
+<p><strong>Sample use case:</strong> A business traveller starts a travel booking. That user is notified that a visa is required for their trip.</p>
+
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#send-message">Send a message</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#schema-context">Context</a></li>
+      <li><a href="#schema-error">Error</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="./v4.notifications-process-flow.png" alt="Process flow for notifications" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Travel Professional Edition</li>
+  <li>Concur Travel Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">notifications.messages.writeonly</code></td>
+      <td>Write messages to the notifications platform</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<ul>
+  <li>User Profile Service - Get user information using access token (JWT)</li>
+  <li>Events Service - Use access token (JWT) and <code class="language-plaintext highlighter-rouge">sessionId</code> to call the Partner Notifications API</li>
+</ul>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>A Company access token (JWT) is required for this endpoint.</p>
+
+<h2 id="send-a-message"><a name="send-message"></a>Send a message</h2>
+
+<p>The endpoint provides a way for SAP Concur partners to message users and notify them. Partners will provide the identifier of the pre-configured message template, along with the data to apply to the message.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">notifications.messages.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://us.api.concursolutions.com/notifications/v4/messages/<span class="o">{</span>userId<span class="o">}</span>/session
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The <code class="language-plaintext highlighter-rouge">userId</code> of the user to whom the notification should be sent.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.5.3">RFC 7231 User-Agent</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#schema">Payload</a></li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a>.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li>HTTP Headers Only</li>
+  <li><a href="#schema-error">Error</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/notifications/v4/messages/0E6BD8D8-A020-43C6-BBEC-B67A7021FF1C
+/session
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>JWT<span class="o">}</span>
+content-type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+   </span><span class="nl">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"D5B80C53-A4D2-4949-8462-D41655F246E2"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"templateId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"template-name"</span><span class="p">,</span><span class="w">
+   </span><span class="nl">"context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://www.example.com/foo"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+concur-correlationid: 848618e7-5747-4970-bda7-fc7baf251f88
+Content-Type: application/json<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+Date: Thu, 24 Jan 2019 01:31:47 GMT
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sessionId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique ID of the session</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">templateId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The template identifier of the message</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">context</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-context">context</a></td>
+      <td>Contains additional information required for the template</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="context"><a name="schema-context"></a>Context</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">url</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The context URL to apply to the template. Please contact SAP Concur to add domains to the approved list.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error"><a name="schema-error"></a>Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique ID of the error</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The error code</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A message describing the error</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-error"><code class="language-plaintext highlighter-rouge">error</code></a></td>
+      <td>An array of errors. Note: this points to this schema as errors can nest.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

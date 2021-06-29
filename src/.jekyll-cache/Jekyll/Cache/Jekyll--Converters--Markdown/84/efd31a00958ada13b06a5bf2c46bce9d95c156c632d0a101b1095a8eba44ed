@@ -1,0 +1,1224 @@
+I"e�<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>The Reports v4 API can be used to read and modify an expense report header of an existing expense report. This API can be used to change attributes like report name, business purpose, etc.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#retrieve-report-header">Retrieve a Report by ID</a></li>
+  <li><a href="#update-report-header">Update a Report</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#report-details-schema">Report Details</a></li>
+      <li><a href="#update-report-schema">Update Report</a></li>
+      <li><a href="#custom-data-schema">Custom Data</a></li>
+      <li><a href="#amount-schema">Amount</a></li>
+      <li><a href="#redirect-fund-schema">Redirect Fund</a></li>
+      <li><a href="#report-send-back-request-schema">Report Send Back Request</a></li>
+      <li><a href="#workflow-transition-request-schema">Workflow Transition Request</a></li>
+      <li><a href="#link-schema">Link</a></li>
+    </ul>
+  </li>
+  <li><a href="#error-schema">Error</a></li>
+  <li><a href="#validation-errors-schema">Validation Errors</a></li>
+</ul>
+
+<h2 id="prior-versions">Prior Versions</h2>
+
+<ul>
+  <li>Report Header v1 (Deprecated) documentation is available <a href="./api-reference-deprecated/version-one-one/expense-report/expense-report-header-resource.html">here</a></li>
+  <li>Reports v3 (Deprecated) documentation is available <a href="./v3.reports.html">here</a></li>
+</ul>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<p>Required Scopes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.report.read</code></td>
+      <td>Get information about expense reports.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code></td>
+      <td>Read and write expense report headers.</td>
+      <td>PATCH</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user.read</code></td>
+      <td>Get User Information, necessary for <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Optional Scope:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spend.listitem.read</code></td>
+      <td>Read only access to spend list items <code class="language-plaintext highlighter-rouge">listItemId</code>.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spend.list.read</code></td>
+      <td>Read only access to spend list and category details.</td>
+      <td>GET</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the User v3.1 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports both company level and user level access tokens.</p>
+
+<h2 id="retrieve-a-report-by-id"><a name="retrieve-report-header"></a>Retrieve a Report by ID</h2>
+
+<p>Retrieves the details of the specific report header.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">PROXY</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report that is being read.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#report-header-response-schema">Report Header Response</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Expense-Report-test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">{</span>
+    <span class="s2">"approvalStatus"</span>: <span class="s2">"Not Submitted"</span>,
+    <span class="s2">"approvalStatusId"</span>: <span class="s2">"A_NOTF"</span>,
+    <span class="s2">"concurAuditStatus"</span>: <span class="s2">"NOTR"</span>,
+    <span class="s2">"customData"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"custom15"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"4366A89A916F074099A971B000989A94"</span>,
+            <span class="s2">"isValid"</span>: <span class="nb">true</span>,
+            <span class="s2">"listItemUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/list/v4/items?id=4366A89A916F074099A971B000989A94"</span>
+        <span class="o">}</span>,
+        <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"custom16"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"Test33224ASDF"</span>,
+            <span class="s2">"isValid"</span>: <span class="nb">true</span>,
+            <span class="s2">"listItemUrl"</span>: null
+        <span class="o">}</span>,
+        <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"custom3"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"582AE31D0F506C4BAA97573F2A90F03B"</span>,
+            <span class="s2">"isValid"</span>: <span class="nb">true</span>,
+            <span class="s2">"listItemUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/list/v4/items?id=582AE31D0F506C4BAA97573F2A90F03B"</span>
+        <span class="o">}</span>,
+        <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"custom4"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"79AE45D0F6757946AC2B01CDFA6CA326"</span>,
+            <span class="s2">"isValid"</span>: <span class="nb">true</span>,
+            <span class="s2">"listItemUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/list/v4/items?id=79AE45D0F6757946AC2B01CDFA6CA326"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"ledger"</span>: <span class="s2">"DEFAULT"</span>,
+    <span class="s2">"ledgerId"</span>: <span class="s2">"2703E3FBD393DA4484ED3CB07303407C"</span>,
+    <span class="s2">"paymentStatus"</span>: <span class="s2">"Not Paid"</span>,
+    <span class="s2">"paymentStatusId"</span>: <span class="s2">"P_NOTP"</span>,
+    <span class="s2">"submitDate"</span>: null,
+    <span class="s2">"approvedAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 525.00000000,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"claimedAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 525.00000000,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"amountCompanyPaid"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"paymentConfirmedAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"amountDueCompany"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"amountDueCompanyCard"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"amountDueEmployee"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"personalAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"reportTotal"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 525.00000000,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"amountNotApproved"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 0E-8,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"isFinancialIntegrationEnabled"</span>: <span class="nb">false</span>,
+    <span class="s2">"canReopen"</span>: <span class="nb">false</span>,
+    <span class="s2">"isReopened"</span>: <span class="nb">false</span>,
+    <span class="s2">"isReceiptImageAvailable"</span>: <span class="nb">false</span>,
+    <span class="s2">"isReceiptImageRequired"</span>: <span class="nb">true</span>,
+    <span class="s2">"isPaperReceiptsReceived"</span>: <span class="nb">false</span>,
+    <span class="s2">"reportId"</span>: <span class="s2">"764428DD6A664AF0BFCB"</span>,
+    <span class="s2">"currency"</span>: <span class="s2">"US, Dollar"</span>,
+    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+    <span class="s2">"analyticsGroupId"</span>: <span class="s2">"C8CB395275EC4FE9AF6CD5B535EA2B17"</span>,
+    <span class="s2">"hierarchyNodeId"</span>: <span class="s2">"0F941E0B0A2C974EB2B06CDA67973052"</span>,
+    <span class="s2">"allocationFormId"</span>: <span class="s2">"FD7E9C6389EF495B85042319D58CAE53"</span>,
+    <span class="s2">"links"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"rel"</span>: <span class="s2">"self"</span>,
+            <span class="s2">"href"</span>: <span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB"</span>,
+            <span class="s2">"hreflang"</span>: null,
+            <span class="s2">"media"</span>: null,
+            <span class="s2">"title"</span>: null,
+            <span class="s2">"type"</span>: null,
+            <span class="s2">"deprecation"</span>: null,
+            <span class="s2">"method"</span>: <span class="s2">"GET"</span>,
+            <span class="s2">"isTemplated"</span>: <span class="nb">false</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"reportDate"</span>: <span class="s2">"2020-03-25"</span>,
+    <span class="s2">"reportFormId"</span>: <span class="s2">"674B67F0C6BD4E9CA5D91AFB82CC8ABB"</span>,
+    <span class="s2">"businessPurpose"</span>: <span class="s2">"Facility cleaning and renovation"</span>,
+    <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>,
+    <span class="s2">"countrySubDivisionCode"</span>: <span class="s2">"US-WA"</span>,
+    <span class="s2">"policyId"</span>: <span class="s2">"EE095F66AEF52B4A9CE62952601E5CB1"</span>,
+    <span class="s2">"startDate"</span>: <span class="s2">"2020-03-10"</span>,
+    <span class="s2">"endDate"</span>: <span class="s2">"2020-03-14"</span>,
+    <span class="s2">"name"</span>: <span class="s2">"March Expenses"</span>,
+    <span class="s2">"policy"</span>: <span class="s2">"JH - US Expense Policy"</span>,
+    <span class="s2">"country"</span>: <span class="s2">"UNITED STATES"</span>,
+    <span class="s2">"userId"</span>: <span class="s2">"32c2fcc3-b2e8-4907-9672-5b3f49b1c643"</span>,
+    <span class="s2">"reportType"</span>: <span class="s2">"Regular"</span>,
+    <span class="s2">"redirectFund"</span>: null,
+    <span class="s2">"creationDate"</span>: <span class="s2">"2020-03-25T20:42:39Z"</span>,
+    <span class="s2">"canRecall"</span>: <span class="nb">false</span>,
+    <span class="s2">"reportVersion"</span>: 0
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="update-a-specific-report"><a name="update-report-header"></a>Update a Specific Report</h2>
+
+<p>Updates the attributes of a specific report.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-1">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">PROXY</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report that is being modified.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="rest-design-specification">REST Design Specification</h4>
+
+<p>PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:</p>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#patch-report-request-schema">Patch Report Request</a></li>
+</ul>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#patch-report-response-schema">Patch Report Response</a></li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Viswa test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--data-raw</span> <span class="s1">'{
+	"customData": [
+        {
+            "id": "custom15",
+            "value": "E31CB42509F9FF408BA7DD6713AB49BD",
+            "isValid": true
+        }
+    ],
+    "businessPurpose":"Office Facility Supplies",
+    "reportSource":"OTHER"
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="reportdetails"><a name="report-details-schema"></a>ReportDetails</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allocationFormId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the allocation form.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amountCompanyPaid</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount paid by the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amountDueCompany</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount that the employee owes the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amountDueCompanyCard</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount that the employee/company owes the corporate card.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amountDueEmployee</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount that the company owes the employee.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amountNotApproved</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount that was not approved for the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">analyticsGroupId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the business intelligence hierarchy node.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvalStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The report’s approval status, in the user’s language.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvalStatusId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the approval status.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvedAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The total amount of approved expenses in the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">businessPurpose</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The text input for the business purpose by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canRecall</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the report can be recalled by the current user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canReopen</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Whether the report can be reopened after payment.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cardProgramStatementPeriodId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of card program statement period on the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">claimedAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The total amount of all non-personal expenses in the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">concurAuditStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The status of audit for the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The country name associated with the report (localized as per <code class="language-plaintext highlighter-rouge">accept-language</code> header).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ISO 3166-1 alpha-2 country code</code></td>
+      <td>The report country. Maximum characters: 2. Example: <code class="language-plaintext highlighter-rouge">US</code> - United States</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countrySubDivisionCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country sub division ISO 3166-2 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">creationDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DDTHH:mm:ssZ</code></td>
+      <td><strong>Required</strong> The UTC datetime when the user created the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The currency name for the report (localized as per <code class="language-plaintext highlighter-rouge">accept-language</code> header).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The 3-letter ISO 4217 currency code for the expense report currency. Examples: <code class="language-plaintext highlighter-rouge">USD</code> - US dollars; <code class="language-plaintext highlighter-rouge">BRL</code> - Brazilian real; <code class="language-plaintext highlighter-rouge">CAD</code> - Canadian dollar; <code class="language-plaintext highlighter-rouge">CHF</code> - Swiss franc; <code class="language-plaintext highlighter-rouge">EUR</code> - Euro; <code class="language-plaintext highlighter-rouge">GBO</code> - Pound sterling; <code class="language-plaintext highlighter-rouge">HKD</code> - Hong Kong</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customData</code></td>
+      <td><a href="#custom-data-schema"><code class="language-plaintext highlighter-rouge">CustomData</code></a></td>
+      <td>-</td>
+      <td>The details from the <code class="language-plaintext highlighter-rouge">customData</code> fields. These fields may not have data, depending on the configuration.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The end date (ISO-8601) of the report as used for trip-based reporting.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hierarchyNodeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the group hierarchy node for the report resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isFinancialIntegrationEnabled</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the Financial Integration setting has been enabled for this report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isPaperReceiptsReceived</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether paper receipts have been received for the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isReceiptImageAvailable</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the receipt image is available at the report level.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isReceiptImageRequired</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the receipt image is required at the report level.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isReopened</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Whether the report is reopened.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ledger</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The ledger name to which the report belongs (localized as per <code class="language-plaintext highlighter-rouge">accept-language</code> header).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ledgerId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the ledger.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">links</code></td>
+      <td><a href="#link-schema"><code class="language-plaintext highlighter-rouge">Link</code></a></td>
+      <td>-</td>
+      <td>Resource links related to this call.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The expense report name input by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentConfirmedAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount that was paid on the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The report’s payment status in the user’s language.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentStatusId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the payment status of the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">personalAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The total amount of expenses marked as personal on the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">policy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The policy name to which the report adheres (localized as per <code class="language-plaintext highlighter-rouge">accept-language</code> header).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">policyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the policy that applies to this report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">redirectFund</code></td>
+      <td><a href="#redirect-fund"><code class="language-plaintext highlighter-rouge">RedirectFund</code></a></td>
+      <td>-</td>
+      <td>Funds redirected to IBCP card.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date assigned to the report by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportFormId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report form.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier for the report resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User friendly unique identifier for the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportTotal</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The total amount on the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This value identifies the method used to create the report. Statement refers to company billed statement reports and auto-created refers to reports created by Expense Assistant.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportVersion</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td><strong>Required</strong> The current version of the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The start date of the report as used for trip-based reporting.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">submitDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DDTHH:mm:ssZ</code></td>
+      <td>The UTC datetime when the user submitted the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the Concur user who is the report owner.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="updatereport"><a name="update-report-schema"></a>UpdateReport</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">businessPurpose</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The text input for the business purpose by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">comment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The expense report comment added by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The country name associated with the report (localized as per <code class="language-plaintext highlighter-rouge">accept-language</code> header).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country ISO 3166-1 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countrySubDivisionCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country sub division ISO 3166-2 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customData</code></td>
+      <td><a href="#custom-data-schema"><code class="language-plaintext highlighter-rouge">CustomData</code></a></td>
+      <td>-</td>
+      <td>The details from the <code class="language-plaintext highlighter-rouge">customData</code> fields. These fields may not have data, depending on the configuration.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The end date of the report as used for trip-based reporting.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isCopyDownInherited</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, any change in the report header fields will be copied down to expenses, itemizations and allocations, as per the configuration. Usage of this flag should be deliberate as data corruption could result.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isPaperReceiptsReceived</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Whether paper receipts have been received for the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The expense report name input by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">policy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The policy name to which the report adheres to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">policyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the policy that applies to this report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">redirectFund</code></td>
+      <td><a href="#redirect-fund-schema"><code class="language-plaintext highlighter-rouge">RedirectFund</code></a></td>
+      <td>-</td>
+      <td>Funds redirected to IBCP card.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date assigned to the report by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportSource</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The source of the report. Supported values: <code class="language-plaintext highlighter-rouge">EA</code> - Expense Assistant, <code class="language-plaintext highlighter-rouge">MOB</code> - Mobile, <code class="language-plaintext highlighter-rouge">OTHER</code> - Unknown, <code class="language-plaintext highlighter-rouge">SE</code> - Smart Expense, <code class="language-plaintext highlighter-rouge">TR</code> - Travel Request, <code class="language-plaintext highlighter-rouge">UI</code> - Web UI</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The start date of the report as used for trip-based reporting.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="customdata"><a name="custom-data-schema"></a>CustomData</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the custom field. Examples: <code class="language-plaintext highlighter-rouge">custom1</code>, <code class="language-plaintext highlighter-rouge">orgUnit1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isValid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The value of the custom field. This field can have values for all the supported data types such as <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">integer</code>, <code class="language-plaintext highlighter-rouge">boolean</code> and <code class="language-plaintext highlighter-rouge">listItemId</code>. Maximum length: 48 characters</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="amount"><a name="amount-schema"></a>Amount</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The 3-letter ISO 4217 currency code for the expense report currency, based on the user’s assigned reimbursement currency when the report was created. Examples: <code class="language-plaintext highlighter-rouge">USD</code> - US dollars; <code class="language-plaintext highlighter-rouge">BRL</code> - Brazilian real; <code class="language-plaintext highlighter-rouge">CAD</code> - Canadian dollar; <code class="language-plaintext highlighter-rouge">CHF</code> - Swiss franc; <code class="language-plaintext highlighter-rouge">EUR</code> - Euro; <code class="language-plaintext highlighter-rouge">GBO</code> - Pound sterling; <code class="language-plaintext highlighter-rouge">HKD</code> - Hong Kong dollar; <code class="language-plaintext highlighter-rouge">INR</code> - Indian rupee; <code class="language-plaintext highlighter-rouge">MXN</code> - Mexican peso; <code class="language-plaintext highlighter-rouge">NOK</code> - Norwegian krone; <code class="language-plaintext highlighter-rouge">SEK</code> - Swedish krona</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td><strong>Required</strong> The amount in the defined currency.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="redirectfund"><a name="redirect-fund-schema"></a>RedirectFund</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> The value of funds redirected to the IBCP card account.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">creditCardId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the IBCP card account to which funds need to be redirected.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="reportsendbackrequest"><a name="report-send-back-request-schema"></a>ReportSendBackRequest</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">comment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Comments for sending back the report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currentProcessInstanceId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Current workflow process instance ID for validation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currentSequence</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>Current workflow process sequence number for validation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reasonCodeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the Reason Code only by processor.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportSource</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The source of the report. Supported values: <code class="language-plaintext highlighter-rouge">EA</code> - Expense Assistant, <code class="language-plaintext highlighter-rouge">MOB</code> - Mobile, <code class="language-plaintext highlighter-rouge">OTHER</code> - Unknown, <code class="language-plaintext highlighter-rouge">SE</code> - Smart Expense, <code class="language-plaintext highlighter-rouge">TR</code> - Travel Request, <code class="language-plaintext highlighter-rouge">UI</code> - Web UI</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="workflowtransitionrequest"><a name="workflow-transition-request-schema"></a>WorkflowTransitionRequest</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">comment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Approver comments.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currentProcessInstanceId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Current workflow process instance ID for validation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currentSequence</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>Current workflow process sequence number for validation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportSource</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The source of the report. Supported values: <code class="language-plaintext highlighter-rouge">EA</code> - Expense Assistant, <code class="language-plaintext highlighter-rouge">MOB</code> - Mobile, <code class="language-plaintext highlighter-rouge">OTHER</code> - Unknown, <code class="language-plaintext highlighter-rouge">SE</code> - Smart Expense, <code class="language-plaintext highlighter-rouge">TR</code> - Travel Request, <code class="language-plaintext highlighter-rouge">UI</code> - Web UI</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Status that will be assigned to the report by this workflow transition.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="link"><a name="link-schema"></a>Link</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deprecation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The URL of the related <code class="language-plaintext highlighter-rouge">HATEOAS</code> link that you can use for subsequent calls.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hreflang</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isTemplated</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the <code class="language-plaintext highlighter-rouge">href</code> is parameterized.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">media</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">method</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The HTTP method required for the related call.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The link relationship that describes how the <code class="language-plaintext highlighter-rouge">href</code> relates to the API call.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">title</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="errormessage"><a name="error-message-schema"></a>ErrorMessage</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the error associated with the response.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The detailed error message.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">httpStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The http response code and phrase for the response.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The URI of the attempted request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date-time</code></td>
+      <td><strong>Required</strong> The time when the error was captured.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">validationErrors</code></td>
+      <td><a href="#validation-error-schema"><code class="language-plaintext highlighter-rouge">ValidationError</code></a></td>
+      <td>-</td>
+      <td>The validation error messages.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="validationerror"><a name="validation-errors-schema"></a>ValidationError</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The ID of the validation error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The detailed message of the validation error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The type of validation which failed.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

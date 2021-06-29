@@ -1,0 +1,588 @@
+I"ê]<p>The Quick Expense API can be used to create an expense with basic information such as date, amount, and expense type, with or without a receipt image. This expense can be added to an expense report within Concur Expense, allowing the user to provide additional details such as attendees, itemizations etc.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API. This API is not available in Implementation environments.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#create-quick-expense">Create a Quick Expense</a></li>
+  <li><a href="#create-quick-expense-image">Create a Quick Expense with an Image</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#quick-expense-request-schema">Quick Expense Request</a>
+        <ul>
+          <li><a href="#location-schema">Location</a></li>
+          <li><a href="#amount-schema">Amount</a></li>
+        </ul>
+      </li>
+      <li><a href="#quick-expense-response-schema">Quick Expense Response</a></li>
+      <li><a href="#schema-error">Error</a></li>
+      <li><a href="#schema-validation-errors">Validation Errors</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<p>Required Scopes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">quickexpense.writeonly</code></td>
+      <td>Write quick expense.</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user.read</code></td>
+      <td>Get User Information, necessary for <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receipts.writeonly</code></td>
+      <td><strong>Required if e-Bunsho is enabled</strong> Write quick expense.</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Optional Scope:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CONFIG</code></td>
+      <td>Get Expense Configuration information, necessary for <code class="language-plaintext highlighter-rouge">expenseTypeId</code>.</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the User v3.1 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.</p>
+
+<p>The partner may use the following SAP Concur APIs to get optional information:</p>
+<ul>
+  <li><a href="/api-reference/expense/expense-report/expense-group-configurations.html">Expense Group Configurations v3.0</a>, to retrieve the <code class="language-plaintext highlighter-rouge">expenseTypeId</code></li>
+  <li><a href="/api-reference/common/locations/v3.locations.html">Locations v3.0</a>, to retrieve the location <code class="language-plaintext highlighter-rouge">id</code></li>
+</ul>
+
+<p><strong>Japan Market</strong>: If the partner is using this API to provide the e-Bunsho digital timestamp for the receipt, the partner should confirm that the client has e-Bunsho activated in SAP Concur.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports both company level and user level access tokens.</p>
+
+<h2 id="create-a-quick-expense"><a name="create-quick-expense"></a>Create a Quick Expense</h2>
+
+<p>Creates a quick expense without an image.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">quickexpense.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/quickexpense/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/quickexpenses
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value: TRAVELER.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#quick-expense-request-schema">Quick Expense Request</a></li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#quick-expense-response-schema">Quick Expense Response</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+  https://us.api.concursolutions.com/quickexpense/v4/users/184dd31a-f48a-4103-879f-c8d45456c7cd/context/TRAVELER/quickexpenses <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Accept: application/json'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'concur-correlationid: quick-expense-test'</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+  "comment": "Offsite team lunch.",
+  "expenseTypeId": "BUSML",
+  "entryDetails": "test-entry",
+  "location": {
+    "city": "Bellevue",
+    "countryCode": "US",
+    "countrySubDivisionCode": "US-WA",
+    "id": "",
+    "name": ""
+  },
+  "paymentTypeId": "CASHX",
+  "transactionAmount": {
+    "currencyCode": "USD",
+    "value": 88.05
+  },
+  "transactionDate": "2019-02-04"
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>201 Created
+
+<span class="o">{</span>
+    <span class="s2">"quickExpenseIdUri"</span>: <span class="s2">"https://seapr1qes.concurasp.com/quickexpense/v4/users/184dd31a-f48a-4103-879f-c8d45456c7cd/context/TRAVELER/quickexpenses/E018795D2B09094FBF223E209E921B88"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="create-a-quick-expense-with-an-image"><a name="create-quick-expense-image"></a>Create a Quick Expense with an Image</h2>
+
+<p>Creates a quick expense with an image.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">quickexpense.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.
+<code class="language-plaintext highlighter-rouge">receipts.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/quickexpense/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/quickexpenses/image
+</code></pre></div></div>
+
+<h5 id="parameters-1">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: TRAVELER.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">fileContent</code></td>
+      <td><code class="language-plaintext highlighter-rouge">file</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The quick expense image. Maximum size 5 MBs. Supported image types are: PNG, PDF, TIFF, JPEG</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#quick-expense-request-schema">Quick Expense Request</a></li>
+</ul>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<ul>
+  <li><a href="#quick-expense-response-schema">Quick Expense Response</a></li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="se">\</span>
+  https://us.api.concursolutions.com/quickexpense/v4/users/184dd31a-f48a-4103-879f-c8d45456c7cd/context/TRAVELER/quickexpenses/image <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'Content-Type: multipart/form-data'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'concur-correlationid: quick-expense-with-image'</span> <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s1">'content-type: multipart/form-data'</span> <span class="se">\</span>
+  <span class="nt">-F</span> <span class="nv">fileContent</span><span class="o">=</span>@/Users/i845500/Pictures/Snip20180410_1.png <span class="se">\</span>
+  <span class="nt">-F</span> <span class="s1">'quickExpenseRequest={
+  "comment": "Offsite team lunch.",
+  "expenseTypeId": "BUSML",
+  "entryDetails": "test-entry",
+  "location": {
+    "city": "Bellevue",
+    "countryCode": "US",
+    "countrySubDivisionCode": "US-WA",
+    "id": "",
+    "name": ""
+  },
+  "paymentTypeId": "CASHX",
+  "transactionAmount": {
+    "currencyCode": "USD",
+    "value": 88.05
+  },
+  "transactionDate": "2019-02-04"
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>201 Created
+
+<span class="o">{</span>
+    <span class="s2">"quickExpenseIdUri"</span>: <span class="s2">"https://seapr1qes.concurasp.com/quickexpense/v4/users/184dd31a-f48a-4103-879f-c8d45456c7cd/context/TRAVELER/quickexpenses/A0D1CE97B4692B4F8E29BEA53B250E36"</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="quick-expense-request"><a name="quick-expense-request-schema"></a>Quick Expense Request</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">comment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This is a comment attached to the quick expense.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">entryDetails</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The quick expense entry details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseTypeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> This is the expense type id of quick expense. Use <a href="/api-reference/expense/expense-report/expense-group-configurations.html">Expense Group Configurations v3.0</a> to retrieve the supported expense types. Supported values for a null value are: <code class="language-plaintext highlighter-rouge">UNDEF</code>, <code class="language-plaintext highlighter-rouge">NULL</code>. <code class="language-plaintext highlighter-rouge">NULL</code> can only be used on a POST operation and will be converted to <code class="language-plaintext highlighter-rouge">UNDEF</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">location</code></td>
+      <td>-</td>
+      <td><a href="#location-schema">Location</a></td>
+      <td>The location where the quick expense occurred.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentTypeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>This is the payment type id of quick expense. Supported values: <code class="language-plaintext highlighter-rouge">CASHX</code>, <code class="language-plaintext highlighter-rouge">CPAID</code>, <code class="language-plaintext highlighter-rouge">PENDC</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionAmount</code></td>
+      <td>-</td>
+      <td><a href="#amount-schema">Amount</a></td>
+      <td><strong>Required</strong> The amount of the quick expense.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td><strong>Required</strong> This is the transaction date of the quick expense.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The name of the vendor.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="location"><a name="location-schema"></a>Location</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">city</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location city.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country ISO 3166-1 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countrySubDivisionCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country sub division ISO 3166-2 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the location. Use <a href="/api-reference/common/locations/v3.locations.html">Locations v3.0</a> to retrieve the location <code class="language-plaintext highlighter-rouge">id</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location name.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="amount"><a name="amount-schema"></a>Amount</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The 3-letter ISO 4217 currency code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The amount value.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="quick-expense-response"><a name="quick-expense-response-schema"></a>Quick Expense Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">quickExpenseIdUri</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The quick expense created resource url.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error"><a name="schema-error"></a>Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Message associated with the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">httpStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The HTTP status associated with the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The path to the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The timestamp for the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">validationErrors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-validation-errors">validationErrors</a></td>
+      <td>An array of validation errors.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="validation-errors"><a name="schema-validation-errors"></a>Validation Errors</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The validation error message.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The source of the validation error.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

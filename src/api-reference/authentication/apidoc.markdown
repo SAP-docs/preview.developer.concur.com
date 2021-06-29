@@ -3,7 +3,7 @@ title: Authentication
 layout: reference
 ---
 
-### Special Note (Please Read First)
+### Special Note: (Please Read First)
 
 If you are an existing partner with an existing app, please read both the [Migration to Oauth2 Tokens](/api-reference/authentication/migrationguide.html) and [Getting Started](/api-reference/authentication/getting-started.html) documentation first. If you have any questions, please contact your Partner Enablement team representative before proceeding.
 
@@ -174,7 +174,7 @@ HTTP/1.1 200 OK
 
 ## <a name="manage_token"></a>Managing tokens
 
-Refresh Tokens are strings that allow your application to obtain a fresh `accessToken` on behalf of a user to access SAP Concur APIs.  The exact format of the string can change, but may look similar to the following:
+Refresh Tokens are UUID4 identifiers that allow your application to obtain a fresh `accessToken` on behalf of a user to access SAP Concur APIs.
 
 ```
 e013335d-b4ce-4c43-a7e4-b67abc1adcb0

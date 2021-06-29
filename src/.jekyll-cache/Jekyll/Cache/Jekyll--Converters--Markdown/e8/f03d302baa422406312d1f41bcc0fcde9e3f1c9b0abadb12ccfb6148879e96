@@ -1,0 +1,235 @@
+I"L(<p>SAP Concur is able to handle HTTP errors, but the preference is for the supplier to return an OTA error whenever possible.  SAP Concur only ever expects one OTA error per message. Any extra errors will be ignored.
+Currently OTA Warnings are not supported and will be ignored.</p>
+
+<p>If the error is specifically related to application level errors, please do not respond with any other error types (HTTP etc.). If you have server level issues, then it is OK to respond with HTTP standard error codes.</p>
+
+<ul>
+  <li><a href="#error-types">Error Types</a>
+    <ul>
+      <li><a href="#unknown">Error Type Code 1: Unknown</a></li>
+      <li><a href="#no-implementation">Error Type Code 2: No Implementation</a></li>
+      <li><a href="#app-error">Error Type Code 13: Application Error</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>Errors should always be returned in a response. For example:</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;soap:Envelope</span> <span class="na">xmlns:soap=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;SOAP-ENV:Header</span> <span class="na">xmlns:SOAP-ENV=</span><span class="s">"http://schemas.xmlsoap.org/soap/envelope/"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;soap:Body&gt;</span>
+    <span class="nt">&lt;OTA_HotelSearchRS</span> <span class="na">xmlns=</span><span class="s">"http://www.opentravel.org/OTA/2003/05"</span>
+                       <span class="na">AltLangID=</span><span class="s">"en"</span>
+                       <span class="na">EchoToken=</span><span class="s">"11111111-2222-3333-4444-555555555555"</span> <span class="na">PrimaryLangID=</span><span class="s">"en"</span>
+                       <span class="na">Version=</span><span class="s">"4"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;Errors&gt;</span>
+        <span class="nt">&lt;Error</span> <span class="na">Code=</span><span class="s">"322"</span> <span class="na">ShortText=</span><span class="s">"No availability"</span> <span class="na">Type=</span><span class="s">"13"</span><span class="nt">&gt;&lt;/Error&gt;</span>
+      <span class="nt">&lt;/Errors&gt;</span>
+    <span class="nt">&lt;/OTA_HotelSearchRS&gt;</span>
+  <span class="nt">&lt;/soap:Body&gt;</span>
+<span class="nt">&lt;/soap:Envelope&gt;</span>
+</code></pre></div></div>
+
+<p>If an error is present in any message, then the content of that message is discarded and only the error element is processed. Any text from the supplier will be logged and a SAP Concur message will be displayed to the user.</p>
+
+<p>Currently SAP Concur does not support displaying of supplier generated errors directly in the UI.</p>
+
+<p>SAP Concur only uses the very first error that is returned, therefore any excess error elements are dropped.  Any errors without a <code class="language-plaintext highlighter-rouge">Type</code> attribute will automatically be treated as <code class="language-plaintext highlighter-rouge">1</code> meaning Unknown.  See the <code class="language-plaintext highlighter-rouge">Error Types</code> table below.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Errors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td>Element used to hold error elements. SAP Concur only expects one (1) error element. An empty errors element will be treated as an <code class="language-plaintext highlighter-rouge">Unknown</code> error.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Errors</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Error</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td>Element to describe a particular error. Extra text can be placed inside this element, however SAP Concur expects the error message to be sent in the <code class="language-plaintext highlighter-rouge">ShortText</code> attribute.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Error</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>An error type code. See the <code class="language-plaintext highlighter-rouge">Error Types</code> below.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ShortText</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> A description of the error. The content of this attribute will be logged, but never displayed to the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> An error code for a specific error.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-types"><a name="error-types"></a>Error Types</h3>
+
+<p>SAP Concur supports the following <code class="language-plaintext highlighter-rouge">Error Type Codes</code> in any of the responses:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Name</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td><code class="language-plaintext highlighter-rouge">Unknown</code></td>
+      <td>Indicates an unknown error.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><code class="language-plaintext highlighter-rouge">No implementation</code></td>
+      <td>Indicates that the target business system has no implementation for the intended request.</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td><code class="language-plaintext highlighter-rouge">Application error</code></td>
+      <td>Indicates that an involved back-end application returned an error which is passed back in the response message.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Note:</strong> The OTA Error-Type code of 4 - <code class="language-plaintext highlighter-rouge">Authentication</code> (indicates the message lacks adequate security credentials) is not expected by SAP Concur.  For all authentication errors SAP Concur expects an HTTP 403.</p>
+
+<p>SAP Concur expects the following errors under the given error types:</p>
+
+<h5 id="error-type-code-1-unknown"><a name="unknown"></a>Error Type Code 1: Unknown</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Error Code</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>188</td>
+      <td>Transaction error</td>
+      <td>For errors not specified in other codes. Internal supplier log ID can be provided in <code class="language-plaintext highlighter-rouge">ShortText</code> for debugging.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="error-type-code-2-no-implementation"><a name="no-implementation"></a>Error Type Code 2: No Implementation</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Error Code</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Not implemented</td>
+      <td>The supplier can respond with this error if the end point called is not yet implemented.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="error-type-code-13-application-error"><a name="app-error"></a>Error Type Code 13: Application Error</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Error Code</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>242</td>
+      <td>Credit card number is invalid or missing</td>
+      <td>Missing credit card number.</td>
+    </tr>
+    <tr>
+      <td>320</td>
+      <td>Invalid value</td>
+      <td>Comma separated node or attribute and sent value should be provided in the content of the error element. Example: <code class="language-plaintext highlighter-rouge">&lt;Error Code="320" ShortText="Invalid value" Type="13"&gt;StayDateRange:2019-11-33&lt;/Error&gt;</code></td>
+    </tr>
+    <tr>
+      <td>322</td>
+      <td>No availability</td>
+      <td>Hotel Codes should be provided in content of the element. Example: <code class="language-plaintext highlighter-rouge">&lt;Error Code="322" ShortText="No availability" Type="13"&gt;HTL4444,HTL5555&lt;/Error&gt;</code></td>
+    </tr>
+    <tr>
+      <td>424</td>
+      <td>No hotels found which match this input</td>
+      <td>Search parameters - geo-code and radius should be provided in content of the element and formatted as tokenized list: Latitude, Longitude, Radius, Unit of Measure code. Example: <code class="language-plaintext highlighter-rouge">&lt;Error Code="322" ShortText="No availability" Type="13"&gt;50.111,40.222,5,2&lt;/Error&gt;</code></td>
+    </tr>
+    <tr>
+      <td>95</td>
+      <td>Booking already cancelled</td>
+      <td>Booking already cancelled.</td>
+    </tr>
+    <tr>
+      <td>438</td>
+      <td>Requested rate not available</td>
+      <td>List of comma separated RatePlanID’s should be provided in content of the element. Example: <code class="language-plaintext highlighter-rouge">&lt;Error Code="322" ShortText="No availability" Type="13"&gt;111,222&lt;/Error&gt;</code></td>
+    </tr>
+    <tr>
+      <td>748</td>
+      <td>Invalid corporate ID</td>
+      <td>Requestor ID should be provided in the content of the element.</td>
+    </tr>
+    <tr>
+      <td>400</td>
+      <td>Invalid property code</td>
+      <td>List of comma separated hotel codes should be provided in content of the element. Example: <code class="language-plaintext highlighter-rouge">&lt;Error Code="322" ShortText="No availability" Type="13"&gt;HTL4444,HTL5555&lt;/Error&gt;</code></td>
+    </tr>
+    <tr>
+      <td>385</td>
+      <td>Invalid confirmation or cancellation number</td>
+      <td>Reservation ID should be provided in content of the element.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

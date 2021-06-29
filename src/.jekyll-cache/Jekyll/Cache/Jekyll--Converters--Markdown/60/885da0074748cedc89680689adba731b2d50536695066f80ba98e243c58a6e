@@ -1,0 +1,2039 @@
+I"1�<h1 id="receipts">Receipts</h1>
+
+<h2 id="supported-receipt-types">Supported Receipt Types</h2>
+
+<p>Receipts can be any of the following types</p>
+
+<ul>
+  <li><a href="#air-receipt">Air</a></li>
+  <li><a href="#car-rental-receipt">Car Rental</a></li>
+  <li><a href="#general-receipt">General</a></li>
+  <li><a href="#ground-transport-receipt">Ground Transport</a></li>
+  <li><a href="#hotel-receipt">Hotel</a></li>
+  <li><a href="#rail-receipt">Rail</a></li>
+</ul>
+
+<p>See the schema documentation below for the specifications of each type, plus the various schemas that are shared components of each receipt schema. Property names mentioned in <strong><em>bold italics</em></strong> are required fields.</p>
+
+<h3 id="schemas">Schemas</h3>
+
+<h4 id="address">Address</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>streetAddress</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>addressLocality</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>City</td>
+    </tr>
+    <tr>
+      <td>addressRegion</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{1,3}$</td>
+      <td>1 to 3 character country subdivision code as defined in ISO 3166-2:2013</td>
+    </tr>
+    <tr>
+      <td><strong><em>addressCountry</em></strong></td>
+      <td>string</td>
+      <td>country-code</td>
+      <td>2 or 3 character country code as defined in ISO 3166-1:2013</td>
+    </tr>
+    <tr>
+      <td>postalCode</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="air-receipt">Air Receipt</h4>
+<p>Schema for airline receipts.</p>
+<ul>
+  <li>Includes all of <a href="#receipt-core-definitions">Receipt Core Definitions</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>itineraryLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.</td>
+    </tr>
+    <tr>
+      <td>tickets</td>
+      <td>array</td>
+      <td><a href="#tickets">tickets</a></td>
+      <td>Air tickets issued.</td>
+    </tr>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Ancillary airline fees.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="tickets">tickets</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>number</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Ticket number issued by the airline when the payment is made. Ticket numbers are globally unique for all IATA carriers. The first 3 digits identify the airline. The three digit code for each airline can be found <a href="http://www.iata.org/about/members/Pages/airline-list.aspx?All=true">here</a>. For example the ticket number for American Airlines where 001 is the airline: 0012375432602.</td>
+    </tr>
+    <tr>
+      <td>recordLocator</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Confirmation identifier for the ticket created by the airline. For most airlines this is a 6 character alphanumeric code that is unique for a short period of time and could be reused in the future.</td>
+    </tr>
+    <tr>
+      <td><strong><em>issueDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>Date and time the ticket was issued.</td>
+    </tr>
+    <tr>
+      <td>pseudoCityCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{3}$</td>
+      <td>IATA city code the ticket was issued from. For example, SEA for Seattle.</td>
+    </tr>
+    <tr>
+      <td>IATAAgencyNumber</td>
+      <td>string</td>
+      <td>^[0-9]{8}$</td>
+      <td>Identifying number assigned by the IATA to the agency issuing the ticket.</td>
+    </tr>
+    <tr>
+      <td>agencyName</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the agency issuing the ticket.</td>
+    </tr>
+    <tr>
+      <td><strong><em>passengerName</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the passenger associated with the ticket.</td>
+    </tr>
+    <tr>
+      <td><strong><em>coupons</em></strong></td>
+      <td>array</td>
+      <td><a href="#coupons">coupons</a></td>
+      <td>Flights issued within this transaction.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="coupons">coupons</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>originationAirportIATACode</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z]{3}$</td>
+      <td>IATA airport code of the flight’s origin.</td>
+    </tr>
+    <tr>
+      <td><strong><em>originationDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>Date and time of origin.</td>
+    </tr>
+    <tr>
+      <td><strong><em>destinationAirportIATACode</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z]{3}$</td>
+      <td>IATA airport code of the flight’s destination.</td>
+    </tr>
+    <tr>
+      <td><strong><em>destinationDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>Date and time of destination.</td>
+    </tr>
+    <tr>
+      <td>flightNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Flight identifier.</td>
+    </tr>
+    <tr>
+      <td><strong><em>couponNumber</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Identifier associated with the given coupon.</td>
+    </tr>
+    <tr>
+      <td><strong><em>operatingAirlineCode</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z]{2}$</td>
+      <td>IATA code of the airline operating the flight.</td>
+    </tr>
+    <tr>
+      <td><strong><em>marketingCarrier</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{3,8}$</td>
+      <td>Flight designator booking the flight.</td>
+    </tr>
+    <tr>
+      <td><strong><em>operatingCarrier</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{3,8}$</td>
+      <td>Flight designator operating the flight.</td>
+    </tr>
+    <tr>
+      <td><strong><em>classOfServiceCode</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z]$</td>
+      <td>Class of service per the airline’s class of service codes. Most airlines use the same codes but some airlines have custom codes.</td>
+    </tr>
+    <tr>
+      <td><strong><em>fareBasisCode</em></strong></td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{2,8}$</td>
+      <td>Rate code the airline used to calculate the fare for this flight.</td>
+    </tr>
+    <tr>
+      <td>ticketDesignatorCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9*?]{1,10}$</td>
+      <td>A valid ticket designator code to indicate what type of discount is applied, such as for a child or infant, or airline employee. This is a 1 to 10 alphanumeric code and can optionally include a single asterisk. Ticket designators are free-form text codes which help identify ticket types. Airlines determine which ticket designators they will use as no standards currently exist.</td>
+    </tr>
+    <tr>
+      <td><strong><em>fare</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>Fare charged for the flight.</td>
+    </tr>
+    <tr>
+      <td>taxes</td>
+      <td>array</td>
+      <td><a href="#taxes">Taxes</a></td>
+      <td>Schema for objects that make up an array of taxes. Used in most receipt types.</td>
+    </tr>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Line Items/fees specific to a leg of the trip. Eg. Baggage fees, class of service fees, priority boarding, meals.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="definitions">Definitions</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>IATAAirportCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{3}$</td>
+      <td>3-letter IATA code for an airport.</td>
+    </tr>
+    <tr>
+      <td>IATAAirlineCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{2}$</td>
+      <td>2-letter code for an airline.</td>
+    </tr>
+    <tr>
+      <td>IATACityCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{3}$</td>
+      <td>3-letter IATA city code. For example, SEA for Seattle.</td>
+    </tr>
+    <tr>
+      <td>IATAAgencyNumber</td>
+      <td>string</td>
+      <td>^[0-9]{8}$</td>
+      <td>8-character ID number assigned by the IATA to an agency.</td>
+    </tr>
+    <tr>
+      <td>flightDesignator</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{3,8}$</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>classOfServiceCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]$</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>fareBasisCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{2,8}$</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>ticketDesignatorCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9*?]{1,10}$</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="car-rental-receipt">Car Rental Receipt</h4>
+<p>Schema for car rentals. This does not include ride services or taxis.</p>
+<ul>
+  <li>Includes all of <a href="#receipt-core-definitions">Receipt Core Definitions</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>itineraryLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.</td>
+    </tr>
+    <tr>
+      <td>segmentLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Unique ID of a single travel event in Concur’s Itinerary Service. An itinerary can contain one or more bookings and each booking can contain one or more segments. The segmentLocator uniquely identifies an event like a car rental with a specific start and end date or a single air segment/sector.</td>
+    </tr>
+    <tr>
+      <td><strong><em>startDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>endDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>pickupLocation</em></strong></td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+    <tr>
+      <td><strong><em>dropoffLocation</em></strong></td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+    <tr>
+      <td><strong><em>rentalDays</em></strong></td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>Total number of days for which the car was rented.</td>
+    </tr>
+    <tr>
+      <td>rentalAgreementNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Agreement identifier.</td>
+    </tr>
+    <tr>
+      <td>confirmationNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Booking confirmation identifier.</td>
+    </tr>
+    <tr>
+      <td>vehicle</td>
+      <td>object</td>
+      <td><a href="#vehicle">vehicle</a></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>driverName</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the driver/renter of the vehicle.</td>
+    </tr>
+    <tr>
+      <td>distance</td>
+      <td>object</td>
+      <td><a href="#distance">distance</a></td>
+      <td>Distance traveled.</td>
+    </tr>
+    <tr>
+      <td>odometerReadingOut</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Odometer reading at the start of the rental period. A number with up to one decimal place is expected.</td>
+    </tr>
+    <tr>
+      <td>odometerReadingIn</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Odometer reading at the end of the rental period. A number with up to one decimal place is expected.</td>
+    </tr>
+    <tr>
+      <td>additionalDriver</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>Additional approved driver (true) or not (false).</td>
+    </tr>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Break down of all car rental charges. This could include daily rate, fees, insurance, GPS rental and other add-ons.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="vehicle">vehicle</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>registrationNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Registration or license plate identifier.</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Vehicle description, including year, make and model.</td>
+    </tr>
+    <tr>
+      <td>classReservedCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{4}$</td>
+      <td>Four-letter Association of Car Rental Industry Systems Standard (ACRISS) car code.</td>
+    </tr>
+    <tr>
+      <td>classRentedCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{4}$</td>
+      <td>Actual vehicle rented ACRISS identifier.</td>
+    </tr>
+    <tr>
+      <td>classChargedCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{4}$</td>
+      <td>Car class code actually charged to the user.</td>
+    </tr>
+    <tr>
+      <td>engineSize</td>
+      <td>string</td>
+      <td>^[0-9]{1,4}$</td>
+      <td>Engine displacement in cubic centimeters.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="definitions-1">Definitions</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>acrissCarCode</td>
+      <td>string</td>
+      <td>^[a-zA-Z]{4}$</td>
+      <td>Four-letter Association of Car Rental Industry Systems Standard (ACRISS) car code.</td>
+    </tr>
+    <tr>
+      <td>engineSize</td>
+      <td>string</td>
+      <td>^[0-9]{1,4}$</td>
+      <td>Engine displacement in cubic centimeters.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="common-definitions">Common Definitions</h4>
+<p>Shared definitions that are utilized in multiple receipt types.</p>
+<h5 id="definitions-2">Definitions</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dateTime</td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>The dateTime validation validates for a subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; This is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td>duration</td>
+      <td>string</td>
+      <td>^(-)?P(?:(-?[0-9,.]<em>)Y)?(?:(-?[0-9,.]</em>)M)?(?:(-?[0-9,.]<em>)W)?(?:(-?[0-9,.]</em>)D)?(?:T(?:(-?[0-9,.]<em>)H)?(?:(-?[0-9,.]</em>)M)?(?:(-?[0-9,.]*)S)?)?$</td>
+      <td>Duration of a time interval as defined in ISO 8601</td>
+    </tr>
+    <tr>
+      <td>nonEmptyString</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>addressRegion</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{1,3}$</td>
+      <td>1 to 3 character country subdivision code as defined in ISO 3166-2:2013</td>
+    </tr>
+    <tr>
+      <td>addressCountry</td>
+      <td>string</td>
+      <td>country-code</td>
+      <td>2 or 3 character country code as defined in ISO 3166-1:2013</td>
+    </tr>
+    <tr>
+      <td>currency</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td>currencyCode</td>
+      <td>string</td>
+      <td>currency-code</td>
+      <td>3-letter currency code as defined in ISO 4217</td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Numeric latitude value between -90 and 90</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Numeric longitude value between -180 and 180</td>
+    </tr>
+    <tr>
+      <td>positiveInteger</td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>Positive integer value of at least 1</td>
+    </tr>
+    <tr>
+      <td>positiveNumber</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Positive number value of at least 0</td>
+    </tr>
+    <tr>
+      <td>negativeCurrency</td>
+      <td>string</td>
+      <td>^[-]\d*.?\d+$</td>
+      <td>String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="distance">distance</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>totalDistance</em></strong></td>
+      <td>number</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>unit</em></strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Can be any of the following values: mi, km</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="discount">Discount</h4>
+<p>Schema for discounts, such as coupons or discount codes, that could be part of a transaction.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>discountName</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The name of the discount.</td>
+    </tr>
+    <tr>
+      <td>discountCode</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The code for the discount.</td>
+    </tr>
+    <tr>
+      <td>discountRate</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The percentage of discount provided.</td>
+    </tr>
+    <tr>
+      <td>discountAmount</td>
+      <td>string</td>
+      <td>^[-]\d*.?\d+$</td>
+      <td>String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="general-receipt">General Receipt</h4>
+<p>General receipt type for transactions that do not fall under one of the more specific receipt types. This might include retail stores or restaurants.</p>
+<ul>
+  <li>Includes all of <a href="#receipt-core-definitions">Receipt Core Definitions</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Line items specified for general receipts.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="ground-transport-receipt">Ground Transport Receipt</h4>
+<p>Schema for ground transportation receipts. This includes essentially all forms of non-aerial transportation, <em>except</em> those that run on railed tracks.</p>
+<ul>
+  <li>Includes all of <a href="#receipt-core-definitions">Receipt Core Definitions</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>itineraryLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>segmentLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>classOfService</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td><strong><em>startDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td>endDateTime</td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td>travelDuration</td>
+      <td>string</td>
+      <td>^(-)?P(?:(-?[0-9,.]<em>)Y)?(?:(-?[0-9,.]</em>)M)?(?:(-?[0-9,.]<em>)W)?(?:(-?[0-9,.]</em>)D)?(?:T(?:(-?[0-9,.]<em>)H)?(?:(-?[0-9,.]</em>)M)?(?:(-?[0-9,.]*)S)?)?$</td>
+      <td>Duration of a time interval as defined in ISO 8601</td>
+    </tr>
+    <tr>
+      <td>mapUrl</td>
+      <td>string</td>
+      <td><a href="#google-maps-uri-pattern">Google Maps URI Pattern</a></td>
+      <td>Link to an image of the traveled route.</td>
+    </tr>
+    <tr>
+      <td><strong><em>pickupLocation</em></strong></td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+    <tr>
+      <td>dropoffLocation</td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+    <tr>
+      <td>distance</td>
+      <td>object</td>
+      <td><a href="#distance">distance</a></td>
+      <td>Object representing a distance.</td>
+    </tr>
+    <tr>
+      <td>driverNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Unique identifier assigned by the ride company to a driver.</td>
+    </tr>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Descriptive breakdown of the fare charged. For example: base fare, distance travelled, discount and other add-ons.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a name="google-maps-uri-pattern"></a>Google Maps URI Pattern: <code class="language-plaintext highlighter-rouge">^https://(www|maps).(googleapis|google).[a-z]+/maps/</code></p>
+
+<h4 id="hotel-receipt">Hotel Receipt</h4>
+<p>Schema for hotel receipts.</p>
+<ul>
+  <li>Includes all of <a href="#receipt-core-definitions">Receipt Core Definitions</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>itineraryLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.</td>
+    </tr>
+    <tr>
+      <td>segmentLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Unique ID of a single travel event in Concur’s Itinerary Service. An itinerary can contain one or more bookings and each booking can contain one or more segments. The segmentLocator uniquely identifies an event like a car rental with a specific start and end date or a single air segment/sector.</td>
+    </tr>
+    <tr>
+      <td>property</td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Physical property location information for the hotel property. This is often different than the merchant location information.</td>
+    </tr>
+    <tr>
+      <td>confirmationNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Booking identifier.</td>
+    </tr>
+    <tr>
+      <td><strong><em>checkInDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>checkOutDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>guests</em></strong></td>
+      <td>array</td>
+      <td><a href="#guests">guests</a></td>
+      <td>Guest information.</td>
+    </tr>
+    <tr>
+      <td>numberInParty</td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>Number of individuals for the stay.</td>
+    </tr>
+    <tr>
+      <td><strong><em>room</em></strong></td>
+      <td>object</td>
+      <td><a href="#room">room</a></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>nightsStayed</em></strong></td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>Positive integer value of at least 1</td>
+    </tr>
+    <tr>
+      <td><strong><em>lineItems</em></strong></td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="guests">guests</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>guestNameRecord</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The loyalty or membership number of the hotel guest.</td>
+    </tr>
+    <tr>
+      <td><strong><em>firstName</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td><strong><em>lastName</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>address</td>
+      <td>object</td>
+      <td><a href="#address">Address</a></td>
+      <td>Address of the guest. It is highly recommended that the business address of the guest is provided if the hotel is provided with one. Doing so will help VAT reclamation partners who work with companies, to have compliant receipts accepted by the tax authority when filing tax reclaims.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="property">property</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The name for the location.</td>
+    </tr>
+    <tr>
+      <td>number</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The identifier the company assigned to this location.</td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Numeric latitude value between -90 and 90</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Numeric longitude value between -180 and 180</td>
+    </tr>
+    <tr>
+      <td>internetAddress</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>emailAddress</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>telephoneNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>faxNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>address</em></strong></td>
+      <td>object</td>
+      <td><a href="#address">Address</a></td>
+      <td>Common address object used by all receipt types except for the JPT IC Card receipt, which uses <a href="#address-original">Address-Original</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="room">room</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>roomNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Room number where the guest stayed.</td>
+    </tr>
+    <tr>
+      <td>roomType</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Type of room where the guest stayed. For example, Standard, Deluxe, etc.</td>
+    </tr>
+    <tr>
+      <td>ratePlanType</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the rate plan according to which the guest was charged.</td>
+    </tr>
+    <tr>
+      <td><strong><em>averageDailyRoomRate</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>Average of the daily room rates for the duration of the guests stay. Room rates usually differ from day to day.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="segments">segments</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>sequenceNumber</em></strong></td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>Unique transaction identifier for every trip taken using the IC card.</td>
+    </tr>
+    <tr>
+      <td><strong><em>dateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>fromStationCode</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Departure station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.</td>
+    </tr>
+    <tr>
+      <td><strong><em>fromStationName</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Departure station label of the route.</td>
+    </tr>
+    <tr>
+      <td><strong><em>toStationCode</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Arrival station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.</td>
+    </tr>
+    <tr>
+      <td><strong><em>toStationName</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Arrival station label of the route.</td>
+    </tr>
+    <tr>
+      <td>fromIsCommuterPass</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>Whether or not the departure route is included in the commuter pass subscription of the employee.</td>
+    </tr>
+    <tr>
+      <td>toIsCommuterPass</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>Whether or not the arrival route is included in the commuter pass subscription of the employee.</td>
+    </tr>
+    <tr>
+      <td>distance</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Positive number value of at least value as 0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="iccardsegment">icCardSegment</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>sequenceNumber</em></strong></td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>Unique transaction identifier for every trip taken using the IC card.</td>
+    </tr>
+    <tr>
+      <td><strong><em>dateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>Transaction date and time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>fromStationCode</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Departure station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.</td>
+    </tr>
+    <tr>
+      <td><strong><em>fromStationName</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Departure station label of the route.</td>
+    </tr>
+    <tr>
+      <td><strong><em>toStationCode</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Arrival station code of the route. This code is specified to the IC Card vendor. Concur Expense has a transcoding table to Expense location codes.</td>
+    </tr>
+    <tr>
+      <td><strong><em>toStationName</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Arrival station label of the route.</td>
+    </tr>
+    <tr>
+      <td>fromIsCommuterPass</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>Whether or not the departure route is included in the commuter pass subscription of the employee.</td>
+    </tr>
+    <tr>
+      <td>toIsCommuterPass</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>Whether or not the arrival route is included in the commuter pass subscription of the employee.</td>
+    </tr>
+    <tr>
+      <td>distance</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Positive number value of at least value as 0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="line-item">Line Item</h4>
+<p>Generic line item. These objects are included in arrays in most receipt types.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>sequenceNumber</em></strong></td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td>The order in which the item appears in the sequence of line items when the receipt is rendered by Concur.</td>
+    </tr>
+    <tr>
+      <td>dateTime</td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td>reference</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The item SKU, identifier or some other attribute the merchant uses to reference the item.</td>
+    </tr>
+    <tr>
+      <td><strong><em>description</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>additionalDescription</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>semanticsCode</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>The <a href="https://developer.concur.com/api-reference/travel/itinerary/itinerary.html#semantics-codes">Concur semantics code</a> for the line item.</td>
+    </tr>
+    <tr>
+      <td>unitCost</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>Amount per unit.</td>
+    </tr>
+    <tr>
+      <td>quantity</td>
+      <td>integer</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>total</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td>subtotal</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td>taxesTotal</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td>taxes</td>
+      <td>array</td>
+      <td><a href="#taxes">Taxes</a></td>
+      <td>Schema for objects that make up an array of taxes. Used in most receipt types.</td>
+    </tr>
+    <tr>
+      <td>vatApplicable</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>If the line item was subject to a value added tax then true, if not then false.</td>
+    </tr>
+    <tr>
+      <td>amountIncludesVat</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>discounts</td>
+      <td>array</td>
+      <td><a href="#discount">discounts</a></td>
+      <td>The discounts offered for this line item.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="location">Location</h4>
+<p>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The name for the location.</td>
+    </tr>
+    <tr>
+      <td>number</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The identifier the company assigned to this location.</td>
+    </tr>
+    <tr>
+      <td>latitude</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Numeric latitude value between -90 and 90</td>
+    </tr>
+    <tr>
+      <td>longitude</td>
+      <td>number</td>
+      <td>N/A</td>
+      <td>Numeric longitude value between -180 and 180</td>
+    </tr>
+    <tr>
+      <td>internetAddress</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>emailAddress</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>telephoneNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>faxNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>address</em></strong></td>
+      <td>object</td>
+      <td><a href="#address">Address</a></td>
+      <td>Common address object used by all receipt types except for the JPT IC Card receipt, which uses <a href="#address-original">Address-Original</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="merchant">Merchant</h4>
+<p>Schema for an object representing a merchant. The broker and seller properties in all receipts use this schema.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>name</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Description of the service provided by the merchant.</td>
+    </tr>
+    <tr>
+      <td>taxId</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The tax identification number assigned to the merchant by the national tax authority. If the partner is providing a tax invoice, then providing a tax identification number is recommended.</td>
+    </tr>
+    <tr>
+      <td><strong><em>location</em></strong></td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payments">Payments</h4>
+<p>The payments array allows for one or more payment methods used in the transaction to be defined. All payment methods defined within the array result in the value for total in the base object of the receipt. The JSON keyword ‘anyOf’ indicates at least one of the following is required and multiple can be present: <a href="#cash">cash</a>, <a href="#creditcard">creditCard</a>, <a href="#companypaid">companyPaid</a>, <a href="#digitalwallet">digitalWallet</a> and / or <a href="#unusedticket">unusedTicket</a>.</p>
+
+<h5 id="cash">cash</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>amount</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="creditcard">creditCard</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>amount</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td><strong><em>cardDetail</em></strong></td>
+      <td>object</td>
+      <td><a href="#cardDetail">cardDetail</a></td>
+      <td>Credit card information.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="carddetail">cardDetail</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>cardType</em></strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Can be any of the following values: American Express, Diners Club, Discover, MasterCard, Visa, Carte Blanche, Enroute, Universal Air Travel, JCB, EuroCard</td>
+    </tr>
+    <tr>
+      <td>creditCardId</td>
+      <td>string</td>
+      <td>^[0-9]{4}$</td>
+      <td>Last four digits of the credit card number to meet FACTA and PCI requirements</td>
+    </tr>
+    <tr>
+      <td>authorizationCode</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Authorization code for transaction.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="companypaid">companyPaid</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>source</em></strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Can be any of the following values: GhostCard, LodgeCard, DirectPay, Invoice</td>
+    </tr>
+    <tr>
+      <td><strong><em>amount</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td>cardDetail</td>
+      <td>object</td>
+      <td><a href="#cardDetail">cardDetail</a></td>
+      <td>Credit card information.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="carddetail-1">cardDetail</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>cardType</em></strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Can be any of the following values: American Express, Diners Club, Discover, MasterCard, Visa, Carte Blanche, Enroute, Universal Air Travel, JCB, EuroCard</td>
+    </tr>
+    <tr>
+      <td>creditCardId</td>
+      <td>string</td>
+      <td>^[0-9]{4}$</td>
+      <td>Last four digits of the credit card number to meet FACTA and PCI requirements</td>
+    </tr>
+    <tr>
+      <td>authorizationCode</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Authorization code for transaction.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="digitalwallet">digitalWallet</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>source</em></strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Can be any of the following values: ApplePay, AndroidPay, SamsungPay, PayPal, OlaMoney</td>
+    </tr>
+    <tr>
+      <td><strong><em>amount</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="unusedticket">unusedTicket</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>ticketNumber</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td><strong><em>amount</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="carddetail-2">cardDetail</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>cardType</em></strong></td>
+      <td>N/A</td>
+      <td>N/A</td>
+      <td>Can be any of the following values: American Express, Diners Club, Discover, MasterCard, Visa, Carte Blanche, Enroute, Universal Air Travel, JCB, EuroCard</td>
+    </tr>
+    <tr>
+      <td>creditCardId</td>
+      <td>string</td>
+      <td>^[0-9]{4}$</td>
+      <td>Last four digits of the credit card number to meet FACTA and PCI requirements</td>
+    </tr>
+    <tr>
+      <td>authorizationCode</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Authorization code for transaction.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="rail-receipt">Rail Receipt</h4>
+
+<p>Schema for rail or train receipts.</p>
+<ul>
+  <li>Includes all of <a href="#receipt-core-definitions">Receipt Core Definitions</a></li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>itineraryLocator</td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Unique ID of an itinerary (also know as a trip) in Concur’s Itinerary Service. An itinerary can contain one or more bookings from various sources.</td>
+    </tr>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Break down of all charges which could include insurance purchased for all train tickets, paid wi-fi etc.</td>
+    </tr>
+    <tr>
+      <td><strong><em>railTickets</em></strong></td>
+      <td>array</td>
+      <td><a href="#railtickets">railTickets</a></td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="railtickets">railTickets</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ticketNumber</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>recordLocator</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Confirmation identifier for the ticket. This code is usually unique for a short period of time and could be reused by the rail company in the future.</td>
+    </tr>
+    <tr>
+      <td><strong><em>issueDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>Date and time the ticket was issued.</td>
+    </tr>
+    <tr>
+      <td><strong><em>passengerName</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the person associated withthe ticket.</td>
+    </tr>
+    <tr>
+      <td>fare</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>Fare charged for a train ticket. This will be the total of all segments in this train ticket.</td>
+    </tr>
+    <tr>
+      <td><strong><em>segments</em></strong></td>
+      <td>array</td>
+      <td><a href="#segments">segments</a></td>
+      <td>Segments for this train ticket.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="segments-1">segments</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>departureStation</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the station from which the train is departing.</td>
+    </tr>
+    <tr>
+      <td><strong><em>departureDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>arrivalStation</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Name of the station where the train is arriving.</td>
+    </tr>
+    <tr>
+      <td><strong><em>arrivalDateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>A subset of ISO 8601 date-times. The first restriction is that the dateTime requires a date, a time (at least the hour portion), and a UTC offset. The second restriction is that the dateTime does not allow a time to be formatted in UTC time (2015-11-02T14:30Z - notice the Z) without an offset; this is because it would be impossible for us to know the original offset so we could not generate a receipt with the correct local time.</td>
+    </tr>
+    <tr>
+      <td><strong><em>trainNumber</em></strong></td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Train identifier</td>
+    </tr>
+    <tr>
+      <td>trainType</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Type of train. For example TGV or TER in France.</td>
+    </tr>
+    <tr>
+      <td><strong><em>classOfServiceCode</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>The class of travel.</td>
+    </tr>
+    <tr>
+      <td>fare</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>Fare charged for this segment of the train ride.</td>
+    </tr>
+    <tr>
+      <td>taxes</td>
+      <td>array</td>
+      <td><a href="#taxes">Taxes</a></td>
+      <td>Taxes paid for this segment.</td>
+    </tr>
+    <tr>
+      <td>lineItems</td>
+      <td>array</td>
+      <td><a href="#line-item">lineItems</a></td>
+      <td>Line items specific to this segment. This could include meals, seat reservations, insurance etc.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="receipt-core-definitions">Receipt Core Definitions</h4>
+
+<p>Core values for all receipt types. All major receipt schemas include these core objects.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>dateTime</em></strong></td>
+      <td>string</td>
+      <td>date-time</td>
+      <td>Date and time of the transaction.</td>
+    </tr>
+    <tr>
+      <td><strong><em>total</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>The total amount of the transaction including all lineitems and taxes.</td>
+    </tr>
+    <tr>
+      <td>subtotal</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>The amount in the transaction excluding taxes.</td>
+    </tr>
+    <tr>
+      <td>taxesTotal</td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>The amount of tax paid in the transaction.</td>
+    </tr>
+    <tr>
+      <td>discountsTotal</td>
+      <td>string</td>
+      <td>^[-]\d*.?\d+$</td>
+      <td>String representing a negative amount of money, normally used for a discount. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+    <tr>
+      <td><strong><em>currencyCode</em></strong></td>
+      <td>string</td>
+      <td>currency-code</td>
+      <td>Currency paid to the merchant.</td>
+    </tr>
+    <tr>
+      <td>broker</td>
+      <td>object</td>
+      <td><a href="#merchant">Merchant</a></td>
+      <td>The entity that facilitates the transaction between the seller and end user.</td>
+    </tr>
+    <tr>
+      <td><strong><em>seller</em></strong></td>
+      <td>object</td>
+      <td><a href="#merchant">Merchant</a></td>
+      <td>The entity providing service to the end user.</td>
+    </tr>
+    <tr>
+      <td><strong><em>payments</em></strong></td>
+      <td>array</td>
+      <td><a href="#payments">Payments</a></td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>discounts</td>
+      <td>array</td>
+      <td><a href="#discount">discounts</a></td>
+      <td>The discounts offered on this transaction.</td>
+    </tr>
+    <tr>
+      <td>taxes</td>
+      <td>array</td>
+      <td><a href="#taxes">Taxes</a></td>
+      <td>Taxes paid as part of transaction.</td>
+    </tr>
+    <tr>
+      <td>reference</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The unique receipt provider or merchant identifier for this receipt or invoice. This value can also be referred to as transaction number, check number, order ID or similar.</td>
+    </tr>
+    <tr>
+      <td>collectionReference</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Use this key to group related receipts into a collection for credits, tips or other adjustments to the original transaction and looking at groups of receipts for analysis purposes. The reference and collectionReference keys typically have separate and unique values but could be the same for the first receipt in a collection.</td>
+    </tr>
+    <tr>
+      <td>taxInvoice</td>
+      <td>boolean</td>
+      <td>N/A</td>
+      <td>A tax invoice (true) or otherwise (false).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="broker">broker</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>name</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Description of the service provided by the merchant.</td>
+    </tr>
+    <tr>
+      <td>taxId</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The tax identification number assigned to the merchant by the national tax authority. If the partner is providing a tax invoice, then providing a tax identification number is recommended.</td>
+    </tr>
+    <tr>
+      <td><strong><em>location</em></strong></td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="seller">seller</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>name</em></strong></td>
+      <td>string</td>
+      <td>^(?!\s*$).+</td>
+      <td>Non-empty string. Length must be at least 1 character.</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>Description of the service provided by the merchant.</td>
+    </tr>
+    <tr>
+      <td>taxId</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The tax identification number assigned to the merchant by the national tax authority. If the partner is providing a tax invoice, then providing a tax identification number is recommended.</td>
+    </tr>
+    <tr>
+      <td><strong><em>location</em></strong></td>
+      <td>object</td>
+      <td><a href="#location">Location</a></td>
+      <td>Schema representing a location, including geographical information and a postal address. Used in multiple receipt types.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="taxes">Taxes</h4>
+
+<p>Schema for objects that make up an array of taxes. Used in most receipt types.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>authority</em></strong></td>
+      <td>object</td>
+      <td><a href="#authority">authority</a></td>
+      <td>The country or subdivision that charged the tax as per ISO 3166-2:2013.</td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong><em>rate</em></strong></td>
+      <td>number</td>
+      <td>N/A</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>rateType</td>
+      <td>string</td>
+      <td>N/A</td>
+      <td>The rate type for the tax charged. For value added tax this could be Zero, Standard, Reduced, etc.</td>
+    </tr>
+    <tr>
+      <td><strong><em>amount</em></strong></td>
+      <td>string</td>
+      <td>^[-]?\d*.?\d+$</td>
+      <td>String representing an amount of money. Should not include a currency code or symbol, as this information is included in the currencyCode field of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="authority">authority</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><em>addressCountry</em></strong></td>
+      <td>string</td>
+      <td>country-code</td>
+      <td>2 or 3 character country code as defined in ISO 3166-1:2013</td>
+    </tr>
+    <tr>
+      <td>addressRegion</td>
+      <td>string</td>
+      <td>^[a-zA-Z0-9]{1,3}$</td>
+      <td>1 to 3 character country subdivision code as defined in ISO 3166-2:2013</td>
+    </tr>
+  </tbody>
+</table>
+:ET

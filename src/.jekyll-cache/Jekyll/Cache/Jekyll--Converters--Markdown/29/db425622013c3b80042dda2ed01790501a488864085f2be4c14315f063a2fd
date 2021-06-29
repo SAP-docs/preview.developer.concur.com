@@ -1,0 +1,325 @@
+I"�I<h2 id="menu">Menu</h2>
+
+<ul>
+  <li><a href="./getting-started.html">Getting Started</a></li>
+  <li><a href="/api-reference/budget/v4.fiscal-year.html">Fiscal Year</a></li>
+  <li><a href="/api-reference/budget/v4.budget-category.html">Budget Category</a></li>
+  <li><a href="/api-reference/budget/v4.budget-header.html">Budget Item</a></li>
+  <li><a href="/api-reference/budget/v4.budget-trackingfield.html">Budget Tracking Field</a></li>
+  <li><a href="/api-reference/budget/v4.budget-adjustments.html">Budget Adjustments</a></li>
+</ul>
+
+<p>This resource is used to add budget adjustments. Each budget item detail may have one or more budget adjustments and adjustments can be made to manually add or subtract the budget, spent or pending balances.</p>
+
+<ul>
+  <li><a href="#create-budget-adjustment">Create a Budget Adjustment</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#budgetAdjustment">Budget Adjustment</a></li>
+      <li><a href="#errorResponse">Error Response</a></li>
+      <li><a href="#errorMessage">Error Message</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="create-a-budget-adjustment"><a name="create-budget-adjustment"></a>Create a Budget Adjustment</h2>
+
+<p>Create one or more budget adjustments.</p>
+
+<ul>
+  <li>If the rolling adjustment feature is used, all adjustments for a given month, adjustment type, amount type, budget, and description will be combined into one adjustment.  See <a href="#parameters">Parameters</a> below.</li>
+  <li>The combination of budget item name, fiscal year name, fiscal period name, and owner email determine which budget the adjustment affects.  See <a href="#schema">Schema</a> below</li>
+  <li>The amount type determines how the adjustment affects the budget.  The budget amount adjustment reduces or increases the top-line budget amount while spent and pending amounts affect the budget balances.</li>
+  <li>Adjustments may not be deleted or updated via the API.</li>
+</ul>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">budgetitem.write</code> - Refer to <a href="./getting-started.html">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">POST /budget/v4/adjustments
+</span></code></pre></div></div>
+
+<h4 id="parameters"><a name="parameters"></a>Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">useMonthlyRollingUpdate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">query</code></td>
+      <td><strong>Required</strong> If true, all adjustments for a given month, adjustment type, amount type &amp; description will be rolled up to one adjustment. This is useful for an automated process that makes daily or weekly updates and doesn’t want to clutter end-user dashboards.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<p><a href="#budgetAdjustment">Budget Adjustments</a></p>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a> Successful call, response is in body.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a> The request was determined to be invalid by the server. Possibly a validation failed on the data that was sent in the payload. The response will have a list of validation errors in the body. See below for an example 400 response.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a> The user does not have the necessary permissions to perform the request.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a> The resource could not be found or does not exist.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a> Error message in response body.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a> Error message in response body.</li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.4.1">RFC 7231 Allow</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.3">RFC 7234 Expires</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-2.3">RFC 7232 ETag</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.4">RFC 7234 Pragma</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.4.2">RFC 7231 Server</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.4">RFC 7231 Vary</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<p>Either “Success” or an <a href="#errorResponse">Error Response</a></p>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/budget/v4/adjustments?useMonthlyRollingUpdate<span class="o">=</span><span class="nb">false
+</span>Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+Content-Type: application/json
+Accept: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+	</span><span class="p">{</span><span class="w">
+		</span><span class="nl">"budgetItemName"</span><span class="p">:</span><span class="s2">"API Budget-Oregon"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"fiscalYearName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"budgetOwnerEmail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"m.jones@example.com"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"fiscalPeriodName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018 - Q3"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"adjustmentType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FUND_TRANSFER"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"amountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BUDGET_AMOUNT"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Initial July Adjustment"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"transactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-07-11"</span><span class="w">
+	</span><span class="p">},</span><span class="w">
+	</span><span class="p">{</span><span class="w">
+		</span><span class="nl">"budgetItemName"</span><span class="p">:</span><span class="s2">"API Budget-Travel"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"fiscalYearName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"budgetOwnerEmail"</span><span class="p">:</span><span class="w"> </span><span class="s2">"m.jones@example.com"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"fiscalPeriodName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018 - Q3"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"adjustmentType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EXPENSE"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"amountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SPENT_AMOUNT"</span><span class="p">,</span><span class="w">
+		</span><span class="nl">"transactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-07-10"</span><span class="w">
+	</span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<h5 id="success-response">Success Response</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Cache-Control: no-store
+Connection: keep-alive
+Content-Length: 9
+Content-Type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>utf-8
+Date: Fri, 21 Sep 2018 15:24:27 GMT
+Expires: Thu, 20 Sep 2018 15:24:27 GMT
+Pragma: no-cache
+Vary: Origin
+concur-correlationid: 86a0d9fe-9e98-43c3-89d8-a2917dd844cb
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"Success"</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="failure-response">Failure Response</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 400 Bad Request
+Cache-Control: no-store
+Connection: close
+Content-Length: 242
+Content-Type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>utf-8
+Date: Fri, 21 Sep 2018 15:29:05 GMT
+Expires: Thu, 20 Sep 2018 15:29:05 GMT
+Pragma: no-cache
+concur-correlationid: 561ce34c-6542-4bae-82a2-aa6ccd8c6b22
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">  
+        </span><span class="nl">"status"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"errorMessageList"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"errorType"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"errorCode"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"BUDGET.BUDGET_PERIOD_REQUIRED"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"errorMessage"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Record 1) Record 1) Budget period is missing"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="budget-adjustment"><a name="budgetAdjustment"></a>Budget Adjustment</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">budgetItemName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The name of the budget of the adjustment.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">fiscalYearName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The name of the budget’s fiscal year.  The default name for a fiscal year is the numeric, four-digit year. Example: <code class="language-plaintext highlighter-rouge">2019</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">fiscalPeriodName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The specific fiscal period when this budget amount will be used. The default name for a fiscal period is: Monthly: &lt;fiscal year name&gt; - &lt;three-letter month abbreviation&gt; (Example: <code class="language-plaintext highlighter-rouge">2019 - Jun</code>). Quarterly: &lt;fiscal year name&gt; - Q&lt;number of quarter&gt; (Example: <code class="language-plaintext highlighter-rouge">2019 - Q2</code>). Yearly: &lt;fiscal year name&gt; (Example: <code class="language-plaintext highlighter-rouge">2019</code>).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">budgetOwnerEmail</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The user who is responsible for the budget, as configured.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">decimal</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The budget currency amount to be adjusted. The amount may be a positive or negative value but it cannot be zero.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">adjustmentType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The type of adjustment being made. Only a user reference field. Supported values: <code class="language-plaintext highlighter-rouge">BUDGET_BALANCE</code>, <code class="language-plaintext highlighter-rouge">FUND_TRANSFER</code>, <code class="language-plaintext highlighter-rouge">EXPENSE</code>, <code class="language-plaintext highlighter-rouge">PAYMENT_REQUEST</code>, <code class="language-plaintext highlighter-rouge">PURCHASE_REQUEST</code>, <code class="language-plaintext highlighter-rouge">REQUEST</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amountType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The type of the budget’s balance to adjust. Affects which values in the budget are updated. Supported values: <code class="language-plaintext highlighter-rouge">BUDGET_AMOUNT</code>, <code class="language-plaintext highlighter-rouge">SPENT_AMOUNT</code>, <code class="language-plaintext highlighter-rouge">PENDING_AMOUNT</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">description</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A user-friendly description of the adjustment.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required if amount type is either SPENT_AMOUNT or PENDING_AMOUNT</strong> The transaction date of adjusted spend. Must be within the fiscal period.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-response"><a name="errorResponse"></a>Error Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">False</code> if there was an error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessageList</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#errorMessage"><code class="language-plaintext highlighter-rouge">errorMessage</code></a></td>
+      <td>List of all errors detected.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-message"><a name="errorMessage"></a>Error Message</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>WARNING or ERROR.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Text code for this error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Plain language error message.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

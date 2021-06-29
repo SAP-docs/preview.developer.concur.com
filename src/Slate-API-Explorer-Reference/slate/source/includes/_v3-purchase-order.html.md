@@ -1,0 +1,340 @@
+
+## Purchase Orders v3
+
+
+The Purchase Orders API gives SAP Concur clients the ability to leverage external data to create and update approved purchase orders. Clients can build a direct connection to the Purchase Orders API which will create purchase orders for invoices to be associated to. It also allows clients to update created purchase orders when orders change, need to be closed, or identify and resolve matching exceptions on PO invoices.
+
+> **Limitations**: This API is not available in the China Data center. This API is only available for direct integrations with an existing SAP Concur client. This API can only be used to create new purchase requests and get the details of the created purchase request. This API cannot update, edit, or delete purchase requests. All edits or processing of the purchase request after it is sent to SAP Concur and created must be done in SAP Concur.
+
+* [Products and Editions](#purchase-orders-v3-products-and-editions)
+* [Scope Usage](#purchase-orders-v3-scope-usage)
+* [Dependencies](#purchase-orders-v3-dependencies)
+* [Access Token Usage](#purchase-orders-v3-access-token-usage)
+* [Create a New Purchase Order](#create-a-new-purchase-order)
+* [Update Purchase Order Line Item with Receipt Information](#put-receipts)
+* [Update an Existing Purchase Order](#update-an-existing-purchase-order)
+* [Get an Existing Purchase Order](#purchase-orders-v3-get-an-existing-purchase-order)
+* [Schema](#purchase-orders-v3-schema)
+* [Response Schema](#schema-response)
+* [Receipt Schema](#schema-receipt)
+* [Error Codes](#error-codes)
+
+#### <a name="products-editions"></a>Purchase Orders v3 - Products and Editions
+
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+
+#### <a name="scope-usage"></a>Purchase Orders v3 - Scope Usage
+
+Required Scopes:
+
+Name|Description|Endpoint
+---|---|---
+`INVPO`|Create, update, and retrieve purchase orders.|POST, PUT, GET
+
+#### <a name="dependencies"></a>Purchase Orders v3 - Dependencies
+
+SAP Concur clients must purchase Concur Invoice, Concur Purchase Order, and Concur Web Services in order to use this API. Concur Invoice with Concur Purchase Order must be configured before using this API.
+
+To create purchase orders, you need to supply a Vendor Code and Vendor Address Code. You can access **Vendor Manager** in Concur Invoice to see these values. If you need to get this data from SAP Concur using web services, you can use the [Vendor v3](/api-reference/invoice/v3.vendor.html) API.
+
+If your purchase order form in SAP Concur has required custom fields that are tied to lists, you will need to supply the Item Code for the list items. You can access **List Management** in SAP Concur to see your list items and list item codes. If you need to get this data from SAP Concur using web services, you can use the [List Item v3](/api-reference/common/list-item/v3.list-item.html) API to retrieve the `Level1Code` value for the list items.
+
+
+#### <a name="access-token-usage"></a>Purchase Orders v3 - Access Token Usage
+
+This API will work with both company or user access tokens. A company access token is required if the integration will create purchase orders for multiple requestors. Using a user access token to create purchase order results in the purchase order being assigned to the user that generated the user access token, not the user set in the payload. A user access token can be used for testing purposes.
+
+#### <a name="post"></a>Create a New Purchase Order
+
+```
+POST /api/v3.0/invoice/purchaseorders
+```
+
+Create or update a Purchase Order. Batch processing is not available using the Purchase Order API. Please use Import Jobs for batch updates.
+
+#### Payload
+
+* [purchaseOrder](#schema-purchaseOrder)
+
+### Example
+
+```json
+{
+  "BillToAddress": {
+    "Address1": "add1",
+    "Address2": "add2",
+    "Address3": "add3",
+    "City": "city",
+    "CountryCode": "US",
+    "ExternalID": "billtoapi",
+    "Name": "billto",
+    "PostalCode": "55426",
+    "StateProvince": "MN"
+  },
+  "CurrencyCode": "USD",
+  "OrderDate":"2011-08-12T20:17:46.384Z",
+  "ID": "API101",
+  "IsTest": "false",
+  "IsChangeOrder": "false",
+  "LedgerCode": "23",
+  "LineItem": [
+    {
+      "Allocation": [
+        {
+          "Amount": "106.74",
+          "Percentage":"100.00000000",
+          "GrossAmount":"106.74"
+        }
+      ],
+      "CreateDate": "2019-12-13 20:00:37.0",
+      "Description": "line 1",
+      "ExpenseType": "Advertising",
+      "ExternalID": "API100line1",
+      "IsReceiptRequired": "true",
+      "LineNumber": "1",
+      "PurchaseOrderReceiptType": "WQTY",
+      "Quantity": "1.00",
+      "UnitOfMeasureCode":"DA",
+      "UnitPrice": "106.74"
+    }
+  ],
+  "Name": "poName",
+  "PolicyExternalID": "PO",
+  "PurchaseOrderNumber": "API101",
+  "PurchaseRequestNumber": "100001",
+  "RequestedBy": "Deo, John",
+  "Shipping": "0.00000000",
+  "ShipToAddress": {
+    "Address1": "add1",
+    "Address2": "add2",
+    "Address3": "add3",    
+    "City": "cityship",
+    "CountryCode": "US",
+    "ExternalID": "Shiptoapi",
+    "Name": "shiptoapi",
+    "PostalCode": "55426",
+    "StateProvince": "MN"
+  },
+  "Status": "Transmitted",
+  "Tax": "0.00000000",
+  "URI": "http://www.concursolutions.com/api/v3.0/invoice/purchaseorders/purchaseorders/API101",
+  "VendorCode": "VEN1",
+  "VendorAddressCode": "VEN1ADDR1"
+}
+```
+
+### Response
+
+* [Response schema](#schema-response)
+
+#### <a name="put-receipts"></a>Update Purchase Order Line Item With Receipt Information
+
+```
+PUT /api/v3.0/invoice/purchaseorderreceipts
+```
+
+### Payload
+
+* [Receipt schema](#schema-receipt)
+
+### Response
+
+* [Response schema](#schema-response)
+
+#### <a name="put"></a>Purchase Orders v3 - Update an Existing Purchase Order
+
+```
+PUT /api/v3.0/invoice/purchaseorders
+```
+
+### Payload
+
+* [purchaseOrder](#schema-purchaseOrder)
+
+### Response
+
+* [Response schema](#schema-response)
+
+#### <a name="get"></a>Purchase Orders v3 - Get an Existing Purchase Order
+
+```
+GET /api/v3.0/invoice/purchaseorders/{id}
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|{id}|The identifier for the purchase order.
+
+### Input
+
+None
+
+### Response
+
+* [purchaseOrder](#schema-purchaseOrder)
+
+#### <a name="schema"></a>Purchase Orders v3 - Schema
+
+#### <a name="schema-purchaseOrder"></a>purchaseOrder
+
+Name|Type|Format|Description
+---|---|---|---
+`AmountWithoutVat`|`string`|-|The net amount of the purchase order (excluding VAT).
+`BillToAddress`|`object`|[`BillToAddress`](#bill-to-address)|**Required** The customer's billing address, which is where the vendor should send the bill.
+`CurrencyCode`|`string`|-|**Required** The 3-letter ISO 4217 currency code of the currency that is associated with the purchase order.
+`Custom1 through Custom24`|`string`|-|A value that can be applied to a custom field that is part of the purchase order header form.
+`Description`|`string`|-|A description of the purchase order.
+`DiscountPercentage`|`string`|-|The discount from the vendor, if the discount terms are met.
+`DiscountTerms`|`string`|-|The net discount terms that the vendor offers, when discounts apply.
+`ID`|`string`|-|The unique identifier of the resource.
+`IsTest`|`string`|`true` / `false`|If the purchase order is a test.
+`IsChangeOrder`|`string`|`true` / `false`|If the purchase order has a change order or not.
+`LedgerCode`|`string`|-|A code which indicates which company journal the Purchase Order is assigned to.
+`LineItem`|`array`|[`LineItem`](#lineItem)|**Required** The line items in a purchase order.
+`Name`|`string`|-|**Required** A name for the purchase order.
+`NeededByDate`|`string`|`YYYY-MM-DD`|The date by which the purchase order must be fulfilled.
+`OrderDate`|`string`|`YYYY-MM-DD`|**Required** The date when goods were ordered.
+`PaymentTerms`|`string`|-|The net payment terms that have been set up with a vendor.
+`PolicyExternalID`|`string`|-|**Required** The external identifier of the policy that should be associated with the purchase order. The external Id is a property of the policy configuration screen. Clients will need to get these ID’s from the Implementation team if using professional version. For standard version the value is always `PO`.
+`PoVendorTaxId`|`string`|-|The vendor tax ID.
+`ProvincialTaxId`|`string`|-|The vendor provincial tax ID.
+`PurchaseOrderNumber`|`string`|-|The purchase order number.
+`PurchaseRequestNumber`|`string`|-|The related purchase request number that generated the purchase order.
+`ReceiptType`|`string`|-|The purchase order receipt type (Deprecated). Use the `PurchaseOrderReceiptType` at line item level instead.
+`RequestedBy`|`string`|-|The person who requests the goods in the purchase order.
+`RequestedDeliveryDate`|`string`|`YYYY-MM-DD`|The date the purchase order instructed the vendor to deliver the goods.
+`Shipping`|`string`|-|The total shipping cost for the purchase order.
+`ShippingDescription`|`string`|-|A description of how the goods in the purchase order will ship. For example, via FedEx.
+`ShippingMethodKey`|`string`|-|A code that represents the shipping method used by the vendor. Maximum length: 10 characters
+`ShippingTermsKey`|`string`|-|A code that represents the shipping terms that the vendor offers. Maximum length: 10 characters
+`ShipToAddress`|`object`|[`ShipToAddress`](#ship-to-address)|**Required** The customer's shipping address, which is where the vendor should ship the goods.
+`Status`|`string`|-|The current status of the purchase order. Default: `Transmitted`. Supported values: `Closed`, `Transmitted`
+`Tax`|`string`|-|The total tax for the purchase order.
+`URI`|`string`|-|The URI to the resource.
+`VatAmountOne`|`string`|-|This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.
+`VatAmountTwo`|`string`|-|This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.
+`VatRateOne`|`string`|-|This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.
+`VatRateTwo`|`string`|-|This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.
+`VendorAccountNumber`|`string`|-|The vendor account number.
+`VendorAddressCode`|`string`|-|**Required** The code that identifies the vendor's remit address for the purchase order.
+`VendorCode`|`string`|-|**Required** The code that identifies the vendor for the purchase order.
+
+#### <a name="bill-to-address"></a>BillToAddress
+
+Name|Type|Format|Description
+---|---|---|---
+`Address1`|`string`|-|**Required** Address line 1 of the billing address.
+`Address2`|`string`|-|Address line 2 of the billing address.
+`Address3`|`string`|-|Address line 3 of the billing address.
+`City`|`string`|-|**Required** The city of the billing address.
+`CountryCode`|`string`|-|**Required** The code of the country for the billing address.
+`ExternalID`|`string`|-|**Required** A unique value supplied by the customer to identify a particular billing address.
+`Name`|`string`|-|An optional name that can be given to the  billing address.
+`PostalCode`|`string`|-|**Required** The postal code of the billing address.
+`StateProvince`|`string`|-|**Required** The state or province of the billing address.
+
+#### <a name="lineItem"></a>LineItem
+
+Name|Type|Format|Description
+---|---|---|---
+`AccountCode`|`string`|-|The account code of the line item. A value must be supplied for either `ExpenseType` or `AccountCode`, but not both. This field is required if an `ExpenseType` value is not supplied.
+`Allocation`|`array`|[`Allocation`](#allocation)|A list of the allocations that are associated with the line item. Allocation elements can be repeated within the same line items to represent multiple allocations.
+`AmountWithoutVat`|`string`|-|The net amount of the line item (excluding VAT).
+`CreateDate`|`string`|`YYYY-MM-DD`|The date the line item was created.
+`Custom1 through Custom20`|`string`|-|A value that can be applied to a custom field 1 that is part of the purchase order line item form.
+`Description`|`string`|-|A description of the line item.
+`ExpenseType`|`string`|-|The expense type of the line item. A value must be supplied for either `ExpenseType` or `AccountCode`, but not both. This field is required if an `AccountCode` value is not supplied.
+`ExternalID`|`string`|-|**Required** A customer-supplied value that uniquely identifies the line item within the purchase order.
+`IsReceiptRequired`|`string`|`true` / `false`|Indicates whether the line item requires a receipt.
+`LineNumber`|`string`|-|**Required** The line item number within the purchase order.
+`Quantity`|`string`|-|**Required** The quantity associated with the line item.
+`PurchaseOrderReceiptType`|`string`|-|Purchase order `ReceiptType` of the line item. If you are using Concur Receiving and need to enter Goods Receipts against the resulting PO lines use `QUANTITY_RECEIPT`. Default: `NONE`. Supported values: `QUANTITY_RECEIPT`, `NONE`
+`RequestedBy`|`string`|-|The person who requests the goods in the line item of the purchase order.
+`RequestedDeliveryDate`|`string`|`YYYY-MM-DD`|The date the line item of the purchase order instructed the vendor to deliver the goods.
+`SupplierPartID`|`string`|-|Any number that might help to identify the line item. This could be a value such as the vendor's part number or even the manufacturer number.
+`Tax`|`string`|-|Any tax that is associated with the line item.
+`UnitOfMeasureCode`|`string`|-|The unit of measure code of the line item.
+`UnitPrice`|`string`|-|**Required** The price of each item of the line item.
+`VatAmount`|`string`|-|This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.
+`VatRate`|`string`|-|This field has not been implemented by Purchase Request yet. Any data in this field will be ignored.
+
+#### <a name="allocation"></a>Allocation
+
+Name|Type|Format|Description
+---|---|---|---
+`Amount`|`string`|-|**Required** The total amount of the allocation.
+`Custom1 through Custom20`|`string`|-|A value that can be applied to a custom field 1 that is part of the allocation form.
+`GrossAmount`|`string`|-|**Required** The allocation gross amount.
+`Percentage`|`string`|-|**Required** The allocation percentage.
+
+#### <a name="ship-to-address"></a>ShipToAddress
+
+Name|Type|Format|Description
+---|---|---|---
+`Address1`|`string`|-|**Required** Address line 1 of the shipping address.
+`Address2`|`string`|-|Address line 2 of the shipping address.
+`Address3`|`string`|-|Address line 3 of the shipping address.
+`City`|`string`|-|**Required** The city of the shipping address.
+`CountryCode`|`string`|-|**Required** The code of the country for the shipping address.
+`ExternalID`|`string`|-|**Required** A unique value supplied by the customer to identify a particular shipping address.
+`Name`|`string`|-|An optional name that can be given to the shipping address.
+`PostalCode`|`string`|-|**Required** The postal code of the shipping address.
+`StateProvince`|`string`|-|**Required** The state or province of the shipping address.
+
+#### <a name="schema-response"></a>Response Schema
+
+Name|Type|Format|Description
+---|---|---|---
+`ErrorCode`|`string`|-|A code that indicates why the purchase order was not processed successfully.
+`ErrorMessage`|`string`|-|A description of the error.
+`FieldCode`|`string`|-|A code that indicates which field caused an issue. This code typically appears only when a field is being validated against a field of a form type. Format: LEVEL CODE. The possible levels are: `Header`, `ShipTo`, `BillTo`, `LineItem`, `Allocation`.
+`LineItemExternalID`|`string`|-|The external ID of a line item that caused an error. If the error is related to an allocation, this field indicates the external ID of the line item that the allocation is associated with, and also indicates the allocation that caused of the error.
+`Message`|`string`|-|
+`PurchaseOrderNumber`|`string`|-|The purchase order number.
+`Status`|`string`|`SUCCESS` / `FAILURE`|The result of processing the purchase order.
+
+#### <a name="schema-receipt"></a>Receipt Schema
+
+Name|Type|Format|Description
+---|---|---|---
+`IsReceived`|`string`|-|**Required** Indicates whether the line item was received.
+`LineItemExternalID	`|`string`|-|**Required** A customer-supplied value that uniquely identifies the line item within the purchase order.
+`PurchaseOrderNumber`|`string`|-|**Required** The purchase order number.
+`ReceivedDate`|`string`|`YYYY-MM-DD`|The date the line item was received.
+`ReceivedQuantity`|`string`|-|The number of items that were received.
+
+#### <a name="error-codes"></a>Error Codes
+
+The web service will not return a 4xx HTTP response code for a batch operation even when every item in the batch failed to be created, updated or deleted. The client must inspect the response to look for warnings or errors with individual batch items.
+
+Code|Description
+---|---
+1000|The PO number is missing or invalid.
+2000|There was no vendor found for the supplied Vendor Code and Vendor Address Code.
+3000|The Currency Code is missing or invalid.
+4000|There was no policy found matching the supplied External Id.
+4001|The policy does not support purchase orders.
+4002|The policy cannot be changed on the purchase order.
+5000|The purchase order does not contain any line items.
+5001|The line item must contain expense type or account code, but not both.
+5002|The line item expense type is invalid.
+5003|The line item account code is invalid.
+5004|The line item tax and unit price must both match positive or negative.
+5500|The line item contains an allocation, but no allocation form is defined.
+5501|The line item allocation amounts exceed the line item total.
+5502|The distribution amounts for a line item must match the line item amount positive or negative.
+5503|The distribution amounts for a line item cannot be zero.
+5600|The external id for the line item is not unique across the purchase order.
+6000|The Ship To Address is missing or invalid.
+6001|The Bill To Address is missing or invalid.
+8000|A required field is missing.
+8001|A field’s value exceeds the maximum length allowed.
+8002|A field’s value is not the correct data type.
+8003|A field’s value is an invalid list item.
+8004|A field’s value is an invalid connected list item.
+8005|The Country Code is missing or invalid.
+8006|A value was supplied for a field that is not part of the form.
+9999|An unexpected error occurred.

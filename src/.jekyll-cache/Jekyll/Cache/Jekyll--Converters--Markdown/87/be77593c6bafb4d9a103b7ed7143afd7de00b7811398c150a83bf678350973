@@ -1,0 +1,335 @@
+I"û3<h1 id="payment-batches">Payment Batches</h1>
+
+<p>The Payment Batch File web service provides an automated solution to clients who would like to manage their payment batches and collect their batch files.</p>
+
+<ul>
+  <li><a href="#getpaymentbatches">Retrieve the list of payment batches</a>
+    <ul>
+      <li><a href="#getpaymentbatchesschema">Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#closepaymentbatch">Close a payment batch asynchronously</a>
+    <ul>
+      <li><a href="#closepaymentbatchschema">Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#closepaymentbatchsync">Close a payment batch synchronously</a>
+    <ul>
+      <li><a href="#closepaymentbatchsyncschema">Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#getbatchfile">Retrieve a payment batch file</a>
+    <ul>
+      <li><a href="#getbatchfileschema">Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#errormessages">Error Messages</a></li>
+</ul>
+
+<h2 id="process-flow">Process Flow</h2>
+
+<p><img src="./payment-batch.png" alt="Process Flow for Payment Batch" /></p>
+
+<h2 id="product-and-edition">Product and Edition</h2>
+
+<p>Concur Expense Standard Edition</p>
+<blockquote>
+  <p><strong>NOTE</strong>: For Concur Expense Professional Edition, use <a href="https://developer.concur.com/api-reference/common/extracts/v1.extracts.html">Extracts v1 API</a></p>
+</blockquote>
+
+<h2 id="retrieve-the-list-of-payment-batches"><a name="getpaymentbatches"></a>Retrieve the List of Payment Batches</h2>
+
+<p>Retrieves the list of payment batches with an optional requested status.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/expense/paymentbatch/v1.1/batchlist/
+</code></pre></div></div>
+
+<h3 id="parameters">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">batchlist</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required.</strong> The batchlist keyword.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Boolean</code></td>
+      <td>-</td>
+      <td>The status of the batches. Can be either OPEN or CLOSED.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="retrieve-payment-batches-response-schema"><a name="getpaymentbatchesschema"></a>Retrieve Payment Batches Response Schema</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The batch name, as it appears in Payment Manager.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier for the batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchTotal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Decimal</code></td>
+      <td>-</td>
+      <td>The batch total amount.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Currency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The <a href="http://en.wikipedia.org/wiki/ISO_4217">3-letter ISO 4217 currency code</a> for the batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Count</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The number of payment demands in the batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The payee of the batch. Either Employee or Card Program.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PaymentMethod</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The reimbursement method for the batch. Either Expense Pay by SAP Concur, Company Check (via Accounts Payable), ADP (via EPIP file), or Other Reimbursement Methods.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Batch-URL</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URL to use as a basis for other actions, such as closing the batch.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="close-a-payment-batch-asynchronously"><a name="closepaymentbatch"></a>Close a Payment Batch Asynchronously</h2>
+<h3 id="version-12">Version 1.2</h3>
+
+<p>This asynchronous request schedules closing of the specified batch, preventing any new expenses from entering it. After the batch closes, you can use Close Payment Batch v1.1 to get the <code class="language-plaintext highlighter-rouge">File-Url</code> to download the file containing the expense transaction information.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: You can check batch status using the Retrieve the List of Payment Batches method.</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/expense/paymentbatch/v1.2/batch/{BatchID}/close
+</code></pre></div></div>
+
+<h3 id="parameters-1">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required.</strong> The unique identifier for the batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">close</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required.</strong> The close keyword.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="close-payment-batch-asynchronously-response-schema"><a name="closepaymentbatchschema"></a>Close Payment Batch Asynchronously Response Schema</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The status of the request to close the batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">JobQueueKey</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier for the batch job.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="close-a-payment-batch-synchronously"><a name="closepaymentbatchsync"></a>Close a Payment Batch Synchronously</h2>
+<h3 id="version-11">Version 1.1</h3>
+
+<p>This request synchronously closes the batch preventing any new expenses from entering it. After the batch closes, SAP Concur creates the batch file containing the expense transaction information. If a batch ID for an already closed batch is sent, SAP Concur regenerates the batch file for the specified batch.</p>
+
+<p>This synchronous call has a time limit that can be superseded by the time it takes to close the batch. It is recommended that you use Close a Payment Batch Asynchronously (v1.2) to close batches, then use this request after the batch is closed to obtain the <code class="language-plaintext highlighter-rouge">File-Url</code> needed to download the file with the expense transaction information.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: You can check batch status using the Retrieve the List of Payment Batches method.</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/expense/paymentbatch/v1.1/batch/{BatchID}/close
+</code></pre></div></div>
+
+<h3 id="parameters-2">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required.</strong> The unique identifier for the batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">close</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required.</strong> The close keyword.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="close-payment-batch-synchronously-response-schema"><a name="closepaymentbatchsyncschema"></a>Close Payment Batch Synchronously Response Schema</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BatchStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The current status of the specified batch.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">File-Url</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A URL for retrieving the extract file or files produced when the batch closes, with encrypted ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The status of the request to close the batch.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="retrieve-a-payment-batch-file"><a name="getbatchfile"></a>Retrieve a Payment Batch File</h2>
+
+<p>Requests the expense transaction data for the specified payment batch.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/expense/paymentbatch/v1.1/batch/{JobRunKey}/file
+</code></pre></div></div>
+
+<h3 id="parameters-3">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">JobRunKey</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required.</strong>  The <code class="language-plaintext highlighter-rouge">File-Url</code> element returned by the Close Batches 1.1 API response contains the encrypted JobRunKey. In practice, you can use the <code class="language-plaintext highlighter-rouge">File-Url</code> whole value to download the file.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="retrieve-payment-batch-file-response-schema"><a name="getbatchfileschema"></a>Retrieve Payment Batch File Response Schema</h3>
+
+<p>This request will return the expense transaction data in text/csv format if there was a single file produced or as a zip archive if the batch is configured to produce more than one file. An example of a client who will receive multiple files is a client using QuickBooks, who receives one file formatted for import into QuickBooks (.IIF extension), and one file for the general ledger (.CSV extension), inside a .ZIP file.</p>
+
+<h2 id="error-messages"><a name="errormessages"></a>Error Messages</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Error Number</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">500</code></td>
+      <td>The batch you attempted to close does not contain any reports. If you recently approved reports for payment, wait 30 minutes and try again.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="enterprise-resource-planning-integration"><a name="erp-integration"></a>Enterprise Resource Planning Integration</h2>
+
+<p>Before you begin, you need to close the Payment Manager batch in order for you to retrieve the files using this API. Ask your client not to close the batch manually through the user interface.</p>
+
+<ol>
+  <li>Obtain a list of your clientâ€™s batches by using <a href="#getpaymentbatches">Get list of batches</a></li>
+  <li>Close the desired batch by using <a href="#closepaymentbatch">Close a payment batch</a></li>
+  <li>Retrieve the file you want by using <a href="#getbatchfile">Retrieve a payment batch file</a></li>
+</ol>
+:ET

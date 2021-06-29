@@ -1,13 +1,12 @@
----
-title: Direct Connect - Hotel v2 - Appendix
-layout: reference
----
 
-# Search
+## Appendix
+
+
+### Search 
 
 ![./media/image1.png](./images/examples/search.png)
 
-### Request
+#### Request
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -22,13 +21,11 @@ layout: reference
                        EchoToken="5ADE581A-8A7C-4DA5-A67B-EED4E58A80E2"
                        Version="4" PrimaryLangID="en" AltLangID="en" MaxResponses="100">
       <POS>
-        <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
-        </Source>
+        <Source ISOCurrency="USD"></Source>
       </POS>
       <Criteria>
         <Criterion>
-          <Position Latitude="47.61037" Longitude="-122.20067"></Position>
+          <Position Latitude="52.559720" Longitude="13.287780"></Position>
           <RefPoint></RefPoint>
           <Radius Distance="5" DistanceMax="30" UnitOfMeasureCode="1"></Radius>
           <StayDateRange Start="2018-02-12" End="2018-02-13"></StayDateRange>
@@ -39,41 +36,38 @@ layout: reference
 </Envelope>
  ```
 
-### Response
+#### Response
 ```xml
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"/>
   <soap:Body>
-    <OTA_HotelSearchRS xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:ns2="http://www.concur.com/webservice/auth" AltLangID="en" EchoToken="FC6F5CDE-2D55-49A4-AE22-056AF980ADF4" PrimaryLangID="en" Version="4">
+    <OTA_HotelSearchRS xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:ns2="http://www.concur.com/webservice/auth" AltLangID="fr" EchoToken="FC6F5CDE-2D55-49A4-AE22-056AF980ADF4" PrimaryLangID="fr" Version="4">
       <Success/>
       <Properties>
-        <Property ChainCode="HI" ChainName="Holiday Inn" HotelCode="22222" HotelName="Holiday Inn Express Sunshine">
-          <Position Latitude="47.61038" Longitude="-122.20068"/>
+        <Property ChainName="Appart City" HotelCode="399671" HotelName="Appart'City Aix en Provence - La Duranne Residence de Tourisme">
+          <Position Latitude="43.49205" Longitude="5.351965"/>
           <Address>
-            <AddressLine>99 East 27th Street</AddressLine>
-            <CityName>Bellevue</CityName>
-            <PostalCode>98009</PostalCode>
-            <StateProv StateCode="WA">Washington</StateProv>
-            <CountryName Code="US">United States of America</CountryName>
+            <AddressLine>300 avenue du Grand Vallat</AddressLine>
+            <CityName>Les Milles</CityName>
+            <PostalCode>13290</PostalCode>
+            <CountryName Code="FR">French Republic France</CountryName>
           </Address>
-          <ContactNumbers>
-            <ContactNumber PhoneNumber="+14255551234" PhoneTechType="1"/>
-          </ContactNumbers>
-          <Award Rating="4"/>
-          <HotelAmenity Code="173"/>
-          <HotelAmenity Code="255"/>
+          <Award Rating="2"/>
+          <HotelAmenity Code="68"/>
+          <HotelAmenity Code="198"/>
+          <HotelAmenity Code="71"/>
+          <HotelAmenity Code="101"/>
+          <HotelAmenity Code="33"/>
+          <Policy CheckInTime="14:00:00" CheckOutTime="12:00:00"/>
           <TPA_Extensions>
             <HotelPreference>not_preferred</HotelPreference>
             <TPA_HotelPreviewImageURI>
-              <URL>https://production.example.com/hotel-image.jpg</URL>
+              <URL>https://foto.hrsstatic.com/fotos/1/3/75/75/80/FFFFFF/http%3A%2F%2Ffoto-origin.hrsstatic.com%2Ffoto%2F3%2F9%2F9%2F6%2Fteaser_399671.jpg/v1M9Y02mJkgafy7d97qkhw%3D%3D/128%2C85/6/AppartCity_Aix_en_Provence_La_Duranne_Residence_de_Tourisme-Les_Milles_Aix-en-Provence-Exterior_view-3-399671.jpg</URL>
             </TPA_HotelPreviewImageURI>
-            <TPA_PropertyReferenceInfo>
-              <PropertyReference ReferenceCatalogCode="1376249" ReferenceCatalogName="giata"/>
-            </TPA_PropertyReferenceInfo>
           </TPA_Extensions>
         </Property>
         <Property>
-          ... additional Property nodes here for all returned hotels
+          ... and another properties follow here for all the returned hotels
         </Property>
       </Properties>
     </OTA_HotelSearchRS>
@@ -81,11 +75,11 @@ layout: reference
 </soap:Envelope>
 ```
 
-# Availability
+#### Availability
 
 The initial Search request (see above) is followed up by an multi-property Availability request.  In the example request below Concur requests the availability for 13 properties.  This could because the initial search only yielded 13 properties or the configuration per vendor is set to request availability for a maximum of 13 properties.
 
-### Request
+#### Request
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -101,51 +95,49 @@ The initial Search request (see above) is followed up by an multi-property Avail
                       EchoToken="5ADE581A-8A7C-4DA5-A67B-EED4E58A80E2"
                       Version="5" PrimaryLangID="en" AltLangID="en">
       <POS>
-        <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
-        </Source>
+        <Source ISOCurrency="USD"></Source>
       </POS>
       <AvailRequestSegments>
         <AvailRequestSegment>
           <HotelSearchCriteria>
             <Criterion>
-              <HotelRef ChainCode="HI" HotelCode="22222"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="50709"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="AB" HotelCode="50709"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="468159"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="CY" HotelCode="765336"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="584875"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="HH" HotelCode="468159"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="765336"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="EM" HotelCode="70346"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="70346"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="AB" HotelCode="52198"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="52198"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="HI" HotelCode="697768"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="697768"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="HH" HotelCode="14411"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="14411"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="YX" HotelCode="436533"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="436533"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="PW" HotelCode="459980"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="459980"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="HI" HotelCode="419430"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="419430"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="WY" HotelCode="92103"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="92103"></HotelRef>
             </Criterion>
             <Criterion>
-              <HotelRef ChainCode="WG" HotelCode="252272"></HotelRef>
+              <HotelRef ChainCode="ZZ" HotelCode="252272"></HotelRef>
             </Criterion>
           </HotelSearchCriteria>
           <StayDateRange Start="2018-02-12" End="2018-02-13"></StayDateRange>
@@ -163,38 +155,59 @@ The initial Search request (see above) is followed up by an multi-property Avail
 </Envelope>
 ```
 
-### Response
+#### Response
 
 ```xml
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <SOAP-ENV:Header xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"/>
   <soap:Body>
-    <OTA_HotelAvailRS xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:ns2="http://www.concur.com/webservice/auth" AltLangID="en" EchoToken="FC6F5CDE-2D55-49A4-AE22-056AF980ADF4" PrimaryLangID="en" Version="5">
+    <OTA_HotelAvailRS xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:ns2="http://www.concur.com/webservice/auth" AltLangID="fr" EchoToken="FC6F5CDE-2D55-49A4-AE22-056AF980ADF4" PrimaryLangID="fr" Version="5">
       <Success/>
       <RoomStays>
         <RoomStay>
           <RoomTypes>
             <RoomType RoomID="b3da298f">
               <RoomDescription>
-                <Text>Deluxe Room with sweeping view of the city. 2 queen beds and sofa bed.</Text>
+                <Text>La chambre standard est équipée de douche/WC ou de baignoire/WC.</Text>
               </RoomDescription>
+              <Amenities>
+                <Amenity ExistsCode="1" RoomAmenity="55"/>
+                <Amenity ExistsCode="1" RoomAmenity="56"/>
+                <Amenity ExistsCode="1" RoomAmenity="4"/>
+                <Amenity ExistsCode="1" RoomAmenity="28"/>
+                <Amenity ExistsCode="1" RoomAmenity="210"/>
+                <Amenity ExistsCode="1" RoomAmenity="92"/>
+                <Amenity ExistsCode="1" RoomAmenity="2"/>
+                <Amenity ExistsCode="1" RoomAmenity="126"/>
+                <Amenity ExistsCode="1" RoomAmenity="19"/>
+                <Amenity ExistsCode="1" RoomAmenity="13"/>
+                <Amenity ExistsCode="1" RoomAmenity="96"/>
+                <Amenity ExistsCode="1" RoomAmenity="50"/>
+                <Amenity ExistsCode="1" RoomAmenity="69"/>
+                <Amenity ExistsCode="1" RoomAmenity="107"/>
+                <Amenity ExistsCode="1" RoomAmenity="10"/>
+              </Amenities>
             </RoomType>
           </RoomTypes>
           <RatePlans>
-            <RatePlan AvailabilityStatus="AvailableForSale" RatePlanID="TOGG3BU">
-              <Guarantee GuaranteeType="GuaranteeRequired" />
+            <RatePlan AvailabilityStatus="AvailableForSale" PrepaidIndicator="false" RatePlanID="TOGG3BU">
+              <Guarantee GuaranteeType="GuaranteeRequired">
+                <Deadline AbsoluteDeadline="2019-05-08T23:59:59"/>
+              </Guarantee>
               <CancelPenalties>
-                <CancelPenalty NoCancelInd="true">
-                  <Deadline AbsoluteDeadline="2018-02-12T18:00:00"/>
+                <CancelPenalty NonRefundable="false">
+                  <Deadline AbsoluteDeadline="2019-05-08T23:59:59" OffsetDropTime="BeforeArrival" OffsetTimeUnit="Day"
+                            OffsetUnitMultiplier="14"/>
                 </CancelPenalty>
               </CancelPenalties>
-              <MealsIncluded Breakfast="false" />
+              <MealsIncluded Breakfast="false" Dinner="false" Lunch="false"/>
             </RatePlan>
           </RatePlans>
           <RoomRates>
             <RoomRate RatePlanID="TOGG3BU" RoomID="b3da298f">
               <Rates>
-                <Rate RateTimeUnit="FullDuration">
+                <Rate ChargeType="18" GuaranteedInd="true" NumberOfUnits="1" RateTimeUnit="FullDuration"
+                      RoomPricingType="Per stay" UnitMultiplier="1">
                   <PaymentPolicies>
                     <GuaranteePayment>
                       <AcceptedPayments>
@@ -215,10 +228,10 @@ The initial Search request (see above) is followed up by an multi-property Avail
                       </AcceptedPayments>
                     </GuaranteePayment>
                   </PaymentPolicies>
-                  <Total AmountAfterTax="161.10" AmountBeforeTax="152.70" CurrencyCode="USD"/>
+                  <Total AmountAfterTax="161.10" AmountBeforeTax="152.70" CurrencyCode="EUR" DecimalPlaces="2"/>
                   <RateDescription>
-                    <Text>Promotional rate</Text>
-                    <Text>Free valet/self parking and turndown service</Text>
+                    <Text>Tarif promotionnel</Text>
+                    <Text>Gratuit pour les clients HRS: Quotidien gratuit, Parking attenant à l'hôtel</Text>
                   </RateDescription>
                 </Rate>
               </Rates>
@@ -227,32 +240,60 @@ The initial Search request (see above) is followed up by an multi-property Avail
           <GuestCounts>
             <GuestCount Count="1"/>
           </GuestCounts>
-          <TimeSpan Start="2018-02-12" End="2018-02-13" />
-          <BasicPropertyInfo HotelCode="22222" />
+          <TimeSpan End="2019-05-23" Start="2019-05-22"/>
+          <BasicPropertyInfo HotelCode="36151" HotelName="Château de la Pioline">
+            <Address>
+              <AddressLine>260 Rue Guillaume du Vair</AddressLine>
+              <CityName>AIX EN PROVENCE</CityName>
+              <PostalCode>13546</PostalCode>
+              <CountryName Code="FR">French Republic France</CountryName>
+            </Address>
+            <ContactNumbers>
+              <ContactNumber PhoneNumber="33442522727"/>
+            </ContactNumbers>
+          </BasicPropertyInfo>
         </RoomStay>
         <RoomStay>
           <RoomTypes>
             <RoomType RoomID="f7631619">
               <RoomDescription>
-                <Text>Standard Room with garden view. 1 king bed and sofa bed.</Text>
+                <Text>La chambre standard est équipée de douche/WC ou de baignoire/WC.</Text>
               </RoomDescription>
+              <Amenities>
+                <Amenity ExistsCode="1" RoomAmenity="55"/>
+                <Amenity ExistsCode="1" RoomAmenity="56"/>
+                <Amenity ExistsCode="1" RoomAmenity="4"/>
+                <Amenity ExistsCode="1" RoomAmenity="28"/>
+                <Amenity ExistsCode="1" RoomAmenity="210"/>
+                <Amenity ExistsCode="1" RoomAmenity="92"/>
+                <Amenity ExistsCode="1" RoomAmenity="2"/>
+                <Amenity ExistsCode="1" RoomAmenity="126"/>
+                <Amenity ExistsCode="1" RoomAmenity="19"/>
+                <Amenity ExistsCode="1" RoomAmenity="13"/>
+                <Amenity ExistsCode="1" RoomAmenity="96"/>
+                <Amenity ExistsCode="1" RoomAmenity="50"/>
+                <Amenity ExistsCode="1" RoomAmenity="69"/>
+                <Amenity ExistsCode="1" RoomAmenity="107"/>
+                <Amenity ExistsCode="1" RoomAmenity="10"/>
+              </Amenities>
             </RoomType>
           </RoomTypes>
           <RatePlans>
-            <RatePlan AvailabilityStatus="AvailableForSale" RatePlanID="MB4YV34">
+            <RatePlan AvailabilityStatus="AvailableForSale" PrepaidIndicator="false" RatePlanID="MB4YV34">
               <Guarantee GuaranteeType="Deposit"/>
               <CancelPenalties>
-                <CancelPenalty NoCancelInd="true">
-                  <Deadline AbsoluteDeadline="2018-02-12T18:00:00"/>
+                <CancelPenalty NonRefundable="true">
+                  <Deadline AbsoluteDeadline="2019-04-15T12:51:47"/>
                 </CancelPenalty>
               </CancelPenalties>
-              <MealsIncluded Breakfast="false" />
+              <MealsIncluded Breakfast="false" Dinner="false" Lunch="false"/>
             </RatePlan>
           </RatePlans>
           <RoomRates>
             <RoomRate RatePlanID="MB4YV34" RoomID="f7631619">
               <Rates>
-                <Rate RateTimeUnit="FullDuration">
+                <Rate ChargeType="18" GuaranteedInd="true" NumberOfUnits="1" RateTimeUnit="FullDuration"
+                      RoomPricingType="Per stay" UnitMultiplier="1">
                   <PaymentPolicies>
                     <GuaranteePayment>
                       <AcceptedPayments>
@@ -273,10 +314,10 @@ The initial Search request (see above) is followed up by an multi-property Avail
                       </AcceptedPayments>
                     </GuaranteePayment>
                   </PaymentPolicies>
-                  <Total AmountAfterTax="149.00" AmountBeforeTax="141.23" CurrencyCode="USD"/>
+                  <Total AmountAfterTax="149.00" AmountBeforeTax="141.23" CurrencyCode="EUR" DecimalPlaces="2"/>
                   <RateDescription>
                     <Text>Hot Deal</Text>
-                    <Text>Free valet/self parking</Text>
+                    <Text>Gratuit pour les clients HRS: Quotidien gratuit, Parking attenant à l'hôtel</Text>
                   </RateDescription>
                 </Rate>
               </Rates>
@@ -285,11 +326,21 @@ The initial Search request (see above) is followed up by an multi-property Avail
           <GuestCounts>
             <GuestCount Count="1"/>
           </GuestCounts>
-          <TimeSpan End="2018-02-13" Start="2018-05-12" />
-          <BasicPropertyInfo HotelCode="50709" />
+          <TimeSpan End="2019-05-23" Start="2019-05-22"/>
+          <BasicPropertyInfo HotelCode="36151" HotelName="Château de la Pioline">
+            <Address>
+              <AddressLine>260 Rue Guillaume du Vair</AddressLine>
+              <CityName>AIX EN PROVENCE</CityName>
+              <PostalCode>13546</PostalCode>
+              <CountryName Code="FR">French Republic France</CountryName>
+            </Address>
+            <ContactNumbers>
+              <ContactNumber PhoneNumber="33442522727"/>
+            </ContactNumbers>
+          </BasicPropertyInfo>
         </RoomStay>
         <RoomStay>
-          ... additional RoomStay nodes follow here for all available rooms for all hotels (properties) per
+          ... and another RoomStay nodes follow here for all the returned rooms for all the hotels (properties) per
           Availability request
         </RoomStay>
       </RoomStays>
@@ -299,7 +350,7 @@ The initial Search request (see above) is followed up by an multi-property Avail
 ```
 
 
-### Search results displayed
+#### Search results displayed
 
 Search results page displaying hotels, based on Search response, and their rates, based on Availability response:
 
@@ -312,11 +363,11 @@ WIth Availability response also cancellation information comes which can be disp
 
 
 
-# Hotel Description
+#### Hotel Description
 
 ![./media/image1.png](./images/examples/5_link.png)
 
-### Request
+#### Request
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -331,19 +382,17 @@ WIth Availability response also cancellation information comes which can be disp
                                 EchoToken="A78F3641-8674-43F9-B58C-AD928D1A75D9"
                                 Version="3" PrimaryLangID="en" AltLangID="en">
       <POS>
-        <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
-        </Source>
+        <Source ISOCurrency="USD"></Source>
       </POS>
       <HotelDescriptiveInfos>
-        <HotelDescriptiveInfo ChainCode="CY" HotelCode="419430"></HotelDescriptiveInfo>
+        <HotelDescriptiveInfo ChainCode="ZZ" HotelCode="419430"></HotelDescriptiveInfo>
       </HotelDescriptiveInfos>
     </OTA_HotelDescriptiveInfoRQ>
   </Body>
 </Envelope>
 ```
 
-### Response
+#### Response
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -353,7 +402,7 @@ WIth Availability response also cancellation information comes which can be disp
                                 xmlns:ns2="http://www.concur.com/webservice/auth">
       <Success/>
       <HotelDescriptiveContents>
-        <HotelDescriptiveContent ChainCode="CY" HotelCode="419430" HotelName="Courtyard Prague Airport">
+        <HotelDescriptiveContent ChainCode="ZZ" HotelCode="419430" HotelName="Courtyard Prague Airport">
           <HotelInfo>
             <Descriptions>
               <DescriptiveText>Prague (PRG): The Europort building which housed the hotel is located in front of the
@@ -375,17 +424,17 @@ WIth Availability response also cancellation information comes which can be disp
               <ImageItems>
                 <ImageItem>
                   <ImageFormat>
-                    <URL>https://iut-foto-origin.hrsstatic.com/foto/3/8/9/8/389886/389886_fi_451616.jpg</URL>
+                    <URL>http://iut-foto-origin.hrsstatic.com/foto/3/8/9/8/389886/389886_fi_451616.jpg</URL>
                   </ImageFormat>
                 </ImageItem>
                 <ImageItem>
                   <ImageFormat>
-                    <URL>https://iut-foto-origin.hrsstatic.com/foto/3/8/9/8/389886/389886_u_6302064.jpg</URL>
+                    <URL>http://iut-foto-origin.hrsstatic.com/foto/3/8/9/8/389886/389886_u_6302064.jpg</URL>
                   </ImageFormat>
                 </ImageItem>
                 <ImageItem>
                   <ImageFormat>
-                    <URL>https://iut-foto-origin.hrsstatic.com/foto/3/8/9/8/389886/389886_u_451896.jpg</URL>
+                    <URL>http://iut-foto-origin.hrsstatic.com/foto/3/8/9/8/389886/389886_u_451896.jpg</URL>
                   </ImageFormat>
                 </ImageItem>
               </ImageItems>
@@ -408,12 +457,12 @@ WIth Availability response also cancellation information comes which can be disp
 ```
 
 
-### Hotel Details displayed
+#### Hotel Details displayed
 
 ![./media/image1.png](./images/examples/5_1.png)
 
 
-# Reservation
+#### Reservation
 
 ![./media/image1.png](./images/examples/4.png)
 ![./media/image1.png](./images/examples/6.png)
@@ -421,7 +470,7 @@ WIth Availability response also cancellation information comes which can be disp
 ![./media/image1.png](./images/examples/6_1.png)
 ![./media/image1.png](./images/examples/6_2.png)
 
-### Request
+#### Request
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -436,9 +485,7 @@ WIth Availability response also cancellation information comes which can be disp
                     EchoToken="6C85DDBD-EB62-444D-B2C3-F59BDF65BE98"
                     Version="6" PrimaryLangID="en" AltLangID="en">
       <POS>
-        <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
-        </Source>
+        <Source ISOCurrency="USD"></Source>
       </POS>
       <HotelReservations>
         <HotelReservation>
@@ -502,7 +549,7 @@ WIth Availability response also cancellation information comes which can be disp
 ```
 
 
-### Response
+#### Response
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -627,13 +674,13 @@ WIth Availability response also cancellation information comes which can be disp
 ```
 
 
-# Read
+#### Read
 
 ![./media/image1.png](./images/examples/7.png)
 ![./media/image1.png](./images/examples/8.png)
 ![./media/image1.png](./images/examples/9.png)
 
-### Request
+#### Request
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -648,9 +695,7 @@ WIth Availability response also cancellation information comes which can be disp
                 EchoToken="4E1B8BF4-ACBD-4709-9FCC-B59EB2550086"
                 Version="5.002" PrimaryLangID="en" AltLangID="en">
       <POS>
-        <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
-        </Source>
+        <Source ISOCurrency="USD"></Source>
       </POS>
       <UniqueID Type="14" ID="88618333"></UniqueID>
     </OTA_ReadRQ>
@@ -659,7 +704,7 @@ WIth Availability response also cancellation information comes which can be disp
 ```
 
 
-### Response
+#### Response
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -790,17 +835,17 @@ WIth Availability response also cancellation information comes which can be disp
   </soap:Body>
 </soap:Envelope>
 ```
-### Itinerary displayed
+#### Itinerary displayed
 
 ![./media/image1.png](./images/examples/10_1.png)
 ![./media/image1.png](./images/examples/10_2.png)
 
-# Cancel
+#### Cancel
 
 ![./media/image1.png](./images/examples/12.png)
 ![./media/image1.png](./images/examples/14.png)
 
-### Request
+#### Request
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -815,9 +860,7 @@ WIth Availability response also cancellation information comes which can be disp
                   EchoToken="2186EB84-23D9-4977-B8A5-B5083C8DE228"
                   Version="3" PrimaryLangID="en" AltLangID="en">
       <POS>
-        <Source ISOCurrency="USD">
-          <RequestorID Type="1" ID="HTL011235"></RequestorID>
-        </Source>
+        <Source ISOCurrency="USD"></Source>
       </POS>
       <UniqueID Type="14" ID="88618333"></UniqueID>
     </OTA_CancelRQ>
@@ -826,7 +869,7 @@ WIth Availability response also cancellation information comes which can be disp
 ```
 
 
-### Response
+#### Response
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

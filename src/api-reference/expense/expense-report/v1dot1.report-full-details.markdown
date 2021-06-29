@@ -1,12 +1,14 @@
----
-title: Report Full Details v1.1
-layout: reference
 
-redirect_from:
- - /api-reference-deprecated/version-one-one/expense-report/get-report-full-details.html
----
+## Report Full Details v1.1
 
-{% include deprecation-alert.html %}
+<div id="attn-depr">
+<p>This API has been deprecated.</p>
+
+<p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+</div>
+
+Learn more in the [API Lifecycle & Deprecation Policy.](/tools-support/deprecation-policy.html)
+
 
 Retrieves the full set of information for the report. Includes the Report Header, Entry, Attendee, Itemization and Allocation details.
 

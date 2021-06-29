@@ -1,0 +1,243 @@
+I"�5<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  <p>Deprecation Date: 05/19/2016</p>
+  
+  
+  <p>Unsupported Date: 11/19/2016</p>
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<p>Expense Entry Itemizations are children of an expense entry that subdivide the expense. A common use case for itemizations is on a hotel bill, which can have separate itemizations for room rate, room tax, and services such as laundry or minibar.</p>
+
+<h2 id="uri">URI</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}/entry/{entryId}/itemization/{itemizationId}
+</code></pre></div></div>
+
+<h2 id="post-expense-entry-itemization">POST Expense Entry Itemization</h2>
+
+<p>Creates or updates an itemization record for the specified expense entry.</p>
+
+<p><strong>NOTE</strong>: Posting expense report information is a multi-stage process. Refer to the Processes section of the Expense Report Web Service page for the steps required to post new expense reports and entries.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="request-parameters">Request parameters</h4>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Required/Optional</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{_reportId_}</code></td>
+      <td>Required</td>
+      <td>The unique identifier for the expense report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{_entryId_}/Itemization</code></td>
+      <td>Required</td>
+      <td>The unique identifier for the expense entry and the Itemization keyword.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{_itemizationID_}</code></td>
+      <td>Optional</td>
+      <td>The unique identifier for the itemization.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Examples:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}/entry/{entryId}/itemization
+https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}/entry/{entryId}/itemization/{itemizationId}
+</code></pre></div></div>
+
+<h4 id="uri-sources">URI Sources</h4>
+
+<ul>
+  <li>The reportId value is returned by the Get List of Reports function, and as part of the <strong>Report-Details-Url</strong> element of the Post Expense Report Header function.</li>
+  <li>The entryId value is returned in the <strong>RpeKey</strong> element of the Get Report Details function.</li>
+  <li>The itemizationId is returned as part of the <strong>Itemization-Url</strong> value returned by this function.</li>
+</ul>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li>Authorization header with OAuth token for valid Concur user. Required.</li>
+</ul>
+
+<p>The OAuth Consumer must have one of the following roles to post itemizations for expenses in reports that they do not own: Web Services Admin for Professional, or Can Administer for Standard.</p>
+
+<h4 id="content-type-header">Content-Type header</h4>
+
+<p>application/xml</p>
+
+<h4 id="payload">Payload</h4>
+
+<p>This request contains an <strong>ExpenseItemizations</strong> parent element with an <strong>Itemization</strong> parent element for each included itemization. The <strong>Itemization</strong> parent element has the following child elements.</p>
+
+<h5 id="itemization-elements">Itemization elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ExpKey</td>
+      <td>Y</td>
+      <td>The expense type key for the expense. Expense Type Keys are returned in the <strong>ExpKey</strong> element by the Get Expense Group Configuration endpoint. The expense type key cannot be modified when updating expense entries.</td>
+    </tr>
+    <tr>
+      <td>Description</td>
+      <td>Depends on configuration</td>
+      <td>The description for the expense.</td>
+    </tr>
+    <tr>
+      <td>TransactionAmount</td>
+      <td>Y</td>
+      <td>The total amount of the itemization in the original currency, with up to three decimal places. Example: 123.654</td>
+    </tr>
+    <tr>
+      <td>PostedAmount</td>
+      <td>Depends on configuration</td>
+      <td>The amount of the itemization in the user’s reimbursement currency, with up to three decimal places. Example: 123.654. May vary from transaction amount if some of the expense is marked personal or if it has been converted to another currency. See <strong>Notes</strong> for more information.</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom20</td>
+      <td>Depends on configuration</td>
+      <td>The Expense Entry Form custom fields. Itemizations are child entries to the expense entry, and they share the custom fields. May be required depending on configuration. Refer to the Processes, <strong>Post Expense Report Data</strong> section of Expense Report for the steps necessary to gather required field information. <br /><strong>NOTE</strong>: If any of the custom fields are configured to contain list values, please refer to the Posting Custom List Items page for information on how to correctly submit list item values.</td>
+    </tr>
+    <tr>
+      <td>IsPersonal</td>
+      <td>N</td>
+      <td>Whether the expense entry is a personal expense. Personal expenses are not reimbursed in Concur Expense. Personal expenses cannot be itemized. Format: N</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>Depends on configuration</td>
+      <td>The itemization comment.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>NOTES:</strong></p>
+
+<ul>
+  <li>The update request must include the <strong>ExpKey</strong> and <strong>TransactionAmount</strong> fields. All other fields only need to be included if they were updated.</li>
+  <li>Update requests cannot change the <strong>ExpKey</strong> for an existing entry.</li>
+  <li>When handling foreign currency transactions, the <strong>CrnCode</strong> and <strong>TransactionAmount</strong> values should indicate the original transaction amount and currency. The <strong>PostedAmount</strong> value should contain the transaction amount converted into the posting currency (the user’s reimbursement currency). Concur will calculate the exchange rate for the expense based on these two fields.</li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="payload-1">Payload</h4>
+
+<p>This request will return an <strong>ItemizationStatusList</strong> parent element with an <strong>ItemizationStatus</strong> child element for each posted itemization. The <strong>ItemizationStatus</strong> element will contain the following child elements.</p>
+
+<h4 id="itemizationstatus-elements">ItemizationStatus elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Index</td>
+      <td>The entry’s sequence in the request.</td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>The status of the request. Possible values are: <br /> 200: The itemization was successfully saved. <br /> 400: The Request includes an error such as a syntax error or missing required element. <br /> 404: The Itemization URI is in the correct syntax, but the system can’t find the itemization. It may have been deleted from the system. <br /> 500: The request has the correct syntax and refers to an existing itemization, but the system was unable to save due to a system conflict.</td>
+    </tr>
+    <tr>
+      <td>Itemization-Url</td>
+      <td>The URI to get the itemization details.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="xml-example-request">XML example request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.concursolutions.com/api/expense/expensereport/v1.1/report/nxxKgLlnROz<span class="nv">$sQ6SKJFjLNs4OWBErcJ8yX</span>/entry/nE0avYnILNNi9qkVyS3lYPuv4Mop4QmVs/Itemization HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ExpenseItemizations</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Itemization&gt;</span>
+    <span class="nt">&lt;ExpKey&gt;</span>DINNR<span class="nt">&lt;/ExpKey&gt;</span>
+    <span class="nt">&lt;Description&gt;</span>Dinner<span class="nt">&lt;/Description&gt;</span>
+    <span class="nt">&lt;TransactionAmount&gt;</span>56.00<span class="nt">&lt;/TransactionAmount&gt;</span>
+    <span class="nt">&lt;PostedAmount&gt;</span>56.00<span class="nt">&lt;/PostedAmount&gt;</span>
+    <span class="nt">&lt;Comment&gt;</span>Dinner<span class="nt">&lt;/Comment&gt;</span>
+    <span class="nt">&lt;Custom1&gt;</span>Dinner<span class="nt">&lt;/Custom1&gt;</span>
+    <span class="nt">&lt;Custom2&gt;</span>Room Service<span class="nt">&lt;/Custom2&gt;</span>
+    <span class="nt">&lt;Custom5&gt;</span>Too late for restaurant<span class="nt">&lt;/Custom5&gt;</span>
+    <span class="nt">&lt;IsPersonal&gt;</span>N<span class="nt">&lt;/IsPersonal&gt;</span>
+  <span class="nt">&lt;/Itemization&gt;</span>
+  <span class="nt">&lt;Itemization&gt;</span>
+    <span class="nt">&lt;ExpKey&gt;</span>LUNCH<span class="nt">&lt;/ExpKey&gt;</span>
+    <span class="nt">&lt;Description&gt;</span>Lunch<span class="nt">&lt;/Description&gt;</span>
+    <span class="nt">&lt;TransactionAmount&gt;</span>24.64<span class="nt">&lt;/TransactionAmount&gt;</span>
+    <span class="nt">&lt;PostedAmount&gt;</span>24.64<span class="nt">&lt;/PostedAmount&gt;</span>
+    <span class="nt">&lt;Comment&gt;</span>Lunch<span class="nt">&lt;/Comment&gt;</span>
+    <span class="nt">&lt;IsPersonal&gt;</span>N<span class="nt">&lt;/IsPersonal&gt;</span>
+  <span class="nt">&lt;/Itemization&gt;</span>
+  <span class="nt">&lt;Itemization&gt;</span>
+    <span class="nt">&lt;ExpKey&gt;</span>BRKFT<span class="nt">&lt;/ExpKey&gt;</span>
+    <span class="nt">&lt;Description&gt;</span>BreakFast<span class="nt">&lt;/Description&gt;</span>
+    <span class="nt">&lt;TransactionAmount&gt;</span>15.34<span class="nt">&lt;/TransactionAmount&gt;</span>
+    <span class="nt">&lt;PostedAmount&gt;</span>15.34<span class="nt">&lt;/PostedAmount&gt;</span>
+    <span class="nt">&lt;Comment&gt;</span>Breakfast<span class="nt">&lt;/Comment&gt;</span>
+    <span class="nt">&lt;IsPersonal&gt;</span>N<span class="nt">&lt;/IsPersonal&gt;</span>
+  <span class="nt">&lt;/Itemization&gt;</span>
+<span class="nt">&lt;/ExpenseItemizations&gt;</span>
+</code></pre></div></div>
+
+<h4 id="xml-example-response">XML example response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ItemizationStatusList</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;ItemizationStatus&gt;</span>
+    <span class="nt">&lt;Index&gt;</span>1<span class="nt">&lt;/Index&gt;</span>
+    <span class="nt">&lt;Status&gt;</span>SUCCESS<span class="nt">&lt;/Status&gt;</span>
+    <span class="nt">&lt;ItemizedEntry-Details-Url&gt;</span>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/nxxKgLlnROz3zHJBCRk$puJLmXp25RsAwp/entry/nE0avYnILNNi9qkVyS3lYPuv4Mop4QmVs/itemization/nE0avYnILN69JgpJGuSCy5qqirEfFcds4<span class="nt">&lt;/ItemizedEntry-Details-Url&gt;</span>
+  <span class="nt">&lt;/ItemizationStatus&gt;</span>
+  <span class="nt">&lt;ItemizationStatus&gt;</span>
+    <span class="nt">&lt;Index&gt;</span>2<span class="nt">&lt;/Index&gt;</span>
+    <span class="nt">&lt;Status&gt;</span>SUCCESS<span class="nt">&lt;/Status&gt;</span>
+    <span class="nt">&lt;ItemizedEntry-Details-Url&gt;</span>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/nxxKgLlnROz3zHJBCRk$puJLmXp25RsAwp/entry/nE0avYnILNNi9qkVyS3lYPuv4Mop4QmVs/itemization/nE0avYnILN65lGE4Zka1YOp608re6ASJb<span class="nt">&lt;/ItemizedEntry-Details-Url&gt;</span>
+  <span class="nt">&lt;/ItemizationStatus&gt;</span>
+  <span class="nt">&lt;ItemizationStatus&gt;</span>
+    <span class="nt">&lt;Index&gt;</span>3<span class="nt">&lt;/Index&gt;</span>
+    <span class="nt">&lt;Status&gt;</span>SUCCESS<span class="nt">&lt;/Status&gt;</span>
+    <span class="nt">&lt;ItemizedEntry-Details-Url&gt;</span>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/nxxKgLlnROz3zHJBCRk$puJLmXp25RsAwp/entry/nE0avYnILNNi9qkVyS3lYPuv4Mop4QmVs/itemization/nE0avYnILN6nw6Hi0jhAuYXAXiXNej7zb<span class="nt">&lt;/ItemizedEntry-Details-Url&gt;</span>
+  <span class="nt">&lt;/ItemizationStatus&gt;</span>
+<span class="nt">&lt;/ItemizationStatusList&gt;</span>
+</code></pre></div></div>
+:ET

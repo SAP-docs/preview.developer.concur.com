@@ -1,0 +1,430 @@
+I"�_<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<ul>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#schema-air-request">Air</a></li>
+      <li><a href="#schema-hotel-request">Hotel</a></li>
+    </ul>
+  </li>
+  <li><a href="#sample-events">Sample Events</a></li>
+</ul>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p>The topic ‘concur.travel.search’ provides travel search information.  Subscribers to this event will receive search criteria for travel searches performed within SAP Concur’s online booking tool.</p>
+
+<p>This event is relevant for applications that are interacting with travelers before they book their trip such as applications that context to the traveler regarding company policy, preferences, or general compliance requirements for booking travel.</p>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="air"><a name="schema-air-request"></a>Air</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the event.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the air search request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Identifies the search event type. Supported values: <code class="language-plaintext highlighter-rouge">travelSearchAir</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">topic</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Topic for subscription. Supported values: <code class="language-plaintext highlighter-rouge">concur.travel.search</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">subTopic</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Identifies a sub topic. Supported values: <code class="language-plaintext highlighter-rouge">airshop.v1.schedule</code>, <code class="language-plaintext highlighter-rouge">airshop.v1.price</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date/time</code></td>
+      <td>Search event time in UTC.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">facts</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-air-search-facts">Air Search Facts</a></td>
+      <td>Facts for air search.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="air-search-facts"><a name="schema-air-search-facts"></a>Air Search Facts</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the company of the traveler.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the user performing the search. Note: In the event travel is booked by an arranger, this will be the traveler’s ID. In cases where a profiled user is booking on behalf of a non profiled guest, this will be the user performing the search.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">arrangerUserId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>If the user is also the traveler, this value will be the same as the userID above. If an arranger is booking on behalf of the traveler, this will uniquely identify the user arranging the trip.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">searchLegs</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Type of air search. Supported values: <code class="language-plaintext highlighter-rouge">RoundTrip</code>, <code class="language-plaintext highlighter-rouge">MultiSeg</code>, <code class="language-plaintext highlighter-rouge">OneWay</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isGuestBooking</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>-</td>
+      <td>Identifies if the booking is a guest.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isFlexFaring</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>-</td>
+      <td>Identifies if search is for flex faring.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">segments</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-air-search-segment">Air Search Segment</a></td>
+      <td>List of segments for search.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">numberOfTravelers</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Number of travelers.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">classOfTrip</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Selected cabin class. Supported values: <code class="language-plaintext highlighter-rouge">F</code> = First Class, <code class="language-plaintext highlighter-rouge">C</code> = Business Class, <code class="language-plaintext highlighter-rouge">W</code> = Premium Economy, <code class="language-plaintext highlighter-rouge">Y</code> = Economy Class</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">airCarriers</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>-</td>
+      <td>If the user filters for individual carriers, this list will be populated with the IATA airline carrier codes. Example: AA, VA, LH</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="air-search-segment"><a name="schema-air-search-segment"></a>Air Search Segment</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departures</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-city">City</a></td>
+      <td>List of departure airports selected by the user. A user can select a city area/hub as point of departure, which will result in an array of multiple airports.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">arrivals</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-city">City</a></td>
+      <td>List of arrival airports selected by the user. A user can select a city area/hub as point of arrival, which will result in an array of multiple airports.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departureDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Date traveler will depart from the point of departure, local time. Either the departure date/time, or the arrival date/time will be populated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departureTime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">HH:MM AM/PM</code></td>
+      <td>Departure time, in local time.  Either the departure date/time, or the arrival date/time will be populated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departureTimeWindow</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Time window (+/-) around selected departure time, in hours. Either the departure date/time, or the arrival date/time will be populated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">arrivalDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Date on which the traveler will arrive at the destination, in local time. Either the departure date/time, or the arrival date/time will be populated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">arrivalTime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">HH:MM AM/PM</code></td>
+      <td>Time at which the traveler will arrive at the destination, in local time.  Either the departure date/time, or the arrival date/time will be populated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">arrivalTimeWindow</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Time window (+/-) around selected arrival time, in hours. Either the departure date/time, or the arrival date/time will be populated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="city"><a name="schema-city"></a>City</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cityName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Name of the city. Example: Frankfurt</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cityIATACode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>IATA code of the city. Example: FRA. Note: If the user searches for a group of airports (e.g. Los Angeles area airports), this code will not be IATA standard. In this case, the city name should be used.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="hotel"><a name="schema-hotel-request"></a>Hotel</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the event.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the hotel search request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Identifies the search event type. Supported  values: <code class="language-plaintext highlighter-rouge">travelSearchHotel</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">topic</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Topic for subscription. Supported values: <code class="language-plaintext highlighter-rouge">concur.travel.search</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">subTopic</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Identifies sub-topic. Supported values: <code class="language-plaintext highlighter-rouge">hotelshop.v1.price</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date/time</code></td>
+      <td>Search event time in UTC.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">facts</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-hotel-search-facts">Hotel Search Facts</a></td>
+      <td>Facts for hotel search.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="hotel-search-facts"><a name="schema-hotel-search-facts"></a>Hotel Search Facts</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the company of the traveler.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">GUID</code></td>
+      <td>Uniquely identifies the user performing the search. Note: In the event travel is booked by an arranger, this will be the traveler’s ID. In cases where a profiled user is booking on behalf of a non-profiled guest, this will be the user performing the search.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">refPointLatitude</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td>Reference point for the search latitude.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">refPointLongitude</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td>Reference point for the search longitude.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">refPointName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Reference point for the search name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">radiusDistance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Distance around the reference point as selected by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">distanceUnit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unit for radius distance. Supported values: <code class="language-plaintext highlighter-rouge">Mile</code>, <code class="language-plaintext highlighter-rouge">Kilometer</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">checkInDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Check in date, in local time.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">checkOutDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Check out date, in local time.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sample-events"><a name="sample-events"></a>Sample Events</h2>
+
+<h3 id="air-1"><a name="sample-air-event"></a>Air</h3>
+
+<p>Sample roundtrip air search</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00e4aeb3-d181-4881-89b1-0d0b5418968f"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"51AB4E74-1287-4B20-87FB-98A93CE4CEEB"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"travelSearchAir"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concur.travel.search"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-10-15T14:19:06.752Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arrangerUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"searchLegs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RoundTrip"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"isGuestBooking"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"isFlexFaring"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"segments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"departures"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"LHR"</span><span class="w">
+       </span><span class="p">],</span><span class="w">
+     </span><span class="nl">"arrivals"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"FRA"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+     </span><span class="nl">"departureDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1/15/2019"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"departureTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9:00 AM"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"departureTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"arrivalDate"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"arrivalTime"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"arrivalTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+     </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"departures"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"FRA"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"arrivals"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+         </span><span class="s2">"LHR"</span><span class="w">
+       </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"departureDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1/16/2019"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"departureTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3:00 PM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"departureTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"arrivalDate"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"arrivalTime"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"arrivalTimeWindow"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+     </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"numberOfTravelers"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"classOfTrip"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"airCarriers"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span></code></pre></div></div>
+:ET

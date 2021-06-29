@@ -1,0 +1,218 @@
+I"E/<ul>
+  <li><a href="#learn">Learn More</a></li>
+  <li><a href="#quick-connect">Quick Connect</a></li>
+  <li><a href="#sequence-flow">API Sequence Flow</a>
+    <ul>
+      <li><a href="#matrix">FI Sequence Flow Matrix</a></li>
+      <li><a href="#expense-pay">Expense Pay</a></li>
+      <li><a href="#nonexpense-pay">Non-Expense Pay Payment Batches (Standard Edition and S2P)</a></li>
+    </ul>
+  </li>
+  <li><a href="#imaging">Imaging</a></li>
+  <li><a href="#timing">Timing to Run FIS</a></li>
+</ul>
+
+<h2 id="learn-more"><a name="learn"></a>Learn More</h2>
+
+<p>An ERP user has two options to obtain data for financial journal entries into the ERP:</p>
+
+<ul>
+  <li>Financial Integration Service (FIS) – data is returned via APIs.</li>
+  <li>Extract files – data is written to a flat file on a batched schedule.</li>
+</ul>
+
+<p>We recommend using data from FIS whenever possible due to the efficiency and advantages it has over batched extract files. If a customer’s ERP requires a file you will create a file based on FIS data, not the extract.</p>
+
+<p>Using FIS data for either of the above situations will simplify processes and enable FIS benefits.</p>
+
+<p>FIS has these benefits over the Extract file process:</p>
+
+<ul>
+  <li>Maintains consistency between SAP Concur solutions and the ERP:
+    <ul>
+      <li>
+        <p>FIS requires a post of the status of the ERP integration back into the SAP Concur solution, per report or invoice. If there is a failure at the ERP, the app will update the affected report or invoice with an error message. The customer will initiate corrective action from within the SAP Concur processor tool. The result is that no expense report or invoice will advance until it can be integrated into the ERP. This process is a change for existing SAP Concur customers who are not accustomed to this awareness between their ERP and SAP Concur solutions.</p>
+      </li>
+      <li>
+        <p>For existing SAP Concur customers, enabling FIS also requires change management discussions regarding expense reports and invoices in process during the switch. Any report created after FIS is enabled will flow to FIS and not the extract file. Reports still in process when FIS is enabled will be accounted for only via the extract file. Customers need to manage their existing integration until those reports or invoices are completely processed.</p>
+      </li>
+    </ul>
+  </li>
+  <li>Real-time integration into the ERP:
+    <ul>
+      <li>Obtain final approved spend data throughout the day and post it to the ERP instead of waiting for the file-based interval to occur once per day.</li>
+    </ul>
+  </li>
+  <li>Payment Confirmation:
+    <ul>
+      <li>ERP partners have the ability to post a payment status of reports into SAP Concur solutions (Expense only at this time).</li>
+      <li>Expense Pay customers who use FIS only reimburse reports that have been successfully posted into their ERP. Conversely, reports processed using the SAE/extract file process have reimbursements sent to the bank independent of the customer’s financial posting.</li>
+    </ul>
+
+    <p>To see the mapping of extract files vs. FIS, review the <a href="./standard-accounting-extract-expense.xlsx">Standard Accounting Extract (SAE)</a> and/or <a href="./payment-request-accounting-extract-invoice.xlsx">Payment Request Accounting Extract (PRAE)</a> files.</p>
+  </li>
+</ul>
+
+<h2 id="quick-connect"><a name="quick-connect"></a>Quick Connect</h2>
+
+<p>Quick Connect describes the process customers use to connect their SAP Concur site with an App Center Partner’s Enterprise application. See the separate <a href="./quick-connect-scope-for-enterprise-apps.html">Quick Connect</a> scope document for details to guide you through the development of this required piece to your certified application.</p>
+
+<h2 id="api-sequence-flow"><a name="sequence-flow"></a>API Sequence Flow</h2>
+
+<p>The flow consists of calling the API in this sequence:</p>
+
+<ol>
+  <li><a href="/api-reference/financial-integration/v4.financial-integration.html#get-transactions">Get Financial Transactions</a> - Obtain final-approved reports (or invoices) from the FIS queue.</li>
+  <li><a href="/api-reference/financial-integration/v4.financial-integration.html#post-acknowledgements">Post Financial Transaction Acknowledgements</a> - Acknowledge each report or invoice has been obtained.</li>
+  <li><a href="/api-reference/financial-integration/v4.financial-integration.html#post-confirmations">Post Financial Transactions Confirmations</a> - Post the status of the ERP integration for each report (success or failure) back into the SAP Concur solution after integrating into the customer’s ERP.</li>
+  <li><a href="/api-reference/financial-integration/v4.financial-integration.html#payment-confirmations">Post Financial Payment Confirmations</a> - Post the financial payment results into the SAP Concur solution.</li>
+</ol>
+
+<p>The following are the recommended steps when you create a file based on FIS data prior to importing into the ERP:</p>
+
+<ol>
+  <li>You will remove any report (or invoice) from your file if it is rejected at the ERP.</li>
+  <li>You will then post a rejected status for that report back into the SAP Concur solution via FIS post confirmation endpoint. (see step 3 above)</li>
+  <li>The customer will then address any rejected reports directly in the SAP Concur solution where they will be re-processed at a later date and eventually included in FIS.</li>
+  <li>You will re-try your file without the rejected reports. Upon 100% successful import of the remaining reports, you will post successful statuses of those reports back into the SAP Concur solution via FIS.</li>
+</ol>
+
+<p>The above steps will maintain consistency between the customer’s ERP and their SAP Concur Spend Management service. If they cannot be performed due to error-handling logistics between you and customer, then you can post successes for the file content back into the SAP Concur solution. The customer will handle the errors directly with the ERP. However, their ERP and the SAP Concur data will not be in sync at this point.</p>
+
+<h3 id="fi-sequence-flow-matrix"><a name="matrix"></a>FI Sequence Flow Matrix</h3>
+
+<p>The following table describes the expected events and their statuses.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Sequence</th>
+      <th>Expected Event</th>
+      <th>Concur Expense Payment Status</th>
+      <th>FIS Posting Document Status</th>
+      <th>ERP</th>
+      <th>FIS</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Report is submitted by user and enters workflow</td>
+      <td>Submitted/Not Paid</td>
+      <td>Doesn’t exist</td>
+      <td>Doesn’t exist</td>
+      <td>NA</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Report is “final approved” in Processor workflow step</td>
+      <td>Processing Payment</td>
+      <td>Queued and Ready</td>
+      <td>Doesn’t exist</td>
+      <td>NA</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>ERP calls FIS for “ready” posting documents</td>
+      <td>Processing Payment</td>
+      <td>Queued and Ready</td>
+      <td>Received</td>
+      <td>GET financial documents</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>ERP calls FIS to acknowledge documents retrieved</td>
+      <td>Processing Payment</td>
+      <td>Acknowledged</td>
+      <td>Acknowledged</td>
+      <td>POST acknowledge financial documents</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>ERP Sends Posting Feedback - Failed</td>
+      <td>Financial Posting Failed</td>
+      <td>Posting Failed</td>
+      <td>Posting Failed</td>
+      <td>POST Posting Feedback</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Processor Recalls Report for Posting Corrections</td>
+      <td>Not Paid</td>
+      <td>Posting Failed</td>
+      <td>Posting Failed</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>Report is re-submitted with corrections and re-enters workflow (steps 1-4 repeat)</td>
+      <td>Submitted/Not Paid</td>
+      <td>Posting Failed</td>
+      <td>Posting Failed</td>
+      <td>N/A</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>ERP Sends Posting Feedback – Success</td>
+      <td>Paid</td>
+      <td>Posting Success</td>
+      <td>Posting Success</td>
+      <td>POST Posting Feedback</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>ERP Sends Payment Feedback (Optional)</td>
+      <td>Payment Confirmed</td>
+      <td>Payment Confirmed</td>
+      <td>Paid</td>
+      <td>POST Payment Confirmation</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="expense-pay"><a name="expense-pay"></a>Expense Pay</h3>
+
+<ul>
+  <li>Batch close process calls FIS to confirm if expense report is successfully posted.</li>
+  <li>Demand is processed and is sent to the bank if status in FIS = SUCCESS.</li>
+  <li>Demand is not processed and is not sent to the bank if status in FIS = FAILED.</li>
+  <li>These statuses are determined by the Posting Confirmation API.</li>
+  <li>This “check” ensures that money is only reimbursed for reports successfully posted in the ERP.</li>
+  <li>When reports are extracted using the SAE/extract file process, payment demands are sent to the bank independent of the customer’s financial posting.</li>
+</ul>
+
+<h3 id="non-expense-pay-payment-batches-universal-edition-and-universal-to-professional-upgrade-edition"><a name="nonexpense-pay"></a>Non-Expense Pay Payment Batches (Universal Edition and Universal-to-Professional Upgrade Edition)</h3>
+
+<ul>
+  <li>Current extract process requires a “batch close” event to trigger the extract job and generate the extract.</li>
+  <li>FIS flow is triggered each time a report reaches the proper workflow status and has no dependency on the status of a batch resulting in a near real-time financial posting process.</li>
+</ul>
+
+<h2 id="imaging"><a name="imaging"></a>Imaging</h2>
+
+<p><strong>Expense</strong></p>
+
+<p>Use the entryreceiptID to obtain a short-lived URL (15 minutes ttl) that can be rendered to obtain the receipt image.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/image/v1.0/report/{entryreceiptID}
+</code></pre></div></div>
+
+<p><strong>Invoice</strong></p>
+
+<p>Use the requestID to obtain a URL, copy the portion up to the “?” and render the image in a separate browser.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/image/v1.0/invoice/{requestID}
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;Image xmlns="http://www.concursolutions.com/api/image/2011/02" xmlns:i="http://www.w3.org/2001/XMLSchema-instance"&gt;
+    &lt;Id&gt;2A5A2971F671480083FF&lt;/Id&gt;
+ &lt;Url&gt;https://imaginginvoiceupload.concursolutions.com/file/p0085104gigw/92608D9780BAB1DB6CF884CE08C115AA660E198045E42357812E976AD35DB3A7B573A0549B4859A742xxxxx?id=2A5A2971F671480083FF&amp;amp;e=p0085104gigw&amp;amp;t=AN&amp;amp;s=ConcurConnect&lt;/Url&gt;
+&lt;/Image&gt;
+</code></pre></div></div>
+
+<h2 id="timing-to-run-fis"><a name="timing"></a>Timing to Run FIS</h2>
+
+<p>Review the timing of the FIS API requests to ensure they are not interfering with the customer administrator’s ability to send an expense report (or invoice) back to the employee prior to ERP integration. This may require the development of a button in the UI of the integration to allow the customer to initiate the FIS process on demand. This would eliminate the need to coordinate the timing.</p>
+
+<p>For example, the SAP Concur workflow typically includes a final approval step that is completed by Finance/Accounting. Once the accountant final-approves a report (or invoice), the report is queued into FIS. If necessary, the accountant can pull this report back and send it back to the employee for adjustment prior to ERP integration, but only if you have not yet picked up the report. So, the process should include awareness of the timing between you and your customer.</p>
+:ET

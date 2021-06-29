@@ -1,0 +1,896 @@
+I"ܩ<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>The Allocations API can be used to read the allocations that belong to a specific expense on an expense report and modify an allocation on an existing expense in an expense report. This API can be used to change custom field attributes, etc.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#specific-expense-allocations">Retrieve allocations on a specific Expense ID and Report ID</a></li>
+  <li><a href="#retrieve-allocation-id">Retrieve an Allocation by ID</a></li>
+  <li><a href="#update-allocation-id">Update an Allocation</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#report-allocation-response-schema">Report Allocation Response</a></li>
+      <li><a href="#custom-data-schema">Custom Data</a></li>
+      <li><a href="#amount-schema">Amount</a></li>
+      <li><a href="#update-report-allocation-schema">Update Report Allocation</a></li>
+      <li><a href="#allocation-schema">Allocation</a></li>
+      <li><a href="#link-schema">Link</a></li>
+    </ul>
+  </li>
+  <li><a href="#error-schema">Error</a></li>
+  <li><a href="#validation-errors-schema">Validation Errors</a></li>
+</ul>
+
+<h2 id="prior-versions">Prior Versions</h2>
+
+<ul>
+  <li>Allocations v3 documentation is available <a href="./api-reference/expense/allocations/expense-allocations.html">here</a></li>
+</ul>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<p>Required Scopes:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.report.read</code></td>
+      <td>Get information about expense reports.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code></td>
+      <td>Read and write expense report headers.</td>
+      <td>PATCH</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user.read</code></td>
+      <td>Get User Information, necessary for <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Optional Scope:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spend.listitem.read</code></td>
+      <td>Read only access to spend list items <code class="language-plaintext highlighter-rouge">listItemId</code>.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spend.list.read</code></td>
+      <td>Read only access to spend list and category details.</td>
+      <td>GET</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the User v3.1 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports both company level and user level access tokens.</p>
+
+<h2 id="retrieve-allocations-of-an-expense-id-on-a-specific-report-id"><a name="report-expense-allocations"></a>Retrieve Allocations of an Expense ID on a Specific Report ID</h2>
+
+<p>Retrieves the allocations that belong to a specific expense ID on a specific report ID.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/expenses/<span class="o">{</span>expenseId<span class="o">}</span>/allocations
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value: <code class="language-plaintext highlighter-rouge">TRAVELER</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report to which the expense entry belongs whose allocations are being retrieved.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the expense entry whose allocations are being retrieved.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#allocations-response-schema">Allocations Response</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/29EE3C62F5D844458828A5C1086072D1/allocations'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Expense-Allocation-test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">[</span>
+    <span class="o">{</span>
+        <span class="s2">"customData"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"id"</span>: <span class="s2">"custom9"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"D3954B47BCEC9446A4FFC49E0000B46E"</span>,
+                <span class="s2">"isValid"</span>: <span class="nb">true</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"allocationId"</span>: <span class="s2">"3BBB494511E1C74DA04469C45B039871"</span>,
+        <span class="s2">"accountCode"</span>: <span class="s2">"Pending Client"</span>,
+        <span class="s2">"overLimitAccountCode"</span>: null,
+        <span class="s2">"allocationAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 250.00,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"approvedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 250.00,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"claimedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 250.00,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"expenseId"</span>: <span class="s2">"29EE3C62F5D844458828A5C1086072D1"</span>,
+        <span class="s2">"isSystemAllocation"</span>: <span class="nb">false</span>,
+        <span class="s2">"isPercentEdited"</span>: <span class="nb">false</span>,
+        <span class="s2">"percentage"</span>: 50.00000000
+    <span class="o">}</span>,
+    <span class="o">{</span>
+        <span class="s2">"customData"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"id"</span>: <span class="s2">"custom9"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"88EACA3116581248BCE27956DE67647D"</span>,
+                <span class="s2">"isValid"</span>: <span class="nb">true</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"allocationId"</span>: <span class="s2">"4DB06B4360E31443AD43ED52B2AE007E"</span>,
+        <span class="s2">"accountCode"</span>: <span class="s2">"Pending Client"</span>,
+        <span class="s2">"overLimitAccountCode"</span>: null,
+        <span class="s2">"allocationAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 250.00,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"approvedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 250.00,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"claimedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 250.00,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"expenseId"</span>: <span class="s2">"29EE3C62F5D844458828A5C1086072D1"</span>,
+        <span class="s2">"isSystemAllocation"</span>: <span class="nb">false</span>,
+        <span class="s2">"isPercentEdited"</span>: <span class="nb">false</span>,
+        <span class="s2">"percentage"</span>: 50.00000000
+    <span class="o">}</span>
+<span class="o">]</span>
+</code></pre></div></div>
+
+<h2 id="retrieve-an-allocation-by-id"><a name="retrieve-allocation-id"></a>Retrieve an Allocation by ID</h2>
+
+<p>Retrieves the details of the specific allocation of an expense entry on a report.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/allocations/<span class="o">{</span>allocationId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-1">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">PROXY</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report to which this allocation belongs.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allocationId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the allocation that is being retrieved.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#allocation-id-response-schema">Allocation by ID Response</a></li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/allocations/3BBB494511E1C74DA04469C45B039871'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Expense-Allocation-test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">{</span>
+    <span class="s2">"customData"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"custom9"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"D3954B47BCEC9446A4FFC49E0000B46E"</span>,
+            <span class="s2">"isValid"</span>: <span class="nb">true</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"allocationId"</span>: <span class="s2">"3BBB494511E1C74DA04469C45B039871"</span>,
+    <span class="s2">"accountCode"</span>: <span class="s2">"Pending Client"</span>,
+    <span class="s2">"overLimitAccountCode"</span>: null,
+    <span class="s2">"allocationAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 250.00,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"approvedAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 250.00,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"claimedAmount"</span>: <span class="o">{</span>
+        <span class="s2">"value"</span>: 250.00,
+        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+    <span class="o">}</span>,
+    <span class="s2">"expenseId"</span>: <span class="s2">"29EE3C62F5D844458828A5C1086072D1"</span>,
+    <span class="s2">"isSystemAllocation"</span>: <span class="nb">false</span>,
+    <span class="s2">"isPercentEdited"</span>: <span class="nb">false</span>,
+    <span class="s2">"percentage"</span>: 50.00000000
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="update-a-specific-allocation"><a name="update-allocation-id"></a>Update a Specific Allocation</h2>
+
+<p>Updates the attributes of a specific allocation.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-4">Request</h3>
+
+<h4 id="uri-2">URI</h4>
+
+<h5 id="template-2">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/allocations/<span class="o">{</span>allocationId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-2">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v1.user.html">User Profile v1.0</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">PROXY</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report to which this allocation belongs.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allocationId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the allocation that is being retrieved.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="rest-design-specification">REST Design Specification</h4>
+
+<p>PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:</p>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#patch-allocation-request-schema">Patch Allocation Request</a></li>
+</ul>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="status-codes-2">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-5">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<ul>
+  <li><a href="#patch-allocation-response-schema">Patch Allocation Response</a></li>
+</ul>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/allocations/3BBB494511E1C74DA04469C45B039871'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Viswa test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: text/plain'</span> <span class="se">\</span>
+<span class="nt">--data-raw</span> <span class="s1">'{
+    "allocation":{
+    "customData": [
+        {
+            "id": "custom9",
+            "value": "058713001E2CD943824280D9275FDC3F",
+            "isValid": true
+        }
+    ]
+    },
+
+    "expenseIds": ["29EE3C62F5D844458828A5C1086072D1"]
+
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="reportallocationresponse"><a name="report-allocation-response-schema"></a>ReportAllocationResponse</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">accountCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The ledger account code associated with the allocation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allocationAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td>The amount of the allocation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allocationId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the allocation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvedAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td>The pro-rated amount of the allocation approved for reimbursement based on the approved expense amount.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">claimedAmount</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>-</td>
+      <td>The amount of the allocation requested for reimbursement.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customData</code></td>
+      <td><a href="#custom-data-schema"><code class="language-plaintext highlighter-rouge">CustomData</code></a></td>
+      <td>-</td>
+      <td>The details from the <code class="language-plaintext highlighter-rouge">customData</code> fields. These fields may not have data, depending on the configuration.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the expense associated with the allocation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isPercentEdited</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the allocation percent has been edited.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isSystemAllocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the allocation is a system allocation, usually hidden from the user. If displayed to the user, should be read-only.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">overLimitAccountCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The ledger account code associated with the allocation if it exceeds a pre-defined threshold, for example, the user’s travel allowance limit.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">percentage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td><strong>Required</strong> The percentage of the total expense that this allocation represents.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="customdata"><a name="custom-data-schema"></a>CustomData</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the custom field. Examples: <code class="language-plaintext highlighter-rouge">custom1</code>, <code class="language-plaintext highlighter-rouge">orgUnit1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isValid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The value of the custom field. This field can have values for all the supported data types such as <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">integer</code>, <code class="language-plaintext highlighter-rouge">boolean</code> and <code class="language-plaintext highlighter-rouge">listItemId</code>. Maximum length: 48 characters</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="amount"><a name="amount-schema"></a>Amount</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The 3-letter ISO 4217 currency code for the expense report currency, based on the user’s assigned reimbursement currency when the report was created. Examples: <code class="language-plaintext highlighter-rouge">USD</code> - US dollars; <code class="language-plaintext highlighter-rouge">BRL</code> - Brazilian real; <code class="language-plaintext highlighter-rouge">CAD</code> - Canadian dollar; <code class="language-plaintext highlighter-rouge">CHF</code> - Swiss franc; <code class="language-plaintext highlighter-rouge">EUR</code> - Euro; <code class="language-plaintext highlighter-rouge">GBO</code> - Pound sterling; <code class="language-plaintext highlighter-rouge">HKD</code> - Hong Kong dollar; <code class="language-plaintext highlighter-rouge">INR</code> - Indian rupee; <code class="language-plaintext highlighter-rouge">MXN</code> - Mexican peso; <code class="language-plaintext highlighter-rouge">NOK</code> - Norwegian krone; <code class="language-plaintext highlighter-rouge">SEK</code> - Swedish krona</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td><strong>Required</strong> The amount in the defined currency.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="updatereportallocation"><a name="update-report-allocation-schema"></a>UpdateReportAllocation</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allocation</code></td>
+      <td><a href="#allocation-schema"><code class="language-plaintext highlighter-rouge">UpdateAllocation</code></a></td>
+      <td>-</td>
+      <td><strong>Required</strong> This is an allocation custom data object to be updated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseIds</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> This is an array of unique identifiers of expenses within this report that are being updated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="updateallocation"><a name="update-allocation-schema"></a>UpdateAllocation</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customData</code></td>
+      <td><a href="#custom-data-schema">CustomData</a></td>
+      <td>-</td>
+      <td>The details from the <code class="language-plaintext highlighter-rouge">customData</code> fields. These fields may not have data, depending on the configuration.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="link"><a name="link-schema"></a>Link</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deprecation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The URL of the related <code class="language-plaintext highlighter-rouge">HATEOAS</code> link that you can use for subsequent calls.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hreflang</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isTemplated</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> Whether the <code class="language-plaintext highlighter-rouge">href</code> is parameterized.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">media</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">method</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The HTTP method required for the related call.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The link relationship that describes how the <code class="language-plaintext highlighter-rouge">href</code> relates to the API call.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">title</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="errormessage"><a name="error-message-schema"></a>ErrorMessage</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the error associated with the response.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The detailed error message.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">httpStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The http response code and phrase for the response.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The URI of the attempted request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date-time</code></td>
+      <td><strong>Required</strong> The time when the error was captured.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">validationErrors</code></td>
+      <td><a href="#validation-error-schema"><code class="language-plaintext highlighter-rouge">ValidationError</code></a></td>
+      <td>-</td>
+      <td>The validation error messages.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="validationerror"><a name="validation-errors-schema"></a>ValidationError</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The ID of the validation error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The detailed message of the validation error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The type of validation which failed.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

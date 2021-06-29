@@ -1,0 +1,1579 @@
+I"B,<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  <p>Deprecation Date: 04/01/2016</p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<p>Current version: <a href="./v2.profile-resource.html">Travel Profile v2</a></p>
+
+<h2 id="description">Description</h2>
+
+<p>The Travel Profile resource represents a Concur travel profile which contains travel-relation information about a user, such as:</p>
+
+<ul>
+  <li>Identity</li>
+  <li>Contact information</li>
+  <li>Rate preferences and discount codes</li>
+  <li>Preferences by travel type</li>
+</ul>
+
+<h2 id="uri">URI</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{InstanceURL}/api/travelprofile/v1.0/profile
+</code></pre></div></div>
+
+<h2 id="operations">Operations</h2>
+
+<ul>
+  <li><a href="#a1">Get a travel profile</a></li>
+  <li><a href="#a2">Get a list of travel profile summaries</a></li>
+</ul>
+
+<h2 id="get-a-travel-profile"><a name="a1">Get a travel profile</a></h2>
+
+<p>Gets the travel profile information for the specified user. The travel profile includes information such as the user’s identity, contact information, rate preferences and discount codes, preferences by travel type, and custom fields. The travel profile information returned by this GET operation depends on whether the caller is a Travel Supplier, a TMC, or a mainstream developer:</p>
+
+<ul>
+  <li>Travel Suppliers can get only the loyalty program information and discount codes for their own loyalty and discount programs.</li>
+  <li>TMCs can get all loyalty programs and discount codes for the specified user.</li>
+  <li>A mainstream developer cannot get any loyalty program or discount information.</li>
+</ul>
+
+<h3 id="request-parameters">Request parameters</h3>
+
+<p>All request paramenters are optional. To identify a specific user by login ID or XMLSyncID, you can specify the following request parameters:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Parameter Type</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>userid_type</td>
+      <td>Path</td>
+      <td>String</td>
+      <td>The type of user identification to use. Possible values are: <strong>login</strong> and <strong>xmlsyncid</strong></td>
+    </tr>
+    <tr>
+      <td>userid_value</td>
+      <td>Path</td>
+      <td>String</td>
+      <td>The user’s login ID or XMLSync ID, depending on which user type is selected. This parameter must be provided in conjunction with the <strong>userid_type</strong> parameter.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="headers">Headers</h3>
+
+<h4 id="content-type-header">Content-Type header</h4>
+
+<p>application/xml</p>
+
+<h4 id="authorization-header">Authorization header</h4>
+
+<p><code class="language-plaintext highlighter-rouge">Authorization: OAuth {access_token}</code></p>
+
+<p>Where <em>access_token</em> is the OAuth 2.0 access token of the user whose travel profile information you want to retrieve. If you want to access company-wide travel profile information, the user account associated with the OAuth 2.0 access token must have a Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
+
+<h3 id="data-model">Data model</h3>
+
+<p>The data model of the response for the GET operation.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ProfileResponse</span> <span class="na">Status=</span><span class="s">"Active|Inactive"</span> <span class="na">Unique=</span><span class="s">"{unique identifier for the user}"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;General&gt;</span>
+    <span class="nt">&lt;NamePrefix</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;FirstName</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;MiddleName</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;LastName</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;NameSuffix</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PreferredName</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;JobTitle</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PreferredLanguage</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;EReceiptOptIn</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;MarketingOptIn</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;HasOpenBooking</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CountryCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CompanyName</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/General&gt;</span>
+  <span class="nt">&lt;Telephones&gt;</span>
+    <span class="nt">&lt;Telephone</span> <span class="na">Type=</span><span class="s">"Cell|Other|Pager|Fax|Home|Work|Primary Mobile Phone"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ContactOptIn</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;CountryCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;PhoneNumber</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Extension</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Telephone&gt;</span>
+  <span class="nt">&lt;/Telephones&gt;</span>
+  <span class="nt">&lt;Addresses&gt;</span>
+    <span class="nt">&lt;Address</span> <span class="na">Type=</span><span class="s">"Home|Work|Billing|Other"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;AttentionLine</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Line1</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Line2</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Line3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;MailStop</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;City</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;StateProvince</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;CountryCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ZipCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Laditude</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Longitude</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Address&gt;</span>
+  <span class="nt">&lt;/Addresses&gt;</span>
+  <span class="nt">&lt;DriversLicenses&gt;</span>
+    <span class="nt">&lt;DriversLicense&gt;</span>
+      <span class="nt">&lt;DriversLicenseNumber</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;IssuingCountry</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;IssuingState</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Expiration</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/DriversLicense&gt;</span>
+  <span class="nt">&lt;/DriversLicenses&gt;</span>
+  <span class="nt">&lt;EmailAddresses&gt;</span>
+    <span class="nt">&lt;EmailAddress</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/EmailAddresses&gt;</span>
+  <span class="nt">&lt;RatePreferences&gt;</span>
+    <span class="nt">&lt;AAARate</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;AARPRate</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;GovtRate</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;MilitaryRate</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/RatePreferences&gt;</span>
+  <span class="nt">&lt;DiscountCodes&gt;</span>
+    <span class="nt">&lt;DiscountCode</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/DiscountCodes&gt;</span>
+  <span class="nt">&lt;Air&gt;</span>
+    <span class="nt">&lt;AirSmokingCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;AirMemberships&gt;</span>
+      <span class="nt">&lt;AirMembership&gt;</span>
+        <span class="nt">&lt;VendorCode</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;AccountNo</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;Status</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;StatusBenefits</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;PointTotal</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;SegmentTotal</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;NextStatus</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/AirMembership&gt;</span>
+    <span class="nt">&lt;/AirMemberships&gt;</span>
+    <span class="nt">&lt;Seat&gt;</span>
+      <span class="nt">&lt;InterRowPositionCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;SectionPositionCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Seat&gt;</span>
+    <span class="nt">&lt;Meals&gt;</span>
+      <span class="nt">&lt;MealCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Meals&gt;</span>
+    <span class="nt">&lt;HomeAirport</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;AirOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;DHSRedressNumber</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;DHSKnownTravelerNumber</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Air&gt;</span>
+  <span class="nt">&lt;Car&gt;</span>
+    <span class="nt">&lt;CarSmokingCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarGPS</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarOption</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarMemberships</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarMembership&gt;</span>
+      <span class="nt">&lt;VendorCode</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;AccountNo</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Status</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;StatusBenefits</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;PointTotal</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;SegmentTotal</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;NextStatus</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;PointsUntilNextStatus</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;SegmentsUntilNextStatus</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/CarMembership&gt;</span>
+    <span class="nt">&lt;CarOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarSkiRack</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Car&gt;</span>
+  <span class="nt">&lt;Hotel&gt;</span>
+    <span class="nt">&lt;SmokingCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;HotelMemberships</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;RoomType</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;HotelOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferFoamPillows</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferCrib</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferRollawayBed</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferGym</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferPool</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferRestaurant</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferWheelchairAccess</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferAccessForBlind</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferRoomService</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;preferEarlyCheckIn</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Hotel&gt;</span>
+  <span class="nt">&lt;CustomFields&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Value</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+  <span class="nt">&lt;/CustomFields&gt;</span>
+<span class="nt">&lt;/ProfileResponse&gt;</span>
+</code></pre></div></div>
+
+<h4 id="profileresponse-root-element">ProfileResponse root element</h4>
+
+<p>The ProfileResponse root element contains the General, Telephones, Addresses, DriversLicenses, EmailAddresses, RatePreferences, DiscountCodes, Air, Car, Hotel, and CustomFields child elements. It has the attributes shown in the Data Model section.</p>
+
+<h4 id="general-elements">General elements</h4>
+
+<p>The General parent element contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NamePrefix</td>
+      <td>String</td>
+      <td>The user’s name prefix. Format: Varchar(60)</td>
+    </tr>
+    <tr>
+      <td>FirstName</td>
+      <td>String</td>
+      <td>The user’s first name. Format: Varchar(32)</td>
+    </tr>
+    <tr>
+      <td>MiddleName</td>
+      <td>String</td>
+      <td>The user’s middle name. Format: Varchar(32)</td>
+    </tr>
+    <tr>
+      <td>LastName</td>
+      <td>String</td>
+      <td>The user’s last name. Format: Varchar(32)</td>
+    </tr>
+    <tr>
+      <td>NameSuffix</td>
+      <td>String</td>
+      <td>The user’s name suffix. Format: Varchar(60)</td>
+    </tr>
+    <tr>
+      <td>PreferredName</td>
+      <td>String</td>
+      <td>The user’s preferred name. Format: Varchar(60)</td>
+    </tr>
+    <tr>
+      <td>JobTitle</td>
+      <td>String</td>
+      <td>The user’s job title. Format: Nvarchar(255)</td>
+    </tr>
+    <tr>
+      <td>PreferredLanguage</td>
+      <td>String</td>
+      <td>The user’s preferred language locale. Example: United States English is en-US. Format: Varchar(20)</td>
+    </tr>
+    <tr>
+      <td>EReceiptOptIn</td>
+      <td>String</td>
+      <td>Whether the user has opted in to receive e-receipts. Format: True/False</td>
+    </tr>
+    <tr>
+      <td>MarketingOptIn</td>
+      <td>String</td>
+      <td>Whether the user has opted in to receive marketing information. Format: True/False</td>
+    </tr>
+    <tr>
+      <td>HasOpenBooking</td>
+      <td>Boolean</td>
+      <td>Whether the user has the TripLink User (formerly Open Booking User) permission. Format: True/False</td>
+    </tr>
+    <tr>
+      <td>CountryCode</td>
+      <td>String</td>
+      <td>The country code in from the<a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"> ISO 3166-1 alpha-2 country code</a> specification. Format: Char(2)</td>
+    </tr>
+    <tr>
+      <td>CompanyName</td>
+      <td>String</td>
+      <td>The user’s company name.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="telephones-elements">Telephones elements</h4>
+
+<p>The Telephones parent element contains a Telephone child element for each included telephone. The Telephone element has the attributes shown in the Response Class section and contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ContactOptIn</td>
+      <td>String</td>
+      <td>Whether the user has opted in to being contacted on this phone. Only appears when the phone type is Cell or Primary Mobile Phone. Format: True/False</td>
+    </tr>
+    <tr>
+      <td>CountryCode</td>
+      <td>String</td>
+      <td>The country code in from the<a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"> ISO 3166-1 alpha-2 country code</a> specification. Format: Char(2)</td>
+    </tr>
+    <tr>
+      <td>PhoneNumber</td>
+      <td>String</td>
+      <td>The phone number as entered by the user, which may contain characters such as () or -. Format: Char(60) <br /> <strong>NOTE</strong>: The user phone number may sometimes be incorrectly parsed if there are data input issues.</td>
+    </tr>
+    <tr>
+      <td>Extension</td>
+      <td>String</td>
+      <td>The phone extension. Format: Varchar(60)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="addresses-elements">Addresses elements</h4>
+
+<p>The Addresses parent element contains an Address child element for each included address. The Address element has the attributes shown in the Response Class section and contains the following child elements:</p>
+
+<p><strong>NOTE</strong>: The values returned for the Address child elements are as entered by the user. The fields do not enforce formatting and may have a wide variety of values.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AttentionLine</td>
+      <td>String</td>
+      <td>Attention Line in the address. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>Line1</td>
+      <td>String</td>
+      <td>Address line 1. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>Line2</td>
+      <td>String</td>
+      <td>Address line 2. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>Line3</td>
+      <td>String</td>
+      <td>Address line 3. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>MailStop</td>
+      <td>String</td>
+      <td>Address mail stop. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td>String</td>
+      <td>The city name. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>StateProvince</td>
+      <td>String</td>
+      <td>The state or province. Format: Nvarchar(Unlimited)</td>
+    </tr>
+    <tr>
+      <td>CountryCode</td>
+      <td>String</td>
+      <td>The country code in from the<a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2"> ISO 3166-1 alpha-2 country code</a> specification. Format: Char(2)</td>
+    </tr>
+    <tr>
+      <td>ZipCode</td>
+      <td>String</td>
+      <td>The zip code. Format: Varchar(20)</td>
+    </tr>
+    <tr>
+      <td>Longitude</td>
+      <td>String</td>
+      <td>Longitude value of Work Address.</td>
+    </tr>
+    <tr>
+      <td>Latitude</td>
+      <td>String</td>
+      <td>Latitude value of Work Address.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="driverslicenses-elements">DriversLicenses elements</h4>
+
+<p>The DriversLicenses parent element contains a DriversLicense child element for each each included licenses. The DriversLicense element contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DriversLicenseNumber</td>
+      <td>String</td>
+      <td>The user’s driver license identification number. Format: Varchar(30)</td>
+    </tr>
+    <tr>
+      <td>IssuingCountry</td>
+      <td>String</td>
+      <td>The country the license was issued in. Format: Char(2)</td>
+    </tr>
+    <tr>
+      <td>IssuingState</td>
+      <td>String</td>
+      <td>The state the license was issued in. Format: Varchar(2)</td>
+    </tr>
+    <tr>
+      <td>Expiration</td>
+      <td>String</td>
+      <td>The expiration date of the license. Format: YYYY-MM-DD</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="emailaddresses-elements">EmailAddresses elements</h4>
+
+<p>The EmailAddresses parent element contains a EmailAddress child element for each included email address. It contains the following child element:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>EmailAddress</td>
+      <td>String</td>
+      <td>The the user’s email address. The EmailAddress element has two attributes: Type and Contact. The Type attribute specifies the type of email address and the possible values are: <strong>Business</strong>, <strong>Business2</strong>, <strong>Personal</strong>. The Contact attribute specifies whether the email address should be used for travel notifications and the possible values are <strong>True</strong> or <strong>False</strong>. Format: Varchar(255)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="ratepreferences-elements">RatePreferences elements</h4>
+<p>The RatePreferences parent element contains the following child element:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AAARate</td>
+      <td>Boolean</td>
+      <td>Whether the user is eligible for the AAA rate. Format: true/false</td>
+    </tr>
+    <tr>
+      <td>AARPRate</td>
+      <td>Boolean</td>
+      <td>Whether the user is eligible for the AARP rate. Format: true/false</td>
+    </tr>
+    <tr>
+      <td>GovtRate</td>
+      <td>Boolean</td>
+      <td>Whether the user is eligible for the Government rate. Format: true/false</td>
+    </tr>
+    <tr>
+      <td>MilitaryRate</td>
+      <td>Boolean</td>
+      <td>Whether the user is eligible for the Military rate. Format: true/false</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="discountcodes-elements">DiscountCodes elements</h4>
+
+<p>The DiscountCodes parent element contains a DiscountCode child element for each included discount code.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>DiscountCode</td>
+      <td>String</td>
+      <td>The discount code for the specified vendor.The DiscountCode element has a Vendor attribute that specifies the name of the vendor for the discount code.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="air-elements">Air elements</h4>
+
+<p>The Air parent element contains the user’s air travel preferences and contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>AirSmokingCode</td>
+      <td>String</td>
+      <td>Whether the user wants a flight with smoking allowed. Legacy. Format: <strong>S</strong>, <strong>N</strong>, <strong>D</strong>.</td>
+    </tr>
+    <tr>
+      <td>AirMemberships</td>
+      <td>Membership</td>
+      <td>The AirMemberships element only appears if the request came from a travel supplier for this travel type, or from a TMC. This element contains an AirMembership child element for each included membership and includes the following child elements:</td>
+    </tr>
+    <tr>
+      <td>Seat</td>
+      <td>-</td>
+      <td>This parent element contains the user’s Car travel preferences. The <strong>Car</strong> element contains the following child elements:</td>
+    </tr>
+    <tr>
+      <td>Meals</td>
+      <td>-</td>
+      <td>This parent element contains the MealCode child element that indicates the meal preference of the traveler. The possible values are: <br /> AVML = Vegetarian Hindu Meal <br /> BBML = Baby Meal  <br /> BLML = Bland Meal  <br /> CHML = Child Meal  <br /> DBML = Diabetic Meal  <br /> FPML = Fruit Platter  <br /> GFML = Gluten Intolerant Meal  <br /> HNML = Hindu Meal  <br /> KSML = Kosher Meal  <br /> LCML = Low Calorie Meal  <br /> LFML = Low Fat Meal  <br /> LSML = Low Salt Meal  <br /> MOML = Muslim Meal  <br /> NLML = Low Lactose Meal  <br /> NSML = No Salt Meal  <br /> PFML = Peanut Free Meal  <br /> SFML = Seafood Meal  <br /> SPML = Special Request Meal <br />  VGML = Vegetarian  <br /> RVML = Vegetarian Raw Vegan Meal  <br /> VLML = Vegetarian Lacto-Ovo  <br /> VJML = Vegetarian Jain Meal  <br /> VOML = Vegetarian Oriental Meal <br /> <br /> <strong>Note</strong>: Regular Meal will not return a value for this preference.</td>
+    </tr>
+    <tr>
+      <td>HomeAirport</td>
+      <td>String</td>
+      <td>The user’s home airport</td>
+    </tr>
+    <tr>
+      <td>DHSRedressNumber</td>
+      <td>String</td>
+      <td>TSA Redress Number</td>
+    </tr>
+    <tr>
+      <td>DHSKnownTravelerNumber</td>
+      <td>String</td>
+      <td>TSA Known Traveler Number</td>
+    </tr>
+    <tr>
+      <td>AirOther</td>
+      <td>String</td>
+      <td>Other Air related description</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="air-memberships-elements">Air Memberships elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VendorCode</td>
+      <td>String</td>
+      <td>The code for the vendor that manages the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>AccountNo</td>
+      <td>String</td>
+      <td>The user’s account identifier in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>String</td>
+      <td>Name of the user’s current level in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>StatusBenefits</td>
+      <td>String</td>
+      <td>Description of a benefit of the loyalty program at the current status.</td>
+    </tr>
+    <tr>
+      <td>PointTotal</td>
+      <td>String</td>
+      <td>The user’s total number of points in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>SegmentTotal</td>
+      <td>String</td>
+      <td>The user’s total segments in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>NextStatus</td>
+      <td>String</td>
+      <td>Name or description of next higher status level in the  loyalty program.</td>
+    </tr>
+    <tr>
+      <td>PointsUntilNextStatus</td>
+      <td>String</td>
+      <td>Loyalty points required to next status level.</td>
+    </tr>
+    <tr>
+      <td>SegmentsUntilNextStatus</td>
+      <td>String</td>
+      <td>Booking segment to next status level.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="seat-elements">Seat elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>InterRowPositionCode</td>
+      <td>String</td>
+      <td>Preferred position in an airplane row. Format: <strong>Window</strong>, <strong>Aisle</strong>, <strong>Middle</strong>, <strong>Isolated</strong>, <strong>DontCare</strong>.</td>
+    </tr>
+    <tr>
+      <td>SectionPositionCode</td>
+      <td>String</td>
+      <td>Preference for position in plane. Format: <strong>F</strong>, <strong>B</strong>, <strong>R</strong>, <strong>D</strong>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="car-elements">Car elements</h4>
+
+<p>The Car parent element contains the user’s car travel preferences. It contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CarSmokingCode</td>
+      <td>String</td>
+      <td>Smoking car preferred. Format: <strong>S</strong>, <strong>N</strong>, <strong>O</strong></td>
+    </tr>
+    <tr>
+      <td>CarGPS</td>
+      <td>String</td>
+      <td>Car GPS preference. Format: true/false.</td>
+    </tr>
+    <tr>
+      <td>CarOption</td>
+      <td>String</td>
+      <td>Car option preference. Format: Char(3)</td>
+    </tr>
+    <tr>
+      <td>CarMemberships</td>
+      <td>Membership</td>
+      <td>The CarMemberships element only appears if the request came from a travel supplier for this travel type, or from a TMC. This element contains a CarMembership child element for each included membership. The CarMembership element has the following child elements:</td>
+    </tr>
+    <tr>
+      <td>CarOther</td>
+      <td>String</td>
+      <td>Other Car related description. Format: Char(30)</td>
+    </tr>
+    <tr>
+      <td>CarSkiRack</td>
+      <td>String</td>
+      <td>Car ski rack preference. Format: true/false.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="car-memberships-elements">Car Memberships elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VendorCode</td>
+      <td>String</td>
+      <td>The code for the vendor that manages the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>AccountNo</td>
+      <td>String</td>
+      <td>The user’s account identifier in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>String</td>
+      <td>Name of the user’s current level in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>StatusBenefits</td>
+      <td>String</td>
+      <td>Description of a benefit of the loyalty program at the current status.</td>
+    </tr>
+    <tr>
+      <td>PointTotal</td>
+      <td>String</td>
+      <td>The user’s total number of points in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>SegmentTotal</td>
+      <td>String</td>
+      <td>The user’s total segments in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>NextStatus</td>
+      <td>String</td>
+      <td>Name or description of next higher status level in the  loyalty program.</td>
+    </tr>
+    <tr>
+      <td>PointsUntilNextStatus</td>
+      <td>String</td>
+      <td>Loyalty points required to next status level.</td>
+    </tr>
+    <tr>
+      <td>SegmentsUntilNextStatus</td>
+      <td>String</td>
+      <td>Booking segment to next status level.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="hotel-elements">Hotel elements</h4>
+
+<p>The Hotel parent element contains the user’s hotel travel preferences. It contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SmokingCode</td>
+      <td>String</td>
+      <td>Smoking room preference. Format: <strong>S</strong>, <strong>N</strong>,<strong>D</strong></td>
+    </tr>
+    <tr>
+      <td>HotelMemberships</td>
+      <td>-</td>
+      <td>This parent element only appears if the request came from a travel supplier for this travel type, or from a TMC. This element contains a HotelMembership child element for each included membership. The HotelMembership element has the following child elements:</td>
+    </tr>
+    <tr>
+      <td>RoomType</td>
+      <td>String</td>
+      <td>Hotel room preference. Values are: H, 2, K, Q, 1, T</td>
+    </tr>
+    <tr>
+      <td>HotelOther</td>
+      <td>String</td>
+      <td>Other Hotel related description. Format: Varchar(30)</td>
+    </tr>
+    <tr>
+      <td>PreferFoamPillows</td>
+      <td>String</td>
+      <td>Whether the user prefers foam pillows. Format: true/false.</td>
+    </tr>
+    <tr>
+      <td>PreferCrib</td>
+      <td>String</td>
+      <td>Whether the user prefers to have a crib. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>PreferRollawayBed</td>
+      <td>String</td>
+      <td>Whether the user prefers to have a rollaway bed. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>PreferGym</td>
+      <td>String</td>
+      <td>Whether the user prefers a hotel with a gym. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>preferPool</td>
+      <td>String</td>
+      <td>Whether the user prefers a hotel with a pool. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>preferRestaraunt</td>
+      <td>String</td>
+      <td>Whether the user prefers a hotel with a restaurant. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>preferWheelchairAccess</td>
+      <td>String</td>
+      <td>Whether the user requires wheelchair access. Format: true/false.</td>
+    </tr>
+    <tr>
+      <td>preferAccessForBlind</td>
+      <td>String</td>
+      <td>Whether the user requires a room with access for blind guests. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>preferRoomService</td>
+      <td>String</td>
+      <td>Whether the user prefers a hotel with room service. Format:true/false.</td>
+    </tr>
+    <tr>
+      <td>preferEarlyCheckIn</td>
+      <td>String</td>
+      <td>Whether the user prefers a hotel with early check in. Format:true/false.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="hotel-memberships-elements">Hotel Memberships elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VendorCode</td>
+      <td>String</td>
+      <td>The code for the vendor that manages the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>AccountNo</td>
+      <td>String</td>
+      <td>The user’s account identifier in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>Status</td>
+      <td>String</td>
+      <td>Name of the user’s current level in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>StatusBenefits</td>
+      <td>String</td>
+      <td>Description of a benefit of the loyalty program at the current status.</td>
+    </tr>
+    <tr>
+      <td>PointTotal</td>
+      <td>String</td>
+      <td>The user’s total number of points in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>SegmentTotal</td>
+      <td>String</td>
+      <td>The user’s total segments in the loyalty program.</td>
+    </tr>
+    <tr>
+      <td>NextStatus</td>
+      <td>String</td>
+      <td>Name or description of next higher status level in the  loyalty program.</td>
+    </tr>
+    <tr>
+      <td>PointsUntilNextStatus</td>
+      <td>String</td>
+      <td>Loyalty points required to next status level.</td>
+    </tr>
+    <tr>
+      <td>SegmentsUntilNextStatus</td>
+      <td>String</td>
+      <td>Booking segment to next status level.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="customfields-elements">CustomFields elements</h4>
+
+<p>The CustomFields parent element contains child elements that specify custom fields in a travel profile. It contains a CustomField child element for each custom field. To retrieve this information, the <strong>Travel Profile</strong>, <strong>Custom Fields</strong> scope must be selected in the <strong>Register Partner Application</strong> page under <strong>Web Services</strong>.</p>
+
+<h4 id="customfield-child-elements">CustomField child elements</h4>
+
+<p>For each custom field, the CustomField element has a Name and Value child element.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Name</td>
+      <td>String</td>
+      <td>The name of the custom field. For example, Employee, Cost Centre, Fund, PassportNumber, Visa, and Assistants.</td>
+    </tr>
+    <tr>
+      <td>Value</td>
+      <td>String</td>
+      <td>The value of the custom field. If the value is null, the Value child element is omitted.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="examples-for-travel-suppliers">Examples for Travel Suppliers</h3>
+
+<h3 id="example-1-get-the-travel-profile-for-the-user-associated-with-the-specified-oauth-20-access-token">Example 1: Get the travel profile for the user associated with the specified OAuth 2.0 access token</h3>
+
+<h5 id="request">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET <span class="o">{</span>InstanceURI<span class="o">}</span>/api/travelprofile/v1.0/profile HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="response">Response</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml    
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ProfileResponse</span> <span class="na">Status=</span><span class="s">"Active"</span> <span class="na">Unique=</span><span class="s">"CM12345678"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;General&gt;</span>
+    <span class="nt">&lt;NamePrefix</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;FirstName&gt;</span>Maria<span class="nt">&lt;/FirstName&gt;</span>
+    <span class="nt">&lt;MiddleName&gt;</span>X<span class="nt">&lt;/MiddleName&gt;</span>
+    <span class="nt">&lt;LastName&gt;</span>Black<span class="nt">&lt;/LastName&gt;</span>
+    <span class="nt">&lt;NameSuffix</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PreferredName</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;JobTitle&gt;</span>Finance Manager<span class="nt">&lt;/JobTitle&gt;</span>
+    <span class="nt">&lt;PreferredLanguage&gt;</span>en-us<span class="nt">&lt;/PreferredLanguage&gt;</span>
+    <span class="nt">&lt;EReceiptOptIn&gt;</span>True<span class="nt">&lt;/EReceiptOptIn&gt;</span>
+    <span class="nt">&lt;MarketingOptIn&gt;</span>True<span class="nt">&lt;/MarketingOptIn&gt;</span>
+    <span class="nt">&lt;HasOpenBooking&gt;</span>true<span class="nt">&lt;/HasOpenBooking&gt;</span>
+    <span class="nt">&lt;CountryCode&gt;</span>US<span class="nt">&lt;/CountryCode&gt;</span>
+    <span class="nt">&lt;CompanyName&gt;</span>ExampleDotCom<span class="nt">&lt;/CompanyName&gt;</span>
+  <span class="nt">&lt;/General&gt;</span>
+  <span class="nt">&lt;Telephones&gt;</span>
+    <span class="nt">&lt;Telephone</span> <span class="na">Type=</span><span class="s">"Work"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>001<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;PhoneNumber&gt;</span>5555551234<span class="nt">&lt;/PhoneNumber&gt;</span>
+      <span class="nt">&lt;Extension</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Telephone&gt;</span>
+    <span class="nt">&lt;Telephone</span> <span class="na">Type=</span><span class="s">"Cell"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>001<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;PhoneNumber&gt;</span>4155544321<span class="nt">&lt;/PhoneNumber&gt;</span>
+      <span class="nt">&lt;Extension</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ContactOptIn&gt;</span>True<span class="nt">&lt;/ContactOptIn&gt;</span>
+    <span class="nt">&lt;/Telephone&gt;</span>
+  <span class="nt">&lt;/Telephones&gt;</span>
+  <span class="nt">&lt;Addresses&gt;</span>
+    <span class="nt">&lt;Address</span> <span class="na">Type=</span><span class="s">"Work"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;AttentionLine&gt;</span>Finance Department<span class="nt">&lt;/AttentionLine&gt;</span>
+      <span class="nt">&lt;Line1&gt;</span>1234 Rainy Street.<span class="nt">&lt;/Line1&gt;</span>
+      <span class="nt">&lt;Line2&gt;</span>Suite 442<span class="nt">&lt;/Line2&gt;</span>
+      <span class="nt">&lt;Line3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;MailStop</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;City&gt;</span>Seattle<span class="nt">&lt;/City&gt;</span>
+      <span class="nt">&lt;StateProvince&gt;</span>WA<span class="nt">&lt;/StateProvince&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>US<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;ZipCode&gt;</span>98102<span class="nt">&lt;/ZipCode&gt;</span>
+      <span class="nt">&lt;Longitude&gt;</span>-77.040706000000<span class="nt">&lt;/Longitude&gt;</span>
+      <span class="nt">&lt;Latitude&gt;</span>38.812690000000<span class="nt">&lt;/Latitude&gt;</span>
+    <span class="nt">&lt;/Address&gt;</span>
+    <span class="nt">&lt;Address</span> <span class="na">Type=</span><span class="s">"Home"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;AttentionLine</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Line1&gt;</span>1234 1st Ave. S<span class="nt">&lt;/Line1&gt;</span>
+      <span class="nt">&lt;Line2&gt;</span>Apt. 821<span class="nt">&lt;/Line2&gt;</span>
+      <span class="nt">&lt;Line3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;MailStop</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;City&gt;</span>Seattle<span class="nt">&lt;/City&gt;</span>
+      <span class="nt">&lt;StateProvince&gt;</span>WA<span class="nt">&lt;/StateProvince&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>US<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;ZipCode&gt;</span>98102<span class="nt">&lt;/ZipCode&gt;</span>
+      <span class="nt">&lt;Longitude&gt;</span>-77.040706000000<span class="nt">&lt;/Longitude&gt;</span>
+      <span class="nt">&lt;Latitude&gt;</span>38.812690000000<span class="nt">&lt;/Latitude&gt;</span>
+    <span class="nt">&lt;/Address&gt;</span>
+  <span class="nt">&lt;/Addresses&gt;</span>
+  <span class="nt">&lt;DriversLicenses&gt;</span>
+    <span class="nt">&lt;DriversLicense&gt;</span>
+      <span class="nt">&lt;DriversLicenseNumber&gt;</span>MIL112233452<span class="nt">&lt;/DriversLicenseNumber&gt;</span>
+      <span class="nt">&lt;IssuingCountry&gt;</span>US<span class="nt">&lt;/IssuingCountry&gt;</span>
+      <span class="nt">&lt;IssuingState&gt;</span>WA<span class="nt">&lt;/IssuingState&gt;</span>
+      <span class="nt">&lt;Expiration&gt;</span>2018-05-22<span class="nt">&lt;/Expiration&gt;</span>
+    <span class="nt">&lt;/DriversLicense&gt;</span>
+  <span class="nt">&lt;/DriversLicenses&gt;</span>
+  <span class="nt">&lt;EmailAddresses&gt;</span>
+    <span class="nt">&lt;EmailAddress</span> <span class="na">Type=</span><span class="s">"Business"</span> <span class="na">Contact=</span><span class="s">"True"</span><span class="nt">&gt;</span>mariab@example.com<span class="nt">&lt;/EmailAddress&gt;</span>
+  <span class="nt">&lt;/EmailAddresses&gt;</span>
+  <span class="nt">&lt;RatePreferences&gt;</span>
+    <span class="nt">&lt;AAARate&gt;</span>true<span class="nt">&lt;/AAARate&gt;</span>
+    <span class="nt">&lt;AARPRate&gt;</span>false<span class="nt">&lt;/AARPRate&gt;</span>
+    <span class="nt">&lt;GovtRate&gt;</span>false<span class="nt">&lt;/GovtRate&gt;</span>
+    <span class="nt">&lt;MilitaryRate&gt;</span>false<span class="nt">&lt;/MilitaryRate&gt;</span>
+  <span class="nt">&lt;/RatePreferences&gt;</span>
+  <span class="nt">&lt;DiscountCodes&gt;</span>
+    <span class="nt">&lt;DiscountCode</span> <span class="na">Vendor=</span><span class="s">"Marriott"</span><span class="nt">&gt;</span>1234567899<span class="nt">&lt;/DiscountCode&gt;</span>
+  <span class="nt">&lt;/DiscountCodes&gt;</span>
+  <span class="nt">&lt;Air&gt;</span>
+    <span class="nt">&lt;AirSmokingCode&gt;</span>S<span class="nt">&lt;/AirSmokingCode&gt;</span>
+    <span class="nt">&lt;AirMemberships&gt;</span>
+      <span class="nt">&lt;AirMembership&gt;</span>
+        <span class="nt">&lt;VendorCode&gt;</span>AA<span class="nt">&lt;/VendorCode&gt;</span>
+        <span class="nt">&lt;AccountNo&gt;</span>K12345<span class="nt">&lt;/AccountNo&gt;</span>
+        <span class="nt">&lt;Status&gt;</span>Normal<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;StatusBenefits&gt;</span>N/A<span class="nt">&lt;/StatusBenefits&gt;</span>
+        <span class="nt">&lt;PointTotal&gt;</span>1234<span class="nt">&lt;/PointTotal&gt;</span>
+        <span class="nt">&lt;SegmentTotal&gt;</span>2<span class="nt">&lt;/SegmentTotal&gt;</span>
+        <span class="nt">&lt;NextStatus&gt;</span>Super<span class="nt">&lt;/NextStatus&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus&gt;</span>444<span class="nt">&lt;/PointsUntilNextStatus&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus&gt;</span>2<span class="nt">&lt;/SegmentsUntilNextStatus&gt;</span>
+      <span class="nt">&lt;/AirMembership&gt;</span>
+    <span class="nt">&lt;/AirMemberships&gt;</span>
+    <span class="nt">&lt;Seat&gt;</span>
+      <span class="nt">&lt;InterRowPositionCode&gt;</span>Window<span class="nt">&lt;/InterRowPositionCode&gt;</span>
+      <span class="nt">&lt;SectionPositionCode&gt;</span>F<span class="nt">&lt;/SectionPositionCode&gt;</span>
+    <span class="nt">&lt;/Seat&gt;</span>
+    <span class="nt">&lt;Meals&gt;</span>
+      <span class="nt">&lt;MealCode&gt;</span>VGML<span class="nt">&lt;/MealCode&gt;</span>
+    <span class="nt">&lt;/Meals&gt;</span>
+    <span class="nt">&lt;HomeAirport&gt;</span>SEA<span class="nt">&lt;/HomeAirport&gt;</span>
+    <span class="nt">&lt;AirOther</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Air&gt;</span>
+  <span class="nt">&lt;Car&gt;</span>
+    <span class="nt">&lt;CarSmokingCode&gt;</span>N<span class="nt">&lt;/CarSmokingCode&gt;</span>
+    <span class="nt">&lt;CarGPS&gt;</span>True<span class="nt">&lt;/CarGPS&gt;</span>
+    <span class="nt">&lt;CarOption</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarMemberships&gt;</span>
+      <span class="nt">&lt;CarMembership&gt;</span>
+        <span class="nt">&lt;VendorCode&gt;</span>ZE<span class="nt">&lt;/VendorCode&gt;</span>
+        <span class="nt">&lt;AccountNo&gt;</span>ABCDEF<span class="nt">&lt;/AccountNo&gt;</span>
+        <span class="nt">&lt;Status&gt;</span>Newbie<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;StatusBenefits&gt;</span>10%  discount<span class="nt">&lt;/StatusBenefits&gt;</span>
+        <span class="nt">&lt;PointTotal&gt;</span>44<span class="nt">&lt;/PointTotal&gt;</span>
+        <span class="nt">&lt;SegmentTotal&gt;</span>8<span class="nt">&lt;/SegmentTotal&gt;</span>
+        <span class="nt">&lt;NextStatus&gt;</span>Veteran<span class="nt">&lt;/NextStatus&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus&gt;</span>55<span class="nt">&lt;/PointsUntilNextStatus&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus&gt;</span>12<span class="nt">&lt;/SegmentsUntilNextStatus&gt;</span>
+      <span class="nt">&lt;/CarMembership&gt;</span>
+      <span class="nt">&lt;CarMembership&gt;</span>
+        <span class="nt">&lt;VendorCode&gt;</span>XW<span class="nt">&lt;/VendorCode&gt;</span>
+        <span class="nt">&lt;AccountNo&gt;</span>GHIJK<span class="nt">&lt;/AccountNo&gt;</span>
+        <span class="nt">&lt;Status&gt;</span>Gold<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;StatusBenefits&gt;</span>30%  discount<span class="nt">&lt;/StatusBenefits&gt;</span>
+        <span class="nt">&lt;PointTotal&gt;</span>1000<span class="nt">&lt;/PointTotal&gt;</span>
+        <span class="nt">&lt;SegmentTotal&gt;</span>50<span class="nt">&lt;/SegmentTotal&gt;</span>
+        <span class="nt">&lt;NextStatus&gt;</span>VIP<span class="nt">&lt;/NextStatus&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus&gt;</span>500<span class="nt">&lt;/PointsUntilNextStatus&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus&gt;</span>25<span class="nt">&lt;/SegmentsUntilNextStatus&gt;</span>
+      <span class="nt">&lt;/CarMembership&gt;</span>
+    <span class="nt">&lt;/CarMemberships&gt;</span>
+    <span class="nt">&lt;CarOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarSkiRack&gt;</span>False<span class="nt">&lt;/CarSkiRack&gt;</span>
+  <span class="nt">&lt;/Car&gt;</span>
+  <span class="nt">&lt;Hotel&gt;</span>
+    <span class="nt">&lt;SmokingCode&gt;</span>N<span class="nt">&lt;/SmokingCode&gt;</span>
+    <span class="nt">&lt;HotelMemberships</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;RoomType&gt;</span>K<span class="nt">&lt;/RoomType&gt;</span>
+    <span class="nt">&lt;HotelOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PreferFoamPillows&gt;</span>True<span class="nt">&lt;/PreferFoamPillows&gt;</span>
+    <span class="nt">&lt;PreferCrib&gt;</span>False<span class="nt">&lt;/PreferCrib&gt;</span>
+    <span class="nt">&lt;PreferRollawayBed&gt;</span>True<span class="nt">&lt;/PreferRollawayBed&gt;</span>
+    <span class="nt">&lt;PreferGym&gt;</span>True<span class="nt">&lt;/PreferGym&gt;</span>
+    <span class="nt">&lt;preferPool&gt;</span>True<span class="nt">&lt;/preferPool&gt;</span>
+    <span class="nt">&lt;preferRestaraunt&gt;</span>True<span class="nt">&lt;/preferRestaraunt&gt;</span>
+    <span class="nt">&lt;preferWheelchairAccess&gt;</span>False<span class="nt">&lt;/preferWheelchairAccess&gt;</span>
+    <span class="nt">&lt;preferAccessForBlind&gt;</span>False<span class="nt">&lt;/preferAccessForBlind&gt;</span>
+    <span class="nt">&lt;preferRoomService&gt;</span>True<span class="nt">&lt;/preferRoomService&gt;</span>
+    <span class="nt">&lt;preferEarlyCheckIn&gt;</span>False<span class="nt">&lt;/preferEarlyCheckIn&gt;</span>
+  <span class="nt">&lt;/Hotel&gt;</span>
+  <span class="nt">&lt;CustomFields&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Employee ID<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>12345<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Cost Centre<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>Headquarters<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Fund<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>StudentTraining<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Passport Number<span class="ni">&amp;gt;</span><span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>AUS1234<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Visa<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>EUvisa1234<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Assistants<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>John Smith<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+  <span class="nt">&lt;/CustomFields&gt;</span>
+<span class="nt">&lt;/ProfileResponse&gt;</span>
+</code></pre></div></div>
+<h4 id="example-2-get-the-travel-profile-for-a-user-with-a-specific-login-id">Example 2: Get the travel profile for a user with a specific login ID</h4>
+
+<h5 id="request-1">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/travelprofile/v1.0/profile?userid_type<span class="o">=</span>login&amp;userid_value<span class="o">=</span>cm@example.com HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="response-1">Response</h5>
+
+<p>The response is the same as in Example 1.</p>
+
+<h3 id="examples-for-tmcs">Examples for TMCs</h3>
+
+<h4 id="example-3-get-the-travel-profile-for-the-user-associated-with-the-specified-oauth-20-access-token">Example 3: Get the travel profile for the user associated with the specified OAuth 2.0 access token</h4>
+
+<h5 id="request-2">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET <span class="o">{</span>InstanceURI<span class="o">}</span>/api/travelprofile/v1.0/profile HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="response-2">Response</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml    
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ProfileResponse</span> <span class="na">Status=</span><span class="s">"Active"</span> <span class="na">Unique=</span><span class="s">"CM12345678"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;General&gt;</span>
+    <span class="nt">&lt;NamePrefix</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;FirstName&gt;</span>Maria<span class="nt">&lt;/FirstName&gt;</span>
+    <span class="nt">&lt;MiddleName&gt;</span>X<span class="nt">&lt;/MiddleName&gt;</span>
+    <span class="nt">&lt;LastName&gt;</span>Black<span class="nt">&lt;/LastName&gt;</span>
+    <span class="nt">&lt;NameSuffix</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PreferredName</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;JobTitle&gt;</span>Finance Manager<span class="nt">&lt;/JobTitle&gt;</span>
+    <span class="nt">&lt;PreferredLanguage&gt;</span>en-us<span class="nt">&lt;/PreferredLanguage&gt;</span>
+    <span class="nt">&lt;EReceiptOptIn&gt;</span>True<span class="nt">&lt;/EReceiptOptIn&gt;</span>
+    <span class="nt">&lt;MarketingOptIn&gt;</span>True<span class="nt">&lt;/MarketingOptIn&gt;</span>
+    <span class="nt">&lt;HasOpenBooking&gt;</span>true<span class="nt">&lt;/HasOpenBooking&gt;</span>
+    <span class="nt">&lt;CountryCode&gt;</span>US<span class="nt">&lt;/CountryCode&gt;</span>
+    <span class="nt">&lt;CompanyName&gt;</span>ExampleDotCom<span class="nt">&lt;/CompanyName&gt;</span>
+  <span class="nt">&lt;/General&gt;</span>
+  <span class="nt">&lt;Telephones&gt;</span>
+    <span class="nt">&lt;Telephone</span> <span class="na">Type=</span><span class="s">"Work"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>001<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;PhoneNumber&gt;</span>5555551234<span class="nt">&lt;/PhoneNumber&gt;</span>
+      <span class="nt">&lt;Extension</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Telephone&gt;</span>
+    <span class="nt">&lt;Telephone</span> <span class="na">Type=</span><span class="s">"Cell"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>001<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;PhoneNumber&gt;</span>4155544321<span class="nt">&lt;/PhoneNumber&gt;</span>
+      <span class="nt">&lt;Extension</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ContactOptIn&gt;</span>True<span class="nt">&lt;/ContactOptIn&gt;</span>
+    <span class="nt">&lt;/Telephone&gt;</span>
+  <span class="nt">&lt;/Telephones&gt;</span>
+  <span class="nt">&lt;Addresses&gt;</span>
+    <span class="nt">&lt;Address</span> <span class="na">Type=</span><span class="s">"Work"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;AttentionLine&gt;</span>Finance Department<span class="nt">&lt;/AttentionLine&gt;</span>
+      <span class="nt">&lt;Line1&gt;</span>1234 Rainy Street.<span class="nt">&lt;/Line1&gt;</span>
+      <span class="nt">&lt;Line2&gt;</span>Suite 442<span class="nt">&lt;/Line2&gt;</span>
+      <span class="nt">&lt;Line3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;MailStop</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;City&gt;</span>Seattle<span class="nt">&lt;/City&gt;</span>
+      <span class="nt">&lt;StateProvince&gt;</span>WA<span class="nt">&lt;/StateProvince&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>US<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;ZipCode&gt;</span>98102<span class="nt">&lt;/ZipCode&gt;</span>
+      <span class="nt">&lt;Longitude&gt;</span>-77.040706000000<span class="nt">&lt;/Longitude&gt;</span>
+      <span class="nt">&lt;Latitude&gt;</span>38.812690000000<span class="nt">&lt;/Latitude&gt;</span>
+    <span class="nt">&lt;/Address&gt;</span>
+    <span class="nt">&lt;Address</span> <span class="na">Type=</span><span class="s">"Home"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;AttentionLine</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Line1&gt;</span>1234 1st Ave. S<span class="nt">&lt;/Line1&gt;</span>
+      <span class="nt">&lt;Line2&gt;</span>Apt. 821<span class="nt">&lt;/Line2&gt;</span>
+      <span class="nt">&lt;Line3</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;MailStop</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;City&gt;</span>Seattle<span class="nt">&lt;/City&gt;</span>
+      <span class="nt">&lt;StateProvince&gt;</span>WA<span class="nt">&lt;/StateProvince&gt;</span>
+      <span class="nt">&lt;CountryCode&gt;</span>US<span class="nt">&lt;/CountryCode&gt;</span>
+      <span class="nt">&lt;ZipCode&gt;</span>98102<span class="nt">&lt;/ZipCode&gt;</span>
+      <span class="nt">&lt;Longitude&gt;</span>-77.040706000000<span class="nt">&lt;/Longitude&gt;</span>
+      <span class="nt">&lt;Latitude&gt;</span>38.812690000000<span class="nt">&lt;/Latitude&gt;</span>
+    <span class="nt">&lt;/Address&gt;</span>
+  <span class="nt">&lt;/Addresses&gt;</span>
+  <span class="nt">&lt;DriversLicenses&gt;</span>
+    <span class="nt">&lt;DriversLicense&gt;</span>
+      <span class="nt">&lt;DriversLicenseNumber&gt;</span>MIL112233452<span class="nt">&lt;/DriversLicenseNumber&gt;</span>
+      <span class="nt">&lt;IssuingCountry&gt;</span>US<span class="nt">&lt;/IssuingCountry&gt;</span>
+      <span class="nt">&lt;IssuingState&gt;</span>WA<span class="nt">&lt;/IssuingState&gt;</span>
+      <span class="nt">&lt;Expiration&gt;</span>2018-05-22<span class="nt">&lt;/Expiration&gt;</span>
+    <span class="nt">&lt;/DriversLicense&gt;</span>
+  <span class="nt">&lt;/DriversLicenses&gt;</span>
+  <span class="nt">&lt;EmailAddresses&gt;</span>
+    <span class="nt">&lt;EmailAddress</span> <span class="na">Type=</span><span class="s">"Business"</span> <span class="na">Contact=</span><span class="s">"True"</span><span class="nt">&gt;</span>mariab@example.com<span class="nt">&lt;/EmailAddress&gt;</span>
+  <span class="nt">&lt;/EmailAddresses&gt;</span>
+  <span class="nt">&lt;RatePreferences&gt;</span>
+    <span class="nt">&lt;AAARate&gt;</span>true<span class="nt">&lt;/AAARate&gt;</span>
+    <span class="nt">&lt;AARPRate&gt;</span>false<span class="nt">&lt;/AARPRate&gt;</span>
+    <span class="nt">&lt;GovtRate&gt;</span>false<span class="nt">&lt;/GovtRate&gt;</span>
+    <span class="nt">&lt;MilitaryRate&gt;</span>false<span class="nt">&lt;/MilitaryRate&gt;</span>
+  <span class="nt">&lt;/RatePreferences&gt;</span>
+  <span class="nt">&lt;DiscountCodes&gt;</span>
+    <span class="nt">&lt;DiscountCode</span> <span class="na">Vendor=</span><span class="s">"Marriott"</span><span class="nt">&gt;</span>1234567899<span class="nt">&lt;/DiscountCode&gt;</span>
+    <span class="nt">&lt;DiscountCode</span> <span class="na">Vendor=</span><span class="s">"IHG"</span><span class="nt">&gt;</span>111222333<span class="err">&lt;</span>/Discount<span class="nt">&lt;/span&gt;</span>
+  <span class="nt">&lt;/DiscountCodes&gt;</span>
+  <span class="nt">&lt;Air&gt;</span>
+    <span class="nt">&lt;AirSmokingCode&gt;</span>S<span class="nt">&lt;/AirSmokingCode&gt;</span>
+    <span class="nt">&lt;AirMemberships&gt;</span>
+      <span class="nt">&lt;AirMembership&gt;</span>
+        <span class="nt">&lt;VendorCode&gt;</span>AA<span class="nt">&lt;/VendorCode&gt;</span>
+        <span class="nt">&lt;AccountNo&gt;</span>K12345<span class="nt">&lt;/AccountNo&gt;</span>
+        <span class="nt">&lt;Status&gt;</span>Normal<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;StatusBenefits&gt;</span>N/A<span class="nt">&lt;/StatusBenefits&gt;</span>
+        <span class="nt">&lt;PointTotal&gt;</span>1234<span class="nt">&lt;/PointTotal&gt;</span>
+        <span class="nt">&lt;SegmentTotal&gt;</span>2<span class="nt">&lt;/SegmentTotal&gt;</span>
+        <span class="nt">&lt;NextStatus&gt;</span>Super<span class="nt">&lt;/NextStatus&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus&gt;</span>444<span class="nt">&lt;/PointsUntilNextStatus&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus&gt;</span>2<span class="nt">&lt;/SegmentsUntilNextStatus&gt;</span>
+      <span class="nt">&lt;/AirMembership&gt;</span>
+    <span class="nt">&lt;/AirMemberships&gt;</span>
+    <span class="nt">&lt;Seat&gt;</span>
+      <span class="nt">&lt;InterRowPositionCode&gt;</span>Window<span class="nt">&lt;/InterRowPositionCode&gt;</span>
+      <span class="nt">&lt;SectionPositionCode&gt;</span>NOPREF<span class="nt">&lt;/SectionPositionCode&gt;</span>
+    <span class="nt">&lt;/Seat&gt;</span>
+    <span class="nt">&lt;Meals&gt;</span>
+      <span class="nt">&lt;MealCode&gt;</span>VGML<span class="nt">&lt;/MealCode&gt;</span>
+    <span class="nt">&lt;/Meals&gt;</span>
+    <span class="nt">&lt;HomeAirport&gt;</span>SEA<span class="nt">&lt;/HomeAirport&gt;</span>
+    <span class="nt">&lt;AirOther</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/Air&gt;</span>
+  <span class="nt">&lt;Car&gt;</span>
+    <span class="nt">&lt;CarSmokingCode&gt;</span>N<span class="nt">&lt;/CarSmokingCode&gt;</span>
+    <span class="nt">&lt;CarGPS&gt;</span>True<span class="nt">&lt;/CarGPS&gt;</span>
+    <span class="nt">&lt;CarOption</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarMemberships&gt;</span>
+      <span class="nt">&lt;CarMembership&gt;</span>
+        <span class="nt">&lt;VendorCode&gt;</span>ZE<span class="nt">&lt;/VendorCode&gt;</span>
+        <span class="nt">&lt;AccountNo&gt;</span>ABCDEF<span class="nt">&lt;/AccountNo&gt;</span>
+        <span class="nt">&lt;Status&gt;</span>Newbie<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;StatusBenefits&gt;</span>10%  discount<span class="nt">&lt;/StatusBenefits&gt;</span>
+        <span class="nt">&lt;PointTotal&gt;</span>44<span class="nt">&lt;/PointTotal&gt;</span>
+        <span class="nt">&lt;SegmentTotal&gt;</span>8<span class="nt">&lt;/SegmentTotal&gt;</span>
+        <span class="nt">&lt;NextStatus&gt;</span>Veteran<span class="nt">&lt;/NextStatus&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus&gt;</span>55<span class="nt">&lt;/PointsUntilNextStatus&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus&gt;</span>12<span class="nt">&lt;/SegmentsUntilNextStatus&gt;</span>
+      <span class="nt">&lt;/CarMembership&gt;</span>
+      <span class="nt">&lt;CarMembership&gt;</span>
+        <span class="nt">&lt;VendorCode&gt;</span>XW<span class="nt">&lt;/VendorCode&gt;</span>
+        <span class="nt">&lt;AccountNo&gt;</span>GHIJK<span class="nt">&lt;/AccountNo&gt;</span>
+        <span class="nt">&lt;Status&gt;</span>Gold<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;StatusBenefits&gt;</span>30%  discount<span class="nt">&lt;/StatusBenefits&gt;</span>
+        <span class="nt">&lt;PointTotal&gt;</span>1000<span class="nt">&lt;/PointTotal&gt;</span>
+        <span class="nt">&lt;SegmentTotal&gt;</span>50<span class="nt">&lt;/SegmentTotal&gt;</span>
+        <span class="nt">&lt;NextStatus&gt;</span>VIP<span class="nt">&lt;/NextStatus&gt;</span>
+        <span class="nt">&lt;PointsUntilNextStatus&gt;</span>500<span class="nt">&lt;/PointsUntilNextStatus&gt;</span>
+        <span class="nt">&lt;SegmentsUntilNextStatus&gt;</span>25<span class="nt">&lt;/SegmentsUntilNextStatus&gt;</span>
+      <span class="nt">&lt;/CarMembership&gt;</span>
+    <span class="nt">&lt;/CarMemberships&gt;</span>
+    <span class="nt">&lt;CarOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;CarSkiRack&gt;</span>False<span class="nt">&lt;/CarSkiRack&gt;</span>
+  <span class="nt">&lt;/Car&gt;</span>
+  <span class="nt">&lt;Hotel&gt;</span>
+    <span class="nt">&lt;SmokingCode&gt;</span>N<span class="nt">&lt;/SmokingCode&gt;</span>
+    <span class="nt">&lt;HotelMemberships</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;RoomType&gt;</span>K<span class="nt">&lt;/RoomType&gt;</span>
+    <span class="nt">&lt;HotelOther</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PreferFoamPillows&gt;</span>True<span class="nt">&lt;/PreferFoamPillows&gt;</span>
+    <span class="nt">&lt;PreferCrib&gt;</span>False<span class="nt">&lt;/PreferCrib&gt;</span>
+    <span class="nt">&lt;PreferRollawayBed&gt;</span>True<span class="nt">&lt;/PreferRollawayBed&gt;</span>
+    <span class="nt">&lt;PreferGym&gt;</span>True<span class="nt">&lt;/PreferGym&gt;</span>
+    <span class="nt">&lt;preferPool&gt;</span>True<span class="nt">&lt;/preferPool&gt;</span>
+    <span class="nt">&lt;preferRestaraunt&gt;</span>True<span class="nt">&lt;/preferRestaraunt&gt;</span>
+    <span class="nt">&lt;preferWheelchairAccess&gt;</span>False<span class="nt">&lt;/preferWheelchairAccess&gt;</span>
+    <span class="nt">&lt;preferAccessForBlind&gt;</span>False<span class="nt">&lt;/preferAccessForBlind&gt;</span>
+    <span class="nt">&lt;preferRoomService&gt;</span>True<span class="nt">&lt;/preferRoomService&gt;</span>
+    <span class="nt">&lt;preferEarlyCheckIn&gt;</span>False<span class="nt">&lt;/preferEarlyCheckIn&gt;</span>
+  <span class="nt">&lt;/Hotel&gt;</span>
+  <span class="nt">&lt;CustomFields&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Employee ID<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>12345<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Cost Centre<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>Headquarters<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Fund<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>StudentTraining<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Passport Number<span class="ni">&amp;gt;</span><span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>AUS1234<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Visa<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>EUvisa1234<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+    <span class="nt">&lt;CustomField&gt;</span>
+      <span class="nt">&lt;Name&gt;</span>Assistants<span class="nt">&lt;/Name&gt;</span>
+      <span class="nt">&lt;Value&gt;</span>John Smith<span class="nt">&lt;/Value&gt;</span>
+    <span class="nt">&lt;/CustomField&gt;</span>
+  <span class="nt">&lt;/CustomFields&gt;</span>
+<span class="nt">&lt;/ProfileResponse&gt;</span>
+</code></pre></div></div>
+
+<h4 id="example-4-get-the-travel-profile-for-a-user-with-a-specific-login-id">Example 4: Get the travel profile for a user with a specific login ID</h4>
+
+<h5 id="request-3">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/travelprofile/v1.0/profile?userid_type<span class="o">=</span>login&amp;userid_value<span class="o">=</span>cm@example.com HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="response-3">Response</h5>
+
+<p>The response is the same as in Example 3.</p>
+
+<h2 id="get-a-list-of-travel-profile-summaries"><a name="a2">Get a list of travel profile summaries</a></h2>
+
+<p>Gets the list of travel profile summaries that have been updated since the specified date. The response is separated into pages.</p>
+
+<h3 id="request-4">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET <span class="o">{</span>InstanceURI<span class="o">}</span>/api/travelprofile/v1.0/profile?LastModifiedDate<span class="o">=</span>2015-01-01T01:00:00 HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="request-parameters-1">Request parameters</h4>
+
+<p>All request paramenters are optional. To identify a specific user by login ID or XMLSyncID, you can specify the following request parameters.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter Name</th>
+      <th>Required/Optional</th>
+      <th>Parameter Type</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LastModifiedDate</td>
+      <td>Required</td>
+      <td>path</td>
+      <td>string</td>
+      <td>The date and time, in UTC, that the profiles must be updated after to be included in the response. Format: YYYY-MM-DDThh:mm:ss</td>
+    </tr>
+    <tr>
+      <td>Page</td>
+      <td>Optional</td>
+      <td>path</td>
+      <td>string</td>
+      <td>The number of pages to retrieve. If the page is outside the number of existing pages, the response elements will be empty</td>
+    </tr>
+    <tr>
+      <td>ItemsPerPage</td>
+      <td>Optional</td>
+      <td>path</td>
+      <td>string</td>
+      <td>The number of travel profiles per page. The maximum value is 200. The default value is 200.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-1">Headers</h4>
+
+<h5 id="accept-header">Accept header</h5>
+
+<p>application/xml</p>
+
+<h5 id="authorization-header-1">Authorization header</h5>
+
+<p><code class="language-plaintext highlighter-rouge">Authorization: OAuth {access_token}</code></p>
+
+<p>Where <em>access_token</em> is the OAuth 2.0 access token of the user whose travel profile summaries you want to retrieve. If you want to access company-wide travel profile information, the user account associated with the OAuth 2.0 access token must have a Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
+
+<h3 id="data-model-1">Data model</h3>
+
+<p>The data model of the response for the GET operation.</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ConnectResponse&gt;</span>
+  <span class="nt">&lt;Metadata&gt;</span>
+    <span class="nt">&lt;Paging&gt;</span>
+      <span class="nt">&lt;TotalPages</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;TotalItems</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Page</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ItemsPerPage</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;PreviousPageURL</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;NextPageURL</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Paging&gt;</span>
+  <span class="nt">&lt;/Metadata&gt;</span>
+  <span class="nt">&lt;Data&gt;</span>
+    <span class="nt">&lt;ProfileSummary&gt;</span>
+      <span class="nt">&lt;LoginID</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;XmlProfileSyncID</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;ProfileLastModifiedUTC</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/ProfileSummary&gt;</span>
+  <span class="nt">&lt;/Data&gt;</span>
+<span class="nt">&lt;/ConnectResponse&gt;</span>
+</code></pre></div></div>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="connectresponse-root-element">ConnectResponse root element</h4>
+
+<p>The ConnectResponse root element contains the General, Telephones, Addresses, DriversLicenses, EmailAddresses, RatePreferences, DiscountCodes, Air, Car, Hotel, and CustomFields child elements. It has the attributes shown in the Response Class section.</p>
+
+<h4 id="metadata-element">Metadata element</h4>
+
+<p>The Metadata parent element contains the Paging child element.</p>
+
+<h4 id="paging-elements">Paging elements</h4>
+
+<p>The Paging parent element contains contains the paging information for the response and it contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TotalPages</td>
+      <td>String</td>
+      <td>The total number of pages to return.</td>
+    </tr>
+    <tr>
+      <td>TotalItems</td>
+      <td>String</td>
+      <td>The total number of profiles the query returned.</td>
+    </tr>
+    <tr>
+      <td>Page</td>
+      <td>String</td>
+      <td>The page number for the set of results in the current response.</td>
+    </tr>
+    <tr>
+      <td>ItemsPerPage</td>
+      <td>String</td>
+      <td>The number of items set to display per page.</td>
+    </tr>
+    <tr>
+      <td>PreviousPageURL</td>
+      <td>String</td>
+      <td>The URI to the previous page of results. This element will be empty when there are no previous pages.</td>
+    </tr>
+    <tr>
+      <td>NextPageURL</td>
+      <td>String</td>
+      <td>The URI to the next set of results. This element will be empty when there are no next pages.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="data-element">Data element</h4>
+
+<p>The Data parent element contains a ProfileSummary child element for each included travel profile.</p>
+
+<h4 id="profilesummary">ProfileSummary</h4>
+
+<p>The Paging parent element contains contains the paging information for the response and it contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element Name</th>
+      <th>Data Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LoginID</td>
+      <td>String</td>
+      <td>The Concur user login ID.</td>
+    </tr>
+    <tr>
+      <td>XMLProfileSyncID</td>
+      <td>String</td>
+      <td>TThe user’s XML Profile Sync ID, if available.</td>
+    </tr>
+    <tr>
+      <td>ProfileLastModifiedUTC</td>
+      <td>String</td>
+      <td>The date, in UTC, when the travel profile was last modified. Format: YYYY-MM-DDThh:mm:ss.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example">Example</h3>
+
+<p>This example gets the list of travel profile summaries modified after January 1 2015.</p>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET <span class="o">{</span>InstanceURI<span class="o">}</span>/api/travelprofile/v1.0/profile?LastModifiedDate<span class="o">=</span>2015-01-01T01:00:00 HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ConnectResponse&gt;</span>
+  <span class="nt">&lt;Metadata&gt;</span>
+    <span class="nt">&lt;Paging&gt;</span>
+      <span class="nt">&lt;TotalPages&gt;</span>1<span class="nt">&lt;/TotalPages&gt;</span>
+      <span class="nt">&lt;TotalItems&gt;</span>2<span class="nt">&lt;/TotalItems&gt;</span>
+      <span class="nt">&lt;Page&gt;</span>1<span class="nt">&lt;/Page&gt;</span>
+      <span class="nt">&lt;ItemsPerPage&gt;</span>200<span class="nt">&lt;/ItemsPerPage&gt;</span>
+      <span class="nt">&lt;PreviousPageURL</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;NextPageURL</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Paging&gt;</span>
+  <span class="nt">&lt;/Metadata&gt;</span>
+  <span class="nt">&lt;Data&gt;</span>
+    <span class="nt">&lt;ProfileSummary&gt;</span>
+      <span class="nt">&lt;LoginID&gt;</span>mariab@company1.com<span class="nt">&lt;/LoginID&gt;</span>
+      <span class="nt">&lt;XmlProfileSyncID&gt;</span>string123<span class="nt">&lt;/XmlProfileSyncID&gt;</span>
+      <span class="nt">&lt;ProfileLastModifiedUTC&gt;</span>2015-01-01T01:00:00<span class="nt">&lt;/ProfileLastModifiedUTC&gt;</span>
+    <span class="nt">&lt;/ProfileSummary&gt;</span>
+    <span class="nt">&lt;ProfileSummary&gt;</span>
+      <span class="nt">&lt;LoginID&gt;</span>peterk@company1.com<span class="nt">&lt;/LoginID&gt;</span>
+      <span class="nt">&lt;XmlProfileSyncID&gt;</span>string456<span class="nt">&lt;/XmlProfileSyncID&gt;</span>
+      <span class="nt">&lt;ProfileLastModifiedUTC&gt;</span>2015-01-01T01:00:00<span class="nt">&lt;/ProfileLastModifiedUTC&gt;</span>
+    <span class="nt">&lt;/ProfileSummary&gt;</span>
+  <span class="nt">&lt;/Data&gt;</span>
+<span class="nt">&lt;/ConnectResponse&gt;</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,110 @@
+I"m<p>SAP Concur will send a request with the information in an encoded query string when the user clicks the button.</p>
+
+<ul>
+  <li><a href="#request">Request</a>
+    <ul>
+      <li><a href="#req-schema">Request Schema</a></li>
+      <li><a href="#authentication">Authentication</a></li>
+      <li><a href="#req-example">Example</a></li>
+    </ul>
+  </li>
+  <li><a href="#response">Response</a></li>
+</ul>
+
+<h3 id="request"><a name="request"></a>Request</h3>
+
+<h4 id="uri">URI</h4>
+<p>The Launch External URL callout launches the URI for the application connector, which can be in a custom location for each client. The standard location is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">https://{servername}/concur/form/v1.0/get</code></p>
+
+<p>The URI is configured on the <strong>Register Application Connector</strong> page in <strong>Web Services</strong> under <strong>Administration</strong>.</p>
+
+<p>The full URI for the request includes the following query string values:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{servername}/concur/form/v1.0/get?xcompanydomain={URL-encoded company domain}
+    &amp;xuserid={URL-encoded login ID of interactive user}
+    &amp;itemurl={URL-encoded url to item}
+    &amp;nonce={URL-encoded timestamp}
+    &amp;signature={URL-encoded signature hash}
+</code></pre></div></div>
+
+<h4 id="request-schema"><a name="req-schema"></a>Request Schema</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>xcompanydomain</td>
+      <td>The company domain.</td>
+    </tr>
+    <tr>
+      <td>xuserid</td>
+      <td>The SAP Concur user ID of the logged-in user. This may be an expense delegate instead of the report owner. To get the report owner ID, use the itemurl to get the details of the expense entry, then use those details to get the associated report details, including the report owner ID.</td>
+    </tr>
+    <tr>
+      <td>itemurl</td>
+      <td>The URL-encoded URI to access the item the field appears on. An example would be the expense entry URI used by the Expense Report web service.</td>
+    </tr>
+    <tr>
+      <td>nonce</td>
+      <td>The URL-encoded GUID used to generate the signature.</td>
+    </tr>
+    <tr>
+      <td>signature</td>
+      <td>The URL-encoded signature hash.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="authentication"><a name="authentication"></a>Authentication</h4>
+<p>To authenticate the request, the developer of the page in the application connector will need to generate an auth signature and compare it with the one passed in the query string.</p>
+
+<p>When the request is received by the connector:</p>
+
+<ol>
+  <li>Obtain the username and password for the application connector. How you do this will be specific to your implementation.</li>
+  <li>Parse and URL decode the following from the query string:
+    <ol>
+      <li>xcompanydomain</li>
+      <li>xuserid (used for subsequent web service call)</li>
+      <li>itemurl</li>
+      <li>nonce</li>
+      <li>signature (used to authenticate and verify the request)</li>
+    </ol>
+  </li>
+  <li>Base64-decode the provided signature.</li>
+  <li>Calculate your own base signature string by appending the values as such:<br />
+{xcompanydomain} + {xuserid} + {itemurl} + {connector username} + {connector password} + {nonce}</li>
+  <li>Use HMacSHA1 to generate a signature hash using the base signature string. To generate the key, concatenate the lower-case value for {connector username} and the exact {connector password}. For example, if the connector user name is JohnDoe, and the password is password, the key would be johndoepassword.</li>
+  <li>Compare the generated signature hash with the signature hash provided in the request query string.
+If the signature hashes match then you know the credentials are valid and the request has not been tampered with.</li>
+</ol>
+
+<p><strong>NOTES:</strong></p>
+
+<ul>
+  <li>You can store the nonce to help prevent replay attacks if necessary.</li>
+  <li>The order of the query parameters is not important, but the values in the base signature string must be combined in the correct order to generate the signature hash correctly.</li>
+</ul>
+
+<h4 id="xml-example-request"><a name="req-example"></a>XML Example Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://{URL to your custom connector and endpoint}
+?xcompanydomain={URL-encoded company domain}
+    &amp;xuserid={URL-encoded login ID of interactive user}
+    &amp;itemurl={URL-encoded url to item}
+    &amp;nonce={URL-encoded timestamp}
+    &amp;signature={URL-encoded signature hash}
+</code></pre></div></div>
+
+<h2 id="response"><a name="response"></a>Response</h2>
+
+<h3 id="content-body">Content Body</h3>
+<p>The application connector does not directly respond to the Launch External URL request. The application connector completes any updates to SAP Concur using the Inbound Web Services. The Launch External URL functionality monitors the external window, and when the window is closed, it redraws the form the user launched from to display any updated values.</p>
+:ET

@@ -1,0 +1,361 @@
+I"H<ul>
+  <li><a href="#post-image">Post an image</a></li>
+  <li><a href="#get-image-url">Get an image URL</a></li>
+</ul>
+
+<p>The SAP Concur Imaging Web service allows clients to manage the receipt images attached to expense reports and the images attached to invoices. Clients can retrieve existing images by reportID, image ID, or invoiceID, and upload new images to a user, expense entry, report, or invoice.</p>
+
+<p>The Imaging web service supports the following image formats:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">application/pdf</code> which has not been encrypted or password protected.</li>
+  <li><code class="language-plaintext highlighter-rouge">image/jpg</code></li>
+  <li><code class="language-plaintext highlighter-rouge">image/jpeg</code></li>
+  <li><code class="language-plaintext highlighter-rouge">image/png</code></li>
+</ul>
+
+<p>The maximum file size allowed is 10 MB.</p>
+
+<h2 id="scope-usage">Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">IMAGE</code></td>
+      <td>Add or Retrieve Report and Line Item Images.</td>
+      <td>GET, POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="product-restrictions">Product Restrictions</h2>
+
+<p>SAP Concur products are highly configurable, and not all clients will have access to all features.</p>
+
+<p>Partner developers must determine which configurations are required for their solution prior to the review process.</p>
+
+<p>Existing clients can work with SAP Concur Advantage Technical Services to create custom applications that work with their configuration.</p>
+
+<h2 id="post-an-image"><a name="post-image"></a>Post an image</h2>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="templates">Templates</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/image/v1.0/receipt
+https://www.concursolutions.com/api/image/v1.0/expenseentry/<span class="o">{</span>entryId<span class="o">}</span>
+https://www.concursolutions.com/api/image/v1.0/invoice/<span class="o">{</span>requestId<span class="o">}</span>
+https://www.concursolutions.com/api/image/v1.0/report/<span class="o">{</span>reportId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<blockquote>
+  <p><strong>Required</strong>: One of these parameters is always required.</p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receipt</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Uploads a receipt image and associates it with the OAuth consumer. The user can view the image in the receipt management section of SAP Concur.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">entryReceiptID/{entryReceiptId}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Obtains a short-lived URL (15 minute ttl) that can be rendered to obtain the receipt image.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseentry/{entryID}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Uploads a receipt image and associates it with the expense entry that matches the supplied entry ID. Once an image is attached to the entry, you cannot append additional images.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoice/{requestID}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Uploads an invoice image and associates it with the invoice that matches the supplied request ID. Each invoice is uniquely identified by the request ID value. Once an image is attached to the invoice, you cannot append additional images. The Concur Invoice product is required to use this endpoint. Currently you must use the Invoice user interface to get the Request ID value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">report/{reportID}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Uploads a receipt image and associates it with the report that matches the supplied report ID. If a report image already exists for the report, the new image will be appended to the existing image.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> (Required) - Authorization header with OAuth token for valid SAP Concur user. The SAP Concur user that authenticates during the OAuth process for this request must either be the user associated with this image, or have one of the following user roles in SAP Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard. These administrative roles allow the user to manage data for the entire company.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">application/pdf</code>, <code class="language-plaintext highlighter-rouge">image/jpg</code>, <code class="language-plaintext highlighter-rouge">image/jpeg</code>, <code class="language-plaintext highlighter-rouge">image/png</code></li>
+    </ul>
+  </li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<p>A byte array containing the image data.</p>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a>: <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#schema-image">Image</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<blockquote>
+  <p>This example contains a truncated (see the ellipsis) 64-bit encoded string representation of the image for illustration purposes only.
+This example demonstrates one of the endpoints available.</p>
+</blockquote>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.concursolutions.com/api/image/v1.0/receipt
+Authorization: OAuth <span class="o">{</span>token<span class="o">}</span>
+Content-Length: 65536
+Content-Type: image/jpeg
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/9j/4AAQSkZJRgABAQEAyADIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0a
+HBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIy
+MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAkiBqQDASIA
+AhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQA
+AAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3
+ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWm
+p6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEA
+AwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEE ...
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 201 Created
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Image</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/image/2011/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Id&gt;</span>aBcDeMwbl34xnwdkUw5ZjDsggDl2$pyoy31$pnGaHAywmPrpbAmE<span class="nt">&lt;/Id&gt;</span>
+  <span class="nt">&lt;Url</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/Image&gt;</span>
+</code></pre></div></div>
+
+<h2 id="get-an-image-url"><a name="get-image-url"></a>Get an image URL</h2>
+
+<p>Retrieves a URL to the following images:</p>
+
+<ul>
+  <li>Receipt</li>
+  <li>Expense entry</li>
+  <li>Invoice</li>
+  <li>Expense Report (PDF)
+    <ul>
+      <li>If receipts have been uploaded to specific expense entries, they will all be bundled into one PDF at the report level.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The URL is valid for 30 minutes after the request.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/image/v1.0/receipt/<span class="o">{</span>imageId<span class="o">}</span>
+https://www.concursolutions.com/api/image/v1.0/expenseentry/<span class="o">{</span>entryId<span class="o">}</span>
+https://www.concursolutions.com/api/image/v1.0/invoice/<span class="o">{</span>requestId<span class="o">}</span>
+https://www.concursolutions.com/api/image/v1.0/report/<span class="o">{</span>imageId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-1">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receipt/{imageId}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The {keyword}/{identifier} for the desired receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseentry/{entryID}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The {keyword}/{identifier} for the desired expense entry. The entryId is returned in the <code class="language-plaintext highlighter-rouge">RpeKey</code> within <code class="language-plaintext highlighter-rouge">ExpenseEntry</code> portion of the response from the <a href="/api-reference/expense/expense-report/v1dot1.report-full-details.html">Expense Report Full Details v1.1</a> API.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoice/{requestID}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The {keyword}/{identifier} for the desired payment request. The Concur Invoice product is required to use this endpoint. Currently you must use the Invoice user interface to get the Request ID value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">report/{imageId}</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The {keyword}/{identifier} for the desired report.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> containing an OAuth token for a valid SAP Concur user. The OAuth consumer must be the owner of the report to which the image is attached.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a>: <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<p>None</p>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a>: <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<ul>
+  <li><a href="#schema-image">Image</a></li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<blockquote>
+  <p>This example demonstrates one of the endpoints available.</p>
+</blockquote>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /api/image/v1.0/expenseentry/A2C40CEE415B43B2A0BE
+Authorization: OAuth <span class="o">{</span>token<span class="o">}</span>
+Accept: application/xml
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Image</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/image/2011/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Id&gt;</span>A2C40CEE415B43B2A0BE<span class="nt">&lt;/Id&gt;</span>
+  <span class="nt">&lt;Url&gt;</span>https://api.example.com/getImage?cid=able999999<span class="ni">&amp;amp;</span>val=F9B35244G86<span class="nt">&lt;/Url&gt;</span>
+<span class="nt">&lt;/Image&gt;</span>
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="image"><a name="schema-image"></a>Image</h3>
+
+<p>The Image schema provides metadata about an image within the system.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the image.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Url</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URL for the image. Note that special characters will be XML-encoded. You will need to unencode any special characters before using the link. This element is empty when uploading images.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="c-code-example">C# Code Example</h2>
+
+<p>The following example in C# illustrates how to read the source image file as an array of bytes and pass that data into the request.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HttpWebRequest</span> <span class="n">request</span> <span class="p">=</span> <span class="p">(</span><span class="n">HttpWebRequest</span><span class="p">)</span><span class="n">WebRequest</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+<span class="n">request</span><span class="p">.</span><span class="n">Method</span> <span class="p">=</span> <span class="s">"POST"</span><span class="p">;</span>
+<span class="n">request</span><span class="p">.</span><span class="n">ContentType</span> <span class="p">=</span> <span class="s">"application/pdf"</span><span class="p">;</span>
+<span class="n">request</span><span class="p">.</span><span class="n">Headers</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span> <span class="n">signature</span><span class="p">);</span>
+
+<span class="k">using</span> <span class="p">(</span><span class="n">FileStream</span> <span class="n">fs</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">FileStream</span><span class="p">(</span><span class="n">pathToImageFile</span><span class="p">,</span> <span class="n">FileMode</span><span class="p">.</span><span class="n">Open</span><span class="p">,</span> <span class="n">FileAccess</span><span class="p">.</span><span class="n">Read</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="k">using</span> <span class="p">(</span><span class="n">BinaryReader</span> <span class="n">br</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BinaryReader</span><span class="p">(</span><span class="n">fs</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="kt">byte</span><span class="p">[]</span> <span class="n">image</span> <span class="p">=</span> <span class="n">br</span><span class="p">.</span><span class="nf">ReadBytes</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">fs</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
+		<span class="n">request</span><span class="p">.</span><span class="n">ContentLength</span> <span class="p">=</span> <span class="n">image</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span>
+
+		<span class="n">Stream</span> <span class="n">ds</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="nf">GetRequestStream</span><span class="p">();</span>
+		<span class="n">ds</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">image</span><span class="p">.</span><span class="n">Length</span><span class="p">);</span>
+		<span class="n">ds</span><span class="p">.</span><span class="nf">Close</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">HttpWebResponse</span> <span class="n">webresponse</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="nf">GetResponse</span><span class="p">();</span>
+</code></pre></div></div>
+:ET

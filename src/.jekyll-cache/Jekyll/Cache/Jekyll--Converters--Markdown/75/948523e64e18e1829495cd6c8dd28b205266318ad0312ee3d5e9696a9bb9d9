@@ -1,0 +1,1708 @@
+I"D^<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>The User Provisioning Service allows callers to provision a user in the SAP Concur environment. Once a User is provisioned, the User identity is setup in Profile, Travel and Spend.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#create-provision-request">Create a Provisioning Request</a></li>
+  <li><a href="#retrieve-provision-request-status">Retrieve a Provisioning Request Status</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#user-schema">User</a></li>
+      <li><a href="#travel-user-schema">Travel User</a></li>
+      <li><a href="#workflow-preference-schema">Workflow Preference Extension</a></li>
+      <li><a href="#bulk-request-schema">Bulk Request</a></li>
+      <li><a href="#spend-user-schema">Spend User</a></li>
+      <li><a href="#spend-role-schema">Spend Role</a></li>
+      <li><a href="#spend-delegate-schema">Spend Delegate</a></li>
+      <li><a href="#spend-approver-schema">Spend Approver</a></li>
+      <li><a href="#enterprise-user-schema">Enterprise User</a></li>
+      <li><a href="#expense-user-preference-schema">Expense User Preference Extension</a></li>
+      <li><a href="#payroll-extension-schema">Payroll Extension</a></li>
+      <li><a href="#provision-status-schema">Provision Status</a></li>
+      <li><a href="#error-schema">Error</a></li>
+      <li><a href="#definitions">Definitions</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="./v4-user-provisioning-process-flow-v2.png" alt="A process flow diagram of the User Provisioning API" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+  <li>Concur Travel Professional Edition</li>
+  <li>Concur Travel Standard Edition</li>
+  <li>Concur Invoice Professional Edition</li>
+  <li>Concur Invoice Standard Edition</li>
+  <li>Concur Request Professional Edition</li>
+  <li>Concur Request Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user.provision.write</code></td>
+      <td>Provision a user.</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>SAP Concur users must purchase either Concur Expense or Concur Travel or both in order to use this API. This API only available to approved early access partners. Please contact your SAP Concur representative for more information.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports company level access tokens.</p>
+
+<h2 id="create-a-provisioning-request"><a name="create-provision-request"></a>Create a Provisioning Request</h2>
+
+<p>Creates a provisioning request.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">user.provision.write</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">user.provision.read</code>- Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Bulk/
+</code></pre></div></div>
+
+<h4 id="parameters">Parameters</h4>
+
+<p>None.</p>
+
+<h4 id="headers">Headers</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><code class="language-plaintext highlighter-rouge">Content-Type</code> is used to specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#bulk-request-schema">Bulk Request</a></li>
+</ul>
+
+<p>The maximum file size allowed is 400kb per request.</p>
+
+<h4 id="payload-example">Payload Example</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+	<span class="s2">"schemas"</span>: <span class="o">[</span>
+		<span class="s2">"urn:ietf:params:scim:api:messages:2.0:BulkRequest"</span>
+	<span class="o">]</span>,
+	<span class="s2">"failOnErrors"</span>: 1,
+	<span class="s2">"Operations"</span>: <span class="o">[</span>
+		<span class="o">{</span>
+			<span class="s2">"method"</span>: <span class="s2">"POST"</span>,
+			<span class="s2">"path"</span>: <span class="s2">"/Users"</span>,
+      <span class="s2">"bulkId"</span>: <span class="s2">"bulk-operation-1"</span>,
+			<span class="s2">"data"</span>: <span class="o">{</span>
+				<span class="s2">"userName"</span>: <span class="s2">"Chris.doe198@sap.com"</span>,
+				<span class="s2">"active"</span>: <span class="nb">true</span>,
+				<span class="s2">"name"</span>: <span class="o">{</span>
+					<span class="s2">"formatted"</span>: <span class="s2">"Chris Doe"</span>,
+					<span class="s2">"legalName"</span>: <span class="s2">"Chris Doe"</span>,
+					<span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
+					<span class="s2">"givenName"</span>: <span class="s2">"Chris"</span>
+				<span class="o">}</span>,
+				<span class="s2">"emails"</span>: <span class="o">[</span>
+					<span class="o">{</span>
+						<span class="s2">"value"</span>: <span class="s2">"Chris.doe198@sap.com"</span>,
+						<span class="s2">"type"</span>: <span class="s2">"Work"</span>
+					<span class="o">}</span>
+				<span class="o">]</span>,
+        <span class="s2">"timezone"</span>: <span class="s2">"America/Los_Angeles"</span>,
+				<span class="s2">"entitlements"</span>: <span class="o">[</span>
+					<span class="s2">"Expense"</span>,
+					<span class="s2">"Travel"</span>
+				<span class="o">]</span>,
+				<span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
+					<span class="s2">"employeeNumber"</span>: <span class="s2">"3749"</span>,
+					<span class="s2">"companyId"</span>: <span class="s2">"xxxxxxxx-xxx-xxx-xxx-9300b1c317xxx"</span>
+				<span class="o">}</span>
+			<span class="o">}</span>
+		<span class="o">}</span>
+	<span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="response">Response</h3>
+<ul>
+  <li><a href="#provision-status-schema">Status</a></li>
+</ul>
+
+<h4 id="response-example">Response Example</h4>
+<blockquote>
+  <p>An example of the response from a Bulk user provisoning request for illustration purposes only.
+Note the id used for status updates and correlationId for troubleshooting.</p>
+</blockquote>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+  <span class="s2">"schemas"</span>: <span class="o">[</span>
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:concur:2.0:Provision:Status"</span>
+  <span class="o">]</span>,
+  <span class="s2">"id"</span>: <span class="s2">"14b15c4b-59a1-42fb-bdb5-999bb3d38d5d"</span>,
+  <span class="s2">"status"</span>: <span class="o">{</span>
+    <span class="s2">"completed"</span>: <span class="nb">false</span>,
+    <span class="s2">"success"</span>: null
+  <span class="o">}</span>,
+  <span class="s2">"meta"</span>: <span class="o">{</span>
+    <span class="s2">"location"</span>: <span class="s2">"https://www.concursolutions.com/provisioning/v4/provisions/14b15c4b-59a1-42fb-bdb5-999bb3d38d5d/status"</span>,
+    <span class="s2">"created"</span>: <span class="s2">"2020-07-15T23:03:07.859+0000"</span>,
+    <span class="s2">"lastModified"</span>: <span class="s2">"2020-07-15T23:03:07.859+0000"</span>,
+    <span class="s2">"resourceType"</span>: <span class="s2">"ProvisionRequest"</span>,
+    <span class="s2">"correlationId"</span>: <span class="s2">"d5192a1d-3385-4afc-9e8d-4aeff8b58a48"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.2.1">100 Continue</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">405 Method Not Allowed</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.8">409 Conflict</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.13">415 Unsupported Media Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc5842#section-7.2">508 Loop Detected</a></li>
+</ul>
+
+<h2 id="retrieve-a-provisioning-request-status"><a name="retrieve-provision-request"></a>Retrieve a Provisioning Request Status</h2>
+
+<p>Retrieves a provisioning request status.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">user.provision.write</code>
+<code class="language-plaintext highlighter-rouge">user.provision.read</code>- Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-1">Request</h3>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /provisioning/v4/provisions/<span class="o">{</span>provision-id<span class="o">}</span>/status
+</code></pre></div></div>
+<h4 id="parameters-1">Parameters</h4>
+<p>Name|Type|Format|Description
+—|—|—|—
+<code class="language-plaintext highlighter-rouge">attributes</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">operations</code>|Response includes operations when specified.
+<code class="language-plaintext highlighter-rouge">startIndex</code>|<code class="language-plaintext highlighter-rouge">Integer</code>|<code class="language-plaintext highlighter-rouge">Non-negative Integer</code>|The 1-based index of the first result in the current set of list results.
+<code class="language-plaintext highlighter-rouge">count</code>|<code class="language-plaintext highlighter-rouge">Integer</code>|<code class="language-plaintext highlighter-rouge">Non-negative Integer</code>|Specifies the desired operations per page.</p>
+
+<h4 id="request-example">Request Example</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/provisioning/v4/provisions/14b15c4b-59a1-42fb-bdb5-999bb3d38d5d/status?attributes<span class="o">=</span>operations
+</code></pre></div></div>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><code class="language-plaintext highlighter-rouge">Content-Type</code> is used to specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html)
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="response-example-1">Response Example</h3>
+<blockquote>
+  <p>This is an example of a status update request from a Bulk user provisoning request for illustration purposes only.</p>
+</blockquote>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+  <span class="s2">"schemas"</span>: <span class="o">[</span>
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:concur:2.0:Provision:Status"</span>
+  <span class="o">]</span>,
+  <span class="s2">"id"</span>: <span class="s2">"14b15c4b-59a1-42fb-bdb5-999bb3d38d5d"</span>,
+  <span class="s2">"status"</span>: <span class="o">{</span>
+    <span class="s2">"completed"</span>: <span class="nb">true</span>,
+    <span class="s2">"success"</span>: <span class="nb">false</span>
+  <span class="o">}</span>,
+  <span class="s2">"operations"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"id"</span>: <span class="s2">"1"</span>,
+      <span class="s2">"status"</span>: <span class="o">{</span>
+        <span class="s2">"completed"</span>: <span class="nb">true</span>,
+        <span class="s2">"success"</span>: <span class="nb">true</span>
+      <span class="o">}</span>,
+      <span class="s2">"resource"</span>: null,
+      <span class="s2">"extensions"</span>: <span class="o">[</span>
+      <span class="o">{</span>
+                    <span class="s2">"name"</span>: <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
+                    <span class="s2">"status"</span>: <span class="o">{</span>
+                        <span class="s2">"completed"</span>: <span class="nb">true</span>,
+                        <span class="s2">"success"</span>: <span class="nb">true</span>,
+                        <span class="s2">"code"</span>: <span class="s2">""</span>,
+                        <span class="s2">"result"</span>: <span class="s2">"success"</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>,
+        <span class="o">{</span>
+                    <span class="s2">"name"</span>: <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
+                    <span class="s2">"status"</span>: <span class="o">{</span>
+                        <span class="s2">"completed"</span>: <span class="nb">true</span>,
+                        <span class="s2">"success"</span>: <span class="nb">true</span>,
+                        <span class="s2">"code"</span>: <span class="s2">""</span>,
+                        <span class="s2">"result"</span>: <span class="s2">"success"</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+      <span class="o">]</span>,
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"meta"</span>: <span class="o">{</span>
+    <span class="s2">"location"</span>: <span class="s2">"https://www.concursolutions.com/provisioning/v4/provisions/14b15c4b-59a1-42fb-bdb5-999bb3d38d5d/status"</span>,
+    <span class="s2">"created"</span>: <span class="s2">"2020-07-15T23:03:07.859+0000"</span>,
+    <span class="s2">"lastModified"</span>: <span class="s2">"2020-07-15T23:03:07.859+0000"</span>,
+    <span class="s2">"resourceType"</span>: <span class="s2">"ProvisionRequest"</span>,
+    <span class="s2">"correlationId"</span>: <span class="s2">"d5192a1d-3385-4afc-9e8d-4aeff8b58a48"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.2.1">100 Continue</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">405 Method Not Allowed</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.8">409 Conflict</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.13">415 Unsupported Media Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc5842#section-7.2">508 Loop Detected</a></li>
+</ul>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="user"><a name="user-schema"></a>User</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">active</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> if <code class="language-plaintext highlighter-rouge">true</code>, the user is active.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addresses</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>A physical mailing address for this user. Supported values: <code class="language-plaintext highlighter-rouge">work</code>, <code class="language-plaintext highlighter-rouge">home</code>, other</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A two-letter country code defined in ISO 3166-1 alpha-2.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locality</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The city or locality.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The zip code or postal code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">region</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The state or region.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">streetAddress</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A label indicating the function of the address. Examples: <code class="language-plaintext highlighter-rouge">work</code>, <code class="language-plaintext highlighter-rouge">home</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dateOfBirth</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYY-MM-DD</code></td>
+      <td>The user’s date of birth.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">displayName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The name of the user, suitable for display. This name should be the full name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emails</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Email addresses for the user. The value should be canonicalized by the service provider.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dateAdded</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The date and time the email was added to the user’s profile.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dateVerified</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The date and time the email was verified.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">notifications</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, user has opted in for notification emails.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A label indicating the attribute’s function. Example: <code class="language-plaintext highlighter-rouge">Work</code>, <code class="language-plaintext highlighter-rouge">home</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Email address value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">verified</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email has been verified by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emergencyContacts</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Emergency Contact information for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A two-letter country code defined in ISO 3166-1 alpha-2 of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emails</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Emails of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locality</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The city or locality of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Name of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">phones</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Phone numbers of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The zip code or postal code of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">region</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The state or region of the emergency contact.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">relationship</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Emergency contact relationship. Supported values: <code class="language-plaintext highlighter-rouge">Spouse</code>, <code class="language-plaintext highlighter-rouge">Brother</code>, <code class="language-plaintext highlighter-rouge">Sister</code>, <code class="language-plaintext highlighter-rouge">Parent</code>, <code class="language-plaintext highlighter-rouge">Life Partner</code>, <code class="language-plaintext highlighter-rouge">Other</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">streetAddress</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The full street address component of the emergency contact, which may include house number, street name, P.O. box, and multi-line extended street address information.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">entitlements</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The features enabled for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">externalId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User identifier from the provisioning user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">gender</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The user’s gender. Supported values: <code class="language-plaintext highlighter-rouge">Male</code>, <code class="language-plaintext highlighter-rouge">Female</code>, <code class="language-plaintext highlighter-rouge">Others</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> Unique identifier for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">localeOverrides</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Support for users who want to override locale settings.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preference24Hour</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred 24 hour format for the user. Supported values: <code class="language-plaintext highlighter-rouge">h:mm AM/PM</code>, <code class="language-plaintext highlighter-rouge">H:mm</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceCurrencySymbolLocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred currency symbol location for the user. Supported values: <code class="language-plaintext highlighter-rouge">BeforeAmount</code>, <code class="language-plaintext highlighter-rouge">AfterAmount</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceDateFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred date format for the user. Supported values: <code class="language-plaintext highlighter-rouge">mm/dd/yyyy</code>, <code class="language-plaintext highlighter-rouge">mm.dd.yyyy</code>, <code class="language-plaintext highlighter-rouge">mm-dd-yyyy</code>, <code class="language-plaintext highlighter-rouge">dd/mm/yyyy</code>, <code class="language-plaintext highlighter-rouge">dd.mm.yyyy</code>, <code class="language-plaintext highlighter-rouge">dd-mm-yyyy</code>, <code class="language-plaintext highlighter-rouge">yyyy/mm/dd</code>, <code class="language-plaintext highlighter-rouge">yyyy.mm.dd</code>, <code class="language-plaintext highlighter-rouge">yyyy-mm-dd</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceDefaultCalView</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred default calendar view for the user. Supported values: <code class="language-plaintext highlighter-rouge">day</code>, <code class="language-plaintext highlighter-rouge">week</code>, <code class="language-plaintext highlighter-rouge">month</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceDistance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred distance metric. Supported values: <code class="language-plaintext highlighter-rouge">mile</code>, <code class="language-plaintext highlighter-rouge">km</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceEndDayViewHour</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Preferred hour setting for the end of day. Supported values: <code class="language-plaintext highlighter-rouge">0</code>-<code class="language-plaintext highlighter-rouge">23</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceFirstDayOfWeek</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred first day of the week for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceHourMinuteSeparator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred separator between hour and minute. Supported values: <code class="language-plaintext highlighter-rouge">:</code>, <code class="language-plaintext highlighter-rouge">.</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceNegativeCurrencyFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred negative currency format for the user. Supported values: <code class="language-plaintext highlighter-rouge">-100</code>, <code class="language-plaintext highlighter-rouge">(100)</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceNegativeNumberFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred negative number format for the user. Supported values: <code class="language-plaintext highlighter-rouge">-100</code>, <code class="language-plaintext highlighter-rouge">(100)</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceNumberFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Preferred number format for the user. Supported values: <code class="language-plaintext highlighter-rouge">1,000.00</code>, <code class="language-plaintext highlighter-rouge">1.000,00</code>, <code class="language-plaintext highlighter-rouge">1 000,00</code>, <code class="language-plaintext highlighter-rouge">1'000.00</code>, <code class="language-plaintext highlighter-rouge">1'000,00</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferenceStartDayViewHour</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Preferred start of day for the user. Begins at <code class="language-plaintext highlighter-rouge">1</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">meta</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The user’s name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">familyName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The family or last name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">formatted</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The full name, including all middle names, title, and suffixes as appropriate, formatted for display Example: <code class="language-plaintext highlighter-rouge">Ms. Barbara J Jensen, III</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">givenName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The given or first name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hasNoMiddleName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the user does not have a middle name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">honorificPrefix</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The honorific or title prefix(es) of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">honorificSuffix</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The honorific suffix(es) of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">legalName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The legal name of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">middleInitial</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The middle initial of the user’s middle name, if the user has a middle name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">middleName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The middle name(s) of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">nickName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The casual way to address the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">phoneNumbers</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Phone numbers for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A two-letter code defined in ISO 3166-1 alpha-2 denoting the country the phone number was issued in.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">display</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A phone number for display.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">notifications</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the user has opted in for mobile device notifications.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">operatingSystem</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The operating system of the device, when the phone is <code class="language-plaintext highlighter-rouge">cellphone</code>. Supported values: <code class="language-plaintext highlighter-rouge">Android Phone</code>, <code class="language-plaintext highlighter-rouge">Android Tablet</code>, <code class="language-plaintext highlighter-rouge">Blackberry</code>, <code class="language-plaintext highlighter-rouge">iOS Phone</code>, <code class="language-plaintext highlighter-rouge">iOS Tablet</code>, <code class="language-plaintext highlighter-rouge">Not a smartphone</code>, <code class="language-plaintext highlighter-rouge">Other iOS device</code>, <code class="language-plaintext highlighter-rouge">Other smartphone</code>, <code class="language-plaintext highlighter-rouge">Unknown</code>, <code class="language-plaintext highlighter-rouge">Window Mobile</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">primary</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, this is the primary device for mobile devices.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A label indicating the phones’s function. Example: <code class="language-plaintext highlighter-rouge">Work</code>, <code class="language-plaintext highlighter-rouge">Home</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Phone number value.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">preferredLanguage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Indicates the user’s preferred written or spoken language. Used for selecting a localized user interface.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timezone</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">olson</code></td>
+      <td>The user’s time zone. Example: <code class="language-plaintext highlighter-rouge">America/Los_Angeles</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Payroll</code></td>
+      <td><a href="#payroll-extension-schema"><code class="language-plaintext highlighter-rouge">PayrollExtension</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">User</code></td>
+      <td><a href="#enterprise-user-schema"><code class="language-plaintext highlighter-rouge">EnterpriseUser</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Approver</code></td>
+      <td><a href="#spend-approver-schema"><code class="language-plaintext highlighter-rouge">SpendApprover</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Delegate</code></td>
+      <td><a href="#spend-delegate-schema"><code class="language-plaintext highlighter-rouge">SpendDelegate</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Role</code></td>
+      <td><a href="#spend-role-schema"><code class="language-plaintext highlighter-rouge">SpendRole</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">User</code></td>
+      <td><a href="#spend-user-schema"><code class="language-plaintext highlighter-rouge">SpendUser</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">UserPreference</code></td>
+      <td><a href="#expense-user-preference-schema"><code class="language-plaintext highlighter-rouge">ExpenseUserPreferenceExtension</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WorkflowPreference</code></td>
+      <td><a href="#workflow-preference-extension-schema"><code class="language-plaintext highlighter-rouge">WorkflowPreferenceExtension</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">User</code></td>
+      <td><a href="#travel-user-schema"><code class="language-plaintext highlighter-rouge">TravelUser</code></a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The name that can be used to log in to CTE.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="travel-user"><a name="travel-user-schema"></a>Travel User</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ruleClass</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Defines the rule class for the travel user either ID or name should be provided.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">travelNameRemark</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Travel name remark.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">xmlProfileSyncId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User-assigned Travel user identifier that allows the user profile to be synchronized with other vendors.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">travelCrsName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The name of the profile in the GDS system.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">groups</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>List of user groups that user belongs to for certain permissions.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">manager</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td>-</td>
+      <td>Travel approver of this user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customFields</code></td>
+      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
+      <td>-</td>
+      <td>User can set values to custom data fields.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="workflow-preference-extension"><a name="workflow-preference-extension-schema"></a>Workflow Preference Extension</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailAwaitApprovalOnCashAdvance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when a cash advance is awaiting approval. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailAwaitApprovalOnPayment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when a payment is awaiting approval. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailAwaitApprovalOnReport</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when a report is awaiting approval. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailAwaitApprovalOnTravelRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when a travel request is awaiting approval. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailStatusChangeOnCashAdvance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when the cash advance status changes. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailStatusChangeOnPayment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when the payment status changes. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailStatusChangeOnReport</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when the report status changes. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailStatusChangeOnTravelRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, an email is sent when the travel request status changes. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">promptForApproverOnPaymentSubmit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, a prompt for approver is displayed when submitting a payment. Default: <code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">promptForApproverOnReportSubmit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, a prompt for approver is displayed when submitting a report. Default: <code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">promptForApproverOnTravelRequestSubmit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, a prompt for approver is displayed when submitting a travel request. Default: <code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="bulk-request"><a name="bulk-request-schema"></a>Bulk Request</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemas</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Operations</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">data</code></td>
+      <td><a href="#user-schema">User</a></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">method</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Supported values: <code class="language-plaintext highlighter-rouge">POST</code>, <code class="language-plaintext highlighter-rouge">PUT</code>, <code class="language-plaintext highlighter-rouge">PATCH</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="spend-user"><a name="spend-user-schema"></a>Spend User</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">budgetCountryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td> </td>
+      <td>Valid ISO 3166 country code for Budget.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Valid ISO 3166 country code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ledgerCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Ledger code to associate with the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locale</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Valid locale from the list of configured locales as defined in [RFC5646]. Example: <code class="language-plaintext highlighter-rouge">en-US</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reimbursementCurrency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Valid three digit currency code in the list of system reimbursement currencies.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reimbursementType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The reimbursement type for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stateProvince</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Valid ISO sub country code. Example: <code class="language-plaintext highlighter-rouge">WA</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="spend-role"><a name="spend-role-schema"></a>Spend Role</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">roles</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Expense roles for the employee.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">roleGroups</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Group(s) to be associated with the Expense role.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">roleName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Expense role for the employee.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="spend-delegate"><a name="spend-delegate-schema"></a>Spend Delegate</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">delegateProdCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>A list of delegates associated with the delegate’s product code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canApprove</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can approve.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canPrepare</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can prepare.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canPrepareForApproval</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can prepare for approval.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canReceiveApprovalEmail</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can receive approval emails.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canReceiveEmail</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can receive emails.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canSubmit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can submit.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canSubmitTravelRequest</code></td>
+      <td>boolean</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can submit travel request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canUseBi</code></td>
+      <td>boolean</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can use BI.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">canViewReceipt</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the delegate can view receipts.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">delegate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> User reference for the delegate.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$ref</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI reference for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">displayName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The username for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">employeeNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The employee number for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>The internal UUID identifier for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">temporaryDelegatation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Determines if delegate can temporarily approve.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">temporaryDelegationFromDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Start date for delegate’s temporary approval permissions.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">temporaryDelegationToDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>End date for delegate’s temporary approval permissions.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="spend-approver"><a name="spend-approver-schema"></a>Spend Approver</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approverType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>A list of approvers associated with the approver’s type.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approver</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>The user reference for the approver.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$ref</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI reference for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">displayName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The username for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">employeeNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The employee number for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>The internal UUID identifier for the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">primary</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> If <code class="language-plaintext highlighter-rouge">true</code>, the associated user is the primary approver.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="enterprise-user"><a name="enterprise-user-schema"></a>Enterprise User</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The SAP Concur ID of the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">costCenter</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Employee cost center for product.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">department</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User supplied department name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">division</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User supplied division name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">employeeNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User supplied employee’s number within the company, unique for the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">jobTitle</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User’s job title in the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">manager</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>The manager of the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$ref</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI of the SCIM resource representing the referenced user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">displayName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The referenced user’s display name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">employeeNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The referenced user’s employee number, if it is an Enterprise user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The referenced user’s UUID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">orgUnit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>User supplied org unit name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">organization</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Company name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">self</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>A reference to the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$ref</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI of the SCIM resource representing the referenced user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Start date.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">terminationDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Termination date. If the employee is terminated, this can also be used to calculate the data retention period.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="expense-user-preference-extension"><a name="expense-user-preference-schema"></a>Expense User Preference Extension</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowCreditCardTransArrivalEmails</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, allows credit card transaction arrival notification emails. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowReceiptImageAvailEmails</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, sends an email when faxed receipts are successfully received. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">autoAddTripCardTransOnReport</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, adds company card transactions within trip dates to one (1) click expense report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">defaultReportPrintFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Default expense report print type. Supported values: <code class="language-plaintext highlighter-rouge">RECEIPTS</code>. <code class="language-plaintext highlighter-rouge">DETAILED</code>, <code class="language-plaintext highlighter-rouge">FAX</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseAuditRequired</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Expense audit is required. Supported values: <code class="language-plaintext highlighter-rouge">NEVER</code>, <code class="language-plaintext highlighter-rouge">REQUIRED</code>, <code class="language-plaintext highlighter-rouge">ALWAYS</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">processorReportAccess</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Report access for processor roles. Supported values: <code class="language-plaintext highlighter-rouge">Expense Processor</code>, <code class="language-plaintext highlighter-rouge">Expense Processor Audit</code>, <code class="language-plaintext highlighter-rouge">Expense Processor Manager</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">promptForCardTransactionsOnReport</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays a prompt for company card transactions when creating a new report. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">promptForReportPrintFormat</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays a prompt for the report format before printing.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">showExpenseOnReport</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Show expenses on detailed report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">showImagingIntro</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays imaging introduction. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">showInstructHelpPanel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays instructional help. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">showTotalOnReport</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, displays report totals on detailed report. Supported values: <code class="language-plaintext highlighter-rouge">ALL</code>, <code class="language-plaintext highlighter-rouge">PARENT</code>, <code class="language-plaintext highlighter-rouge">NOTHING</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">useQuickItinAsDefault</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, uses quick itinerary as default.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payroll-extension"><a name="payroll-extension-schema"></a>Payroll Extension</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">adp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>ADP settings for employee.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The company code for the employee within ADP.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deductionCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The deduction code for the employee within ADP.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">employeeFileNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the employee within ADP, also known as the Employee File Number.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="provision-status"><a name="provision-status-schema"></a>Provision Status</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> Unique identifier for the provisioning request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">operations</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>The status of each operation of the provisioning request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">extensions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>The extensions’ status.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Additional messages in case of errors/warnings.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Message code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The message description.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemaPath</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Relative schema path of attribute.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Message type. Supported values: <code class="language-plaintext highlighter-rouge">error</code>, <code class="language-plaintext highlighter-rouge">warning</code>, <code class="language-plaintext highlighter-rouge">user</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Extension name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Status of the operation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>HTTP status code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">completed</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> If <code class="language-plaintext highlighter-rouge">true</code>, the processing extension is complete.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">result</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The current processing status.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">success</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the processing extension was successful.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Identifier of the operation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">resource</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Resource details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>Unique identifier of the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Resource type.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Status of the operation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">completed</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td><strong>Required</strong> If <code class="language-plaintext highlighter-rouge">true</code>, the provisioning is complete.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">success</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, the provisioning is successful.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error"><a name="error-schema"></a>Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">messages</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td>-</td>
+      <td>Additional messages in case of errors/warnings.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Message code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Message description.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemaPath</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Relative schema path of attribute.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Message type.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="definitions"><a name="definitions"></a>Definitions</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a name="definition-dateTime"></a><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>DateTime of where the transaction happened in format specified in ISO 8601, using UTC + Offset. For example, 2016-04-22T12:20+0700 (12:20 PM in Pacific Time).</td>
+    </tr>
+  </tbody>
+</table>
+:ET

@@ -1,0 +1,195 @@
+I"�<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>The Detokenizer service allows clients to retrieve the user’s credit card number from Concur Expense in a secure way. The Detokenizer service returns the user’s credit card number encrypted with a public key that the client provides in the request. The client will be able to decrypt the user’s credit card number using their private key.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available to clients who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+</blockquote>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#get-credit-card-account-details">Get Credit Card Account Details</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#schema-account-number">Account Number</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">creditcardaccountnumber.read</code> or <code class="language-plaintext highlighter-rouge">creditcardaccount.read</code></td>
+      <td>Reads credit card data from Concur Expense.</td>
+      <td>GET</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>SAP Concur clients must purchase Concur Expense in order to use this API.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports company level access tokens.</p>
+
+<h2 id="get-credit-card-account-details"><a name="get-credit-card-account-details"></a>Get Credit Card Account Details</h2>
+
+<p>Returns the credit card number encrypted with the public key provided in the request.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">creditcardaccountnumber.read or creditcardaccount.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/detokenizer/v1/company/<span class="o">{</span>companyUUID<span class="o">}</span>/creditcard/<span class="o">{</span>creditcardGUID<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pubkeyAlgorithm </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The RSA algorithm used by the <code class="language-plaintext highlighter-rouge">PublicKey</code> for credit card number encryption.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pubkeyFormat  </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Public key format.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pubkey </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Public key.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyUUID </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Company UUID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">creditcardGUID </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Credit card GUID.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> : Header used for authorization. Should be specified in the format ‘Bearer JWT_Token’. This is a Company JWT token.</li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li>None.</li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is an SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+<ul>
+  <li><a href="#schema-account-number">Account Number</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/detokenizer/v1/company/d295261b-e624-442b-b771-9c7f00c1ed9a/creditcard/BB98EABE1DDA7B48B858CFDC7EEE2A10?pubkeyAlgorithm<span class="o">=</span>rsa_pkcs7&amp;pubkeyFormat<span class="o">=</span>cert&amp;pubkey<span class="o">=</span>PUBLIC_KEY
+Authorization: Bearer JWT_TOKEN
+Accept: application/json
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Content-Type: application/json
+Content-Length: 1270
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+ </span><span class="nl">"accountNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MIAGCSqGSIb3DQEHA6CAMIACAQAxgbUwgbICAQAwGzAPMQ0wCwYDVQQDDARUZXN0AghyaD1Uj9uSsDANBgkqhkiG9w0BAQEFAASBgAk0/9Yd5CQt5/6vQ1gO9aSivBJrv4AOAluZ876tqVI+fCZi7P1YojC4nTkvl358zfD3vXE3ehj14FfIPZlwmuVlSZF4ad5ni2B78fs5Jr6lxhG9iPU0FyFv+NhuIet/mpEaaX2CWB8CUwkTVdDyT5UjrwqsvYpRCwLz0Hx76BO8MIAGCSqGSIb3DQEHATAdBglghkgBZQMEAQIEEPo3PO3VplgQ4mN0L5KInPKggAQgkqu7zWslGq3uqw0G2WXkK0QA2p0YHQuwhEPT2JMF5mUAAAAAAAAAA"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="account-number"><a name="schema-account-number"></a>Account Number</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">accountNumber </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Encrypted credit card account number.</td>
+    </tr>
+  </tbody>
+</table>
+:ET

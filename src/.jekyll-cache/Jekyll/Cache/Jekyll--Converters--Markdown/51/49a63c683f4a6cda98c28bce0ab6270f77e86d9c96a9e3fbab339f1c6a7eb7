@@ -1,0 +1,705 @@
+I"m<p>A post transportation search request is sent when the Travel user searches for ground transportation.</p>
+
+<ul>
+  <li><a href="#request">Request</a>
+    <ul>
+      <li><a href="#req-schema">Request Schema</a>
+        <ul>
+          <li><a href="#pickup-location">Pickup Location</a></li>
+          <li><a href="#dropoff-location">Dropoff Location</a></li>
+          <li><a href="#discount-code">Discount Code</a></li>
+          <li><a href="#airport">Airport</a></li>
+          <li><a href="#flight">Flight</a></li>
+          <li><a href="#train-station">Train Station</a></li>
+          <li><a href="#train">Train</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#response">Response</a>
+    <ul>
+      <li><a href="#res-schema">Response Schema</a>
+        <ul>
+          <li><a href="#error">Error</a></li>
+          <li><a href="#limo">Limo</a></li>
+          <li><a href="#vendor">Vendor</a></li>
+          <li><a href="#form-payment">Form of Payment</a></li>
+          <li><a href="#rate-info">Rate Information</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#examples">Examples</a></li>
+</ul>
+
+<h2 id="request"><a name="request"></a>Request</h2>
+
+<h3 id="uri">URI</h3>
+
+<p>The Ground Transportation direct connect sends the relevant information to a URI that the travel supplier maintains. The standard location is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">https://{servername}/concur/groundtransportation</code></p>
+
+<p>The URI is configured by the supplier when registering the partner application.</p>
+
+<h3 id="headers">Headers</h3>
+
+<h4 id="accept-header">Accept Header</h4>
+<p>application/xml</p>
+
+<h4 id="authorization-header">Authorization Header</h4>
+<p>Authorization header with OAuth credentials.</p>
+
+<h3 id="request-body"><a name="req-schema"></a>Request Body</h3>
+<p>The request will contain a <strong>CC_LimoSearchRequest</strong> parent element, containing the following child elements.</p>
+
+<p><strong>ServiceType</strong>: The type of service requested. Will contain one of the following values:</p>
+
+<p>100: Point to point<br />
+110: One way to airport<br />
+111: One way from airport<br />
+120: One way to train station<br />
+121: One way from train station<br />
+200: Hourly<br />
+300: Airport to airport</p>
+
+<p><strong>ClassOfService</strong>: The requested service class. Will contain one of the following values:</p>
+
+<p>100: Normal<br />
+200: High<br />
+300: Highest</p>
+
+<p>If this value is not provided by the user, it will default to 100.</p>
+
+<p><strong>PickupLocation</strong>: The pick up location. This parent element contains the following child elements:</p>
+
+<h4 id="pickuplocation-elements"><a name="pickup-location"></a>PickupLocation Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LocationType</td>
+      <td>One of the following: 100 - Address, 200 - Airport, 300 - Train station.</td>
+    </tr>
+    <tr>
+      <td>Airport</td>
+      <td>Refer to the Airport Elements table. Provided if the LocationType = 200.</td>
+    </tr>
+    <tr>
+      <td>TrainStation</td>
+      <td>Refer to the Train Station Elements table. Provided if the LocationType = 300.</td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>The street address of the location. Provided if the LocationType = 100.</td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td>The location city.</td>
+    </tr>
+    <tr>
+      <td>State</td>
+      <td>The location state. Preferably 2 characters, max 10 characters.</td>
+    </tr>
+    <tr>
+      <td>Country</td>
+      <td>The location’s <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">2 character ISO 3166-1 alpha-2</a> country code. Example: US</td>
+    </tr>
+    <tr>
+      <td>PostalCode</td>
+      <td>The location postal code.</td>
+    </tr>
+    <tr>
+      <td>ExtraNotes</td>
+      <td>Additional notes about the location. Example: Ring doorbell, Holiday Inn, etc.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>DropoffLocation</strong>: The drop off location. This parent element contains the following child elements:</p>
+
+<h4 id="dropofflocation-elements"><a name="dropoff-location"></a>DropoffLocation Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LocationType</td>
+      <td>One of the following: 100 - Address, 200 - Airport, 300 - Train station.</td>
+    </tr>
+    <tr>
+      <td>Airport</td>
+      <td>Refer to the Airport Elements table. Provided if the LocationType = 200.</td>
+    </tr>
+    <tr>
+      <td>TrainStation</td>
+      <td>Refer to the Train Station Elements table. Provided if the LocationType = 300.</td>
+    </tr>
+    <tr>
+      <td>Address</td>
+      <td>The street address of the location. Provided if the LocationType = 100.</td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td>The location city.</td>
+    </tr>
+    <tr>
+      <td>State</td>
+      <td>The location state. Preferably 2 characters, max 10 characters.</td>
+    </tr>
+    <tr>
+      <td>Country</td>
+      <td>The location’s <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">2 character ISO 3166-1 alpha-2</a> country code. Example: US</td>
+    </tr>
+    <tr>
+      <td>PostalCode</td>
+      <td>The location postal code.</td>
+    </tr>
+    <tr>
+      <td>ExtraNotes</td>
+      <td>Additional notes about the location. Example: Apartment building, gravel driveway, etc.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>StartDateTime</strong>:  The time, in GMT, that the reservation must begin. <strong>Format</strong>: 2015-05-19T18:00:00</p>
+
+<p><strong>EndDateTime</strong>:  The time, in GMT that the reservation will end. Provided for hourly reservations. <strong>Format</strong>: 2015-05-19T18:00:00</p>
+
+<p><strong>PickupInstructions</strong>: Additional instructions about the pick up request.</p>
+
+<p><strong>DropoffInstructions</strong>: Additional instructions about the drop off request.</p>
+
+<p><strong>LanguageCode</strong>: The language of the traveler. Will be one of the following options:</p>
+
+<p>en: English<br />
+en-us: English (US)<br />
+en-gb: English (UK)<br />
+fr: French<br />
+fr-ca: French (Canadian)<br />
+de: German<br />
+pt: Portuguese<br />
+es: Spanish<br />
+nl: Dutch<br />
+it: Italian<br />
+ja: Japanese<br />
+pl: Polish<br />
+pt-br: Portuguese (Brazilian)<br />
+ru: Russian<br />
+hu: Hungarian<br />
+ko: Korean<br />
+sv: Swedish<br />
+zh-cn: Chinese<br />
+zh-tw: Traditional Chinese</p>
+
+<p><strong>Currency</strong>: The <a href="http://en.wikipedia.org/wiki/ISO_4217" target="blank">3-letter ISO 4217 currency code</a> for the reservation amount.</p>
+
+<p><strong>NumPassengers</strong>: The number of passengers.</p>
+
+<p><strong>VehicleType</strong>: The type of vehicle requested. Will be one of the following options:</p>
+
+<p>100: Sedan<br />
+200: Limo<br />
+201: Stretch Limo<br />
+300: SUV<br />
+301: Stretch SUV<br />
+400: Van<br />
+401: Mini-Bus<br />
+402: Bus<br />
+500: Motor Coach<br />
+501: Antique/Classic<br />
+502: Trolley<br />
+503: Carriage<br />
+600: Shuttle<br />
+900: Any</p>
+
+<p><strong>DiscountCode</strong>: The discount code information. This parent element contains the following child elements:</p>
+
+<h4 id="discountcode-elements"><a name="discount-code"></a>DiscountCode Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CorporateID</td>
+      <td>The user’s corporate ID.</td>
+    </tr>
+    <tr>
+      <td>VendorCode</td>
+      <td>The user’s vendor code.</td>
+    </tr>
+    <tr>
+      <td>DiscountNumber</td>
+      <td>The user’s discount number.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="airport-elements"><a name="airport"></a>Airport Elements</h4>
+
+<p><strong>AirportCode</strong>: The <a href="http://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code" target="blank">IATA Code</a> for the airport.</p>
+
+<p><strong>Flight</strong>: The flight information. This parent element contains the following child elements:</p>
+
+<h4 id="flight-elements"><a name="flight"></a>Flight Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CarrierCode</td>
+      <td>The airline code.</td>
+    </tr>
+    <tr>
+      <td>FlightNumber</td>
+      <td>The flight number.</td>
+    </tr>
+    <tr>
+      <td>ArrivalDateTime</td>
+      <td>The flight arrival time. Only provided for the PickupLocation element. <strong>Format</strong>: 2015-05-19T18:00:00</td>
+    </tr>
+    <tr>
+      <td>DepartureDateTime</td>
+      <td>The flight departure time. Only provided for the DropoffLocation element. <strong>Format</strong>: 2015-05-19T18:00:00</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="train-station-elements"><a name="train-station"></a>Train Station Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>StationCode</td>
+      <td>The station code.</td>
+    </tr>
+    <tr>
+      <td>StationName</td>
+      <td>The name of the station.</td>
+    </tr>
+    <tr>
+      <td>City</td>
+      <td>The city the station is located in.</td>
+    </tr>
+    <tr>
+      <td>State</td>
+      <td>The state the station is located in. Preferably 2 characters, max 10 characters.</td>
+    </tr>
+    <tr>
+      <td>Train</td>
+      <td>The train information. This parent element contains the following child elements.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="train-elements"><a name="train"></a>Train Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CarrierCode</td>
+      <td>The code of the train carrier.</td>
+    </tr>
+    <tr>
+      <td>CarrierName</td>
+      <td>The name of the train carrier.</td>
+    </tr>
+    <tr>
+      <td>TrainNumber</td>
+      <td>The train number.</td>
+    </tr>
+    <tr>
+      <td>ArrivalDateTime</td>
+      <td>The train arrival time. Only provided for the PickupLocation element. <strong>Format</strong>: 2015-05-19T18:00:00</td>
+    </tr>
+    <tr>
+      <td>DepartureDateTime</td>
+      <td>The train departure time. Only provided for the DropoffLocation element. <strong>Format</strong>: 2015-05-19T18:00:00</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="response"><a name="response"></a>Response</h2>
+
+<p>The supplier responds to the Limo Search request by returning the details of an available reservation that matches the search criteria.</p>
+
+<h3 id="content-types">Content Types</h3>
+<p>application/xml</p>
+
+<h3 id="content-body"><a name="res-schema"></a>Content Body</h3>
+<p>The response will include a <strong>CC_LimoSearchReply</strong> parent element, with the following child elements:</p>
+
+<p><strong>Error</strong>: The error information, if an error occurred. Required. This parent element contains the following child elements:</p>
+
+<h4 id="error-elements"><a name="error"></a>Error Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ErrorCode</td>
+      <td>The code for the error. Will contain one of the following values:<br />100: Pickup/dropoff location related error<br />200: Pickup/dropoff time related error<br />300: Other request parameters related error<br />400: Credential related error<br />500: No rate/service available<br />900: Unknown error</td>
+    </tr>
+    <tr>
+      <td>ErrorSource</td>
+      <td>The source of the error.</td>
+    </tr>
+    <tr>
+      <td>ErrorDescription</td>
+      <td>The additional error information.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>RequestData</strong>: This parent element contains a copy of the original request data. Only the <strong>ServiceType</strong>, <strong>PickupLocation</strong>, <strong>DropoffLocation</strong>, and <strong>StartDateTime</strong> elements are required.</p>
+
+<p><strong>Limos</strong>: This parent element contains a <strong>Limo</strong> child element with the available reservation information. Refer to the Limo Elements table for the details of the child elements of the <strong>Limo</strong> element.</p>
+
+<h4 id="limo-elements"><a name="limo"></a>Limo Elements</h4>
+
+<p><strong>RateInfo</strong>: The rate information for the limo. Refer to the Rate Information Elements table for more information. Required.</p>
+
+<p><strong>Vehicle</strong>: The type of vehicle. Required. This parent element contains the following child elements:</p>
+
+<p><strong>VehicleType</strong>: One of the following values:</p>
+
+<p>100: Sedan<br />
+200: Limo<br />
+250: Stretch Limo<br />
+300: SUV<br />
+350: Stretch SUV<br />
+400: Van<br />
+450: Mini-Bus<br />
+500: Motor Coach<br />
+600: Shuttle<br />
+700: Trolley<br />
+800: Carriage<br />
+900: Any</p>
+
+<p><strong>Description</strong>: The detailed description of the vehicle.</p>
+
+<p><strong>MaxPassengers</strong>: The maximum number of passengers allowed in the vehicle. Must be greater than zero.</p>
+
+<p><strong>VehicleID</strong>:  Information to identify the specific vehicle.</p>
+
+<p><strong>Vendor</strong>: The reservation vendor. Required. This parent element contains the following child elements:</p>
+
+<h4 id="vendor-elements"><a name="vendor"></a>Vendor Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VendorCode</td>
+      <td>The vendor code for the vendor.</td>
+    </tr>
+    <tr>
+      <td>VendorName</td>
+      <td>The vendor’s name.</td>
+    </tr>
+    <tr>
+      <td>PhoneNumber</td>
+      <td>The vendor’s phone number.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>AcceptedFops</strong>: The accepted forms of payment. Required. This parent element contains the <strong>FormOfPayment</strong> child element. The <strong>FormOfPayment</strong> element contains the allowed forms of payment. The possible child elements are:</p>
+
+<h4 id="formofpayment-elements"><a name="form-payment"></a>FormOfPayment Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CreditCard</td>
+      <td>This element will appear if the Credit Card form of payment is accepted. Contains the <strong>Type</strong> child element with one of the following values: AX - American Express, CA - Master Card, VI - Visa, DS - Discover Card, DC - Diners Club</td>
+    </tr>
+    <tr>
+      <td>Cash</td>
+      <td>This element will appear if the Cash form of payment is accepted.</td>
+    </tr>
+    <tr>
+      <td>Check</td>
+      <td>This element will appear if the Check form of payment is accepted.</td>
+    </tr>
+    <tr>
+      <td>DirectBilling</td>
+      <td>This element will appear if the Direct Billing form of payment is accepted.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="rate-information-elements"><a name="rate-info"></a>Rate Information Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RateID</td>
+      <td>Y</td>
+      <td>The rate identifier.</td>
+    </tr>
+    <tr>
+      <td>Rate</td>
+      <td>Y</td>
+      <td>The BasePrice + ServiceCharge + SurCharge + Tax</td>
+    </tr>
+    <tr>
+      <td>RateTypeCode</td>
+      <td>Y</td>
+      <td>The code for the rate type. Will be one of the following options:<br />F: Flat rate<br />H: Hourly<br />E: Estimated amount<br />N: Currently not available</td>
+    </tr>
+    <tr>
+      <td>CategoryCode</td>
+      <td>N</td>
+      <td>Extra information that will be passed back during sell request to help identify the rate.</td>
+    </tr>
+    <tr>
+      <td>Currency</td>
+      <td>Y</td>
+      <td>The <a href="http://en.wikipedia.org/wiki/ISO_4217" target="_blank">3-letter ISO 4217 currency code</a> for the rate amount.</td>
+    </tr>
+    <tr>
+      <td>NoRateText</td>
+      <td>N</td>
+      <td>Explanation of rate type. Provided if RateTypeCode = N</td>
+    </tr>
+    <tr>
+      <td>MinHours</td>
+      <td>N</td>
+      <td>The minimum number of hours for the reservation.</td>
+    </tr>
+    <tr>
+      <td>DiscountType</td>
+      <td>N</td>
+      <td>The type of discount applied.</td>
+    </tr>
+    <tr>
+      <td>BasePrice</td>
+      <td>N</td>
+      <td>The reservation price without taxes, surcharges or service charges.</td>
+    </tr>
+    <tr>
+      <td>ServiceCharge</td>
+      <td>N</td>
+      <td>The service charge for the reservation.</td>
+    </tr>
+    <tr>
+      <td>SurCharge</td>
+      <td>N</td>
+      <td>This element contains the desc attribute, with text describing the reason for the surcharge. Example: <code class="language-plaintext highlighter-rouge">&lt;SurCharge desc="fuel"&gt;</code></td>
+    </tr>
+    <tr>
+      <td>Tax</td>
+      <td>N</td>
+      <td>The reservation tax.</td>
+    </tr>
+    <tr>
+      <td>ExtraPickupCharge</td>
+      <td>N</td>
+      <td>Any additional fees for the pickup service.</td>
+    </tr>
+    <tr>
+      <td>ExtraDropoffCharge</td>
+      <td>N</td>
+      <td>Any additional fees for the drop off service.</td>
+    </tr>
+    <tr>
+      <td>OptionalExtraStopCharge</td>
+      <td>N</td>
+      <td>The charge for any additional stops.</td>
+    </tr>
+    <tr>
+      <td>OptionalExtraTimeCharge</td>
+      <td>N</td>
+      <td>The charge for each additional hour.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples"><a name="examples"></a>Examples</h2>
+
+<h3 id="xml-example-request">XML Example Request</h3>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/concur/groundtransportation</span> <span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">Basic ...</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">{length of content body}</span>
+
+<span class="nt">&lt;CC_LimoSearchRequest&gt;</span>
+    <span class="nt">&lt;ServiceType&gt;</span>110<span class="nt">&lt;/ServiceType&gt;</span>
+    <span class="nt">&lt;ClassOfService&gt;</span>100<span class="nt">&lt;/ClassOfService&gt;</span>
+    <span class="nt">&lt;PickupLocation&gt;</span>
+        <span class="nt">&lt;LocationType&gt;</span>100<span class="nt">&lt;/LocationType&gt;</span>
+        <span class="nt">&lt;Airport&gt;</span>
+            <span class="nt">&lt;AirportCode</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Airport&gt;</span>
+        <span class="nt">&lt;Address&gt;</span>209 Madison St., Suite 400<span class="nt">&lt;/Address&gt;</span>
+        <span class="nt">&lt;City&gt;</span>Alexandria<span class="nt">&lt;/City&gt;</span>
+        <span class="nt">&lt;State&gt;</span>VA<span class="nt">&lt;/State&gt;</span>
+        <span class="nt">&lt;Country&gt;</span>US<span class="nt">&lt;/Country&gt;</span>
+        <span class="nt">&lt;PostalCode&gt;</span>22314<span class="nt">&lt;/PostalCode&gt;</span>
+    <span class="nt">&lt;/PickupLocation&gt;</span>
+    <span class="nt">&lt;DropoffLocation&gt;</span>
+        <span class="nt">&lt;LocationType&gt;</span>200<span class="nt">&lt;/LocationType&gt;</span>
+        <span class="nt">&lt;Airport&gt;</span>
+            <span class="nt">&lt;AirportCode&gt;</span>DCA<span class="nt">&lt;/AirportCode&gt;</span>
+        <span class="nt">&lt;/Airport&gt;</span>
+        <span class="nt">&lt;Address</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;City</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;State</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;Country</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;PostalCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/DropoffLocation&gt;</span>
+    <span class="nt">&lt;StartDateTime&gt;</span>2012-03-14T09:00<span class="nt">&lt;/StartDateTime&gt;</span>
+    <span class="nt">&lt;EndDateTime</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;PickupInstructions</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;DropoffInstructions</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;LanguageCode&gt;</span>en-us<span class="nt">&lt;/LanguageCode&gt;</span>
+    <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+    <span class="nt">&lt;NumPassengers&gt;</span>1<span class="nt">&lt;/NumPassengers&gt;</span>
+    <span class="nt">&lt;DiscountCode</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;VehicleType&gt;</span>100<span class="nt">&lt;/VehicleType&gt;</span>
+<span class="nt">&lt;/CC_LimoSearchRequest&gt;</span>
+</code></pre></div></div>
+
+<h3 id="xml-example-of-successful-response">XML Example of Successful Response</h3>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">{length of content body}</span>
+
+<span class="nt">&lt;CC_LimoSearchReply</span> <span class="na">size=</span><span class="s">"1396"</span> <span class="na">elaspedMs=</span><span class="s">"782"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Error&gt;</span>
+        <span class="nt">&lt;ErrorCode</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;ErrorSource</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;ErrorDescription</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;/Error&gt;</span>
+    <span class="nt">&lt;RequestData&gt;</span>
+        <span class="nt">&lt;ServiceType&gt;</span>110<span class="nt">&lt;/ServiceType&gt;</span>
+        <span class="nt">&lt;ClassOfService&gt;</span>100<span class="nt">&lt;/ClassOfService&gt;</span>
+        <span class="nt">&lt;PickupLocation&gt;</span>
+            <span class="nt">&lt;Airport</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;Address&gt;</span>209 Madison St. #400<span class="nt">&lt;/Address&gt;</span>
+            <span class="nt">&lt;City&gt;</span>Alexandria<span class="nt">&lt;/City&gt;</span>
+            <span class="nt">&lt;State&gt;</span>VA<span class="nt">&lt;/State&gt;</span>
+            <span class="nt">&lt;Country&gt;</span>US<span class="nt">&lt;/Country&gt;</span>
+            <span class="nt">&lt;PostalCode&gt;</span>22314<span class="nt">&lt;/PostalCode&gt;</span>
+        <span class="nt">&lt;/PickupLocation&gt;</span>
+        <span class="nt">&lt;DropoffLocation&gt;</span>
+            <span class="nt">&lt;Airport&gt;</span>DCA<span class="nt">&lt;/Airport&gt;</span>
+            <span class="nt">&lt;Address</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;City</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;State</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;Country</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;PostalCode</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/DropoffLocation&gt;</span>
+        <span class="nt">&lt;StartDateTime&gt;</span>2012-02-19T09:00:00<span class="nt">&lt;/StartDateTime&gt;</span>
+        <span class="nt">&lt;EndDateTime</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;PickupInstructions</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;DropoffInstructions</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;Country&gt;</span>US<span class="nt">&lt;/Country&gt;</span>
+        <span class="nt">&lt;NumPassengers&gt;</span>1<span class="nt">&lt;/NumPassengers&gt;</span>
+        <span class="nt">&lt;VehicleType&gt;</span>100<span class="nt">&lt;/VehicleType&gt;</span>
+    <span class="nt">&lt;/RequestData&gt;</span>
+    <span class="nt">&lt;Limos&gt;</span>
+        <span class="nt">&lt;Limo&gt;</span>
+            <span class="nt">&lt;RateInfo&gt;</span>
+                <span class="nt">&lt;RateID&gt;</span>1<span class="nt">&lt;/RateID&gt;</span>
+                <span class="nt">&lt;Rate&gt;</span>42.50<span class="nt">&lt;/Rate&gt;</span>
+                <span class="nt">&lt;RateTypeCode&gt;</span>100<span class="nt">&lt;/RateTypeCode&gt;</span>
+                <span class="nt">&lt;CategoryCode</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;MinHours</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;Currency&gt;</span>USD<span class="nt">&lt;/Currency&gt;</span>
+                <span class="nt">&lt;NoRateText</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;DiscountType</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;BasePrice&gt;</span>35.00<span class="nt">&lt;/BasePrice&gt;</span>
+                <span class="nt">&lt;ServiceCharge&gt;</span>5.00<span class="nt">&lt;/ServiceCharge&gt;</span>
+                <span class="nt">&lt;SurChange</span> <span class="na">desc=</span><span class="s">"fuel"</span><span class="nt">&gt;</span>1.00<span class="nt">&lt;/SurChange&gt;</span>
+                <span class="nt">&lt;Tax&gt;</span>1.50<span class="nt">&lt;/Tax&gt;</span>
+                <span class="nt">&lt;ExtraPickupCharge</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;ExtraDropoffCharge</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;OptionalExtraStopCharge</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;OptionalExtraTimeCharge</span> <span class="nt">/&gt;</span>
+                <span class="nt">&lt;Message&gt;</span>Ordinary Limo<span class="nt">&lt;/Message&gt;</span>
+            <span class="nt">&lt;/RateInfo&gt;</span>
+            <span class="nt">&lt;Vehicle&gt;</span>
+                <span class="nt">&lt;VehicleType&gt;</span>Sedan<span class="nt">&lt;/VehicleType&gt;</span>
+                <span class="nt">&lt;Description&gt;</span>This is a Sedan.<span class="nt">&lt;/Description&gt;</span>
+                <span class="nt">&lt;MaxPassengers&gt;</span>1<span class="nt">&lt;/MaxPassengers&gt;</span>
+                <span class="nt">&lt;VehicleID&gt;</span>12<span class="nt">&lt;/VehicleID&gt;</span>
+            <span class="nt">&lt;/Vehicle&gt;</span>
+            <span class="nt">&lt;Vendor&gt;</span>
+                <span class="nt">&lt;VendorCode&gt;</span>LML<span class="nt">&lt;/VendorCode&gt;</span>
+                <span class="nt">&lt;VendorName&gt;</span>LimoVendor<span class="nt">&lt;/VendorName&gt;</span>
+                <span class="nt">&lt;PhoneNumber&gt;</span>4354654654<span class="nt">&lt;/PhoneNumber&gt;</span>
+            <span class="nt">&lt;/Vendor&gt;</span>
+            <span class="nt">&lt;AcceptedFops&gt;</span>
+                <span class="nt">&lt;FormOfPayment&gt;</span>
+                    <span class="nt">&lt;CreditCard&gt;</span>
+                        <span class="nt">&lt;Type&gt;</span>VI<span class="nt">&lt;/Type&gt;</span>
+                    <span class="nt">&lt;/CreditCard&gt;</span>
+                <span class="nt">&lt;/FormOfPayment&gt;</span>
+            <span class="nt">&lt;/AcceptedFops&gt;</span>
+        <span class="nt">&lt;/Limo&gt;</span>
+    <span class="nt">&lt;/Limos&gt;</span>
+<span class="nt">&lt;/CC_LimoSearchReply&gt;</span>
+</code></pre></div></div>
+
+:ET

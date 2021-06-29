@@ -1,0 +1,1591 @@
+@charset "utf-8";
+@import 'normalize';
+@import 'variables';
+@import 'icon-font';
+// @import 'rtl'; // uncomment to switch to RTL format
+
+/*
+Copyright 2008-2013 Concur Technologies, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may
+not use this file except in compliance with the License. You may obtain
+a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+// GENERAL STUFF
+////////////////////////////////////////////////////////////////////////////////
+
+html, body {
+  color: $main-text;
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @extend %default-font;
+  background-color: $main-bg;
+  height: 100%;
+  -webkit-text-size-adjust: none; /* Never autoresize text */
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// TABLE OF CONTENTS
+////////////////////////////////////////////////////////////////////////////////
+
+#toc > ul > li > a > span {
+  float: right;
+  background-color: #2484FF;
+  border-radius: 40px;
+  width: 20px;
+}
+
+.toc-wrapper {
+  transition: left 0.3s ease-in-out;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: fixed;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: $nav-width;
+  background-color: $nav-bg;
+  font-size: 13px;
+  font-weight: bold;
+
+  // language selector for mobile devices
+  .lang-selector {
+    display: none;
+    a {
+      padding-top: 0.5em;
+      padding-bottom: 0.5em;
+    }
+  }
+
+  // This is the logo at the top of the ToC
+  .logo {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    height: 45px;
+    margin-bottom: $logo-margin;
+  }
+
+  &>.search {
+    position: relative;
+
+    input {
+      background: $nav-bg;
+      border-width: 0 0 1px 0;
+      border-color: $search-box-border-color;
+      padding: 6px 0 6px 20px;
+      box-sizing: border-box;
+      margin: $nav-v-padding $nav-padding;
+      width: $nav-width - ($nav-padding*2);
+      outline: none;
+      color: $nav-text;
+      border-radius: 0; /* ios has a default border radius */
+    }
+
+    &:before {
+      position: absolute;
+      top: 17px;
+      left: $nav-padding;
+      color: $nav-text;
+      @extend %icon-search;
+    }
+  }
+
+  .search-results {
+    margin-top: 0;
+    box-sizing: border-box;
+    height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition-property: height, margin;
+    transition-duration: 180ms;
+    transition-timing-function: ease-in-out;
+    background: $nav-subitem-bg;
+    &.visible {
+      height: 30%;
+      margin-bottom: 1em;
+    }
+
+    li {
+      margin: 1em $nav-padding;
+      line-height: 1;
+    }
+
+    a {
+      color: $nav-text;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+
+  // The Table of Contents is composed of multiple nested
+  // unordered lists.  These styles remove the default
+  // styling of an unordered list because it is ugly.
+  ul, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: 28px;
+  }
+
+  li {
+    color: $nav-text;
+    transition-property: background;
+    transition-timing-function: linear;
+    transition-duration: 200ms;
+  }
+
+  // This is the currently selected ToC entry
+  .toc-link.active {
+    background-color: $nav-active-bg;
+    color: $nav-active-text;
+  }
+
+  // this is parent links of the currently selected ToC entry
+  .toc-link.active-parent {
+    background-color: $nav-active-parent-bg;
+    color: $nav-active-parent-text;
+  }
+
+  .toc-list-h2 {
+    display: none;
+    background-color: $nav-subitem-bg;
+    font-weight: 500;
+  }
+
+  .toc-h2 {
+    padding-left: $nav-padding + $nav-indent;
+    font-size: 13px;
+  }
+
+  .toc-list-h3 {
+    background-color: $nav-subitem-bg;
+  }
+  
+  .toc-h3 {
+    padding-left: $nav-padding + $nav-padding + $nav-indent;
+    font-size: 12px;
+  }
+  
+  .toc-list-h4 {
+    display: none;
+    background-color: $nav-subitem-bg;
+  }
+  
+  .toc-h4 {
+    padding-left: $nav-padding + $nav-padding + $nav-padding + $nav-indent;
+    font-size: 10px;
+
+  }
+
+  .toc-footer {
+    padding: 1em 0;
+    margin-top: 1em;
+    border-top: 1px dashed $nav-footer-border-color;
+  
+
+    li,a {
+      color: $nav-text;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    li {
+      font-size: 0.8em;
+      line-height: 1.7;
+      text-decoration: none;
+    }
+  }
+}
+
+.toc-link, .toc-footer li {
+  padding: 0 $nav-padding 0 $nav-padding;
+  display: block;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;//description wrapping?
+  text-decoration: none;
+  color: $nav-text;
+  transition-property: background;
+  transition-timing-function: linear;
+  transition-duration: 130ms;
+}
+
+
+
+// button to show navigation on mobile devices
+#nav-button {
+  span {
+    display: block;
+    $side-pad: $main-padding / 2 - 8px;
+    padding: $side-pad $side-pad $side-pad;
+    background-color: rgba($main-bg, 0.7);
+    transform-origin: 0 0;
+    transform: rotate(-90deg) translate(-100%, 0);
+    border-radius: 0 0 0 5px;
+  }
+  padding: 0 1.5em 5em 0; // increase touch size area
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+  opacity: 0.7;
+  line-height: 16px;
+  img {
+    height: 16px;
+    vertical-align: bottom;
+  }
+
+  transition: left 0.3s ease-in-out;
+
+  &:hover { opacity: 1; }
+  &.open {left: $nav-width}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// PAGE LAYOUT AND CODE SAMPLE BACKGROUND
+////////////////////////////////////////////////////////////////////////////////
+
+.page-wrapper {
+  margin-left: $nav-width;
+  position: relative;
+  z-index: 10;
+  background-color: $main-bg;
+  min-height: 100%;
+  padding-bottom: 1px; // prevent margin overflow
+
+  // The dark box is what gives the code samples their dark background.
+  // It sits essentially under the actual content block, which has a
+  // transparent background.
+  // I know, it's hackish, but it's the simplist way to make the left
+  // half of the content always this background color.
+  .dark-box {
+    width: $examples-width;
+    background-color: $examples-bg;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  .lang-selector {
+    position: fixed;
+    z-index: 50;
+    border-bottom: 5px solid $lang-select-active-bg;
+  }
+}
+
+.lang-selector {
+  display: flex;
+  background-color: $lang-select-bg;
+  width: 100%;
+  font-weight: bold;
+  overflow-x: auto;
+  a {
+    display: inline;
+    color: $lang-select-text;
+    text-decoration: none;
+    padding: 0 10px;
+    line-height: 30px;
+    outline: 0;
+
+    &:active, &:focus {
+      background-color: $lang-select-pressed-bg;
+      color: $lang-select-pressed-text;
+    }
+
+    &.active {
+      background-color: $lang-select-active-bg;
+      color: $lang-select-active-text;
+    }
+  }
+
+  &:after {
+    content: '';
+    clear: both;
+    display: block;
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// CONTENT STYLES
+////////////////////////////////////////////////////////////////////////////////
+// This is all the stuff with the light background in the left half of the page
+
+.content {
+  // fixes webkit rendering bug for some: see #538
+  -webkit-transform: translateZ(0);
+  // to place content above the dark box
+  position: relative;
+  z-index: 30;
+
+  &:after {
+    content: '';
+    display: block;
+    clear: both; 
+  }
+
+  &>h1, &>h2, &>h3, &>h4, &>h5, &>h6, &>p, &>table, &>ul, &>ol, &>aside, &>dl {
+    margin-right: $examples-width;
+    padding: 0 $main-padding;
+    box-sizing: border-box;
+    display: block;
+
+    @extend %left-col;
+  }
+
+
+
+  &>ul, &>ol {
+    padding-left: $main-padding + 15px;
+  }
+
+  h3 {
+    @extend %header-font;
+    font-size: 25px;//previously 16px
+    margin-top: 0.5em;
+    margin-bottom: -47px;//previously 0- updated to make sure Schema subtitles and Properties are visible without having to scroll up.
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
+  }
+
+  h4 {
+    @extend %header-font;
+    font-size: 19px;//previously 13px
+    margin-top: 30px;//previously 0.5em
+    margin-bottom: 0;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
+  }
+
+
+  //API REFERENCE 
+
+  #menu {
+    margin-bottom: -20px;
+  }
+  
+  #getting-started{
+    margin-bottom: -20px;
+  }
+
+  #overview{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="get-all"] {//ensuring that API Reference headings with Get All do not overlap sub items
+    margin-bottom: -20px;
+    }
+  
+  h3[id*="obtain"] {//ensuring that API Reference headings with Obtain or Obtaining do not overlap sub items
+    margin-bottom: -20px;
+  }
+
+  h4[id*="obtain"] {//ensuring that API Reference headings with Obtain or Obtaining do not overlap sub items
+      margin-bottom: -20px;
+  }
+
+  h3[id*="calling"] {//ensuring that API Reference headings with Obtain or Obtaining do not overlap sub items
+    margin-bottom: -20px;
+  }
+  #base-uris {//ensuring that API Reference headings with Base URIs do not overlap sub items
+    margin-bottom: -20px;
+  }
+
+  #calling-an-api-with-access-token{//ensuring that API Reference headings with Calling An API Access Token do not overlap sub items
+    margin-bottom: -20px;
+  }
+
+  #company {//ensuring that API Reference headings with Calling An API Access Token do not overlap sub items
+    margin-bottom: -20px;
+  }
+
+  #exchanging-a-token{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="paging"]{
+    margin-bottom: -20px;
+  }
+  
+  #description{
+    margin-bottom: -20px;
+  }
+  
+  h3[id*="agency-proposal"]{
+    margin-bottom: -20px;
+  }
+
+
+  h3[id*="query-parameters"]{
+    margin-bottom:-20px;
+  }
+
+  h3[id*="content"]{
+    margin-bottom: -20px;
+  }
+
+  #request-body{
+    margin-bottom: -20px;
+  }
+
+  #request-parameters{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="request"]{
+    margin-bottom: -20px;
+  }
+
+  #itineraries-and-trips{
+    margin-bottom: -20px;
+  }
+
+  #2-getting-started{
+    margin-bottom: -30px;
+  }
+
+  #old-world-authentication{
+    margin-bottom: -30px;
+  }
+  
+  #travel-management-companies{
+    margin-bottom: -20px;
+  }
+
+  #triplink-travel-suppliers{
+    margin-bottom: -20px;
+  }
+
+  #sap-concur-clients-and-third-party-developers{
+    margin-bottom: -20px;
+  }
+  
+  #user-permission{
+    margin-bottom: -20px;
+  }
+
+  #accessing-application-connector-registration{
+    margin-bottom: -20px;
+  }
+
+  #registering-an-application-connector{
+    margin-bottom: -20px;
+  }
+
+  #modifying-an-application-connector-registration{
+    margin-bottom: -20px;
+  }
+  
+  #deactivating-an-application-connector-registration{
+    margin-bottom: -20px;
+  }
+
+  #supported-accept-types{
+    margin-bottom: 20px;
+  }
+
+  #search{
+    margin-bottom: -20px;
+  }
+
+  #emergency-technical-contact{
+    margin-bottom: -20px;
+  }
+
+  #testing-environment{
+    margin-bottom: -20px;
+  }
+
+  #urls{
+    margin-bottom: -20px;
+  }
+  
+  #handling-of-html{
+    margin-bottom: -20px;
+  }
+
+  #message-structure{
+    margin-bottom: -20px;
+  }
+
+  #product-restrictions{
+    margin-bottom: -20px;
+  }
+
+  #actors{
+    margin-bottom: -20px;
+  }
+
+  #use-case{
+    margin-bottom: -20px;
+  }
+
+  #reservation-and-read-requests{
+    margin-bottom: -20px;
+  }
+
+  #search-criteria{
+    margin-bottom: -20px;
+  }
+
+  #general-system-overview{
+    margin-bottom: -20px;
+  }
+
+  #http-headers-2{
+    margin-bottom: -20px;
+  }
+
+  #soap-header{
+    margin-bottom: -20px;
+  }
+
+  #ota-message-headers{
+    margin-bottom: -20px;
+  }
+
+  #error-types{
+    margin-bottom: -20px;
+  }
+
+  #reservation-message{
+    margin-bottom: -20px;
+  }
+
+  #relationship-between-roomid-and-rateplanid{
+    margin-bottom: -20px;
+  }
+
+  #descriptive-info{
+    margin-bottom: -20px;
+  }
+
+
+  h3[id*="response"]{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="scope"]{
+    margin-bottom: -20px;
+  }
+
+   
+  h3[id*="authorization"]{
+    margin-bottom: -20px;
+  }
+
+  #get-a-budget-item{
+    margin-bottom:-20px;
+  }
+
+  #get-a-fiscal-year{
+    margin-bottom: -20px;
+  }
+
+  #budgetperson{
+    margin-bottom: -20px;
+  }
+
+  #naming-convention{
+    margin-bottom: -20px;
+  }
+
+  #budget-item{
+    margin-bottom: -20px;
+  }
+
+  #post-a-budget-item{
+    margin-bottom: -20px;
+  }
+
+  #travel-booking{
+    margin-bottom: -20px;
+  }
+  #trips{
+    margin-bottom: -20px;
+  }
+
+  
+  #schema{
+    margin-bottom: -20px;
+  }
+
+  #uri{
+    margin-bottom: -20px;
+  }
+ 
+  h3[id*="request-headers"]{
+    margin-bottom:-20px;
+  }
+
+  #request-schema{
+    margin-bottom:-20px;
+  }
+
+  #get-list-of-reports{
+    margin-bottom: -20px;
+  }
+
+  #get-list-of-expense-reports{
+    margin-bottom: -20px;
+  }
+
+  #report-details-schema{
+    margin-bottom: -20px;
+  }
+
+
+  #version{
+    margin-bottom: -20px;
+  }
+
+  #ota_hoteldescriptiveinfors
+
+  h3[id*="step"]{
+    margin-bottom: -20px;
+  }
+
+  #process-flow{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="procedure"]{
+    margin-bottom: -20px;
+  }
+
+  div[id*="attn-depr"]{
+    background-color: #e68d8c;
+    width: 600px;
+  }
+
+  h3[id*="example"]{
+    margin-bottom: -20px;
+  }
+
+  #get-oauth-access-token{
+    margin-bottom: -20px;
+  }
+
+  #get-request-details{
+    margin-bottom: -20px;
+  }
+
+  #create-a-connection-request-on-behalf-of-a-specific-user{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="retrieve"]{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="update"]{
+    margin-bottom: -20px;
+  }
+
+  #capabilities{
+    margin-bottom: -20px;
+  }
+  
+  #service-codes{
+    margin-bottom: -20px;
+  }
+
+  h3[id*="input"]{
+    margin-bottom: -20px;
+  }
+
+  #dependencies{
+    margin-bottom: -20px;
+  }
+
+  #access-token-usage{
+    margin-bottom: -20px;
+  }
+
+  #post-new-attendee-list{
+    margin-bottom: -20px;
+  }
+
+  #get-attendees{
+    margin-bottom: -20px;
+  }
+
+  #prior-versions{
+    margin-bottom: -20px;
+  }
+  
+  #post-an-attendee-inactivation-list{
+    margin-bottom: -20px;
+  }
+
+  #create-a-new-expense-itemization{
+    margin-bottom: -20px;
+  }
+
+  #post-expense-entry-itemization{
+    margin-bottom: -20px;
+  }
+
+  #accept-header{
+    margin-bottom: -20px;
+  }
+
+  #schema-definition{
+    margin-bottom: -20px;
+  }
+
+  #get-user{
+    margin-bottom: -20px;
+  }
+
+  #user-details{
+    margin-bottom: -20px;
+  }
+
+  #overview-of-version-4-0{
+    margin-bottom: -20px;
+  }
+
+  #get-started-receipts-v4-overview-of-version-4-0{
+    margin-bottom: -20px;
+  }
+
+  #cancel-a-booking{
+    margin-bottom: -20px;
+  }
+
+  #receipts-v4-overview{
+    margin-bottom: -20px;
+  }
+
+  #security{
+    margin-bottom: -20px;
+  }
+
+  #caveauts{
+    margin-bottom: -20px;
+  }
+
+ 
+  // the div is the tocify hidden div for placeholding stuff
+  &>h1, &>h2, &>div {
+    clear:both;
+  }
+
+  // the div is the tocify hidden div for placeholding stuff-originally added for deeper nesting but not needed, as it threw off the matching between TOC and page display
+//& > h1,
+//& > h2,
+//& > h3,
+//& > h4,
+//& > div {
+  //clear: both;
+//}
+
+
+  h1 {
+    @extend %header-font;
+    font-size: 25px;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-bottom: $h1-margin-bottom;
+    margin-top: 2em;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background-color: #fdfdfd;
+  }
+
+  h1:first-child, div:first-child + h1 {
+    border-top-width: 0;
+    margin-top: 0;
+  }
+
+  h2 {
+    @extend %header-font;
+    font-size: 25px; //previously 19
+    margin-top: 4em;
+    margin-bottom: 0;
+    border-top: 1px solid #ccc;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    background-image: linear-gradient(to bottom, rgba(#fff, 0.2), rgba(#fff, 0));
+  }
+
+  // h2s right after h1s should bump right up
+  // against the h1s.
+  h1 + h2, h1 + div + h2 {
+    margin-top: $h1-margin-bottom * -1;
+    border-top: none;
+  }
+
+  //h3, h4, h5, h6 {
+    //@extend %header-font;
+    //font-size: 15px;
+    //margin-top: 2.5em;
+    //margin-bottom: 0.8em;
+  //h4, h5, h6 {
+    //font-size: 10px;
+  //}}replaced with below, line 445
+
+  h5, h6 {
+    @extend %header-font;
+    font-size: 15px;
+    margin-top: 2.5em;
+    margin-bottom: 0.8em;
+  }
+  h5, h6 {
+    font-size: 10px;
+  }
+
+  
+
+  hr {
+    margin: 2em 0;
+    border-top: 2px solid $examples-bg;
+    border-bottom: 2px solid $main-bg;
+  }
+  
+  // hr p{
+  //   color: red;
+  // }
+
+  table {
+    margin-bottom: 1em;
+    margin-top: 25px;
+    overflow: auto;
+    
+    th,td {
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.6;
+      code {
+        white-space: nowrap;
+        
+      }
+    }
+
+
+  
+
+    th {
+      padding: 5px 10px;
+      border-bottom: 1px solid #ccc;
+      vertical-align: bottom;
+    }
+
+    td {
+      padding: 10px;
+    }
+
+    tr:last-child {
+      border-bottom: 1px solid #ccc;
+    }
+
+    tr:nth-child(odd)>td {
+      background-color: lighten($main-bg,4.2%);
+    }
+
+    tr:nth-child(even)>td {
+      background-color: lighten($main-bg,2.4%);
+    }
+  }
+
+  dt {
+    font-weight: bold;
+  }
+
+  dd {
+    margin-left: 15px;
+  }
+
+  p, li, dt, dd {
+    line-height: 1.6;
+    margin-top: 0;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    background-color: rgba(0,0,0,0.05);
+    padding: 3px;
+    border-radius: 3px;
+    @extend %break-words;
+    @extend %code-font;
+  }
+
+  pre>code {
+    background-color:transparent;
+    padding: 0;
+  }
+
+  aside {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    background: $aside-notice-bg;
+    line-height: 1.6;
+
+    &.warning {
+      background-color: $aside-warning-bg;
+    }
+
+    &.success {
+      background-color: $aside-success-bg;
+    }
+  }
+
+  aside:before {
+    vertical-align: middle;
+    padding-right: 0.5em;
+    font-size: 14px;
+  }
+
+  aside.notice:before {
+    @extend %icon-info-sign;
+  }
+
+  aside.warning:before {
+    @extend %icon-exclamation-sign;
+  }
+
+  aside.success:before {
+    @extend %icon-ok-sign;
+  }
+
+  .search-highlight {
+    padding: 2px;
+    margin: -3px;
+    border-radius: 4px;
+    border: 1px solid #F7E633;
+    background: linear-gradient(to top left, #F7E633 0%, #F1D32F 100%);
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// CODE SAMPLE STYLES
+////////////////////////////////////////////////////////////////////////////////
+// This is all the stuff that appears in the right half of the page
+
+
+// Scroll bar for code samples
+.content pre {
+  max-height: 150px;//originally at 175px
+  overflow-y: auto;
+
+}
+
+.content {
+  &>div.highlight {
+    clear:none;
+  }
+
+  pre, blockquote {
+    background-color: $code-bg;
+    color:#fff;
+    
+
+    margin: 0;
+    width: $examples-width;
+    height: 100%;
+
+    float:right;
+    clear:right;
+
+    box-sizing: border-box;
+
+    @extend %right-col;
+
+    &>p { margin: 0; }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+      border-bottom: dashed 1px #ccc;
+    }
+  }
+
+  pre {
+    @extend %code-font;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    padding: 2em $main-padding;
+  }
+ // This will move Code Sample and Example Response orange blocks up/down 
+  blockquote{
+    margin-top: 0px;
+  }
+
+  // Put small space in between JSON and XML Example Response code samples, since their using a scrollbar.
+  pre.highlight.json.tab-json{
+    margin-bottom: 5px;
+  }
+ // Put small space between the Code Sample and Body Parameter blocks for the POST reqeusts.
+  .highlight{
+    margin-bottom:10px;
+    
+  }
+  //Align Request and Response code samples with their titles in middle section  
+  pre.highlight.http.tab-http{
+    margin-top:-50px;
+    margin-bottom:70px;
+  }
+
+   pre.highlight.shell.tab-shell{
+     margin-top:-90px;
+  // margin-bottom:-30px;
+    
+  }
+
+
+  blockquote {
+    &>p {
+      background-color: $code-annotation-bg;
+      padding: $code-annotation-padding 2em;
+      color: #000;//previously #eee
+      
+    }
+  }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// RESPONSIVE DESIGN
+////////////////////////////////////////////////////////////////////////////////
+// These are the styles for phones and tablets
+// There are also a couple styles disperesed
+
+@media (max-width: $tablet-width) {
+  .toc-wrapper {
+    left: -$nav-width;
+
+    &.open {
+      left: 0;
+    }
+  }
+
+  .page-wrapper {
+    margin-left: 0;
+  }
+
+  #nav-button {
+    display: block;
+  }
+
+  .toc-link {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+  }
+}
+
+@media (max-width: $phone-width) {
+  .dark-box {
+    display: none;
+  }
+
+  %left-col {
+    margin-right: 0;
+  }
+
+  .toc-wrapper .lang-selector {
+    display: block;
+  }
+
+  .page-wrapper .lang-selector {
+    display: none;
+  }
+
+  %right-col {
+    width: auto;
+    float: none;
+  }
+
+  %right-col + %left-col {
+    margin-top: $main-padding;
+  }
+}
+
+.highlight .c, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #909090;
+}
+
+.highlight, .highlight .w {
+  background-color: $code-bg;
+}
+
+.copy-clipboard {
+  float: right;
+  fill: #9DAAB6;
+  cursor: pointer;
+  opacity: 0.4;
+  height: 18px;
+  width: 18px;
+}
+
+.copy-clipboard:hover {
+  opacity: 0.8;
+}
+
+
+/*DEVELOPER.CONCUR THEME
+/*If h4 Header Tag contains GET,POST,PUT or DELETE, update background color accordingly*/
+
+h4[id*="get__"] {
+  /*background-color: #0F6AB4;*/
+  background-color: #158ff3
+  
+  
+}
+
+h4[id*="get_"] {
+  /*background-color: #0F6AB4;*/
+  background-color: #158ff3
+  
+  
+}
+
+h4[id*="post__"] {
+  /*background-color: #10A54A;*/
+  background-color: #13c557;
+  
+}
+
+h4[id*="put__"] {
+  /*background-color: #C5862B;*/
+  background-color: #e09730;
+  
+}
+
+h4[id*="put_"] {
+  /*background-color: #C5862B;*/
+  background-color: #e09730;
+  
+}
+
+h4[id*="delete__"] {
+  /*background-color: #A41E22;*/
+  background-color: #e22a30;
+  
+}
+
+h4[id*="delete_"] {
+  /*background-color: #A41E22;*/
+  background-color: #e22a30;
+  
+}
+
+h4[id*="usingpost"] {
+  /*background-color: #10A54A;*/
+  background-color: #13c557;
+}
+
+h4[id*="usingget"] {
+  /*background-color: #0F6AB4;*/
+  background-color: #158ff3;
+  
+}
+
+h4[id*="usingdelete"] {
+/*background-color: #A41E22;*/
+background-color: #e22a30
+
+}
+
+h4[id*="usingput"] {
+/*background-color: #C5862B;*/
+background-color:#C5862B;;
+
+}
+
+//API REFERENCE UPDATES
+h3[id*="properties"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="verb-and-uris"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="keys-and-secrets"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="refreshing-an-access-token"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="revoking-a-single-access-token-for-a-given-user"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="revoking-all-access-tokens-for-a-user"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="Native"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="web"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="appcenter"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="auto-connect"]{
+  margin-bottom: -20px;
+}
+
+h3[id*="special-note-please-read-first"]{
+  margin-bottom: -20px;
+}
+
+#authentication{
+  margin-bottom: -20px;
+}
+
+#access-tokens{
+  margin-bottom: -20px;
+}
+
+#password-grant{
+  margin-bottom: -20px;
+}
+
+#client-credentials-grant{
+  margin-bottom: -20px;
+}
+
+#one-time-password-grant{
+  margin-bottom: -20px;
+}
+
+#naming-conventions{
+  margin-bottom: -20px;
+}
+
+#refreshing-a-token{
+  margin-bottom: -20px;
+}
+
+#revoking-a-token{
+  margin-bottom: -20px;
+}
+
+#managing-tokens{
+  margin-bottom: -20px;
+}
+
+#base-uris-for-all-other-calls{
+  margin-bottom: -20px;
+}
+
+#id-token{
+  margin-bottom: -20px;
+}
+
+#verifying-an-id-token{
+  margin-bottom: -20px;
+}
+
+#troubleshooting{
+  margin-bottom: -20px;
+}
+
+#enterprise-business-applications{
+  margin-bottom: -20px;
+}
+
+#manage-application-connectors{
+  margin-bottom: -20px;
+}
+
+#native{
+  margin-bottom: -20px;
+}
+
+#get-a-budget-category{
+  margin-bottom: -20px;
+}
+
+
+/* REST For User Provisioning Form*/
+//h4[id*="-get"] {
+/*background-color: #0F6AB4;*/
+//background-color: #158ff3
+
+//}
+
+h4[id*="event-hook"] {
+/*background-color: #10A54A;*/
+background-color: #13c557;
+
+}
+
+h4[id*="health"] {
+/*background-color:#0F6AB4;*/
+background-color: #158ff3
+
+}
+
+h4[id*="-create"] {
+/*background-color:#10A54A;*/
+background-color: #13c557;
+
+}
+
+
+/*Update background color for Deprecated items*/
+p[id*="deprecated_item"] {
+background-color: #F2DEDE;
+
+}
+
+//table heading
+// tr th {
+//   color: rgba($main-bg, 0.7)
+// }
+
+/*'String portion of Response and HTTP title*/
+code {
+  color:  #9e3819;
+}
+/*All of the major portion of code text. portions of the Javascript code*/
+.highlight .s1{
+  color: rgb(3, 28, 172);
+}
+.highlight .nl{
+  color: #000;
+}
+
+/* Host and Accept Portion of HTTP*/
+.highlight .s{
+  color: #9b7200;
+}
+
+/*Value portion of Key Value par in Example Response*/
+.highlight .s2{
+  color: #9b7200;
+}
+
+
+
+/*////////////////////////////////
+RUBY CODE SAMPLES
+//////////////////////////////////*/
+
+/*'Require' portion of code*/
+.highlight .nb{
+  color:  #b15407;
+}
+/*result and ':headers' portion(also controls major portion of JAVA code'*/
+.highlight .n{
+  color:  #b14506;
+}
+
+/*The numbers in the Example Responses*/
+.highlight .mi{
+  color:  rgb(6, 37, 212);
+}
+
+/*The 'GET' AND 'PARSE' portion of the HTTP* and Ruby codes*/ 
+.highlight .nf{
+  color:  #0e8352;
+}
+
+/*The base url in the HTTP*/
+.highlight .nn{
+  color:  #000;
+}
+
+/*RestClient and JSON portions of cod*/
+.highlight .no{
+  color:  #088faa;
+}
+
+/*'params' and 'headers' portion of code*/
+.highlight .ss{
+  color:#AE81FF
+}
+
+/*API REFERENCE*/
+/*HTTP request code sample*/
+.highlight .err {
+  color: #000
+}
+
+
+/*//////////////////////////////////////
+JAVASCRIPT CODE SAMPLES
+///////////////////////////////////////
+
+/*The 'return' statement on the Javascript*/
+.highlight .k{
+  color:  #F92672;
+}
+
+/*The 'method' and 'get' portion of the Javascript code*/
+.highlight .na{
+  color: #b14506;
+}
+
+.highlight .nt{
+  color:#000;
+  
+}
+
+/*The Header, Fetch, Then, and Console.log*/
+.highlight .nx{
+  color: #000;
+}
+
+/*All of the 'const' portions of the Javascript code*/
+.highlight .kd{
+  color: #b15407;
+}
+
+/*//////////////
+PHP SECTION
+////////////////*/
+
+/*The 'client, request body, response, and headers portion of the code'*/
+.highlight .nv{
+  
+  color:#b15407;
+}
+
+/*/////////
+JAVA CODE
+/////////*/
+
+/*HttpURLConnection, BufferdReader, StringBuffer, String*/
+.highlight .nc {
+  color:#567e05
+}
+
+/*URL*/
+.highlight .no{
+  color: #088FAA;
+}
+
+/*new and while statements*/
+.highlight .k{
+  color: #af0644;
+}
+
+/*Brackets and Parenthesis*/
+.highlight .o{
+  color: #000;
+}
+
+/*'null'*/
+.highlight .kc {
+  color: #0d8da7;
+}
+
+/*'int'*/
+.highlight .kt {
+  color: #0d8da7;
+}
+
+
+/*LOGO*/
+#logo-image {
+  width: 230px;
+  height: 200px;
+}
+
+.svg {
+  color: red;
+}
+
+.content table tr:nth-child(odd) > td {
+  /*background-color: white*/
+  background-color: #FCF6DB; }/*Developer.Concur Theme:Parameter and Model/Schema section in Middle Section of page-Every other list Item*/
+.content table tr:nth-child(even) > td {
+  /*background-color: #fbfcfd; }/*Developer.Concur Theme: Parameter and Model/Schema section in Middle Section of page-Every other list Item*/
+   background-color: #FCF6DB }
+
+#toc-size {
+    font-size:12px;
+  }
+  
+
+#custom-size {
+  max-height:110px;
+
+}
+
+// Scroll bar for middle section
+.content table{
+  max-height: 600px;//originally at 175px
+  overflow-y: auto;
+}
+
+
+
+  //scrollbar
+
+ 
+
+/*p.code[*="POST /image/v1.0/receipt"] {
+background-color: #0F6AB4;
+
+}
+/*if html includes 'get', change color*/
+
+
+
+// tr th::after
+// {
+//     content: "Scope";
+//     color:rgba($main-bg, 0.7);
+//     position: absolute;
+//     left: 38px
+// }
+
+// tr th::after
+// {
+//     content: "Scope Description";
+//     color:rgba($main-bg, 0.7);
+//     position: absolute;
+//     left: 38px
+// }
+
+
+

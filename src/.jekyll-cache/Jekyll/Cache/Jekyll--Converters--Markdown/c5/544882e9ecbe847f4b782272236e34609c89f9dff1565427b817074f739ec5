@@ -1,0 +1,165 @@
+I"+<p>The Concur Fetch Attendee version 2.0 callout allows clients to import attendee information from their internal system to SAP Concur when a user is adding attendees to an entry. The SAP Concur service sends the attendee search fields to an application connector, created by the client, a third-party developer, or SAP Concur. The connector is hosted by the client or third-party developer, and has access to the attendee system of record. The connector uses the attendee information sent from SAP Concur to search for all matching attendee records in the client’s system. Once the connector has the list of possible matches, it sends the attendee data to SAP Concur. The user sees the list of matches and can select the appropriate attendee for the entry.</p>
+
+<p>This callout differs from the standard SAP Concur web services in the following ways:</p>
+
+<ul>
+  <li>It uses an <strong>outbound message</strong> where SAP Concur calls a public facing API endpoint provided by the application connector. Refer to <strong>Callouts &gt;</strong> <a href="/api-reference/callouts/callouts-application-connectors.html">Core Concepts</a> for more information.</li>
+  <li>The client or third-party developers can configure and maintain the public web service interface (the application connector), or the connector can be maintained by SAP Concur. This documentation specifies the request and response format required by SAP Concur.</li>
+  <li>Clients can either choose to create their own application connector using PHP, Java, .NET etc or can use one of SAP Concur Partner’s Attendee Fetch applications.</li>
+  <li>The client SAP Concur Administrator must select the attendee types that will use this functionality during application connector registration. Once the attendee types are selected, they will be automatically configured to not allow users to create new attendees manually.</li>
+</ul>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#product-restrictions">Product Restrictions</a></li>
+  <li><a href="#concur-connect-callout-details">Callout Details</a></li>
+  <li><a href="#fetch-attendee-process-overview">Fetch Attendee Process Overview</a>
+    <ul>
+      <li><a href="#security">Security</a></li>
+      <li><a href="#authentication">Authentication</a></li>
+      <li><a href="#functions">Functions</a></li>
+    </ul>
+  </li>
+  <li><a href="#installation-process">Installation Process</a>
+    <ul>
+      <li><a href="#concur-config">SAP Concur Configuration</a></li>
+      <li><a href="#responses-errors">Responses and Errors</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="process-flow"><a name="process-flow"></a>Process Flow</h3>
+
+<p><img src="./fetch-attendee.png" alt="A process flow diagram showing flow between SAP Concur, an application connector, and client's data source" /></p>
+
+<h3 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h3>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+  <li>Expense in the SAP Mobile App</li>
+  <li>Concur Request Professional Edition</li>
+</ul>
+
+<h3 id="product-restrictions"><a name="product-restrictions"></a>Product Restrictions</h3>
+
+<ul>
+  <li>SAP Concur products are highly configurable, and not all clients will have access to all features.</li>
+  <li>Partner developers must determine which configurations are required for their solution prior to the review process.</li>
+  <li>Existing clients can work with Concur Advantage Technical Services to create custom applications that work with their configuration.</li>
+</ul>
+
+<h2 id="callout-details"><a name="concur-connect-callout-details"></a>Callout Details</h2>
+
+<p>Information on how to download, install, and configure the application connector is included in <strong>Callouts &gt;</strong> <a href="/api-reference/callouts/callouts-application-connectors.html">Core Concepts</a>.</p>
+
+<h2 id="fetch-attendee-process-overview"><a name="fetch-attendee-process-overview"></a>Fetch Attendee Process Overview</h2>
+
+<p>The configuration process has the following steps:</p>
+
+<ol>
+  <li>Client, third party developer, or SAP Concur downloads, installs, configures, and customizes the application connector.</li>
+  <li>Optional for Professional / Premium Only: Client SAP Concur admin creates a new attendee type to use with the connector.</li>
+  <li>Client registers the application connector, selecting the attendee types that will use the connector.
+Once the configuration is complete, the callout uses the following process:
+    <ol>
+      <li>The user selects the appropriate attendee type in the <strong>Search Attendees</strong> window.</li>
+      <li>The user enters information into an attendee field and clicks <strong>Search</strong>.</li>
+      <li>SAP Concur sends the attendee search field information to the application connector. This request includes all attendee fields, with any blank values formatted as an empty string.</li>
+      <li>The application connector queries the attendee system of record and returns a list of results to SAP Concur.<br />
+<strong>NOTE</strong>: The results list is limited to 100 records.</li>
+      <li>SAP Concur displays the results in the <strong>Search Results</strong> section of the <strong>Search Attendees</strong> window.<br />
+<strong>NOTE</strong>: If the application connector does not respond or returns an error, the user is notified in a popup window within SAP Concur.
+SAP Concur will not resend the request unless the user manually initiates the search again.</li>
+      <li>If the user adds the attendees to the entry, the attendee information is saved in SAP Concur.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3 id="security"><a name="security"></a>Security</h3>
+
+<p>SAP Concur will make calls to the application connector’s endpoint using SSL. During configuration, SAP Concur will connect to the application connector to validate that its hostname and access credentials are valid.</p>
+
+<p>SAP Concur will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. You will need to install the signed certificate before SAP Concur can access the connector.</p>
+
+<h3 id="authentication"><a name="authentication"></a>Authentication</h3>
+
+<p>Authentication between SAP Concur and the application connector is performed using HTTP Basic Auth. By default, these credentials are stored in the appropriate web configuration file for your platform, such as web.xml or web.config. These credentials are entered in SAP Concur on the <strong>Register Application Connector</strong> page in <strong>Web Services</strong> under <strong>Administration</strong>.</p>
+
+<p>Refer to the <strong>Installation Process</strong> for more information.</p>
+
+<h3 id="functions"><a name="functions"></a>Functions</h3>
+
+<p><a href="/api-reference/callouts/post-fetch-attendee.html">Version 3.0: Post Attendee Search Request</a></p>
+
+<h2 id="installation-process"><a name="installation-process"></a>Installation Process</h2>
+
+<p>The installation process includes installing the application connector, and registering it with SAP Concur.</p>
+
+<p>First, the client or third-party developer will create and install the application connector on their web site or a third party hosting site. The connector should be programmed to accept the requests from SAP Concur and provide the documented responses.</p>
+
+<p>During installation, the client or developer will select and configure an externally available endpoint on the host server for SAP Concur to send the attendee search request to.</p>
+
+<p>The client then registers the application connector with SAP Concur:</p>
+
+<ol>
+  <li>Log in to SAP Concur as an administrative user.</li>
+  <li>Select Administration &gt; Web Services.</li>
+  <li>Click Manage Application Connectors.</li>
+  <li>Click New.</li>
+  <li>Fill out the fields according to the <strong>Application Connector Fields</strong> table shown below.</li>
+  <li>In the Services section, select Fetch Attendee.</li>
+  <li>Click Configure. The Configure Service window appears.</li>
+  <li>Enter the endpoint that the SAP Concur will connect to on your server. Example: <code class="language-plaintext highlighter-rouge">/attendee/v2.0/fetch</code>. <strong>Note:</strong> The endpoint name should contain ‘v2.0’, otherwise the API defaults to v1.0 and returns a different set of fields.</li>
+  <li>Select the Active check box if the endpoint is ready for use. Usually you will do this after you have implemented and tested the endpoint in your application connector.</li>
+  <li>Select the attendee types that will use the application connector. These attendee types will be automatically configured to not allow users to create new attendees manually.</li>
+  <li>Click OK.</li>
+  <li>Click Test Connection. SAP Concur will attempt to access the configured endpoint with the provided user credentials.</li>
+  <li>Click Save. The application connector is now registered with SAP Concur and enabled.</li>
+</ol>
+
+<p><strong>Application Connector Fields</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Name</td>
+      <td>Enter the name that should appear in the list of connectors.</td>
+    </tr>
+    <tr>
+      <td>Description</td>
+      <td>Enter the description of the function of the connector, such as what back-end system it might connect to.</td>
+    </tr>
+    <tr>
+      <td>Host Name</td>
+      <td>Enter the hostname for the connector. Example: <code class="language-plaintext highlighter-rouge">https://{servername}</code></td>
+    </tr>
+    <tr>
+      <td>User Name</td>
+      <td>Enter the user name required to authenticate with the host. This must be the same as the user name specified in the configuration file for the application connector, using HTTP Basic Auth.</td>
+    </tr>
+    <tr>
+      <td>Password</td>
+      <td>Enter the password required to authenticate with the host. This must be the same as the password specified in the configuration file for the application connector, using HTTP Basic Auth.1.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="sap-concur-configuration"><a name="concur-config"></a>SAP Concur Configuration</h3>
+
+<p>The SAP Concur administrator can select which attendee types use the connector when registering the application connector. These attendee types will be automatically configured to not allow users to create new attendees manually.</p>
+
+<p><strong>Professional/Premium Only:</strong> If desired, the administrator can create a new attendee type specifically for use with the connector.</p>
+
+<h3 id="responses-and-errors"><a name="responses-errors"></a>Responses and Errors</h3>
+
+<p>Refer to the <a href="/api-reference/http-status-codes.html">HTTP Status Codes</a> for details of the common responses and errors.</p>
+:ET

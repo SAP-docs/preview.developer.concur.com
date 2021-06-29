@@ -1,0 +1,445 @@
+I"�L<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<p><strong>NOTE:</strong> Find the newer version 3.0 <a href="/api-reference/expense/expense-report/v3.reports.html">here.</a></p>
+
+<p>The expense report header contains classification information for the expense report, and serves as the container for the expense entries.</p>
+
+<h2 id="resource-uri">Resource URI</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/
+</code></pre></div></div>
+
+<h2 id="post-an-expense-report-header">Post an expense report header</h2>
+
+<p>Posts the expense report header information for a new or existing report for the user specified in the OAuth access token. If the OAuth consumer has the necessary roles, they can update reports that belong to other users. Use this function to create a report, then use the Post Expense Entry function to send expense line items.</p>
+
+<p><strong>NOTES</strong>:</p>
+
+<ul>
+  <li>Posting expense report information is a multi-stage process.</li>
+  <li>Reports with the following statuses can’t be modified:
+    <ul>
+      <li>Processing Payment</li>
+      <li>Paid</li>
+      <li>Payment Confirmed</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="request">Request</h3>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Required/Optional</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">{_reportId_}</code></td>
+      <td>Optional</td>
+      <td>The unique identifier for the report. Only used when updating an existing report.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}
+</code></pre></div></div>
+
+<p><strong>URI Source</strong>: The reportId value is returned by the Get List of Reports and Get Report Details functions, and as part of the <strong>Report-Details-Url</strong> element returned by this function.</p>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li>Authorization - Authorization header with OAuth token for valid Concur user. Required.</li>
+  <li>Content-Type - application/xml</li>
+</ul>
+
+<p>The Concur user must have one of the following roles in Expense:</p>
+
+<ul>
+  <li>Expense User: This role allows the user to create and modify their own reports.</li>
+  <li>Web Services Administrator (Professional/Premium): This role allows the user to modify reports for all users.</li>
+  <li>Can Administer (Standard): This role allows the user to modify reports for all users.</li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<p>This request should contain a <strong>Report</strong> parent element with the following child elements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Name</td>
+      <td>Y</td>
+      <td>The expense report name.</td>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>Depends on configuration</td>
+      <td>The business purpose of the report. Maximum length: 500.</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>Depends on configuration</td>
+      <td>The report header comment. Maximum length: 500.</td>
+    </tr>
+    <tr>
+      <td>OrgUnit1 through OrgUnit6</td>
+      <td>Depends on configuration</td>
+      <td>The custom Organization Unit fields. May be required depending on configuration. Refer to the Processes &gt; <strong>Post Expense Report Data</strong> section of Expense Report for the steps necessary to gather required field information.</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom20</td>
+      <td>Depends on configuration</td>
+      <td>The custom fields on the Expense Report Header form. May be required depending on configuration. Refer to the Processes &gt; <strong>Post Expense Report Data</strong> section of Expense Report for the steps necessary to gather required field information. <br /> <strong>NOTE</strong>: If any of the custom fields are configured to contain list values, refer to the Posting Custom List Items page for information on how to correctly submit list item values.</td>
+    </tr>
+    <tr>
+      <td>UserDefinedDate</td>
+      <td>Depends on configuration</td>
+      <td>The date the user selected for the report. Format: YYYY-MM-DD hh:mm:ss.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response">Response</h3>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li>Content-Type - application/xml</li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<p>The response will include a <strong>ReportDetails</strong> parent element. This element will contain a <strong>ReportStatus</strong> child element. The <strong>ReportStatus</strong> element will contain the following child elements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Status</td>
+      <td>The status of the request.</td>
+    </tr>
+    <tr>
+      <td>Report-Details-Url</td>
+      <td>The URI to use when posting report details to this report.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="xml-example-of-new-report-request">XML example of new report request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.concursolutions.com/api/expense/expensereport/v1.1/report HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;Report</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Name&gt;</span>January Expenses<span class="nt">&lt;/Name&gt;</span>
+  <span class="nt">&lt;Purpose&gt;</span>All expenses for January<span class="nt">&lt;/Purpose&gt;</span>
+  <span class="nt">&lt;Comment&gt;</span>Includes Client Meetings.<span class="nt">&lt;/Comment&gt;</span>
+  <span class="nt">&lt;OrgUnit1&gt;</span>US<span class="nt">&lt;/OrgUnit1&gt;</span>
+  <span class="nt">&lt;OrgUnit2&gt;</span>NW<span class="nt">&lt;/OrgUnit2&gt;</span>
+  <span class="nt">&lt;OrgUnit3&gt;</span>Redmond<span class="nt">&lt;/OrgUnit3&gt;</span>
+  <span class="nt">&lt;Custom1&gt;</span>Client<span class="nt">&lt;/Custom1&gt;</span>
+  <span class="nt">&lt;Custom2&gt;</span>Local<span class="nt">&lt;/Custom2&gt;</span>
+  <span class="nt">&lt;UserDefinedDate&gt;</span>2011-03-26 15:15:07.0<span class="nt">&lt;/UserDefinedDate&gt;</span>
+<span class="nt">&lt;/Report&gt;</span>
+</code></pre></div></div>
+
+<h4 id="xml-example-of-successful-response">XML example of successful response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;ReportDetails&gt;</span>
+  <span class="nt">&lt;ReportStatus</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Status&gt;</span>SUCCESS<span class="nt">&lt;/Status&gt;</span>
+    <span class="nt">&lt;Report-Details-Url&gt;</span>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/nxxKgLlnRODp$sie8Hq1UviOJ2AbpS7dCP<span class="nt">&lt;/Report-Details-Url&gt;</span>
+  <span class="nt">&lt;/ReportStatus&gt;</span>
+<span class="nt">&lt;/ReportDetails&gt;</span>
+</code></pre></div></div>
+
+<h2 id="post-report-header-batch-request">Post Report Header Batch Request</h2>
+
+<p>Posts a batch of expense report headers. The expense report header contains classification information for the expense report. Use this endpoint to create a batch of reports, then use the Post Expense Entry function to send expense line items. All batch operations allow up to 1000 headers per batch. If a batch request with over 1000 headers is sent, only the first 1000 headers in the batch will be processed. <br /><strong>NOTE</strong>: Posting expense report information is a multi-stage process. Refer to the  Processes  section of the Expense Report Web Service page for the steps required to post new expense reports and entries.</p>
+
+<h3 id="request-1">Request</h3>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Required/Optional</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">batch</code></td>
+      <td>required</td>
+      <td>The batch keyword.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Example:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/expensereport/v1.1/report/batch
+</code></pre></div></div>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li>Authorization</li>
+  <li>Content-Type - application/xml</li>
+</ul>
+
+<p>The Concur user must have one of the following roles in Expense:</p>
+
+<ul>
+  <li>Expense User: This role allows the user to create and modify their own reports.</li>
+  <li>Web Services Administrator (Professional/Premium): This role allows the user to create and modify reports for all users.</li>
+  <li>Can Administer (Standard): This role allows the user to create and modify reports for all users.</li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<p>This request should contain a <strong>batch</strong> parent element with a <strong>Report</strong> parent element for each included report. The <strong>Report</strong> element contains the following child elements.</p>
+
+<h5 id="report-elements">Report elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Index</td>
+      <td>Y</td>
+      <td>The header’s location in the batch. Should start at 1 and increment sequentially. This value is used to identify the record if there is an error.</td>
+    </tr>
+    <tr>
+      <td>LoginId</td>
+      <td>Y</td>
+      <td>The report owner’s Concur login ID.</td>
+    </tr>
+    <tr>
+      <td>Name</td>
+      <td>Y</td>
+      <td>The expense report name.</td>
+    </tr>
+    <tr>
+      <td>Purpose</td>
+      <td>Depends on configuration</td>
+      <td>The business purpose of the report. Maximum length: 500.</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>Depends on configuration</td>
+      <td>The report header comment. Maximum length: 500.</td>
+    </tr>
+    <tr>
+      <td>OrgUnit1 through OrgUnit6</td>
+      <td>Depends on configuration</td>
+      <td>The custom Organization Unit fields. May be required depending on configuration. Refer to the Processes &gt; <strong>Post Expense Report Data</strong> section of Expense Report for the steps necessary to gather required field information.</td>
+    </tr>
+    <tr>
+      <td>Custom1 through Custom20</td>
+      <td>Depends on configuration</td>
+      <td>The custom fields on the Expense Report Header form. May be required depending on configuration. Refer to the Processes &gt; <strong>Post Expense Report Data</strong> section of Expense Report for the steps necessary to gather required field information. <br /> <strong>NOTE</strong>: If any of the custom fields are configured to contain list values, please refer to the Posting Custom List Items page for information on how to correctly submit list item values.</td>
+    </tr>
+    <tr>
+      <td>UserDefinedDate</td>
+      <td>Depends on configuration</td>
+      <td>The date the user selected for the report. Format: YYYY-MM-DD hh:mm:ss.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-1">Response</h3>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li>Content-Type - application/xml</li>
+</ul>
+
+<h3 id="payload-3">Payload</h3>
+
+<p>This request will return a <strong>report-batch-result</strong> parent element with the following child elements.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>records-succeeded</td>
+      <td>The number of records processed that were successfully added.</td>
+    </tr>
+    <tr>
+      <td>records-failed</td>
+      <td>The number of records processed that were not successfully added.</td>
+    </tr>
+    <tr>
+      <td>errors</td>
+      <td>This will contain an <strong>error</strong> parent element for each record failure. For details about the <strong>error</strong> child elements, see the <strong>error child elements</strong> table below.</td>
+    </tr>
+    <tr>
+      <td>ReportDetails</td>
+      <td>This parent element will contain a <strong>ReportStatus</strong> child element for all report headers that did not cause an error. For details about the <strong>ReportStatus</strong> child elements, see the <strong>ReportStatus child elements</strong> table below.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-elements">error elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Index</td>
+      <td>The header’s location in the batch</td>
+    </tr>
+    <tr>
+      <td>LoginID</td>
+      <td>The user’s Concur login ID.</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>The error message.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="reportstatus-elements">ReportStatus elements</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Status</td>
+      <td>The status of the request.</td>
+    </tr>
+    <tr>
+      <td>Report-Details-Url</td>
+      <td>The URI to use when posting report details to this report.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="xml-example-request">XML example request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.concursolutions.com/api/expense/expensereport/v1.1/report/batch HTTP/1.1
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;batch</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Report&gt;</span>
+    <span class="nt">&lt;Index&gt;</span>1<span class="nt">&lt;/Index&gt;</span>
+    <span class="nt">&lt;LoginId&gt;</span>cmiller@example.com<span class="nt">&lt;/LoginId&gt;</span>
+    <span class="nt">&lt;Name&gt;</span>January Expenses<span class="nt">&lt;/Name&gt;</span>
+    <span class="nt">&lt;Purpose&gt;</span>All expenses for January<span class="nt">&lt;/Purpose&gt;</span>
+    <span class="nt">&lt;Comment&gt;</span>Includes Client Meetings.<span class="nt">&lt;/Comment&gt;</span>
+    <span class="nt">&lt;OrgUnit1&gt;</span>US<span class="nt">&lt;/OrgUnit1&gt;</span>
+    <span class="nt">&lt;OrgUnit2&gt;</span>NW<span class="nt">&lt;/OrgUnit2&gt;</span>
+    <span class="nt">&lt;OrgUnit3&gt;</span>Redmond<span class="nt">&lt;/OrgUnit3&gt;</span>
+    <span class="nt">&lt;Custom1&gt;</span>Client<span class="nt">&lt;/Custom1&gt;</span>
+    <span class="nt">&lt;Custom2&gt;</span>Local<span class="nt">&lt;/Custom2&gt;</span>
+    <span class="nt">&lt;UserDefinedDate&gt;</span>2011-01-26 12:15:00.0<span class="nt">&lt;/UserDefinedDate&gt;</span>
+  <span class="nt">&lt;/Report&gt;</span>
+  <span class="nt">&lt;Report&gt;</span>
+    <span class="nt">&lt;Index&gt;</span>2<span class="nt">&lt;/Index&gt;</span>
+    <span class="nt">&lt;LoginId&gt;</span>tbrown@example.com<span class="nt">&lt;/LoginId&gt;</span>
+    <span class="nt">&lt;Name&gt;</span>Trip to New York <span class="nt">&lt;/Name&gt;</span>
+    <span class="nt">&lt;Purpose&gt;</span>New York Sales Meeting <span class="nt">&lt;/Purpose&gt;</span>
+    <span class="nt">&lt;Comment&gt;&lt;/Comment&gt;</span>
+    <span class="nt">&lt;OrgUnit1&gt;</span>US<span class="nt">&lt;/OrgUnit1&gt;</span>
+    <span class="nt">&lt;OrgUnit2&gt;&lt;/OrgUnit2&gt;</span>
+    <span class="nt">&lt;OrgUnit3&gt;</span>Tucson<span class="nt">&lt;/OrgUnit3&gt;</span>
+    <span class="nt">&lt;Custom1&gt;</span>Client<span class="nt">&lt;/Custom1&gt;</span>
+    <span class="nt">&lt;Custom2&gt;</span>Remote<span class="nt">&lt;/Custom2&gt;</span>
+    <span class="nt">&lt;UserDefinedDate&gt;</span>2011-02-04 15:25:07.0<span class="nt">&lt;/UserDefinedDate&gt;</span>
+  <span class="nt">&lt;/Report&gt;</span>
+<span class="nt">&lt;/batch&gt;</span>
+</code></pre></div></div>
+
+<h4 id="xml-example-response-with-success-and-failure">XML example response with success and failure</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;report-batch-result</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;records-succeeded&gt;</span>1<span class="nt">&lt;/records-succeeded&gt;</span>
+  <span class="nt">&lt;records-failed&gt;</span>1<span class="nt">&lt;/records-failed&gt;</span>
+  <span class="nt">&lt;errors&gt;</span>
+    <span class="nt">&lt;error&gt;</span>
+      <span class="nt">&lt;Index&gt;</span>2<span class="nt">&lt;/Index&gt;</span>
+      <span class="nt">&lt;LoginID&gt;</span>tbrown@example.com<span class="nt">&lt;/LoginID&gt;</span>
+      <span class="nt">&lt;message&gt;</span>Invalid Value for:OrgUnit2<span class="nt">&lt;/message&gt;</span>
+    <span class="nt">&lt;/error&gt;</span>
+  <span class="nt">&lt;/errors&gt;</span>
+  <span class="nt">&lt;ReportDetails&gt;</span>
+    <span class="nt">&lt;ReportStatus</span> <span class="nt">&gt;</span>
+      <span class="nt">&lt;Index&gt;</span>1<span class="nt">&lt;/Index&gt;</span>
+      <span class="nt">&lt;Status&gt;</span>SUCCESS<span class="nt">&lt;/Status&gt;</span>
+      <span class="nt">&lt;Report-Details-Url&gt;</span>https://www.concursolutions.com/api/expense/expensereport/v1.1/nxxKgLlnRODp$sie8Hq1UviOJ2AbpS7dCP<span class="nt">&lt;/Report-Details-Url&gt;</span>
+    <span class="nt">&lt;/ReportStatus&gt;</span>
+  <span class="nt">&lt;/ReportDetails&gt;</span>
+<span class="nt">&lt;/report-batch-result&gt;</span>
+</code></pre></div></div>
+:ET

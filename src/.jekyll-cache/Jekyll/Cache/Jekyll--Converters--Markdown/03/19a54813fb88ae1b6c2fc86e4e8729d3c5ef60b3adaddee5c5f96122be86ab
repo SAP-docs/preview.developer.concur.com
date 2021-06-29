@@ -1,0 +1,179 @@
+I"h <div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<h2 id="description">Description</h2>
+
+<p>This request is sent when the Travel user requests the reservation details for the supplied reservation ID. The response includes the reservation details, and is identical to the <a href="/api-reference/direct-connects/hotel/post-new-reservation.html">Post New Reservation</a> response.</p>
+
+<h2 id="request">Request</h2>
+
+<h3 id="encoding">Encoding</h3>
+<p>UTF-8</p>
+
+<h3 id="uri">URI</h3>
+
+<p>The Hotel direct connect sends the relevant information to a URI that the travel supplier maintains. The standard location is:</p>
+
+<p><code class="language-plaintext highlighter-rouge">https://{servername}/concur/hotel/v1/</code></p>
+
+<p>The supplier determines the URI and provides it to SAP Concur to use when registering the partner application.</p>
+
+<h3 id="headers">Headers</h3>
+
+<h4 id="accept-header">Accept header</h4>
+<p>application/xml</p>
+
+<h4 id="authorization-header">Authorization header</h4>
+<p>Authorization header with Basic credentials. Required. Refer to the <a href="/api-reference/direct-connects/hotel.html">Security</a> documentation for more information.</p>
+
+<h3 id="request-body">Request body</h3>
+
+<p>The request will contain a <strong>OTA_ReadRQ</strong> parent element, containing the following attributes:</p>
+
+<ul>
+  <li>xmlns</li>
+  <li>EchoToken</li>
+  <li>TimeStamp</li>
+  <li>PrimaryLangID</li>
+  <li>xmlns:xsi</li>
+  <li>xsi:schemaLocation</li>
+  <li>Version</li>
+</ul>
+
+<p>The <strong>OTA_ReadRQ</strong> parent element contains the following child elements:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POS</td>
+      <td>The point of sale information. Contains a <strong>Source</strong> child element that specifies the source of the request. For information about <strong>Source</strong> element, see the <strong>Source elements</strong> table below.</td>
+    </tr>
+    <tr>
+      <td>ReadRequests</td>
+      <td>This element has a <strong>ReadRequest</strong> child element. For information about the <strong>ReadRequest</strong> element, see the <strong>ReadRequest elements</strong> table below.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="source-elements">Source elements</h4>
+
+<p>The <strong>Source</strong> element has the following attributes:</p>
+
+<ul>
+  <li>ISOCountry: The country code for the Travel user’s home country.</li>
+  <li>ISOCurrency: The 3-letter ISO 4217 currency code for the Travel user’s currency.</li>
+</ul>
+
+<p>The <strong>Source</strong> element contains the following element:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RequestorID</td>
+      <td>The corporate identifier. If necessary, multiple <strong>RequestorID</strong> elements can be sent. This element has the following attributes:<br /><strong>Type</strong>: The type code for the corporate identifier. Should be one of the supported <a href="/api-reference/direct-connects/hotel.html">ID Type Codes</a>. <br /><strong>ID</strong>: The corporate identifier. <br /><strong>ID_Context</strong>: The corporate identifier context.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="readrequest-elements">ReadRequest elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>UniqueID</td>
+      <td>This element has the following attributes:<br /><strong>ID</strong>: The reservation identification number.<br /><strong>Type</strong>: The type of reservation.</td>
+    </tr>
+    <tr>
+      <td>Verification</td>
+      <td>This parent element contains information that can be used to verify the owner of the reservation. For information about the <strong>Verification</strong> element, see the <strong>Verification elements</strong> table below.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="verification-elements">Verification elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PersonName</td>
+      <td>This parent element contains the <strong>GivenName</strong> and <strong>SurName</strong> child elements, which should match the reservation details.</td>
+    </tr>
+    <tr>
+      <td>TelephoneInfo</td>
+      <td>This element has the <strong>PhoneNumber</strong> attribute, which contains the guest telephone number. The number should match the reservation.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="xml-example-request">XML Example Request</h3>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/concur/hotel/v1</span> <span class="k">HTTPS</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">example.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">Basic ...</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">{length of content body}</span>
+
+<span class="cp">&lt;?xml version="1.0" encoding="utf-8" ?&gt;</span>
+<span class="nt">&lt;OTA_ReadRQ</span> <span class="na">xmlns=</span><span class="s">"http://www.opentravel.org/OTA/2003/05"</span> <span class="na">EchoToken=</span><span class="s">"ABC123"</span> <span class="na">TimeStamp=</span><span class="s">"2012-01-01T19:00:00"</span> <span class="na">PrimaryLangID=</span><span class="s">"en-us"</span> <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="na">xsi:schemaLocation=</span><span class="s">"http://www.opentravel.org/OTA/2003/05 ../Schemas/OTA_ReadRQ.xsd"</span> <span class="na">Version=</span><span class="s">"1"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;POS&gt;</span>
+        <span class="nt">&lt;Source</span> <span class="na">ISOCountry=</span><span class="s">"US"</span> <span class="na">ISOCurrency=</span><span class="s">"USD"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;RequestorID</span> <span class="na">Type=</span><span class="s">"18"</span> <span class="na">ID=</span><span class="s">"7777777"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/Source&gt;</span>
+    <span class="nt">&lt;/POS&gt;</span>
+    <span class="nt">&lt;ReadRequests&gt;</span>
+        <span class="nt">&lt;ReadRequest&gt;</span>
+            <span class="nt">&lt;UniqueID</span> <span class="na">ID=</span><span class="s">"888000888"</span> <span class="na">Type=</span><span class="s">"14"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;Verification&gt;</span>
+                <span class="nt">&lt;PersonName&gt;</span>
+                    <span class="nt">&lt;GivenName&gt;</span>CHRIS<span class="nt">&lt;/GivenName&gt;</span>
+                    <span class="nt">&lt;Surname&gt;</span>MILLER<span class="nt">&lt;/Surname&gt;</span>
+                <span class="nt">&lt;/PersonName&gt;</span>
+                <span class="nt">&lt;TelephoneInfo</span> <span class="na">PhoneNumber=</span><span class="s">"212-555-1212"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/Verification&gt;</span>
+        <span class="nt">&lt;/ReadRequest&gt;</span>
+    <span class="nt">&lt;/ReadRequests&gt;</span>
+<span class="nt">&lt;/OTA_ReadRQ&gt;</span>
+</code></pre></div></div>
+
+<h2 id="response">Response</h2>
+
+<p>The supplier responds to the request by returning the details of the completed booking.</p>
+
+<h3 id="content-types">Content Types</h3>
+<p>application/xml</p>
+
+<h3 id="response-body">Response body</h3>
+
+<p>The response is identical to the response for <a href="/api-reference/direct-connects/hotel/post-new-reservation.html">Post New Reservation</a>.</p>
+:ET

@@ -1,0 +1,893 @@
+I"/�<ul>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#obtain-payment">Obtaining Payments</a></li>
+  <li><a href="#updating-payment">Updating a Payment With Status</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#schema-payments">Payments</a></li>
+      <li><a href="#schema-payment">Payment</a></li>
+      <li><a href="#schema-invoice">Invoice</a></li>
+      <li><a href="#schema-vendor">Vendor</a></li>
+      <li><a href="#schema-amount">Amount</a></li>
+      <li><a href="#schema-payment-update">Payment Update</a></li>
+      <li><a href="#schema-payment-update-result">Payment Update Result</a></li>
+      <li><a href="#schema-errors">Errors</a></li>
+    </ul>
+  </li>
+  <li><a href="#definitions">Definitions</a>
+    <ul>
+      <li><a href="#schema-payment-update-status">Payment Update Status</a></li>
+      <li><a href="#schema-payment-provider-method">Payment Provider Method</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="overview"><a name="overview"></a>Overview</h2>
+
+<p>SAP Concur partners with external payment providers for processing invoice payments. These payment providers are listed on the App Center and can integrate with the Invoice product by using the Invoice Pay APIs. Payment providers can get a list of all the payments authorized to be processed by them, and send back status of those payments.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is only available for use by payment partners who will be processing invoice payments. This API can accept a maximum of 1,000 requests per minute across all payment providers. This API is available only in the North America Data Center.</p>
+</blockquote>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="./v4-invoice-pay-process-flow.png" alt="A process flow diagram of the Invoice Pay API" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Invoice Professional Edition</li>
+  <li>Concur Invoice Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoice.providerpayment.write</code></td>
+      <td>Read access to pending payments, and write access to payment status</td>
+      <td>GET,POST</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>This API can only be used with SAP Concur clients who have purchased Concur Invoice.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports only Company access tokens.</p>
+
+<h2 id="obtaining-payments"><a name="obtain-payment"></a>Obtaining payments</h2>
+
+<p>Payment providers can use this endpoint to get a list of payments.</p>
+<ul>
+  <li>This method will return all payments with a status <a href="#schema-payment-update-status">PENDING_RETRIEVAL</a> and payment method <code class="language-plaintext highlighter-rouge">PAVPVD</code>. After an invoice is approved and extracted it will be converted into a payment with status <a href="#schema-payment-update-status">PENDING_RETRIEVAL</a>.</li>
+  <li>It returns a maximum of 500 records at a time. In order to ensure that all payments are retrieved, call this method until you receive an empty payment in the response.</li>
+  <li>The payment provider will need to acknowledge that payments were received, using <a href="#updating-payment">Updating a Payment With Status</a> and updating the status of the payment to any status other than <a href="#schema-payment-update-status">PENDING_RETRIEVAL</a>.</li>
+</ul>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/invoice/provider-payment/v4/payments
+</code></pre></div></div>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<p>None.</p>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<p><a href="#schema-payments">Payments</a></p>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/invoice/provider-payment/v4/payments
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"payments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"paymentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0f27533f-ce38-4f43-a2f3-fa9f0e6b33fc"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"paymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PAYPVD"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"paymentDueDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-09"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"totalAmount"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30.00"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"invoices"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"invoiceNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AGH87"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"invoiceID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1ADFBB440D7045F68DE2"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"invoiceAmount"</span><span class="p">:{</span><span class="w">
+            </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30.00"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"paymentAmount"</span><span class="p">:{</span><span class="w">
+            </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30.00"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"notesToSupplier"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"vendor"</span><span class="p">:{</span><span class="w">
+        </span><span class="nl">"addressLine1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234 Rain Street"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"addressLine2"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"addressLine3"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"vendorAddrCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1160"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chicago"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IL"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"postalCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"60680-28160"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"countryName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UNITED STATES"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Terry"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brown"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"phoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"terry.brown@example.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"vendorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1160"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"vendorName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Dell"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"buyerAccountNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234567890"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="updating-a-payment-with-status"><a name="updating-payment"></a>Updating a Payment With Status</h2>
+
+<p>Payment providers can use this endpoint to provide updates to the status of payments.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/invoice/provider-payment/v4/payments/{paymentId}
+</code></pre></div></div>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier of the payment to update.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<p><a href="#schema-payment-update">Payment Update</a></p>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<p><a href="#schema-payment-update-result">Payment Update Result</a></p>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/invoice/provider-payment/v4/payments/0f27533f-ce38-4f43-a2f3-fa9f0e6b33fc
+Authorization: BEARER {token}
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"providerReference"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"hdoesofdl"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"PAID"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Payment was successful"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentAdjustmentNotes"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"statusDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-10"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentInitiationDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-09"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentSettlementDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-09"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"thirdPartyPaymentIdentifier"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"69249"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentMethod"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"CHECK"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paidAmount"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"createdDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-09"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"lastModifiedDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-09"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"PAID"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"statusMessage"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Payment was successful"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentAdjustmentNotes"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"statusDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-10"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentInitiationDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-09"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentSettlementDate"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-05-09"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"thirdPartyPaymentIdentifier"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"69249"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paymentMethod"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"CHECK"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"paidAmount"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="payments"><a name="schema-payments"></a>Payments</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">payments</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-payment">Payment</a></td>
+      <td>Array of payments.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payment"><a name="schema-payment"></a>Payment</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoices</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-invoice">Invoice</a></td>
+      <td>Array of invoices that need to be batched in a payment.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentDueDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date by which the payment should be made.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique identifier of the payment in SAP Concur. Maximum 36 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentMethod</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The value is always <code class="language-plaintext highlighter-rouge">PAYPVD</code> which means that the client wants to pay using a payment provider. Maximum 15 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">totalAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-amount">Amount</a></td>
+      <td>This amount needs to be paid to the vendor.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-vendor">Vendor</a></td>
+      <td>Vendor requesting the payment.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="invoice"><a name="schema-invoice"></a>Invoice</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoiceAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-amount">Amount</a></td>
+      <td>Amount on the invoice.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoiceNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Invoice Number. Maximum 50 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoiceId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique identifier of the invoice in SAP Concur. This can be used to get additional invoice information from other APIs. This is the same as <code class="language-plaintext highlighter-rouge">paymentRequestID</code> in other Invoice APIs. Maximum 20 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">notesToSupplier</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Notes to the supplier contain remittance information that the buyer wants to provide to the supplier. Maximum 500 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-amount">Amount</a></td>
+      <td>Payment amount on the invoice.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="vendor"><a name="schema-vendor"></a>Vendor</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">buyerAccountNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Buyer Account Number. Maximum 50 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Code. Maximum 32 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendorName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Name. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address line 1. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address line 2. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine3</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address line 3. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">city</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address City. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">state</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address State. Maximum 10 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address Country Code. Maximum 2 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address Country Name. Maximum 64 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address Postal Code. Maximum 20 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendorAddrCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Vendor Address Code. Maximum 64 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">email</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Email Address. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">firstName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>First Name. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lastName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Last Name. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">phoneNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Phone Number. Maximum 25 characters.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="amount"><a name="schema-amount"></a>Amount</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Amount. Maximum 20 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Currency Code. Maximum 3 characters.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payment-update"><a name="schema-payment-update"></a>Payment Update</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">providerReference</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique identifier of the payment in the payment provider’s system. This will be used for internal troubleshooting. Maximum 100 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="#schema-payment-update-status">Payment Update Status</a></td>
+      <td><strong>Required</strong> Used to depict success, error or any other intermediate state, defined by SAP Concur.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Payment provider description of the status. Providers can supply any message. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentAdjustmentNotes</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Payment adjustment notes sent by the payment provider. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td><strong>Required</strong> The date that the payment provider recorded this status change.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentInitiationDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date the payment was initiated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentSettlementDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date the payment will be in the payees account.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">thirdPartyPaymentIdentifier</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Check number if the payment was done via check or trace number for ACH payments. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentMethod</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="#schema-payment-provider-method">Payment Provider Method</a></td>
+      <td><strong>Required if the status is PAID, CHECK_PROCESSED, or CARD_SETTLED</strong> Payment method used by the payment provider.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paidAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-amount">Amount</a></td>
+      <td><strong>Required if the status is PAID, CHECK_PROCESSED, or CARD_SETTLED</strong> Amount paid by the payment provider.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payment-update-result"><a name="schema-payment-update-result"></a>Payment Update Result</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">createdDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date the payment was created.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date the payment was last modified.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">providerReference</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique identifier of the payment in the payment provider’s system. Maximum 100 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="#schema-payment-update-status">Payment Update Status</a></td>
+      <td><strong>Required</strong> Used to depict success, error or any other intermediate state, defined by SAP Concur.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Payment provider description of the status. Providers can supply any message. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentAdjustmentNotes</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Payment adjustment notes sent by the payment provider. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td><strong>Required</strong> The date that the payment provider recorded this status change.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentInitiationDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date the payment was initiated.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentSettlementDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>YYYY-MM-DD</td>
+      <td>The date the payment will be in the payees account.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">thirdPartyPaymentIdentifier</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Check number if the payment was done via check or trace number for ACH payments. Maximum 255 characters.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentMethod</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="#schema-payment-provider-method">Payment Provider Method</a></td>
+      <td><strong>Required if the status is PAID, CHECK_PROCESSED, or CARD_SETTLED</strong> Payment method used by the payment provider.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paidAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-amount">Amount</a></td>
+      <td><strong>Required if the status is PAID, CHECK_PROCESSED, or CARD_SETTLED</strong> Amount paid by the payment provider.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="errors"><a name="schema-errors"></a>Errors</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-error">Error</a></td>
+      <td>An array of errors.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error"><a name="schema-error"></a>Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Machine readable code associated with the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Human readable message associated with the error.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="definitions"><a name="definitions"></a>Definitions</h2>
+
+<h4 id="payment-update-status"><a name="schema-payment-update-status"></a>Payment Update Status</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+      <th>Status available in the Payment Confirmation Extract</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PENDING_RETRIEVAL</code></td>
+      <td>Not yet retrieved by the payment provider</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RETRIEVED</code></td>
+      <td>Retrieved by the payment provider</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PROCESSING</code></td>
+      <td>Payment is being processed by the payment provider</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">REJECTED</code></td>
+      <td>Payment was rejected by the payment provider</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RETURNED</code></td>
+      <td>Payment was returned by the bank</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CANCELED</code></td>
+      <td>Payment was canceled</td>
+      <td><code class="language-plaintext highlighter-rouge">FAILED</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CHECK_PRINTED</code></td>
+      <td>Check was printed</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CHECK_MAILED</code></td>
+      <td>Check was mailed</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CHECK_PROCESSED</code></td>
+      <td>Check was processed</td>
+      <td><code class="language-plaintext highlighter-rouge">PAID</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CHECK_VOIDED</code></td>
+      <td>Check was voided</td>
+      <td><code class="language-plaintext highlighter-rouge">VOID</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PAID</code></td>
+      <td>Payment was successfully made</td>
+      <td><code class="language-plaintext highlighter-rouge">PAID</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CARD_EMAIL_SENT</code></td>
+      <td>Email with card information sent to vendor</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CARD_AUTHORIZED</code></td>
+      <td>Card was authorized by the merchant</td>
+      <td>Not available</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CARD_SETTLED</code></td>
+      <td>Card was settled by vendor</td>
+      <td><code class="language-plaintext highlighter-rouge">PAID</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payment-provider-method"><a name="schema-payment-provider-method"></a>Payment Provider Method</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ACH</code></td>
+      <td>ACH payment</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CHECK</code></td>
+      <td>Check payment</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">WIRE</code></td>
+      <td>Wire payment</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CARD</code></td>
+      <td>Virtual Card payment</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">OTHER</code></td>
+      <td>Any other payment method</td>
+    </tr>
+  </tbody>
+</table>
+:ET

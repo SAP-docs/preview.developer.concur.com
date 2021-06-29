@@ -1,0 +1,583 @@
+I"Àl<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  
+  
+  <p>
+</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
+
+<p>This resource supports the following POST actions:</p>
+
+<ul>
+  <li>Post new list item</li>
+  <li>Post list item update</li>
+  <li>Post list item deletion</li>
+</ul>
+
+<h2 id="post-new-list-item">Post New List Item</h2>
+
+<h3 id="description">Description</h3>
+
+<p>Adds list items to an existing list.</p>
+
+<h3 id="post-new-list-item-request">Post New List Item Request</h3>
+
+<h4 id="request-parameters">Request parameters</h4>
+
+<ul>
+  <li><strong>{<em>listID</em>}</strong> Required. The identifier for the desired list.</li>
+  <li><strong>batch?type</strong>=<strong>{<em>type</em>}</strong> Required. The type of batch operation to complete. Should be <strong>create</strong>.</li>
+</ul>
+
+<p>Example: <code class="language-plaintext highlighter-rouge">https://www.concursolutions.com/api/expense/list/v1.0/{_listID_}/batch?type=create</code></p>
+
+<h4 id="headers">Headers</h4>
+
+<h5 id="authorization-header">Authorization header</h5>
+
+<p>Required. Authorization header with OAuth token for valid Concur user. The OAuth consumer must have one of the following user roles in Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard. These roles allow the user to manage data for the entire company.</p>
+
+<h5 id="accept-header">Accept header</h5>
+
+<p>application/xml</p>
+
+<h3 id="root-elements">Root elements</h3>
+
+<p>This function requires as its arguments a <strong>list-item-batch</strong> element containing a <strong>list-item</strong> child element for each item to be added. The <strong>list-item</strong> elements can contain the following child elements.</p>
+
+<h4 id="list-item-child-elements">list-item child elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the list item as it appears in the user interface. Maximum 64 characters.</td>
+    </tr>
+    <tr>
+      <td>levelxcode</td>
+      <td>Y, for each list level</td>
+      <td>There must be one element for each list level. A three level list will require the elements: <strong>level1code</strong>, <strong>level2code</strong> and <strong>level3code</strong>.<br /><br />Maximum 32 characters for each level. Hyphens are not allowed in this field.<br /><br /><strong>NOTE</strong>: The level codes for the list item are used to uniquely identify the list item. Once a list item has been created, the level codes cannot be updated. Refer to <a href="./v1.list-item.html#changing-level-code">Changing a List Item Level Code</a> for more information.</td>
+    </tr>
+    <tr>
+      <td>start-date</td>
+      <td>N</td>
+      <td>The effective date when the list item should be active. Format: YYYY-MM-DD.</td>
+    </tr>
+    <tr>
+      <td>end-date</td>
+      <td>N</td>
+      <td>The effective date when the list item should be inactive. Format: YYYY-MM-DD.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-request-for-single-level-list">XML Example Request For Single Level List</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/expense/list/v1.0/list/I8pq1l<span class="nv">$rdSmdrEW23deOjPjyr4Wso0Wq$a</span>/batch?type<span class="o">=</span>create HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Spool<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>SL<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;start-date&gt;</span>2010-04-01<span class="nt">&lt;/start-date&gt;</span>
+        <span class="nt">&lt;end-date&gt;</span>2010-09-30<span class="nt">&lt;/end-date&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Wheel<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>WH<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;start-date&gt;</span>2010-04-01<span class="nt">&lt;/start-date&gt;</span>
+        <span class="nt">&lt;end-date&gt;</span>2010-09-30<span class="nt">&lt;/end-date&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+<span class="nt">&lt;/list-item-batch&gt;</span>
+</code></pre></div></div>
+
+<h4 id="xml-example-request-for-multiple-level-list">XML Example Request For Multiple Level List</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/expense/list/v1.0/list/uiT738IE<span class="nv">$fhI223Kjd1</span><span class="o">!</span>jfHus<span class="nv">$/</span>batch?type<span class="o">=</span>create HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Beverages<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Meal<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>FOOD<span class="nt">&lt;/level1code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Non-Alcoholic<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;level2code&gt;</span>NALC<span class="nt">&lt;/level2code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Alcoholic<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;level2code&gt;</span>ALC<span class="nt">&lt;/level2code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Soft drinks<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;level2code&gt;</span>NALC<span class="nt">&lt;/level2code&gt;</span>
+        <span class="nt">&lt;level3code&gt;</span>SODA<span class="nt">&lt;/level3code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Juices<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;level2code&gt;</span>NALC<span class="nt">&lt;/level2code&gt;</span>
+        <span class="nt">&lt;level3code&gt;</span>JUICE<span class="nt">&lt;/level3code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Apple Juice<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;level2code&gt;</span>NALC<span class="nt">&lt;/level2code&gt;</span>
+        <span class="nt">&lt;level3code&gt;</span>JUICE<span class="nt">&lt;/level3code&gt;</span>
+        <span class="nt">&lt;level4code&gt;</span>APL<span class="nt">&lt;/level4code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Coca-Cola or Pepsi<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>DRINKS<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;level2code&gt;</span>NALC<span class="nt">&lt;/level2code&gt;</span>
+        <span class="nt">&lt;level3code&gt;</span>SODA<span class="nt">&lt;/level3code&gt;</span>
+        <span class="nt">&lt;level4code&gt;</span>COLA<span class="nt">&lt;/level4code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+<span class="nt">&lt;/list-item-batch&gt;</span>
+</code></pre></div></div>
+
+<h3 id="post-new-list-item-response">Post New List Item Response</h3>
+
+<h4 id="http-responses">HTTP Responses</h4>
+
+<ul>
+  <li><a href="/api-reference/http-status-codes.html">HTTP Status Codes</a></li>
+  <li><a href="./v1.list-item.html#error-codes">List Item Error Codes</a></li>
+</ul>
+
+<h4 id="content-types">Content Types</h4>
+
+<p>application/xml</p>
+
+<h4 id="response-body-root-elements">Response body root elements</h4>
+
+<p>This request will return a <strong>list-item-batch-result</strong> parent element with the following child elements.</p>
+
+<h5 id="list-item-batch-result-child-elements">list-item-batch-result child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>records-succeeded</td>
+      <td>The number of records processed that were successfully added.</td>
+    </tr>
+    <tr>
+      <td>records-failed</td>
+      <td>The number of records processed that were not successfully added.</td>
+    </tr>
+    <tr>
+      <td>errors</td>
+      <td>This will contain an <strong>error</strong> parent element for each record failure. See the <strong>error child elements</strong> table below for information about the child elements</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="error-child-elements">error child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>code</td>
+      <td>The code associated with the error. Refer to <a href="/api-reference/common/list-item/v1.list-item.html#error-codes">Responses and Errors</a> for the full list of possible error codes.</td>
+    </tr>
+    <tr>
+      <td>list-item-code</td>
+      <td>The level code of the record that failed.</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>The error message.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-of-successful-response">XML Example of Successful Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTPS/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch-result</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;records-succeeded&gt;</span>8<span class="nt">&lt;/records-succeeded&gt;</span>
+    <span class="nt">&lt;records-failed&gt;</span>0<span class="nt">&lt;/records-failed&gt;</span>
+<span class="nt">&lt;/list-item-batch-result&gt;</span>
+</code></pre></div></div>
+
+<h2 id="post-list-item-update">Post List Item Update</h2>
+
+<h3 id="description-1">Description</h3>
+
+<p>Updates existing list items for a specified list.</p>
+
+<h3 id="post-list-item-update-request">Post List Item Update Request</h3>
+
+<h4 id="request-parameters-1">Request parameters</h4>
+
+<ul>
+  <li><strong>{<em>listID</em>}</strong> Required. The identifier for the desired list.</li>
+  <li><strong>batch?type={<em>type</em>}</strong> Required. The type of batch operation to complete. Should be <strong>update</strong>.</li>
+</ul>
+
+<p>Example: <code class="language-plaintext highlighter-rouge">https://www.concursolutions.com/api/expense/list/v1.0/_{listID_}/batch?type=update</code></p>
+
+<h4 id="headers-1">Headers</h4>
+
+<h5 id="authorization-header-1">Authorization header</h5>
+
+<p>Required. Authorization header with OAuth token for valid Concur user. The OAuth consumer must have one of the following user roles in Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard. These roles allow the user to manage data for the entire company.</p>
+
+<h5 id="accept-header-1">Accept header</h5>
+
+<p>application/xml</p>
+
+<h4 id="root-elements-1">Root elements</h4>
+
+<p>The request includes a <strong>list-item-batch</strong> element containing a <strong>list-item</strong> child element for each item to be updated. The <strong>list-item</strong> elements can contain the following child elements.</p>
+
+<h5 id="list-item-child-elements-1">list-item child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>Y</td>
+      <td>The name of the list item as it appears in the user interface. Maximum 64 characters.</td>
+    </tr>
+    <tr>
+      <td>levelxcode</td>
+      <td>Y, for each list level</td>
+      <td>There must be one element for each list level. A three level list will require the elements: <strong>level1code</strong>, <strong>level2code</strong> and <strong>level3code</strong>.<br /><br />Maximum 32 characters for each level. Hyphens are not allowed in this field.<br /><br /><strong>NOTE</strong>: The level codes for the list item are used to uniquely identify the list item. Once a list item has been created, the level codes cannot be updated. Refer to <a href="/api-reference/common/list-item/v1.list-item.html#changing-level-code">Changing a List Item Level Code</a> for more information.</td>
+    </tr>
+    <tr>
+      <td>start-date</td>
+      <td>N</td>
+      <td>The effective date when the list item should be active. Format: YYYY-MM-DD.</td>
+    </tr>
+    <tr>
+      <td>end-date</td>
+      <td>N</td>
+      <td>The effective date when the list item should be inactive. Format: YYYY-MM-DD.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-request">XML Example Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/expense/list/v1.0/I8pq1l<span class="nv">$rdSmdrEW23deOjPjyr4Wso0Wq$a</span>/batch?type<span class="o">=</span>update HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Sprocket, Large <span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>SP<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;start-date&gt;</span>2012-06-15<span class="nt">&lt;/start-date&gt;</span>
+        <span class="nt">&lt;end-date&gt;</span>2012-12-31<span class="nt">&lt;/end-date&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;name&gt;</span>Bushing, vulcanized inner sleeve<span class="nt">&lt;/name&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>BU<span class="nt">&lt;/level1code&gt;</span>
+        <span class="nt">&lt;start-date&gt;</span>2012-06-15<span class="nt">&lt;/start-date&gt;</span>
+        <span class="nt">&lt;end-date&gt;</span>2012-12-31<span class="nt">&lt;/end-date&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+<span class="nt">&lt;/list-item-batch&gt;</span>
+</code></pre></div></div>
+
+<h3 id="post-list-item-update-response">Post List Item Update Response</h3>
+
+<h4 id="http-responses-1">HTTP Responses</h4>
+
+<ul>
+  <li><a href="/api-reference/http-status-codes.html">HTTP Status Codes</a></li>
+  <li><a href="./v1.list-item.html#error-codes">List Item Error Codes</a></li>
+</ul>
+
+<h4 id="content-types-1">Content Types</h4>
+
+<p>application/xml</p>
+
+<h4 id="response-body-root-elements-1">Response body root elements</h4>
+
+<p>This request will return a <strong>list-item-batch-result</strong> parent element with the following child elements.</p>
+
+<h5 id="list-item-batch-result-child-elements-1">list-item-batch-result child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>records-succeeded</td>
+      <td>The number of records processed that were successfully added.</td>
+    </tr>
+    <tr>
+      <td>records-failed</td>
+      <td>The number of records processed that were not successfully added.</td>
+    </tr>
+    <tr>
+      <td>errors</td>
+      <td>This will contain an <strong>error</strong> parent element for each record failure. See the <strong>error child element</strong> table below for information about the child elements.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="error-child-elements-1">error child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>code</td>
+      <td>The code associated with the error. Refer to <a href="/api-reference/common/list-item/v1.list-item.html#error-codes">Responses and Errors</a> for the full list of possible error codes.</td>
+    </tr>
+    <tr>
+      <td>list-item-code</td>
+      <td>The level code of the record that failed.</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>The error message.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-of-successful-response-1">XML Example of Successful Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTPS/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch-result</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;records-succeeded&gt;</span>2<span class="nt">&lt;/records-succeeded&gt;</span>
+    <span class="nt">&lt;records-failed&gt;</span>0<span class="nt">&lt;/records-failed&gt;</span>
+<span class="nt">&lt;/list-item-batch-result&gt;</span>
+</code></pre></div></div>
+
+<h4 id="xml-example-of-a-response-with-a-failure">XML Example of a Response with a Failure</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTPS/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch-result</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;records-succeeded&gt;</span>1<span class="nt">&lt;/records-succeeded&gt;</span>
+    <span class="nt">&lt;records-failed&gt;</span>1<span class="nt">&lt;/records-failed&gt;</span>
+    <span class="nt">&lt;errors&gt;</span>
+        <span class="nt">&lt;error&gt;</span>
+            <span class="nt">&lt;code&gt;</span>1<span class="nt">&lt;/code&gt;</span>
+            <span class="nt">&lt;list-item-code&gt;</span>BU<span class="nt">&lt;/list-item-code&gt;</span>
+            <span class="nt">&lt;message&gt;</span>List item name is too long<span class="nt">&lt;/message&gt;</span>
+        <span class="nt">&lt;/error&gt;</span>
+    <span class="nt">&lt;/errors&gt;</span>
+<span class="nt">&lt;/list-item-batch-result&gt;</span>
+</code></pre></div></div>
+
+<h2 id="post-list-item-deletion">Post List Item Deletion</h2>
+
+<h3 id="description-2">Description</h3>
+
+<p>Deletes existing list items for a specified list.</p>
+
+<h3 id="post-list-item-deletion-request">Post List Item Deletion Request</h3>
+
+<h4 id="request-parameters-2">Request parameters</h4>
+
+<ul>
+  <li><strong>{<em>listID</em>}</strong> Required. The identifier for the desired list.</li>
+  <li><strong>batch?type={<em>type</em>}</strong> Required. The type of batch operation to complete. Should be <strong>delete</strong>.</li>
+</ul>
+
+<p>Example: <code class="language-plaintext highlighter-rouge">https://www.concursolutions.com/api/expense/list/v1.0/_{listID_}/batch?type=delete</code></p>
+
+<h4 id="headers-2">Headers</h4>
+
+<h5 id="authorization-header-2">Authorization header</h5>
+
+<p>Required. Authorization header with OAuth token for valid Concur user. The OAuth consumer must have one of the following user roles in Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard. These roles allow the user to manage data for the entire company.</p>
+
+<h5 id="accept-header-2">Accept header</h5>
+
+<p>application/xml</p>
+
+<h4 id="root-elements-2">Root elements</h4>
+
+<p>The request includes a <strong>list-item-batch</strong> element containing a <strong>list-item</strong> child element for each item to be updated. The <strong>list-item</strong> elements can contain the following child elements.</p>
+
+<h5 id="list-item-child-elements-2">list-item child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>name</td>
+      <td>N</td>
+      <td>The name of the list item as it appears in the user interface. Maximum 64 characters.</td>
+    </tr>
+    <tr>
+      <td>levelxcode</td>
+      <td>Y, for each list level</td>
+      <td>There must be one element for each list level. A three level list will require the elements: <strong>level1code</strong>, <strong>level2code</strong> and <strong>level3code</strong>.<br /><br />Maximum 32 characters for each level. Hyphens are not allowed in this field.<br /><br /><strong>NOTE</strong>: The level codes for the list item are used to uniquely identify the list item. Once a list item has been created, the level codes cannot be updated. Refer to <a href="./v1.list-item.html#changing-level-code">Changing a List Item Level Code</a> for more information.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-request-1">XML Example Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /api/expense/list/v1.0/list/I8pq1l<span class="nv">$rdSmdrEW23deOjPjyr4Wso0Wq$a</span>/batch?type<span class="o">=</span>delete HTTPS/1.1
+Host: www.concursolutions.com
+Authorization: OAuth <span class="o">{</span>access token<span class="o">}</span>
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>BU<span class="nt">&lt;/level1code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+    <span class="nt">&lt;list-item&gt;</span>
+        <span class="nt">&lt;level1code&gt;</span>WH<span class="nt">&lt;/level1code&gt;</span>
+    <span class="nt">&lt;/list-item&gt;</span>
+<span class="nt">&lt;/list-item-batch&gt;</span>
+</code></pre></div></div>
+
+<h3 id="post-list-item-deletion-response">Post List Item Deletion Response</h3>
+
+<h4 id="http-responses-2">HTTP Responses</h4>
+
+<ul>
+  <li><a href="/api-reference/http-status-codes.html">HTTP Status Codes</a></li>
+  <li><a href="./v1.list-item.html#error-codes">List Item Error Codes</a></li>
+</ul>
+
+<h4 id="content-types-2">Content Types</h4>
+
+<ul>
+  <li>application/xml</li>
+</ul>
+
+<h4 id="response-body-root-elements-2">Response body root elements</h4>
+
+<p>This request will return a <strong>list-item-batch-result</strong> parent element with the following child elements.</p>
+
+<h5 id="list-item-batch-result-child-elements-2">list-item-batch-result child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>records-succeeded</td>
+      <td>The number of records processed that were successfully added.</td>
+    </tr>
+    <tr>
+      <td>records-failed</td>
+      <td>The number of records processed that were not successfully added.</td>
+    </tr>
+    <tr>
+      <td>errors</td>
+      <td>This will contain an <strong>error</strong> parent element for each record failure. See the <strong>error child element</strong> table below for information about the child elements.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="error-child-elements-2">error child elements</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>code</td>
+      <td>The code associated with the error. Refer to <a href="/api-reference/common/list-item/v1.list-item.html#error-codes">Responses and Errors</a> for the full list of possible error codes.</td>
+    </tr>
+    <tr>
+      <td>list-item-code</td>
+      <td>The level code of the record that failed.</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>The error message.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="xml-example-of-successful-response-2">XML Example of Successful Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTPS/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;list-item-batch-result</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/list/2010/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;records-succeeded&gt;</span>2<span class="nt">&lt;/records-succeeded&gt;</span>
+    <span class="nt">&lt;records-failed&gt;</span>0<span class="nt">&lt;/records-failed&gt;</span>
+<span class="nt">&lt;/list-item-batch-result&gt;</span>
+</code></pre></div></div>
+:ET

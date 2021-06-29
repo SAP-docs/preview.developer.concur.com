@@ -1,5 +1,5 @@
 ---
-title: Budget v4 - Getting Started
+title: Budget v4 - Getting Started.
 layout: reference
 ---
 

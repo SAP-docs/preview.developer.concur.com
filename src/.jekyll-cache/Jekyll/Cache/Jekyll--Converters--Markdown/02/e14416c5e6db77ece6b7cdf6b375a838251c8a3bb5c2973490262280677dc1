@@ -1,0 +1,913 @@
+I"L�<ul>
+  <li><a href="#get-definitions">Get an array of extract definitions</a></li>
+  <li><a href="#get-definition">Get a single extract definition</a></li>
+  <li><a href="#get-file">Get an extract file or files</a></li>
+  <li><a href="#get-job-array">Get an array of extract jobs</a></li>
+  <li><a href="#getexjd">Get a single extract job</a></li>
+  <li><a href="#getexjs">Get a single extract job status</a></li>
+  <li><a href="#postexjr">Post an extract job initiation request</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#schema-definitions">Definitions</a></li>
+      <li><a href="#schema-definition">Definition</a></li>
+      <li><a href="#schema-jobs">Jobs</a></li>
+      <li><a href="#schema-job">Job</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="capabilities">Capabilities</h2>
+
+<p>The Extract web service allows for the development of a customized process that can be used to request and extract available data objects such as “Approved” Expense Reports, Invoices, and Payment Requests.</p>
+
+<p>Through a series of web service calls an Application Connector can GET the Extract Definition List, then use that list to perform a POST the Extract Job of their choosing. This POST will initiate the extract process. While the job runs another process can periodically GET the Extract Job Status and once “Complete” the Connector can then perform a GET to obtain the Extract Job File data.</p>
+
+<p>The series of calls that your connector will make will remain the same for each implementation of the Extract Web Service.</p>
+
+<p>Additionally, it provides:</p>
+
+<ul>
+  <li>Access to extract files using HTTP to move or manage the data as opposed to using a secure FTP site.</li>
+  <li>Clients with organizational units around the globe can create and receive extracts at times that work best for their time zones. To accomplish this, you can work with your SAP Concur support resource to create a unique Extract Definition for each organizational unit that requires a separate extract.</li>
+  <li>A way to receive extract files throughout the day including, but not limited to, outside the Overnight Processing Period (ONP).</li>
+</ul>
+
+<blockquote>
+  <p>Note: A client may elect to include additional functionality that could result in complex journal entries. For example, they may allow cash advances or utilize a company-paid corporate card program where personal amounts result in an employee owing the employer. These configuration choices require more care when pulling the extract file from SAP Concur. Work with their functional experts on their specific use case, then watch the relevant videos in the <a href="http://www.concurtraining.com/prdeployment/sts"><strong>SAE Detailed Discussions</strong></a> section at the bottom of the page for detailed information on which fields to include.</p>
+</blockquote>
+
+<p>Resource URI</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{InstanceURL}/api/expense/extract/v1.0
+https://{InstanceURL}/api/expense/extract/v1.0/{DefinitionID}/job
+https://{InstanceURL}/api/expense/extract/v1.0/{DefinitionID}/job/status
+https://{InstanceURL}/api/expense/extract/v1.0/{DefinitionID}/job/{JobID}/file
+</code></pre></div></div>
+
+<h2 id="version">Version</h2>
+
+<p>1.0</p>
+
+<h2 id="base-uri">Base URI</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/api/expense/extract/v1.0/
+</code></pre></div></div>
+
+<h2 id="authorization">Authorization</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">Authorization</code> header with OAuth token for a valid SAP Concur user must be included with all API calls. The OAuth consumer must have one of the following user roles in SAP Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard. These roles allow the user to manage data for the entire company.</p>
+
+<h2 id="get-an-array-of-extract-definitions"><a name="get-definitions"></a>Get an Array of Extract Definitions</h2>
+
+<h3 id="request">Request</h3>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="parameters">Parameters</h4>
+
+<p>None</p>
+
+<h4 id="payload">Payload</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>JSON</td>
+      <td><strong>Required</strong> Description.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<p><a href="#schema-definitions">Definitions</a></p>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/expense/extract/v1.0/
+Authorization: OAuth {token}
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;definitions</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/extract/2010/02"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;definition&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;job-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job<span class="nt">&lt;/job-link&gt;</span>
+    <span class="nt">&lt;name&gt;</span>Standard Accounting Extract<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;/definition&gt;</span>
+  <span class="nt">&lt;definition&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/Umj$swS19lpd7Sk$phUYl67wE1ss4Q$shu<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;job-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/Umj$swS19lpd7Sk$phUYl67wE1ss4Q$shu<span class="nt">&lt;/job-link&gt;</span>
+    <span class="nt">&lt;name&gt;</span>European Extract<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;/definition&gt;</span>
+  <span class="nt">&lt;definition&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/8LjhN23Hs33$piUUfy4ytTqa$sqqacYeP1<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;job-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/8LjhN23Hs33$piUUfy4ytTqa$sqqacYeP1<span class="nt">&lt;/job-link&gt;</span>
+    <span class="nt">&lt;name&gt;</span>Asian Extract<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;/definition&gt;</span>
+<span class="nt">&lt;/definitions&gt;</span>
+</code></pre></div></div>
+
+<h2 id="get-a-single-extract-definition"><a name="get-definition"></a>Get a single extract definition</h2>
+
+<p>Retrieves the details of the specified extract definition.</p>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DefinitionID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the desired extract definition.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="uri-template">URI Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/{DefinitionID}
+</code></pre></div></div>
+
+<h4 id="payload-2">Payload</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>JSON</td>
+      <td><strong>Required</strong> Description.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<p><a href="#schema-definition">Definition</a></p>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-3">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/expense/extract/v1.0/n59FpBJ8hN3qVWTFIrtxkOT5pef6DmIj3
+Authorization: OAuth {token}
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;definition</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/extract/2010/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/n59FpBJ8hN3qVWTFIrtxkOT5$pef6DmIj3<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;name&gt;</span>AMEX Remittance - US<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;job-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/n59FpBJ8hN3qVWTFIrtxkOT5$pef6DmIj3/job<span class="nt">&lt;/job-link&gt;</span>
+<span class="nt">&lt;/definition&gt;</span>
+</code></pre></div></div>
+
+<h2 id="get-an-extract-file-or-files"><a name="get-file"></a>Get an extract file or files</h2>
+
+<p>The extracted data for the specified extract job.</p>
+
+<p>The response is the extracted data in <code class="language-plaintext highlighter-rouge">text/csv</code> format if there was a single file produced or as <code class="language-plaintext highlighter-rouge">application/zip</code> if the extract definition is configured to produce more than one file.</p>
+
+<h3 id="request-4">Request</h3>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DefinitionID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The definition identifier.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">JobID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the job.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="uri-template-1">URI Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/{DefinitionID}/job/{JobID}/file
+</code></pre></div></div>
+
+<h4 id="payload-4">Payload</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>JSON</td>
+      <td><strong>Required</strong> Description.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="status-codes-2">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-5">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">text/csv</code></li>
+      <li><code class="language-plaintext highlighter-rouge">application/zip</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="payload-5">Payload</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>format</td>
+      <td>description</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd/file
+Authorization: OAuth {token}
+</code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<h5 id="single-file">Single file</h5>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: text/csv
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>100,AAA,BBBB,CCCC,...&lt;rest of file&gt;
+</code></pre></div></div>
+
+<h5 id="multiple-files">Multiple files</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/zip
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{ zip archive data}
+</code></pre></div></div>
+
+<h2 id="get-an-array-of-extract-jobs"><a name="get-job-array"></a>Get an Array of Extract Jobs</h2>
+
+<p>Requests a list of the last 100 extract jobs ran for the specified Extract Definition.</p>
+
+<h3 id="request-6">Request</h3>
+
+<h4 id="headers-6">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="parameters-3">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DefinitionID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The definition identifier.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="uri-template-2">URI Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/{DefinitionID}/job
+</code></pre></div></div>
+
+<h4 id="payload-6">Payload</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td>JSON</td>
+      <td><strong>Required</strong> Description.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-6">Response</h3>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-7">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-7">Payload</h4>
+
+<p><a href="#schema-jobs">Jobs</a></p>
+
+<h3 id="example-3">Example</h3>
+
+<h4 id="request-7">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job HTTP/1.1
+Authorization: OAuth {token}
+</code></pre></div></div>
+
+<h4 id="response-7">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;jobs</span> <span class="na">xmlns=</span><span class="s">"..."</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;job&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;status-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd/status<span class="nt">&lt;/status-link&gt;</span>
+    <span class="nt">&lt;start-time&gt;</span>2010-01-13T18:30:02Z<span class="nt">&lt;/start-time&gt;</span>
+    <span class="nt">&lt;status&gt;</span>Queued<span class="nt">&lt;/status&gt;</span>
+  <span class="nt">&lt;/job&gt;</span>
+  <span class="nt">&lt;job&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/21UwwqA3jk25Lis77jF$piiD21c89lLwEq<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;status-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/21UwwqA3jk25Lis77jF$piiD21c89lLwEq/status<span class="nt">&lt;/status-link&gt;</span> 
+    <span class="nt">&lt;start-time&gt;</span>2010-01-13T18:30:02Z<span class="nt">&lt;/start-time&gt;</span>
+    <span class="nt">&lt;stop-time&gt;</span>2010-01-13T18:30:50Z<span class="nt">&lt;/stop-time&gt;</span>
+    <span class="nt">&lt;status&gt;</span>Complete<span class="nt">&lt;/status&gt;</span>
+    <span class="nt">&lt;file-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/21UwwqA3jk25Lis77jF$piiD21c89lLwEq/file<span class="nt">&lt;/file-link&gt;</span>
+  <span class="nt">&lt;/job&gt;</span>
+  <span class="nt">&lt;job&gt;</span>
+    <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uI77ndy0Q1szuU73XSh56lshi$p215gHs1<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;status-link&gt;</span>https://www.concursolutions.com/api/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uI77ndy0Q1szuU73XSh56lshi$p215gHs1/status<span class="nt">&lt;/status-link&gt;</span>
+    <span class="nt">&lt;start-time&gt;</span>2010-01-12T18:30:01Z<span class="nt">&lt;/start-time&gt;</span>
+    <span class="nt">&lt;stop-time&gt;</span>2010-01-12T18:31:01Z<span class="nt">&lt;/stop-time&gt;</span>
+    <span class="nt">&lt;status&gt;</span>Complete<span class="nt">&lt;/status&gt;</span>
+    <span class="nt">&lt;file-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uI77ndy0Q1szuU73XSh56lshi$p215gHs1/file<span class="nt">&lt;/file-link&gt;</span>
+  <span class="nt">&lt;/job&gt;</span>
+<span class="nt">&lt;/jobs&gt;</span>
+</code></pre></div></div>
+
+<h2 id="get-a-single-extract-job"><a name="getexjd"></a>Get a Single Extract Job</h2>
+
+<p>Retrieves the details of the specified extract definition.</p>
+
+<h3 id="request-8">Request</h3>
+
+<h4 id="headers-8">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="parameters-4">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DefinitionID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the desired extract definition.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">JobID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the job and the job keyword.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="uri-template-3">URI Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/{DefinitionID}/job/{JobID}
+</code></pre></div></div>
+
+<h4 id="payload-8">Payload</h4>
+
+<p>None</p>
+
+<h3 id="response-8">Response</h3>
+
+<h4 id="status-codes-4">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-9">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-9">Payload</h4>
+
+<p><a href="#schema-job">Job</a></p>
+
+<h3 id="example-4">Example</h3>
+
+<h4 id="request-9">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd
+Authorization: OAuth {token}
+</code></pre></div></div>
+
+<h4 id="response-9">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;job</span> <span class="na">xmlns=</span><span class="s">"..."</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd&gt;<span class="nt">&lt;/id&gt;</span>
+  <span class="nt">&lt;status-link&gt;</span>https://www.concursolutions.com/api/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd/status<span class="nt">&lt;/status-link&gt;</span>
+  <span class="nt">&lt;start-time&gt;</span>2010-01-12T18:30:01<span class="nt">&lt;/start-time&gt;</span>
+  <span class="nt">&lt;stop-time&gt;</span>2010-01-12T18:31:01<span class="nt">&lt;/stop-time&gt;</span>
+  <span class="nt">&lt;status&gt;</span>Complete<span class="nt">&lt;/status&gt;</span>
+  <span class="nt">&lt;file-link&gt;</span> https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd/file<span class="nt">&lt;/file-link&gt;</span>
+<span class="nt">&lt;/job&gt;</span>
+</code></pre></div></div>
+
+<h2 id="get-a-single-extract-job-status"><a name="getexjs"></a>Get a Single Extract Job Status</h2>
+
+<p>Retrieves the details of the specified extract definition.</p>
+
+<h3 id="request-10">Request</h3>
+
+<h4 id="headers-10">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="parameters-5">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DefinitionID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the desired extract definition.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">JobID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the job and the job keyword.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="uri-template-4">URI Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/{DefinitionID}/job/{JobID}/status
+</code></pre></div></div>
+
+<h4 id="payload-10">Payload</h4>
+
+<p>None</p>
+
+<h3 id="response-10">Response</h3>
+
+<h4 id="status-codes-5">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+</ul>
+
+<h4 id="headers-11">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="payload-11">Payload</h4>
+
+<p><a href="#schema-job">Job</a></p>
+
+<h3 id="example-5">Example</h3>
+
+<h4 id="request-11">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/nX8O9$pytn6vJEWvLOZxyy3GcNGyj0ZklG/job/nIJp1lR2R0LNT4XcO5fXG$s$sZmVuRTuG$ps/status
+{Header}: {Value}
+</code></pre></div></div>
+
+<h4 id="response-11">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;job</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/extract/2010/02"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nX8O9$pytn6vJEWvLOZxyy3GcNGyj0ZklG/job/nIJp1lR2R0LNT4XcO5fXG$s$sZmVuRTuG$ps<span class="nt">&lt;/id&gt;</span>
+  <span class="nt">&lt;status-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nX8O9$pytn6vJEWvLOZxyy3GcNGyj0ZklG/job/nIJp1lR2R0LNT4XcO5fXG$s$sZmVuRTuG$ps/status<span class="nt">&lt;/status-link&gt;</span>
+  <span class="nt">&lt;start-time&gt;</span>2011-08-25T14:25:22.58<span class="nt">&lt;/start-time&gt;</span>
+  <span class="nt">&lt;stop-time&gt;</span>2011-08-25T14:25:23.537<span class="nt">&lt;/stop-time&gt;</span>
+  <span class="nt">&lt;status&gt;</span>Completed<span class="nt">&lt;/status&gt;</span>
+  <span class="nt">&lt;file-link&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nX8O9$pytn6vJEWvLOZxyy3GcNGyj0ZklG/job/nIJp1lR2R0LNT4XcO5fXG$s$sZmVuRTuG$ps/file<span class="nt">&lt;/file-link&gt;</span>
+<span class="nt">&lt;/job&gt;</span>
+</code></pre></div></div>
+
+<h2 id="post-an-extract-job-initiation-request"><a name="postexjr"></a>Post an Extract Job Initiation Request</h2>
+
+<p>Initiates a new extract job for the specified extract definition. The job will be scheduled to start as soon as possible. The value will be Queued until the job begins.</p>
+
+<h3 id="request-12">Request</h3>
+
+<h4 id="headers-12">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+</ul>
+
+<h4 id="parameters-6">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">DefinitionID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The identifier for the desired extract definition.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5 id="uri-template-5">URI Template</h5>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/api/expense/extract/v1.0/{DefinitionID}/job
+</code></pre></div></div>
+
+<h4 id="payload-12">Payload</h4>
+
+<p><a href="#schema-definition">Definition</a></p>
+
+<h3 id="response-12">Response</h3>
+
+<h4 id="status-codes-6">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+</ul>
+
+<h4 id="headers-13">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a> <code class="language-plaintext highlighter-rouge">application/xml</code></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.2">RFC 7231 Location</a></li>
+</ul>
+
+<h4 id="payload-13">Payload</h4>
+
+<p><a href="#schema-job">Job</a></p>
+
+<h3 id="example-6">Example</h3>
+
+<h4 id="request-13">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job
+Authorization: OAuth {token}
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;definition</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/extract/2010/02"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd<span class="nt">&lt;/id&gt;</span>
+<span class="nt">&lt;/definition&gt;</span>
+</code></pre></div></div>
+
+<h4 id="response-13">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 201 Created
+Location: https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd
+Content-Type: application/xml
+</code></pre></div></div>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;job</span> <span class="na">xmlns=</span><span class="s">"..."</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;id&gt;</span>https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd<span class="nt">&lt;/id&gt;</span>
+  <span class="nt">&lt;status-link&gt;</span> https://www.concursolutions.com/api/expense/extract/v1.0/nYoPK$pZmcowMRUqcl5bnDAwwsMydyt$xd/job/uIo87jk3SHudi$sdlYle8$peot$pD21jyd/status<span class="nt">&lt;/status-link&gt;</span>
+  <span class="nt">&lt;start-time&gt;</span>2010-01-13T18:30:02Z<span class="nt">&lt;/start-time&gt;</span>
+  <span class="nt">&lt;status&gt;</span>Queued<span class="nt">&lt;/status&gt;</span>
+<span class="nt">&lt;/job&gt;</span>
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="definitions"><a name="schema-definitions"></a>Definitions</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">definitions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-definition">definition</a></td>
+      <td><strong>Required</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="definition"><a name="schema-definition"></a>Definition</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The extract definition ID URI with encrypted ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">job-link</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The extract job URI with encrypted ID. The job-link value is used as the URI when creating the extract job data request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The extract definition name.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="jobs"><a name="schema-jobs"></a>Jobs</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">jobs</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-job">job</a></td>
+      <td><strong>Required</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="job"><a name="schema-job"></a>Job</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique job identifier with encrypted ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status-link</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A URI for retrieving the current job status, with encrypted ID. The <strong>status-link</strong> value is used as the URI when requesting the job status.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">start-time</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The time in UTC (GMT) the job is scheduled to start.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stop-time</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The time in UTC (GMT) the job finished. Not included if the job is still running.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The current status of the job.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">file-link</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A URI for retrieving the file or files produced by the job run, with encrypted ID. Not included if the job is still running. The <code class="language-plaintext highlighter-rouge">file-link</code> value is used as the URI when retrieving the extract data.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="enterprise-resource-planning-integration"><a name="erp-integration"></a>Enterprise Resource Planning Integration</h2>
+
+<p>For the purposes of ERP integration this API is available to Professional Edition. For Standard Edition use <a href="/api-reference/expense/payment-batch/v1.payment-batches.html#erp-integration">Payment Batches v1 API ERP Integration</a>.</p>
+
+<ol>
+  <li><a href="#get-definitions">Get an array of extract definitions</a>
+    <ul>
+      <li>Locate the desired definitions for your client. You may need to obtain additional details as there may be multiple files to obtain depending on client requirements.</li>
+      <li>Record the Definition ID to use in subsequent API requests.</li>
+    </ul>
+  </li>
+  <li><a href="#get-job-array">Get an array of extract jobs</a>
+    <ul>
+      <li>OPTIONAL: the Partner only needs to do this if the Partner is running the job, otherwise skip this step.</li>
+      <li>Determine which jobs are interesting and record their <code class="language-plaintext highlighter-rouge">file-link</code>.</li>
+    </ul>
+  </li>
+  <li><a href="#get-file">Get an extract file or files</a></li>
+</ol>
+:ET

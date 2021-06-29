@@ -1,0 +1,172 @@
+I"p!<p>Posts an exception to the report, and associates it with one of the following data levels: Report Header, Entry, Itemization, Allocation. This endpoint requires familiarity with the company’s exception code configuration.</p>
+
+<ul>
+  <li><a href="#request">Request</a>
+    <ul>
+      <li><a href="#req-schema">Request Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#response">Response</a>
+    <ul>
+      <li><a href="#res-schema">Response Schema</a></li>
+    </ul>
+  </li>
+  <li><a href="#examples">Examples</a></li>
+</ul>
+
+<h2 id="request"><a name="request"></a>Request</h2>
+
+<h3 id="request-parameters">Request Parameters</h3>
+
+<h4 id="path-parameters">Path Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Required/Optional</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{<em>reportKey</em>}/Exceptions</td>
+      <td>required</td>
+      <td>The identifier for the desired report and the exceptions keyword.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Example:</strong> <code class="language-plaintext highlighter-rouge">https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportKey}/Exceptions</code></p>
+
+<p><strong>URI Source</strong>:
+The reportKey value is returned in the <strong>RptKey</strong> element by the <a href="/api-reference/expense/expense-report/v3.reports.html#getID">Get Report Details</a> response.</p>
+
+<h3 id="headers">Headers</h3>
+
+<h4 id="authorization-header">Authorization Header</h4>
+
+<p>Authorization header with OAuth token for valid SAP Concur user. Required.</p>
+
+<h4 id="content-type-header">Content-Type Header</h4>
+<p>application/xml</p>
+
+<h3 id="request-schema"><a name="req-schema"></a>Request Schema</h3>
+<p>This request should contain an <strong>Exceptions</strong> parent element with an <strong>Exception</strong> parent element for each exception included in the report. The <strong>Exception</strong> element contains the following child elements:</p>
+
+<h4 id="exception-elements">Exception Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Required (must contain value)?</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Index</td>
+      <td>Y</td>
+      <td>The exception’s location in a batch of exceptions. Should start at 1 and increment sequentially. This value is used to identify the record if there is an error.</td>
+    </tr>
+    <tr>
+      <td>ObjectType</td>
+      <td>Y</td>
+      <td>The type of object to assign the exception. Format: Report, Entry, or Allocation. When sending a Report level exception, the ObjectType and ObjectId can be null, as the report key is supplied in the URI.</td>
+    </tr>
+    <tr>
+      <td>ObjectId</td>
+      <td>Y</td>
+      <td>The unique identifier for the object to associate with the exception. Returned by the <a href="/api-reference/expense/expense-report/v3.reports.html#getID">Get Report Details</a> function. Must be the value from one of the following fields:<br />   Entry or Itemization: Use the <strong>RpeKey</strong>.<br />   Allocation: Use <strong>AllocationKey</strong>.<br />   Report Header: Null value. When sending a Report level exception, the ObjectType and ObjectId can be null, as the report key is supplied in the URI.</td>
+    </tr>
+    <tr>
+      <td>ExceptionCode</td>
+      <td>Y</td>
+      <td>The Exception Code for the exception to assign to the object. Must be a configured exception code in Expense. Example: NODATE</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="response"><a name="response"></a>Response</h2>
+
+<h3 id="content-types">Content Types</h3>
+<p>application/xml</p>
+
+<h3 id="response-schema"><a name="res-schema"></a>Response Schema</h3>
+<p>This request will return an <strong>exception-result</strong> parent element.</p>
+
+<h4 id="exception-result-elements">Exception-Result Elements</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>exceptions-succeeded</td>
+      <td>The number of exceptions processed that were successfully assigned.</td>
+    </tr>
+    <tr>
+      <td>exceptions-failed</td>
+      <td>The number of exceptions processed that were not successfully added.</td>
+    </tr>
+    <tr>
+      <td>errors</td>
+      <td>This will contain an <strong>error</strong> parent element for each record failure. The <strong>error</strong> element will contain the following child elements:<br />   Index: The exception’s location in the batch.<br />   message: The error message.</td>
+    </tr>
+    <tr>
+      <td>ExceptionDetails</td>
+      <td>This parent element will contain an <strong>ExceptionInfo</strong> parent element for all exceptions that did not cause an error, and will contain the following child elements:<br />   Index: The exception’s location in the batch.<br />   Status: The status of the request.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="examples"><a name="examples"></a>Examples</h2>
+
+<h3 id="xml-example-request">XML Example Request</h3>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">https://www.concursolutions.com/api/expense/expensereport/v1.1/report/3FK118eIJ844Uwl0HF32/Exceptions</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/xml</span>
+
+<span class="nt">&lt;Exceptions</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;Exception&gt;</span>
+        <span class="nt">&lt;Index&gt;</span>1<span class="nt">&lt;/Index&gt;</span>
+        <span class="nt">&lt;ObjectType&gt;</span>Report<span class="nt">&lt;/ObjectType&gt;</span>
+        <span class="nt">&lt;ObjectId&gt;</span>nxxKgLlnRODp$sie8Hq1UviOJ2AbpS7dCP<span class="nt">&lt;/ObjectId&gt;</span>
+        <span class="nt">&lt;ExceptionCode&gt;</span>APPRVTO<span class="nt">&lt;/ExceptionCode&gt;</span>
+    <span class="nt">&lt;/Exception&gt;</span>
+    <span class="nt">&lt;Exception&gt;</span>
+        <span class="nt">&lt;Index&gt;</span>2<span class="nt">&lt;/Index&gt;</span>
+        <span class="nt">&lt;ObjectType&gt;</span>Entry<span class="nt">&lt;/ObjectType&gt;</span>
+        <span class="nt">&lt;ObjectId&gt;</span>nxxKgLlnRODp$sie8Hq1UviOJ2deAbpS7dC0<span class="nt">&lt;/ObjectId&gt;</span>
+        <span class="nt">&lt;ExceptionCode&gt;</span>APPRVTO<span class="nt">&lt;/ExceptionCode&gt;</span>
+    <span class="nt">&lt;/Exception&gt;</span>
+<span class="nt">&lt;/Exceptions&gt;</span>
+</code></pre></div></div>
+
+<h3 id="xml-example-of-response-with-success-and-failure">XML Example of Response With Success and Failure</h3>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;exception-result</span> <span class="na">xmlns=</span><span class="s">"http://www.concursolutions.com/api/expense/expensereport/2011/03"</span> <span class="na">xmlns:i=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;exceptions-succeeded&gt;</span>1<span class="nt">&lt;/exceptions-succeeded&gt;</span>
+    <span class="nt">&lt;exceptions-failed&gt;</span>1<span class="nt">&lt;/exceptions-failed&gt;</span>
+    <span class="nt">&lt;errors&gt;</span>
+        <span class="nt">&lt;error&gt;</span>
+            <span class="nt">&lt;Index&gt;</span>2<span class="nt">&lt;/Index&gt;</span>
+            <span class="nt">&lt;message&gt;</span>Invalid Exception Code<span class="nt">&lt;/message&gt;</span>
+        <span class="nt">&lt;/error&gt;</span>
+    <span class="nt">&lt;/errors&gt;</span>
+    <span class="nt">&lt;ExceptionDetails&gt;</span>
+        <span class="nt">&lt;ExceptionInfo&gt;</span>
+            <span class="nt">&lt;Index&gt;</span>1<span class="nt">&lt;/Index&gt;</span>
+            <span class="nt">&lt;Status&gt;</span>Success<span class="nt">&lt;/Status&gt;</span>
+        <span class="nt">&lt;/ExceptionInfo&gt;</span>
+    <span class="nt">&lt;/ExceptionDetails&gt;</span>
+<span class="nt">&lt;/exception-result&gt;</span>
+</code></pre></div></div>
+
+:ET

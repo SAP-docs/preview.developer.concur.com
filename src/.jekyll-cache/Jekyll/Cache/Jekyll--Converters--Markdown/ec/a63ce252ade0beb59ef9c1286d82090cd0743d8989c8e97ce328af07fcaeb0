@@ -1,0 +1,431 @@
+I"*N<ul>
+  <li><a href="">Overview</a></li>
+  <li><a href="#company">Company</a></li>
+  <li><a href="#obtain_token">Obtaining a one-time auth token</a></li>
+  <li><a href="#response_codes">Response Codes</a></li>
+</ul>
+
+<h2 id="company"><a name="company"></a>Company</h2>
+
+<p>Company is a top-level principal within Concur and you would be able to obtain an access token and a refresh token on a Company’s behalf just like you would be able to with a User. Only one authorization flow is currently available for obtaining tokens for a Company, which is the <a href="/api-reference/authentication/apidoc.html#password_grant">Password grant</a> using a temporary auth token received from the App Center.</p>
+
+<h2 id="obtaining-an-auth-token"><a name="obtain_token"></a>Obtaining an auth token</h2>
+
+<p>To begin the authentication flow for a company, one must first obtain a temporary auth token through AppCenter’s interface. AppCenter will request for a temporary auth token and hand it off to the partner, who will then in turn use <a href="/api-reference/authentication/apidoc.html#password_grant">Password grant</a> to exchange the temporary auth token for a full access token and refresh token for the company.</p>
+
+<p>Auth tokens are valid only for 12 hours.  Partners have 12 hours to exchange the auth token for a refresh and access token, and can use this auth token multiple times within the 12 hours in case of network failure.</p>
+
+<p>This auth flow diagram describes this handshake:</p>
+
+<p><strong>Company Authentication Flow Sequence Diagram</strong></p>
+
+<p><img src="company_auth_diagram.png" alt="Company Authentication Flow Sequence Diagram" /></p>
+
+<p>AppCenter will call this endpoint to obtain an <code class="language-plaintext highlighter-rouge">authToken</code>.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /profile-service/v1/keys/principals/&lt;companyId&gt;/authtoken/
+</code></pre></div></div>
+
+<p>Sample Curl:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-E</span> appcenter.p12:. <span class="nt">-H</span> <span class="s1">'concur-correlationid: githbuwiki'</span> <span class="nt">-XPOST</span> https://us.api.concursolutions.com/profile-service/v1/keys/principals/08BCCA1E-0D4F-4261-9F1B-F778D96617D6/authtoken/
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PASS"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errormsg"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;authToken&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>AppCenter redirects User to Client’s auth handler URI (Connect URL) and passing in the authToken</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>301 Redirect https://client.app.url?id<span class="o">=</span><span class="nv">$company_uuid</span>&amp;requestToken<span class="o">=</span><span class="nv">$request_token</span>&amp;userID<span class="o">=</span><span class="nv">$user_uuid</span>
+</code></pre></div></div>
+
+<p>At this point, the user should be prompted to sign in to your application. If the user doesn’t not have account, the user should have the ability to create one. For applications that have user read scope, the User UUID can be used to pre-populate the account creation forms. Please see the <a href="/manage-apps/go-market-docs/app-center-ux-guidelines-enterprise.html">App Center User Experience guidelines</a> for more information.</p>
+
+<p><strong>Client app calls Oauth2 password grant to get an access token for the company</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">client_id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UIID</code></td>
+      <td>Applications client_id supplied by App Management</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">client_secret</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>Applications client_secret supplied by App Management</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">grant_type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Specify which grant type you expect the oauth2 service to process. For password grant, the value is <code class="language-plaintext highlighter-rouge">password</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">username</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>specify the <code class="language-plaintext highlighter-rouge">companyId</code> to be used in the password grant request. The <code class="language-plaintext highlighter-rouge">id</code> above.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">password</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>specify the <code class="language-plaintext highlighter-rouge">authToken</code> to be used in the password grant request. The <code class="language-plaintext highlighter-rouge">requestToken</code> above.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">credtype</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The credtype signifies to oauth2 which credential set is being submitted in the request. The value: <code class="language-plaintext highlighter-rouge">authtoken</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="example">Example</h2>
+
+<h3 id="request">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /oauth2/v0/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: us.api.concursolutions.com
+Connection: close
+Content-Length: 175
+
+<span class="nv">client_id</span><span class="o">=</span>your-client_id
+&amp;client_secret<span class="o">=</span>your-client_secret
+&amp;grant_type<span class="o">=</span>password
+&amp;username<span class="o">=</span>&lt;companyId&gt;
+&amp;password<span class="o">=</span>&lt;authtoken&gt;
+&amp;credtype<span class="o">=</span>authtoken
+</code></pre></div></div>
+
+<h3 id="response">Response</h3>
+
+<p><strong>Success</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Date: date-requested
+Content-Length: 3397
+Connection: Close
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3600"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"app_scopes"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"access_token"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"refresh_token"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"geolocation"</span><span class="p">:</span><span class="s2">"https://us.api.concursolutions.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Failure</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalid_grant"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Incorrect Credentials. Please Retry"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="response-codes"><a name="response_codes"></a>Response Codes</h2>
+
+<h5 id="http-status-code-returned-by-oauth2">HTTP Status Code returned by oauth2</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>HTTP Status Code</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>200</td>
+      <td>OK - Successful call, response is in body.</td>
+    </tr>
+    <tr>
+      <td>400</td>
+      <td>Bad Request <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>401</td>
+      <td>Unauthorized <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>403</td>
+      <td>Forbidden <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>404</td>
+      <td>Not Found <code class="language-plaintext highlighter-rouge">(error, error_description, code)</code></td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>Server Error, error message is in body.</td>
+    </tr>
+    <tr>
+      <td>503</td>
+      <td>Server Timed Out, error message is in body.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>4xx class errors have a JSON response with the following fields</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;number&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;error&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error_description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;error_description&gt;"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="token">/token</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Error</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>5</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Incorrect credentials. Please Retry</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Account is disabled. Please contact support</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Account is disabled. Please contact support</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Logon Denied. Please contact support</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Logon Denied. Please contact support</td>
+    </tr>
+    <tr>
+      <td>14</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Account Locked. Please contact support</td>
+    </tr>
+    <tr>
+      <td>16</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>user lives elsewhere</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>Incorrect credentials. Please Retry</td>
+    </tr>
+    <tr>
+      <td>51</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>username was not supplied</td>
+    </tr>
+    <tr>
+      <td>52</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>password was not supplied</td>
+    </tr>
+    <tr>
+      <td>53</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_client</code></td>
+      <td>company is not enabled for this client</td>
+    </tr>
+    <tr>
+      <td>54</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_scope</code></td>
+      <td>requested scope exceeds granted scope</td>
+    </tr>
+    <tr>
+      <td>55</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>we don’t know this email</td>
+    </tr>
+    <tr>
+      <td>56</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">otp</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>57</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">channel_type</code> missing</td>
+    </tr>
+    <tr>
+      <td>58</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">channel_handle</code> missing</td>
+    </tr>
+    <tr>
+      <td>59</td>
+      <td><code class="language-plaintext highlighter-rouge">access_denied</code></td>
+      <td>client disabled</td>
+    </tr>
+    <tr>
+      <td>60</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>these are not the grants you are looking for</td>
+    </tr>
+    <tr>
+      <td>61</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_client</code></td>
+      <td>client not found</td>
+    </tr>
+    <tr>
+      <td>62</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">client_id</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>63</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">client_secret</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>64</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_client</code></td>
+      <td>Incorrect credentials. Please Retry</td>
+    </tr>
+    <tr>
+      <td>65</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">grant_type</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>80</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>invalid channel type</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>bad channel handle</td>
+    </tr>
+    <tr>
+      <td>83</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>otp not found</td>
+    </tr>
+    <tr>
+      <td>84</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>fact verification failed</td>
+    </tr>
+    <tr>
+      <td>85</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>otp verification failed</td>
+    </tr>
+    <tr>
+      <td>100</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>backend does not know about this username</td>
+    </tr>
+    <tr>
+      <td>101</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>code was not supplied</td>
+    </tr>
+    <tr>
+      <td>102</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">redirect_uri</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>103</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>code is bad or expired</td>
+    </tr>
+    <tr>
+      <td>104</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td><code class="language-plaintext highlighter-rouge">redirect_uri</code> does not match the previous grant</td>
+    </tr>
+    <tr>
+      <td>105</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>this grant was not issued to you!</td>
+    </tr>
+    <tr>
+      <td>106</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">refresh_token</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>107</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>refresh disallowed for app</td>
+    </tr>
+    <tr>
+      <td>108</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_grant</code></td>
+      <td>bad or expired refresh token</td>
+    </tr>
+    <tr>
+      <td>109</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td><code class="language-plaintext highlighter-rouge">loginid</code> was not supplied</td>
+    </tr>
+    <tr>
+      <td>115</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>unauthenticated client will not be issued token!</td>
+    </tr>
+    <tr>
+      <td>117</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>nonce is mandatory for this <code class="language-plaintext highlighter-rouge">response_type</code></td>
+    </tr>
+    <tr>
+      <td>118</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>display is invalid</td>
+    </tr>
+    <tr>
+      <td>119</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>prompt is invalid</td>
+    </tr>
+    <tr>
+      <td>119</td>
+      <td><code class="language-plaintext highlighter-rouge">invalid_request</code></td>
+      <td>prompt must be set to consent for <code class="language-plaintext highlighter-rouge">offline_access</code></td>
+    </tr>
+  </tbody>
+</table>
+:ET

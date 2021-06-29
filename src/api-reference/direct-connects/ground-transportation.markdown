@@ -57,6 +57,7 @@ This callout can also be used to perform the following operations:
 * Get the Reservation Details
 * Cancel the Ground Transportation Reservation
 * Update the Ground Transportation Reservation with the Supplier
+* Update the Ground Transportation Reservation with Travel
 
 ## <a name="authentication"></a>Authentication
 Authentication between SAP Concur and the application connector is performed using OAuth.
@@ -72,6 +73,9 @@ Authentication between SAP Concur and the application connector is performed usi
 [Post Transportation Search][7]
 
 [Update Reservation with the Supplier][8]
+
+[Update Reservation with Travel][9]
+
 
 ##  <a name="gds-sell-formats"></a>GDS Sell Formats
 

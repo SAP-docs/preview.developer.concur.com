@@ -1,0 +1,170 @@
+I"R(<p>The Event Notification callout allows clients to choose to be notified through web services when certain actions take place in their SAP Concur company. If the client uses Concur Expense, the supported events are the Expense report entering the Post-Submit or Pre-Extract workflow steps. If the client uses Concur Travel Request, the supported events are the Travel Request entering the Post-Submit or Pre-Extract workflow steps. When the event happens, SAP Concur generates a notification and places it into the notification system queue. When the notification reaches the front of the queue, SAP Concur sends a request to the configured endpoint with event information.</p>
+
+<p>This callout differs from the standard SAP Concur web services in the following ways:</p>
+
+<ul>
+  <li>It uses an <strong>outbound</strong> <strong>callout</strong> where Expense calls a public facing URL provided by the application connector, which is a web server hosted by the third-party developer or client. Refer to <a href="/api-reference/callouts/callouts-application-connectors.html">Callouts and Application Connectors for more information</a>.</li>
+  <li>The application connector can also use the web services to retrieve or send SAP Concur data.</li>
+  <li>The developer or client can configure and maintain the public web service interface (the application connector), or the connector can be maintained by SAP Concur. This guide specifies the request and response format required by SAP Concur.</li>
+  <li>The developer or client can choose to create their own application connector using a different language, such as PHP, if preferred.</li>
+</ul>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#example-use-case">Example Use Case</a></li>
+  <li><a href="#product-restrictions">Product Restrictions</a></li>
+  <li><a href="#event-notification-process">Event Notification Process Overview</a></li>
+  <li><a href="#security">Security</a></li>
+  <li><a href="#authentication">Authentication</a></li>
+  <li><a href="#functions">Functions</a>
+    <ul>
+      <li><a href="#installation-process">Installation Process</a></li>
+      <li><a href="#response-errors">Response and Errors</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="./event-notification-process-flow.png" alt="Process Flow for the Event Notification Callout" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Request Professional Edition</li>
+  <li>The SAP Concur Mobile App</li>
+</ul>
+
+<h2 id="example-use-case"><a name="example-use-case"></a>Example Use Case</h2>
+
+<p>An example use of this callout is:</p>
+
+<ol>
+  <li>A SAP Concur user submits an expense report, triggering an Event Notification.</li>
+  <li>The notification is placed in a queue and processed in a first come, first served order.</li>
+  <li>When the notification gets to the front of the queue, it is sent to the endpoint specified by the developer.</li>
+  <li>The application connector returns the HTTP 200 status code, and the notification is removed from the queue.</li>
+  <li>The developer uses the Report information to make the <a href="/api-reference/expense/expense-report/v3.reports.html">Get Expense Report Details</a> request.</li>
+  <li>The developer uses the additional information to validate some expense report information.</li>
+  <li>The developer then uses the <a href="/api-reference/expense/expense-report/post-report-exceptions.html">Post Expense Report Exceptions</a> function to approve the report.</li>
+</ol>
+
+<p>This is one use case for the Event Notification callout, however it can be used for a wide variety of requirements.</p>
+
+<h2 id="product-restrictions"><a name="product-restrictions"></a>Product Restrictions</h2>
+
+<p>SAP Concur products are highly configurable, and not all clients will have access to all features.</p>
+
+<p>Partner developers must determine which configurations are required for their solution prior to the review process.</p>
+
+<p>Existing clients can work with Concur Advantage Technical Services to create custom applications that work with their configuration.</p>
+
+<h2 id="event-notification-process-overview"><a name="event-notification-process"></a>Event Notification Process Overview</h2>
+
+<p>The configuration process has the following steps:</p>
+
+<ol>
+  <li>
+    <p>Third-party developer, client or SAP Concur downloads, installs, configures, and customizes the application connector. The application connector may make requests to the inbound web services.</p>
+  </li>
+  <li>
+    <p>The developer or the SAP Concur clients registers the application connector.<br />
+  Refer to <strong>Installation &gt; Process</strong> for the detailed steps.</p>
+  </li>
+</ol>
+
+<p>Once the configuration is complete, the callout uses the following process:</p>
+
+<ol>
+  <li>The configured event occurs in SAP Concur.</li>
+  <li>SAP Concur sends the request information to the specified endpoint for the application connector.</li>
+</ol>
+
+<h2 id="security">Security</h2>
+
+<p>SAP Concur will make calls to the application connector’s endpoint using SSL. During configuration, SAP Concur will connect to the application connector to validate that its hostname and access credentials are valid.</p>
+
+<p>In the code SAP Concur provides for a sample application connector, credentials are stored in a web configuration file that varies by platform, such as web.xml or web.config. However, if you are hosting the connector, you can customize where and how the credentials are stored by customizing HTTPBasicAuth.java or Authentication.cs.</p>
+
+<p>Expense or Travel Request will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. If you are hosting the application connector, you will need to install the signed certificate before SAP Concur can access the connector.</p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>Authentication between SAP Concur and the application connector is performed using HTTP Basic Auth. By default, these credentials are stored in the appropriate web configuration file for your platform, such as web.xml or web.config. These credentials are entered in SAP Concur on the <strong>Register Application Connector</strong> page in <strong>Web Services</strong> under <strong>Administration</strong>.</p>
+
+<p>Refer to the <strong>Callouts and Application Connectors</strong> page for more information.</p>
+
+<h2 id="functions"><a name="functions"></a>Functions</h2>
+
+<p><a href="/api-reference/callouts/delete-notification.html">Delete Notification</a></p>
+
+<p><a href="/api-reference/callouts/get-notifications-status.html">Get Notifications by Status</a></p>
+
+<p><a href="/api-reference/callouts/post-event-notification.html">Post Event Notification Request </a></p>
+
+<h3 id="installation-process"><a name="installation-process"></a>Installation Process</h3>
+<p>The installation process includes installing the application connector, and registering it with SAP Concur.</p>
+
+<ol>
+  <li>The third-party developer or client will create and install the application connector on their web site or a third party hosting site. The connector should be programmed to accept the requests from SAP Concur and provide the documented responses.</li>
+  <li>The client registers the application connector with SAP Concur:
+    <ol>
+      <li>Log in to SAP Concur as an administrative user.</li>
+      <li>Select <strong>Administration</strong> &gt; <strong>Web Services</strong>.</li>
+      <li>Click <strong>Manage Application Connectors</strong>.</li>
+      <li>Click <strong>New</strong>.</li>
+      <li>Fill out the fields:</li>
+    </ol>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Name</td>
+          <td>Enter the name that should appear in the list of connectors.</td>
+        </tr>
+        <tr>
+          <td>Description</td>
+          <td>Enter the description of the function of the connector, such as what back-end system it might connect to.</td>
+        </tr>
+        <tr>
+          <td>Host Name</td>
+          <td>Enter the hostname for the connector. Example: https://{servername}</td>
+        </tr>
+        <tr>
+          <td>User Name</td>
+          <td>Enter the user name required to authenticate with the host. This must be the same as the user name specified in the configuration file for the application connector, using HTTP Basic Auth.</td>
+        </tr>
+        <tr>
+          <td>Password</td>
+          <td>Enter the password required to authenticate with the host. This must be the same as the password specified in the configuration file for the application connector, using HTTP Basic Auth.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ol>
+      <li>In the <strong>Services</strong> section, select <strong>Send Notification</strong>.</li>
+      <li>Click <strong>Configure</strong>. The <strong>Configure Service</strong> window appears.</li>
+      <li>Enter the endpoint that SAP Concur will connect to on your server. Example: /concur/v1.0/notify</li>
+      <li>Select the <strong>Enabled</strong> check box if the endpoint is ready for use. Usually you will do this after you have implemented and tested the endpoint in your application connector.</li>
+      <li>In the Workflows section, select the workflow step for each expense report or travel request workflow that requires notifications.</li>
+      <li>Click <strong>OK</strong>.</li>
+      <li>Click <strong>Test Connection</strong>. SAP Concur will attempt to access the configured endpoint with the provided user credentials.</li>
+      <li>Click <strong>Save</strong>. The application connector is now registered with SAP Concur and enabled.</li>
+    </ol>
+  </li>
+</ol>
+
+<h3 id="responses-and-errors"><a name="response-errors"></a>Responses and Errors</h3>
+
+<p>Refer to the <a href="/api-reference/http-status-codes.html">HTTP Status Codes</a> page for details of the common responses and errors.</p>
+
+:ET

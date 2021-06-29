@@ -1,0 +1,406 @@
+I"�O<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<h1 id="sign-in-with-concur">Sign in with Concur</h1>
+
+<ul>
+  <li><a href="#introduction">Introduction</a></li>
+  <li><a href="#benefits">Benefits</a></li>
+  <li><a href="#use_cases">Use Cases</a></li>
+  <li><a href="#how_it_works">How it Works</a></li>
+  <li><a href="#getting_started">Getting Started</a></li>
+  <li><a href="#error_handling">Error Handling</a>
+    <ul>
+      <li><a href="#authorization_declined">Authorization Declined</a></li>
+      <li><a href="#application_is_disabled">Application is disabled</a></li>
+    </ul>
+  </li>
+  <li><a href="#advanced">Advanced</a>
+    <ul>
+      <li><a href="#enterprise_applications">Enterprise Applications</a></li>
+      <li><a href="#triplink_configurations">TripLink Configurations</a></li>
+      <li><a href="#supported_languages">Supported Languages</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="introduction"><a name="introduction"></a>Introduction</h2>
+
+<p>Streamline user onboarding with <strong>Sign in with Concur</strong> – a new feature that allows new users to log on to a partner application using their Concur credentials. Similar to the single sign-on feature provided by Facebook and other social applications, Sign in with Concur reduces the time and effort involved in setting up an account with our partner apps.</p>
+
+<h2 id="benefits"><a name="benefits"></a>Benefits</h2>
+
+<p><em>For partners</em></p>
+
+<ul>
+  <li>Streamlines account set-up: User’s profile is pre-validated, including basic PII information plus travel preferences</li>
+  <li>Simplifies development and integration: Quickly obtain authentication tokens for the user and call Concur’s APIs</li>
+</ul>
+
+<p><em>For users</em></p>
+
+<ul>
+  <li>Quick and hassle-free way to sign up for a new app</li>
+  <li>Secure: User’s Concur credentials are never shared with partners</li>
+</ul>
+
+<h2 id="use-cases"><a name="use_cases"></a>Use Cases</h2>
+
+<p>Sign in with Concur solves access and support issues for all of our various types of partner integrations:</p>
+
+<p><em>Consumer applications</em></p>
+
+<p>Business travelers use in-policy providers but may not have an existing loyalty account. Gain access to the network of business travelers and expense users of Concur by simplifying their first purchase.</p>
+
+<p><em>Front office applications</em></p>
+
+<p>Travel and Expense Policy administrators reduce the company’s cost via volume purchasing through your application or service; reduce your integration and support overhead as well by removing the need to manage individual user accounts associate with those customers.</p>
+
+<p><em>Back office applications</em></p>
+
+<ul>
+  <li>
+    <p>Automate the process of provisioning users for your application using data from Concur.</p>
+  </li>
+  <li>
+    <p>Simplify log in and support for users that log in infrequently by leveraging Concur’s authentication.</p>
+  </li>
+</ul>
+
+<h1 id="how-it-works"><a name="how_it_works"></a>How it Works</h1>
+
+<p><em>Select</em> <strong>Sign in with Concur</strong> <em>from the site login menu</em></p>
+
+<p><img src="sign-in-with-concur-images/login-screen-sample.png" alt="login screen sample" /></p>
+
+<p><em>Pick Authentication Option</em></p>
+
+<p>Single-sign on users can utilize the “Send a link to my email” option.</p>
+
+<p><img src="sign-in-with-concur-images/authorization-grant-sign-in.png" alt="sign in" /></p>
+
+<p><em>If the user selects “One-time Link”:</em></p>
+
+<p><em>Enter Email address</em></p>
+
+<p><img src="sign-in-with-concur-images/authorization-grant-sign-in-email.png" alt="sign in email option" /></p>
+
+<p><em>Confirmation page</em></p>
+
+<p><img src="sign-in-with-concur-images/authorization-grant-email-confirmation.png" alt="email confirmation" /></p>
+
+<p><em>Email example</em></p>
+
+<p><img src="sign-in-with-concur-images/authorization-grant-email-sample.png" alt="email sample" /></p>
+
+<p><em>If the user selects “Enter Concur Credentials”:</em></p>
+
+<p><img src="sign-in-with-concur-images/authorization-grant-username-password.png" alt="sign in username and password option" /></p>
+
+<p><em>Complete!</em></p>
+
+<p><em>For both authentication flows, once authorized, the account is provisioned and user is logged in</em></p>
+
+<p><img src="sign-in-with-concur-images/sign-in-with-concur-complete.png" alt="sign in complete" /></p>
+
+<h1 id="getting-started"><a name="getting_started"></a>Getting Started</h1>
+
+<p><strong>1. Obtain your Application clientID and clientSecret</strong></p>
+
+<p>Before you can integrate <strong>Sign in with Concur</strong> into your application, you need to register your application with Concur. You can do this by contacting your Partner Enablement Manager or Partner Account Manager. Once you have registered an application, you will receive a <code class="language-plaintext highlighter-rouge">clientId</code> and <code class="language-plaintext highlighter-rouge">clientSecret</code>. The <code class="language-plaintext highlighter-rouge">clientId</code> is a unique UUID4 identifier for your application, and the <code class="language-plaintext highlighter-rouge">clientSecret</code> is your application password. You will be using this credential to obtain tokens either for the application itself, or on behalf of a user.</p>
+
+<p><strong>2. Add the button to your application</strong></p>
+
+<p>The first script adds the Concur style library to your page and the second applies the style to your button.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script
+  data-client-id=[yourClientID]
+  data-redirect-uri=[yourRedirectURI]
+  data-oauth-uri="https://www-us.api.concursolutions.com"
+  src="https://static.concursolutions.com/nui/oauth/0.0.1/concur-signin.js"&gt;
+&lt;/script&gt;
+
+&lt;div style="float:right"&gt;
+  &lt;div id="concur-signin"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre></div></div>
+
+<p>Clicking this button renders the Sign in with Concur screen which presents two options to the user for signing in:
+1) using Concur credentials
+OR
+2) using a link sent via email.</p>
+
+<p>Option 2 is designed for users who do not want to use passwords or those that do not have passwords such as Single Sign On (SSO) users.</p>
+
+<p><img src="sign-in-with-concur-images/authorization-grant-sign-in-email.png" alt="sign in email option" /></p>
+
+<p><strong>3. Handle Authorization Completion</strong></p>
+
+<p>When users choose the email option, an email will be sent to the user that contains the <code class="language-plaintext highlighter-rouge">redirect_uri</code> chosen by the partner in Step 1. If the user selects the username and password option, after accepting the scopes, the user is also sent to the <code class="language-plaintext highlighter-rouge">redirect_uri</code> provided.</p>
+
+<p>There will also be a temporary one-time use code which is appended to this <code class="language-plaintext highlighter-rouge">redirect_uri</code>. For example, if our redirect URI is https://www.hipmunk.com/auth/concur/callback, the code will be returned as:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    ```
+    https://www.hipmunk.com/auth/concur/callback?cc=&lt;token&gt;
+    ```
+</code></pre></div></div>
+
+<p>The call to this <code class="language-plaintext highlighter-rouge">redirect_uri</code> will contain a temporary code <code class="language-plaintext highlighter-rouge">cc</code> which should be used to obtain an official oauth2 <code class="language-plaintext highlighter-rouge">accesstoken</code> and <code class="language-plaintext highlighter-rouge">refreshtoken</code>.</p>
+
+<p>The response for a successful call will look like this:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>**HTTP/** 1.1200 **OK**
+
+;Content-Type: application/json
+
+Date: date-requested
+
+Content-Length: 3397
+
+Connection: Close
+
+{
+
+  "expires_in":"3600",
+
+  "scope":"app-scope",
+
+  "token_type":"Bearer",
+
+  "access_token":"new-access_token",
+
+  "refresh_token":"new-refresh_token",
+
+  "refresh_expiry":"refresh_token_expiry",
+
+  "geolocation":"https://us.api.concursolutions.com"
+
+}
+</code></pre></div></div>
+
+<p><strong>4. Retrieve User Profile information</strong></p>
+
+<p>Once the partner completes the oauth2 flow, they receive an <code class="language-plaintext highlighter-rouge">access_token</code> and <code class="language-plaintext highlighter-rouge">refresh_token</code>. Using the <code class="language-plaintext highlighter-rouge">access_token</code> and within the hour lifetime of the token, the partner has the ability to call SAP Concur APIs.  Your application may call the Profile API to obtain user information in order to provision an account in the partner’s application.</p>
+
+<p><em>TripLink Suppliers see the appendix for more details.</em></p>
+
+<p>Here’s an example to retrieve profile information for a User in the Production environment using cURL ( <a href="/platform/base-uris.html">Base URIs for other Environments</a>):</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -k -v -H "Accept: application/json"\
+
+-H "Authorization: Bearer …ypN2lukfWACR-26otN50c0OzY6kgY06RA"\
+
+https://us.api.concursolutions.com/profile/v1/me
+</code></pre></div></div>
+
+<p>The response from the Profile service will be a compact version of the User profile. The schema can be found <a href="/api-reference/profile/user.json">here</a>.</p>
+
+<p><strong>5. Create user’s account and log user into partner application immediately for a seamless user experience.</strong></p>
+
+<p>Once the user is logged in, your application must determine whether an existing account exists. Your application can do so by pulling user information from the application and SAP Concur profile.</p>
+
+<h4 id="existing-accounts">Existing Accounts</h4>
+
+<p><strong>For users connected to SAP Concur</strong> through the Concur App Center or otherwise, your application can match the SAP Concur unique user ID.</p>
+
+<h4 id="new-sap-concur-accounts">New SAP Concur Accounts</h4>
+
+<p><strong>For users with existing, non-SAP Concur accounts</strong> , the unique user information in your application can be matched with information in SAP Concur (e.g. email address).</p>
+
+<p><strong>If the user does not have an existing account</strong> , your application must provision a user account. In this case, the partner maintains the user’s profile over time. This is beneficial as it allows the app to post data for the user following the initial session. For example, it allows users make changes to a reservation and receive updates within SAP Concur and/or receive receipts for services charged after delivery such as hotel stays.</p>
+
+<p>In all cases, the user’s token, geolocation and user UUID should be stored.  As applications vary in the information required to create a new user record and utilize the service, your application should leverage data from the user profile endpoint where possible.</p>
+
+<h1 id="account-maintenance"><a name="account_maintenance"></a>Account Maintenance</h1>
+
+<p>Once the account is provisioned or matched, the application must:</p>
+
+<ul>
+  <li><a href="/api-reference/authentication/apidoc.html#revoke_token">Provide the option to disconnect</a></li>
+  <li>Maintain the user’s session.  Once the session is established, your application’s typical session maintenance should be observed. This includes idle timeout and session refresh, where applicable. The issued token will have a predetermined expiration. To maintain the connection, please see the  <a href="/api-reference/authentication/apidoc.html#refresh_token">token refresh documentation</a>.</li>
+</ul>
+
+<h1 id="error-handling"><a name="error_handling"></a>Error Handling</h1>
+
+<p>In all cases, the error description provided by Concur should be displayed to the user.</p>
+
+<p>The following covers special cases that require additional handling.</p>
+
+<h2 id="authorization-declined"><a name="authorization_declined"></a>Authorization Declined</h2>
+
+<p>In the case the user leaves the sign in process or sign in is unsuccessful, the user will be redirected to the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your_Redirect_Uri?
+
+ error_code=user_denied
+
+ &amp;error_description=The+user+denied+your+request.
+</code></pre></div></div>
+
+<p>Apps should then provide the user with alternative connection methods:</p>
+
+<ul>
+  <li>Log in by creating an account</li>
+  <li>Attempt Sign in with Concur with an alternate credential</li>
+</ul>
+
+<h2 id="application-is-disabled"><a name="application_is_disabled"></a>Application is disabled</h2>
+
+<p>Customers have the option to disable applications for their users. In these cases, the user will be redirected to the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your_Redirect_Uri?
+
+ error_code=
+
+ &amp;error_description=
+</code></pre></div></div>
+
+<p>In this case, the user will not be able to access your application using Sign in with Concur. The error description should be displayed to the user and the user given alternate sign in methods (e.g. create an account).</p>
+
+<h1 id="advanced"><a name="advanced"></a>Advanced</h1>
+
+<p>This section covers guidelines for specific Sign in with Concur implementations.</p>
+
+<h2 id="enterprise-applications"><a name="enterprise_applications"></a>Enterprise Applications</h2>
+
+<p>Company-wide integrations are unique in that your application will interact with SAP Concur both on a batch level (for example, GET or POST for multiple employees) but also allow individuals to sign in to the service without creating a new account.</p>
+
+<p>When an application supports enterprise integrations, the user’s account should be associated with the company’s information (company UUID) so that the company token can be used to process batch transactions.</p>
+
+<p>In addition, the administrator will need to identify the users which should have access to your application. Given that, the administrator must first add users to your service. An example of the set up and sign in process are documented below.</p>
+
+<h3 id="sign-in-with-concur-set-up">Sign in with Concur Set Up</h3>
+<p>The below diagram illustrates the initial set up process. To set up the connection, the administrator must identify the users of your service.</p>
+
+<p>Note that, in addition to identifying users of the service, your application may also require that roles/permissions be assigned to individual users to determine access to various features and functionality of your service. Role and permissions assignment are not depicted in the diagram below as the requirements may differ for each client application.</p>
+
+<p>Once added to the service, users must then verify their identity before first sign in. This process uses the <a href="/api-reference/authentication/apidoc.html#otp_grant">One-Time Password Grant</a> to first validate the user is the owner of the email address used to uniquely identify that individual. Once validated, the user may sign in with username and password going forward.</p>
+
+<p><img src="sign-in-with-concur-images/sign-in-with-concur-set-up.jpg" alt="set_up_diagram" /></p>
+
+<h3 id="signing-in-to-the-client-application">Signing in to the Client Application</h3>
+<p>When a user first navigates to your application, you may offer multiple sign in options, including Sign in with Concur.
+Once signed in, your application must validate that users have completed the one-time verification.</p>
+
+<p>If the user has not completed the one-time verification when visiting your site, the <a href="/api-reference/authentication/apidoc.html#otp_grant">One-Time Password Grant</a> should be initiated on the user’s behalf.</p>
+
+<p>The below illustrates the process for users signing in to your service.</p>
+
+<p><img src="sign-in-with-concur-images/signing-in-to-client-application.jpg" alt="sign_in_diagram" /></p>
+
+<h2 id="triplink-configurations"><a name="triplink_configurations"></a>TripLink Configurations</h2>
+
+<p>Depending on the products the customer has enabled, integrations and features available with Sign in with Concur vary. The following defines the scopes that are applicable product combinations. Your application must support each of the below potential scope configurations:</p>
+
+<ul>
+  <li>Travel Users
+    <ul>
+      <li>TripLink Access:
+        <ul>
+          <li>Travel Profile</li>
+          <li>Client Discount Code</li>
+          <li>User form of Payment</li>
+          <li>Ghost Card</li>
+          <li>Itinerary</li>
+          <li>E-Receipt</li>
+        </ul>
+      </li>
+      <li>Non-Triplink Access:
+        <ul>
+          <li>Travel Profile</li>
+          <li>E-receipt</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Expense Only Access:*
+    <ul>
+      <li>E-receipt</li>
+    </ul>
+  </li>
+</ul>
+
+<p>* Special Note: For TripLink Suppliers that support the <a href="/api-reference/travel-receipts/getting-started.html">Travel Receipts API</a>, this API does not support Expense only users. It is recommended that e-receipts be posted for these or all users via the <a href="/api-reference/receipts/get-started.html">Receipts API</a>.</p>
+
+<p>To determine which permissions the user has access to, <strong>each time a user signs in</strong> *, your application should:</p>
+
+<ol>
+  <li><strong>Call the User Profile API to get the user’s permissions.</strong></li>
+</ol>
+
+<p>A user can have one or more permissions that will dictate the scopes applicable to that user.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  curl -k -v -H "Accept: application/json"\
+
+  -H "Authorization: Bearer …ypN2lukfWACR-26otN50c0OzY6kgY06RA"\
+
+  https://us.api.concursolutions.com/api/user/v1.0/user
+</code></pre></div></div>
+
+<p>The detailed response can be found here: <a href="/api-reference/user/">/api-reference/user/</a> (snippet below).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Name</strong></th>
+      <th><strong>Type</strong></th>
+      <th><strong>Format</strong></th>
+      <th><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ExpenseUser</td>
+      <td>string</td>
+      <td> </td>
+      <td>Whether the user has access to Expense. Format: Y/N.</td>
+    </tr>
+    <tr>
+      <td>TripUser</td>
+      <td>string</td>
+      <td> </td>
+      <td>Whether the user has access to Travel. Format: Y/N.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The response will indicate whether the is an Expense or Travel user.</p>
+
+<p><strong>If an expense user only</strong> , only the e-receipts scope is applicable and the user will not be eligible for other travel         discounts or automated itinerary creation in Concur.</p>
+
+<p><strong>If a travel user, use the token to call the</strong> <a href="/api-reference/travel-profile/01-profile-            resource.html"><strong>Travel Profile API</strong></a> <strong>.</strong></p>
+
+<p>Within this response, is the “HasOpenBooking” parameter; if “true” the user is eligible for TripLink.</p>
+
+<p>If the user has travel only, they will not receive e-receipts.</p>
+
+<ol>
+  <li><strong>Store the user permissions information. (optional)</strong></li>
+</ol>
+
+<p>The user’s permissions can then be used to determine which scopes and APIs are applicable for updates to an existing booking   and/or e-receipts.</p>
+
+<ul>
+  <li>The user’s permissions can change at any time. It is recommended that the permissions be checked each time the user logs       in to determine whether new functionality is available to the user. *</li>
+</ul>
+
+<h2 id="supported-languages"><a name="supported_languages"></a>Supported Languages</h2>
+
+<p>The following language codes are supported in by Sign in with Concur.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Code</strong></th>
+      <th><strong>Name</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>en</td>
+      <td>English (US)</td>
+    </tr>
+  </tbody>
+</table>
+:ET

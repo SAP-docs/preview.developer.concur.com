@@ -1,0 +1,86 @@
+I"�<p>The Concur Fetch List callout allows clients to import list items from an internal system to Expense when a user is filling out list fields for an expense. The Expense service sends a request for list items to an application connector, created by the client, a third-party developer, or SAP Concur. The connector is hosted by the client or developer, and has access to the list item system of record. The connector uses the list information sent from Expense to search for all matching list items in the system of record. Once the connector has the list items, it sends the data to Expense. The user sees the list items and can select the appropriate item for the expense. When the user saves the expense, the list item is added to the list within Expense.</p>
+
+<p>This callout differs from the inbound SAP Concur web services in the following ways:</p>
+
+<ul>
+  <li>It uses an <strong>outbound</strong> <strong>message</strong> where Expense calls a public facing API endpoint provided by the application connector.</li>
+  <li>The third-party developer or client can configure and maintain the public web service interface (the application connector), or the connector can be maintained by SAP Concur. This guide specifies the request and response format required by SAP Concur.</li>
+  <li>The client Expense administrator must configure a list (most commonly a connected list), and SAP Concur must perform database configuration on the list before this service can be used.</li>
+</ul>
+
+<h2 id="contents">Contents</h2>
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#product-restrictions">Product Restrictions</a></li>
+  <li><a href="#fetch-list-process-overview">Fetch List Process Overview</a></li>
+  <li><a href="#security">Security</a></li>
+  <li><a href="#authentication">Authentication</a></li>
+  <li><a href="#functions">Functions</a></li>
+  <li><a href="#concur-expense-config">Concur Expense Configuration</a></li>
+  <li><a href="#responses-errors">Responses and Errors</a></li>
+</ul>
+
+<h3 id="process-flow"><a name="process-flow"></a>Process Flow</h3>
+
+<p><img src="./fetch-list-item.png" alt="A process flow diagram showing flow between SAP Concur, an application connector, and client's data source" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>The SAP Concur Mobile App</li>
+</ul>
+
+<h2 id="product-restrictions"><a name="product-restrictions"></a>Product Restrictions</h2>
+<p>SAP Concur products are highly configurable, and not all clients will have access to all features.</p>
+
+<p>Partner developers must determine which configurations are required for their solution prior to the review process.</p>
+
+<p>Existing clients can work with Concur Advantage Technical Services to create custom applications that work with their configuration.</p>
+
+<h2 id="fetch-list-process-overview"><a name="fetch-list-process-overview"></a>Fetch List Process Overview</h2>
+<p>The configuration process has the following steps:</p>
+
+<ol>
+  <li>Third-party developer, client or SAP Concur downloads, installs, configures, and customizes the application connector.</li>
+  <li>SAP Concur registers the application connector.</li>
+  <li>Expense Admin creates a new list in List Management.</li>
+  <li>SAP Concur configures the list to search for external items.</li>
+  <li>If using a connected list, Expense Admin creates a connected list definition in Forms and Fields.</li>
+</ol>
+
+<p>Once the configuration is complete, the callout uses the following process:</p>
+
+<ol>
+  <li>The user selects the external source list field while creating an expense entry.</li>
+  <li>Expense sends the list field information and the item codes for the previously selected levels (for connected lists) to the application connector.</li>
+  <li>The application connector queries the list system of record and returns the set of list items to Expense.</li>
+  <li>Expense displays the list items in a drop down list.</li>
+  <li>The user selects the desired list item and saves the expense.</li>
+</ol>
+
+<h2 id="security"><a name="security"></a>Security</h2>
+<p>SAP Concur will make calls to the application connector’s endpoint using SSL. During configuration, SAP Concur will connect to the application connector to validate that its hostname and access credentials are valid.</p>
+
+<p>In the code SAP Concur provides for a sample application connector, credentials are stored in a web configuration file that varies by platform, such as web.xml or web.config. However, if you are hosting the connector, you can customize where and how the credentials are stored by customizing HTTPBasicAuth.java or Authentication.cs.</p>
+
+<p>Expense will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. You will need to install the signed certificate before SAP Concur can access the connector.</p>
+
+<h2 id="authentication"><a name="authentication"></a>Authentication</h2>
+<p>Authentication between SAP Concur and the application connector is performed using HTTP Basic Auth. By default, these credentials are stored in the appropriate web configuration file for your platform, such as web.xml or web.config. These credentials are entered in SAP Concur on the <strong>Register Application Connector</strong> page in <strong>Web Services</strong> under <strong>Administration</strong>.</p>
+
+<h2 id="functions"><a name="functions"></a>Functions</h2>
+
+<ul>
+  <li><a href="/api-reference/callouts/post-list-search-request.html">Version 1.2: Post List Search Request</a></li>
+</ul>
+
+<h2 id="concur-expense-configuration"><a name="concur-expense-config"></a>Concur Expense Configuration</h2>
+
+<p>Expense must have a list field configured to use an external source before this callout can be used. The client creates the list, SAP Concur configures it to use the external source, and the client creates the connected list definition if necessary.</p>
+
+<h2 id="responses-and-errors"><a name="responses-errors"></a>Responses and Errors</h2>
+
+<p>Refer to the <a href="/api-reference/http-status-codes.html">HTTP Status Codes</a> page for details of the common responses and errors.</p>
+
+:ET

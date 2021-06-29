@@ -1,0 +1,906 @@
+I"��<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<h1 id="user-locations">User Locations</h1>
+
+<ul>
+  <li><a href="#overview">Overview</a></li>
+  <li><a href="#prerequisites">Prerequisites</a></li>
+  <li><a href="#serviceDetails">Service Details</a></li>
+  <li><a href="#regionalAvailability">Regional Availability</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#client">Client</a></li>
+      <li><a href="#users">Users</a></li>
+      <li><a href="#locations">Locations</a></li>
+      <li><a href="#sourcePartner">Source Partner</a></li>
+      <li><a href="#transaction">Transaction</a></li>
+    </ul>
+  </li>
+  <li><a href="#requestHeaders">Request Headers</a></li>
+  <li><a href="#responseHeaders">Response Headers</a></li>
+  <li><a href="#statusCodes">Status Codes</a></li>
+  <li><a href="#example">Example</a></li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>The goal of this API is to allow customers and 3rd party vendors to add their traveler’s location data to Concur Locate so it can be utilized locate and contact travelers to address their duty of care requirements.</p>
+
+<p>This API supports POST only.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ol>
+  <li><a href="/manage-apps/partner-applications.html">Obtain a client ID, secret and sandbox environment</a> if you don’t already have one.</li>
+  <li>Obtain your <a href="#sourcePartner">Source partner</a> information. This will be provided along with your application credentials.</li>
+  <li>This API supports all valid authorization tokens, specifically those with the client_credentials grant. Read the <a href="/api-reference/authentication/getting-started.html">Getting Started</a> section of <a href="/api-reference/authentication/apidoc.html">Authentication API</a> for details. Your sandbox will be configured to accept posts from your application.</li>
+</ol>
+
+<h2 id="service-details">Service Details</h2>
+<p>The service is a POST call adhering to the following steps:</p>
+
+<ul>
+  <li>Vendor onboarding has been completed prior to invoking the API. All the authentication and authorization credentials have been set up at this point.</li>
+  <li>Third party vendors invoke the User Location API using the client credentials (JWT)</li>
+  <li>Since the new service is registered with API gateway, the call is intercepted by the API Gateway and basic authentication and authorization for the given client credentials (JWT) is done</li>
+  <li>If the checks fail, then the appropriate error response is returned to the caller.</li>
+  <li>If the checks pass, then the request is forwarded to the load balancer which routes the request to the appropriate node for processing</li>
+  <li>The selected node processes the request which is in JSON format. Validations are performed the data conversion takes place. If any of the validations fail, then the appropriate error response is returned to the client (HTTP 400 Bad Request / HTTP 403 Unauthorized)</li>
+  <li>If the validations pass, then the request is processed, and the data is persisted to the backend (DB) in the following ways:
+    <ul>
+      <li>Direct persistence</li>
+      <li>Persistence via queues</li>
+    </ul>
+  </li>
+  <li>If the persistence is successful, then an HTTP 200 OK is returned to the caller</li>
+  <li>If there are any issues with the persistence, then the appropriate codes are returned to the caller (HTTP 500 Application exception)</li>
+  <li>Note that the error messages are intentionally ambiguous to prevent exploitation</li>
+</ul>
+
+<h2 id="regional-availability">Regional Availability</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://us.api.concursolutions.com/locate/api/v1/user/locations
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://emea.api.concursolutions.com/locate/api/v1/user/locations
+</code></pre></div></div>
+
+<h2 id="schema">Schema</h2>
+
+<p><em>POST /locate/api/v1/user/locations</em></p>
+
+<p>See the schema documentation below for the specifications of each type, plus the various schemas that are shared components of each receipt schema.</p>
+
+<p>The user locations API includes users and itineraries (locations) in addition to information about the company and post type (add or cancel).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>UserLocations</td>
+      <td>Object</td>
+      <td>JSON</td>
+      <td><strong>Required</strong> Contains the Client, Users, Locations, Source Partner and Transaction.</td>
+    </tr>
+    <tr>
+      <td>Client</td>
+      <td>Object</td>
+      <td>JSON</td>
+      <td><strong>Required</strong> This indicates which entity within the organization the traveler belongs to.</td>
+    </tr>
+    <tr>
+      <td>Users</td>
+      <td>Object</td>
+      <td>JSON</td>
+      <td><strong>Required</strong> This is the users’ information. This will be used to either create a new traveler or to match with an existing traveler.</td>
+    </tr>
+    <tr>
+      <td>Locations</td>
+      <td>Object</td>
+      <td>JSON</td>
+      <td><strong>Required</strong> This is the users’ location information. Multiple locations can be passed for a single user.</td>
+    </tr>
+    <tr>
+      <td>SourcePartner</td>
+      <td>Object</td>
+      <td>JSON</td>
+      <td><strong>Required</strong> This is used to identify your application. This information will be provided to you in advance.</td>
+    </tr>
+    <tr>
+      <td>Transaction</td>
+      <td>Object</td>
+      <td>JSON</td>
+      <td><strong>Required</strong> Whether this transaction adds or cancels itineraries/locations.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="client">Client</h3>
+
+<p>This indicates which entity within the organization the traveler belongs to. This will vary by client. You will be provided with a list of the applicable agencies for each customer.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Values/Length</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Id</td>
+      <td>36</td>
+      <td>String</td>
+      <td><strong>Required</strong>  Id: This maps to the top-level corporation</td>
+    </tr>
+    <tr>
+      <td>firstSubLevel</td>
+      <td>36</td>
+      <td>String</td>
+      <td>This is the child corporation i.e one level below the top level corporation.</td>
+    </tr>
+    <tr>
+      <td>secondSubLevel</td>
+      <td>36</td>
+      <td>String</td>
+      <td>This is the sub level of the child corporation (firstsublevel).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="users">Users</h3>
+
+<p>This information will be used to match or create a new user. Either login ID or email address must be provided. If an existing user is not found for the login ID or email, one will be created.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Values/Length</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>visitorId</td>
+      <td>10</td>
+      <td>Long</td>
+      <td><strong>Required</strong> This is a unique identifier for the user generated by your application.</td>
+    </tr>
+    <tr>
+      <td>firstName</td>
+      <td>100</td>
+      <td>String</td>
+      <td><strong>Required</strong> The first name of the user.</td>
+    </tr>
+    <tr>
+      <td>lastName</td>
+      <td>100</td>
+      <td>String</td>
+      <td><strong>Required</strong> The last name of the user.</td>
+    </tr>
+    <tr>
+      <td>email</td>
+      <td>255</td>
+      <td>String</td>
+      <td><strong>Either email or concurLoginId must be provided</strong></td>
+    </tr>
+    <tr>
+      <td>employeeId</td>
+      <td>19</td>
+      <td>String</td>
+      <td>Optional field to indicate the employee id of the user</td>
+    </tr>
+    <tr>
+      <td>mobileCountryCode</td>
+      <td>4</td>
+      <td>String</td>
+      <td>Either ISO Alpha-2 code or International Calling Codes (4 digits). As a reference the full set can be found at <a href="http://www.mcc-mnc.com/">Country Codes</a>.</td>
+    </tr>
+    <tr>
+      <td>mobile</td>
+      <td>10</td>
+      <td>String</td>
+      <td>The contact number of the user</td>
+    </tr>
+    <tr>
+      <td>optedIn</td>
+      <td>‘True’ / ‘False’</td>
+      <td>String</td>
+      <td>Indicates if the user has chosen to receive messages via SMS or Text</td>
+    </tr>
+    <tr>
+      <td>concurLoginId</td>
+      <td>128</td>
+      <td>String</td>
+      <td><strong>Either email or concurLoginId must be provided</strong></td>
+    </tr>
+    <tr>
+      <td>affiliation</td>
+      <td>255</td>
+      <td>String</td>
+      <td>Used to indicate the type of traveler (e.g. employee, student, faculty)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="locations">Locations</h3>
+
+<p>This section includes information about the traveler’s future or current location. Either the location latitude and longitude OR the IATA (airport) code must be present. If both are present, the latitude and longitude take precedence.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Values/Length</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>locationId</td>
+      <td>-</td>
+      <td>String</td>
+      <td>Identifier of the travel location</td>
+    </tr>
+    <tr>
+      <td>locationAddress</td>
+      <td>512</td>
+      <td>String</td>
+      <td>Address of the travel location</td>
+    </tr>
+    <tr>
+      <td>locationName</td>
+      <td>100</td>
+      <td>String</td>
+      <td>Name of the travel location</td>
+    </tr>
+    <tr>
+      <td>locationDescription</td>
+      <td>100</td>
+      <td>String</td>
+      <td>A short description of the travel location</td>
+    </tr>
+    <tr>
+      <td>locationPhone</td>
+      <td>50</td>
+      <td>String</td>
+      <td>Contact details of the travel location</td>
+    </tr>
+    <tr>
+      <td>locationLatitude</td>
+      <td>-</td>
+      <td>String</td>
+      <td><strong>Either the airport or latitude/longitude must be provided</strong></td>
+    </tr>
+    <tr>
+      <td>locationLongitude</td>
+      <td>-</td>
+      <td>String</td>
+      <td><strong>Either the airport or latitude/longitude must be provided</strong></td>
+    </tr>
+    <tr>
+      <td>locationIATACode</td>
+      <td>3</td>
+      <td>String</td>
+      <td><a href="https://en.wikipedia.org/wiki/List_of_airports_by_IATA_code:_A">IATA Airport Codes</a> Either the airport or latitude/longitude must be provided.</td>
+    </tr>
+    <tr>
+      <td>startDate</td>
+      <td>16</td>
+      <td>String (format YYYY-MM-DDTHH:MM)</td>
+      <td><strong>Required</strong> Traveler’s arrival date</td>
+    </tr>
+    <tr>
+      <td>endDate</td>
+      <td>16</td>
+      <td>String (format YYYY-MM-DDTHH:MM)</td>
+      <td><strong>Required</strong> Traveler’s departure date</td>
+    </tr>
+    <tr>
+      <td>timezoneId</td>
+      <td>60</td>
+      <td>String</td>
+      <td><strong>Required</strong> As a reference the full set of timezones can be found at <a href="http://joda-time.sourceforge.net/timezones.html">http://joda-time.sourceforge.net/timezones.html</a></td>
+    </tr>
+    <tr>
+      <td>visitorID</td>
+      <td>10</td>
+      <td>-</td>
+      <td>This corresponds to the visitorId provided in the <a href="#users">Users</a> schema.Ids present in this array must be present in the <a href="#users">Users</a> schema.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="source-partner">Source partner</h3>
+
+<p>This information will be provided to you along with your client ID and secret.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Values/Length</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Id</td>
+      <td>2</td>
+      <td>String</td>
+      <td><strong>Required</strong> This will provide to clients similar to the Client ID</td>
+    </tr>
+    <tr>
+      <td>name</td>
+      <td>100</td>
+      <td>String</td>
+      <td>The name of the source provider e.g Source Provider1</td>
+    </tr>
+    <tr>
+      <td>description</td>
+      <td>100</td>
+      <td>String</td>
+      <td>A short description of the source provider</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="transaction">Transaction</h3>
+
+<p>Itineraries can be added or cancelled. This section allows you to indicate whether this is an addition of a new itinerary or cancellation of an existing itinerary. A cancellation request is for canceling the itinerary completely in our system and if there are any updates to the existing itineraries then it needs to be resent using the same booking or transaction id.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Property Name</th>
+      <th>Values/Length</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>transactionId</td>
+      <td>5</td>
+      <td>String</td>
+      <td><strong>Required</strong> This is a unique identifier generated by your application for the request.</td>
+    </tr>
+    <tr>
+      <td>createdDate</td>
+      <td>16</td>
+      <td>String (format YYYY-MM-DDTHH:MM)</td>
+      <td><strong>Required</strong></td>
+    </tr>
+    <tr>
+      <td>transactionType</td>
+      <td>10</td>
+      <td><strong>Required</strong> ‘Add’ or ‘Cancel’</td>
+      <td>Add is indicative of creating a new itinerary or updating an existing itinerary. Cancel means removing the itinerary. Cancel works only on future dated itineraries</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="request-headers">Request Headers</h2>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-5.4">RFC 7230 Host</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.5.2">RFC 7231 Referer</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.5.3">RFC 7231 User-Agent</a></li>
+</ul>
+
+<h2 id="response-headers">Response Headers</h2>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.1">RFC 7230 Transfer-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.4">RFC 7231 Vary</a></li>
+</ul>
+
+<h2 id="status-codes">Status Codes</h2>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<p>Exceptions from the service will be mapped to one of the aforementioned
+error codes.</p>
+
+<h2 id="example">Example</h2>
+
+<h3 id="mobile-and-mobile-country-code-valid-combinations">Mobile and Mobile Country Code valid combinations</h3>
+<p>Example with Country code for South Africa (Country Code:ZA)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Country Code</th>
+      <th>Mobile Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Empty</td>
+      <td>7160986233</td>
+    </tr>
+    <tr>
+      <td>JP</td>
+      <td>800122334</td>
+    </tr>
+    <tr>
+      <td>81</td>
+      <td>800122334</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>When <code class="language-plaintext highlighter-rouge">mobileCountryCode</code> is non-blank it will validate the mobile number against that country’s market. It will accept the country letters (in this case JP) or the country code (in this case 81)</li>
+  <li>When <code class="language-plaintext highlighter-rouge">mobileCountryCode</code> is blank, it will default to the client country (client id defined in the client section of the JSON)</li>
+  <li>Mobile is validated against the <code class="language-plaintext highlighter-rouge">mobileCountryCode</code> or default country (as mentioned in point 1 above) if this field is blank. When a mobile number is provided there are no issues as long as it follows the appropriate format and is a valid mobile in the country where it is registered. For e.g If the <code class="language-plaintext highlighter-rouge">mobileCountryCode</code> provided in the JSON is 81 (JP - Japan) then the subsequent mobile number must be valid in JP.</li>
+  <li>If the <code class="language-plaintext highlighter-rouge">mobileCountryCode</code> is not provided in the JSON and the client country is US then the mobile number provided must be valid in US because of the default behaviour mentioned above.</li>
+  <li><code class="language-plaintext highlighter-rouge">mobileCountryCode</code> can be of the following two variants
+    <ul>
+      <li>A 2-letter ISO code (e.g US, JP, IT)</li>
+      <li>A 4 digit International Calling Code.
+  Please ensure that there are no special characters and spaces in the <code class="language-plaintext highlighter-rouge">mobile</code> or <code class="language-plaintext highlighter-rouge">mobileCountryCode</code> fields. Also ensure that the above limits and datatypes are strictly followed to prevent unwanted behaviour of the system.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>A new field <code class="language-plaintext highlighter-rouge">partiallyProcessedTransactions</code> is introduced in the response to cater to the following invalid mobile scenarios.
+    * Mobile number is not valid for the country derived based on details provided for traveller 
+    * A well formed mobile number could not be derived using the mobile provided</p>
+
+<h3 id="request">Request</h3>
+<h6 id="cancel-request-without-location-and-user-fields-minimal-request">Cancel request without location and user fields (minimal request)</h6>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>baseURI<span class="o">}</span>/locate/api/v1/user/locations
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"userLocations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UL_CLI"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"sourcePartner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SP"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"transactionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AAAAAA"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"createdDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T12:05"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transactionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cancel"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="response">Response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+<span class="nb">date</span>: Mon, 15 May 2018 14:28:07 GMT
+content-length: 20
+content-type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"processedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"AAAAAA"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully Processed"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"unprocessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"partiallyProcessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> 
+</span></code></pre></div></div>
+
+<h3 id="request-1">Request</h3>
+<h6 id="add-request">Add request</h6>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>baseURI<span class="o">}</span>/locate/api/v1/user/locations
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"userLocations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UL_CLI"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"firstSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"secondSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST3"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test3@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc333"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7160981138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST4"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test4@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc334"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2125551138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"locationId"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SomeLocation"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationDescription"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLatitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLongitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationIataCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LHR"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-01T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-02T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timezoneId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe/London"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationPhone"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="mi">22</span><span class="p">,</span><span class="mi">23</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"sourcePartner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SP"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"transactionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ASDFGH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"createdDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T12:05"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transactionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="response-1">Response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+<span class="nb">date</span>: Mon, 15 May 2018 14:28:07 GMT
+content-length: 20
+content-type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"processedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ASDFGH"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully Processed"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"unprocessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"partiallyProcessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> 
+</span></code></pre></div></div>
+
+<h3 id="request-2">Request</h3>
+<h6 id="add-request---mobile-phone-variation">Add request - mobile phone variation</h6>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>baseURI<span class="o">}</span>/locate/api/v1/user/locations
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"userLocations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UL_CLI"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"firstSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"secondSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST3"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test3@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc333"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+(27)7160981138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST4"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test4@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc334"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2125551138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"locationId"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SomeLocation"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationDescription"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLatitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLongitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationIataCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LHR"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-01T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-02T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timezoneId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe/London"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationPhone"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="mi">22</span><span class="p">,</span><span class="mi">23</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"sourcePartner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SP"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"transactionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ASDFGH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"createdDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T12:05"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transactionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="response-2">Response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+<span class="nb">date</span>: Mon, 15 May 2018 14:28:07 GMT
+content-length: 20
+content-type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"processedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ASDFGH"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully Processed"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"unprocessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"partiallyProcessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> 
+</span></code></pre></div></div>
+
+<h3 id="request-3">Request</h3>
+<h6 id="add-request---invalid-mobile-phone-variation">Add request - invalid mobile phone variation</h6>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>baseURI<span class="o">}</span>/locate/api/v1/user/locations
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"userLocations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UL_CLI"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"firstSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"secondSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST3"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test3@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc333"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+(27)7160981138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST4"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test4@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc334"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0005551138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"locationId"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SomeLocation"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationDescription"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLatitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLongitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationIataCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LHR"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-01T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-02T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timezoneId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe/London"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationPhone"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="mi">22</span><span class="p">,</span><span class="mi">23</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"sourcePartner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SP"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"transactionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ASDFGH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"createdDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T12:05"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transactionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="response-3">Response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+<span class="nb">date</span>: Mon, 15 May 2018 14:28:07 GMT
+content-length: 20
+content-type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"processedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"unprocessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"partiallyProcessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ASDFGH"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Partially processed the transactions : [Incorrect mobile for [23] ]"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> 
+</span></code></pre></div></div>
+
+<h3 id="request-4">Request</h3>
+<h6 id="add-request---unprocessed-transaction">Add request - unprocessed transaction</h6>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>baseURI<span class="o">}</span>/locate/api/v1/user/locations
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"userLocations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"client"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UL_CLI"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"firstSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"secondSubLevel"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST3"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test3@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc333"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"+(27)7160981138"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"firstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"lastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEST4"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"test.test4@abcd.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abc334"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobileCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"asdfrgh"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"optedIn"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"concurLoginId"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"affiliation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Student"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"locationId"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SomeLocation"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationDescription"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLatitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationLongitude"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationIataCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LHR"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-01T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-02T12:07"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"timezoneId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe/London"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"locationPhone"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"visitorId"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="mi">22</span><span class="p">,</span><span class="mi">23</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"sourcePartner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SP"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Source Partner"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transaction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"transactionId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ASDFGH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"createdDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-06T12:05"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transactionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Add"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="response-4">Response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+<span class="nb">date</span>: Mon, 15 May 2018 14:28:07 GMT
+content-length: 20
+content-type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"processedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"unprocessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ASDFGH"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid mobile details found for transaction [ASDFGH]. Skipping transaction "</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"partiallyProcessedTransactions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w"> 
+</span></code></pre></div></div>
+
+:ET

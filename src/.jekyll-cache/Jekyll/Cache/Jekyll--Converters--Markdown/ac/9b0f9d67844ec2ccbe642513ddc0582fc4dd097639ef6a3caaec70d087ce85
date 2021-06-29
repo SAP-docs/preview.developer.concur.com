@@ -1,0 +1,462 @@
+I"�D<div>
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>Used for fetching or uploading custom exchange rates for an entity</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: The POST (uploading custom exchange rate) API is designed to support at most 100 currency sets in a single synchronous call</p>
+</blockquote>
+
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#post">Upload Custom Exchange Rates</a></li>
+  <li><a href="#get">Get Exchange Rate</a></li>
+  <li><a href="#schema">Schema</a></li>
+</ul>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="./exrbs-post.png" alt="Process Flow for POST" /></p>
+
+<p><img src="./exrbs-get.png" alt="Process Flow for GET" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+  <li>Concur Travel Professional Edition</li>
+  <li>Concur Travel Standard Edition</li>
+  <li>Concur Invoice Professional Edition</li>
+  <li>Concur Invoice Standard Edition</li>
+  <li>Concur Request Professional Edition</li>
+  <li>Concur Request Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.exchangerate.writeonly</code></td>
+      <td>Permission to upload custom exchange rates for an entity</td>
+      <td>POST /v4/rates</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<ul>
+  <li>Concur oauth2</li>
+  <li>Concur EMT</li>
+</ul>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<ul>
+  <li>Valid user token grants access to GET API and only GET</li>
+  <li>Valid company token with required scope grants access to POST API and only POST</li>
+</ul>
+
+<h2 id="upload-custom-exchange-rates"><a name="post"></a>Upload custom exchange rates</h2>
+
+<p>Upload custom exchange rate sets for an entity.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.exchangerate.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /exchangeratebroker/v4/rates
+</code></pre></div></div>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> (<strong>Required</strong>) is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><code class="language-plaintext highlighter-rouge">company-uid</code> (<strong>Required</strong>) is a Concur specific custom header used to specify which entity to upload exchange rates for <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#schema-post-req">BulkExchangeRateUploadRequest</a></li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#schema-post-resp">BulkExchangeRateUploadResponse</a></li>
+  <li><a href="#schema-error">Error</a></li>
+</ul>
+
+<h2 id="get-exchange-rate"><a name="get"></a>Get Exchange Rate</h2>
+
+<p>Fetch exchange rate for an entity. Source of exchange rate depends on entity site setting.</p>
+
+<h3 id="request-1">Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /exchangeratebroker/v4/rates/<span class="o">{</span>baseCurrency<span class="o">}</span>/<span class="o">{</span><span class="nb">date</span><span class="o">}</span>/<span class="o">{</span>quoteCurrency<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">baseCurrency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>path</td>
+      <td><strong>Required</strong> ISO 4217 Alphabetic code of the currency converting from.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>path</td>
+      <td><strong>Required</strong> UTC time YYYY-MM-DD for quoting exchange rate.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">quoteCurrency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>path</td>
+      <td><strong>Required</strong> ISO 4217 Alphabetic code of the currency converting to.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> (<strong>Required</strong>) is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><code class="language-plaintext highlighter-rouge">company-uid</code> (<strong>Required</strong>) is a Concur specific custom header used to specify which entity’s exchange rates to get, <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><code class="language-plaintext highlighter-rouge">concur-uid</code> (<strong>Required if using a user token as Authorization</strong>) is a Concur specific custom header used for authorizing getting entity’s exchage rate for user,  <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h3 id="response-1">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#schema-get-resp">Get exchange rate response</a></li>
+  <li><a href="#schema-error">Error</a></li>
+</ul>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="get-exchange-rate-response"><a name="schema-get-resp"></a>GET exchange rate response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">BigDecimal</code></td>
+      <td>-</td>
+      <td>Quoted exchange rate for entity.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="bulkexchangerateuploadrequest"><a name="schema-post-req"></a>BulkExchangeRateUploadRequest</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currency_sets</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-upload-req"><code class="language-plaintext highlighter-rouge">ExchangeRateUploadRequest</code></a></td>
+      <td><strong>Required</strong> An array of exchange rate upload requests</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="exchangerateuploadrequest"><a name="schema-upload-req"></a>ExchangeRateUploadRequest</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">from_crn_code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> ISO 4217 Alphabetic code of the currency converting from.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">to_crn_code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> ISO 4217 Alphabetic code of the currency converting to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">start_date</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> UTC time YYYY-MM-DD for exchange rate come to be effective.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Custom exchange rate.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="bulkexchangerateuploadresponse"><a name="schema-post-resp"></a>BulkExchangeRateUploadResponse</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">overallStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Overall status for this bulk upload.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Overall message for this bulk upload</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencySets</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-upload-resp"><code class="language-plaintext highlighter-rouge">ExchangeRateUploadResponse</code></a></td>
+      <td>Array of individual upload results</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="exchangerateuploadresponse"><a name="schema-upload-resp"></a>ExchangeRateUploadResponse</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">from_crn_code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>ISO 4217 Alphabetic code of the currency converting from.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">to_crn_code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>ISO 4217 Alphabetic code of the currency converting to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">start_date</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>UTC time YYYY-MM-DD for exchange rate come to be effective.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Custom exchange rate.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>HTTP status code for uploading this custom currency set.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>HTTP message for uploading this custom currency set.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error"><a name="schema-error"></a>Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the error associated with the response or is it error response itself</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The detailed error message</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">httpStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The http response code and phrase for the response</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The URI of the attempted request</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string($date-time)</code></td>
+      <td>-</td>
+      <td>The datetime when the error was captured example: 2016-10-04T00:53:25.931+0000</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">validationErrors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-error-validation"><code class="language-plaintext highlighter-rouge">ValidationError</code></a></td>
+      <td>validation errors for this request</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="validationerror"><a name="schema-error-validation"></a>ValidationError</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The detailed message of the validation error</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The type of validation which failed</td>
+    </tr>
+  </tbody>
+</table>
+:ET

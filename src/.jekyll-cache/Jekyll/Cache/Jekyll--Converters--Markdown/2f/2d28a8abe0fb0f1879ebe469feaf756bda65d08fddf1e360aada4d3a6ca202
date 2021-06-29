@@ -1,0 +1,351 @@
+I"F<p>The Travel Allowance API fetches all the fixed allowance days in the specified expense report. Clients using this API can determine whether an allowance is a full day or partial day allowance.</p>
+
+<blockquote>
+  <p><strong>Limitations</strong>: This API is available only for Finland customers. This API is not available in the China Data Center.</p>
+</blockquote>
+
+<ul>
+  <li><a href="#process-flow">Process Flow</a></li>
+  <li><a href="#products-editions">Products and Editions</a></li>
+  <li><a href="#scope-usage">Scope Usage</a></li>
+  <li><a href="#dependencies">Dependencies</a></li>
+  <li><a href="#access-token-usage">Access Token Usage</a></li>
+  <li><a href="#details-of-travel-allowance-days">Get Details of Travel Allowance Days</a></li>
+  <li><a href="#schema">Schema</a>
+    <ul>
+      <li><a href="#get-travel-allowance-days-response">Get Travel Allowance Days Response</a></li>
+      <li><a href="#schema-error">Error</a></li>
+    </ul>
+  </li>
+  <li><a href="#definitions">Definitions</a></li>
+</ul>
+
+<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+
+<p><img src="Process_Flow.png" alt="Image of Process_Flow" /></p>
+
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+</ul>
+
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>travelallowance.allowancedays.read</td>
+      <td>View the allowance days in an expense report</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td>EXPRPT</td>
+      <td>Retrieve the report ID from the Expense Report API to supply to the Travel Allowance API</td>
+      <td>GET</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>The developer must call the <a href="/api-reference/expense/expense-report/v3.reports.html">Expense Report v3</a> API prior to using this API, to get the expense report Id.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API will work with Company access token only. A valid Company <code class="language-plaintext highlighter-rouge">access token</code> is needed to use this API.</p>
+
+<h3 id="retrieve-a-company-access-token">Retrieve a Company Access Token</h3>
+
+<p>A Company-level access token is required to create an integration with this API. This allows your integration to get fixed allowance day details of an expense report.</p>
+
+<p>For clients connecting to this API to build a custom integration you will receive client credentials and information on how to generate your company access token or company refresh token from the SAP Concur Web Services resource assigned to assist you with Authentication.</p>
+
+<p>Before making requests to this API, you must <a href="/api-reference/authentication/getting-started.html">obtain an access token from the Authentication API</a>.</p>
+
+<p>The response will include an <code class="language-plaintext highlighter-rouge">access_token</code> field, which contains your access token. For subsequent calls, you will need to include this access token in the <code class="language-plaintext highlighter-rouge">Authorization</code> header of your calls.</p>
+
+<h2 id="get-details-of-travel-allowance-days"><a name="details-of-travel-allowance-days"></a>Get Details of Travel Allowance Days</h2>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">travelallowance.allowancedays.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request">Request</h3>
+
+<h4 id="uri">URI</h4>
+
+<h5 id="template">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/api/v4/travelallowance/allowancedays/companyUUID/<span class="o">{</span>companyUUID<span class="o">}</span>/contexts/<span class="o">{</span>Context<span class="o">}</span>/<span class="o">{</span>ContextId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyUUID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The company’s unique identifier.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Context</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> For expense reports, the value is <code class="language-plaintext highlighter-rouge">EXPENSE_REPORT</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ContextId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> For expense reports, this is the reportId of the report.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li>None</li>
+</ul>
+
+<h3 id="response">Response</h3>
+
+<h4 id="status-codes">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">405 Method Not Allowed</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+</ul>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.3.2">RFC 7231 Content-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#get-travel-allowance-days-response">Get Travel Allowance Days Response</a></li>
+  <li><a href="#schema-error">Error</a></li>
+</ul>
+
+<h3 id="example">Example</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/api/v4/travelallowance/allowancedays/companyUUID/d5528866-51b1-40a1-bab2-76296a106dcd/contexts/EXPENSE_REPORT/B769E8B106C04F30AE27
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+Content-Type: application/json
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Wed, 06 Jul 2020 17:33:03 GMT
+Content-Length: 1270
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"self"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/api/v4/travelallowance/allowancedays/companyUUID/d5528866-51b1-40a1-bab2-76296a106dcd/contexts/EXPENSE_REPORT/B769E8B106C04F30AE27"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fullAllowanceDay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"False"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowanceDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-244T12:00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTransactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-244T12:00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTransactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEALS"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fullAllowanceDay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"False"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowanceDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-245T12:00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTransactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-245T12:00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTransactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEALS"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"fullAllowanceDay"</span><span class="p">:</span><span class="w"> </span><span class="s2">"False"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"allowanceDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-246T12:00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTransactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-09-246T12:00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTransactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"expenseTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MEALS"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="get-travel-allowance-days-response-schema"><a name="get-travel-allowance-days-response"></a>Get Travel Allowance Days Response Schema</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseTypeCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Expense Code. For example, MEALS for Travel Allowance.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">fullAllowanceDay</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>True/False. ‘True’ means full allowance day and ‘False’ means partial allowance day.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The 3-letter ISO 4217 currency code for the expense report currency. The expense report currency is defined as the report creator’s default reimbursement currency.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowanceDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td><a href="#definition-dateTime">dateTime</a></td>
+      <td>Travel Allowance Date.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseTransactionDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td><a href="#definition-dateTime">dateTime</a></td>
+      <td>Expense transaction date.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseTransactionAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">numeric</code></td>
+      <td>-</td>
+      <td>Expense transaction amount, in the expense entry currency.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The href represents the target resource identifiers.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rel</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The link relation type describes how the current context (source) is related to the target resource.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error"><a name="schema-error"></a>Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">exception</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Relative exception details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td>-</td>
+      <td>Time at which exception occur.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">message</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Message associated with the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Relative data path.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="definitions"><a name="definitions"></a>Definitions</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a name="definition-dateTime"></a><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>DateTime of where the transaction happened in format specified in ISO 8601, using UTC + Offset. For example, 2016-04-22T12:20+0700 (12:20 PM in Pacific Time).</td>
+    </tr>
+  </tbody>
+</table>
+:ET
