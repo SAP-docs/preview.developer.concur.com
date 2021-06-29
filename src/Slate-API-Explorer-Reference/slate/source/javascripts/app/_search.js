@@ -10,6 +10,7 @@
   var timeoutHandle = 0;
   var index;
 
+  function populate() {
     index = lunr(function(){
 
       this.ref('id');
