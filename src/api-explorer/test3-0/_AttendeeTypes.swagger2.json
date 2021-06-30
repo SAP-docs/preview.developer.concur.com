@@ -1,0 +1,356 @@
+{
+  "x-sap-shortText": "Get and update your configured attendee types in Concur Expense.",
+  "swagger": "2.0",
+  "host": "www.concursolutions.com",
+  "basePath": "/api/v3.0",
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json",
+    "application/xml"
+  ],
+  "consumes": [
+    "application/json",
+    "application/xml"
+  ],
+  "securityDefinitions": {
+    "OAuth2": {
+      "type": "oauth2",
+      "description": "To use this API, you need to get OAuth client credentials (client ID, secret, and geolocation) from SAP Concur, and be authorized to use the relevant scope. Refer to the <a href=\"https://developer.concur.com/api-reference/authentication/getting-started.html\">full authentication information</a> for more information.",
+      "tokenUrl": "https://us.api.concursolutions.com/oauth2/v0",
+      "flow": "application"
+    }
+  },
+  "security": [
+    {
+      "OAuth2": []
+    }
+  ],
+  "info": {
+    "title": "Attendee Types",
+    "description": "Get the configured attendee types for the company or for a specified user. You can also update attendee types by providing some or all of the attendee type fields.",
+    "version": "3.0"
+  },
+  "tags": [
+    {
+      "name": "Resources",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/expense/attendeetypes": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Get all attendee types",
+        "description": "Gets all active attendee types for the company.",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The starting point of the next set of results, after the limit specified in the limit field has been reached.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of records to return. Default value: 25",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AttendeeTypesCollection"
+            }
+          }
+        }
+      },
+      "post": {
+        "deprecated": true,
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Create a new attendee type",
+        "description": "DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016 Creates a new attendee type.",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "body",
+            "description": "The AttendeeType object to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AttendeeTypePost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreateResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          }
+        }
+      }
+    },
+    "/expense/attendeetypes/{id}": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Get a single attendee type",
+        "description": "Gets an attendee type for the specified ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the attendee type.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/AttendeeTypeGet"
+            }
+          }
+        }
+      },
+      "delete": {
+        "deprecated": true,
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Delete an attendee type by ID",
+        "description": "DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016 Deletes the specified attendee type.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the attendee type to delete.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Update an attendee type by ID",
+        "description": "Updates the specified attendee type. Only the fields provided in the supplied object will be updated. Missing fields will not be altered.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the attendee type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "The partial or complete AttendeeType object to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AttendeeTypePut"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Void"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AttendeeTypeGet": {
+      "properties": {
+        "AllowAttendeeCountEditing": {
+          "type": "boolean",
+          "description": "Determines whether users are allowed to edit the count for this attendee type. Format: true or false"
+        },
+        "AllowManuallyEnteredAttendees": {
+          "type": "boolean",
+          "description": "Determines whether users are allowed to add attendees for this attendee type. Format: true or false"
+        },
+        "AttendeeFormID": {
+          "type": "string",
+          "description": "The unique identifier for the attendee form for this attendee type."
+        },
+        "Code": {
+          "type": "string",
+          "description": "A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 40 characters"
+        },
+        "ConnectorID": {
+          "type": "string",
+          "description": "The unique identifier for the Application Connector that is the data source for this attendee type. When this field is empty, Concur Expense is the data source."
+        },
+        "DuplicateSearchFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "The URI of the next page of results, if any."
+          },
+          "description": "The list of Attendee field IDs used by the Add Attendee user interface to alert users that the attendee they want to add is a possible duplicate."
+        },
+        "ID": {
+          "type": "string",
+          "description": "The unique identifier of the resource."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name for the attendee type. This name must be unique. Maximum length: 40 characters"
+        },
+        "URI": {
+          "type": "string",
+          "description": "The URI to the resource."
+        }
+      }
+    },
+    "AttendeeTypePost": {
+      "properties": {
+        "AllowAttendeeCountEditing": {
+          "type": "boolean",
+          "description": "Determines whether users are allowed to edit the count for this attendee type. Format: true or false"
+        },
+        "AllowManuallyEnteredAttendees": {
+          "type": "boolean",
+          "description": "Determines whether users are allowed to add attendees for this attendee type. Format: true or false"
+        },
+        "AttendeeFormID": {
+          "type": "string",
+          "description": "The unique identifier for the attendee form for this attendee type."
+        },
+        "Code": {
+          "type": "string",
+          "description": "A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 40 characters"
+        },
+        "ConnectorID": {
+          "type": "string",
+          "description": "The unique identifier for the Application Connector that is the data source for this attendee type. When this field is empty, Concur Expense is the data source."
+        },
+        "DuplicateSearchFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "The URI of the next page of results, if any."
+          },
+          "description": "The list of Attendee field IDs used by the Add Attendee user interface to alert users that the attendee they want to add is a possible duplicate."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name for the attendee type. This name must be unique. Maximum length: 40 characters"
+        }
+      }
+    },
+    "AttendeeTypePut": {
+      "properties": {
+        "AllowAttendeeCountEditing": {
+          "type": "boolean",
+          "description": "Determines whether users are allowed to edit the count for this attendee type. Format: true or false"
+        },
+        "AllowManuallyEnteredAttendees": {
+          "type": "boolean",
+          "description": "Determines whether users are allowed to add attendees for this attendee type. Format: true or false"
+        },
+        "AttendeeFormID": {
+          "type": "string",
+          "description": "The unique identifier for the attendee form for this attendee type."
+        },
+        "Code": {
+          "type": "string",
+          "description": "A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 40 characters"
+        },
+        "ConnectorID": {
+          "type": "string",
+          "description": "The unique identifier for the Application Connector that is the data source for this attendee type. When this field is empty, Concur Expense is the data source."
+        },
+        "DuplicateSearchFields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "The URI of the next page of results, if any."
+          },
+          "description": "The list of Attendee field IDs used by the Add Attendee user interface to alert users that the attendee they want to add is a possible duplicate."
+        },
+        "Name": {
+          "type": "string",
+          "description": "The name for the attendee type. This name must be unique. Maximum length: 40 characters"
+        }
+      }
+    },
+    "AttendeeTypesCollection": {
+      "properties": {
+        "Items": {
+          "$ref": "#/definitions/AttendeeTypeGet"
+        },
+        "NextPage": {
+          "type": "string",
+          "description": "The URI of the next page of results, if any."
+        }
+      }
+    },
+    "CreateResponse": {
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "The URI of the next page of results, if any."
+        },
+        "URI": {
+          "type": "string",
+          "description": "The URI of the next page of results, if any."
+        }
+      }
+    },
+    "Void": {
+      "properties": {}
+    }
+  },
+  "x-servers": [
+    {
+      "url": "https://www.concursolutions.com/api/v3.0",
+      "description": "Concur API EndPoint"
+    }
+  ]
+}
