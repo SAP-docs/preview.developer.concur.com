@@ -5,7 +5,7 @@ The Users resource represents a set of SAP Concur users. It is always managed as
 
 * [Retrieve a user's information](#getUser)
   * [Schema](#getUserSchema)
-* [Retrieve all users based on search criteria](#getall)
+* [Retrieve all users based on search criteria](#retrieve-all-users-based-on-search-criteria)
 * [Retrieve the list of required fields for creating a user](#requiredFields)
   * [Schema](#requiredFieldsSchema)
 * [Update a user's account information](#createUser) - Create a User is not supported at this time.
