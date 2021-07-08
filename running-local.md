@@ -4,7 +4,7 @@
 
 Ensure you have the following dependencies installed in your developer environment:
 
-* Ruby (2.2.5)
+* Ruby (2.7.3)
 * Node (6.11.3)
 * Npm (3.10.10)
 
