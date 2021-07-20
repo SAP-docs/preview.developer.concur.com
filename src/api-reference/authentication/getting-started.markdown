@@ -42,7 +42,7 @@ Full docs: <https://developer.concur.com/api-reference/authentication/apidoc.htm
 
 Store the token and geolocation.
 
-## <a name="calling-API">3. Calling an API with the Access Token
+## <a name="calling-API"></a>3. Calling an API with the Access Token
 Once you have the `accessToken`, you need to supply this in an Authorization header in the form of `Authorization: Bearer <accessToken>` when making a HTTPS call. The `accessToken` is a large string that looks something like this:
 
 ```
