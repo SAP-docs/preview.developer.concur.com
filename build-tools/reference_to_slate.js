@@ -1,3 +1,6 @@
+/*
+** Copy api-reference content (both markdown and images) to the staging area used by slate.
+*/
 const fs = require('fs');
 const path = require('path');
 
