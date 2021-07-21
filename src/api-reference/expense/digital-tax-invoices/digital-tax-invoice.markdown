@@ -13,7 +13,7 @@ The Digital Tax Invoice web service allows digital tax invoice validators to vie
 ### Version
 3.0
 
-## <a name="get"></a>Retrieve All Digital Tax Invoices That Can Be Validated by the User Based On the Search Criteria
+## Retrieve All Digital Tax Invoices That Can Be Validated by the User Based On the Search Criteria <a name="get"></a>
 
     GET  /api/v3.0/expense/digitaltaxinvoices
 
@@ -34,7 +34,7 @@ https://www.concursolutions.com/api/v3.0/expense/digitaltaxinvoices?limit=5
 ```
 
 
-## <a name="getID"></a>Retrieve a Single Digital Tax Invoice by ID
+## Retrieve a Single Digital Tax Invoice by ID <a name="getID"></a>
 
     GET  /api/v3.0/expense/digitaltaxinvoices/{id}
 
@@ -53,7 +53,7 @@ https://www.concursolutions.com/api/v3.0/expense/digitaltaxinvoices/gWj3IHRYiHZG
 ```
 
 
-## <a name="put"></a>Update a Specified Digital Tax Invoice
+## Update a Specified Digital Tax Invoice <a name="put"></a>
 
     PUT  /api/v3.0/expense/digitaltaxinvoices/{id}
 
@@ -66,7 +66,7 @@ https://www.concursolutions.com/api/v3.0/expense/digitaltaxinvoices/gWj3IHRYiHZG
 |`id`	|	`path`	|	`string`	|	**Required** The ID of the digital tax invoice to update.
 
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 
 ### <a name="digitaltaxinvoices"></a>Digital Tax Invoices
@@ -93,3 +93,4 @@ https://www.concursolutions.com/api/v3.0/expense/digitaltaxinvoices/gWj3IHRYiHZG
 ```
 https://www.concursolutions.com/api/v3.0/expense/digitaltaxinvoices/gWj3IHRYiHZGUtIO83ILhbNHqCsjMmkvj%24pQ
 ```
+

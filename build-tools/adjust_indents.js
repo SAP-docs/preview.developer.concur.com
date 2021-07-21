@@ -1,10 +1,15 @@
+/*
+** This script is used to fix indentation in the api-explorer section.
+** This is needed because the source markdown uses header levels which do not
+** fit nicely into the auto-generated table of content side bar.
+*/
 const fs = require('fs');
 const path = require('path');
 const parser = require('node-html-parser');
 
 function processNode(oNode) {
 
-    // nodType == 1 is an HTML element
+    // nodeType == 1 is an HTML element
     if (oNode.nodeType !== 1) {
         return;
     }

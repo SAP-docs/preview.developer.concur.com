@@ -1,3 +1,7 @@
+/*
+** Copy static content built by middleman from from the slate directory
+** back to slate-ui directory for web-serving.
+*/
 const fs = require('fs');
 const path = require('path');
 

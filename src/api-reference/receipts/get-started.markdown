@@ -13,7 +13,7 @@ redirect_from:
   * [Acquire an Access Token](#retrieve-a-user-access-token)
   * [Explore the API in JavaScript](#explore-the-api-in-javascript)
 
-## <a name="overview"></a>Overview
+## Overview <a name="overview"></a>
 
 The Receipts V4 API accepts three different formulae for posting a receipt:
 
@@ -40,11 +40,11 @@ These two different resources are sent/fetched from the Receipts V4 API via diff
 * The e-receipt must come directly from the original merchant issuing the receipt or from a third party authorized by the merchant to issue receipts on behalf of the merchant.
 * All receipt data fields that are required by the relevant government jurisdiction must be provided even if the SAP Concur documentation indicates the data field is optional. If a government required data field is not available in the current schema then a legally compliant receipt image must be attached.
 
-## <a name="version"></a>Overview of Version 4.0
+## Overview of Version 4.0 <a name="version"></a>
 
 Version 4.0 of the Receipts API offers features like more receipt types, automatic e-receipt generation in end user’s preferred language and ability for partners to provide detailed tax information. Unlike version 3.0, we are discontinuing the use of matching facts; instead the partner will have to create a receipt for a specific end user. Receipts 4.0 works only with the new [Authentication API](https://developer.concur.com/api-reference/authentication/apidoc.html).
 
-## <a name="explore-the-api"></a>Explore the API
+## Explore the API <a name="explore-the-api"></a>
 
 ### <a name="prerequisites"></a>Prerequisites
 
@@ -140,3 +140,4 @@ req.on('error', (e) => {
     console.error(e);
 });
 ```
+

@@ -25,7 +25,7 @@ If you are an existing partner with an existing app, please read both the [Migra
 
 **Note:** The Pre-2017 Authorization (Deprecated) documentation be found [here](/api-reference/authentication/authorization-pre-2017.html)
 
-## <a name="access_token"></a>Access Tokens
+## Access Tokens <a name="access_token"></a>
 
 The Oauth2 service generates access tokens for authenticated users, applications or companies. The token returned in the Oauth2 response can be used to access protected resources on SAP Concur services.
 
@@ -64,7 +64,7 @@ Connection: Close
 ```
 
 
-## <a name="obtain_token"></a>Obtaining a token
+## Obtaining a token <a name="obtain_token"></a>
 
 You can obtain a token for three different types of principals in the SAP Concur universe.
 
@@ -83,7 +83,7 @@ In order to obtain a token, the client application needs to call the Oauth2 endp
   * [Client Credentials grant](#client_credentials)
   * [One Time Password grant](#otp_grant)
 
-## <a name="refresh_token"></a>Refreshing a token
+## Refreshing a token <a name="refresh_token"></a>
 
 
 The refresh grant is used to refresh an access_token that has expired. This grant can be used anytime a refresh_token is returned in the response of another grant request. No user interaction is required.
@@ -151,7 +151,7 @@ Connection: Close
 }
 ```
 
-## <a name="revoke_token"></a>Revoking a token
+## Revoking a token <a name="revoke_token"></a>
 
 All refresh_tokens associated to a user for an application can be revoked by calling the `https://us.api.concursolutions.com/app-mgmt/v0/connections` endpoint with a `DELETE` action. You have to provide the User's `accessToken` in the Authorization Header as `Authorization: Bearer <access_token>`.
 
@@ -172,7 +172,7 @@ Authorization: Bearer {token}
 HTTP/1.1 200 OK
 ```
 
-## <a name="manage_token"></a>Managing tokens
+## Managing tokens <a name="manage_token"></a>
 
 Refresh Tokens are strings that allow your application to obtain a fresh `accessToken` on behalf of a user to access SAP Concur APIs.  The exact format of the string can change, but may look similar to the following:
 
@@ -184,7 +184,7 @@ It is highly recommended that you store Refresh Tokens together with your user's
 
 FOR APP CENTER AND SUPPLIER PARTNERS supporting all geolocations, storing the authorization metadata, including the geolocation are REQUIRED.
 
-## <a name="base_uri"></a>Base URIs
+## Base URIs <a name="base_uri"></a>
 
 When making API calls, the appropriate base URI should be used. There are three different scenarios:
 1. Obtaining a token for a user.
@@ -233,7 +233,7 @@ Connection: Close
 When then calling the receipts API to post a receipt, your request should be made to https://us.api.concursolutions.com (if server side) or https://www-us.api.concursolutions.com (for clients).
 
 
-## <a name="id_token"></a>ID Token
+## ID Token <a name="id_token"></a>
 
 Authentication service will return an [OPENID](http://openid.net) compatible [ID token](http://openid.net/specs/openid-connect-core-1_0.html#IDToken) with every token request. This `id_token` is primarily used to describe information about a user or a company. You can obtain the userId from this token.
 
@@ -259,7 +259,7 @@ The Authentication service exposes [JWKs](https://tools.ietf.org/html/rfc7517) t
 
 This is the link to the SAP Concur JSON Web Key for Oauth2. [https://www-us.api.concursolutions.com/oauth2/v0/jwks](https://www-us.api.concursolutions.com/oauth2/v0/jwks)
 
-## <a name="auth_grant"></a>Authorization grant
+## Authorization grant <a name="auth_grant"></a>
 
 The authorization grant is the regular 3-legged oauth2 grant and is defined in detail in [RFC6749 sec-4.1](https://tools.ietf.org/html/rfc6749#section-4.1). This grant requires the user to explicitly authenticate themselves and authorise the application initiating the grant.
 
@@ -308,7 +308,7 @@ Name | Type | Format | Description
 `code`|`string`| `UUID` | The authorization code provided by Auth
 `grant_type`|`string` |-| `authorization_code`
 
-## <a name="password_grant"></a>Password grant
+## Password grant <a name="password_grant"></a>
 
 The Password grant can be used when there is a trust relationship between the user and the application. There are two credential types allowed with Password Grant:
 
@@ -376,7 +376,7 @@ example bad login
 }
 ```
 
-## <a name="client_credentials"></a>Client Credentials grant
+## Client Credentials grant <a name="client_credentials"></a>
 
 Use the `application/x-www-form-urlencoded` content type.
 
@@ -426,7 +426,7 @@ Connection: Close
 ```
 
 
-## <a name="otp_grant"></a>One Time Password grant
+## One Time Password grant <a name="otp_grant"></a>
 
 
 The One-time Password grant type leverages email, phone (text messaging), instant messaging and similar systems to provide per user access tokens to client applications. This grant type requires the following steps:
@@ -563,7 +563,7 @@ Connection: keep-alive
 }
 ```
 
-## <a name="response_codes"></a>Response Codes
+## Response Codes <a name="response_codes"></a>
 
 ##### HTTP Status returned by oauth2
 
@@ -669,7 +669,7 @@ In all cases, the friendly error description should be displayed to the user.
 | 81   | `invalid_request` | bad channel handle                                     |
 | 82   | `invalid_request` | the number of open otp requests has been exceeded      |
 
-## <a name="troubleshooting"></a>Troubleshooting
+## Troubleshooting <a name="troubleshooting"></a>
 
 In order to assist with troubleshooting, SAP Concur responds with a unique correlationId in the response header. The key to look for is `correlationid`. This unique code can be used during troubleshooting as it identifies the API call in the log files. You should record this information in your own API call logs as well so that you can pass this information on to the SAP Concur support team.
 
@@ -685,7 +685,7 @@ Example of the `correlationid` in the response:
 < Concur-Correlationid: 2803b8f8-a42b-43c2-a739-b8768e4759b8
 ```
 
-## <a name="enterprise-business-applications"></a>Enterprise Business Applications
+## Enterprise Business Applications <a name="enterprise-business-applications"></a>
 
 Only the [Password Grant Type](#password_grant) is available for obtaining company-level tokens.
 
@@ -704,3 +704,4 @@ Only the [Password Grant Type](#password_grant) is available for obtaining compa
 1. It is highly recommended that Partners log the following elements:
   * `userId`: the user who clicked on the Connect button (returned in the re-direct URI)
   * `correlationid`: SAP Concur responds with a unique code which identifies the API call in the log files.  (returned in the response header).  More details can be found here.
+

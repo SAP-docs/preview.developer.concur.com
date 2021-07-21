@@ -23,7 +23,7 @@ Our recommendation for suppliers is to match users requesting to connect utilizi
 * Connection Requests v3.0 is deprecated.
 * Connection Requests v3.1 is deprecated.
 
-## <a name="get"></a>Retrieve all connection requests that match the TripLink supplier ID
+## Retrieve all connection requests that match the TripLink supplier ID <a name="get"></a>
 
 ```
 GET /api/v3.2/common/connectionrequests/
@@ -42,7 +42,7 @@ Name | Type | Format | Description
 
 
 
-## <a name="getID"></a>Retrieve a connection request by ID
+## Retrieve a connection request by ID <a name="getID"></a>
 
     GET  /api/v3.2/common/connectionrequests/{id}
 
@@ -57,7 +57,7 @@ Name | Type | Format | Description
 `id`	|	``path``	|	``string``	|	**Required** The connection request ID.
 
 
-## <a name="post"></a>Create a connection request on behalf of a specific user
+## Create a connection request on behalf of a specific user <a name="post"></a>
 
     POST  /api/v3.2/common/connectionrequests/
 
@@ -72,7 +72,7 @@ Name | Type | Format | Description
 `user`	|	``query``	|	``string``	|	**Required** The login ID of the user for whom to create the connection request. The user must have the Web Services Admin role to use this parameter.
 
 
-## <a name="put"></a>Update a connection request
+## Update a connection request <a name="put"></a>
 
     PUT  /api/v3.2/common/connectionrequests/{id}
 
@@ -87,7 +87,7 @@ Name | Type | Format | Description
 `id`	|	``path``	|	``string``	|	**Required** The connection request ID.
 `content`	|	``body``	|	-	|	**Required** The connection request object to update.
 
-## <a name="schema32"></a>Schema 3.2
+## Schema 3.2 <a name="schema32"></a>
 
 
 ### <a name="connectionrequests32"></a>Connection Requests
@@ -126,7 +126,7 @@ Name | Type | Format | Description
 `email5`	|	``string``	|	-	|	The user's verified email address.
 
 
-## <a name="schema"></a>Schema 3.0 (Deprecated)
+## Schema 3.0 (Deprecated) <a name="schema"></a>
 
 
 ### <a name="connectionrequests"></a>Connection Requests
@@ -151,7 +151,7 @@ Name | Type | Format | Description
 `Status`	|	``string``	|	-	|	The status code representing the state of the connection request.
 `URI`	|	``string``	|	-	|	The URI to the resource.
 
-## <a name="schema31"></a>Schema 3.1 (Deprecated)
+## Schema 3.1 (Deprecated) <a name="schema31"></a>
 
 
 ### <a name="connectionrequests31"></a>Connection Requests
@@ -187,3 +187,4 @@ Name | Type | Format | Description
 `Email3`	|	``string``	|	-	|	The user's verified email address.
 `Email4`	|	``string``	|	-	|	The user's verified email address.
 `Email5`	|	``string``	|	-	|	The user's verified email address.
+

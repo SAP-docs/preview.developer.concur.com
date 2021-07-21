@@ -14,7 +14,7 @@ Scopes apply to applications only. Scopes play a crucial part in defining the ul
 
 User’s Roles / Permissions + Claims + Application Scopes
 
-## <a name="conventions"></a>Naming Conventions
+## Naming Conventions <a name="conventions"></a>
 
 Concur services follow these standard naming conventions for scopes.
 
@@ -24,7 +24,7 @@ Examples: mileage.rate.read
           receipts.read
 ```
 
-## <a name="actions"></a>List of v4 Actions
+## List of v4 Actions <a name="actions"></a>
 
 `{actions}` are common authorizations across resources.
 
@@ -35,7 +35,7 @@ Action|Description|Examples
 `writeonly`|Write only access|`mileage.journey.writeonly`, `receipts.writeonly`
 `delete`|Delete access|N/A
 
-## <a name="v4apiscopes"></a>List of v4 API Scopes
+## List of v4 API Scopes <a name="v4apiscopes"></a>
 
 These are the list of scopes for the v4+ APIs.
 
@@ -78,7 +78,7 @@ user.read|Read user profile
 user.write|Read and write user profile
 
 
-## <a name="connectscopes"></a>List of Connect API scopes
+## List of Connect API scopes <a name="connectscopes"></a>
 
 These are the list of scopes for the existing CONNECT APIs (v1.0 - v3.1)
 
@@ -125,3 +125,4 @@ TRVREQ|Travel Request - Add, Update or Delete Travel Requests
 TWS|Travel Approval - Approve or Reject Travel Itineraries
 USER|Users- Add or Update User Accounts
 COMPANY|Companies - Add or Update Company profile
+

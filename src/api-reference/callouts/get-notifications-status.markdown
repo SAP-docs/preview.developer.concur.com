@@ -11,7 +11,7 @@ Retrieves the list of event notifications that are in the supplied status.
   * [Schema](#schema)
   * [Response Examples](#res-examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 
@@ -106,3 +106,4 @@ Content-Type: application/json; charset=utf-8
   }
 ]
 ```
+

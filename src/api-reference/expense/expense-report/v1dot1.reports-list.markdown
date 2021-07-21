@@ -104,3 +104,4 @@ The `ApprovalURL` provides a link to Expense that can be used with SSO in most c
 * The approver is currently on the company network or is using VPN
 
 Otherwise, when the approver clicks the link, the Expense login page appears. The approver logs in and follows the normal steps for approving reports.
+

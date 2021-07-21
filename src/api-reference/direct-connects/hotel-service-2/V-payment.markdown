@@ -51,3 +51,4 @@ Org units can also be integrated in this workflow. If enabled, they will be made
 **5.	Reservation**
 
 After the user has selected a rate with GuaranteeType marked as ‘none’ the reservation request will be sent with OTA_HotelResRQ. The OTA_HotelResRQ also contains descriptive billing information.
+

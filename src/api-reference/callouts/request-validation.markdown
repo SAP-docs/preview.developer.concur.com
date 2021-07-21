@@ -138,3 +138,4 @@ The application connector has now completed the process of validating a Request,
 [10]: /api-reference/authentication/apidoc.html
 [12]: https://developer.concur.com/node/518#requestdetails
 [13]: https://developer.concur.com/node/519#requestworkflow
+

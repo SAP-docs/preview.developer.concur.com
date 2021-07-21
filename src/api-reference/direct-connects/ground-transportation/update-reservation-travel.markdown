@@ -26,7 +26,7 @@ This request is sent when the ground transportation service provider needs to se
 * [Response](#response)
   * [Response Example](#res-example)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### URI
 
@@ -369,7 +369,7 @@ Content-Length: {length of content body}
 </CC_LimoPostBackRequest>
 ```
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 SAP Concur responds to the supplier request with a result message.
 
@@ -416,3 +416,4 @@ Content-Type: application/xml
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
+

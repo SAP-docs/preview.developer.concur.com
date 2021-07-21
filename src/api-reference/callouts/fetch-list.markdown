@@ -26,11 +26,11 @@ This callout differs from the inbound SAP Concur web services in the following w
 
 ![A process flow diagram showing flow between SAP Concur, an application connector, and client's data source](./fetch-list-item.png)
 
-## <a name="products-editions"></a>Products and Editions
+## Products and Editions <a name="products-editions"></a>
 * Concur Expense Professional Edition
 * The SAP Concur Mobile App
 
-## <a name="product-restrictions"></a>Product Restrictions
+## Product Restrictions <a name="product-restrictions"></a>
 SAP Concur products are highly configurable, and not all clients will have access to all features.
 
 Partner developers must determine which configurations are required for their solution prior to the review process.
@@ -54,7 +54,7 @@ To configure a Fetch List callout:
 
 >**Note:** If this Fetch List callout is made inactive and then subsequently saved on the System page, any lists that have been added to this Fetch List as a Configured List will be deleted from that Fetch List service.
 
-## <a name="fetch-list-process-overview"></a>Fetch List Process Overview
+## Fetch List Process Overview <a name="fetch-list-process-overview"></a>
 Once the configuration is complete, the callout uses the following process:
 
 1. The user selects the external source list field while creating an expense entry.
@@ -63,17 +63,17 @@ Once the configuration is complete, the callout uses the following process:
 4. Expense displays the list items in a drop down list.
 5. The user selects the desired list item and saves the expense.
 
-## <a name="security"></a>Security
+## Security <a name="security"></a>
 SAP Concur will make calls to the application connector's endpoint using SSL. During configuration, SAP Concur will connect to the application connector to validate that its hostname and access credentials are valid.
 
 In the code SAP Concur provides for a sample application connector, credentials are stored in a web configuration file that varies by platform, such as web.xml or web.config. However, if you are hosting the connector, you can customize where and how the credentials are stored by customizing HTTPBasicAuth.java or Authentication.cs.
 
 Expense will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. You will need to install the signed certificate before SAP Concur can access the connector.
 
-## <a name="authentication"></a>Authentication
+## Authentication <a name="authentication"></a>
 Authentication between SAP Concur and the application connector is performed using HTTP Basic Auth. By default, these credentials are stored in the appropriate web configuration file for your platform, such as web.xml or web.config. These credentials are entered in SAP Concur on the **Register Application Connector** page in **Web Services** under **Administration**.
 
-## <a name="functions"></a>Functions
+## Functions <a name="functions"></a>
 
 * [Version 1.2: Post List Search Request][3]
 
@@ -82,3 +82,4 @@ Authentication between SAP Concur and the application connector is performed usi
 Refer to the [HTTP Status Codes](/api-reference/http-status-codes.html) page for details of the common responses and errors.
 
 [3]: /api-reference/callouts/post-list-search-request.html
+

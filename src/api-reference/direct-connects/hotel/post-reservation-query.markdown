@@ -117,3 +117,4 @@ application/xml
 ### Response body
 
 The response is identical to the response for [Post New Reservation](/api-reference/direct-connects/hotel/post-new-reservation.html).
+

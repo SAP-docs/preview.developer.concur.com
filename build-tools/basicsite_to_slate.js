@@ -1,3 +1,7 @@
+/*
+** Copy some basic content (top level images etc.) from site-src directory to the
+** staging area used by slate
+*/
 const fs = require('fs');
 const path = require('path');
 

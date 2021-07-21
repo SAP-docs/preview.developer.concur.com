@@ -160,3 +160,4 @@ The role code value that can be used for provisioning with the `Spend Role Exten
 |`REPORTING_HIST_DATA_USER`|Cognos Hist Data Access|Cognos Hist Data Access.|N|N|
 |`REPORTING_DASHBOARD_USER`|Dashboard User|**NOTE: Do not use. This role is retired.**|N|N|
 |`REPORTING_EMPLOYEE_ADMIN`|Employee Admin Permission on Reporting Hierarchy|The user assigned this role can grant Reporting Hierarchy Nodes permission to users in the Employee Admin.<br>**NOTE**: Each user assigned Employee admin must also be assigned permissions for reporting (BI), expense, and payment (Invoice). These additional permissions govern the roles the employee administrator can assign for the employees in his or her assigned groups.|Y|N|
+

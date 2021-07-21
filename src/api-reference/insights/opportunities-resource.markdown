@@ -13,7 +13,7 @@ Retrieves a collection of opportunities for a specified trip or for all trips th
 ### Version
 3.0
 
-## <a name="get"></a>Retrieve all connection requests that match the TripLink supplier ID
+## Retrieve all connection requests that match the TripLink supplier ID <a name="get"></a>
 
     GET  https://www.concursolutions.com/api/v3.0/insights/opportunities
 
@@ -28,7 +28,7 @@ Name | Type | Format | Description
 `toUtc`	|	`DateTime`	|	`query`	|	The To date in UTC for the date range
 
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 
 ### <a name="opportunities"></a>Opportunities
@@ -54,3 +54,4 @@ Name | Type | Format | Description
 `TripId	`|	`string`	|	-	|	The trip id of the associated itinerary
 `Type`	|	`string`	|	-	|	The type of opportunity. Possible values: 'Hotel', 'Car', 'Air', 'Rail', 'Taxi' or 'Service'
 `URI`	|	`string`	|	-	|	The URI to the resource.					
+

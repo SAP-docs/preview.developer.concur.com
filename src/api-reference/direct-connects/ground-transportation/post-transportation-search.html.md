@@ -23,7 +23,7 @@ A post transportation search request is sent when the Travel user searches for g
     * [Rate Information](#rate-info)
 * [Examples](#examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### URI                                                                                
 
@@ -283,7 +283,7 @@ The response will include a **CC_LimoSearchReply** parent element, with the foll
 |  OptionalExtraStopCharge |  N |  The charge for any additional stops. |
 |  OptionalExtraTimeCharge |  N |  The charge for each additional hour. |
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 ###  XML Example Request
 
@@ -422,3 +422,4 @@ Content-Length: {length of content body}
 [3]: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [4]: https://en.wikipedia.org/wiki/ISO_4217
 [5]: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
+

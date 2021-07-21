@@ -11,13 +11,13 @@ layout: reference
 	* [Hotel](#schema-hotel-request)
 * [Sample Events](#sample-events)
 
-## <a name="overview"></a>Overview
+## Overview <a name="overview"></a>
 
 The topic 'concur.travel.search' provides travel search information.  Subscribers to this event will receive search criteria for travel searches performed within the SAP Concur online booking tool.
 
 This event is relevant for applications that are interacting with travelers before they book their trip such as applications that context to the traveler regarding company policy, preferences, or general compliance requirements for booking travel.
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 ### <a name="schema-air-request"></a>Air
 
@@ -92,7 +92,7 @@ Name|Type|Format|Description
 `checkInDate`|`string`|`YYYY-MM-DD`|Check in date, in local time.
 `checkOutDate`|`string`|`YYYY-MM-DD`|Check out date, in local time.
 
-## <a name="sample-events"></a>Sample Events
+## Sample Events <a name="sample-events"></a>
 
 ### <a name="sample-air-event"></a>Air
 
@@ -151,3 +151,4 @@ Sample roundtrip air search
 }
 
 ```
+

@@ -9,13 +9,13 @@ layout: reference
 * [Calling Users Bulk API](#usersbulk)
 * [Schema](#schema)
 
-## <a name="company"></a>Obtain Company Token
+## Obtain Company Token <a name="company"></a>
 
 Company is a top-level principal within SAP Concur and you would be able to obtain an access token and a refresh token on a company's behalf just like you would be able to with a user. Only one authorization flow is currently available for obtaining tokens for a company, which is the [Password grant](/api-reference/authentication/apidoc.html#password_grant).
 
 For more information and instructions for obtaining a Company Token, please review the [Company Level Authentication](/https://developer.concur.com/api-reference/authentication/company-auth.html)
 
-## <a name="usersbulk"></a>Calling Users Bulk API
+## Calling Users Bulk API <a name="usersbulk"></a>
 
 This endpoint will retrieve a list of users that belong to a company and return basic company information together with the list of users.
 
@@ -107,7 +107,7 @@ curl -v -X GET -H "Authorization: Bearer $token" \
 }
 ```
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 Property Name|Type|Format|Description
 ---|---|---|---
@@ -129,3 +129,4 @@ Property Name|Type|Format|Description
 `OrginzationUnit`|`string`|-|The organization unit of the user.
 `PrimaryEmail`|`string`|-|The primary email of the user.
 `URI`|`string`|-|The URI to the resource.
+

@@ -89,3 +89,4 @@ USER|Add or update SAP Concur user accounts|[User v1](/api-reference/user/), [Us
 user.read|Read profile information|[Profile](/api-reference/profile/v1.getting-started.html), [User API (Profile v1)](/api-reference/profile/v1.user.html), [Comments v4](/api-reference/expense/expense-report/v4.comments.html), [Reports v4](/api-reference/expense/expense-report/v4.reports.html), [Allocations v4](/api-reference/expense/expense-report/v4.allocations.html), [Expenses v4](/api-reference/expense/expense-report/v4.expenses.html), [Quick Expense v4](/api-reference/expense/quick-expense/v4.quick-expense.html)
 user.write|Read and update profile information|[Profile](/api-reference/profile/v1.getting-started.html), [User API (Profile v1)](/api-reference/profile/v1.user.html)
 user_read|Read only access to user travel preference data|[User v1](/api-reference/user/), [User v3](/api-explorer/v3-0/Users.html), [User v3.1](/api-reference/authentication/get-users31.html)
+

@@ -27,7 +27,7 @@ The Users resource represents a set of SAP Concur users. It is always managed as
 
 ![Process Flow for the User Resource](./create-user.png)
 
-## <a name="getUser"></a>Retrieve a User's Information
+## Retrieve a User's Information <a name="getUser"></a>
 
 This resource allows you to get profile information for a given user. If a request URL does not include a `?loginID` parameter then the response will be for the logged in user (and you must pass authentication information with your request).
 
@@ -66,11 +66,11 @@ Name|Type|Format|Description
 `ExpenseApproverEmployeeID`|`string`|-|The employee ID of the user's Expense approver. If you are importing both a user and their approver, the approver should be listed before the user in the batch.
 `IsTestEmp`|`Boolean`|Y/N|Whether the user is a test user.
 
-## <a name="getall"></a>Retrieve All Users Based on Search Criteria
+## Retrieve All Users Based on Search Criteria <a name="getall"></a>
 
 Note that this is a version 3.0 API and can be found [here](/api-explorer/v3-0/Users.html).
 
-## <a name="requiredFields"></a>Retrieve the List of Required Fields for Creating a User
+## Retrieve the List of Required Fields for Creating a User <a name="requiredFields"></a>
 
 Retrieves a list of configured fields on the Global employee form in SAP Concur.
 
@@ -102,7 +102,7 @@ Name|Type|Format|Description
 `ListName`|`string`|-|The name of the list associated with the field.
 `HierLevel`|`string`|-|The list level of the field. If it is the second level field in a two-level list, the value would be 2.
 
-## <a name="createUser"></a>Update a User's Account Information
+## Update a User's Account Information <a name="createUser"></a>
 
 Updates one or more users. The batch can contain up to 500 users.
 
@@ -181,7 +181,7 @@ Name|Type|Format|Description
 </batch>
 ```
 
-## <a name="updatePwd"></a>Update a User's Password
+## Update a User's Password <a name="updatePwd"></a>
 
      POST api/user/v1.0/Users/password
 
@@ -227,3 +227,4 @@ Name|Type|Format|Description
     </User>
 </UserBatch>
 ```
+

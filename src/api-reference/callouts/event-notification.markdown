@@ -24,17 +24,17 @@ This callout differs from the standard SAP Concur web services in the following 
   * [Installation Process](#installation-process)
   * [Response and Errors](#response-errors)
 
-## <a name="process-flow"></a>Process Flow
+## Process Flow <a name="process-flow"></a>
 
 ![Process Flow for the Event Notification Callout](./event-notification-process-flow.png)
 
-## <a name="products-editions"></a>Products and Editions
+## Products and Editions <a name="products-editions"></a>
 
 * Concur Expense Professional Edition
 * Concur Request Professional Edition
 * The SAP Concur Mobile App
 
-## <a name="example-use-case"></a>Example Use Case
+## Example Use Case <a name="example-use-case"></a>
 
 An example use of this callout is:
 
@@ -48,7 +48,7 @@ An example use of this callout is:
 
 This is one use case for the Event Notification callout, however it can be used for a wide variety of requirements.
 
-## <a name="product-restrictions"></a>Product Restrictions
+## Product Restrictions <a name="product-restrictions"></a>
 
 SAP Concur products are highly configurable, and not all clients will have access to all features.
 
@@ -56,7 +56,7 @@ Partner developers must determine which configurations are required for their so
 
 Existing clients can work with Concur Advantage Technical Services to create custom applications that work with their configuration.
 
-## <a name="event-notification-process"></a>Event Notification Process Overview
+## Event Notification Process Overview <a name="event-notification-process"></a>
 
 The configuration process has the following steps:
 
@@ -84,7 +84,7 @@ Authentication between SAP Concur and the application connector is performed usi
 
 Refer to the **Callouts and Application Connectors** page for more information.
 
-## <a name="functions"></a>Functions
+## Functions <a name="functions"></a>
 
 [Delete Notification][9]  
 
@@ -134,3 +134,4 @@ Refer to the [HTTP Status Codes](/api-reference/http-status-codes.html) page for
 [12]: /callouts/event-notification#installproc
 [13]: /callouts/event-notification#responses
 [14]: https://github.com/concurtech
+

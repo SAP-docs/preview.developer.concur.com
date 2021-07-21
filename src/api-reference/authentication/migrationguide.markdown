@@ -9,11 +9,11 @@ layout: reference
 
 Existing applications that use the [Pre-2017 Authorization (Deprecated)](/api-reference/authentication/authorization-pre-2017.html) framework need to move to support the new Oauth2 Bearer Tokens. Applications will need to migrate their existing users who already have connected to it to obtain new Oauth2 tokens without requiring users to reauthorize. This can be done by exchanging an old access token for a new refresh token.
 
-## <a name="base_uris"></a>Base URIs
+## Base URIs <a name="base_uris"></a>
 
 When making API calls, the appropriate base URI for the user's geolocation should be used. See the [Base URIs](/platform/base-uris.html) page for the full list.
 
-## <a name="exchangetoken"></a>Exchanging a Token
+## Exchanging a Token <a name="exchangetoken"></a>
 
 In order to support new Oauth2, applications need to exchange old access token for new `accessToken` and `refreshToken` pair. Once obtained, applications should store these `refreshTokens` as part of users authorization data.
 
@@ -121,7 +121,7 @@ successful call, responds with:
 
 
 
-## <a name="response_codes"></a>Response Codes
+## Response Codes <a name="response_codes"></a>
 
 ##### HTTP Status returned by exchangeAccessToken
 
@@ -212,3 +212,4 @@ successful call, responds with:
 | 118  | `invalid_request` | display is invalid                                     |
 | 119  | `invalid_request` | prompt is invalid                                      |
 | 119  | `invalid_request` | prompt must be set to consent for `offline_access`     |
+

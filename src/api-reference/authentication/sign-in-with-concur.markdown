@@ -5,8 +5,6 @@ layout: reference
 
 {% include prerelease.html %}
 
-# Sign in with Concur
-
 * [Introduction](#introduction)
 * [Benefits](#benefits)
 * [Use Cases](#use_cases)
@@ -20,11 +18,11 @@ layout: reference
   * [TripLink Configurations](#triplink_configurations)
   * [Supported Languages](#supported_languages)
 
-## <a name="introduction"></a>Introduction
+## Introduction <a name="introduction"></a>
 
 Streamline user onboarding with **Sign in with Concur** – a new feature that allows new users to log on to a partner application using their Concur credentials. Similar to the single sign-on feature provided by Facebook and other social applications, Sign in with Concur reduces the time and effort involved in setting up an account with our partner apps.
 
-## <a name="benefits"></a>Benefits
+## Benefits <a name="benefits"></a>
 
 _For partners_
 
@@ -38,7 +36,7 @@ _For users_
 
 
 
-## <a name="use_cases"></a>Use Cases
+## Use Cases <a name="use_cases"></a>
 
 Sign in with Concur solves access and support issues for all of our various types of partner integrations:
 
@@ -62,7 +60,8 @@ _Back office applications_
 
 - Simplify log in and support for users that log in infrequently by leveraging the SAP Concur authentication.
 
-# <a name="how_it_works"></a>How it Works
+## How it Works <a name="how_it_works"></a>
+
 
 
 _Select_ **Sign in with Concur** _from the site login menu_
@@ -113,7 +112,8 @@ _For both authentication flows, once authorized, the account is provisioned and 
 
  ![sign in complete](sign-in-with-concur-images/sign-in-with-concur-complete.png)
 
-# <a name="getting_started"></a>Getting Started
+## Getting Started <a name="getting_started"></a>
+
 
 **1. Obtain your Application clientID and clientSecret**
 
@@ -230,7 +230,8 @@ Once the user is logged in, your application must determine whether an existing 
 
 In all cases, the user's token, geolocation and user UUID should be stored.  As applications vary in the information required to create a new user record and utilize the service, your application should leverage data from the user profile endpoint where possible.
 
-# <a name="account_maintenance"></a>Account Maintenance
+## Account Maintenance <a name="account_maintenance"></a>
+
 
 Once the account is provisioned or matched, the application must:
 
@@ -238,13 +239,14 @@ Once the account is provisioned or matched, the application must:
 - Maintain the user's session.  Once the session is established, your application's typical session maintenance should be observed. This includes idle timeout and session refresh, where applicable. The issued token will have a predetermined expiration. To maintain the connection, please see the  [token refresh documentation](/api-reference/authentication/apidoc.html#refresh_token).
 
 
-# <a name="error_handling"></a>Error Handling
+## Error Handling <a name="error_handling"></a>
+
 
 In all cases, the error description provided by Concur should be displayed to the user.
 
 The following covers special cases that require additional handling.
 
-## <a name="authorization_declined"></a>Authorization Declined
+## Authorization Declined <a name="authorization_declined"></a>
 
 In the case the user leaves the sign in process or sign in is unsuccessful, the user will be redirected to the following:
 
@@ -263,7 +265,7 @@ Apps should then provide the user with alternative connection methods:
 
 
 
-## <a name="application_is_disabled"></a>Application is disabled
+## Application is disabled <a name="application_is_disabled"></a>
 
 Customers have the option to disable applications for their users. In these cases, the user will be redirected to the following:
 
@@ -277,11 +279,12 @@ Your_Redirect_Uri?
 
 In this case, the user will not be able to access your application using Sign in with Concur. The error description should be displayed to the user and the user given alternate sign in methods (e.g. create an account).
 
-# <a name="advanced"></a>Advanced
+## Advanced <a name="advanced"></a>
+
 
 This section covers guidelines for specific Sign in with Concur implementations.
 
-## <a name="enterprise_applications"></a>Enterprise Applications
+## Enterprise Applications <a name="enterprise_applications"></a>
 
 Company-wide integrations are unique in that your application will interact with SAP Concur both on a batch level (for example, GET or POST for multiple employees) but also allow individuals to sign in to the service without creating a new account.
 
@@ -308,7 +311,7 @@ The below illustrates the process for users signing in to your service.
 
 ![sign_in_diagram](sign-in-with-concur-images/signing-in-to-client-application.jpg)
 
-## <a name="triplink_configurations"></a>TripLink Configurations
+## TripLink Configurations <a name="triplink_configurations"></a>
 
 Depending on the products the customer has enabled, integrations and features available with Sign in with Concur vary. The following defines the scopes that are applicable product combinations. Your application must support each of the below potential scope configurations:
 
@@ -365,10 +368,12 @@ To determine which permissions the user has access to, **each time a user signs 
 
   * The user's permissions can change at any time. It is recommended that the permissions be checked each time the user logs       in to determine whether new functionality is available to the user. *
 
-## <a name="supported_languages"></a>Supported Languages
+## Supported Languages <a name="supported_languages"></a>
 
 The following language codes are supported in by Sign in with Concur.
 
 | **Code** | **Name** |
 | --- | --- |
 | en | English (US) |
+
+

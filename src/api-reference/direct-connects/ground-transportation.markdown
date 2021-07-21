@@ -33,7 +33,7 @@ SAP Concur products are highly configurable, and not all clients will have acces
 
 Partner developers must determine which configurations are required for their solution prior to the review process.
 
-## <a name="config-process"></a>Configuration Process
+## Configuration Process <a name="config-process"></a>
 
 The configuration process has the following steps:
 
@@ -58,10 +58,10 @@ This callout can also be used to perform the following operations:
 * Cancel the Ground Transportation Reservation
 * Update the Ground Transportation Reservation with the Supplier
 
-## <a name="authentication"></a>Authentication
+## Authentication <a name="authentication"></a>
 Authentication between SAP Concur and the application connector is performed using OAuth.
 
-## <a name="operations"></a>Operations
+## Operations <a name="operations"></a>
 
 [Cancel Reservation][4]
 
@@ -98,3 +98,4 @@ TUR ZM AK1  SEA 15DEC-/FALCON DES-TEL 8666932526/RATE-50.00 HOURLY-2 HR MIN/CON
 [7]: /api-reference/direct-connects/ground-transportation/post-transportation-search.html
 [8]: /api-reference/direct-connects/ground-transportation/update-reservation-supplier.html
 [9]: /api-reference/direct-connects/ground-transportation/update-reservation-travel.html
+

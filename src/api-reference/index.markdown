@@ -39,3 +39,4 @@ during the certification process:
 * [eReceipt apps (B2C apps)](https://prezi.com/p/ur2i1m8thynz/)
 
 > NOTE: These do not apply to a Triplink app integration.
+

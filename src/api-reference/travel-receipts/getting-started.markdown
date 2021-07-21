@@ -26,7 +26,7 @@ https://us.api.concursolutions.com/travelreceipts/v1/receiptrequests
 https://emea.api.concursolutions.com/travelreceipts/v1/receiptrequests
 ```
 
-## <a name="auth"></a>Authentication
+## Authentication <a name="auth"></a>
 Partners must obtain an [access token from the Authentication API](/api-reference/authentication/getting-started.html).
 
 The partner's `access_token` from the Authentication API response should then be used in the `Authorization` header of the Travel Receipts API calls. 
@@ -46,5 +46,6 @@ HTTPie:
 ```shell
 http -f POST https://us.api.concursolutions.com/oauth2/v0/token client_secret={YOUR SECRET} client_id={YOUR CLIENT ID} grant_type=client_credentials
 ```
+
 
 

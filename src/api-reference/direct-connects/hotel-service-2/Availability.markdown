@@ -56,7 +56,7 @@ Message to retrieved the availability of hotels.
     * [Basic Property Info](#basic-property-info)
 * [Relationship Between RoomID and RatePlanID](#relationship-roomid-rateplanid)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -167,7 +167,7 @@ Message to retrieved the availability of hotels.
 
 ---
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The maximum allowed size of `OTA_HotelAvailRS` is 5 MB. Any response that exceeds this limit shall be dropped.
 
@@ -465,7 +465,8 @@ For a description of the relationship between the `RoomID` and `RatePlanID` refe
 |----------------|-----------|-------------|
 |`HotelCode`|`complex`|**Required** Refer to the `HotelRef` element described in [Search](/api-reference/direct-connects/hotel-service-2/Search.html).|
 
-# <a name="relationship-roomid-rateplanid"></a>Relationship between RoomID and RatePlanID
+## Relationship between RoomID and RatePlanID <a name="relationship-roomid-rateplanid"></a>
+
 
 The combination of these IDs must be unique per `RoomStay`.  IDs with the same values can be redefined in multiple `RoomStays`.
 
@@ -513,3 +514,5 @@ The combination of these IDs must be unique per `RoomStay`.  IDs with the same v
   ...
 </OTA_HotelAvailRS>
 ```
+
+

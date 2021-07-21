@@ -97,7 +97,7 @@ The response will include a CC_LimoCancelReply parent element, with the followin
 |  ProviderFeedback |  N |  Any additional feedback from the supplier. |
 |  AccountingInfo |  N |  The accounting information for the reservation. This parent element contains the following child elements:<br>**AccountingField1** through **AccountingField5**: These fields contain detailed accounting information. |
 
-## <a name="rate-info"></a>Rate Information Elements
+## Rate Information Elements <a name="rate-info"></a>
 
 |Element  |Required?| Description|
 |---|:---:|---|
@@ -118,7 +118,7 @@ The response will include a CC_LimoCancelReply parent element, with the followin
 |OptionalExtraStopCharge| N|  The charge for any additional stops.|
 |OptionalExtraTimeCharge  |N| The charge for each additional hour.|
 
-## <a name="reply-credit-card"></a>Reply Credit Card Elements
+## Reply Credit Card Elements <a name="reply-credit-card"></a>
 
 |Element  |Required?  |Description|
 |----|:----:|----|
@@ -126,7 +126,7 @@ The response will include a CC_LimoCancelReply parent element, with the followin
 |Number |Y  |The card number.|
 |Expiration |Y  |The card expiration date. Format: 2013-02-19|
 
-## <a name="example"></a>Example of Successful Response
+## Example of Successful Response <a name="example"></a>
 ```http
 HTTPS/1.1 200 OK
 Content-Type: application/xml
@@ -276,3 +276,4 @@ Content-Length: {length of content body}
 ```
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
+

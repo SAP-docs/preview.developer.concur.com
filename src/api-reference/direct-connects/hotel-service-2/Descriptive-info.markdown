@@ -31,7 +31,7 @@ Message to retrieve descriptive details about a given hotel. This may include te
     * [Image Item](#image-item)
     * [Image Format](#image-format)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -75,7 +75,7 @@ Message to retrieve descriptive details about a given hotel. This may include te
 |`ChainCode`|`stringLength1to8`|The code that identifies a hotel chain or management group. The hotel chain code is decided between vendors. This attribute is optional if the hotel is an independent property that can be identified by the `HotelCode` attribute.|
 |`HotelCode`|`stringLength1to16`|**Required** The code that uniquely identifies a single hotel property. The hotel code is decided between vendors.|
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The maximum allowed size of `OTA_HotelDescriptiveInfoRS` is 150 KB. Any response that exceeds this limit will be dropped.
 
@@ -195,3 +195,4 @@ The maximum allowed size of `OTA_HotelDescriptiveInfoRS` is 150 KB. Any response
 |Name|Type|Description|
 |---------|-------------------|-------------|
 |`URL`|`string`|**Required** Contains a HTTPS URL pointing to a hotel image. The URLs are used in a client-side gallery widget, which works best with `.png` and `.jpg` files.|
+

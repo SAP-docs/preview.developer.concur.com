@@ -12,7 +12,7 @@ The SAP Concur Allocations API allows for the retrieval of allocation informatio
 ### Version
 3.0
 
-## <a name="get"></a>Retrieve All Allocations Per Entry or Report
+## Retrieve All Allocations Per Entry or Report <a name="get"></a>
 
     GET  /api/v3.0/expense/allocations
 
@@ -110,7 +110,7 @@ https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 [Allocations Schema](#schema)
 
 
-## <a name="getID"></a>Retrieve a Single Allocation by ID
+## Retrieve a Single Allocation by ID <a name="getID"></a>
 
     GET  /api/v3.0/expense/allocations/{id}
 
@@ -124,7 +124,7 @@ https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 
 
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 ### <a name="allocations"></a>Allocations
 
@@ -199,3 +199,4 @@ https://www.concursolutions.com/api/v3.0/expense/allocations/gWmudeHM8AuFlD9Py%2
   "URI": "https://www.concursolutions.com/api/v3.0/expense/allocations/gWmudeHM8AuFlD9Py$p7cwkclNQvGC1JQPyw"
 }
 ```
+

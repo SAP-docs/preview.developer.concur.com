@@ -21,7 +21,7 @@ The configured fields for the specified expense form.
 ## Operations
 [GET](#get)
 
-## <a name="get-list-form-fields"></a>Get a List of Form Fields
+## Get a List of Form Fields <a name="get-list-form-fields"></a>
 Retrieves the details of the configured form fields for the specified form.
 
 **NOTE**: When sending in requests using these fields, be sure to include the required fields from the form and any additional required fields specified in the request documentation.
@@ -162,3 +162,4 @@ Content-Type: application/xml
     </FormField>
 </FormFieldsList>
 ```
+

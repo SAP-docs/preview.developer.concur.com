@@ -11,7 +11,7 @@ layout: reference
     * [Custom Fields for Healthcare Provider Attendees](#custom-fields)
   * [Response Example](#res-example)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### URI
 
@@ -211,3 +211,4 @@ Content-Length: {length of content body}
 
 
 [2]: /api-reference/authentication/apidoc.html
+

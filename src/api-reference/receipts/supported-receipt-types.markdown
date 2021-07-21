@@ -472,3 +472,4 @@ Schema for objects that make up an array of taxes. Used in most receipt types.
 |---|---|---|---|
 |__*addressCountry*__|string|country-code|2 or 3 character country code as defined in ISO 3166-1:2013|
 |addressRegion|string|^[a-zA-Z0-9]{1,3}$|1 to 3 character country subdivision code as defined in ISO 3166-2:2013|
+

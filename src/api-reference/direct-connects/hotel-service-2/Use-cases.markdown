@@ -51,7 +51,7 @@ Basic scenario encompassing all the functionality provided by Hotel Service 2 in
 1. The UI shows the trip cancellation page where confirmation and cancellation numbers can be found.  The Business traveler closes the pop-up.
 
 
-## <a name="search-criteria"></a>Search Criteria
+## Search Criteria <a name="search-criteria"></a>
 
 Given the following example:
 
@@ -60,11 +60,14 @@ Given the following example:
 Out of 100 returned hotels in response from the Hotel Supplier first 10 hotels are Most Preferred hotels within the 30km radius. The next 10 hotels are Preferred hotels from 30km radius. The remaining 80 hotels are hotels with no preference within the 5km radius. Note: The preference level is defined by the HotelPreference element in the TPA_Extensions, which is outlined in Search.
 
 
-## <a name="reservation-read-requests"></a>Reservation and Read Requests
+## Reservation and Read Requests <a name="reservation-read-requests"></a>
 
 SAP Concur will follow up a Reservation Request with a Read request as soon as possible after processing the Reservation Response. If a Read request does not arrive within 5 minutes for a given Reservation, then the supplier should treat that Reservation as an orphan and should thus seek to cancel it.
 
 
-# <a name="general-system-overview"></a>General System Overview
+## General System Overview <a name="general-system-overview"></a>
+
 
 ![./media/image1.png](./images/diagrams/hs2-sequence-diagram.png)
+
+

@@ -5,8 +5,6 @@ redirect_from:
   - /api-reference-deprecated/old-auth/old-auth.html
 ---
 
-# Authentication
-
 {% capture deprecation_content %}
 
 If you are a new partner or an existing one creating a new app, please refer to the [new authentication version documentation](/api-reference/authentication/getting-started.html).
@@ -30,7 +28,7 @@ Please contact your Partner Enablement representative before starting any new de
 	* [AppCenter flow](#app-center)
 	* [Auto-Connect flow](#auto-connect)
 
-## <a name="access-tokens"></a>Access tokens
+## Access tokens <a name="access-tokens"></a>
 An access token is a long-lived token used to make API calls.
 
 ### <a name="verbs-and-uris"></a>Verb and URIs
@@ -158,7 +156,7 @@ None
 	POST https://www.concursolutions.com/net2/oauth2/revoketoken.ashx?consumerKey=eZByXv2X41cJlC21pSVvRi&user=Maria
 	Authorization: OAuth fdjhk2382kwkajsklwe8i3932kslswl
 
-## <a name="choosing-authorization-flow"></a>Choosing an authorization flow
+## Choosing an authorization flow <a name="choosing-authorization-flow"></a>
 Use this table to decide which OAuth 2.0 authorization flow to use for the application:
 
 If you need to... | Use this flow
@@ -276,3 +274,4 @@ The Auto-Connect flow is an authorization to support Connection Requests API cal
 	`PUT /common/connectionrequests/{id}`
 
 1. If you encounter an error that makes it impossible to complete the connection process, revoke the access token so the user knows that the connection attempt failed and they can try again at a later time.
+

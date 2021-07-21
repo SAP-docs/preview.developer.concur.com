@@ -20,7 +20,7 @@ layout: reference
 
 1.1 documentation is available [here](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)  
 
-## <a name="get"></a>Retrieve all expense itemizations owned by the user
+## Retrieve all expense itemizations owned by the user <a name="get"></a>
 
 **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
 
@@ -127,7 +127,7 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations?limit=10&user=ALL
 }
 ```
 
-## <a name="getID"></a>Retrieve an expense itemization by ID
+## Retrieve an expense itemization by ID <a name="getID"></a>
 
     GET  /api/v3.0/expense/itemizations/{id}
 
@@ -225,7 +225,7 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations/gWidFO7ikXV6%24pcZ
 ```
 
 
-## <a name="post"></a>Create a new expense itemization
+## Create a new expense itemization <a name="post"></a>
 
     POST  /api/v3.0/expense/itemizations
 
@@ -253,7 +253,7 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations
 ```
 
 
-## <a name="put"></a>Update an expense itemization
+## Update an expense itemization <a name="put"></a>
 
 **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
 
@@ -279,7 +279,7 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations/gWidFO7ikXV6%24pcZ
 no content
 ```
 
-## <a name="delete"></a>Delete an expense itemization
+## Delete an expense itemization <a name="delete"></a>
 
 **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
 
@@ -307,7 +307,7 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations/gWidFO7ikXV6%24pcZ
 no content
 ```
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 
 ### <a name="itemizations"></a>Itemizations
@@ -358,3 +358,4 @@ Name | Type | Format | Description
 `ListItemID`	|	`string`	|	-	|	For list fields, this is the list item ID.
 `Type`	|	`string`	|	-	|	The custom field type. Possible values: Amount, Boolean, ConnectedList, Date, Integer, List, Number, Text
 `Value`	|	`string`	|	-	|	The value in the Org Unit or Custom field. For list fields, this is the name of the list item. Maximum length: 48 characters
+

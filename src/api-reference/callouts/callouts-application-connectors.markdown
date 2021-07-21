@@ -150,3 +150,4 @@ Application connector registrations can't be removed, but can be deactivated. Co
 5. Clear the **Active** check box.
 6. Click **OK**.
 7. Click **Save**.
+

@@ -1,3 +1,9 @@
+/*
+** Copy api-explorer content to the staging area used by slate.
+** The file is also renamed (adding the required underscore at the start of the file).
+** For each processed directory, the first file is also modified to include a Version
+** header, for the table of contents to function correctly
+*/
 const fs = require('fs');
 const path = require('path');
 

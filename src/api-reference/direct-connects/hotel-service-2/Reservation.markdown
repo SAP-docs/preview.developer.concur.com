@@ -58,7 +58,7 @@ Message to reserve a hotel.
     * [Rates](#rates)
     * [Rate](#rate)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -390,7 +390,7 @@ Message to reserve a hotel.
 
 ---
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceeds this limit shall be dropped.
 
@@ -575,3 +575,4 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
 |Name|Type|Description|
 |------------------------|--------------------|-------------|
 |`Total`|`complex`|**Required** A description of the rate. Refer to `Total` in [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html#total).|
+

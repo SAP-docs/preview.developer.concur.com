@@ -845,3 +845,4 @@ WIth Availability response also cancellation information comes which can be disp
 
 ![./media/image1.png](./images/examples/15.png)
 ![./media/image1.png](./images/examples/16.png)
+

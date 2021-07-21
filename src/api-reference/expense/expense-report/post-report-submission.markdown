@@ -13,7 +13,7 @@ Triggers the Submit workflow action for the specified report.
     * [Report Exception Schema](#report-exception)
 * [Examples](#examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 
@@ -36,7 +36,7 @@ application/xml
 **X_UserID**: This request requires an additional field in the authorization header, identifying the report owner. This identifier is the SAP Concur login for the user, and is often also the email address of the user. The field format is:  
 X_UserID: expenseuser@example.com
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 ### <a name="schema"></a>Schema
 This request will return a **ReportStatus** parent element with the following child elements.
@@ -67,7 +67,7 @@ If the report submission triggered an exception, a **ReportExceptions** parent e
 |  TransactionDate |  The date of the entry. |
 |  Type |  The exception type. |
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 ### XML Example Request
 
@@ -91,3 +91,4 @@ X-UserID: cmiller@example.com
 [3]: /api-reference/expense/expense-report/v1dot1.reports.html#getID
 [4]: /api-reference/expense/expense-report/v1dot1.reports.html#post
 [6]: https://developer.concur.com/reference/http-codes
+

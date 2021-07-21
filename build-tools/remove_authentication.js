@@ -1,3 +1,6 @@
+/*
+** Modify source swagger json to remove any authentication details.
+*/
 const fs = require('fs');
 const path = require('path');
 

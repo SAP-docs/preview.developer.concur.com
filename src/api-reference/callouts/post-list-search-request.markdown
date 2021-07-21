@@ -10,7 +10,7 @@ layout: reference
   * [Response Schema](#res-schema)
   * [Response Examples](#res-examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Supported Accept Types
 application/xml
@@ -102,7 +102,7 @@ Content-Length: {length of content body}
  </fetch-list-request>
 ```
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 ### Supported Content Types
 
@@ -161,3 +161,4 @@ Content-Type: application/xml
 ```
 
 [1]: /api-reference/authentication/apidoc.html
+

@@ -30,7 +30,7 @@ This callout differs from the standard SAP Concur web services in the following 
 * [Concur Expense Configuration](#concur-expense-config)
 * [Responses and Errors](#responses-errors)
 
-## <a name="process-flow"></a>Process Flow
+## Process Flow <a name="process-flow"></a>
 
 ![Process Flow for Launch External Service](./launch-external-url.png)
 
@@ -108,3 +108,4 @@ Refer to the [HTTP Codes](/api-reference/http-status-codes.html) page for detail
 
 
 [4]: /api-reference/callouts/launch-external-url-request.html
+
