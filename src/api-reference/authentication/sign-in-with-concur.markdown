@@ -5,8 +5,6 @@ layout: reference
 
 {% include prerelease.html %}
 
-# Sign in with Concur
-
 * [Introduction](#introduction)
 * [Benefits](#benefits)
 * [Use Cases](#use_cases)

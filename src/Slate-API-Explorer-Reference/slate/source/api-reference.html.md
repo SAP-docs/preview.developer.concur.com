@@ -2,6 +2,7 @@
 title: API Reference
 
 includes:
+  - authentication/SectionHeader.md
   - authentication/apidoc.markdown
   - authentication/app-center-learn-more.md
   - authentication/authorization-pre-2017.markdown
@@ -12,12 +13,14 @@ includes:
   - authentication/oauth2-migration-best-practices.markdown
   - authentication/scopes.markdown
   - authentication/sign-in-with-concur.markdown
+  - budget/SectionHeader.md
   - budget/getting-started.md
   - budget/v4.budget-adjustments.md
   - budget/v4.budget-category.md
   - budget/v4.budget-header.md
   - budget/v4.budget-trackingfield.md
   - budget/v4.fiscal-year.md
+  - callouts/SectionHeader.md
   - callouts/callouts-application-connectors.markdown
   - callouts/delete-notification.markdown
   - callouts/event-notification.markdown
@@ -34,20 +37,119 @@ includes:
   - callouts/request-validation.markdown
   - callouts/v4.launch-external-url-request.markdown
   - callouts/v4.launch-external-url.markdown
+  - cash-advance/SectionHeader.md
   - cash-advance/CashAdvance.markdown
   - cash-advance/v4.cash-advance.md
+  - common/SectionHeader.md
+  - common/connection-requests/connection-requests-resource.markdown
+  - common/ess/getting-started.markdown
+  - common/ess/subscription-management.markdown
+  - common/event-pubsub/getting-started.markdown
+  - common/event-pubsub/travel-search-event.markdown
+  - common/extracts/v1.extracts.markdown
+  - common/list-item/custom-list-items.markdown
+  - common/list-item/v1.list-item.markdown
+  - common/list-item/v1.list-resource-get.markdown
+  - common/list-item/v1.list-resource-post.markdown
+  - common/list-item/v1.list-resource.markdown
+  - common/list-item/v3.list-item.markdown
+  - common/list-item/v4.list-item.markdown
+  - common/lists/v3.lists.markdown
+  - common/lists/v4.list.markdown
+  - common/locations/v1dot1.locations.markdown
+  - common/locations/v3.locations.markdown
+  - common/suppliers/suppliers-resource.markdown
+  - detokenizer/SectionHeader.md
   - detokenizer/v4.detokenizer.md
+  - direct-connects/ground-transportation/SectionHeader.md
   - direct-connects/ground-transportation.markdown
+  - direct-connects/ground-transportation/cancel-reservation.markdown
+  - direct-connects/ground-transportation/post-reservation-detail-search.markdown
+  - direct-connects/ground-transportation/post-reservation-sell.markdown
+  - direct-connects/ground-transportation/post-transportation-search.html.md
+  - direct-connects/ground-transportation/post-transportation-search.markdown
+  - direct-connects/ground-transportation/update-reservation-supplier.markdown
+  - direct-connects/ground-transportation/update-reservation-travel.markdown
+  - direct-connects/hotel-service-2/SectionHeader.md
+  - direct-connects/hotel-service-2/Appendix.markdown
+  - direct-connects/hotel-service-2/Availability.markdown
+  - direct-connects/hotel-service-2/Cancel.markdown
+  - direct-connects/hotel-service-2/Descriptive-info.markdown
+  - direct-connects/hotel-service-2/Error-handling.markdown
+  - direct-connects/hotel-service-2/Headers.markdown
+  - direct-connects/hotel-service-2/Introduction.markdown
+  - direct-connects/hotel-service-2/Rate-details.markdown
+  - direct-connects/hotel-service-2/Read-Itinerary.markdown
+  - direct-connects/hotel-service-2/Reservation.markdown
+  - direct-connects/hotel-service-2/Search.markdown
+  - direct-connects/hotel-service-2/Update-History.markdown
+  - direct-connects/hotel-service-2/Use-cases.markdown
+  - direct-connects/hotel-service-2/V-payment.markdown
+  - direct-connects/hotel-service-2/xsd-schema.markdown
+  - direct-connects/hotel/SectionHeader.md
   - direct-connects/hotel.markdown
+  - direct-connects/hotel/hotel-direct-connect-codes.markdown
+  - direct-connects/hotel/post-availability-search.markdown
+  - direct-connects/hotel/post-booking-rule-search.markdown
+  - direct-connects/hotel/post-hotel-search.markdown
+  - direct-connects/hotel/post-new-reservation.markdown
+  - direct-connects/hotel/post-reservation-cancellation.markdown
+  - direct-connects/hotel/post-reservation-query.markdown
+  - direct-connects/hotel/post-reservation-update.markdown
+  - ess/SectionHeader.md
   - ess/v4.event-subscription.markdown
+  - expense/SectionHeader.md
+  - expense/allocations/expense-allocations.markdown
+  - expense/attendee-types/v1.attendee-types.markdown
+  - expense/attendee-types/v3.attendee-types.markdown
+  - expense/attendees/v1.attendees.markdown
+  - expense/attendees/v1dot1.attendees.markdown
+  - expense/attendees/v2.attendees.markdown
+  - expense/attendees/v3.attendees.markdown
+  - expense/digital-tax-invoices/digital-tax-invoice.markdown
+  - expense/exchange-rate/v4.admin-config.md
+  - expense/exchange-rate/v4.exchange-rate.md
+  - expense/expense-report/company-card-transaction-resource.markdown
+  - expense/expense-report/expense-delegators.markdown
+  - expense/expense-report/expense-entry.markdown
+  - expense/expense-report/expense-form-field.markdown
+  - expense/expense-report/expense-form.markdown
+  - expense/expense-report/expense-group-configurations.markdown
+  - expense/expense-report/expense-itemization.markdown
+  - expense/expense-report/expense-report-get.markdown
+  - expense/expense-report/integration-status.markdown
+  - expense/expense-report/post-report-exceptions.markdown
+  - expense/expense-report/post-report-submission.markdown
+  - expense/expense-report/post-report-workflow-action.markdown
+  - expense/expense-report/v1dot1.expense-entry.markdown
+  - expense/expense-report/v1dot1.expense-group-configurations.markdown
+  - expense/expense-report/v1dot1.expense-itemization.markdown
+  - expense/expense-report/v1dot1.report-full-details.markdown
+  - expense/expense-report/v1dot1.reports-list.markdown
+  - expense/expense-report/v1dot1.reports.markdown
+  - expense/expense-report/v2.expense-entry-attendee.markdown
+  - expense/expense-report/v2.reports.markdown
+  - expense/expense-report/v3.expense-entry-attendee.markdown
+  - expense/expense-report/v3.reports.markdown
+  - expense/expense-report/v4.allocations.markdown
+  - expense/expense-report/v4.comments.markdown
+  - expense/expense-report/v4.expenses.markdown
+  - expense/expense-report/v4.reports.markdown
+  - expense/expense-report/v4.workflows.markdown
+  - expense/payment-batch/v1.payment-batches.markdown
+  - expense/quick-expense/v4.quick-expense.md
+  - expense/travelallowance/v4.travel-allowance-days-endpoints.md
   - financial-integration/v4.financial-documents-schema.markdown
   - financial-integration/v4.financial-integration-service-use-cases.markdown
   - financial-integration/v4.financial-integration-use-cases-extract-information.markdown
   - financial-integration/v4.financial-integration.markdown
+  - image/SectionHeader.md
   - image/v1.image.markdown
   - image/v3.image.markdown
+  - insights/SectionHeader.md
   - insights/latest-bookings-resource.markdown
   - insights/opportunities-resource.markdown
+  - invoice/SectionHeader.md
   - invoice/v3.payment-request-digest.markdown
   - invoice/v3.payment-request.markdown
   - invoice/v3.purchase-order-receipt.markdown
@@ -57,21 +159,27 @@ includes:
   - invoice/v4.invoice-pay.markdown
   - invoice/v4.purchase-request-endpoints.markdown
   - invoice/v4.purchase-request-get-started.markdown
+  - locate/SectionHeader.md
   - locate/v1.userLocations.markdown
   - locate/v4.userLocations.markdown
+  - notifications/SectionHeader.md
   - notifications/v4.notifications.markdown
+  - profile/SectionHeader.md
   - profile/v1.company.md
   - profile/v1.getting-started.md
   - profile/v1.user.md
   - profile/v4.identity.md
   - profile/v4.scope-mapping.md
+  - realtime-location-ingest/SectionHeader.md
   - realtime-location-ingest/realtimeingestAPI.md
+  - receipts/SectionHeader.md
   - receipts/endpoints.markdown
   - receipts/get-started.markdown
   - receipts/response-codes.markdown
   - receipts/sample-receipts.markdown
   - receipts/supported-receipt-types.markdown
   - receipts/v3.receipts.markdown
+  - request/SectionHeader.md
   - request/v1.request.markdown
   - request/v3.request.markdown
   - request/v4.endpoints.agency proposal-resources_EA version.markdown
@@ -84,6 +192,7 @@ includes:
   - request/v4.endpoints.workflow-resources.markdown
   - request/v4.get-started.markdown
   - request/v4.response-codes.markdown
+  - travel-profile/SectionHeader.md
   - travel-profile/v1.loyalty-program-resource.markdown
   - travel-profile/v1.notification-company-resource.markdown
   - travel-profile/v1.notification-user-resource.markdown
@@ -91,12 +200,28 @@ includes:
   - travel-profile/v2.profile-resource.markdown
   - travel-profile/v2.profile-service.markdown
   - travel-profile/v2.reference-resource.markdown
+  - travel-receipts/SectionHeader.md
   - travel-receipts/getting-started.markdown
   - travel-receipts/sample.markdown
   - travel-receipts/v4.travel-receipts.markdown
+  - travel/SectionHeader.md
   - travel/travel.markdown
+  - travel/itinerary-tmc-thirdparty/index.markdown
+  - travel/itinerary-v4/v4.itinerary.md
+  - travel/itinerary/booking.markdown
+  - travel/itinerary/itinerary.markdown
+  - travel/itinerary/booking/booking-resource.markdown
+  - travel/itinerary/trip/trip-resource.markdown
+  - travel/trip-approval/v1.trip-approval-resource.markdown
+  - user-provisioning/SectionHeader.md
   - user-provisioning/v4.user-provisioning.md
   - user-provisioning/v4.user-provisioning_release_notes.md
+  - user-provisioning/spend/spend-role-code-definition.md
+  - user-provisioning/spend/v4.spend-user-get-started.md
+  - user-provisioning/spend/v4.spend-user-provisioning.md
+  - user-provisioning/spend/v4.spend-user-retrieval.md
+  - user-provisioning/travel/v4.travel-extension.md
+  - user/SectionHeader.md
   - user/index.markdown
   
 toc_footers:
@@ -110,6 +235,3 @@ code_clipboard: true
 ---
 
 # API REFERENCE
-# Authentication Docs
-
-
