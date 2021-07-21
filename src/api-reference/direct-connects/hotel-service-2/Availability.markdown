@@ -465,7 +465,8 @@ For a description of the relationship between the `RoomID` and `RatePlanID` refe
 |----------------|-----------|-------------|
 |`HotelCode`|`complex`|**Required** Refer to the `HotelRef` element described in [Search](/api-reference/direct-connects/hotel-service-2/Search.html).|
 
-# <a name="relationship-roomid-rateplanid"></a>Relationship between RoomID and RatePlanID
+## Relationship between RoomID and RatePlanID <a name="relationship-roomid-rateplanid"></a>
+
 
 The combination of these IDs must be unique per `RoomStay`.  IDs with the same values can be redefined in multiple `RoomStays`.
 
@@ -513,4 +514,5 @@ The combination of these IDs must be unique per `RoomStay`.  IDs with the same v
   ...
 </OTA_HotelAvailRS>
 ```
+
 

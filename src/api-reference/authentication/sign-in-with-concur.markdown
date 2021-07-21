@@ -62,7 +62,8 @@ _Back office applications_
 
 - Simplify log in and support for users that log in infrequently by leveraging the SAP Concur authentication.
 
-# <a name="how_it_works"></a>How it Works
+## How it Works <a name="how_it_works"></a>
+
 
 
 _Select_ **Sign in with Concur** _from the site login menu_
@@ -113,7 +114,8 @@ _For both authentication flows, once authorized, the account is provisioned and 
 
  ![sign in complete](sign-in-with-concur-images/sign-in-with-concur-complete.png)
 
-# <a name="getting_started"></a>Getting Started
+## Getting Started <a name="getting_started"></a>
+
 
 **1. Obtain your Application clientID and clientSecret**
 
@@ -230,7 +232,8 @@ Once the user is logged in, your application must determine whether an existing 
 
 In all cases, the user's token, geolocation and user UUID should be stored.  As applications vary in the information required to create a new user record and utilize the service, your application should leverage data from the user profile endpoint where possible.
 
-# <a name="account_maintenance"></a>Account Maintenance
+## Account Maintenance <a name="account_maintenance"></a>
+
 
 Once the account is provisioned or matched, the application must:
 
@@ -238,7 +241,8 @@ Once the account is provisioned or matched, the application must:
 - Maintain the user's session.  Once the session is established, your application's typical session maintenance should be observed. This includes idle timeout and session refresh, where applicable. The issued token will have a predetermined expiration. To maintain the connection, please see the  [token refresh documentation](/api-reference/authentication/apidoc.html#refresh_token).
 
 
-# <a name="error_handling"></a>Error Handling
+## Error Handling <a name="error_handling"></a>
+
 
 In all cases, the error description provided by Concur should be displayed to the user.
 
@@ -277,7 +281,8 @@ Your_Redirect_Uri?
 
 In this case, the user will not be able to access your application using Sign in with Concur. The error description should be displayed to the user and the user given alternate sign in methods (e.g. create an account).
 
-# <a name="advanced"></a>Advanced
+## Advanced <a name="advanced"></a>
+
 
 This section covers guidelines for specific Sign in with Concur implementations.
 
@@ -372,4 +377,5 @@ The following language codes are supported in by Sign in with Concur.
 | **Code** | **Name** |
 | --- | --- |
 | en | English (US) |
+
 

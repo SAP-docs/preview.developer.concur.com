@@ -65,7 +65,9 @@ Out of 100 returned hotels in response from the Hotel Supplier first 10 hotels a
 SAP Concur will follow up a Reservation Request with a Read request as soon as possible after processing the Reservation Response. If a Read request does not arrive within 5 minutes for a given Reservation, then the supplier should treat that Reservation as an orphan and should thus seek to cancel it.
 
 
-# <a name="general-system-overview"></a>General System Overview
+## General System Overview <a name="general-system-overview"></a>
+
 
 ![./media/image1.png](./images/diagrams/hs2-sequence-diagram.png)
+
 

@@ -12,7 +12,8 @@ SAP Concur will send the user-name and password in both the HTTP header and the 
   * [Request Message Headers](#request-message)
   * [Response Message Headers](#response-message)
 
-# <a name="http"></a>HTTP Headers
+## HTTP Headers <a name="http"></a>
+
 
 SAP Concur will send the following HTTP headers in every request.  The contents of the Authentication header will be repeated in the SOAP payload. Please note that some libraries used to handle the requests may be case sensitive.
 
@@ -56,7 +57,8 @@ SOAPAction: search
 Accept-Encoding: gzip
 ```
 
-# <a name="soap"></a>Soap Header
+## Soap Header <a name="soap"></a>
+
 
 The Soap header nested in the Envelope will contain an authentication element.
 
@@ -79,7 +81,8 @@ Sample:
 ```
 Login and password are provided by the Hotel supplier for SAP Concur as API consumer, not per customer.
 
-# <a name="ota-message"></a>OTA Message Headers
+## OTA Message Headers <a name="ota-message"></a>
+
 
 Every message must contain the following required attributes and elements.  On top of these each message may specify extra attributes and elements. Refer to a specific messages' page for details.
 
@@ -129,4 +132,5 @@ The supplier is required to respond with the following attributes and elements i
 |`PrimaryLangID`|`string`|**Required** The primary language preference for the message encoded as ISO 639-1.|
 |`AltLangID`|`string`|**Required** The alternate language for a customer or message encoded as ISO 639-1.|
 |`Success / Error`|`complex`|**Required** Indicates Success Or Error.  Refer to the [Error Handling](/api-reference/direct-connects/hotel-service-2/Error-handling.html) page for more details.|
+
 
