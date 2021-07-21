@@ -19,7 +19,7 @@ redirect_from:
 * [Reservation Status Types](#method7)
 * [Preference Levels](#method8)
 
-## <a name="method1"></a>OTA Error Codes
+## OTA Error Codes <a name="method1"></a>
 
 Code|Description
 ---|---
@@ -308,7 +308,7 @@ Code|Description
 864|Special rate is required/missing
 
 
-## <a name="method2"></a>FOP Codes
+## FOP Codes <a name="method2"></a>
 
 Code|Description
 ---|---
@@ -336,7 +336,7 @@ DB|Debit
 PP|This code indicates that the payment is through a deposit account/prepaid account/agency invoice. Only available if the Deposit Account ID field is filled out for the travel configuration.
 
 
-## <a name="method3"></a>Hotel Chain Codes
+## Hotel Chain Codes <a name="method3"></a>
 
 Code|Description
 ---|---
@@ -353,7 +353,7 @@ WY|Wyndham Hotels
 ZZ|Other/Unknown
 
 
-## <a name="method4"></a>AQC Codes
+## AQC Codes <a name="method4"></a>
 
 Code|Description
 ---|---
@@ -377,7 +377,7 @@ Code|Description
 18|Under 10
 19|Junior
 
-## <a name="method5"></a>Supported Languages
+## Supported Languages <a name="method5"></a>
 
 Code|Description
 ---|---
@@ -404,7 +404,7 @@ no|Norwegian
 sk|Slovak
 tr|Turkish
 
-## <a name="method6"></a>ID Type Codes
+## ID Type Codes <a name="method6"></a>
 
 Code|Description
 ---|---
@@ -438,7 +438,7 @@ Code|Description
 39|Contract
 40|Confirmation number
 
-## <a name="method7"></a>Reservation Status Types
+## Reservation Status Types <a name="method7"></a>
 
 |Code|
 |--|
@@ -451,7 +451,7 @@ Code|Description
 |Unsuccessful|
 |PendingCancellation|
 
-## <a name="method8"></a>Preference Levels
+## Preference Levels <a name="method8"></a>
 
 Value|Text Value|Description
 ---|---
@@ -461,3 +461,4 @@ Value|Text Value|Description
 4|less_preferred|-
 5|preferred|-
 10|most_preferred|Three golden diamonds
+

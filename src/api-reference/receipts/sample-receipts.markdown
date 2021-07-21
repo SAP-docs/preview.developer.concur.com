@@ -1182,3 +1182,4 @@ Below we have sample receipt data and the corresponding receipt images for the f
 #### Generated Receipt Image
 
 ![Rail Receipt Image](/api-reference/receipts/rail-multiple-tickets.png)
+

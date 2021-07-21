@@ -24,7 +24,7 @@ NOTE: The Concur Expense product is highly configurable, and each client may hav
 
 1.1 documentation is available [here](./v1dot1.expense-group-configurations.html)
 
-## <a name="get"></a>Retrieve a configuration of an expense group
+## Retrieve a configuration of an expense group <a name="get"></a>
 
     GET  /api/v3.0/expense/expensegroupconfigurations
 
@@ -92,7 +92,7 @@ https://www.concursolutions.com/api/v3.0/expense/expensegroupconfigurations?user
 }
 ```
 
-## <a name="getID"></a>Retrieve an expense group configuration by ID
+## Retrieve an expense group configuration by ID <a name="getID"></a>
 
     GET  /api/v3.0/expense/expensegroupconfigurations/{id}
 
@@ -106,7 +106,7 @@ Name | Type | Format | Description
 
 
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 
 ### <a name="ExpenseGroupConfigurations"></a>Expense Group Configurations
@@ -1239,3 +1239,4 @@ https://www.concursolutions.com/api/v3.0/expense/expensegroupconfigurations/gWv5
   "URI": "https://www.concursolutions.com/api/v3.0/expense/expensegroupconfigurations/gWv5bj$sPY1weV9audTTRp7PkBlea3Y6aizg"
 }
 ```
+

@@ -32,7 +32,7 @@ This request is sent when the Travel user updates an existing ground transportat
     * [Reply Credit Card](#reply-credit-card)
 * [Examples](#examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### URI
 
@@ -197,7 +197,7 @@ The request will contain a **CC_LimoUpdateRequest** parent element, containing t
 | Country | The country of the billing address of the car. |
 | PostalCode | The postal code of the billing address of the car. |
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The supplier responds to the update request with the reservation details.
 
@@ -340,7 +340,7 @@ The response will include a **CC_LimoUpdateReply** parent element, with the foll
 | Number | The card number. |
 | Expiration | The card expiration date. Format: 2013-02-19 |
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 ### XML Example Request
 
@@ -617,3 +617,4 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
+

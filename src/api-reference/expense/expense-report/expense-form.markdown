@@ -25,7 +25,7 @@ The configured expense forms in SAP Concur. Clients can have multiple forms conf
 ### Operations
 [GET](#get)
 
-## <a name="get-form-types"></a>Get Form Types
+## Get Form Types <a name="get-form-types"></a>
 
 Retrieves the list of configured form types.
 
@@ -112,7 +112,7 @@ Content-Type: application/xml
 </FormTypesList>
 ```
 
-## <a name="get-form-data"></a>Get Form Data
+## Get Form Data <a name="get-form-data"></a>
 
 Retrieves the list of configured forms for the specified form type.
 
@@ -179,3 +179,4 @@ Content-Type: application/xml
     </FormData>
 </FormDataList>
 ```
+

@@ -18,13 +18,13 @@ layout: reference
 
 The Event Subscription Service (ESS) implements Publish/Subscribe pattern using principles of Event Driven Architecture in SAP Concur. It allows clients and partners to be notified through web services when certain actions take place in connected SAP Concur companies. When the business/system event occurs in SAP Concur, ESS sends that event to the configured endpoint with relevant information.
 
-## <a name="ess-terminology"></a>ESS Terminology
+## ESS Terminology <a name="ess-terminology"></a>
 * Event - a state of business/system object or entity. Always has EventType that represents a type of entity change or specific state in a workflow. Example: Report Created, Report Submitted, etc
 * Topic - a stream of events of business/system object or entity. Example: Concur.user, Concur.expense.report, Concur.travel.request. There is always a topic owner in Concur, it can be team, product or system.
 * Subscription - a topic consumer. Each subscription has a topic it is subscribed to.  
 * Webhook - an ESS application that uses subscription and delivers events to the endpoint.
 
-## <a name="ess-delivery"></a>ESS Delivery model
+## ESS Delivery model <a name="ess-delivery"></a>
 
 It is important to remember that ESS doesn't have any API that you can call for SAP Concur events, ESS delivers events to your endpoint.
 
@@ -33,7 +33,7 @@ It is important to remember that ESS doesn't have any API that you can call for 
 * The application endpoint can also use the related web services to retrieve or send SAP Concur data. For example, an event may be generated when a request for travel is submitted. The application endpoint may then leverage data from the event, such as the request ID, to retrieve the relevant travel request record from the published Request APIs.
 
 
-## <a name="access-control"></a>Access control
+## Access control <a name="access-control"></a>
 
 ESS is requiring a caller to have a proper JWT and scopes, for more details please refer <a href="https://developer.concur.com/api-reference/authentication/scopes.html">our wiki</a>
 A caller must have types of scopes
@@ -45,13 +45,13 @@ A caller must have types of scopes
 All required scopes can be requested for a caller Application by Partner Enablement team.
 
 
-## <a name="subscribing"></a>Subscribing your endpoint
+## Subscribing your endpoint <a name="subscribing"></a>
 
 In order to begin receiving events, you must first subscribe to the relevant topic(s) for your application.
 
 To subscribe to an event, you must work with your relevant SAP Concur technical contact; for partners, please work with your technical enablement contact. For customers, your web services consultant will subscribe on your behalf to the relevant topic(s).
 
-## <a name="endpoint-requirements"></a>Endpoint Requirements
+## Endpoint Requirements <a name="endpoint-requirements"></a>
 
 The Event Subscription Service provides guaranteed at least once event delivery.  This is accomplished through retrying posting of the event payload to the subscribers' endpoint until the response indicates successful receipt.  The expected acknowledgment max for a request to the subscribers' endpoint is 30 seconds.  The service will attempt posting to the endpoint and then back-off and retry until the subscriber endpoint responds with delivered or not accepted, the service will retry at least 3 days and skip to the next event after unsuccessful delivery.  SAP Concur suggests the subscriber to consider following:
 * Endpoint response time requirements depend on the topic throughput. Please contact topic owner to calculate acceptable throughput, generally we recommend to keep response time as low   as possible (< 3 seconds)
@@ -97,3 +97,4 @@ The Event Subscription service has the following characteristics from the subscr
 * Request will be retried until delivery OR event retention period expiry
 * Event retention period is 72 hours from the time of event being published
 * Events are not archived, but all of the event delivery attempts/responses are logged and retained for 30 days
+

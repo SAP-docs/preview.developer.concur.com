@@ -11,7 +11,7 @@ Posts an exception to the report, and associates it with one of the following da
   * [Response Schema](#res-schema)
 * [Examples](#examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 
@@ -64,7 +64,7 @@ exceptions-failed | The number of exceptions processed that were not successfull
 errors | This will contain an **error** parent element for each record failure. The **error** element will contain the following child elements:<br/>&nbsp;&nbsp;&nbsp;Index: The exception's location in the batch.<br/>&nbsp;&nbsp;&nbsp;message: The error message.
 ExceptionDetails |This parent element will contain an **ExceptionInfo** parent element for all exceptions that did not cause an error, and will contain the following child elements:<br/>&nbsp;&nbsp;&nbsp;Index: The exception's location in the batch.<br/>&nbsp;&nbsp;&nbsp;Status: The status of the request.
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 ###  XML Example Request
 
@@ -114,3 +114,4 @@ Content-Type: application/xml
 
 [1]: /api-reference/expense/expense-report/v3.reports.html#getID
 [2]: https://developer.concur.com/reference/http-codes
+

@@ -56,3 +56,4 @@ Returns detailed information about a hotel reservation. Used in a process of boo
 ## Response
 
 The response to the Read Itinerary message is the same the response to the Reservation Request, which can be found under Reservation.
+

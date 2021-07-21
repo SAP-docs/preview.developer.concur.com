@@ -94,3 +94,4 @@ SAP Concur expects the following errors under the given error types:
 |748|Invalid corporate ID|Requestor ID should be provided in the content of the element.|
 |400|Invalid property code|List of comma separated hotel codes should be provided in content of the element. Example: ```<Error Code="322" ShortText="No availability" Type="13">HTL4444,HTL5555</Error>```|
 |385|Invalid confirmation or cancellation number|Reservation ID should be provided in content of the element.|
+

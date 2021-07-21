@@ -20,7 +20,7 @@ An expense entry in an expense report.
 https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}/entry/{entryId}
 ```
 
-## <a id="listoflists" name="listoflists"></a>Get Expense Entry Details Request
+## Get Expense Entry Details Request <a id="listoflists" name="listoflists"></a>
 
 Retrieves the details for the specified expense entry
 
@@ -300,3 +300,4 @@ Content-Type: application/xml
   </ReportEntryStatus>
 </ReportEntryStatusList>
 ```
+

@@ -57,7 +57,7 @@ Message to retrieve the details of a hotel rate.
     * [Timespan](#timespan)
     * [Basic Property Info](#basic-property-info)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -182,7 +182,7 @@ Message to retrieve the details of a hotel rate.
 
 ---
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The maximum allowed size of `OTA_HotelAvailRS` is 5 MB. Any response that exceeds this limit shall be dropped.
 
@@ -494,3 +494,4 @@ For a description of the relationship between the `RoomID` and `RatePlanID` refe
 |`HotelCode`|`complex`|**Required** Refer to the `HotelRef` element described in [Search](/api-reference/direct-connects/hotel-service-2/Search.html).|
 |`Address`|`complex`|Refer to [Search](/api-reference/direct-connects/hotel-service-2/Search.html).|
 |`ContactNumbers`|`complex`|Refer to [Search](/api-reference/direct-connects/hotel-service-2/Search.html).|
+

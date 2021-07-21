@@ -682,3 +682,4 @@ http https://us.api.concursolutions.com/receipts/v4/image-only-receipts/{RECEIPT
 ```
 
 [Back to Top](#endpoints)
+

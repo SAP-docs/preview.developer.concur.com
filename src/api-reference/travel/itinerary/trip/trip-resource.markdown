@@ -32,7 +32,7 @@ In order to obtain itinerary data when making Itinerary API calls, the value of 
 * [Cancel a trip](#delete)
   * [Schema](#delete-schema)
 
-## <a name="getts"></a>Get Trip Summaries
+## Get Trip Summaries <a name="getts"></a>
 
 The Get Itinerary Summaries endpoint is used for retrieving trip summaries for the traveler whose account is associated with the OAuth access token used to make the API call. This endpoint can also be used to get trip summaries for a different user or the whole company. This is usually done when a Travel Management Company (TMC) needs to get trip summaries on behalf of a user or company.
 
@@ -323,7 +323,7 @@ Content-Type: application/xml
 </ConnectResponse>
 ```
 
-## <a name="gettd"></a>Get Trip Details
+## Get Trip Details <a name="gettd"></a>
 
 The Get Itinerary Details endpoint is used for getting details for the specified trip. The elements included in the response vary as follows:
 
@@ -368,7 +368,7 @@ Where `access_token` is the OAuth 2.0 access token of the user whose itinerary i
 
 application/xml
 
-## <a name="gettd-schema"></a>Get Trip Details Response Schema
+## Get Trip Details Response Schema <a name="gettd-schema"></a>
 The response returns subset of the elements described in the following tables depending on the parameters used in the request and the status and details for the itinerary. The response can be formatted for TripIt, using the `systemformat` query string.
 
 ### Parent Elements
@@ -663,7 +663,7 @@ Authorization: OAuth {access token}
 </Response>  
 ```
 
-## <a name="postnt"></a>Create a New Trip
+## Create a New Trip <a name="postnt"></a>
 
 This endpoint is used for creating a new trip. To create a new trip, the specified dates in the content body can only span the trip to be created and cannot span an existing trip. To create or update a trip on behalf of a user, the OAuth access token used to make the API call should be associated with the SAP Concur account of that user. The TripLink supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
@@ -726,7 +726,7 @@ Where `access_token` is the OAuth 2.0 access token of the user whose trip you wa
 | `Warning` | optional | - | - | The warnings associated with the booking.
 | `WebAddresses` |optional | - | - | List of web addresses such as emails, pick-up URLs, and so on associated with this booking.
 
-## <a name="postnt-response-schema"></a>Create New Trip Response Schema
+## Create New Trip Response Schema <a name="postnt-response-schema"></a>
 
 The response returns an HTTP status code and if the trip is created successfully, it also returns the full posted trip details with the following additional elements inside the `Itinerary` parent element:
 
@@ -1288,13 +1288,13 @@ Content-Type: application/xml
 #### Response
 The response is the same as in Example 1.
 
-## <a name="postut"></a>Update a Trip
+## Update a Trip <a name="postut"></a>
 
 Creates a new trip or updates an existing trip. A new trip will be created if the trip dates span no existing trip and the request doesn’t include a `tripId`. If a `tripId` is included in the URI it will update the specified trip. The full trip information is included in the update request, which replaces the existing trip.  
 
 This endpoint can be used to create trips for a user that is not the OAuth consumer. This is most often done when a travel supplier or TMC needs to create a trip on behalf of a user. The supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
-## <a name="delete"></a>Cancel a Trip
+## Cancel a Trip <a name="delete"></a>
 
 This endpoint can be used to cancel all segments in a trip. To cancel a trip on behalf of a user, the OAuth access token used to make the API call should be associated with the SAP Concur account of that user. The TripLink supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
@@ -1405,3 +1405,4 @@ Authorization: OAuth {access token}
     </Bookings>
 </Itinerary>
 ```
+

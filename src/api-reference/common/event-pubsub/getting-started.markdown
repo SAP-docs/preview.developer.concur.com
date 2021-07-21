@@ -51,3 +51,4 @@ The Event Subscription service has the following characteristics from the subscr
 * Event retention period is 72 hours from the time of event being published
 * Events are not archived, but of the event delivery attempts/responses are logged and retained a (period of time)
 
+

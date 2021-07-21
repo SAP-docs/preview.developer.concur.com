@@ -38,7 +38,7 @@ Supported Soapactions:
 |`read`|Used to perform Read Itinerary |
 |`cancel`|Used to perform Cancel |
 
-## <a name="troubleshooting"></a>Troubleshooting
+## Troubleshooting <a name="troubleshooting"></a>
 
 In order to assist with troubleshooting, SAP Concur provides a unique correlationId in the request header. The key to look for is `correlationid`. This unique code can be used during troubleshooting as it identifies the API call in the log files. You should record this information in your own API call logs as well so that you can pass this information on to the SAP Concur support team.
 
@@ -83,7 +83,7 @@ Login and password are provided by the Hotel supplier for SAP Concur as API cons
 
 Every message must contain the following required attributes and elements.  On top of these each message may specify extra attributes and elements. Refer to a specific messages' page for details.
 
-## <a name="request-message"></a>Request Message Headers
+## Request Message Headers <a name="request-message"></a>
 
 |Name|Type|Description|
 |-----------------|--------------------|-------------|
@@ -117,7 +117,7 @@ SAP Concur will always send the ISO Currency.
 
 ---
 
-## <a name="response-message"></a>Response Message Headers
+## Response Message Headers <a name="response-message"></a>
 
 The supplier is required to respond with the following attributes and elements in the root of any message. Each message may specify extra attributes and elements. Refer to a specific messages' page for details.
 
@@ -129,3 +129,4 @@ The supplier is required to respond with the following attributes and elements i
 |`PrimaryLangID`|`string`|**Required** The primary language preference for the message encoded as ISO 639-1.|
 |`AltLangID`|`string`|**Required** The alternate language for a customer or message encoded as ISO 639-1.|
 |`Success / Error`|`complex`|**Required** Indicates Success Or Error.  Refer to the [Error Handling](/api-reference/direct-connects/hotel-service-2/Error-handling.html) page for more details.|
+

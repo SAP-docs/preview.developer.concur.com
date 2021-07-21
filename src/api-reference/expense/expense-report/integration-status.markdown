@@ -18,7 +18,7 @@ This resource allows developers to ensure that the necessary transactions to acc
 ### Operations
 [POST](#post)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 
@@ -37,7 +37,7 @@ Authorization header with OAuth token for valid SAP Concur user. Required. The O
 * application/json
 * application/xml
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 ### Content Types
 
@@ -101,3 +101,4 @@ Content-Type: application/json
   "Message": "To use the POST Expense Journal Entry Job Key the report must be at the Processing Payment or Payment Confirmed Payment Status."
 }
 ```
+

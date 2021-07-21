@@ -20,3 +20,4 @@ History of changes in HS2 developer documentation
 |Dec 15, 2020| Added BasicPropertyInfo and Timespan to Reservation Response Docs|
 |Dec 4, 2020| Clarification of NoCancelInd and Absolute Deadline in CancelPenalty, Rate-Details and Availability|
 
+

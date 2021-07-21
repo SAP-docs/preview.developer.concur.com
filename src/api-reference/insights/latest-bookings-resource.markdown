@@ -13,7 +13,7 @@ Gets the latest hotel and air booking for a particular user.
 ### Version
 3.0
 
-## <a name="get"></a>Retrieve the latest hotel and air booking for a particular user
+## Retrieve the latest hotel and air booking for a particular user <a name="get"></a>
 
     GET   /api/v3.0/insights/latestbookings/
 
@@ -24,7 +24,7 @@ Name | Type | Format | Description
 -----|------|--------|------------			
 `user`	|	`string`	|	`query`	|	The login ID of the user. The user must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 
 ### <a name="latestbooking"></a>Latest Booking
@@ -49,6 +49,7 @@ Name | Type | Format | Description
 -----|------|--------|------------
 `Location`	|	`string`	|	-	|	The IATA airport code of the location of the latest booked hotel segment.
 `StarRating`	|	`Int32`	|	-	|	The star rating of the latest booked hotel segment. Possible values are from 0 - 5. Values 1 - 5 are mapped to the Northstar standard. If the value is 0, the star rating could not be found.
+
 
 
 

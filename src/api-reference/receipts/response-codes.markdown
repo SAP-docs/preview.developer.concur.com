@@ -32,3 +32,4 @@ layout: reference
 |500|Internal Server Error|Internal error|This response is for generic internal server errors. Something went wrong, and we're probably already trying to fix it!|
 |||Unable to save receipt into the database|An error occurred while trying to update the state of the receipt.|
 |||Could not get available receipts|An error occurred while trying to fetch receipts for a user by state.|
+

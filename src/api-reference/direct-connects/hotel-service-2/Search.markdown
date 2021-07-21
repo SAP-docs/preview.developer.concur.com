@@ -39,7 +39,7 @@ Message to perform the initial search for hotels.
     * [TPA Hotel Preview Image URI](#tpa-hotel-preview)
     * [TPA Property Reference Info](#tpa-property-reference-info)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -146,7 +146,7 @@ The radius element is used along with the Hotel Preference to categorize the sea
 |`Start`|`date`, `time`, or `datetime`|**Required** The starting value of the time span.|
 |`End`|`date`, `time`, or `datetime`|**Required** The ending value of the time span.|
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The maximum allowed size of `OTA_HotelSearchRS` is 1 MB. Any response that exceeds this limit will be dropped.
 
@@ -311,3 +311,4 @@ The maximum allowed size of `OTA_HotelSearchRS` is 1 MB. Any response that excee
 |---------|-------------------|-------------|
 |`ReferenceCatalogName`|`string`|**Required** which catalog the property reference comes from. Support `giata` only for now |
 |`ReferenceCatalogCode`|`string`|**Required** alternate property id (only giata id of hotel for now) from specified reference catalog |
+

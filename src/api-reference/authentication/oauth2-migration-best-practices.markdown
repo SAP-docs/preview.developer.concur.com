@@ -10,14 +10,14 @@ layout: reference
   * [Token Management](#token-management)
   * [Old Auth v.s. New Auth Diagram](#old-v-new-diagram)
 
-## <a name="old-authentication"></a>Old World Authentication
+## Old World Authentication <a name="old-authentication"></a>
 
   - The old world authentication is a hybrid oauth2 implementation which has an endpoint that looks like this `/net2/oauth2/`
   - Client applications are identified by a `ConsumerKey` and `Secret` pair. Sometimes these are referred to as `client_id` and `client_secret`.
   - Access Tokens in the old world have a 12 months expiry period and refresh tokens live forever. This is typically not a good security practice and goes against the Oauth2 standards.
   - Tokens that are being used by clients today are issued for WSADMINs, meaning all tokens have administrative access.
 
-## <a name="new-authentication"></a>New World Authentication
+## New World Authentication <a name="new-authentication"></a>
 
 ### <a name="oauth2"></a>1. Oauth2
   - The SAP Concur new Oauth2 implementation follows the established Oauth2 Authorization Framework RFC : https://tools.ietf.org/html/rfc6749
@@ -79,3 +79,4 @@ layout: reference
 
 ### <a name="old-v-new-diagram"></a>4. Old auth v.s. new auth diagram
 ![old v.s. new](./oldNewAuthComparion.png)
+

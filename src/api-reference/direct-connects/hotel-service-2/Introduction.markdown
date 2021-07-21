@@ -3,7 +3,7 @@ title: Direct Connect - Hotel v2 - Introduction
 layout: reference
 ---
 
-## <a name="overview"></a>Overview
+## Overview <a name="overview"></a>
 The Hotel Services v2 Direct Connect provides a method for Travel users to access hotel inventory.
 
 The Hotel Service 2.0 API from SAP Concur is a specification based on OTA 2015 standard for Hotel Suppliers. Please refer to XSD schema of the service and WSDL service description. This Guide provides information how the Hotel Supplier can make their content available for Concur Travel users using Hotel Service 2.0 API. Once the Hotel Supplier has developed and certified their interface with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users. This API has client/server architecture, where SAP Concur acts as client, pulling information from the Hotel Supplier, who acts as server, responding to SAP Concur’s requests. This guide specifies the request and response format required by SAP Concur.
@@ -30,10 +30,10 @@ This call-out differs from the in-bound SAP Concur web services in the following
   * [Requests](#requests)
   * [Responses](#responses)
 
-## <a name="product-restrictions"></a>Product Restrictions
+## Product Restrictions <a name="product-restrictions"></a>
 SAP Concur products are highly configurable, and not all clients will have access to all features.
 
-## <a name="supported-ops"></a>Supported Operations
+## Supported Operations <a name="supported-ops"></a>
 
 * Search
 * Availability
@@ -43,7 +43,7 @@ SAP Concur products are highly configurable, and not all clients will have acces
 * Read-Itinerary
 * Cancel
 
-## <a name="nonfunctional-requirements"></a>Non-Functional Requirements
+## Non-Functional Requirements <a name="nonfunctional-requirements"></a>
 
 ### <a name="payload-limits"></a>Payload Limits
 
@@ -98,19 +98,19 @@ As sensitive data and payment card details are transferred via API, the Hotel Su
 #### HTTPS
 SAP Concur requires TLS 1.2 (Transport Layer Security) SSL protocol for file transfers. The Hotel Supplier will provide SAP Concur HTTPS URL of its end-point. Standard HTTPS port 443 should be used.
 
-## <a name="urls"></a>URLs
+## URLs <a name="urls"></a>
 SAP Concur will receive a single URL from the Hotel Supplier. All requests will go to that URL.
 
 For details of all required HTTP headers refer to Headers
 
 SAP Concur is using date as xs:date XML type "2017-05-01".
 
-## <a name="handling-html"></a>Handling of HTML
+## Handling of HTML <a name="handling-html"></a>
 
 CDATA and HTML code inside of XML nodes and attributes are not allowed. These data will be escaped.
 The hotel suppliers should not use XML special characters - predefined entities: &, <, >, ", ' inside of ID elements like RatePlanID.
 
-## <a name="message-structure"></a>Message Structure
+## Message Structure <a name="message-structure"></a>
 
 All messages to and from the HS2 API follow this structure:
 
@@ -132,3 +132,4 @@ All messages to and from the HS2 API follow this structure:
     * OTA_<message type>RS
 
 **Note:** The header in the response does not need the Authentication element.
+

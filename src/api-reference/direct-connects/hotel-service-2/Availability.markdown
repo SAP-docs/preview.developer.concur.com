@@ -56,7 +56,7 @@ Message to retrieved the availability of hotels.
     * [Basic Property Info](#basic-property-info)
 * [Relationship Between RoomID and RatePlanID](#relationship-roomid-rateplanid)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ```xml
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
@@ -167,7 +167,7 @@ Message to retrieved the availability of hotels.
 
 ---
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 The maximum allowed size of `OTA_HotelAvailRS` is 5 MB. Any response that exceeds this limit shall be dropped.
 
@@ -513,3 +513,4 @@ The combination of these IDs must be unique per `RoomStay`.  IDs with the same v
   ...
 </OTA_HotelAvailRS>
 ```
+

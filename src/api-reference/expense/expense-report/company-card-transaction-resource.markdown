@@ -21,7 +21,7 @@ Retrieves a list of unassigned company card charges for the user specified in th
 #### Operations
 [GET](#get)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 None.
@@ -32,7 +32,7 @@ application/xml
 ### Authorization Header
 Authorization header with OAuth token for valid SAP Concur user. Required.
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 ### Content Types
 application/xml
@@ -53,7 +53,7 @@ This request will return a **CardCharges** parent element with a **CardCharge** 
 |  TransactionCrnCode |  The currency code of the transaction amount. |
 |  TransactionDate |  The date of the transaction. |
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 #### XML Example Request
 
@@ -91,3 +91,4 @@ Content-Type: application/xml
     </CardCharge>
 </CardCharges>
 ```
+

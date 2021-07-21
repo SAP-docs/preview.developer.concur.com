@@ -11,7 +11,7 @@ Supplier companies provide travel services to users. The Suppliers resource can 
 * [Retrieve a single supplier by ID](#getID)
 * [Schema](#schema)
 
-## <a name="get"></a>Retrieve all suppliers based on search criteria
+## Retrieve all suppliers based on search criteria <a name="get"></a>
 
     GET  /api/v3.0/common/suppliers/
 
@@ -37,7 +37,7 @@ Name | Type | Format | Description
 
 
 
-## <a name="getID"></a>Retrieve a single supplier by ID
+## Retrieve a single supplier by ID <a name="getID"></a>
 
     GET  /api/v3.0/common/suppliers/{id}
 
@@ -51,7 +51,7 @@ Name | Type | Format | Description
 
 
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 
 ### <a name="suppliers"></a>Suppliers
@@ -98,3 +98,4 @@ Name | Type | Format | Description
 `URI`	|	`string`	|	-	|	The URI to the resource.
 `WebUrl`	|	`string`	|	-	|	Web Address
 `WorldspanId`	|	`string`	|	-	|	Worldspan Id
+

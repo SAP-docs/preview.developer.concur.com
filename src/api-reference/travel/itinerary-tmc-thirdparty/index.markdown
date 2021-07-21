@@ -632,7 +632,7 @@ Content-Type: application/xml
 </Response>
 ```
 
-## <a name="postdetails"></a>POST Itinerary Details
+## POST Itinerary Details <a name="postdetails"></a>
 
 ### Description
 
@@ -1431,7 +1431,7 @@ The request will return the full trip details for the cancelled trip. The trip w
 </Itinerary>
 ```
 
-## <a name="post"></a>POST Booking Details
+## POST Booking Details <a name="post"></a>
 Creates a new booking or updates an existing booking. A new booking will be assigned to the specified trip, or if no trip is specified, the first itinerary that spans the booking dates. If no trip is specified and no itinerary exists that spans the booking dates, a new itinerary will be created.  
 
 This endpoint can be used to create/update bookings for a user that is not the OAuth consumer. This is most often done when a travel supplier or Travel Management Company needs to create/update a booking on behalf of a user. The supplier or TMC must be registered with SAP Concur, and must have an account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
@@ -1635,7 +1635,7 @@ Content-Type: application/xml
 </Itinerary>
 ```
 
-## <a name="cancel"></a>POST Booking Cancellation
+## POST Booking Cancellation <a name="cancel"></a>
 
 Cancels an existing booking. By default, the OAuth consumer should be the owner of the booking. This endpoint can also be used to cancel bookings that the OAuth consumer does not own. This is most often done when a Travel Management Company needs to cancel bookings on behalf of a user. The TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
@@ -1757,7 +1757,7 @@ Authorization: OAuth {access token}
 </Car>
 ```
 
-## <a name="objects"></a>Booking Object Elements
+## Booking Object Elements <a name="objects"></a>
 
 The booking elements contain many child elements. For ease of use, these elements are divided into the Core Elements, which are the most frequently used, and Additional Elements, which are not often used but are supported by the Itinerary web service. Some elements only appear if the travel supplier created the booking. Elements are marked as required if they must be supplied for a new booking.  
 
@@ -2475,3 +2475,4 @@ This parent element contains the following child elements:
 [4]: https://www.tripit.com/developer
 [5]: https://en.wikipedia.org/wiki/ISO_4217
 [6]: https://en.wikipedia.org/wiki/Neutral_unit_of_construction_(airlines)
+

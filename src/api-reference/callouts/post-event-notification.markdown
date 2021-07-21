@@ -9,7 +9,7 @@ layout: reference
 * [Response](#response)
   * [Response Example](#res-example)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Supported Accept Types
 * application/xml
@@ -57,7 +57,7 @@ Authorization: Basic Y29uY3VyOmNvbmN1cg==
 </Notification>
 ```
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 ### Supported Content Types
 * application/txt
@@ -72,3 +72,4 @@ The application connector responds with an HTTP 200 code when it successfully re
 
 
 [2]: /api-reference/callouts/event-notification.html
+

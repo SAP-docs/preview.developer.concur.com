@@ -42,11 +42,11 @@ This callout differs from the standard SAP Concur web services in the following 
 * Partner developers must determine which configurations are required for their solution prior to the review process.
 * Existing clients can work with Concur Advantage Technical Services to create custom applications that work with their configuration.
 
-## <a name="concur-connect-callout-details"></a>Callout Details
+## Callout Details <a name="concur-connect-callout-details"></a>
 
 Information on how to download, install, and configure the application connector is included in **Callouts >** [Core Concepts](/api-reference/callouts/callouts-application-connectors.html).
 
-## <a name="fetch-attendee-process-overview"></a>Fetch Attendee Process Overview
+## Fetch Attendee Process Overview <a name="fetch-attendee-process-overview"></a>
 
 The configuration process has the following steps:
 
@@ -80,7 +80,7 @@ Refer to the **Installation Process** for more information.
 
 [Version 3.0: Post Attendee Search Request](/api-reference/callouts/post-fetch-attendee.html)
 
-## <a name="installation-process"></a>Installation Process
+## Installation Process <a name="installation-process"></a>
 
 The installation process includes installing the application connector, and registering it with SAP Concur.
 
@@ -126,3 +126,4 @@ The SAP Concur administrator can select which attendee types use the connector w
 ### <a name="responses-errors"></a>Responses and Errors
 
 Refer to the [HTTP Status Codes](/api-reference/http-status-codes.html) for details of the common responses and errors.
+

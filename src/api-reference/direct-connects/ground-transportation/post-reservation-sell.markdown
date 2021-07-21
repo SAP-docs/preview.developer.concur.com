@@ -22,7 +22,7 @@ A post reservation sell request is sent when a Travel user attempts to book a gr
 	* [Reply Credit Card](#reply-credit-card)
   * [Response Example](#res-example)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Supported Accept Types
 application/xml
@@ -362,7 +362,7 @@ Content-Length: {length of content body}
 </CC_LimoSellRequest>
 ```
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 The supplier responds to the Sell request by returning the details of the booked reservation.
 
 ### Supported Content Types
@@ -630,3 +630,4 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
+

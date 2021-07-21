@@ -20,11 +20,11 @@ layout: reference
   * [TripLink Configurations](#triplink_configurations)
   * [Supported Languages](#supported_languages)
 
-## <a name="introduction"></a>Introduction
+## Introduction <a name="introduction"></a>
 
 Streamline user onboarding with **Sign in with Concur** – a new feature that allows new users to log on to a partner application using their Concur credentials. Similar to the single sign-on feature provided by Facebook and other social applications, Sign in with Concur reduces the time and effort involved in setting up an account with our partner apps.
 
-## <a name="benefits"></a>Benefits
+## Benefits <a name="benefits"></a>
 
 _For partners_
 
@@ -38,7 +38,7 @@ _For users_
 
 
 
-## <a name="use_cases"></a>Use Cases
+## Use Cases <a name="use_cases"></a>
 
 Sign in with Concur solves access and support issues for all of our various types of partner integrations:
 
@@ -244,7 +244,7 @@ In all cases, the error description provided by Concur should be displayed to th
 
 The following covers special cases that require additional handling.
 
-## <a name="authorization_declined"></a>Authorization Declined
+## Authorization Declined <a name="authorization_declined"></a>
 
 In the case the user leaves the sign in process or sign in is unsuccessful, the user will be redirected to the following:
 
@@ -263,7 +263,7 @@ Apps should then provide the user with alternative connection methods:
 
 
 
-## <a name="application_is_disabled"></a>Application is disabled
+## Application is disabled <a name="application_is_disabled"></a>
 
 Customers have the option to disable applications for their users. In these cases, the user will be redirected to the following:
 
@@ -281,7 +281,7 @@ In this case, the user will not be able to access your application using Sign in
 
 This section covers guidelines for specific Sign in with Concur implementations.
 
-## <a name="enterprise_applications"></a>Enterprise Applications
+## Enterprise Applications <a name="enterprise_applications"></a>
 
 Company-wide integrations are unique in that your application will interact with SAP Concur both on a batch level (for example, GET or POST for multiple employees) but also allow individuals to sign in to the service without creating a new account.
 
@@ -308,7 +308,7 @@ The below illustrates the process for users signing in to your service.
 
 ![sign_in_diagram](sign-in-with-concur-images/signing-in-to-client-application.jpg)
 
-## <a name="triplink_configurations"></a>TripLink Configurations
+## TripLink Configurations <a name="triplink_configurations"></a>
 
 Depending on the products the customer has enabled, integrations and features available with Sign in with Concur vary. The following defines the scopes that are applicable product combinations. Your application must support each of the below potential scope configurations:
 
@@ -365,10 +365,11 @@ To determine which permissions the user has access to, **each time a user signs 
 
   * The user's permissions can change at any time. It is recommended that the permissions be checked each time the user logs       in to determine whether new functionality is available to the user. *
 
-## <a name="supported_languages"></a>Supported Languages
+## Supported Languages <a name="supported_languages"></a>
 
 The following language codes are supported in by Sign in with Concur.
 
 | **Code** | **Name** |
 | --- | --- |
 | en | English (US) |
+

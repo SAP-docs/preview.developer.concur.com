@@ -18,17 +18,17 @@ layout: reference
   * [address](#schema-address)
   * [errorDescription](#schema-errorDescription)
   
-## <a name="overview"></a>Overview
+## Overview <a name="overview"></a>
 
 This API provides an endpoint to ingest real time user location information from Rideshare Services. 
 
-## <a name="regional-availability"></a>Regional Availability
+## Regional Availability <a name="regional-availability"></a>
 
 ```
 https://us.api.concursolutions.com/realtimeingest
 ```
 
-## <a name="request-headers"></a>Request Headers
+## Request Headers <a name="request-headers"></a>
 
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
 
@@ -36,7 +36,7 @@ https://us.api.concursolutions.com/realtimeingest
 
 Please refer the [Schema](#schema) section for more information regarding each field in the payload.
 
-## <a name="response-headers"></a>Response Headers
+## Response Headers <a name="response-headers"></a>
 
 * [concur-correlationid] Concur specific custom header
 * [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
@@ -54,14 +54,14 @@ appVersion|String|-|Application version number
 message|String|-|Success / Error message
 errorDescription|Object|JSON|Description of error, if applicable
 
-## <a name="status-codes"></a>Status Codes
+## Status Codes <a name="status-codes"></a>
 
 * [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
 * [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
 * [401 Unauthorised](https://tools.ietf.org/html/rfc7235#section-3.1)
 * [406 Not Acceptable](https://tools.ietf.org/html/rfc7231#section-6.5.6)
 
-## <a name="example"></a>Example
+## Example <a name="example"></a>
 
 ### Request URL
 
@@ -116,7 +116,7 @@ concur-correlationid: {concur-correlationid}
  }                       
 ```
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 See the schema documentation below for the specifications of each type, plus the various schemas that are shared components of each receipt schema.
 
@@ -152,3 +152,4 @@ postalCode|String|-|Postal code of the address
 Property Name|Type|Format|Description
 ---|---|---|---
 fieldName|Array|-|Errors associated with the given *fieldName*
+

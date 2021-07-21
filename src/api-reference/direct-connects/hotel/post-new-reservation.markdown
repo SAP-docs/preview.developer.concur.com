@@ -397,3 +397,4 @@ Content-Length: {length of content body}
 
 [1]: https://developer.concur.com/overview/partner-applications
 [4]: https://developer.concur.com/sites/default/files/HotelCodes.pdf
+

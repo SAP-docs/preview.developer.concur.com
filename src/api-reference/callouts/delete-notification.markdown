@@ -14,7 +14,7 @@ Delete an event notification.
 ## URI
 `https://www.concursolutions.com/api/platform/notifications/v1.0/notification/`
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 
@@ -68,3 +68,4 @@ The response returns an HTTP Status Code as follows:
 
 
 [1]: /api-reference/callouts/get-notifications-status.html
+

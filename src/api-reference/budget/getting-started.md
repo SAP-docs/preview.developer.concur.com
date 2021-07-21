@@ -21,7 +21,7 @@ layout: reference
 * [Dependencies](#dependencies)
 * [Access Token Usage](#access-token-usage)
 
-## <a name="overview"></a>Overview
+## Overview <a name="overview"></a>
 
 The Budget service exposes budget and fiscal year data.  Partners and clients may use the service endpoints to read and alter fiscal year, budget, budget adjustment, and budget matching configuration.
 Summary and detailed balance amounts are also available to read, but may not be altered via the API.
@@ -32,7 +32,7 @@ The sequence to configure budgets is to first setup the fiscal year and then the
 
 ![A process flow diagram of getting started with Budget APIs](./v4-budget-getting-started-process-flow.png)
 
-## <a name="products-editions"></a>Products and Editions
+## Products and Editions <a name="products-editions"></a>
 
 * Concur Request Professional Edition
 * Concur Request Standard Edition
@@ -41,7 +41,7 @@ The sequence to configure budgets is to first setup the fiscal year and then the
 * Concur Invoice Professional Edition
 * Concur Invoice Standard Edition
 
-## <a name="scope-usage"></a>Scope Usage
+## Scope Usage <a name="scope-usage"></a>
 
 This API requires one or more of the following scopes:
 
@@ -52,10 +52,11 @@ Name|Description|Endpoint
 `fiscalcalendar.read`|Grants read access to the fiscal calendar.|GET All Fiscal Years, GET a Fiscal Year
 `fiscalcalendar.write`|Grants read and write access to the fiscal calendar.|GET All Fiscal Years, GET a Fiscal Year, POST a Fiscal Year, DELETE a Fiscal Year
 
-## <a name="dependencies"></a>Dependencies
+## Dependencies <a name="dependencies"></a>
 
 SAP Concur clients must purchase Budget in order to use this API.
 
-## <a name="access-token-usage"></a>Access Token Usage
+## Access Token Usage <a name="access-token-usage"></a>
 
 This API supports both company level and user level access tokens. The user needs to have the Budget Administrator role in order to access the API.
+

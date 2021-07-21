@@ -16,11 +16,11 @@ The Expense Entries API is used to manage expense reports and their entries in S
 
 1.1 documentation is available [here.](/api-reference/expense/expense-report/v1dot1.expense-entry.html)  
 
-## <a name="get"></a>Retrieve All Expense Entries
+## Retrieve All Expense Entries <a name="get"></a>
 
 [Version 2.0](/api-reference/expense/expense-report/expense-report-get.html), covers a wider range of partner scenarios and is recommended as the first step. However, depending on  the entries you need to retrieve, using a combination of version 2.0 and version 3.0 should be considered. To see examples, review the [VAT Reclaim](/api-guides/vat-reclaim/vat-reclaim-guide.html) integration guide.
 
-## <a name="post"></a>Create a New Expense Entry
+## Create a New Expense Entry <a name="post"></a>
 
     POST  /api/v3.0/expense/entries
 
@@ -46,7 +46,7 @@ https://www.concursolutions.com/api/v3.0/expense/entries
 }
 ```
 
-## <a name="put"></a>Updates an Expense Entry
+## Updates an Expense Entry <a name="put"></a>
 
     PUT  /api/v3.0/expense/entries/{id}
 
@@ -62,7 +62,7 @@ Name | Type | Format | Description
 https://www.concursolutions.com/api/v3.0/expense/entries/gWidFO7ikXV66iSvqtG6Yd0wZ%24s4ftzvzTCg
 ```
 
-## <a name="delete"></a>Delete an Expense Entry
+## Delete an Expense Entry <a name="delete"></a>
 
     DELETE  /api/v3.0/expense/entries/{id}
 
@@ -78,7 +78,7 @@ Name | Type | Format | Description
 https://www.concursolutions.com/api/v3.0/expense/entries/gWidFO7ikXV66iSvqtG6Yd0wZ%24s4ftzvzTCg
 ```
 
-## <a name="schema"></a>Schema
+## Schema <a name="schema"></a>
 
 ### <a name="entries"></a>Entries
 
@@ -164,3 +164,4 @@ Name | Type | Format | Description
 `UnitOfMeasure`	|	`string`	|	-	|	**Required** The unit of measure for distance and odometer values. Supported values: `M` - miles, `K` - kilometers
 
 **NOTE:** Clients that have Car Configurations that include variable rates or custom mileage expense type codes are not supported. We only support Car Configurations that include Personal Car One-Rate definitions, using the default mileage expense type code (MILEG) where Google Maps is not set as mandatory.
+

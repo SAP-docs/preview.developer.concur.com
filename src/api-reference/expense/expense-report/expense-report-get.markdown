@@ -24,7 +24,7 @@ GET list of reports can be found [here](/api-reference/expense/expense-report/v2
     * [Employee Bank Account](#employee-bank-account)
 * [Examples](#examples)
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 ### Request Parameters
 
@@ -47,7 +47,7 @@ These roles allow the user to manage data for the entire company.
 #### Accept Header
 application/xml
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 ### Content Types
 application/xml
@@ -215,7 +215,7 @@ This request will return a **ReportDetails** parent element.
 |  Amount |  Value, as credit or debit, of the amount to be exchanged between the payer and payee for this expense account code (not an absolute value) Maximum 23 characters. EXAMPLES: Value of zero, credit, or debit, as the following:  <br> 0 (Zero) "0"  <br> \+ (Plus / Debit) "+50.00"  <br> \- (Minus / Credit) "-50.00" |
 |  JobRunKey |  Either the unique identifier for job run for the accounting extract that processed this journal, or a static value indicating the journal was processed by Manual Pay, Expense Pay, or some other system. |
 
-## <a name="vat-data"></a>VATData
+## VATData <a name="vat-data"></a>
 
 |  Element |  Description |
 | -------- | ------------ |
@@ -291,7 +291,7 @@ This request will return a **ReportDetails** parent element.
 |  PostalAddressCode |  The postal address code entered on the Bank Information page. Maximum 20 characters. |
 |  PostalAddressCountry |  The postal address country entered on the Bank Information page. Maximum 2 characters. Format: The [ISO 3166-1 alpha-2 country code][3]. Example: United States is US. |
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 ### XML Example Request
 
@@ -668,3 +668,4 @@ Content-Type: application/xml
 [5]: https://developer.concur.com/users/users-resource/user-resource-get
 [6]: https://developer.concur.com/expense-report/expense-group-configuration-resource/expense-group-configuration-resource-get
 [7]: https://developer.concur.com/api-documentation/deprecated-features/get-list-reports-v20
+

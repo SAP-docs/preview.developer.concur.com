@@ -21,7 +21,7 @@ Retrieves the list of users that have granted delegate permissions to the user s
 ### Operations
 [GET](#get)  
 
-## <a name="request"></a>Request
+## Request <a name="request"></a>
 
 #### Request Parameters
 None.
@@ -34,7 +34,7 @@ Authorization header with OAuth token for valid SAP Concur user. Required.
 ### Accept Header
 application/xml
 
-## <a name="response"></a>Response
+## Response <a name="response"></a>
 
 #### Content Types
 application/xml
@@ -56,7 +56,7 @@ This request will return a **DelegatorsList** parent element with a **Delegator*
 |  ReceivesEmails |  Whether the delegate also receives the SAP Concur emails sent to the delegator. |
 |  DelegatorXUserID |  The user ID of the delegator. |
 
-## <a name="examples"></a>Examples
+## Examples <a name="examples"></a>
 
 #### XML Example Request
 
@@ -95,3 +95,4 @@ Content-Type: application/xml
     </Delegator>
 </DelegatorsList>
 ```
+

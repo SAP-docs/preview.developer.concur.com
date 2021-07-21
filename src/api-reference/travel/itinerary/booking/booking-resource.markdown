@@ -20,7 +20,7 @@ Version 1.1
 
 In order to obtain itinerary data when making Itinerary API calls, the value of the OAuth scope parameter must be set to: `ITINER`
 
-## <a name="create-update-booking"></a>Create or Update Booking
+## Create or Update Booking <a name="create-update-booking"></a>
 
 Creates a new booking or updates an existing booking. A new booking will be assigned to the specified trip, or if no trip is specified, the first itinerary that spans the booking dates. If no trip is specified and no itinerary exists that spans the booking dates, a new itinerary will be created.
 
@@ -231,7 +231,7 @@ Authorization: OAuth {access token}
 </Itinerary>
 ```
 
-## <a name="cancel-booking"></a>Cancel a Booking
+## Cancel a Booking <a name="cancel-booking"></a>
 
 Cancels an existing booking. By default, the OAuth consumer should be the owner of the booking. This endpoint can also be used to cancel bookings that the OAuth consumer does not own. This is most often done when a Travel Management Company needs to cancel bookings on behalf of a user. The TMC must be registered with SAP Concur and have a SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
@@ -369,3 +369,4 @@ Authorization: OAuth {access token}
 
 [1]: /api-reference/travel/itinerary-tmc-thirdparty/#objects
 [2]: /api-reference/travel/itinerary/trip/trip-resource.html
+

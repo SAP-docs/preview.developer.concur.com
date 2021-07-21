@@ -247,3 +247,4 @@ Content-Length: {length of content body}
     </HotelResModifies>
 </OTA_HotelResModifyRS>
 ```
+

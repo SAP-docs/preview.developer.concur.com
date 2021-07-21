@@ -249,7 +249,7 @@ The response will include a CC_LimoReservationDetailReply parent element, with t
 |ArrivalDateTime| | |The train arrival time. Only provided for the PickupLocation element. Format: 2015-05-19T18:00:00|
 |DepartureDateTime| | |The train departure time. Only provided for the DropoffLocation element. Format: 2015-05-19T18:00:00|
 
-## <a name="example"></a>XML Example of Successful Response
+## XML Example of Successful Response <a name="example"></a>
 
 ```shell
 HTTPS/1.1 200 OK
@@ -403,3 +403,4 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
+

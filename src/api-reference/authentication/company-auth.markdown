@@ -8,11 +8,11 @@ layout: reference
 * [Obtaining a one-time auth token](#obtain_token)
 * [Response Codes](#response_codes)
 
-## <a name="company"></a>Company
+## Company <a name="company"></a>
 
 Company is a top-level principal within Concur and you would be able to obtain an access token and a refresh token on a Company's behalf just like you would be able to with a User. Only one authorization flow is currently available for obtaining tokens for a Company, which is the [Password grant](/api-reference/authentication/apidoc.html#password_grant) using a temporary auth token received from the App Center.
 
-## <a name="obtain_token"></a>Obtaining an auth token
+## Obtaining an auth token <a name="obtain_token"></a>
 
 To begin the authentication flow for a company, one must first obtain a temporary auth token through AppCenter's interface. AppCenter will request for a temporary auth token and hand it off to the partner, who will then in turn use [Password grant](/api-reference/authentication/apidoc.html#password_grant) to exchange the temporary auth token for a full access token and refresh token for the company.
 
@@ -120,7 +120,7 @@ Connection: Close
 }
 ```
 
-## <a name="response_codes"></a>Response Codes
+## Response Codes <a name="response_codes"></a>
 
 ##### HTTP Status Code returned by oauth2
 
@@ -191,3 +191,4 @@ Code|Error|Description
 118|`invalid_request`|display is invalid
 119|`invalid_request`|prompt is invalid
 119|`invalid_request`|prompt must be set to consent for `offline_access`
+

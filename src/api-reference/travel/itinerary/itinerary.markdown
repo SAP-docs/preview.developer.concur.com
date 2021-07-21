@@ -14,21 +14,21 @@ layout: reference
 * [Best Practices](#itin-best-practices)
 * [Reference](#reference-topics)
 
-## <a name="itinerary-overview"></a>Overview
+## Overview <a name="itinerary-overview"></a>
 
 The Itinerary API can be used to programmatically access travel data such as trips and bookings in Concur Travel. Concur Travel uses this data to match and consolidate bookings it receives from disparate sources and put these into consolidated travelers’ itineraries, providing travelers a convenient way to view their trips in a single itinerary view. Travelers can view their itineraries through mobile applications or other services.
 
-## <a name="itinver"></a>Version
+## Version <a name="itinver"></a>
 
 Version 1.0
 
-## <a name="itinres"></a>Resources
+## Resources <a name="itinres"></a>
 
 [Trip](/api-reference/travel/itinerary/trip/trip-resource.html)
 
 [Booking](/api-reference/travel/itinerary/booking/booking-resource.html)
 
-## <a name="itin-concepts"></a>Concepts
+## Concepts <a name="itin-concepts"></a>
 
 ### Itineraries and Trips
 
@@ -40,7 +40,7 @@ The terms itinerary and trip are synonyms. Trip is the name used for the SAP Con
 * A _booking record_ is the container for all segments booked from a source with the same unique identifier (_record locator_ or _confirmation number_). A single booking can have multiple segments.
 * A _segment_ includes details about the travel booking.
 
-## <a name="itin-use"></a>Who Can Use This Web Service?
+## Who Can Use This Web Service? <a name="itin-use"></a>
 
 TripLink suppliers, travel management companies (TMCs), and SAP Concur clients and third-party developers can use the Itinerary API. The level of access to the data in the Concur Travel system depends on who is accessing it and the SAP Concur products that have been purchased.
 
@@ -69,7 +69,7 @@ TripLink suppliers, travel management companies (TMCs), and SAP Concur clients a
 
 SAP Concur products are highly configurable, and not all clients will have access to all features. Some itinerary data may have come from Sabre. SAP Concur encourages you to speak to Sabre about becoming a Sabre Authorized Developer.
 
-## <a name="itin-auth"></a>Authentication and Authorization
+## Authentication and Authorization <a name="itin-auth"></a>
 
 The Itinerary API uses OAuth 2.0 for authenticating users and authorizing access to travel data.
 
@@ -84,13 +84,13 @@ TMCs can request or send travel bookings in two ways:
 
 The travel supplier can request or send travel bookings by using an OAuth token for the user the travel booking belongs to, generated with the user's involvement.
 
-## <a name="itin-config"></a>Configuration
+## Configuration <a name="itin-config"></a>
 
 * If you are a TMC, third-party developer, or a TripLink supplier who would like to start using this web service, please visit: [http://www.concur.com/en-us/connect-platform/suppliers][3] or contact the SAP Partner Enablement Team.
 * SAP Concur products are highly configurable, and not all SAP Concur clients will have access to all features.
 * Partner developers must determine which configurations are required for their solution prior to the review process.
 
-## <a name="itin-faq"></a>FAQs
+## FAQs <a name="itin-faq"></a>
 
 #### When Do I Send Trips Versus Bookings?
 
@@ -149,7 +149,7 @@ Yes.
 
 No.
 
-## <a name="itin-best-practices"></a>Best Practices
+## Best Practices <a name="itin-best-practices"></a>
 
 * When extracting past data:
     * Extract a month of trip summaries to gauge volume. If hundreds are returned, then adjust extraction to weekly.
@@ -168,7 +168,7 @@ No.
     * An individual booking on behalf of another user (profiled user).
     * An individual booking for a guest (non-profiled user).
 
-## <a name="reference-topics" id="reference-topics">Reference</a>
+##  <a name="reference-topics" id="reference-topics">Reference</a>
 
 The Itinerary Reference documentation includes the following reference information that can be used in conjunction with the Trip Resource API and Booking Resource API documentation. It includes the following reference topics:
 
@@ -1847,3 +1847,4 @@ SAP Concur converts local date/time to UTC.  In order to do that we need to be a
 [2]: https://en.wikipedia.org/wiki/List_of_airports_by_IATA_code:_A
 [6]: https://developer.concur.com/api-reference/travel/itinerary-tmc-thirdparty/#objects
 [9]: Itinerarywebserviceoverview.png
+

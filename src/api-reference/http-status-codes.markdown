@@ -51,3 +51,4 @@ Error Code|Message|Description
 429|Too Many Requests|This response is returned when services are overloaded either with too many requests from a single source or too many requests in aggregate. When this happens slow the rate of requests.
 500|Internal Server Error/Not Closed|**Expense Report Web Service**: This response is returned when the system is unable to calculate an exchange rate for a posted expense report entry.<br>**Payment Batch Web Service**: The specified batch could not be closed.
 503|Service Unavailable|This response is returned when the web service is down for maintenance. The partner application should sleep for 5 minutes then retry the request. If the request continues to fail after a few retries, the developer should contact concurconnecttech@concur.com.
+
