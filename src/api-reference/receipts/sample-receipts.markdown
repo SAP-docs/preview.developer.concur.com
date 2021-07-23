@@ -559,7 +559,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 #### Generated Receipt Image
 
-![A Receipt Image](/api-reference/receipts/air-multiple-tickets.png)
+![A Receipt Image](air-multiple-tickets.png)
 
 ### Car Rental
 
@@ -696,7 +696,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 #### Generated Receipt Image
 
-![Car Rental Receipt Image](/api-reference/receipts/car-rental.png)
+![Car Rental Receipt Image](car-rental.png)
 
 ### Hotel
 
@@ -891,7 +891,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 #### Generated Receipt Image
 
-![Hotel Receipt Image](/api-reference/receipts/hotel.png)
+![Hotel Receipt Image](hotel.png)
 
 ### Ground Transport
 
@@ -1061,7 +1061,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 #### Generated Receipt Image
 
-![Ground Transport Receipt Image](/api-reference/receipts/ground_transport.png)
+![Ground Transport Receipt Image](ground_transport.png)
 
 ### Rail (Multiple Tickets)
 
@@ -1181,5 +1181,5 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 #### Generated Receipt Image
 
-![Rail Receipt Image](/api-reference/receipts/rail-multiple-tickets.png)
+![Rail Receipt Image](rail-multiple-tickets.png)
 
