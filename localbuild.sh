@@ -18,10 +18,12 @@ export NODE_PATH=$(npm root --quiet -g)
 # Step 1: Clean environment for build
 echo "Cleaning build artifact directories..."
 set +e
+rm -rf _site
 rm -rf src/Slate-API-Explorer-Reference/slate/source/images
 rm -rf src/Slate-API-Explorer-Reference/slate/source/includes
 rm -rf src/Slate-API-Explorer-Reference/slate/build
 rm -rf src/slate-ui/built
+mkdir _site
 mkdir src/Slate-API-Explorer-Reference/slate/source/images
 mkdir src/Slate-API-Explorer-Reference/slate/source/includes
 mkdir src/Slate-API-Explorer-Reference/slate/build
@@ -62,6 +64,14 @@ echo "Generating static html from markdown..."
 pushd ./src/Slate-API-Explorer-Reference/slate && bundle install && bundle exec middleman build 2>/dev/null
 popd
 
-# Step 10: Move static files to slate-ui directory
+# Step 10: Modify static html files to add yaml front matter, otherwise jekyll cannot process the file.
+echo "Updating static HTML files to prepare for JEKYLL"
+node ./build-tools/reference_fix_jekyll.js
+
+# Step 11: Move static files to slate-ui directory
 echo "Copying static files to slate-ui directory..."
 node ./build-tools/slate_to_static.js
+
+# Step 12: Jekyll build to resolve "{ % include }" directives
+echo "Compiling static files with JEKYLL"
+bundle exec jekyll build
