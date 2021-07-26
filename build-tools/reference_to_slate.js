@@ -76,7 +76,7 @@ aContent = [
     'authentication', 'ess', 'travel', 'budget', 'expense', 'locate', 'travel-profile',
     'callouts', 'financial-integration', 'notifications', 'travel-receipts', 'cash-advance',
     'profile', 'user', 'common', 'image', 'realtime-location-ingest', 'user-provisioning',
-    'receipts', 'detokenizer', 'insights', 'request', 'direct-connects', 'invoice'
+    'receipts', 'detokenizer', 'insights', 'request', 'direct-connects', 'invoice', 'general'
 ];
 
 aContent.forEach(sDirectory => {

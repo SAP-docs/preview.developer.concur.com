@@ -6,8 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SOURCE_DIRECTORY = "./src/Slate-API-Explorer-Reference/slate/build"
-const TARGET_DIRECTORY = "./src/slate-ui/built";
-
+const TARGET_DIRECTORY = "./src/staged/slate-ui";
 
 function copyDirectory(sSource, sTarget) {
     // Create target directory.
@@ -35,6 +34,11 @@ fs.copyFileSync(sSource, sTarget);
 // Copy api-reference.html
 sSource = path.join(SOURCE_DIRECTORY, "api-reference.html");
 sTarget = path.join(TARGET_DIRECTORY, "api-reference.html");
+fs.copyFileSync(sSource, sTarget);
+
+// Copy deprecated.html
+sSource = path.join(SOURCE_DIRECTORY, "deprecated.html");
+sTarget = path.join(TARGET_DIRECTORY, "deprecated.html");
 fs.copyFileSync(sSource, sTarget);
 
 // Copy CSS

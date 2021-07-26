@@ -22,12 +22,13 @@ rm -rf _site
 rm -rf src/Slate-API-Explorer-Reference/slate/source/images
 rm -rf src/Slate-API-Explorer-Reference/slate/source/includes
 rm -rf src/Slate-API-Explorer-Reference/slate/build
-rm -rf src/slate-ui/built
+rm -rf src/staged
 mkdir _site
 mkdir src/Slate-API-Explorer-Reference/slate/source/images
 mkdir src/Slate-API-Explorer-Reference/slate/source/includes
 mkdir src/Slate-API-Explorer-Reference/slate/build
-mkdir src/slate-ui/built
+mkdir src/staged
+mkdir src/staged/slate-ui
 set -e
 
 # Step 2: Remove authentication from swagger files.
@@ -72,6 +73,18 @@ node ./build-tools/reference_fix_jekyll.js
 echo "Copying static files to slate-ui directory..."
 node ./build-tools/slate_to_static.js
 
-# Step 12: Jekyll build to resolve "{ % include }" directives
+# Step 12: Setup symlinks for Jekyll build
+echo "Create symlinks in build directory..."
+pushd ./src/staged
+ln -s ../_includes .
+ln -s ../_layouts .
+ln -s ../_sass .
+popd
+
+# Step 13: Copy other static content into staging area
+echo "Copying other static content to staging area..."
+node ./build-tools/static_content.js
+
+# Step 14: Jekyll build to resolve "{ % include }" directives
 echo "Compiling static files with JEKYLL"
 bundle exec jekyll build

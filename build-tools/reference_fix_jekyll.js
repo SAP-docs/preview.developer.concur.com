@@ -50,3 +50,4 @@ function processFile(sFile) {
 }
 
 processFile("api-reference.html");
+processFile("deprecated.html");
