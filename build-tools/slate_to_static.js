@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SOURCE_DIRECTORY = "./src/Slate-API-Explorer-Reference/slate/build"
-const TARGET_DIRECTORY = "./src/staged/slate-ui";
+const TARGET_DIRECTORY = "./src/staged";
 
 function copyDirectory(sSource, sTarget) {
     // Create target directory.
@@ -27,8 +27,8 @@ function copyDirectory(sSource, sTarget) {
 }
 
 // Copy index.html
-var sSource = path.join(SOURCE_DIRECTORY, "index.html");
-var sTarget = path.join(TARGET_DIRECTORY, "index.html");
+var sSource = path.join(SOURCE_DIRECTORY, "api-explorer.html");
+var sTarget = path.join(TARGET_DIRECTORY, "api-explorer.html");
 fs.copyFileSync(sSource, sTarget);
 
 // Copy api-reference.html

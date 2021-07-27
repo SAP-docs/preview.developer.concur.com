@@ -21,27 +21,18 @@ function prependLine(sFile, sLine) {
 }
 
 function processDirectory(sDir, sVersion) {
-    var bFirst = true;
-
     var sVersionTarget = path.join(TARGET_DIRECTORY, sVersion);
+    // Create target directory.
+    if (!fs.existsSync(sVersionTarget)) {
+        fs.mkdirSync(sVersionTarget);
+    }
 
     fs.readdirSync(sDir).forEach(sFile => {
         var sExt = path.extname(sFile);
         var sSourceFile = path.join(sDir, sFile);
         var sTargetFile = path.join(sVersionTarget, "_" + sFile);
         if (sExt == ".md") {
-            if (bFirst == true) {
-                // Create target directory.
-                if (!fs.existsSync(sVersionTarget)) {
-                    fs.mkdirSync(sVersionTarget);
-                }
-            }
             fs.copyFileSync(sSourceFile, sTargetFile);
-            if (bFirst == true) {
-                console.log("Adding '# Version' tag for " + sVersion + " to " + sTargetFile);
-                prependLine(sTargetFile, "# Version " + sVersion + "\n");
-                bFirst = false;
-            }
         }
     });
 }
@@ -54,4 +45,3 @@ processDirectory("./src/api-explorer/v3-0", "3.0");
 processDirectory("./src/api-explorer/v3-1", "3.1");
 processDirectory("./src/api-explorer/v3-2", "3.2");
 processDirectory("./src/api-explorer/v4-0", "4.0");
-
