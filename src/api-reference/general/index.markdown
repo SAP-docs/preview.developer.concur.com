@@ -1,5 +1,5 @@
 ---
-title: API Reference
+title: Introduction
 layout: reference
 redirect_from:
   - /docs-and-resources/documentation/
