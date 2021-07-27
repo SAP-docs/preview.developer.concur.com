@@ -9,12 +9,6 @@
 #
 set -euo pipefail
 
-# Pre-requisite: install required modules
-# Install globally as it's easier for circleci
-echo "Installing node dependencies..."
-npm install -g node-html-parser
-export NODE_PATH=$(npm root --quiet -g)
-
 # Step 1: Clean environment for build
 echo "Cleaning build artifact directories..."
 set +e
@@ -40,13 +34,13 @@ echo "Processing Swagger JSON files..."
 pushd ./src/api-explorer/ && find . -name \*.jsonp -type f -exec bash -c "widdershins {} -o {}.md --omitHeader > /dev/null" \; -print
 popd
 
-# Step 4: Correct the indents in the generated markdown
-echo "Massaging generated markdown..."
-node ./build-tools/adjust_indents.js
-
-# Step 5: Copy generated markdown to slate directory (explorer)
+# Step 4: Copy generated markdown to slate directory (explorer)
 echo "Copying generated markdown (api-explorer)..."
 node ./build-tools/explorer_to_slate.js
+
+# Step 5: Correct the indents in the generated markdown
+echo "Massaging generated markdown..."
+node ./build-tools/explorer_cleanup.js
 
 # Step 6: Copy markdown to slate directory (reference)
 echo "Copying markdown (api-reference)..."

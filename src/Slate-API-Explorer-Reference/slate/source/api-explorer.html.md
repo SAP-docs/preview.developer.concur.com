@@ -13,6 +13,7 @@ language_tabs:
  
 includes:
 
+  - 3.0/VersionHeader.md
   - 3.0/Allocations.swagger2.jsonp.md
   - 3.0/AttendeeTypes.swagger2.jsonp.md
   - 3.0/Attendees.swagger2.jsonp.md
@@ -42,11 +43,13 @@ includes:
   - 3.0/VendorBank.swagger2.jsonp.md
   - 3.0/VendorGroup.swagger2.jsonp.md
   - 3.0/Vendors.swagger2.jsonp.md
-  - 3.1/BulkUser.swagger.jsonp.md
+  - 3.1/VersionHeader.md
   - 3.1/ConnectionRequests.swagger.jsonp.md
   - 3.1/RequestGroupConfigurations.swagger2.jsonp.md
   - 3.1/Requests.swagger2.jsonp.md
+  - 3.2/VersionHeader.md
   - 3.2/ConnectionRequests.swagger.jsonp.md
+  - 4.0/VersionHeader.md
   - 4.0/Budget.swagger2.jsonp.md
   - 4.0/CashAdvance.swagger2.jsonp.md
   - 4.0/ConcurRequest.swagger2.jsonp.md

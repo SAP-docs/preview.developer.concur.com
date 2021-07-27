@@ -13,7 +13,6 @@
 */
 const fs = require('fs');
 const path = require('path');
-const parser = require('node-html-parser');
 
 var aIgnored = [];
 var headerRegex = /---[\s\S]title: (.*?)[\s\S]layout: reference[\s\S]([.|\s|\S]*?)---/
@@ -44,10 +43,38 @@ function processNode(oNode) {
     }
 }
 
-function processLine(sLine, sTitle) {
+function processHTMLHeader(sLine, iHeader) {
+    var sHeader = "h" + iHeader;
+    if ((sLine.indexOf("<" + sHeader) >= 0) && (sLine.indexOf(sHeader + ">") > 0)) {
+        var iNewHeader;
+        if (iHeader == 1 && bFirstH1 == true) {
+            // First H1 is the title, only indent one.
+            iNewHeader = iHeader + 1;
+            bFirstH1 = false;
+        } else {
+            iNewHeader = iHeader + 2;
+        }
+        var sNewHeader = "h" + iNewHeader
+        var oRegex = new RegExp(sHeader, 'g')
+        sLine = sLine.replace(oRegex, sNewHeader);
+    }
+    return sLine;
+}
+
+function processHTMLHeaders(sLine) {
+    for (var i = 6; i >= 1; i--) {
+        sLine = processHTMLHeader(sLine, i);
+    }
+    return sLine;
+}
+
+function processLine(sLine) {
+    // Adjust HTML headers
+    sLine = processHTMLHeaders(sLine);
+
     // Adjust markdown lines.
     if (sLine.startsWith("# ") ||
-        sLine.startsWith("## ") ||//&& !sLine.startsWith("## " + sTitle)) ||
+        sLine.startsWith("## ") ||
         sLine.startsWith("### ")) {
         return "#" + sLine + "\n";
     }
@@ -59,7 +86,7 @@ function processFile(sDir, sFile) {
     var sPath = path.join(sDir, sFile);
     var sRaw = fs.readFileSync(sPath, { encoding: 'utf8' });
 
-    // Step 1: Replace markdown header with simple title
+    // Replace markdown header with simple title
     var oResult = headerRegex.exec(sRaw);
     var sTitle;
     if (!oResult) {
@@ -69,17 +96,11 @@ function processFile(sDir, sFile) {
         sRaw = sRaw.replace(headerRegex, "# " + sTitle);
     }
 
-    // Step 2, massage html headers
-    var oRoot = parser.parse(sRaw);
-    oRoot.childNodes.forEach(function (oNode) {
-        processNode(oNode);
-    });
-
-    // Step 3, massage markdown headers
-    var aContent = oRoot.toString().split('\n');
+    // Massage markdown headers
+    var aContent = sRaw.split('\n');
     var sOutput = "";
     aContent.forEach(function (sLine) {
-        sOutput = sOutput + processLine(sLine, sTitle);
+        sOutput = sOutput + processLine(sLine);
     });
 
     fs.writeFileSync(sPath, sOutput);
@@ -88,7 +109,7 @@ function processFile(sDir, sFile) {
 function createHeaderFile(sDir) {
     var sHeader = path.basename(sDir).toUpperCase();
     var sPath = path.join(sDir, "SectionHeader.md");
-    sOutput = "#" + sHeader + "\n";
+    sOutput = "# " + sHeader + "\n";
     fs.writeFileSync(sPath, sOutput);
 }
 
