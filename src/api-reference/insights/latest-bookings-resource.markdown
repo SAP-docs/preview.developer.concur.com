@@ -3,8 +3,6 @@ title: Latest Bookings
 layout: reference
 ---
 
-# Latest Bookings
-
 Gets the latest hotel and air booking for a particular user.
 
 * [Retrieve the latest hotel and air booking for a particular user](#get)

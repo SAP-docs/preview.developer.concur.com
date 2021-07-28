@@ -3,8 +3,6 @@ title: Endpoints
 layout: reference
 ---
 
-# Endpoints
-
 * [Definitions of Resources](#definitions-of-resources)
   * [Supported Image Formats](#supported-image-formats)
 * [General](#general)

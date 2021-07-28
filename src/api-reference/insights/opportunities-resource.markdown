@@ -3,8 +3,6 @@ title: Opportunities
 layout: reference
 ---
 
-# Opportunities
-
 Retrieves a collection of opportunities for a specified trip or for all trips that fall within a date range.
 
 * [Retrieve a collection of opportunities for a specified trip or for all trips that fall within a date range](#get)

@@ -3,8 +3,6 @@ title: User
 layout: reference
 ---
 
-# User
-
 The Users resource represents a set of SAP Concur users. It is always managed as a batch of users, even if the batch contains only one user.
 
 * [Retrieve a user's information](#getUser)
