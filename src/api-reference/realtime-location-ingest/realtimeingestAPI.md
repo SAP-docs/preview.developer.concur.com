@@ -5,8 +5,6 @@ layout: reference
 
 {% include prerelease.html %}
 
-# Realtime Ingest Location
-
 * [Overview](#overview)
 * [Regional Availability](#regional-availability)
 * [Request Headers](#request-headers)

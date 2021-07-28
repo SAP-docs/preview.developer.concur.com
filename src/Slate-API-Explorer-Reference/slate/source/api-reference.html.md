@@ -142,12 +142,11 @@ includes:
   - realtime-location-ingest/SectionHeader.md
   - realtime-location-ingest/realtimeingestAPI.md
   - receipts/SectionHeader.md
-  - receipts/endpoints.markdown
   - receipts/get-started.markdown
-  - receipts/response-codes.markdown
-  - receipts/sample-receipts.markdown
+  - receipts/endpoints.markdown
   - receipts/supported-receipt-types.markdown
-  - receipts/v3.receipts.markdown
+  - receipts/sample-receipts.markdown
+  - receipts/response-codes.markdown
   - request/SectionHeader.md
   - request/v3.request.markdown
   - request/v4.endpoints.agency proposal-resources_EA version.markdown
@@ -160,7 +159,6 @@ includes:
   - request/v4.endpoints.workflow-resources.markdown
   - request/v4.get-started.markdown
   - request/v4.response-codes.markdown
-  - travel-profile/SectionHeader.md
   - travel-receipts/SectionHeader.md
   - travel-receipts/getting-started.markdown
   - travel-receipts/sample.markdown
@@ -168,18 +166,17 @@ includes:
   - travel/SectionHeader.md
   - travel/travel.markdown
   - travel/itinerary-tmc-thirdparty/index.markdown
-  - travel/itinerary-v4/v4.itinerary.md
-  - travel/itinerary/booking.markdown
   - travel/itinerary/itinerary.markdown
+  - travel/itinerary-v4/v4.itinerary.md
   - travel/itinerary/booking/booking-resource.markdown
   - travel/itinerary/trip/trip-resource.markdown
   - user-provisioning/SectionHeader.md
+  - user-provisioning/spend/v4.spend-user-get-started.md
   - user-provisioning/v4.user-provisioning.md
   - user-provisioning/v4.user-provisioning_release_notes.md
-  - user-provisioning/spend/spend-role-code-definition.md
-  - user-provisioning/spend/v4.spend-user-get-started.md
   - user-provisioning/spend/v4.spend-user-provisioning.md
   - user-provisioning/spend/v4.spend-user-retrieval.md
+  - user-provisioning/spend/spend-role-code-definition.md
   - user-provisioning/travel/v4.travel-extension.md
   - user/SectionHeader.md
   - user/index.markdown

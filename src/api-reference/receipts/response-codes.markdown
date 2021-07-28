@@ -3,10 +3,6 @@ title: Response Codes
 layout: reference
 ---
 
-# Receipts
-
-## Response Codes
-
 ### Success Codes
 
 |Code|Message|Information|
