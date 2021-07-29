@@ -12,9 +12,7 @@ jobs:
           keys:
             - rubygems-v1-{{ checksum "Gemfile.lock" }}
             - rubygems-v1-fallback
-      - run: sudo apt-get install python3
       - run: sudo apt-get update 
-      - run: sudo apt-get install -y python3-pip 
       - run: sudo pip3 install pipenv 
       - run: pipenv install
       - run: pipenv install Unipath
@@ -30,11 +28,6 @@ jobs:
           key: rubygems-v1-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - run:
-          name: Widdershins Install and Execution.
-          command: |
-                sudo npm install -g widdershins
-                cd ./src/api-explorer/ && find . -name \*.json -type f -exec widdershins \{\} -o \{\}.md --omitHeader \;
       - run: 
           name: /usr/loca/bin should in your $PATH
           command: set -euo pipefail
@@ -53,7 +46,6 @@ jobs:
                 mkdir src/Slate-API-Explorer-Reference/slate/source/includes
                 mkdir src/Slate-API-Explorer-Reference/slate/build
                 mkdir src/staged
-                mkdir src/staged/slate-ui
                 set -e
       - run:
           name: Remove authentication from swagger files.
@@ -103,7 +95,7 @@ jobs:
                 echo "Updating static HTML files to prepare for JEKYLL"
                 node ./build-tools/reference_fix_jekyll.js
       - run:
-          name: Move static files to slate-ui directory.
+          name: Move static files to staging directory.
           command: |
                 echo "Copying static files to slate-ui directory..."
                 node ./build-tools/slate_to_static.js 
