@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/test-repo
     docker:
-      - image: cimg/ruby:2.7.1-node
+      - image: cimg/ruby:2.7.3-node
     environment:
       BUNDLE_PATH: ~/repo/vendor/bundle 
     steps:
@@ -12,10 +12,6 @@ jobs:
           keys:
             - rubygems-v1-{{ checksum "Gemfile.lock" }}
             - rubygems-v1-fallback
-      #- run: 
-       #   name: "Setup custom environment variables"
-        #  command: echo 'export Widdershins_Template="./api-explorer/templates/openapi3-copy"' >> $BASH_ENV
-
       - run: sudo apt-get install python3
       - run: sudo apt-get update 
       - run: sudo apt-get install -y python3-pip 
@@ -23,64 +19,113 @@ jobs:
       - run: pipenv install
       - run: pipenv install Unipath
       - run:
-          name: Widdershins Install and Execution.
-          command: |
-                sudo npm install -g widdershins
-                cd ./src/api-explorer/ && find . -name \*.json -type f -exec widdershins \{\} -o \{\}.md --omitHeader \;
-      - run:
-          name: Add Underscore V3.0
-          command: pipenv run python ./src/api-explorer/v3-0/z_underscore_v3_0.py
-      - run:
-          name: Add Underscore V3.1
-          command: pipenv run python ./src/api-explorer/v3-1/z_underscore_v3_1.py
-      - run:
-          name: Add Underscore V3.2
-          command: pipenv run python ./src/api-explorer/v3-2/z_underscore_v3_2.py
-      - run:
-          name: Add Underscore V4.0
-          command: pipenv run python ./src/api-explorer/v4-0/z_underscore_v4_0.py
-      - run:
-          name: Move From Dev Center To Slate
-          command: pipenv run python ./z_dc_to_slate.py
-      - run:
-          name: Adjust Tags and Content
-          command: pipenv run python ./src/Slate-API-Explorer-Reference/slate/source/includes/z_update_swagger_tags.py
-      - run:
-          name: Add Version Folders 3.0, 3.1, 3.2 and 4.0 
-          command:  cd ./src/Slate-API-Explorer-Reference/slate/source/includes/ && echo "# Version 3.1"  >> _Vendors.swagger2.json.md && echo "# Version 3.2"  >> _RequestGroupConfigurations.swagger2.json.md &&  echo "# Version 4.0" >> _ConnectionRequests32.swagger.json.md
-          
-      - run:
-              name: Build Fresh Slate Static Files
-              no_output_timeout: 20m
-              command: cd ./src/Slate-API-Explorer-Reference/slate && bundle install && bundle exec middleman build
-      - run:
-          name: Move Static Files Back To Dev Center
-          command: pipenv run python ./z_slate-to-dc-file-transfer.py
-      - run:
-          name: Remove Erroneous Scope Tags
-          command: pipenv run python ./z_remove-scope-desc.py
-      - run:
-          name: install dependencies
+          name: Installing Ruby dependencies.
           command: |
                 gem update --system
                 gem install bundler   
       - run:
-          name: Bundle Install
+          name: Bundle installation.
           command: bundle check || bundle install
       - save_cache:
           key: rubygems-v1-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
       - run:
-          name: Jekyll build
-          command: bundle exec jekyll build
-      #- run:
-       #   name: HTMLProofer tests
-        #  command: |
-         #   bundle exec htmlproofer ./_site \
-          #  --allow-hash-href \
-           # --check-html \
-            #--disable-external
+          name: Widdershins Install and Execution.
+          command: |
+                sudo npm install -g widdershins
+                cd ./src/api-explorer/ && find . -name \*.json -type f -exec widdershins \{\} -o \{\}.md --omitHeader \;
+      - run: 
+          name: /usr/loca/bin should in your $PATH
+          command: set -euo pipefail
+      - run: 
+          name: Clean environment for build.
+          command: |
+                echo "Cleaning build artifact directories..."
+                set +e
+                rm -rf _site
+                rm -rf src/Slate-API-Explorer-Reference/slate/source/images
+                rm -rf src/Slate-API-Explorer-Reference/slate/source/includes
+                rm -rf src/Slate-API-Explorer-Reference/slate/build
+                rm -rf src/staged
+                mkdir _site
+                mkdir src/Slate-API-Explorer-Reference/slate/source/images
+                mkdir src/Slate-API-Explorer-Reference/slate/source/includes
+                mkdir src/Slate-API-Explorer-Reference/slate/build
+                mkdir src/staged
+                mkdir src/staged/slate-ui
+                set -e
+      - run:
+          name: Remove authentication from swagger files.
+          command: |
+                echo "Removing authentication from swagger files..."
+                node ./build-tools/remove_authentication.js
+      - run:
+          name: Process swagger files.
+          command: |
+                echo "Processing Swagger JSON files..."
+                pushd ./src/api-explorer/ && find . -name \*.jsonp -type f -exec bash -c "widdershins {} -o {}.md --omitHeader > /dev/null" \; -print
+                popd
+      - run:
+          name: Copy generated markdown to slate directory(explorer).
+          command: |
+                echo "Copying generated markdown (api-explorer)..."
+                node ./build-tools/explorer_to_slate.js
+      - run:
+          name: Correct the indents in the generated markdown.
+          command: |
+                echo "Massaging generated markdown..."
+                node ./build-tools/explorer_cleanup.js
+      - run:
+          name: Copy markdown to slate directory (reference).
+          command: |
+                echo "Copying markdown (api-reference)..."
+                node ./build-tools/reference_to_slate.js
+      - run:
+          name: Copy basic site files to slate directory.
+          command: |
+                echo "Copying other sources to slate directory..."
+                node ./build-tools/basicsite_to_slate.js
+      - run:
+          name: Cleanup reference files.
+          command: |
+                echo "Cleanup api-reference markdown..."
+                node ./build-tools/reference_cleanup.js
+      - run:
+          name: Build Slate static files.
+          command: |
+                echo "Generating static html from markdown..."
+                pushd ./src/Slate-API-Explorer-Reference/slate && bundle install && bundle exec middleman build 2>/dev/null
+                popd
+      - run:
+          name: Modify static html files to add yaml front matter, otherwise Jekyll cannot process the file.
+          command: |
+                echo "Updating static HTML files to prepare for JEKYLL"
+                node ./build-tools/reference_fix_jekyll.js
+      - run:
+          name: Move static files to slate-ui directory.
+          command: |
+                echo "Copying static files to slate-ui directory..."
+                node ./build-tools/slate_to_static.js 
+      - run:
+          name: Setup symlinks for Jekyll build.
+          command: |
+                echo "Create symlinks in build directory..."
+                pushd ./src/staged
+                ln -s ../_includes .
+                ln -s ../_layouts .
+                ln -s ../_sass .
+                popd
+      - run:
+          name: Copying other static content into staging area.
+          command: |
+                echo "Copying other static content to staging area..."
+                node ./build-tools/static_content.js    
+      - run:
+          name: Jekyll build to resolve " { % include }" directives.
+          command: |
+                echo "Compiling static files with JEKYLL"
+                bundle exec jekyll build
       - persist_to_workspace:
           root: ./
           paths:
@@ -93,21 +138,20 @@ jobs:
       - attach_workspace:
           at: ./
       - run:
-          name: Disable jekyll builds
+          name: Disable Jekyll builds.
           command: touch ./_site/.nojekyll
       - run:
-          name: Install and configure dependencies
+          name: Install and configure dependencies.
           command: | 
                 npm install -g --silent gh-pages@2.0.1
-                git config user.email "jaron.manyama@concur.com"
-                git config user.name "Jaron Manyama"
+                git config user.email "danra2@u.washington.edu"
+                git config user.name "danra2"
       - run:
-          name: Deploy docs to gh-pages branch
+          name: Deploy docs to gh-pages branch.
           command: gh-pages --dotfiles --message "[skip ci] Updates" --dist ./_site
       - add_ssh_keys:
           fingerprints:
             - 5a:c7:12:8e:d9:74:2b:9c:c8:cb:ae:1c:0b:f3:21:65
-
 workflows:         
   version: 2
   test-deploy:
