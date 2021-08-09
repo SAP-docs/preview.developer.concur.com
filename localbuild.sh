@@ -22,7 +22,7 @@ mkdir src/Slate-API-Explorer-Reference/slate/source/images
 mkdir src/Slate-API-Explorer-Reference/slate/source/includes
 mkdir src/Slate-API-Explorer-Reference/slate/build
 mkdir src/staged
-mkdir src/staged/slate-ui
+mkdir src/staged
 set -e
 
 # Step 2: Remove authentication from swagger files.
@@ -63,8 +63,8 @@ popd
 echo "Updating static HTML files to prepare for JEKYLL"
 node ./build-tools/reference_fix_jekyll.js
 
-# Step 11: Move static files to slate-ui directory
-echo "Copying static files to slate-ui directory..."
+# Step 11: Move static files to staging directory
+echo "Copying static files to staging directory..."
 node ./build-tools/slate_to_static.js
 
 # Step 12: Setup symlinks for Jekyll build
