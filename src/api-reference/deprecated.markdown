@@ -5,7 +5,6 @@ layout: reference
 
 The following application programming interfaces (APIs) and other resources have been deprecated according to the [API Lifecycle & Deprecation Policy](/tools-support/deprecation-policy.html).
 
-
 * [Attendees v1](/api-reference/expense/attendees/v1.attendees.html)
 * [Attendees v1.1](/api-reference/expense/attendees/v1dot1.attendees.html)
 * [Attendees v2](/api-reference/expense/attendees/v2.attendees.html)
