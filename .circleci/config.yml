@@ -26,99 +26,16 @@ jobs:
           paths:
             - vendor/bundle
       - run:
-          name: Widdershins Install and Execution.
-          command: |
-                sudo npm install -g widdershins
-      - run: 
-          name: /usr/loca/bin should in your $PATH
-          command: set -euo pipefail
-      - run: 
-          name: Clean environment for build.
-          command: |
-                echo "Cleaning build artifact directories..."
-                set +e
-                rm -rf _site
-                rm -rf src/Slate-API-Explorer-Reference/slate/source/images
-                rm -rf src/Slate-API-Explorer-Reference/slate/source/includes
-                rm -rf src/Slate-API-Explorer-Reference/slate/build
-                rm -rf src/staged
-                mkdir _site
-                mkdir src/Slate-API-Explorer-Reference/slate/source/images
-                mkdir src/Slate-API-Explorer-Reference/slate/source/includes
-                mkdir src/Slate-API-Explorer-Reference/slate/build
-                mkdir src/staged
-                set -e
-      - run:
-          name: Remove authentication from swagger files.
-          command: |
-                echo "Removing authentication from swagger files..."
-                node ./build-tools/remove_authentication.js
-      - run:
-          name: Process swagger files.
-          command: |
-                echo "Processing Swagger JSON files..."
-                pushd ./src/api-explorer/ && find . -name \*.jsonp -type f -exec bash -c "widdershins {} -o {}.md --omitHeader > /dev/null" \; -print
-                popd
-      - run:
-          name: Copy generated markdown to slate directory(explorer).
-          command: |
-                echo "Copying generated markdown (api-explorer)..."
-                node ./build-tools/explorer_to_slate.js
-      - run:
-          name: Correct the indents in the generated markdown.
-          command: |
-                echo "Massaging generated markdown..."
-                node ./build-tools/explorer_cleanup.js
-      - run:
-          name: Copy markdown to slate directory (reference).
-          command: |
-                echo "Copying markdown (api-reference)..."
-                node ./build-tools/reference_to_slate.js
-      - run:
-          name: Copy basic site files to slate directory.
-          command: |
-                echo "Copying other sources to slate directory..."
-                node ./build-tools/basicsite_to_slate.js
-      - run:
-          name: Cleanup reference files.
-          command: |
-                echo "Cleanup api-reference markdown..."
-                node ./build-tools/reference_cleanup.js
-      - run:
-          name: Build Slate static files.
-          command: |
-                echo "Generating static html from markdown..."
-                pushd ./src/Slate-API-Explorer-Reference/slate && bundle install && bundle exec middleman build 2>/dev/null
-                popd
-      - run:
-          name: Modify static html files to add yaml front matter, otherwise Jekyll cannot process the file.
-          command: |
-                echo "Updating static HTML files to prepare for JEKYLL"
-                node ./build-tools/reference_fix_jekyll.js
-      - run:
-          name: Move static files to staging directory.
-          command: |
-                echo "Copying static files to slate-ui directory..."
-                node ./build-tools/slate_to_static.js 
-      - run:
-          name: Setup symlinks for Jekyll build.
-          command: |
-                echo "Create symlinks in build directory..."
-                pushd ./src/staged
-                ln -s ../_includes .
-                ln -s ../_layouts .
-                ln -s ../_sass .
-                popd
-      - run:
-          name: Copying other static content into staging area.
-          command: |
-                echo "Copying other static content to staging area..."
-                node ./build-tools/static_content.js    
-      - run:
           name: Jekyll build to resolve " { % include }" directives.
           command: |
                 echo "Compiling static files with JEKYLL"
                 bundle exec jekyll build
+      - run:
+          name: Place CNAME
+          command: |
+                echo "Placing custom domain name"
+                echo "doctest.frdy.io" > _site/CNAME # Update with preview.developer.concur.com when going live
+
       - persist_to_workspace:
           root: ./
           paths:
