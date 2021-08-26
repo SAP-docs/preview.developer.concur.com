@@ -5,6 +5,8 @@ redirect_from:
   - /api-reference-deprecated/old-auth/old-auth.html
 ---
 
+# Pre-2017 Authorization (Deprecated)
+
 {% capture deprecation_content %}
 
 If you are a new partner or an existing one creating a new app, please refer to the [new authentication version documentation](/api-reference/authentication/getting-started.html).
