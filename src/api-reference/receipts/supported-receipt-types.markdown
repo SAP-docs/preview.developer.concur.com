@@ -3,6 +3,8 @@ title: Supported Receipt Types
 layout: reference
 ---
 
+# Receipts v4 - Supported Receipt Types
+
 Receipts can be any of the following types
 
  - [Air](#air-receipt)

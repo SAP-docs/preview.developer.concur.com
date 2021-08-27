@@ -3,6 +3,8 @@ title: Budget v4 - Getting Started
 layout: reference
 ---
 
+# Getting Started
+
 * [Overview](#overview)
 * [Process Flow](#process-flow)
 * [Products and Editions](#products-editions)
