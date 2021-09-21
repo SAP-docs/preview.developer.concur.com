@@ -16,4 +16,4 @@ bundle exec jekyll build
 
 # Step 3: Place CNAME
 echo "Setting custom domain name"
-echo "doctest.frdy.io" > _site/CNAME # Update with preview.developer.concur.com when going live
+echo "preview.developer.concur.com" > _site/CNAME
