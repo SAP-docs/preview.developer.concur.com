@@ -1,12 +1,11 @@
 ---
-title: Latest Bookings 
+title: Latest Bookings
 layout: reference
 ---
 
-Gets the latest hotel and air booking for a particular user.
+# Latest Bookings
 
-* [Retrieve the latest hotel and air booking for a particular user](#get)
-* [Schema](#schema)
+Gets the latest hotel and air booking for a particular user.
 
 ### Version
 3.0
@@ -15,7 +14,7 @@ Gets the latest hotel and air booking for a particular user.
 
     GET   /api/v3.0/insights/latestbookings/
 
-        
+
 ### Parameters
 
 Name | Type | Format | Description
@@ -47,7 +46,3 @@ Name | Type | Format | Description
 -----|------|--------|------------
 `Location`	|	`string`	|	-	|	The IATA airport code of the location of the latest booked hotel segment.
 `StarRating`	|	`Int32`	|	-	|	The star rating of the latest booked hotel segment. Possible values are from 0 - 5. Values 1 - 5 are mapped to the Northstar standard. If the value is 0, the star rating could not be found.
-
-
-
-

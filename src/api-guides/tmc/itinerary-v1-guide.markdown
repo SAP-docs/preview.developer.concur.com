@@ -151,7 +151,7 @@ https://developer.concur.com/api-reference/travel/itinerary/trip/trip-resource.h
 POST
 
 ```
-{{geolocation}}
+{geolocation}
 /api/travel/trip/v1.1/?userid_type=login_id&userid_value=user@domain.com
 
 Authorization: Bearer {access_token}
@@ -623,7 +623,7 @@ BODY
 
 POST
 ```
-{{geolocation}} /api/travel/trip/v1.1/?tripid={{stored TripID}}
+{geolocation} /api/travel/trip/v1.1/?tripid={stored TripID}
 userid_type=login_id&userid_value=user@domain.com
 
 Authorization: Bearer {access_token}
@@ -671,7 +671,7 @@ BODY
 POST
 
 ```
-{geolocation} /api/travel/trip/v1.1/cancel?tripid={{stored TripID}}
+{geolocation} /api/travel/trip/v1.1/cancel?tripid={stored TripID}
 userid_type=login_id&userid_value=user@domain.com
 ```
 ```
