@@ -7,16 +7,6 @@ layout: reference
 
 > Note: The scopes related to this documentation are currently limited to Early Access developers at this time.  Once the Early Access phase has been completed, all developers that are interested in pursuing this integration will be given the scope in their Development app.
 
-* [Integration](#integration)
-* [Quick Connect](#quick-connect)
-* [Company Profile](#profile)
-* [Topics to complete prior to obtaining invoices](#Topics-to-complete-prior-to-obtaining-invoices)
-* [Update Vendor Payment Method field](#Update-Vendor-Payment-Method-field)
-* [Overview, Scopes, and Obtaining Invoices pending payment](#Overview-Scopes-and-Obtaining-Invoices-pending-payment)
-* [Discounts on invoices](#Discounts)
-* [Updating a payment with status](#Updating-a-payment-with-status)
-* [Learn](#learn)
-
 The Payment Provider App Category streamlines the Invoice Payment process for SAP Concur customers. The Payment Provider Partner's certified app will obtain Invoice data from our customers' Concur site by using the "Quick Connect" process and executing their app using Invoice APIs. To be certified, the Partner must support both Editions of Concur Invoice: Standard Edition and Professional Edition.
 
 ## <a name="integration"></a>Integration
