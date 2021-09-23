@@ -1,12 +1,11 @@
 ---
-title: Opportunities 
+title: Opportunities
 layout: reference
 ---
 
-Retrieves a collection of opportunities for a specified trip or for all trips that fall within a date range.
+#Opportunities
 
-* [Retrieve a collection of opportunities for a specified trip or for all trips that fall within a date range](#get)
-* [Schema](#schema)
+Retrieves a collection of opportunities for a specified trip or for all trips that fall within a date range.
 
 ### Version
 3.0
@@ -15,7 +14,7 @@ Retrieves a collection of opportunities for a specified trip or for all trips th
 
     GET  https://www.concursolutions.com/api/v3.0/insights/opportunities
 
-        
+
 ### Parameters
 
 Name | Type | Format | Description
@@ -52,4 +51,3 @@ Name | Type | Format | Description
 `TripId	`|	`string`	|	-	|	The trip id of the associated itinerary
 `Type`	|	`string`	|	-	|	The type of opportunity. Possible values: 'Hotel', 'Car', 'Air', 'Rail', 'Taxi' or 'Service'
 `URI`	|	`string`	|	-	|	The URI to the resource.					
-
