@@ -7,13 +7,6 @@ layout: reference
 
 This is a basic scenario describing functionality provided by the Hotel Service v2 API incorporated into Concur Travel. This includes a hotel search, confirmation of a booking, and cancellation.
 
-* [Actors](#actors)
-* [Hotel Search, Reserve, and Cancel Walkthrough](#walkthrough)
-  * [Search](#search)
-  * [Reserve](#reserve)
-  * [Cancel](#cancel)
-* [General System Overview](#sequence-diagram)
-
 ## <a name="actors"></a>Actors
 
 1. Primary Actor - Business traveler (or travel arranger)

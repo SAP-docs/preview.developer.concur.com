@@ -5,12 +5,6 @@ layout: reference
 
 # Travel Itinerary API v4 with Business Events
 
-* [Introduction](#introduction)
-* [Data Scope](#data-scope)
-* [Event details](#event-details)
-* [Itinerary v4 API](#itinerary)
-* [References for Enumeration Types](#references)
-
 ## <a name="introduction"></a>Introduction
 
 The event driven GET Itinerary v4 API will provide a scalable solution by allowing partners to get near real time updates for trips being created, updated, cancelled, deleted, and anonymized.
