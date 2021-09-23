@@ -3,34 +3,11 @@ title: SAP Concur App Center - User Experience Guidelines for Enterprise Applica
 layout: reference
 ---
 
+# User Experience Guidelines for Enterprise Applications
+
 In this guide, we will help you implement the connection process between an a company's SAP Concur instance to your system. You will find best practices for user-centered design, examples of dos-and-don’ts, and suggested steps to guide the administrator through the connection process.
 
 It is not our intention to tell you what colors and fonts to use. Maintaining your brand integrity is important, and these guidelines do not interfere with that. Rather, our goal is for SAP Concur administrator to have a pleasant and consistent experience across all of our partner applications. Observing these guidelines will help ensure that our shared users have positive experiences with both of our companies as a result of our partnership.
-
-* [A word on accessibility](#word-on-accessibility)
-* [Account linking example](#design-guidelines-account-linking-example)
-* [Design guidelines](#design-guidelines)
-  * [Connect](#design-guidelines-connect)
-    * [Activate + Connect](#design-guidelines-connect-activate)
-    * [Request Information](#design-guidelines-connect-request-information)
-  * [Accept Terms](#design-guidelines-accept-terms)
-  * [Landing Page](#design-guidelines-landing-page)
-    * [Verification](#landing-page-verification)
-    * [Sign In or Sign Up](#landing-page-sign-in-or-up)
-      * [Options](#sign-in-or-up-options)
-      * [Account Creation](#sign-in-or-up-account-creation)
-  * [Confirmation](#design-guidelines-confirmation)
-* [Guideline Checklist](#guideline-checklist)
-  * [Landing Page(s)](#guideline-checklist-landing-page)
-  * [Account Creation](#guideline-checklist-account-creation)
-  * [Confirmation Page](#guideline-checklist-confirmation)
-  * [Disconnect](#guideline-checklist-disconnect)
-* [Accessibility best practices](#accesibility-best-practices)
-  * [Provide text alternatives](#accesibility-best-practices-text-alternatives)
-  * [Distinguishable content](#accesibility-best-practices-distinguishable-content)
-  * [Keyboard control](#accesibility-best-practices-keyboard-control)
-  * [Predictable structure](#accesibility-best-practices-predictable-structure)
-  * [Input assistance](#accesibility-best-practices-input-assistance)
 
 ## <a name="word-on-accessibility"></a>A word on accessibility
 
