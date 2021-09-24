@@ -1,0 +1,212 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Rest API for Exchange Rate Broker",
+    "title": "Exchange Rate Broker",
+    "version": "4.0"
+  },
+  "host": "us.api.concursolutions.com",
+  "basePath": "/",
+  "tags": [
+    { "name": "Exchange Rate API", "description": "Exchange Rate Controller" }
+  ],
+  "paths": {
+    "/exchangerate/v4/rates": {
+      "post": {
+        "tags": ["Exchange Rate API"],
+        "summary": "Upload custom exchange rates for an entity.",
+        "operationId": "uploadExchangeRateUsingPOST",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "bulkUploadRequest",
+            "description": "bulkUploadRequest",
+            "required": true,
+            "schema": { "$ref": "#/definitions/BulkExchangeRateUploadRequest" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully uploaded exchange rates",
+            "schema": { "$ref": "#/definitions/BulkExchangeRateUploadResponse" }
+          },
+          "400": {
+            "description": "Invalid request received",
+            "schema": { "$ref": "#/definitions/ErrorMessage" }
+          },
+          "401": {
+            "description": "Access Denied",
+            "schema": { "$ref": "#/definitions/ErrorMessage" }
+          },
+          "403": {
+            "description": "Invalid JWT. Expected a valid company JWT",
+            "schema": { "$ref": "#/definitions/ErrorMessage" }
+          },
+          "404": {
+            "description": "Unable to find exchange rate",
+            "schema": { "$ref": "#/definitions/ErrorMessage" }
+          },
+          "500": {
+            "description": "Internal server error, please contact the administrator.",
+            "schema": { "$ref": "#/definitions/ErrorMessage" }
+          },
+          "503": {
+            "description": "The service is unavailable either due to being offline or refusing the connection",
+            "schema": { "$ref": "#/definitions/ErrorMessage" }
+          }
+        },
+        "security": [{ "JWT": [] }, { "CN": [] }]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "JWT": { "type": "apiKey", "name": "Authorization", "in": "header" }
+  },
+  "definitions": {
+    "BulkExchangeRateUploadRequest": {
+      "type": "object",
+      "required": ["currency_sets"],
+      "properties": {
+        "currency_sets": {
+          "type": "array",
+          "description": "List of currency pairs with exchange rate, and start date",
+          "items": { "$ref": "#/definitions/ExchangeRateUploadRequest" }
+        }
+      },
+      "title": "BulkExchangeRateUploadRequest",
+      "description": "This object contains a currency set to be uploaded."
+    },
+    "BulkExchangeRateUploadResponse": {
+      "type": "object",
+      "properties": {
+        "currencySets": {
+          "type": "array",
+          "description": "Currency set response",
+          "items": { "$ref": "#/definitions/ExchangeRateUploadResponse" }
+        },
+        "message": {
+          "type": "string",
+          "example": "Requests completed successfully",
+          "description": "Overall message for the response"
+        },
+        "overallStatus": {
+          "type": "string",
+          "example": "Success",
+          "description": "Overall status of the response"
+        }
+      },
+      "title": "BulkExchangeRateUploadResponse",
+      "description": "This object contains an overall status on a bulk upload request along with the currency set which was uploaded. Additionally, each individual ExchangeRateUploadResponse object has an upload status code and message."
+    },
+    "ErrorMessage": {
+      "type": "object",
+      "required": ["errorMessage", "httpStatus", "path", "timestamp"],
+      "properties": {
+        "errorId": {
+          "type": "string",
+          "description": "The unique identifier of the error associated with the response or the error response itself"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "The detailed error message"
+        },
+        "httpStatus": {
+          "type": "string",
+          "example": 400,
+          "description": "The http response code and phrase for the response"
+        },
+        "path": {
+          "type": "string",
+          "description": "The URI of the attempted request"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2016-10-04T00:53:25.931+0000",
+          "description": "The time when the error was captured"
+        },
+        "validationErrors": {
+          "type": "array",
+          "description": "The validation error messages",
+          "items": { "$ref": "#/definitions/ValidationError" }
+        }
+      },
+      "title": "ErrorMessage",
+      "description": "Contains detailed information about an error."
+    },
+    "ExchangeRateUploadRequest": {
+      "type": "object",
+      "required": ["from_crn_code", "rate", "start_date", "to_crn_code"],
+      "properties": {
+        "from_crn_code": {
+          "type": "string",
+          "example": "USD",
+          "description": "From currency code (ISO 4217 alphabetic code)"
+        },
+        "rate": { "type": "number", "example": 1.0005, "description": "Rate" },
+        "start_date": {
+          "type": "string",
+          "example": "2020-01-30",
+          "description": "Start date"
+        },
+        "to_crn_code": {
+          "type": "string",
+          "example": "CNY",
+          "description": "To currency code (ISO 4217 alphabetic code)"
+        }
+      },
+      "title": "ExchangeRateUploadRequest",
+      "description": "Exchange Rate Upload Request. This object specifies a currency pair (ISO 4217 alphabetic code), exchange rate, and start date."
+    },
+    "ExchangeRateUploadResponse": {
+      "type": "object",
+      "properties": {
+        "from_crn_code": {
+          "type": "string",
+          "example": "USD",
+          "description": "From currency code (ISO 4217 alphabetic code)"
+        },
+        "rate": { "type": "number", "example": 1.0005, "description": "Rate" },
+        "start_date": {
+          "type": "string",
+          "example": "2020-01-30",
+          "description": "Start date"
+        },
+        "statusCode": {
+          "type": "integer",
+          "format": "int32",
+          "example": 200,
+          "description": "Status Code"
+        },
+        "statusMessage": {
+          "type": "string",
+          "example": "success",
+          "description": "Status Message"
+        },
+        "to_crn_code": {
+          "type": "string",
+          "example": "CNY",
+          "description": "To currency code (ISO 4217 alphabetic code)"
+        }
+      },
+      "title": "ExchangeRateUploadResponse",
+      "description": "Exchange Rate Upload Response. This object specifies a currency pair (ISO 4217 alphabetic code), exchange rate, and start date, along with status message and HTTP status code."
+    },
+    "ValidationError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The detailed message of the validation error"
+        },
+        "source": {
+          "type": "string",
+          "description": "The type of validation which failed"
+        }
+      },
+      "title": "ValidationError"
+    }
+  }
+}
