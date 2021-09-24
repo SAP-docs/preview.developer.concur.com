@@ -339,14 +339,14 @@ Please have the following data and identifiers available:
 
 This is a screen shot of a typical Body response for retrieving a profile in POSTMAN.
 
-![Postman body response](images/overview-postman-body.png)
+![Postman body response](images/overview-postman-body.jpg)
 
 Select “Headers” for the response headers. Note “concur-correlationid”
 
 We require that you store the response GUID when an error occurs. When you log a case, please include the concur-correlationid GUID so we can retrieve the error(s) from our internal tools / logging system. This is what response headers look like in POSTMAN:
 
-![Postman response headers](images/overview-postman-headers.png)
+![Postman response headers](images/overview-postman-headers.jpg)
 
 Here’s what it would look like when we search for your application’s errors using the concur-correlationID GUID. It is vital for troubleshooting efficiency.
 
-![correlationID search results](images/overview-correlationid.png)
+![correlationID search results](images/overview-correlationid.jpg)
