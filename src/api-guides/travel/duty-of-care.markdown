@@ -5,14 +5,6 @@ layout: reference
 
 # Duty of Care 
 
-* [Introduction](#introduction)
-* [Data Scope](#data-scope)
-* [Quick Connect (Authentication)](#quick-connect)
-* [Company Profile API](#company-profile)
-* [Event details](#event-details)
-* [Itinerary V4 API](#itinerary)
-* [Identity V4 API](#identity)
-
 ## <a name="introduction"></a>Introduction
 
 Duty of care (DoC) partners are provided access to travel itinerary data. Previously, the Itinerary API required partners to poll for new or recently changed trips. You can now subscribe to events and fetch trips by ID which will improve scale and performance. This event-driven GET endpoint in the Itinerary V4 API will provide a scalable solution by allowing you to get near real time updates for trips being created, updated, and cancelled.

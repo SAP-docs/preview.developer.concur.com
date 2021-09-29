@@ -7,23 +7,6 @@ layout: reference
 
 If you are an existing partner with an existing app, please read both the [Migration to Oauth2 Tokens](/api-reference/authentication/migrationguide.html) and [Getting Started](/api-reference/authentication/getting-started.html) documentation first. If you have any questions, please contact your Partner Enablement team representative before proceeding.
 
-* [Overview]()
-* [Tokens](#access_token)
-  * [Obtaining a token](#obtain_token)
-  * [Refreshing a token](#refresh_token)
-  * [Revoking a token](#revoke_token)
-  * [Token Management](#manage_token)
-  * [Base URIs & Geolocation](#base_uri)
-  * [ID Token](#id_token)
-* Types of grants
-  * [Authorization grant](#auth_grant)
-  * [Password grant](#password_grant)
-  * [Client Credentials grant](#client_credentials)
-  * [One Time Password grant](#otp_grant)
-* [Response Codes](#response_codes)
-* [Troubleshooting](#troubleshooting)
-* [Enterprise Business Applications](#enterprise-business-applications)
-
 **Note:** The Pre-2017 Authorization (Deprecated) documentation be found [here](/deprecated.html#pre-2017-authorization-deprecated)
 
 ## Access Tokens <a name="access_token"></a>
@@ -710,4 +693,3 @@ Only the [Password Grant Type](#password_grant) is available for obtaining compa
 1. It is highly recommended that Partners log the following elements:
   * `userId`: the user who clicked on the Connect button (returned in the re-direct URI)
   * `correlationid`: SAP Concur responds with a unique code which identifies the API call in the log files.  (returned in the response header).  More details can be found here.
-
