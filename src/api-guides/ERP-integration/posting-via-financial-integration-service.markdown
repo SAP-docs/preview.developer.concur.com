@@ -5,18 +5,6 @@ layout: reference
 
 # Financial Posting via Financial Integration Service
 
-* [Learn More](#learn)
-  * [Comparison of extract files vs. FIS data](#comparison)
-* [Quick Connect](#quick-connect)
-* [API Sequence Flow](#sequence-flow)
-  * [FI Sequence Flow Matrix - Expense](#expense-matrix)
-  * [FI Sequence Flow Matrix - Invoice](#invoice-matrix)
-  * [Expense Pay](#expense-pay)
-  * [Non-Expense Pay Payment Batches (Standard Edition and S2P)](#nonexpense-pay)
-* [Imaging](#imaging)
-* [Timing to Run FIS](#timing)
-* [Get Started](#start)
-
 ## <a name="learn"></a>Learn More
 
 An ERP user has two options to obtain data for financial journal entries into the ERP:

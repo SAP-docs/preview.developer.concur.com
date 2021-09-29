@@ -7,14 +7,6 @@ layout: reference
 
 Frequently asked questions on how the HotelService API content is leveraged in the SAP Concur Travel hotel online booking tool.
 
-* [General](#general)
-* [Search](#search)
-* [Availability & RateDetails](#availability)
-* [HotelDescriptiveInfo](#hotel-descriptive-info)
-* [Reservation](#reservation)
-* [ReadItinerary](#read-itinerary)
-* [Cancel](#cancel)
-
 ## <a name="general"></a>General
 
 Q: What are the expectations of `PrimaryLangID` and `AltLangID`?
