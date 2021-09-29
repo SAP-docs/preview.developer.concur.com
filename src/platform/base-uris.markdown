@@ -5,11 +5,6 @@ layout: reference
 
 # Base URIs
 
-* [What Is the Base URI](#base)
-* [Production](#production)
-* [Implementation](#implementation)
-* [Pre-2017 Legacy URIs (Deprecated)](#deprecated)
-
 ## <a name="base"></a>What Is the Base URI?
 
 The Base URI (also known as the Instance URL) is the domain where the SAP Concur platform entity resides. You must specify which location you are trying to work with by making a change to the end point declaration before you make your API call.

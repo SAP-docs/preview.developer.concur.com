@@ -5,12 +5,6 @@ layout: reference
 
 # Transport Layer Security (TLS)
 
-* [Overview](#overview)
-* [What the Customer Sees](#customer)
-* [Affected Connections](#connections)
-* [Informational Banner Displayed](#banner)
-* [Configuration / Feature Activation](#configuration)
-
 ## <a name="overview"></a>Overview
 
 We are ending support for version 1.1 of the Transport Layer Security (TLS) encryption protocol. Support for the more secure version 1.2 of TLS continues. As background, the TLS protocol allows secure back and forth communications between a phone or computer and a cloud-based service. This change is currently planned for the first quarter of 2020.
