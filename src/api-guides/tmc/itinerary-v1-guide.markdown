@@ -151,7 +151,7 @@ https://developer.concur.com/api-reference/travel/itinerary/trip/trip-resource.h
 POST
 
 ```
-{{geolocation}}
+{geolocation}
 /api/travel/trip/v1.1/?userid_type=login_id&userid_value=user@domain.com
 
 Authorization: Bearer {access_token}
@@ -609,13 +609,13 @@ BODY
 </Itinerary>
 ```
 
->**NOTE**: Submitting itinerary data with similar travel dates and trip data will result in multiple itineraries for the traveler if login_id is the only parameter used.
+**NOTE**: Submitting itinerary data with similar travel dates and trip data will result in multiple itineraries for the traveler if login_id is the only parameter used.
 
->**NOTE**: Store the returned TripID. This value is required for itinerary updates or cancellations.
+**NOTE**: Store the returned TripID. This value is required for itinerary updates or cancellations.
 
->**NOTE**: For additional itinerary samples, please contact your Platform Enablement PM.
+**NOTE**: For additional itinerary samples, please contact your Platform Enablement PM.
 
->**NOTE**: Store the concur-correlationid value returned in the header response for logging, troubleshooting, or case escalation purposes.
+**NOTE**: Store the concur-correlationid value returned in the header response for logging, troubleshooting, or case escalation purposes.
 
 ### Update an Itinerary
 
@@ -623,7 +623,7 @@ BODY
 
 POST
 ```
-{{geolocation}} /api/travel/trip/v1.1/?tripid={{stored TripID}}
+{geolocation} /api/travel/trip/v1.1/?tripid={stored TripID}
 userid_type=login_id&userid_value=user@domain.com
 
 Authorization: Bearer {access_token}
@@ -671,7 +671,7 @@ BODY
 POST
 
 ```
-{geolocation} /api/travel/trip/v1.1/cancel?tripid={{stored TripID}}
+{geolocation} /api/travel/trip/v1.1/cancel?tripid={stored TripID}
 userid_type=login_id&userid_value=user@domain.com
 ```
 ```

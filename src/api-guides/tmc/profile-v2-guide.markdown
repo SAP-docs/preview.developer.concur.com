@@ -101,7 +101,7 @@ The XSD (schema) for Profile API v2.0 is very similar to the existing schema for
 
 ### GET Profile Information
 
->**NOTE**: Our development organization has enforced the inclusion of the LastModifiedDate parameter. Users who omit LastModifiedDate, will receive an error. For users who would like to get profile summaries for all of their users, they can set LastModifiedDate to 1900-01-01T12:00:00.
+**NOTE**: Our development organization has enforced the inclusion of the LastModifiedDate parameter. Users who omit LastModifiedDate, will receive an error. For users who would like to get profile summaries for all of their users, they can set LastModifiedDate to 1900-01-01T12:00:00.
 
 #### Retrieve a List of Travel Profile Summaries by Last Modified Date (with Paging)
 
