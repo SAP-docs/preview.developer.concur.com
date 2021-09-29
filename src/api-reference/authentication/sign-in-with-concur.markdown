@@ -5,19 +5,6 @@ layout: reference
 
 {% include prerelease.html %}
 
-* [Introduction](#introduction)
-* [Benefits](#benefits)
-* [Use Cases](#use_cases)
-* [How it Works](#how_it_works)
-* [Getting Started](#getting_started)
-* [Error Handling](#error_handling)
-  * [Authorization Declined](#authorization_declined)
-  * [Application is disabled](#application_is_disabled)
-* [Advanced](#advanced)
-  * [Enterprise Applications](#enterprise_applications)
-  * [TripLink Configurations](#triplink_configurations)
-  * [Supported Languages](#supported_languages)
-
 ## Introduction <a name="introduction"></a>
 
 Streamline user onboarding with **Sign in with Concur** – a new feature that allows new users to log on to a partner application using their Concur credentials. Similar to the single sign-on feature provided by Facebook and other social applications, Sign in with Concur reduces the time and effort involved in setting up an account with our partner apps.
@@ -375,5 +362,3 @@ The following language codes are supported in by Sign in with Concur.
 | **Code** | **Name** |
 | --- | --- |
 | en | English (US) |
-
-

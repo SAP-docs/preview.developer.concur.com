@@ -4,10 +4,6 @@ layout: reference
 ---
 # Migrating to OAuth2 Tokens
 
-* [Base URIs](#base_uris)
-* [Exchanging a Token](#exchangetoken)
-* [Response Codes](#response_codes)
-
 Existing applications that use the [Pre-2017 Authorization (Deprecated)](/api-reference/authentication/authorization-pre-2017.html) framework need to move to support the new OAuth2 Bearer Tokens. Applications will need to migrate their existing users who already have connected to it to obtain new Oauth2 tokens without requiring users to reauthorize. This can be done by exchanging an old access token for a new refresh token.
 
 ## Base URIs <a name="base_uris"></a>

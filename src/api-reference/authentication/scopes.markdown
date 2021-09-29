@@ -4,11 +4,6 @@ layout: reference
 ---
 # Scopes
 
-* [Naming Conventions](#conventions)
-* [List of v4 Actions](#actions)
-* [List of v4 API Scopes](#v4apiscopes)
-* [List of Connect API scopes](#connectscopes)
-
 Scope is a parameter as defined in the OAuth 2.0 standards (RFC6749) to enable a client to specify the scope of the access request. The value of the scope parameter is expressed as a list of space-delimited, case-sensitive strings although some implementations of scope uses a comma-delimited format. Scopes limit access for OAuth2 tokens and do not grant any additional permission beyond that which the client already has.
 
 Scopes apply to applications only. Scopes play a crucial part in defining the ultimate access to a resource by a User.
@@ -126,4 +121,3 @@ TRVREQ|Travel Request - Add, Update or Delete Travel Requests
 TWS|Travel Approval - Approve or Reject Travel Itineraries
 USER|Users- Add or Update User Accounts
 COMPANY|Companies - Add or Update Company profile
-

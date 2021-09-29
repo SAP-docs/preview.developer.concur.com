@@ -4,13 +4,6 @@ layout: reference
 ---
 # OAuth2 Migration Best Practices
 
-* [Old World Authentication](#old-authentication)
-* [New World Authentication](#new-authentication)
-  * [Oauth2](#oauth2)
-  * [Getting Started](#getting-started)
-  * [Token Management](#token-management)
-  * [Old Auth v.s. New Auth Diagram](#old-v-new-diagram)
-
 ## Old World Authentication <a name="old-authentication"></a>
 
   - The old world authentication is a hybrid oauth2 implementation which has an endpoint that looks like this `/net2/oauth2/`
@@ -20,13 +13,13 @@ layout: reference
 
 ## New World Authentication <a name="new-authentication"></a>
 
-### <a name="oauth2"></a>1. Oauth2
+### <a name="oauth2"></a>Oauth2
   - The SAP Concur new Oauth2 implementation follows the established Oauth2 Authorization Framework RFC : https://tools.ietf.org/html/rfc6749
   - This new service has an endpoint of `/oauth2/v0/token`
   - Unlike the old world auth, access tokens have a 1 hour expiry and refresh tokens have a 6 months expiry. This is in accordance to the best practice of using short lived tokens.
   - This would mean that clients would need to perform token management.
 
-### <a name="getting-started"></a>2. Getting Started
+### <a name="getting-started"></a>Getting Started
   - Getting clientID / clientSecret
     - Work with the SAP Concur implementation team to obtain a new oauth2 `client_id` and `client_secret` and to define the scope of client's application.
     - Process will take no longer than 48 hours.
@@ -36,7 +29,7 @@ layout: reference
     - `Refresh Token`: This token can change although most of the time this value is the same. Client applications should treat all returned refresh tokens as new values and overwrite the stored values with the new values you get from the response.
     - `Refresh Token Expiry`: This date should be checked by a daily script and ensure that a refresh_grant is made to keep the refresh token alive indefinitely. If company policy dictates that the token should be allowed to expire, then you can skip this step. Once a refresh token has expired, clients would need to contact SAP Concur's Implementation team to get a new company token.
 
-### <a name="token-management"></a>3. Token Management
+### <a name="token-management"></a>oken Management
   - Calling APIs with `accessTokens`
     - All APIs within SAP Concur require the calling application present an `accessToken` in the Header using the "Bearer" keyword.
     - Example:
@@ -78,6 +71,5 @@ layout: reference
 
     - for a full list, review this doc: <https://developer.concur.com/api-reference/authentication/apidoc.html#response_codes>
 
-### <a name="old-v-new-diagram"></a>4. Old auth v.s. new auth diagram
+### <a name="old-v-new-diagram"></a>Old auth v.s. new auth diagram
 ![old v.s. new](./oldNewAuthComparion.png)
-

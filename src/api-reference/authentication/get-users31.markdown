@@ -11,10 +11,6 @@ layout: reference
   <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
 </div>
 
-* [Obtain Company Token](#company)
-* [Calling Users Bulk API](#usersbulk)
-* [Schema](#schema)
-
 ## Obtain Company Token <a name="company"></a>
 
 Company is a top-level principal within SAP Concur and you would be able to obtain an access token and a refresh token on a company's behalf just like you would be able to with a user. Only one authorization flow is currently available for obtaining tokens for a company, which is the [Password grant](/api-reference/authentication/apidoc.html#password_grant).
@@ -135,4 +131,3 @@ Property Name|Type|Format|Description
 `OrginzationUnit`|`string`|-|The organization unit of the user.
 `PrimaryEmail`|`string`|-|The primary email of the user.
 `URI`|`string`|-|The URI to the resource.
-
