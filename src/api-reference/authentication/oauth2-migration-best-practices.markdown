@@ -29,7 +29,7 @@ layout: reference
     - `Refresh Token`: This token can change although most of the time this value is the same. Client applications should treat all returned refresh tokens as new values and overwrite the stored values with the new values you get from the response.
     - `Refresh Token Expiry`: This date should be checked by a daily script and ensure that a refresh_grant is made to keep the refresh token alive indefinitely. If company policy dictates that the token should be allowed to expire, then you can skip this step. Once a refresh token has expired, clients would need to contact SAP Concur's Implementation team to get a new company token.
 
-### <a name="token-management"></a>oken Management
+### <a name="token-management"></a>Token Management
   - Calling APIs with `accessTokens`
     - All APIs within SAP Concur require the calling application present an `accessToken` in the Header using the "Bearer" keyword.
     - Example:
