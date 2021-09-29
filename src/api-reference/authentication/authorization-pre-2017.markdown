@@ -17,19 +17,6 @@ Please contact your Partner Enablement representative before starting any new de
 
 {% include deprecation-alert.html deprecation_date="02/04/2017" content=deprecation_content %}
 
-* [Access tokens](#access-tokens)
-	* [Verb and URIs](#verbs-and-uris)
-	* [Keys and Secrets](#keys-and-secrets)
-	* [Getting an access token](#getting-access-token)
-	* [Refreshing an access token](#refreshing-access-token)
-	* [Revoking a single access token for a given user](#revoke-single-access-token)
-	* [Revoking all access tokens for a user](#revoke-all-access-tokens)
-* [Choosing an authorization flow](#choosing-authorization-flow)
-	* [Native flow](#native)
-	* [Web flow](#web)
-	* [AppCenter flow](#app-center)
-	* [Auto-Connect flow](#auto-connect)
-
 ## Access tokens <a name="access-tokens"></a>
 An access token is a long-lived token used to make API calls.
 
@@ -276,4 +263,3 @@ The Auto-Connect flow is an authorization to support Connection Requests API cal
 	`PUT /common/connectionrequests/{id}`
 
 1. If you encounter an error that makes it impossible to complete the connection process, revoke the access token so the user knows that the connection attempt failed and they can try again at a later time.
-
