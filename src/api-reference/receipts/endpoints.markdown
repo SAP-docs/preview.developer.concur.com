@@ -3,23 +3,6 @@ title: Endpoints
 layout: reference
 ---
 
-* [Definitions of Resources](#definitions-of-resources)
-  * [Supported Image Formats](#supported-image-formats)
-* [General](#general)
-  * [GET Service Index](#endpoint-service-index)
-  * [GET Receipt Status by Receipt ID](#endpoint-get-receipt-status)
-* [E-Receipts](#e-receipts)
-  * [GET Schemas](#endpoint-schemas)
-  * [POST Receipts](#endpoint-post-a-receipt)
-  * [GET Receipts by User ID](#endpoint-get-receipts-by-userid)
-  * [GET Receipts by Receipt ID](#endpoint-get-a-receipt-by-id)
-  * [GET Receipt Image by Receipt ID](#endpoint-get-receipt-image)
-* [Image-Only Receipts](#image-only-receipts)
-  * [POST Image-Only Receipts](#endpoint-post-an-image-only-receipt)
-  * [GET Image-Only Receipts by User ID](#endpoint-get-image-only-receipts-by-userid)
-  * [GET Image-Only Receipt by Receipt ID](#endpoint-get-an-image-only-receipt-by-id)
-  * [GET Receipt Image by Receipt ID](#endpoint-get-receipt-image-image-only)
-
 ## Definitions of Resources
 
 * *__E-Receipt__* - A schema-enforced resource with data and, optionally, an image. If an image is not provided, one will be generated from the data resource.
@@ -680,4 +663,3 @@ http https://us.api.concursolutions.com/receipts/v4/image-only-receipts/{RECEIPT
 ```
 
 [Back to Top](#endpoints)
-

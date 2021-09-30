@@ -7,13 +7,7 @@ layout: reference
 
 Below we have sample receipt data and the corresponding receipt images for the following receipt types:
 
-* [Air (Multiple Tickets)](#air-multiple-tickets)
-* [Car Rental](#car-rental)
-* [Ground Transport](#ground-transport)
-* [Hotel](#hotel)
-* [Rail (Multiple Tickets)](#rail-multiple-tickets)
-
-### Air (Multiple Tickets)
+## Air (Multiple Tickets)
 
 #### Receipt Data
 
@@ -559,7 +553,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 ![A Receipt Image](air-multiple-tickets.png)
 
-### Car Rental
+## Car Rental
 
 #### Receipt Data
 
@@ -696,7 +690,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 ![Car Rental Receipt Image](car-rental.png)
 
-### Hotel
+## Hotel
 
 #### Receipt Data
 
@@ -891,7 +885,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 ![Hotel Receipt Image](hotel.png)
 
-### Ground Transport
+## Ground Transport
 
 #### Receipt Data
 
@@ -1061,7 +1055,7 @@ Below we have sample receipt data and the corresponding receipt images for the f
 
 ![Ground Transport Receipt Image](ground_transport.png)
 
-### Rail (Multiple Tickets)
+## Rail (Multiple Tickets)
 
 #### Receipt Data
 
@@ -1180,4 +1174,3 @@ Below we have sample receipt data and the corresponding receipt images for the f
 #### Generated Receipt Image
 
 ![Rail Receipt Image](rail-multiple-tickets.png)
-

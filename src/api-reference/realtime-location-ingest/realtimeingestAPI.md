@@ -5,20 +5,7 @@ layout: reference
 
 {% include prerelease.html %}
 
-* [Overview](#overview)
-* [Regional Availability](#regional-availability)
-* [Request Headers](#request-headers)
-* [Response Headers](#response-headers)
-* [Status Codes](#status-codes)
-* [Example](#example)
-* [Schema](#schema)
-  * [dropOffLocation](#schema-dropOffLocation)
-  * [address](#schema-address)
-  * [errorDescription](#schema-errorDescription)
-  
-## Overview <a name="overview"></a>
-
-This API provides an endpoint to ingest real time user location information from Rideshare Services. 
+This API provides an endpoint to ingest real time user location information from Rideshare Services.
 
 ## Regional Availability <a name="regional-availability"></a>
 
@@ -106,7 +93,7 @@ concur-correlationid: {concur-correlationid}
 
 ### Response Body
 ```json
-{ 
+{
   "concur-correlationId": "concur-correlationId",
   "requestId": "requestId",  
   "appVersion": "appVersion",                    
@@ -150,4 +137,3 @@ postalCode|String|-|Postal code of the address
 Property Name|Type|Format|Description
 ---|---|---|---
 fieldName|Array|-|Errors associated with the given *fieldName*
-
