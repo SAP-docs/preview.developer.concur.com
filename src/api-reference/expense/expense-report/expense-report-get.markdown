@@ -11,21 +11,6 @@ Some elements will appear only if the OAuth consumer has the Web Services Admin 
 
 GET list of reports can be found [here](/api-reference/expense/expense-report/v2.reports.html)
 
-* [Request](#request)
-* [Response](#response)
-  * [Schema](#schema)
-    * [Expense Entry](#expense-entry)
-    * [Itemization](#itemization)
-    * [Attendee](#attendee)
-    * [Allocation](#allocation)
-    * [Journal Entry](#journal-entry)
-    * [VAT Data](#vat-data)
-    * [Card Transaction](#card-transaction)
-    * [Custom Fields](#custom-fields)
-    * [Report Owner](#report-owner)
-    * [Employee Bank Account](#employee-bank-account)
-* [Examples](#examples)
-
 ## Request <a name="request"></a>
 
 ### Request Parameters
@@ -670,4 +655,3 @@ Content-Type: application/xml
 [5]: https://developer.concur.com/users/users-resource/user-resource-get
 [6]: https://developer.concur.com/expense-report/expense-group-configuration-resource/expense-group-configuration-resource-get
 [7]: https://developer.concur.com/api-documentation/deprecated-features/get-list-reports-v20
-

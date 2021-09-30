@@ -7,21 +7,9 @@ layout: reference
 
 The configured fields for the specified expense form.
 
-* [Get a List of Form Fields](#get-list-form-fields)
-  * [Request](#request)
-  * [Response](#response)
-    * [Response Schema](#res-schema)
-  * [Example Request](#ex-req)
-  * [Example Response](#ex-res)
 
-## Version
-1.1
-
-## URI
+### URI
 `https://www.concursolutions.com/api/expense/expensereport/v1.1/report/Form/_{FormId}_/Fields`
-
-## Operations
-[GET](#get)
 
 ## Get a List of Form Fields <a name="get-list-form-fields"></a>
 Retrieves the details of the configured form fields for the specified form.
@@ -164,4 +152,3 @@ Content-Type: application/xml
     </FormField>
 </FormFieldsList>
 ```
-
