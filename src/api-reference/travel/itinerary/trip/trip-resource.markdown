@@ -7,30 +7,17 @@ layout: reference
 
 The Trips resource represents itineraries in the Concur Travel system. TripLink suppliers use this resource to display a subset of the full booking fields.
 
-## Version
+### Version
 
 1.1
 
-## URI  
+### URI  
 
 `/travel/trip/v1.1/{query_parameters}`
 
 ## Scope
 
 In order to obtain itinerary data when making Itinerary API calls, the value of the OAuth scope parameter must be set to: `ITINER`
-
-## Operations
-
-* [Get trip summaries](#getts)
-  * [Schema](#getts-schema)
-* [Get trip details](#gettd)
-  * [Schema](#gettd-schema)
-* [Create a new trip](#postnt)
-  * [Request schema](#postnt-request-schema)
-  * [Response schema](#postnt-response-schema)
-* [Update a trip](#postut)
-* [Cancel a trip](#delete)
-  * [Schema](#delete-schema)
 
 ## Get Trip Summaries <a name="getts"></a>
 
@@ -45,7 +32,7 @@ The Get Itinerary Summaries endpoint is used for retrieving trip summaries for t
 * Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.
 * This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and most bookings from your travel agency. Some customers may have multiple booking options which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.
 
-## Request
+### Request
 
   GET /travel/trip/v1.1/{query_parameters}
 
@@ -106,7 +93,7 @@ Where `access_token` is the OAuth 2.0 access token of the user whose itinerary i
 
 application/xml
 
-### <a name="getts-schema"></a>Get Trip Summaries Response Schema
+## <a name="getts-schema"></a>Get Trip Summaries Response Schema
 
 The response returns an `ItineraryInfoList` parent element with an `ItineraryInfo` child element for each trip summary for the specified traveler. If the `includeMetadata` and `ItemsPerPage` query parameters are included in the request, the response will include a `ConnectResponse` parent element which contains a `MetaData` element with paging information and a `Data` element with an `ItineraryInfoList` child element. The response for this operation can be divided into pages for easier processing.
 
@@ -336,20 +323,20 @@ This topic describes the full set of possible elements that can be returned. No 
 
 By default, when calling this API, the SAP Concur account associated with the OAuth access token used to make the API call should be the owner of the trip. This endpoint can also be used to get details for trips that the OAuth consumer does not own. This is most often done when a TMC needs to get trip details on behalf of a user. The TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
-## Request
+### Request
 
 ```
 GET /travel/trip/v1.1/trip_ID?[systemFormat=system_format|&userid_type=login|&user_id=login_ID]
 ```
 
-## Path Parameters
+### Path Parameters
 
 | Parameter Name | Data Type |Description
 | --------- | --------- | -------
 | `trip_ID`  | `string`  |  **Required**: The identifier for the desired trip. This identifier is returned as the value of the ID element when getting trip summaries. For example, if the returned value of the ID element is I2uwiJJw8r7Owl3IWlSie9WIelxhAhwiL, then the URI for the request is `/travel/trip/v1.1/I2uwiJJw8r7Owl3IWlSie9WIelxhAhwi`.
 
 
-## Query Parameters
+### Query Parameters
 
 | Parameter Name |Data Type |Description
 | --------- | --------- | -------
@@ -412,7 +399,7 @@ The response returns subset of the elements described in the following tables de
 |`ItinSourceName`	|`string`	|The itinerary source. Format: TravelSupplier.
 |`PassengerCount`	|`integer`	|The number of passengers included in the booking.
 
-## Examples
+### Examples
 
 ### Example 1: Get Trip Details for a Trip ID
 
@@ -667,7 +654,7 @@ Authorization: OAuth {access token}
 
 This endpoint is used for creating a new trip. To create a new trip, the specified dates in the content body can only span the trip to be created and cannot span an existing trip. To create or update a trip on behalf of a user, the OAuth access token used to make the API call should be associated with the SAP Concur account of that user. The TripLink supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
-## Request
+### Request
 
     POST /travel/trip/v1.1?[userid_type=login&user_id=login_ID]
 
@@ -678,7 +665,7 @@ This endpoint is used for creating a new trip. To create a new trip, the specifi
 | `userid_type`  | `string`	| **Optional**: The type of user identification to use. Possible value is: `login_id`.
 | `userid_value`  | `string`	| **Optional**: The value for the user identification type. Currently the only available type is `login_id` so the value is the login credentials. This parameter must be provided in conjunction with the `userid_type` parameter. The `userid_type` and `userid_value` parameters can only be used if the user account associated with the OAuth 2.0 access token is associated with an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard. The format for the request URI using the `userid_type` and `userid_value` query parameters is `/travel/trip/v1.1/trip_ID?userid_type=login&userid_value=login_ID`.
 
-## Headers
+### Headers
 
 ### Authorization Header (required)
 
@@ -738,7 +725,7 @@ The response returns an HTTP status code and if the trip is created successfully
 | `BookedVia` | `string` | Y | The booking method or the GDS the itinerary was booked in.
 | `DateBookedLocal` | `dateTime` | Y | The date, in the traveler’s local time, that the booking was made.
 
-## Examples
+### Examples
 
 ### Example 1: TMC Creates a Trip for User Using Their Login Credentials
 
@@ -1298,7 +1285,7 @@ This endpoint can be used to create trips for a user that is not the OAuth consu
 
 This endpoint can be used to cancel all segments in a trip. To cancel a trip on behalf of a user, the OAuth access token used to make the API call should be associated with the SAP Concur account of that user. The TripLink supplier or TMC must be registered with SAP Concur and have an SAP Concur account that has one of the following user roles: Web Services Administrator for Professional, or Can Administer for Standard.
 
-## Request
+### Request
     POST /travel/trip/v1.1/cancel?tripid=trip_ID[&userid_type=login&userid_value=login_ID]
 
 ### Path Parameters
@@ -1315,7 +1302,7 @@ This endpoint can be used to cancel all segments in a trip. To cancel a trip on 
 | `userid_type`  |`string` | **Optional**: The type of user identification to use. Possible value is: `login_id`.
 | `userid_value`  | `string` | **Optional**: The user's login ID. This parameter must be provided in conjunction with the `userid_type` parameter. The `userid_type` and `userid_value` parameters can only be used if the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard. The format for the request URI using the `userid_type` and `userid_value` query parameters is `/travel/trip/v1.1/trip_ID?userid_type=login&userid_value=login_ID`.
 
-## Headers
+### Headers
 
 ### Authorization Header (Required)
 
@@ -1327,7 +1314,7 @@ Where `access_token` is the OAuth 2.0 access token of the user whose trip you wa
 
 None.
 
-### <a name="delete-schema"></a>Cancel Trip Request Schema
+###<a name="delete-schema"></a>Cancel Trip Request Schema
 
 The request returns the full trip details for the cancelled trip. If the request is successful, the response trip will not contain any segments because they have been cancelled. The response includes the following additional elements inside the `Itinerary` parent element:
 
@@ -1340,7 +1327,7 @@ The request returns the full trip details for the cancelled trip. If the request
 | `DateBookedLocal` | `dateTime` | The date, in the traveler’s local time, that the booking was made.
 
 
-## Examples
+### Examples
 
 ### Example: Cancel a Trip with a Specific Trip ID
 
@@ -1405,4 +1392,3 @@ Authorization: OAuth {access token}
     </Bookings>
 </Itinerary>
 ```
-
