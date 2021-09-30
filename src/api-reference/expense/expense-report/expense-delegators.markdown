@@ -9,11 +9,6 @@ Users that have granted delegate permissions to the another Expense user.
 
 Retrieves the list of users that have granted delegate permissions to the user specified in the OAuth access token.
 
-* [Request](#request)
-* [Response](#response)
-  * [Schema](#schema)
-* [Examples](#examples)
-
 ### Version
 1.1
 
@@ -97,4 +92,3 @@ Content-Type: application/xml
     </Delegator>
 </DelegatorsList>
 ```
-
