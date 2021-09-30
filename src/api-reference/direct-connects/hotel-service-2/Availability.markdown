@@ -13,51 +13,6 @@ Message to retrieved the availability of hotels.
 
 ---
 
-* [Request](#request)
-  * [Schema](#req-schema)
-    * [Available Request Segments](#available-request-segments)
-    * [Available Request Segment](#available-request-segment)
-    * [Hotel Search Criteria](#hotel-search-criteria)
-    * [Criterion](#criterion)
-    * [Stay Date Range](#stay-date-range)
-    * [Room Stay Candidates](#room-stay-candidates)
-    * [Room Stay Candidate](#room-stay-candidate)
-    * [Guest Counts](#guest-counts)
-    * [Guest Count](#guest-count)
-* [Response](#response)
-  * [Schema](#res-schema)
-    * [Room Stays](#room-stays)
-    * [Room Stay](#room-stay)
-    * [Room Types](#room-types)
-    * [Room Type](#room-type)
-    * [Room Description](#room-description)
-    * [Rate Plans](#rate-plans)
-    * [Rate Plan](#rate-plan)
-    * [Rate Plan Description](#rate-plan-description)
-    * [Guarantee](#guarantee)
-    * [Supported Guarantee Types](#supported-guarantee-types)
-    * [Supported Guarantee Required](#supported-guarantee-required)
-    * [Deadline](#deadline)
-    * [Cancel Penalties](#cancel-penalties)
-    * [Cancel Penalty](#cancel-penalty)
-    * [Meals Included](#meals-included)
-    * [Rooms Rates](#room-rates)
-    * [Room Rate](#room-rate)
-    * [Rates](#rates)
-    * [Rate](#rate)
-    * [Payment Policies](#payment-policies)
-    * [Guarantee Payment](#guarantee-payment)
-    * [Accepted Payments](#accepted-payments)
-    * [Accepted Payment](#accepted-payment)
-    * [Payment Card](#payment-card)
-    * [Card Type](#card-type)
-    * [Total](#total)
-    * [Rate Description](#rate-description)
-    * [TPA Extensions](#tpa-extensions)
-    * [TimeSpan](#timespan)
-    * [Basic Property Info](#basic-property-info)
-* [Relationship Between RoomID and RatePlanID](#relationship-roomid-rateplanid)
-
 ## Request <a name="request"></a>
 
 ```xml
@@ -515,5 +470,3 @@ The combination of these IDs must be unique per `RoomStay`.  IDs with the same v
   ...
 </OTA_HotelAvailRS>
 ```
-
-

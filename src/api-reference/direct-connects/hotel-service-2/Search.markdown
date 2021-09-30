@@ -13,32 +13,6 @@ Message to perform the initial search for hotels.
 
 ---
 
-* [Request](#request)
-  * [Schema](#req-schema)
-    * [Criteria](#criteria)
-    * [Criterion](#criterion)
-    * [TPA Extensions](#req-tpa-extensions)
-    * [Custom Fields](#custom-fields)
-    * [Position](#position)
-    * [Hotel Ref](#hotel-ref)
-    * [Radius](#radius)
-    * [Stay Date Range](#stay-date-range)
-* [Response](#response)
-  * [Schema](#res-schema)
-    * [Properties](#properties)
-    * [Property](#property)
-    * [Address](#address)
-    * [State Prov](#state-prov)
-    * [Country Name](#country-name)
-    * [Contact Numbers](#contact-numbers)
-    * [Contact Number](#contact-number)
-    * [Award](#award)
-    * [Hotel Amenity](#hotel-amenity)
-    * [Supported Hotel Amenities](#supported-hotel-amenities)
-    * [TPA Extensions](#res-tpa-extensions)
-    * [TPA Hotel Preview Image URI](#tpa-hotel-preview)
-    * [TPA Property Reference Info](#tpa-property-reference-info)
-
 ## Request <a name="request"></a>
 
 ```xml
@@ -309,4 +283,3 @@ The maximum allowed size of `OTA_HotelSearchRS` is 1 MB. Any response that excee
 |---------|-------------------|-------------|
 |`ReferenceCatalogName`|`string`|**Required** which catalog the property reference comes from. Support `giata` only for now |
 |`ReferenceCatalogCode`|`string`|**Required** alternate property id (only giata id of hotel for now) from specified reference catalog |
-

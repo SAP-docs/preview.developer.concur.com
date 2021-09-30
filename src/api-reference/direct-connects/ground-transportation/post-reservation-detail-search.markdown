@@ -5,22 +5,6 @@ layout: reference
 
 # Post a Reservation Detail Search
 
-* [Response Schema](#res-schema)
-  * [Error](#error)
-  * [Primary Passenger Child](#primary-passenger-child)
-  * [Pickup Location](#pickup-location)
-  * [Dropoff Location](#dropoff-location)
-  * [Vehicle Child](#vehicle-child)
-  * [Vendor Child](#vendor-child)
-  * [Form of Payment Child](#form-payment-child)
-  * [Rate Information](#rate-info)
-  * [Reply Credit Card](#reply-credit-card)
-  * [Airport](#airport)
-  * [Flight Child](#flight-child)
-  * [Train Station](#train-station)
-  * [Train Child](#train-child)
-* [Example](#example)
-
 ## Request
 
 The following request is sent to the supplier when the Travel user selects a ground transportation reservation to get additional details.
@@ -405,4 +389,3 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
-

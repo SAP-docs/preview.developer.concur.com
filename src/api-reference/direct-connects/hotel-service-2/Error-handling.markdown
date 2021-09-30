@@ -10,11 +10,6 @@ Currently OTA Warnings are not supported and will be ignored.
 
 If the error is specifically related to application level errors, please do not respond with any other error types (HTTP etc.). If you have server level issues, then it is OK to respond with HTTP standard error codes.
 
-* [Error Types](#error-types)
-  * [Error Type Code 1: Unknown](#unknown)
-  * [Error Type Code 2: No Implementation](#no-implementation)
-  * [Error Type Code 13: Application Error](#app-error)
-
 Errors should always be returned in a response. For example:
 
 ```xml
@@ -57,7 +52,7 @@ SAP Concur only uses the very first error that is returned, therefore any excess
 |`ShortText`|`string`|**Required** A description of the error. The content of this attribute will be logged, but never displayed to the user.|
 |`Code`|`string`|**Required** An error code for a specific error.|
 
-### <a name="error-types"></a>Error Types
+## <a name="error-types"></a>Error Types
 
 SAP Concur supports the following `Error Type Codes` in any of the responses:
 
@@ -71,19 +66,19 @@ SAP Concur supports the following `Error Type Codes` in any of the responses:
 
 SAP Concur expects the following errors under the given error types:
 
-##### <a name="unknown"></a>Error Type Code 1: Unknown
+## <a name="unknown"></a>Error Type Code 1: Unknown
 
 |Error Code|Description|Example|
 |------------|-------------------|---------|
 |188|Transaction error|For errors not specified in other codes. Internal supplier log ID can be provided in `ShortText` for debugging.|
 
-##### <a name="no-implementation"></a>Error Type Code 2: No Implementation
+## <a name="no-implementation"></a>Error Type Code 2: No Implementation
 
 |Error Code|Description|Example|
 |------------|-----------------|---------|
 |1|Not implemented|The supplier can respond with this error if the end point called is not yet implemented. |
 
-##### <a name="app-error"></a>Error Type Code 13: Application Error
+## <a name="app-error"></a>Error Type Code 13: Application Error
 
 |Error Code|Description|Example|
 |------------|---------------------------------------------|---------|
@@ -96,4 +91,3 @@ SAP Concur expects the following errors under the given error types:
 |748|Invalid corporate ID|Requestor ID should be provided in the content of the element.|
 |400|Invalid property code|List of comma separated hotel codes should be provided in content of the element. Example: ```<Error Code="322" ShortText="No availability" Type="13">HTL4444,HTL5555</Error>```|
 |385|Invalid confirmation or cancellation number|Reservation ID should be provided in content of the element.|
-

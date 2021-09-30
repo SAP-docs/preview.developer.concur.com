@@ -9,25 +9,6 @@ layout: reference
 
 This request is sent when the ground transportation service provider needs to send an update to the reservation to Travel.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-    * [Error](#error)
-    * [Primary Passenger](#primary-passenger)
-    * [Pickup Location](#pickup-location)
-    * [Dropoff Location](#dropoff-location)
-    * [Vehicle](#vehicle)
-    * [Vendor](#vendor)
-    * [Form of Payment](#form-payment)
-    * [Airport](#airport)
-    * [Flight](#flight)
-    * [Train Station](#train-station)
-    * [Rate Information](#rate-info)
-    * [Train](#train)
-    * [Credit Card](#credit-card)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Example](#res-example)
-
 ## Request <a name="request"></a>
 
 ### URI
@@ -418,4 +399,3 @@ Content-Type: application/xml
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
-
