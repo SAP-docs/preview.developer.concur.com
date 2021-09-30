@@ -7,14 +7,9 @@ layout: reference
 
 Supplier companies provide travel services to users. The Suppliers resource can be used to retrieve information about suppliers.
 
-* [Retrieve all suppliers based on search criteria](#get)
-* [Retrieve a single supplier by ID](#getID)
-* [Schema](#schema)
-
 ## Retrieve all suppliers based on search criteria <a name="get"></a>
 
     GET  /api/v3.0/common/suppliers/
-
 
 ### Parameters
 
@@ -35,12 +30,9 @@ Name | Type | Format | Description
 `iataCode`	|	`query`	|	``string``	|	IATA Code
 `relevance`	|	`query`	|	`Int32`	|	Relevance of the Search results5
 
-
-
 ## Retrieve a single supplier by ID <a name="getID"></a>
 
     GET  /api/v3.0/common/suppliers/{id}
-
 
 ### Parameters
 
@@ -48,11 +40,7 @@ Name | Type | Format | Description
 -----|------|--------|------------
 `id`|```string```|`path`|**Required** Supplier ID.
 
-
-
-
 ## Schema <a name="schema"></a>
-
 
 ### <a name="suppliers"></a>Suppliers
 
@@ -60,7 +48,6 @@ Name | Type | Format | Description
 -----|------|--------|------------
 `Items`	|	`Array`	|	[Supplier](#supplier)	|	The result connection
 `NextPage`	|	``string``	|	-	|	The URI of the next page of results, if any.
-
 
 ### <a name="supplier"></a>Supplier
 
@@ -98,4 +85,3 @@ Name | Type | Format | Description
 `URI`	|	`string`	|	-	|	The URI to the resource.
 `WebUrl`	|	`string`	|	-	|	Web Address
 `WorldspanId`	|	`string`	|	-	|	Worldspan Id
-

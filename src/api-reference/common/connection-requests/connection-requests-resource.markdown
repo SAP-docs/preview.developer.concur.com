@@ -12,15 +12,6 @@ The use of loyalty numbers and/or verified emails to identify users is based on 
 
 Our recommendation for suppliers is to match users requesting to connect utilizing last name and loyalty number only. Or in the case of suppliers without loyalty numbers to use verified email and the last name of the user only. The first name and middle name fields have proved to generate a high degree of failures when utilized due to issues like nicknames within the supplier systems.
 
-
-* [Retrieve all connection requests that match the TripLink supplier ID](#get)
-* [Retrieve a connection request by ID](#getID)
-* [Create a connection request on behalf of a specific user](#post)
-* [Update a connection request](#put)
-* [Schema 3.2](#schema32)
-* [Schema 3.0 (deprecated)](#schema)
-* [Schema 3.1 (deprecated)](#schema31)
-
 * Connection Requests v3.0 is deprecated.
 * Connection Requests v3.1 is deprecated.
 
@@ -188,4 +179,3 @@ Name | Type | Format | Description
 `Email3`	|	``string``	|	-	|	The user's verified email address.
 `Email4`	|	``string``	|	-	|	The user's verified email address.
 `Email5`	|	``string``	|	-	|	The user's verified email address.
-

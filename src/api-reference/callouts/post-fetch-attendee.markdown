@@ -5,13 +5,6 @@ layout: reference
 
 # Post an Attendee Search Request
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-    * [Custom Fields for Healthcare Provider Attendees](#custom-fields)
-  * [Response Example](#res-example)
 
 ## Request <a name="request"></a>
 
@@ -25,17 +18,17 @@ For backward compatibility, Fetch Attendee version 1.0 is used instead of versio
 
 The application connector responds to the Fetch Attendee request by returning all attendees that match the search criteria. The result is limited to the maximum number of records specified in the request. If more than the maximum number of records are sent, Concur Expense displays a message in the Attendee Search window asking the user to refine their search. The authorization functionality in version 2.0 is the same as version 1.0
 
-### Headers
+## Headers
 
-#### Authorization Header
+### Authorization Header
 
 Required. Authorization header with Basic authorization for endpoint. Refer to [Authentication][2] for more information.
 
-### <a name="req-schema"></a>Request Schema
+## <a name="req-schema"></a>Request Schema
 
 The request body contains an **AttendeeSearchRequest** parent element with an **Attendee** child element. The **Attendee** elements contain the values entered on the search form.
 
-#### Attendee Elements
+### Attendee Elements
 
 |  Element |  Description |
 |-----|-----|
@@ -108,13 +101,13 @@ Content-Length: {length of content body}
 
 application/xml
 
-### <a name="res-schema"></a>Response Schema
+## <a name="res-schema"></a>Response Schema
 
 The response will include an **AttendeeSearchResponse** parent element, with an **Attendee** child element for each search result.  
 
 If no attendees match the search criteria, the response returns an empty **AttendeeSearchResponse**.
 
-#### Attendee Elements
+### Attendee Elements
 
 The **Attendee** child element must contain all of the elements described below. The **FirstName**, **LastName**, and **ExternalID** elements must have values. All other elements must be returned in the response, however they can be empty if no data is available.
 
@@ -130,7 +123,7 @@ The **Attendee** child element must contain all of the elements described below.
 |  Suffix |  The suffix of the attendee. Maximum length: 32. |
 |  Title |  The attendee's title. Maximum length: 32 |
 
-#### <a name="custom-fields"></a>Custom Fields for Healthcare Provider Attendees
+### <a name="custom-fields"></a>Custom Fields for Healthcare Provider Attendees
 
 |Field | Description |
 |------|-------|
@@ -154,7 +147,7 @@ The **Attendee** child element must contain all of the elements described below.
 * When implementing the search logic, the search criteria should use logical AND between the fields, not logical OR. For example, if in the search dialog the user specifies Doe in the last name field and Acme in the company field, the connector must return only records where the Acme company has contacts with the last name of Doe. It must not return records for contacts with the last name Doe who belong to another company such as Apex.
 * If the application connector does not respond or returns an error, the user is notified in a popup window within Expense. The SAP Concur solution will not resend the request unless the user manually initiates the search again.
 
-####  <a name="res-example"></a>XML Example of Successful Response
+###  <a name="res-example"></a>XML Example of Successful Response
 
 ```http
 HTTPS/1.1 200 OK
@@ -213,4 +206,3 @@ Content-Length: {length of content body}
 
 
 [2]: /api-reference/authentication/apidoc.html
-
