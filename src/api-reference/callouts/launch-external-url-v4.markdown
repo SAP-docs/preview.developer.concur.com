@@ -14,29 +14,14 @@ This callout differs from the standard SAP Concur web services in the following 
 
 *	It uses an outbound callout where Expense calls a public facing URL provided by the application connector, which is a web server hosted by the third-party developer or client. The connector domain must be on the allow list created during the configuration process.
 *	The application connector can also use the web services to read or update SAP Concur data.
-*	The developer or client can configure and maintain the public web service interface (the application connector), or the connector can be maintained by SAP Concur. This guide specifies the request and response format required.
+*	The developer or client can configure and maintain the public web service interface (the application connector), or the connector can be maintained by us. This guide specifies the request and response format required.
 *	The client Expense administrator must configure a new form field and add the field to the desired form before this service can be used.
 
 ## Prior Versions
 The [Launch External URL v1](https://developer.concur.com/api-reference/callouts/launch-external-url.html) will continue to work only at the Expense Entry level. Launch External URL v1 is not available on the NextGen UI for Concur Expense.
 
-## Contents
-
-* [Process Flow](#process-flow)
-* [Products and Editions](#products-editions)
-* [Limitations](#limitations)
-* [Callout Details](#callout-details)
-* [V4 Launch External URL Process Overview](#leu-process-overview)
-* [Security](#security)
-* [Authentication](#auth)
-* [Functions](#functions)
-* [SAP Concur Expense Configuration](#config)
-* [Responses and Errors](#responses-errors)
-* [Launch External URL Form Field Configuration](#leu-field-config)
-* [Application Connector Management](#app-connector)
-* [Configure Launch External URL - V4 Service](#config-leu)
-
 ## Process Flow <a name="process-flow"></a>
+
 ![Process Flow for Launch External Service](./launch-external-url-v4.png)
 
 ## Products and Editions <a name="products-editions"></a>
@@ -60,16 +45,17 @@ The system requires certain named fields (not custom fields) to be completed bef
 * At the Report Header level: Report Name, Report Date, Policy, and Start/End Date.
 * At the Expense Entry level: Expense Type, Amount, Transaction Date, Payment Type, and Currency.
 
-Any audit rules configured as Save actions will not be visible to the end user until the user returns to the SAP Concur Expense application from the pop-up window.
+Any audit rules configured as Save actions will not be visible to the end user until the user returns to the Concur Expense application from the pop-up window.
 
 ## Callout Details <a name="callout-details"></a>
+
 Information on how to create, install, and configure the application connector is included in [Callouts and Application Connectors](https://developer.concur.com/api-reference/callouts/callouts-application-connectors.html) and below.
 
 ## Launch URL Process Overview <a name="leu-process-overview"></a>
 
 The configuration process has the following steps:
 
-1. Third-party developer, client or SAP Concur downloads, installs, configures, and customizes the application connector. The application connector may make requests to the inbound web services.
+1. Third-party developer, client or us downloads, installs, configures, and customizes the application connector. The application connector may make requests to the inbound web services.
 
 2. Concur Expense registers the application connector. Be ready to supply the test and production domain information.
 
@@ -98,6 +84,7 @@ Once the configuration is complete, the callout uses the following process:
 >**Note**:  Concur Expense will perform a save for the area where the user came from (Entry, Allocation, Header) before the new browser window opens and upon refresh after the window is closed.
 
 ## Security <a name="security"></a>
+
 Concur Expense will make calls to the application connector’s endpoint using SSL. During configuration,  Concur Expense will connect to the application connector to validate that its hostname and access credentials are valid.
 
 Concur Expense provides for a sample application connector, credentials are stored in a web configuration file that varies by platform, such as web.xml or web.config. However, if you are hosting the connector, you can customize where and how the credentials are stored by customizing HTTPBasicAuth.java or Authentication.cs.
@@ -109,12 +96,14 @@ Concur Expense sends requests to the application connector using anonymous autho
 
 The application connector can validate the authenticity of the query by generating a signature hash from the provided variables and comparing it with the passed in values, including the signature hash that Concur Expense supplies. Two of the required variables for the signature hash are username and password, which are entered in Concur Expense on the Register Application Connector page in web services under Administration. The application connector must use the same username and password pair to generate its validation signature hash.
 
-Details on registering your client ID can be found on the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) page. 
+Details on registering your client ID can be found on the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) page.
 
 ## Functions <a name="functions"></a>
+
 Details of the URI used for the Launch External URL request can be found on the [V4 Launch External URL Request](\api-reference\callouts\launch-external-url-v4-request.html) page.
 
 ## Concur Expense Configuration <a name="config"></a>
+
 A custom field in Expense with text data type for the Expense Report Header, Entry, or Allocation must be configured as the Launch URL control type and the form field must be added to the desired form before this callout can be used. The Launch URL control type will not appear in the list until a partner application using the Launch External URL API has been registered and enabled for the company. The administrator must select either a single-line or a multi-line control type, depending on the data that will be placed in the field.
 
 Notes:
@@ -124,6 +113,7 @@ Notes:
 * This Callout cannot be used with Standard Edition clients or from a Travel or Invoice field.
 
 ## Responses and Errors <a name="responses-errors"></a>
+
 Refer to the [HTTP Codes](https://developer.concur.com/api-reference/http-status-codes.html) page for details of the common responses and errors.  
 
 ## Application Connector Management <a name="app-connector"></a>
@@ -178,4 +168,3 @@ Create a new form field with the Launch External URL control type.
 6. Go to the **Forms** tab and add the **Launch URL** field to the form.
 
 >**Note**: Make sure the Access Rights are set to Modify for the Employee role. Approver, Expense Processor, and Expense Processor Manager roles should be configured as read-only or hidden.
-

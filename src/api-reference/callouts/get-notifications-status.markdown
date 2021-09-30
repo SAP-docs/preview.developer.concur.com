@@ -6,12 +6,6 @@ layout: reference
 
 Retrieves the list of event notifications that are in the supplied status.
 
-* [Request](#request)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Schema](#schema)
-  * [Response Examples](#res-examples)
-
 ## Request <a name="request"></a>
 
 ### Request Parameters
@@ -22,24 +16,24 @@ The desired status for the notification. Required. Currently supports **failed**
 Example:  
 `https://www.concursolutions.com/api/platform/notifications/v1.0/notification?status={status}`
 
-### Headers
+## Headers
 
-#### Authorization Header
+### Authorization Header
 
 Authorization header with OAuth token for valid SAP Concur user. Required.
 
-The OAuth consumer must have one of the following user roles in SAP Concur: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard.
+The OAuth consumer must have one of the following user roles in the SAP Concur platform: Company Administrator or Web Services Administrator for Professional, or Can Administer for Standard.
 
-#### Accept Header
+### Accept Header
 
 * application/xml
 * application/json
 
-#### Content-Type Header
+### Content-Type Header
 
 application/xml
 
-####  <a name="req-example"></a>XML Example Request
+###  <a name="req-example"></a>XML Example Request
 
 ```http
 GET https://www.concursolutions.com/api/platform/notifications/v1.0/notification?status=FAILED HTTP/1.1
@@ -54,10 +48,10 @@ Accept: application/xml
 * application/xml
 * application/json
 
-### <a name="schema"></a>Schema
+## <a name="schema"></a>Schema
 This request will return a **NotificationsList** parent element with a **Notification** child element for each failed notification. The **Notification** elements will have a **Failure** child element if the notification is failed.
 
-#### Failure Elements
+### Failure Elements
 
 |  Element |  Description |
 | --------| ------------- |
@@ -69,7 +63,7 @@ This request will return a **NotificationsList** parent element with a **Notific
 |  ObjectURI |  The URI for the object. The developer can use the appropriate GET function for the Object Type. |
 
 
-####  <a name="res-examples"></a>XML Example of Successful Response
+###  <a name="res-examples"></a>XML Example of Successful Response
 
 ```http
 HTTP/1.1 200 OK
@@ -89,7 +83,7 @@ Content-Type: application/xml
 </NotificationList>
 ```
 
-####  JSON Example of Successful Response
+###  JSON Example of Successful Response
 
 ```http
 HTTP/1.1 200 OK
@@ -107,4 +101,3 @@ Content-Type: application/json; charset=utf-8
   }
 ]
 ```
-
