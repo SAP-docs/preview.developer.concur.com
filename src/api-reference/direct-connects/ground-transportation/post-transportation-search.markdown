@@ -7,27 +7,9 @@ layout: reference
 
 A post transportation search request is sent when the Travel user searches for ground transportation.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-    * [Pickup Location](#pickup-location)
-    * [Dropoff Location](#dropoff-location)
-    * [Discount Code](#discount-code)
-    * [Airport](#airport)
-    * [Flight](#flight)
-    * [Train Station](#train-station)
-    * [Train](#train)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-    * [Error](#error)
-    * [Limo](#limo)
-    * [Vendor](#vendor)
-    * [Form of Payment](#form-payment)
-    * [Rate Information](#rate-info)
-* [Examples](#examples)
-
 ## Request <a name="request"></a>
 
-### URI                                                                                
+### URI
 
 The Ground Transportation direct connect sends the relevant information to a URI that the travel supplier maintains. The standard location is:
 
@@ -424,4 +406,3 @@ Content-Length: {length of content body}
 [3]: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [4]: https://en.wikipedia.org/wiki/ISO_4217
 [5]: https://en.wikipedia.org/wiki/International_Air_Transport_Association_airport_code
-

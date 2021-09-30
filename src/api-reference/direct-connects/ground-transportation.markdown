@@ -16,18 +16,11 @@ This callout differs from the inbound SAP Concur web services in the following w
 
 **NOTE**: This direct connect was originally designed to work with Limo providers, but can support all types of ground transportation.
 
-* [Products and Editions](#products-editions)
-* [Product Restrictions](#product-restrictions)
-* [Configuration Process](#config-process)
-* [Authentication](#authentication)
-* [Operations](#operations)
-* [GDS Sell Formats](#gds-sell-formats)
-
-### <a name="products-editions"></a>Products and Editions
+## <a name="products-editions"></a>Products and Editions
 * Concur Travel Professional Edition
 * Concur Travel Standard Edition
 
-### <a name="product-restrictions"></a>Product Restrictions
+## <a name="product-restrictions"></a>Product Restrictions
 
 This direct connect is only available to Travel Suppliers with Ground Transportation inventory. This direct connect is not supported in the SAP Concur mobile application.
 
@@ -100,4 +93,3 @@ TUR ZM AK1  SEA 15DEC-/FALCON DES-TEL 8666932526/RATE-50.00 HOURLY-2 HR MIN/CON
 [7]: /api-reference/direct-connects/ground-transportation/post-transportation-search.html
 [8]: /api-reference/direct-connects/ground-transportation/update-reservation-supplier.html
 [9]: /api-reference/direct-connects/ground-transportation/update-reservation-travel.html
-

@@ -7,23 +7,6 @@ layout: reference
 
 A post reservation sell request is sent when a Travel user attempts to book a ground transportation reservation.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-	* [Airport](#airport)
-    * [Train Station](#train-station)
-   * [Credit Card](#credit-card)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-    * [Error](#error)
-	* [Primary Passenger](#primary-passenger)
-	* [Rate Information](#rate-info)
-	* [Vehicle](#vehicle-schema)
-	* [Vendor](#vendor-schema)
-	* [Form of Payment](#form-payment)
-	* [Reply Credit Card](#reply-credit-card)
-  * [Response Example](#res-example)
-
 ## Request <a name="request"></a>
 
 ### Supported Accept Types
@@ -632,4 +615,3 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
-
