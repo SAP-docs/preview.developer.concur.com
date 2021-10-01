@@ -7,16 +7,6 @@ layout: reference
 
 Posts a workflow action for the supplied expense report. The workflow action moves the expense report through the workflow process.
 
-* [Workflow Actions](#workflow-actions)
-* [Workflow Roles](#workflow-roles)
-  * [System Role](#system-role)
-  * [Approver Role](#approver-role)
-* [Request](#request)
-  * [Request Schema](#req-schema)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-* [Examples](#examples)
-
 ## Workflow Actions <a name="workflow-actions"></a>
 
 The available actions are:
@@ -133,4 +123,3 @@ Authorization: OAuth {access token}
 
 [1]: /api-reference/expense/expense-report/v3.reports.html#getID
 [2]: https://developer.concur.com/reference/http-codes
-

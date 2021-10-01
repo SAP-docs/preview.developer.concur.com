@@ -7,18 +7,12 @@ layout: reference
 
 Basic scenario encompassing all the functionality provided by Hotel Service 2 incorporated into Concur Travel starting from a hotel search, through to confirmation of a booking and ending with a cancellation.
 
-* [Actors](#actors)
-* [Use Case](#use-case)
-* [Search Criteria](#search-criteria)
-* [Reservation and Read Requests](#reservation-read-requests)
-* [General System Overview](#general-system-overview)
-
-### <a name="actors"></a>Actors
+## <a name="actors"></a>Actors
 
 1. Primary Actor - Business traveler
 1. Secondary Actor - Hotel Supplier
 
-### <a name="use-case"></a>Use Case
+## <a name="use-case"></a>Use Case
 
 1. Business traveler performs a search for hotels given a criteria.  
 
@@ -71,5 +65,3 @@ SAP Concur will follow up a Reservation Request with a Read request as soon as p
 
 
 ![./media/image1.png](./images/diagrams/hs2-sequence-diagram.png)
-
-

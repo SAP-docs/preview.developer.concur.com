@@ -5,15 +5,6 @@ layout: reference
 
 # Expense Entries v3
 
-* [Retrieve All Expense Entries](#get)
-* [Create a New Expense Entry](#post)
-* [Update an Expense Entry](#put)
-* [Delete an Expense Entry](#delete)
-* [Schema](#schema)
-  * [Entry](#entry)
-  * [Custom Field](#custom-field)
-  * [Journey](#journey)
-
 The Expense Entries API is used to manage expense reports and their entries in SAP Concur solutions. It allows for the synchronizing and reconciliation of expense related information with your internal systems and reporting modules.
 
 1.1 documentation is available [here.](/api-reference/expense/expense-report/v1dot1.expense-entry.html)  
@@ -166,4 +157,3 @@ Name | Type | Format | Description
 `UnitOfMeasure`	|	`string`	|	-	|	**Required** The unit of measure for distance and odometer values. Supported values: `M` - miles, `K` - kilometers
 
 **NOTE:** Clients that have Car Configurations that include variable rates or custom mileage expense type codes are not supported. We only support Car Configurations that include Personal Car One-Rate definitions, using the default mileage expense type code (MILEG) where Google Maps is not set as mandatory.
-

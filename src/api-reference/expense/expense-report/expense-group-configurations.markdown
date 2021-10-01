@@ -9,20 +9,11 @@ Retrieves the list of Expense Polices, Expense Types and Payment Types for the E
 
 NOTE: The Concur Expense product is highly configurable, and each client may have a unique set of payment types. If a payment type is not included in the response, it is not available for use with this client.
 
-* [Retrieve a configuration of an expense group](#get)
-* [Retrieve an expense group configuration by ID](#getID)
-* [Schema](#schema)
-* [Make a test call using 3.0 Swagger](https://www.concursolutions.com/api/docs/index.html#!/ExpenseGroupConfigurations)
-
-## Version
-3.0
-
 1.1 documentation is available [here](./v1dot1.expense-group-configurations.html)
 
 ## Retrieve a configuration of an expense group <a name="get"></a>
 
     GET  /api/v3.0/expense/expensegroupconfigurations
-
 
 ### Parameters
 
@@ -1234,4 +1225,3 @@ https://www.concursolutions.com/api/v3.0/expense/expensegroupconfigurations/gWv5
   "URI": "https://www.concursolutions.com/api/v3.0/expense/expensegroupconfigurations/gWv5bj$sPY1weV9audTTRp7PkBlea3Y6aizg"
 }
 ```
-

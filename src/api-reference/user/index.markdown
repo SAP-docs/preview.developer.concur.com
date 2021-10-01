@@ -5,18 +5,6 @@ layout: reference
 
 The Users resource represents a set of SAP Concur users. It is always managed as a batch of users, even if the batch contains only one user.
 
-* [Retrieve a user's information](#getUser)
-  * [Schema](#getUserSchema)
-* [Retrieve all users based on search criteria](#getall)
-* [Retrieve the list of required fields for creating a user](#requiredFields)
-  * [Schema](#requiredFieldsSchema)
-* [Update a user's account information](#createUser) - Create a User is not supported at this time.
-  * [Request schema](#createUserRequestSchema)
-  * [Response schema](#createUserResponseSchema)
-* [Update a user's password](#updatePwd)
-  * [Request schema](#updatePwdRequestSchema)
-  * [Response schema](#updatePwdResponseSchema)
-
 ### Version
 
 1.0
@@ -225,4 +213,3 @@ Name|Type|Format|Description
     </User>
 </UserBatch>
 ```
-

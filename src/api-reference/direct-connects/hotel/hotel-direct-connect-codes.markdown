@@ -10,17 +10,6 @@ redirect_from:
 
 {% include deprecation-alert.html %}
 
-# Hotel Direct Connect Codes
-
-* [OTA Error Codes](#method1)
-* [FOP Codes](#method2)
-* [Hotel Chain Codes](#method3)
-* [AQC Codes](#method4)
-* [Supported Languages](#method5)
-* [ID Type Codes](#method6)
-* [Reservation Status Types](#method7)
-* [Preference Levels](#method8)
-
 ## OTA Error Codes <a name="method1"></a>
 
 Code|Description
@@ -463,4 +452,3 @@ Value|Text Value|Description
 4|less_preferred|-
 5|preferred|-
 10|most_preferred|Three golden diamonds
-

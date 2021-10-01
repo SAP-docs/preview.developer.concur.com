@@ -6,11 +6,6 @@ layout: reference
 
 The Cancel Reservation operation is sent to the supplier to cancel a travel reservation on behalf of a user. The Ground Transportation direct connect sends the relevant information to a URI that the travel supplier maintains.  The standard location is: `https://{servername}/concur/groundtransportation`. This URI is configured by the supplier when registering the partner application.
 
-* [Response Schema](#res-schema)
-  * [Rate Information](#rate-info)
-  * [Reply Credit Card](#reply-credit-card)
-* [Example](#example)
-
 ## Request
 
 ### URI
@@ -277,4 +272,3 @@ Content-Length: {length of content body}
 ```
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
-

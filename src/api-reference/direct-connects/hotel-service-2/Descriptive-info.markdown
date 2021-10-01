@@ -13,24 +13,6 @@ Message to retrieve descriptive details about a given hotel. This may include te
 
 ---
 
-* [Request](#request)
-  * [Schema](#req-schema)
-    * [Hotel Descriptive Infos](#hotel-desc-infos)
-    * [Hotel Descriptive Info](#hotel-desc-info)
-* [Response](#response)
-  * [Schema](#res-schema)
-    * [Hotel Descriptive Contents](#hotel-desc-contents)
-    * [Hotel Descriptive Content](#hotel-desc-content)
-    * [Hotel Info](#hotel-info)
-    * [Descriptions](#descriptions)
-    * [TPA Extensions](#tpa-extensions)
-    * [Description](#description)
-    * [Multimedia Descriptions](#multi-descs)
-    * [Multimedia Description](#multi-desc)
-    * [Image Items](#image-items)
-    * [Image Item](#image-item)
-    * [Image Format](#image-format)
-
 ## Request <a name="request"></a>
 
 ```xml
@@ -195,4 +177,3 @@ The maximum allowed size of `OTA_HotelDescriptiveInfoRS` is 150 KB. Any response
 |Name|Type|Description|
 |---------|-------------------|-------------|
 |`URL`|`string`|**Required** Contains a HTTPS URL pointing to a hotel image. The URLs are used in a client-side gallery widget, which works best with `.png` and `.jpg` files.|
-

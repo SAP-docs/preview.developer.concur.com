@@ -7,33 +7,6 @@ layout: reference
 
 This request is sent when the Travel user updates an existing ground transportation reservation.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-    * [Booker](#booker)
-    * [Primary Passenger](#primary-passenger)
-    * [Pickup Location](#pickup-location)
-    * [Dropoff Location](#dropoff-location)
-    * [Discount Code](#discount-code)
-    * [Form of Payment](#req-form-payment)
-    * [Airport](#req-airport)
-    * [Flight](#req-flight)
-    * [Train Station](#req-train-station)
-    * [Train](#req-train)
-    * [Credit Card](#credit-card)
-* [Response](#response)
-  * [Response Schema](#response-schema)
-    * [Error](#error)
-    * [Vehicle](#vehicle)
-    * [Rate Information](#rate-info)
-    * [Vendor](#vendor)
-    * [Form of Payment](#res-form-payment)
-    * [Airport](#res-airport)
-    * [Flight](#res-flight)
-    * [Train Station](#res-train-station)
-    * [Train](#res-train)
-    * [Reply Credit Card](#reply-credit-card)
-* [Examples](#examples)
-
 ## Request <a name="request"></a>
 
 ### URI
@@ -619,4 +592,3 @@ Content-Length: {length of content body}
 
 [1]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 [2]: http://en.wikipedia.org/wiki/ISO_4217
-
