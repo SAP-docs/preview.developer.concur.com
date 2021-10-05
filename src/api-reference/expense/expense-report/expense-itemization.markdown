@@ -5,17 +5,6 @@ layout: reference
 
 #  Itemizations v3
 
-* [Retrieve all expense itemizations owned by the user](#get) **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**
-* [Retrieve an expense itemization by ID](#getID)
-* [Create a new expense itemization](#post)
-* [Update an expense itemization](#put) **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**
-* [Delete an expense itemization](#delete) **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**
-* [Schema](#schema)
-
-## Version
-
-3.0 Note that some methods are deprecated  
-
 1.1 documentation is available [here](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)  
 
 ## Retrieve all expense itemizations owned by the user <a name="get"></a>
@@ -355,4 +344,3 @@ Name | Type | Format | Description
 `ListItemID`	|	`string`	|	-	|	For list fields, this is the list item ID.
 `Type`	|	`string`	|	-	|	The custom field type. Possible values: Amount, Boolean, ConnectedList, Date, Integer, List, Number, Text
 `Value`	|	`string`	|	-	|	The value in the Org Unit or Custom field. For list fields, this is the name of the list item. Maximum length: 48 characters
-

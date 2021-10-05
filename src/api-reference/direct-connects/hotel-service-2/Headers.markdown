@@ -7,13 +7,6 @@ layout: reference
 
 SAP Concur will send the user-name and password in both the HTTP header and the SOAP header. If the username and password generates an authentication error, then SAP Concur expects an HTTP 403 response.
 
-* [HTTP Headers](#http)
-  * [Troubleshooting](#troubleshooting)
-* [Soap Header](#soap)
-* [OTA Message Headers](#ota-message)
-  * [Request Message Headers](#request-message)
-  * [Response Message Headers](#response-message)
-
 ## HTTP Headers <a name="http"></a>
 
 
@@ -135,5 +128,3 @@ The supplier is required to respond with the following attributes and elements i
 |`PrimaryLangID`|`string`|**Required** The primary language preference for the message encoded as ISO 639-1.|
 |`AltLangID`|`string`|**Required** The alternate language for a customer or message encoded as ISO 639-1.|
 |`Success / Error`|`complex`|**Required** Indicates Success Or Error.  Refer to the [Error Handling](/api-reference/direct-connects/hotel-service-2/Error-handling.html) page for more details.|
-
-

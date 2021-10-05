@@ -5,32 +5,32 @@ layout: reference
 
 # Post an Event Notification Request
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-  * [Request Example](#req-example)
-* [Response](#response)
-  * [Response Example](#res-example)
+
 
 ## Request <a name="request"></a>
 
 ### Supported Accept Types
+
 * application/xml
 
 ### URI
+
 The Event Notification callout sends the notification to a URI for the application connector, which can be in a custom location for each client. The standard location is:
 
     https://{servername}/concur/v1.0/notify
 
 The URI is configured on the **Register Application Connector** page in** Web Services** under **Administration**.
 
-
 ### Request Headers - Required
+
 Authorization header with Basic authorization for endpoint. Refer to [Authentication][2] for more information.
 
 ### Request Headers - Optional
+
 None
 
-### <a name="req-schema"></a>Request Schema
+## <a name="req-schema"></a>Request Schema
+
 The request will include a **Notification** parent element, with the following child elements:
 
 |Element |Description |
@@ -62,9 +62,11 @@ Authorization: Basic Y29uY3VyOmNvbmN1cg==
 ## Response <a name="response"></a>
 
 ### Supported Content Types
+
 * application/txt
 
 ### Content Body
+
 The application connector responds with an HTTP 200 code when it successfully receives the notification.
 
 ###  <a name="res-example"></a>Example of Successful Response
@@ -74,4 +76,3 @@ The application connector responds with an HTTP 200 code when it successfully re
 
 
 [2]: /api-reference/callouts/event-notification.html
-

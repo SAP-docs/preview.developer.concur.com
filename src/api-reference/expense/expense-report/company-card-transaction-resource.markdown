@@ -9,11 +9,6 @@ The corporate or credit card charges that are available for use in expense repor
 
 Retrieves a list of unassigned company card charges for the user specified in the OAuth access token.
 
-* [Request](#request)
-* [Response](#response)
-  * [Schema](#schema)
-* [Examples](#examples)
-
 ### Version
 1.1
 
@@ -93,4 +88,3 @@ Content-Type: application/xml
     </CardCharge>
 </CardCharges>
 ```
-

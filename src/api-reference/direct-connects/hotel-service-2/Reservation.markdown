@@ -13,51 +13,6 @@ Message to reserve a hotel.
 
 ---
 
-* [Request](#request)
-  * [Schema](#req-schema)
-    * [Hotel Reservation](#req-hotel-reservation)
-    * [Room Stays](#req-room-stays)
-    * [Guest Counts](#guest-counts)
-    * [Guest Count](#guest-count)
-    * [Rate Plan](#req-rate-plan)
-    * [Guarantee](#guarantee)
-    * [Guarantees Accepted](#guarantees-accepted)
-    * [Payment Card](#payment-card)
-    * [Series Code](#series-code)
-    * [Comments](#comments-one)
-    * [Comment](#comment-one)
-    * [Text](#text)
-    * [Res Guest](#res-guest)
-    * [Profile](#profile)
-    * [Customer](#customer)
-    * [Person Name](#person-name)
-    * [Telephone](#telephone)
-    * [Citizen Country Name](#citizen-country-name)
-    * [Company Info](#company-info)
-    * [Res Global Info](#res-global-info)
-    * [Memberships](#memberships)
-    * [Membership](#membership)
-    * [Comments](#comments-two)
-    * [Comment](#comment-two)
-    * [TPA Extensions](#tpa-extensions)
-    * [Notify Emails](#notify-emails)
-    * [Custom Fields](#custom-fields)
-    * [Custom Field](#custom-field)
-* [Response](#response)
-  * [Schema](#res-schema)
-    * [Res Response Type](#res-response-type)
-    * [Hotel Reservations](#hotel-reservations)
-    * [Hotel Reservation](#res-hotel-reservation)
-    * [Unique ID](#unique-id)
-    * [Type](#type)
-    * [Room Stays](#res-room-stays)
-    * [Room Stay](#room-stay)
-    * [Rate Plan](#res-rate-plan)
-    * [RoomRates](#room-rates)
-    * [RoomRate](#room-rate)
-    * [Rates](#rates)
-    * [Rate](#rate)
-
 ## Request <a name="request"></a>
 
 ```xml
@@ -575,4 +530,3 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
 |Name|Type|Description|
 |------------------------|--------------------|-------------|
 |`Total`|`complex`|**Required** A description of the rate. Refer to `Total` in [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html#total).|
-

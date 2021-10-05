@@ -5,18 +5,6 @@ layout: reference
 
 # ERP Integrations
 
-* [Learn](#learn)
-* [Phased Development Approaches](#phases)
-* [Integration](#integration)
-  * [Quick Connect](#quick-connect)
-  * [Company Profile](#profile)
-  * [Financial posting via Financial Integration Service](./posting-via-financial-integration-service.html)
-  * [Financial posting via Extract](./posting-via-extracts.html)
-  * [Manage lists of Cost Object codes](#integration-manage-lists)
-  * [Add and update Vendor data](#integration-vendor-data)
-  * [Send Purchase Order data to SAP Concur](#integration-purchase-order) (Invoice Only)
-  * [Send Purchase Order Receipt data to SAP Concur](#integration-purchase-order-receipt) (Invoice Only)
-
 Thank you for your interest in an App Center Partnership to develop an ERP integration between SAP Concur’s products and your chosen ERP brand. The App Center Certification Program requires each desired ERP Brand to be certified. The certified application must support the Expense & Invoice products for both of SAP Concur’s Editions (Standard + Professional Edition). Unless noted as _Optional_ all portions are required.
 
 ## <a name="learn"></a>Learn

@@ -7,12 +7,6 @@ layout: reference
 
 Posts an exception to the report, and associates it with one of the following data levels: Report Header, Entry, Itemization, Allocation. This endpoint requires familiarity with the company's exception code configuration.
 
-* [Request](#request)
-  * [Request Schema](#req-schema)
-* [Response](#response)
-  * [Response Schema](#res-schema)
-* [Examples](#examples)
-
 ## Request <a name="request"></a>
 
 ### Request Parameters
@@ -116,4 +110,3 @@ Content-Type: application/xml
 
 [1]: /api-reference/expense/expense-report/v3.reports.html#getID
 [2]: https://developer.concur.com/reference/http-codes
-

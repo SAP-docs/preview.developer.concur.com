@@ -9,12 +9,6 @@ Triggers the Submit workflow action for the specified report.
 
 **Important Note**: This endpoint submits the expense report as if the original report owner had submitted it. Consult your company's Expense administrator to confirm that the web service should be allowed to submit reports on behalf of users. If you wish to enforce the expense report delegate functionality, use the [Get Expense Delegators][1] function to determine if the user in question has the correct permissions to submit on behalf of the report owner.
 
-* [Request](#request)
-* [Response](#response)
-  * [Schema](#schema)
-    * [Report Exception Schema](#report-exception)
-* [Examples](#examples)
-
 ## Request <a name="request"></a>
 
 ### Request Parameters
@@ -93,4 +87,3 @@ X-UserID: cmiller@example.com
 [3]: /api-reference/expense/expense-report/v1dot1.reports.html#getID
 [4]: /api-reference/expense/expense-report/v1dot1.reports.html#post
 [6]: https://developer.concur.com/reference/http-codes
-

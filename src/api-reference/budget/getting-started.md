@@ -5,13 +5,6 @@ layout: reference
 
 # Getting Started
 
-* [Overview](#overview)
-* [Process Flow](#process-flow)
-* [Products and Editions](#products-editions)
-* [Scope Usage](#scope-usage)
-* [Dependencies](#dependencies)
-* [Access Token Usage](#access-token-usage)
-
 ## Overview <a name="overview"></a>
 
 The Budget service exposes budget and fiscal year data.  Partners and clients may use the service endpoints to read and alter fiscal year, budget, budget adjustment, and budget matching configuration.
@@ -50,4 +43,3 @@ SAP Concur clients must purchase Budget in order to use this API.
 ## Access Token Usage <a name="access-token-usage"></a>
 
 This API supports both company level and user level access tokens. The user needs to have the Budget Administrator role in order to access the API.
-

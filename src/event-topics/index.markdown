@@ -5,14 +5,6 @@ layout: reference
 
 # Event Subscription Management
 
-* [Access Control (JWT)](#ac-jwt)
-* [Browse Available Topics](#get-topics)
-* [Create a Subscription](#put-subscription)
-* [Verify Your Subscription](#get-subscription)
-* [Browse Existing Subscriptions](#get-subscription-list)
-* [Delete Your Subscription](#delete-subscription)
-* [Request Example](#example)
-
 ## <a name="ac-jwt"></a>Access Control (JWT)
 
 The Event Subscription Service (ESS) API uses the standard SAP Concur OAuth2 Framework for Authentication and Authorization via a JSON Web Token (JWT).
