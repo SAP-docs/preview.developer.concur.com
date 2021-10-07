@@ -2,11 +2,11 @@
 
 ## Introduction
 
-Concur maintain two public websites for customers providing API documentation:
+Concur maintains two public websites for customers providing API documentation:
 * developer.concur.com
 * preview.developer.concur.com
 
-Each site is maintained in its own github repository with the static content served up using GitHub pages
+Each site is maintained in its own github repository with the static content served up using GitHub pages.
 
 The main site most customers will use is developer.concur.com.  Edits and new content are made initially in the preview repository and, periodically, the documentation team will need to transfer that content to the main site when a new release is needed.
 
@@ -26,13 +26,14 @@ Installing `git` on `mac` is easy, choose any of the following:
 
 ### Windows
 
-There are various ways to install `git` on `windows`, but the recommended way would be to install `git bash`, which provides the `git` command line tool inside a `bash` terminal on windows.  https://gitforwindows.org/
+There are various ways to install `git` on `Windows`, but the recommended way would be to install `git bash`, which provides the `git` command line tool inside a `bash` terminal on Windows.  https://gitforwindows.org/
 
 ## Workflow
 
 This workflow uses a local clone of the `developer.concur.com` repository where changes can be pulled from the `preview.developer.concur.com` repository and merged into a branch, before pushing that branch to github to generate a `pull request`.
 
-The `main` branch on both `developer.concur.com` and `preview.developer.concur.com` are protected against direct merges.  Only pull requests from another branch are allowed, and those pull requests must be reviewed by a contributor other than the `author`.  (Administrators can merge PRs without reviews if needed, but this is recommended only under exceptional circumstances.)
+The `main` branch on both `developer.concur.com` and `preview.developer.concur.com` are protected against direct merges.  Only pull requests from another branch are allowed, and those pull requests must be reviewed by a contributor other than the `author`.
+> Administrators can merge PRs without reviews if needed, but this is recommended only under exceptional circumstances.
 
 ## Initial setup (do this once)
 
@@ -43,7 +44,7 @@ Clone the repository.  You can have multiple clones of the same repository on yo
         mkdir pullmerges
         cd pullmerges
 
-2. Clone the `developer.concur.com` repository into this repository
+2. Clone the `developer.concur.com` repository into this directory
 
         git clone https://github.com/SAP-docs/developer.concur.com.git
 
@@ -55,7 +56,7 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
         git remote add preview https://github.com/SAP-docs/preview.developer.concur.com.git
 
-## Performing a pullmerge (do this periodically as required)
+## Usual workflow (performing the pullmerge periodically as required)
 
 1. Go to your `pullmerge` copy of the `developer.concur.com` repository
 
@@ -70,7 +71,7 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
         git fetch preview
 
-4. Create a branch on your `developer.concur.com` repository used to generate the PR for the pullmerge.  A recommended branch name might include the date of the pull merge, but can be any name (that's not currently a valid branch)
+4. Create a branch on your `developer.concur.com` repository that will be used to generate the PR for the pullmerge.  A recommended branch name might include the date of the pull merge, but can be any name (that's not currently a valid branch)
 
         git checkout -b pullmerge_0710
 
@@ -131,4 +132,4 @@ e.g.
 
         git cherry-pick 73b705b0d9737a7bd407eba18aba92cdce80c2a1
 
-And then continue from step 6, above once all the required commits have been picked.
+And then continue from step 6, above, once all the required commits have been picked.
