@@ -75,9 +75,9 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
         git checkout -b pullmerge_0710
 
-5. Merge the latest updates from preview into your branch.  This command will result in a `vi` editor allowing you to modify the commit message - the default value already populated in the editor is fine (usually something like `Merge remote-tracking branch 'preview/main' into pullmerge_0710`), so all you need to do is exit the editor, saving the changes.  If you're not familiar with `vi` the easiest way to do this by entering `ZZ` (i.e. hold down shift and press `z` twice).
+5. Merge the latest updates from preview into your branch. 
 
-        git merge preview/main
+        git merge --no-edit preview/main
 
 6. Push the changes into `developer.concur.com` on Github.  **Note:** update the name of your branch in this command:
 
