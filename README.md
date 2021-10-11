@@ -55,3 +55,16 @@ If the site build is successful, within CircleCI:
 1. Environment is created.
 1. Generated static content is updated in gh-pages branch
 1. gh-pages branch is automatically re-published using GitHub Pages
+
+
+# Code of Conduct
+
+Please refer to our [Code of Conduct](CODE_OF_CONDUCT.md) when contributing
+
+# Licensing
+
+Copyright 2021 SAP SE or an SAP affiliate company and SAP Concur API documentation contributors.
+
+Please see our [LICENSE](LICENSE) for copyright and license information.
+
+Detailed information including third-party components and their licensing/copyright information is available via the REUSE tool (Link TBD).
