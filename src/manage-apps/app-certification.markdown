@@ -9,13 +9,13 @@ Handling data with care and delivering a positive experience for our customers i
 
 #### **Get Started on Your API Review**
 
-Start with an overview of the whole process: [API documentation]({{ site.baseurl }}/api-reference/). During the Business Development phase, you will be provided access to a Professional Edition Sandbox. Sandboxes are required for partners or customers looking to use SAP Concur APIs to read and write data from SAP Concur. It is important that you contact your assigned technical resource at SAP Concur to gain access to a sandbox that best fits your scenario. If you are unsure of your technical contact, consider these 3 scenarios:
+Start with an overview of the whole process: [API documentation]({{ site.baseurl }}/api-reference/). Consider these three integration scenarios:
 
 * Develop an application for the SAP Concur App Center. This requires a signed Partner Agreement, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
 * Develop an application as a SAP Concur client (or for a client). The client must purchase the Client Web Services SKU and their administrative support contact would open a case through our [support portal](https://www.concur.com/en-us/support).
 * Develop an application as a TMC/reseller, [contact us](mailto:supplierservices@sap.com).
 
-You will continue to use this sandbox during your development and certification. Once a Certification Project Manager is assigned to your team, you will be provided access to another Standard Edition sandbox that will be used to validate token management across different data centers and, if necessary, differences between Professional Edition and Standard Edition.
+Once you choose the desired path and the relevant contract is in place, you will be assigned a technical resource to guide you through the corresponding process. The process includes gaining access to a Professional Edition and/or Standard Edition sandbox depending on the above scenario. The sandbox will allow you to validate your integration during development.
 
 As you develop your app, your Certification Project Manager will record the exact APIs (including the version and verbs) that you will use for your application. See the requirements to pass certification in these Overview docs (including Support requirements expected of the Partner):
 
