@@ -1,9 +1,7 @@
 
 # SAP Concur Developer Center (Source)
 
-<!--
-[![REUSE status](https://api.reuse.software/badge/github.com/sap-docs/developer.concur.com)](https://api.reuse.software/info/github.com/sap-docs/developer.concur.com)
--->
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-docs/preview.developer.concur.com)](https://api.reuse.software/info/github.com/SAP-docs/preview.developer.concur.com)
 
 This repo contains the documentation and support content for the Concur API developer audience. This includes both internal and external developers.  
 
@@ -67,4 +65,4 @@ Copyright 2021 SAP SE or an SAP affiliate company and SAP Concur API documentati
 
 Please see our [LICENSE](LICENSE) for copyright and license information.
 
-Detailed information including third-party components and their licensing/copyright information is available via the REUSE tool (Link TBD).
+Detailed information including third-party components and their licensing/copyright information is available via the REUSE tool (https://api.reuse.software/info/github.com/SAP-docs/preview.developer.concur.com)
