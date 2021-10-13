@@ -7,7 +7,21 @@ layout: reference
 
 The Comments v4 API is used to read the comments entered on the expense report header, or expenses of an existing expense report. This API is used to detail information about spending that occurs out of policy, which is justified by the report owner, or inaccuracies pointed out by the approvers of the expense report.
 
-## Prior Versions <a name="prior-versions"></a>
+* [Prior Versions](#prior-versions)
+* [Limitations](#limitations)
+* [Products and Editions](#products-editions)
+* [Scope Usage](#scope-usage)
+* [Dependencies](#dependencies)
+* [Access Token Usage](#access-token-usage)
+* [Retrieve Report Header Comments](#retrieve-report-header-comments)
+* [Retrieve Expense Comments](#retrieve-expense-comments)
+* [Schema](#schema)
+* [Report Header Comments](#report-header-comments-response-schema)
+* [Expense Comments](#expense-comments-response-schema)
+* [Error Message](#error-message-schema)
+* [Validation Error](#validation-errors-schema)
+
+## <a name="prior-versions"></a>Prior Versions
 
 * Reports v2 documentation is available [here](./v2.reports.html).
 
@@ -20,7 +34,7 @@ This API is only available to partners who have been granted access by SAP Concu
 * Concur Expense Professional Edition
 * Concur Expense Standard Edition
 
-## Scope Usage <a name="scope-usage"></a>
+## <a name="scope-usage"></a>Scope Usage
 
 Required Scopes:
 
@@ -37,15 +51,15 @@ Optional Scope:
 |`expense.report.workflowstatus.write`|Approve or Send Back the Report in the workflow|PATCH|
 
 
-## Dependencies <a name="dependencies"></a>
+## <a name="dependencies"></a>Dependencies
 
 SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
 
-## Access Token Usage <a name="access-token-usage"></a>
+## <a name="access-token-usage"></a>Access Token Usage
 
 This API supports both company level and user level access tokens.
 
-## Retrieve Report Header Comments <a name="retrieve-report-header-comments"></a>
+## <a name="retrieve-report-header-comments"></a>Retrieve Report Header Comments
 
 Retrieves the comments on the specific report header.
 
@@ -67,7 +81,9 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 |---|---|---|---|
 |`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
 |`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
-|`reportId`|string|-|**Required** The unique identifier of the report that is being read.|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+|`includeAllComments`|`boolean`|true or false|Return all the comments that are present on the report at all levels. Default value: false|
+
 
 #### Headers
 
@@ -105,7 +121,7 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 #### Request
 
 ```shell
-curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/comments' \
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/comments?includeAllComments=true' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: Expense-Report-test' \
 --header 'Content-Type: application/json'
@@ -120,23 +136,25 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
 [
   {
     "comment": "This is an expense report for office supplies",
-    "creationDate": "2021-03-17T22:29:50.090Z",
     "author": {
       "firstName": "Concur",
       "lastName": "Administrator",
       "middleInitial": ""
     },
-    "createdForEmployeeId": "32c2fcc3-b2e8-4907-9672-5b3f49b1c643",
     "createdForEmployee": {
       "firstName": "Tester",
       "lastName": "Insert",
       "middleInitial": "A"
     },
+    "createdForEmployeeId": "32c2fcc3-b2e8-4907-9672-5b3f49b1c643",
+    "creationDate": "2021-03-17T22:29:50.090Z",
+    "expenseId": null
+    "isAuditorComment": false,
     "isLatest": true
   }
 ]
 ```
-## Retrieve Expense Comments <a name="retrieve-expense-comments"></a>
+## <a name="retrieve-expense-comments"></a>Retrieve Expense Comments
 
 Retrieves the comments on the specific expense within an expense report.
 
@@ -158,7 +176,7 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 |---|---|---|---|
 |`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
 |`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
-|`reportId`|string|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
 |`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
 
 #### Headers
@@ -211,24 +229,26 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
 [
     {
         "comment": "This expense is allowed due to the pandemic",
-        "creationDate": "2021-03-17T23:05:40.340Z",
         "author": {
             "firstName": "Concur",
             "lastName": "Administrator",
             "middleInitial": ""
         },
-        "createdForEmployeeId": "32c2fcc3-b2e8-4907-9672-5b3f49b1c643",
         "createdForEmployee": {
             "firstName": "Tester",
             "lastName": "Insert",
             "middleInitial": "A"
         },
+        "createdForEmployeeId": "32c2fcc3-b2e8-4907-9672-5b3f49b1c643",
+        "creationDate": "2021-03-17T23:05:40.340Z",
+        "expenseId": "84FCBB92BD4E5342B849DAC29FD163A1",
+        "isAuditorComment": false,
         "isLatest": true
     }
 ]
 ```
 
-## Schema <a name="schema"></a>
+## <a name="schema"></a>Schema
 
 ### <a name="report-header-comments-response-schema"></a> Report Header Comments
 
@@ -251,6 +271,8 @@ Name|Type|Format|Description
 `createdForEmployee`|[`Employee`](#employee-schema)|-|**Required** The name of the employee the comment was created on behalf of. This would differ from the comment author only in the case of delegates creating the comment.
 `createdForEmployeeId`|`string`|-|**Required** The unique identifier of the employee the comment was created on behalf of. This would differ from the comment author only in the case of delegates creating the comment.
 `creationDate`|`string`|`YYYY-MM-DDTHH:mm:ssZ.SSS'Z'`|**Required** The UTC datetime when the comment was created on the report or expense.
+`expenseId`|`string`|-|**Required** The unique identifier of the expense.
+`isAuditorComment`|`boolean`|`true`/`false`|**Required** If `true`, this attribute represents whether this comment has been authored by an auditor.
 `isLatest`|`boolean`|`true`/`false`|**Required** If `true`, this attribute represents the latest comment by the user.
 
 ### <a name="employee-schema"></a>Employee
