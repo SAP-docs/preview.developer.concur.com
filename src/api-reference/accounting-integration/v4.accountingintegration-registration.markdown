@@ -1,0 +1,205 @@
+---
+title: Registration of ERP Integraton
+layout: reference
+---
+
+{% include prerelease.html %}
+
+## <a name="register-erp"></a>Register an ERP Integration
+
+This endpoint is to register a given ERP integration with SAP Concur by providing the details of the ERP integration.
+
+> **Limitation**:
+> * This endpoint can be called once every minute.
+
+### Scopes
+
+`spend.accountingintegration.write` - Refer to [Scope Usage](./v4.accountingintegration-get-started.markdown#scope-usage) for full details.
+
+### Request
+
+##### URI Template
+
+```shell
+POST /accountingintegration/v4/companies/{companyId}/erps
+```
+
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company in Concur
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [ErpPackage](./v4.accountingintegration-schema.markdown#erp-package)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Custom Header
+
+* `concur-correlationid` is a SAP Concur platform specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* [ErpPackage](./v4.accountingintegration-schema.markdown#erp-package)
+* [Error](./v4.accountingintegration-schema.markdown#schema-error)
+
+### Example
+
+#### Request
+
+```shell
+POST /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps
+```
+
+```json
+{
+  "partnerAppName": "string",
+  "features": [
+    "SUPPORTS_RECEIPT_POSTING"
+  ],
+  "erpName": "string",
+  "realmId": "string"
+}
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "partnerAppName": "string",
+  "features": [
+    "SUPPORTS_RECEIPT_POSTING"
+  ],
+  "erpName": "string",
+  "realmId": "string",
+  "erpId": "2fcffbce-a381-4169-a954-c0395eefd6f6"
+}
+```
+
+## <a name="get-erp"></a>Get the Details of the ERP Integration
+
+This endpoint is to retrieve the detail of the registered ERP integration.
+
+### Scopes
+
+`spend.accountingintegration.read` - Refer to [Scope Usage](./v4.accountingintegration-get-started.markdown#scope-usage) for full details.
+
+### Request
+
+##### URI Template
+
+```shell
+GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}
+```
+
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company in Concur
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration with Concur
+
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "partnerAppName": "string",
+  "features": [
+    "SUPPORTS_RECEIPT_POSTING"
+  ],
+  "erpName": "string",
+  "realmId": "string",
+  "erpId": "2fcffbce-a381-4169-a954-c0395eefd6f6"
+}
+```
+
+## <a name="unregister-erp"></a>Unregister an ERP Integration
+
+This endpoint is to remove the ERP integration and all corresponding data including the ERP data cached in SAP Concur.
+
+### Scopes
+
+`spend.accountingintegration.write` - Refer to [Scope Usage](./v4.accountingintegration-get-started.markdown#scope-usage) for full details.
+
+### Request
+
+##### URI Template
+
+```shell
+DELETE /accountingintegration/v4/companies/{companyId}/erps/{erpId}
+```
+
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company in Concur
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration with Concur
+
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+DELETE /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6
+```
+
+#### Response
+
+```shell
+204 No Content
+```
