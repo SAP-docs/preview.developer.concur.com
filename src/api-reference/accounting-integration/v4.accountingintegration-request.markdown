@@ -1,0 +1,179 @@
+---
+title: Request Processing
+layout: reference
+---
+
+{% include prerelease.html %}
+
+## <a name="get-request-status"></a>Get Request Status
+
+This endpoint is to get the status of a given request.
+
+### Scopes
+
+`spend.accountingintegration.read` - Refer to [Scope Usage](./v4.accountingintegration-get-started.markdown#scope-usage) for full details.
+
+### Request
+
+##### URI Template
+
+```shell
+GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}/requests/{requestId}
+```
+
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company in Concur
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration with Concur
+`requestId`|`string`|`UUID`|**Required** Unique identifier of the request in UUID format
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Custom Header
+
+* `concur-correlationid` is a SAP Concur platform specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* [RequestStatus](./v4.accountingintegration-schema.markdown#request-status)
+* [Error](./v4.accountingintegration-schema.markdown#schema-error)
+
+### Example
+
+#### Request
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "status": "PROCESSING",
+  "requestId": "3f1508be-9b55-400f-8bac-475015567a52",
+  "_links": {
+    "errors": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"
+    },
+    "self": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"
+    }
+  }
+}
+```
+
+## <a name="get-request-errors"></a>Get Request Error Details
+
+This endpoint is to retrieve the processing errors of a given request
+
+> **Limitations**:
+> * Navigate via the `links` attribute in the response payload to retrieve the next page, if the page size exceeds 1 MB
+
+### Scopes
+
+`spend.accountingintegration.read` - Refer to [Scope Usage](./v4.accountingintegration-get-started.markdown#scope-usage) for full details.
+
+### Request
+
+##### URI Template
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors
+```
+
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company in Concur
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration with Concur
+`requestId`|`string`|`UUID`|**Required** Unique identifier of the request in UUID format
+
+#### Headers
+
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Custom Header
+
+* `concur-correlationid` is a SAP Concur platform specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+list-of-processing-error
+
+#### Payload
+
+* [List of Processing Error](./v4.accountingintegration-schema.markdown#list-of-processing-error)
+* [Error](./v4.accountingintegration-schema.markdown#schema-error)
+
+### Example
+
+#### Request
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "data": [
+    {
+      "companyId": "09ac834c-46d6-49ff-9653-551d69072d56",
+      "requestId": "3f1508be-9b55-400f-8bac-475015567a52",
+      "errorCode": "string",
+      "errorMessage": "string",
+      "objectType": "ACCOUNT",
+      "values": "string",
+      "validationErrors": [
+        {
+          "source": "string",
+          "errorMessage": "string",
+          "errorCode": "string"
+        }
+      ]
+    }
+  ],
+  "_links": {
+    "next": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors?next=string"
+    }
+  }
+}
+```
+
