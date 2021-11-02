@@ -24,9 +24,9 @@ Name|Description
 
 Name|Condition|User Case
 ---|---|---
-`listMapping.created`|This event will be published after the customer has mapped the SAP Concur systems list with the ERP list name.|The subscriber may send over the list items to SAP Concur.
-`listMapping.deleted`|This event will be published after the customer has removed the mapping between the Concur list and the ERP list name.|The subscriber may remove the list items from SAP Concur.
-`data.resetRequested`|This event will be published when the customer has requested to reset the ERP data cached in SAP Concur data center.|The subscriber may reset the ERP data cached in SAP Concur.
+`listMapping.created`|This event will be published after the customer has mapped the SAP Concur systems list with the ERP list name.|The subscriber may send over the list items.
+`listMapping.deleted`|This event will be published after the customer has removed the mapping between the SAP Concur systems list and the ERP list name.|The subscriber may remove the list items from SAP Concur.
+`data.resetRequested`|This event will be published when the customer has requested to reset the ERP data cache.|The subscriber may reset the ERP data cache.
 `data.statusUpdated`|This event will be published after the completion of the processing of the ERP data.|The subscriber may query for the status details.
 
 ## <a name="schema"></a>Schema
