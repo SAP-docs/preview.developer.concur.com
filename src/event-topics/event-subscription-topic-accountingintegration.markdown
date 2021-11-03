@@ -35,16 +35,16 @@ Name|Condition|User Case
 
 Name|Type|Format|Description
 ---|---|---|---
-`data`|`array`|[`ListMapping`](./v4.accountingintegration-schema.markdown#list-mapping)|List of ERP list to SAP Concur list mappings.
+`data`|`array`|[`ListMapping`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#list-mapping)|List of ERP list to SAP Concur list mappings.
 
 ### <a name="resetRequested"></a>Schema for Event `data.resetRequested`
 
 Name|Type|Format|Description
 ---|---|---|---
-`data`|`array`|[`ObjectType`](./v4.accountingintegration-schema.markdown#object-type)|Accounting object type.
+`data`|`array`|[`ObjectType`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#object-type)|Accounting object type.
 
 ### <a name="statusUpdated"></a>Schema for Event `data.statusUpdated`
 
 Name|Type|Format|Description
 ---|---|---|---
-`data`|[`RequestStatus`](./v4.accountingintegration-schema.markdown#request-status)|-|Details of the request status.
+`data`|[`RequestStatus`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#request-status)|-|Details of the request status.
