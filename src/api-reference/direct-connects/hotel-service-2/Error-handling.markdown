@@ -70,7 +70,7 @@ SAP Concur expects the following errors under the given error types:
 
 |Error Code|Description|Example|
 |------------|-------------------|---------|
-|188|Transaction error|For errors not specified in other codes. Internal supplier log ID can be provided in `ShortText` for debugging.|
+|188|Transaction error|For errors not specified in other codes. The `ShortText` should be provided to identify the cause of the error.|
 
 ## <a name="no-implementation"></a>Error Type Code 2: No Implementation
 
@@ -85,9 +85,9 @@ SAP Concur expects the following errors under the given error types:
 |242|Credit card number is invalid or missing|Missing credit card number.|
 |320|Invalid value|Comma separated node or attribute and sent value should be provided in the content of the error element. Example: ```<Error Code="320" ShortText="Invalid value" Type="13">StayDateRange:2019-11-33</Error> ```|
 |322|No availability|Hotel Codes should be provided in content of the element. Example: ```<Error Code="322" ShortText="No availability" Type="13">HTL4444,HTL5555</Error>```|  
-|424|No hotels found which match this input|Search parameters - geo-code and radius should be provided in content of the element and formatted as tokenized list: Latitude, Longitude, Radius, Unit of Measure code. Example: ```<Error Code="322" ShortText="No availability" Type="13">50.111,40.222,5,2</Error>```|
+|424|No hotels found which match this input|Search parameters - geo-code and radius should be provided in content of the element and formatted as tokenized list: Latitude, Longitude, Radius, Unit of Measure code. Example: ```<Error Code="424" ShortText="No availability" Type="13">50.111,40.222,5,2</Error>```|
 |95|Booking already cancelled|Booking already cancelled.|
-|438|Requested rate not available|List of comma separated RatePlanID's should be provided in content of the element. Example: ```<Error Code="322" ShortText="No availability" Type="13">111,222</Error>```|
+|438|Requested rate not available|List of comma separated RatePlanID's should be provided in content of the element. Example: ```<Error Code="438" ShortText="No availability" Type="13">111,222</Error>```|
 |748|Invalid corporate ID|Requestor ID should be provided in the content of the element.|
-|400|Invalid property code|List of comma separated hotel codes should be provided in content of the element. Example: ```<Error Code="322" ShortText="No availability" Type="13">HTL4444,HTL5555</Error>```|
+|400|Invalid property code|List of comma separated hotel codes should be provided in content of the element. Example: ```<Error Code="400" ShortText="No availability" Type="13">HTL4444,HTL5555</Error>```|
 |385|Invalid confirmation or cancellation number|Reservation ID should be provided in content of the element.|
