@@ -9,7 +9,7 @@ The OAuth 2.0 Application Management tool enables clients who have Client Web Se
 
 Once the tool is enabled, an admin with the Web Services Administrator role will see a link to the OAuth 2.0 Application Management tool on the Authentication Administration page.
 
->**NOTE**:	For admins working with Standard entities, a user with the **Can Administer** permission has the Web Services Administrator role.
+>**NOTE**: For admins working with Standard entities, a user with the **Can Administer** permission has the Web Services Administrator role.
 
 The OAuth 2.0 Application Management tool enables clients to do the following:
 
@@ -20,7 +20,7 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 *	Search for and sort OAuth 2.0 applications.
 *	View information about previously created apps such as Client ID, app description, creation date.
 
->**NOTE**:	For admins working with Standard entities, a user with the Can Administer permission has the Web Services Administrator role.
+>**NOTE**: For admins working with Standard entities, a user with the Can Administer permission has the Web Services Administrator role.
 
 ## Limitations
 

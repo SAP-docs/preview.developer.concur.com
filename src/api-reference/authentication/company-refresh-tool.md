@@ -17,18 +17,18 @@ Admins with the required permissions see a link to the **Company Request Token**
 
 After clicking **Company Request Token**, the admin sees the **Company Request Tokens** page.
 
-![Product screen showing the Application List page](./tool-images/app-manage-tool-02.png)
+![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
 
 On the **Company Request Tokens** page, the admin enters their **Client ID** in the **App ID** field, and then clicks **Submit**.
 
->**NOTE**:	Clients can obtain a **Client ID** through one of the following methods:
+>**NOTE**: Clients can obtain a **Client ID** through one of the following methods:
 
 * Clients with Client Web Services who have requested access to the self-service tool for application management can generate a Client ID using the self-service tool.
 * Clients who do not have Client Web Services can contact SAP Concur support to obtain an App ID as needed.
 
 The **Company Request Token Successfully Created** dialog appears.
 
-(image)
+![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/company-refresh-tool-02.png)
 
 This dialog contains the Company UUID and the Company Request Token. The admin must copy and save both the Company UUID and the Company Request Token before signing out or navigating away from this dialog.
 
@@ -52,13 +52,13 @@ To generate a new Client ID (App ID) and Client Secret:
 2. Click **OAuth 2.0 Application Management**. The **Application List** page appears.
 3. Click **Create New App**.
 
-(image)
+![Product screen showing the Application List page](./tool-images/company-refresh-tool-03.png)
 
 The **Create New App** page appears.
 
-(image)
+![Product screen showing the Create New App page](./tool-images/company-refresh-tool-04.png)
 
->**NOTE**:	The App Type is read-only.
+>**NOTE**: The App Type is read-only.
 
 4. Populate the fields.
 
@@ -72,7 +72,7 @@ SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is onl
 
 5. Click **Submit**. The **App Credentials** page appears. The **App Credentials** page displays the **Client ID** and **Client Secret**. Before clicking **OK**, record the **Client ID** and **Client Secret**. They will be required in subsequent steps of this procedure.
 
-(image)
+![Product screen showing the App Credentials page](./tool-images/company-refresh-tool-05.png)
 
 6. Click **OK**. The new application appears in the list on the **Application List** page. You can confirm the details of the app, including the **Client ID** and **Client Secret** by clicking the **Client ID** in the list on the **Application List** page.
 
@@ -81,17 +81,17 @@ SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is onl
 1. Click **Administration** > **Company** > **Authentication Admin. The **Authentication Administration** page appears.
 2. Click **Company Request Token**. The admin **Company Request Tokens** page appears.
 
-(image)
+![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
 
 3. In the **App ID** field, type the **Client ID** you recorded in Step 5 of the preceding procedure.
 
-(image)
+![Product screen showing the Company Request dialog](./tool-images/company-refresh-tool-06.png)
 
 4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
 
-(image)
+![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
 
->**NOTE**:	The Company Request Token expires after 24 hours. If you cannot complete the workflow within 24 hours of generating the Company Request Token, you must regenerate the token before completing the workflow. You can regenerate the Company Request Token by reentering the Client ID in the App ID and clicking Submit again.
+>**NOTE**: The Company Request Token expires after 24 hours. If you cannot complete the workflow within 24 hours of generating the Company Request Token, you must regenerate the token before completing the workflow. You can regenerate the Company Request Token by reentering the Client ID in the App ID and clicking Submit again.
 
 5. To obtain a Company JWT, follow the steps on the **Company Request Tokens** page:
 
