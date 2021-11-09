@@ -1,0 +1,165 @@
+---
+title: Managing ERP List Names in SAP Concur
+layout: reference
+---
+
+# Accounting Integration v4 - Manage ERP List Names
+
+{% include prerelease.html %}
+
+## <a name="patch-lists"></a>Add, Update, or Delete List Names
+
+This endpoint allows users to add, update, or delete ERP list names. Upon receiving the data, the server will process the request asynchronously and return immediately with a response payload containing the status and the link of the progressing status.
+
+In addition, events will be published to notify API users of important updates. For more information, please see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+
+### Limitations
+
+* The total request payload size should not exceed 4 MB.
+* Any given ERP record size should not exceed 200 KB.
+* The ERP data will be cached in SAP Concur data center for no more than 150 days.
+This endpoint can be called once per second.
+
+### Scopes
+
+`spend.accountingintegration.write` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+PATCH /accountingintegration/v4/companies/{companyId}/erps/{erpId}/lists
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: [List of ERP List](./v4.accountingintegration-schema.html#list-of-list)
+* Response: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [Error](./v4.accountingintegration-schema.html#schema-error)
+
+### Examples
+
+#### Request: delete all, then add new data
+
+```shell
+PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/lists
+```
+
+```json
+{
+  "deleteAll": true,
+  "data": [
+    {
+      "id": "string",
+      "name": "string"
+    }
+  ]
+}
+```
+
+#### Request: add (or update) data, then delete the specified data
+
+```shell
+PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/lists
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "string",
+      "name": "string"
+    },
+    {
+      "isDeleted": true,
+      "id": "string2"
+    }
+  ]
+}
+```
+
+#### Response
+
+```shell
+202 Accepted
+```
+
+```json
+{
+  "status": "PROCESSING",
+  "requestId": "3f1508be-9b55-400f-8bac-475015567a52",
+  "links": {
+    "errors": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"
+    },
+    "self": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"
+    }
+  }
+}
+```
+
+## <a name="get-lists"></a>Retrieve List Names
+
+This endpoint retrieves the ERP list name that is cached in SAP Concur systems.
+
+### Limitation
+
+* Navigate via the `links` attribute in the response payload to retrieve the next page, if the page size exceeds 1 MB.
+
+### Scopes
+
+`spend.accountingintegration.read` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}/lists
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: None
+* Response: [List of ERP List](./v4.accountingintegration-schema.html#list-of-list), [Error](./v4.accountingintegration-schema.html#schema-error)
+
+### Examples
+
+#### Request
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/lists
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "string",
+      "name": "string"
+    }
+  ],
+  "links": {
+    "next": {
+      "href": "/accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/lists?next=string"
+    }
+  }  
+}
+```
