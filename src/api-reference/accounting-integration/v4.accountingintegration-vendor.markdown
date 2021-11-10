@@ -1,0 +1,225 @@
+---
+title: Managing ERP Vendors in SAP Concur
+layout: reference
+---
+
+# Accounting Integration v4 - Manage ERP Vendors
+
+{% include prerelease.html %}
+
+## <a name="patch-vendors"></a>Add, Update, or Delete Vendors
+
+This endpoint allows users to add, update, or delete ERP vendor data that is cached. Upon receiving the data, the server will process the request asynchronously and return immediately with a response payload containing the status and the link of the progressing status.
+
+In addition, events will be published to notify API users of important updates. For more information, please see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+
+### Limitations
+
+* The total request payload size should not exceed 4 MB.
+* Any given ERP record size should not exceed 200 KB.
+* The ERP data will be cached in SAP Concur data center for no more than 150 days.
+* This endpoint can be called once per second.
+
+### Scopes
+
+`spend.accountingintegration.write` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+PATCH /accountingintegration/v4/companies/{companyId}/erps/{erpId}/vendors
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: [List of Vendor](./v4.accountingintegration-schema.html#list-of-vendor)
+* Request: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [Error](./v4.accountingintegration-schema.html#schema-error)
+
+### Examples
+
+#### Request: delete all data, then add new data
+
+```shell
+PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/vendors
+```
+
+```json
+{
+  "deleteAll": true,
+  "data": [
+    {
+      "id": "string",
+      "type": "ACCOUNTING",
+      "currencyCode": "string",
+      "lastName": "string",
+      "firstName": "string",
+      "name": "string",
+      "employeeId": "string",
+      "companyName": "string",
+      "email": "string",
+      "taxId": "string",
+      "phone": "string",
+      "accountNumber": "string",
+      "address": {
+        "addr1": "string",
+        "addr2": "string",
+        "addr3": "string",
+        "state": "string",
+        "country": "string",
+        "postalCode": "string",
+        "city": "string",
+        "note": "string"
+      }
+    }
+  ]
+}
+```
+
+#### Request: add (or update) data, then delete the specified data
+
+```shell
+PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/vendors
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "string",
+      "type": "ACCOUNTING",
+      "currencyCode": "string",
+      "lastName": "string",
+      "firstName": "string",
+      "name": "string",
+      "employeeId": "string",
+      "companyName": "string",
+      "email": "string",
+      "taxId": "string",
+      "phone": "string",
+      "accountNumber": "string",
+      "address": {
+        "addr1": "string",
+        "addr2": "string",
+        "addr3": "string",
+        "state": "string",
+        "country": "string",
+        "postalCode": "string",
+        "city": "string",
+        "note": "string"
+      }
+    },    
+    {
+      "isDeleted": true,
+      "id": "string2"
+    }
+  ]
+}
+```
+
+#### Response
+
+```shell
+202 Accepted
+```
+
+```json
+{
+  "status": "PROCESSING",
+  "requestId": "3f1508be-9b55-400f-8bac-475015567a52",
+  "links": {
+    "errors": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"
+    },
+    "self": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"
+    }
+  }
+}
+```
+
+## <a name="get-vendors"></a>Retrieve Vendors
+
+This endpoint is to retrieve the ERP vendor data.
+
+### Limitations
+
+* Navigate via the `links` attribute in the response payload to retrieve the next page, if the page size exceeds 1 MB.
+
+### Scopes
+
+`spend.accountingintegration.read` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}/vendors
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: None
+* Response: [List of Vendor](./v4.accountingintegration-schema.html#list-of-vendor), [Error](./v4.accountingintegration-schema.html#schema-error)
+
+### Examples
+
+#### Request
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/vendors
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "string",
+      "type": "ACCOUNTING",
+      "currencyCode": "string",
+      "lastName": "string",
+      "firstName": "string",
+      "name": "string",
+      "employeeId": "string",
+      "companyName": "string",
+      "email": "string",
+      "taxId": "string",
+      "phone": "string",
+      "accountNumber": "string",
+      "address": {
+        "addr1": "string",
+        "addr2": "string",
+        "addr3": "string",
+        "state": "string",
+        "country": "string",
+        "postalCode": "string",
+        "city": "string",
+        "note": "string"
+      }
+    }
+  ],
+  "links": {
+    "next": {
+      "href": "/accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/vendors?next=string"
+    }
+  }  
+}
+```
