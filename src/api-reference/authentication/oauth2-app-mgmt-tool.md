@@ -20,8 +20,6 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 *	Search for and sort OAuth 2.0 applications.
 *	View information about previously created apps such as Client ID, app description, creation date.
 
->**NOTE**: For admins working with Standard entities, a user with the Can Administer permission has the Web Services Administrator role.
-
 ## Limitations
 
 This tool is currently only available in the US (North America) and EMEA data centers. All other data centers can contact Client Web Services for assistance.
