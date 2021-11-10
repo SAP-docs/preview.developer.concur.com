@@ -48,7 +48,7 @@ EMEA|Implementation|https://www-emea-impl.api.concursolutions.com |Default for a
 
 ### <a name="deprecated"></a>Pre-2017 Legacy URIs (Deprecated)
 
-The following base URIs have been used for APIs that are authenticating using the legacy [authentication method](/authentication/authorization-pre-2017.html). The new base URIs have been adapted to become backwards compatible with the legacy authentication methods. As such, these legacy base URIs should not be used unless necessary. JWT calls are not compatible with the legacy base URIs.
+The following base URIs have been used for APIs that are authenticating using the legacy [authentication method](/api-reference/authentication/authorization-pre-2017.html). The new base URIs have been adapted to become backwards compatible with the legacy authentication methods. As such, these legacy base URIs should not be used unless necessary. JWT calls are not compatible with the legacy base URIs.
 
 To migrate to the current authentication method, review these resources:
 
