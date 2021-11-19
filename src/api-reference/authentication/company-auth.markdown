@@ -4,7 +4,9 @@ layout: reference
 ---
 # Company Level Authentication
 
-Company is a top-level principal within Concur and you would be able to obtain an access token and a refresh token on a Company's behalf just like you would be able to with a User. Only one authorization flow is currently available for obtaining tokens for a Company, which is the [Password grant](/api-reference/authentication/apidoc.html#password_grant) using a temporary auth token received from the App Center.
+Company is a top-level principal within the SAP Concur platform and you would be able to obtain an access token and a refresh token on a Company's behalf just like you would be able to with a User. Only one authorization flow is currently available for obtaining tokens for a Company, which is the [Password grant](/api-reference/authentication/apidoc.html#password_grant) using a temporary auth token received from the App Center.
+
+Client Web Services clients can use the [Company Request Token Tool](/api-reference/authentication/company-auth.html) to generate a Company Request Token and the [OAuth 2.0 Application Management Tool](/api-reference/authentication/oauth2-app-mgmt-tool.html) to generate Client IDs (App IDs) and Client Secrets without contacting SAP Concur support.
 
 ## Obtaining an auth token <a name="obtain_token"></a>
 
