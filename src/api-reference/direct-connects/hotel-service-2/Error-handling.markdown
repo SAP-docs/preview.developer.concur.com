@@ -70,7 +70,7 @@ SAP Concur expects the following errors under the given error types:
 
 |Error Code|Description|Example|
 |------------|-------------------|---------|
-|188|Transaction error|For errors not specified in other codes. The `ShortText` should be provided to identify the cause of the error.|
+|188|Transaction error|For errors not specified in other codes. The `ShortText` must identify the cause of the error.|
 
 ## <a name="no-implementation"></a>Error Type Code 2: No Implementation
 
