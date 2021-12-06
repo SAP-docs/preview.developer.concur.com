@@ -295,14 +295,14 @@ We’re always looking to build out new written or video testimonials – contac
 
 **[Fusion Exchange](https://www.concur.com/en-us/fusion-exchange)** is a series of one-day events across the globe that bring together SAP Concur clients, prospects and partners. Sponsorship space is limited, so please email [concursponsorships@sap.com](mailto:concursponsorships@sap.com) to express interest. ​
 
-**Other Opportunities** – Throughout the year, SAP Concur hosts other opportunities live and virtual. Submit topic ideas in the [Partner Speaker](https://sapconcur.az1.qualtrics.com/jfe/form/SV_bPI7N63CJorhYPz) [Bureau](https://sapconcur.az1.qualtrics.com/jfe/form/SV_bPI7N63CJorhYPz), a tool the SAP Concur event and customer teams use in order to consider relevant partners for participation in events and webinars.​
+**Other Opportunities** – Throughout the year, SAP Concur hosts other opportunities live and virtual. Submit topic ideas in the [Partner Speaker Bureau](https://sapinsights.eu.qualtrics.com/jfe/form/SV_9vunNSgYkIrEeAC), a tool the SAP Concur event and customer teams use in order to consider relevant partners for participation in events and webinars.​
 
 ### <a name="sap-concur-events-best-practices"></a>SAP Concur Events Best Practices
 
 #### <a name="in-person-events"></a>In-Person Events 
 
 1.  Nominate a client speaker or suggest a session topic. This can help get your business included in event sessions. ​
-	-   Tip: For Fusion, there will be a call for speakers on the website and in our App Center Insights partner newsletter in advance of the event. You should also complete the [Partner Speaker](https://sapconcur.az1.qualtrics.com/jfe/form/SV_bPI7N63CJorhYPz) [Bureau](https://sapconcur.az1.qualtrics.com/jfe/form/SV_bPI7N63CJorhYPz) with topic ideas.​
+	-   Tip: For Fusion, there will be a call for speakers on the website and in our App Center Insights partner newsletter in advance of the event. You should also complete the [Partner Speaker Bureau](https://sapinsights.eu.qualtrics.com/jfe/form/SV_9vunNSgYkIrEeAC) with topic ideas.​
 2.  Encourage existing contacts to stop by with their peers to learn what’s new ​
 3.  Giveaway items are always well-received (tech accessories, drinkware, stickers, shirts, etc.) ​
 4.  Host a sweepstake enter-to-win contest that rewards winners with prizes ​
@@ -323,7 +323,7 @@ We’re always looking to build out new written or video testimonials – contac
 
 Amplify your company’s voice to your prospects, clients, and colleagues. By submitting a speaking session idea today, you’ll be considered to be a live or virtual presenter at global events such as Fusion, Fusion Exchange, and other SAP Concur customer-facing events.​
 
-[Submit Your Story](https://sapconcur.az1.qualtrics.com/jfe/form/SV_bPI7N63CJorhYPz)​
+[Submit Your Story](https://sapinsights.eu.qualtrics.com/jfe/form/SV_9vunNSgYkIrEeAC)​
 
 ### <a name="partner-hosted-webinars-best-practices"></a>Partner-Hosted Webinars Best Practices​
 1.  Make sure that you have thoroughly reviewed your distribution list to ensure that no inappropriate contacts receive your invitations and email campaigns.​
