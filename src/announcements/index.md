@@ -4,6 +4,10 @@ layout: reference
 ---
 # Announcements
 
+### 2021-12-09 :: December 2021 Release Notes Published
+
+The December 2021 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
+
 ### 2021-11-10 :: November 2021 Release Notes Published
 
 The November 2021 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
