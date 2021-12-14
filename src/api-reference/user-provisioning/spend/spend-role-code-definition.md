@@ -21,7 +21,7 @@ The following lists contain the available permissions and roles for Expense, Req
 
 |Role Code|Role Full Name|Description|Group-Aware|Product Area|
 |---|---|---|---|---|
-The role code value that can be used for provisioning with the `Spend Role Extension`.|The full name of the role.|The usage of the role.|When assigning this role, one or more groups must be given. Default is at the Global group level.|Shared with two or more SAP Concur products.|
+The role code value that can be used for provisioning with the `Spend Role Extension`.|The full name of the role.|The usage of the role.|When assigning this role, users may supply one or more groups. If no group is supplied, then the role is defaulted to the global group.|Shared with two or more SAP Concur products.|
 
 ## Expense Product Roles <a name="expense-roles"></a>
 
