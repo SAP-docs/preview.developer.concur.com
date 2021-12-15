@@ -11,7 +11,7 @@ The following lists contain the available permissions and roles for Expense, Req
 
 **NOTE:** The following spend roles map to entitlements, which cannot be modified through the Spend role extension individually, but only entitlement.
 
-| Role Code | Entitlement|
+| Role Code | Entitlements |
 | :--------:| :--------: |
 | EXP_USER | Expense |
 | REQ_USER | Request |
