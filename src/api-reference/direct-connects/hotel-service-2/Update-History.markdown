@@ -9,6 +9,7 @@ History of changes in HS2 developer documentation
 
 |Date of Change|Description|
 |--------------|------------|
+|Nov 29, 2021|Add 3DS TPA_Extension to Reservation request|
 |Aug 11, 2021|Specify 2-letter ISO 3166 country code|
 |July 22, 2021|Remove references to RefPoint in the Search criteria, it is not used.|
 |July 21, 2021|Removing `required` tag on Avail/RequireSeriesCode. Removing mention of RequireSeriesCode on RateDetails.|

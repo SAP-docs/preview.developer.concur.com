@@ -2,14 +2,10 @@
 title: Travel Request v4 - Request Proposals Resources
 layout: reference
 ---
-# Travel Request v4 - Request Proposals Resources
 
-{% include prerelease.html %}
+# Travel Request v4 - Agency Proposal Resources
 
-* [Send agency proposals within a Request](#post-request-agencyproposals-resource)
-* [Get the list of existing agency proposals within a Request](#get-request-agencyproposals-resource)
-
-## Send proposals within a Request <a name="post-request-agencyproposals-resource"></a>
+## <a name="post-request-agencyproposals-resource"></a>Send proposals within a Request
 
 ### Scopes
 
@@ -30,9 +26,13 @@ Name|Type|Format|Description
 `requestUuid`|`string`|-|**Required** The unique identifier of the Request.
 `userId`|`string`|-|The unique identifier of the travel agent assigned to the travel agency linked to the proposal feature. <br> **Required** when connecting with a Company token, if empty a 400 `missingRequiredParam` error code will be displayed.
 
+#### Headers
+
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
 #### Payload
 
-[Agency proposals](#schema-agencyproposals)
+[Agency proposals](./v4.endpoints.schemas.html#schema-agencyproposals)
 
 ### HTTP Response
 
@@ -42,7 +42,7 @@ To learn more about response HTTP status codes for this API see [Travel Request 
 
 #### Payload
 
-[Agency proposals](#schema-agencyproposals)
+[Agency proposals](./v4.endpoints.schemas.html#schema-agencyproposals) - The created proposal(s).
 
 ### Example
 
@@ -52,6 +52,7 @@ To learn more about response HTTP status codes for this API see [Travel Request 
 POST https://us.api.concursolutions.com/travelrequest/v4/requests/{requestUuid}/agencyproposals
 Accept: application/json
 Authorization: Bearer {token}
+Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
 ```
 
 #### HTTP Response
@@ -116,7 +117,7 @@ Authorization: Bearer {token}
       },
       "transactionDate": "2021-03-29T03:04:05.678Z"
     },
-
+    
     {
       "agencyProposalSegments": [
            {
@@ -152,7 +153,6 @@ Authorization: Bearer {token}
   ],
   "agencyProposalType": "API",
   "approvalLimitDate": "2021-04-24T03:04:05.678Z",
-  "autoSelect": false,
   "booked": true,
   "comments": "",
   "itineraryLocator": "AR15U",
@@ -221,7 +221,7 @@ Authorization: Bearer {token}
       },
       "transactionDate": "2021-03-29T03:04:05.678Z"
     },
-
+    
     {
       "agencyProposalSegments": [
            {
@@ -257,7 +257,6 @@ Authorization: Bearer {token}
   ],
   "agencyProposalType": "API",
   "approvalLimitDate": "2021-04-26T03:04:05.678Z",
-  "autoSelect": false,
   "booked": true,
   "comments": "",
   "itineraryLocator": "AR15U",
@@ -274,7 +273,7 @@ Authorization: Bearer {token}
 
 ```
 
-## Get the list of agency proposals <a name="get-request-agencyproposals-resource"></a>
+## <a name="get-request-agencyproposals-resource"></a>Get the list of agency proposals
 
 ### Scopes
 
@@ -294,6 +293,10 @@ Name|Type|Format|Description
 ---|---|---|---
 `requestUuid`|`string`|-|**Required** The unique identifier of the Request.
 
+#### Headers
+
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
 #### Payload
 
 None.
@@ -306,7 +309,7 @@ To learn more about response HTTP status codes for this API see [Travel Request 
 
 #### Payload
 
-[Agency proposals](#schema-agencyproposals)
+[Agency proposals](./v4.endpoints.schemas.html#schema-agencyproposals)
 
 ### Example
 
@@ -316,6 +319,7 @@ To learn more about response HTTP status codes for this API see [Travel Request 
 GET https://us.api.concursolutions.com/travelrequest/v4/requests/{requestUuid}/agencyproposals
 Accept: application/json
 Authorization: Bearer {token}
+Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
 ```
 
 #### HTTP Response
@@ -435,7 +439,6 @@ Authorization: Bearer {token}
         ],
         "agencyProposalType": "API",
         "approvalLimitDate": "2021-04-26T03:04:06.000Z",
-        "autoSelect": false,
         "booked": true,
         "comments": "",
         "importDate": "2021-03-29T09:44:36.000Z",
@@ -571,7 +574,6 @@ Authorization: Bearer {token}
         ],
         "agencyProposalType": "API",
         "approvalLimitDate": "2021-04-24T03:04:06.000Z",
-        "autoSelect": false,
         "booked": true,
         "comments": "",
         "importDate": "2021-03-29T09:44:34.000Z",
@@ -590,125 +592,3 @@ Authorization: Bearer {token}
     }
 ]
 ```
-### <a name="schema-agencyproposals"></a>Agency proposals
-
-Name|Type|Format|Description
----|---|---|---
-`agencyProposalType`|`string`|-|**Required** The agency proposal type value. Supported value: `API`.
-`importDate`|`timestamp`|`YYYY-MM-DDThh:mm:ss.SSS'Z`|**Read only** The date of the import.
-`proposalUuid`|`string`|-|**Read only** The unique identifier of one proposal for a Request.
-`providerMessageId`|`string`|-|The unique identifier of the client’s batch of proposal.
-`proposalBatchSize`|`integer`|-|**Required** Size of the client’s batch of proposal. <br>Note: If this value is greater than 1, the Request will not be sent back to the traveler as long as the expected number of proposals (respective proposalOrder) are not integrated into the Request.
-`proposalOrder`|`integer`|-|**Required** Sequence order of the proposal for the request.
-`booked`|`boolean`|-|**Required** If `true`, this trip is (or has to be) handled by a travel agency.
-`approvalLimitDate`|-|`yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|Limit approval date of the proposal. Past this date, the proposal will not be viable any more.
-`status`|`string`|-|**Required** Supported values: `PROPOSAL`,`CONFIRMED`,`TICKETISSUED`.
-`proposal`|`boolean`|-|**Read only** If `true`, this proposal is still in the `PROPOSAL` status.  If `false`, the proposal status is `CONFIRMED` (tickets issued).
-`comments`|`string`|-|Free text.
-`itineraryLocator`|`string`|-|The unique identifier for Concur Travel itinerary.
-`autoSelect`|`boolean`|-| If `true`, the Request is approved and the confirmed proposal is sent back into the Request. **Not managed yet**.
-`selected`|`boolean`|-|**Read only** Value becomes `true` when that proposal is selected by the user.
-`totalPostedAmount`|`object`|[`Amount`](#schema-amount)|The total amount for that proposal.
-`policyCompliant`|`boolean`|-|If `true`, the the Agency Proposal is policy compliant. Default: `true`
-`agencyProposalEntries`|`array`|[`Agency proposal entry`](#schema-agencyproposalentry)|Minimum required: 1.
-
-### <a name="schema-agencyproposalentry"></a>Agency proposal entry
-
-Name|Type|Format|Description
----|---|---|---
-`proposalEntryUuid`|`string`|-|**Read only** The unique identifier of one entry in a proposal for a request.
-`comments`|`string`|-|**Read only** Concatenate the comments of underlying segments.
-`transactionDate`|`timestamp`|`YYYY-MM-DDThh:mm:ss.SSS'Z`|**Read only** The date of the transaction in local time.
-`transactionAmount`|`object`|[`Amount`](#schema-amount)|The amount of this entry.
-`exchangeRate`|`object`|[`Exchange Rate`](#schema-exchangerate)|**Read only** The exchange rate that applies to this entry.
-`agencyProposalSegment`|`array`|[`Agency proposal segment`](#schema-agencyproposalsegment)|Minimum required: 1.
-
-### <a name="schema-agencyproposalsegment"></a>Agency proposal segment
-
-Name|Type|Format|Description
----|---|---|---
-`proposalSegmentUuid`|`string`|-|**Read only** The unique identifier of one segment in a proposal for a request.
-`pnr`|`string`|-|**Required** The personal number of reservation.
-`booked`|`boolean`|-|**Required** If `true`, this trip is (or has to be) handled by a travel agency.
-`policyCompliant`|`boolean`|-|**Read only** If `true`, the Agency Proposal is policy compliant. `true` if `policyComplianceLevel` is 100.
-`policyCompliantLevel`|`integer`|-|A value between 0 & 100 that matches the segment compliance. `100` if fully `policyCompliant`, `0` if not compliant at all. Default value: `100`.
-`comments`|`string`|-|Free text.
-`startDate`|`date`|`yyyy-MM-dd`|The date of the beginning of this segment.
-`startTime`|`time`|`yyyy-MM-dd`|The time of the beginning of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
-`endDate`|`date`|`yyyy-MM-dd`|The date of the ending of this segment.
-`endTime`|`time`|`yyyy-MM-dd`|The time of the ending of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
-`vendorName`|`string`|-|**Required** The vendor name for this segment.
-`confirmationNumber`|`string`|-|**Required** The record locator or confirmation number for the flight from the airline.
-`proposalSegmentType`|`string`|-|**Required** Supported values: `AIR`, `RAIL`, `CAR`, `HOTEL`, `MISC`
-`segmentTypeCode`|`object`|[`Segment Type`](#schema-segmenttype)|**Required** The type of the segment. Supported values: `AIRFR`, `CARRT`, `HOTEL`, `RAILF`, `MISC`
-`timeZone`|`zoneId`|-|The time zone of the booking. <br>Format: <br>- Fixed offsets: a fully resolved offset from UTC/Greenwich, that uses the same offset for all local date-times; <Br>- Geographical regions: an area where a specific set of rules for finding the offset from UTC/Greenwich apply (default group is the IANA Time Zone Database (TZDB)).
-`agencyProposalAirSegment`|`array`|[`Agency proposal air segment`](#schema-agencyproposalairsegment)|Additional fields for Air segments.
-`agencyProposalRailSegment`|`array`|[`Agency proposal rail segment`](#schema-agencyproposalrailsegment)|Additional fields for Rail segments.
-`agencyProposalCarSegment`|`array`|[`Agency proposal car segment`](#schema-agencyproposalcarsegment)|Additional fields for Car segments.
-`agencyProposalHotelSegment`|`array`|[`Agency proposal hotel segment`](#schema-agencyproposalhotelsegment)|Additional fields for Hotel segments.
-`agencyProposalMiscSegment`|`array`|[`Agency proposal misc segment`](#schema-agencyproposalmiscsegment)|Additional fields for Misc segments.
-
-### <a name="schema-agencyproposalairsegment"></a>Agency proposal air segment
-
-Name|Type|Format|Description
----|---|---|---
-`classOfService`|`string`|-|**Required** The class of the air segment.
-`duration`|`integer`|-|**Required** The duration of the booked flight. Must be greater than 0.
-`flightNumber`|`string`|-|**Required** The flight number for the booking.
-`seatNumber`|`string`|-|The number of the seat.
-`aircraft`|`string`|-|The code of the aircraft type.
-`departureTerminal`|`string`|-|The departure terminal for the air segment leg.
-`arrivalTerminal`|`string`|-|The arrival terminal for the air segment leg.
-`startLocation`|`object`|[`Location`](#schema-location)|**Required** The start location of the air segment leg (Air location schema).
-`endLocation`|`object`|[`Location`](#schema-location)|**Required** The end location of the air segment leg (Air location schema).
-
-### <a name="schema-agencyproposalrailsegment"></a>Agency proposal rail segment
-
-Name|Type|Format|Description
----|---|---|---
-`classOfService`|`string`|-|**Required** The class of the segment leg.
-`duration`|`integer`|-|**Required** The duration of the booked train. Must be greater than 0.
-`trainNumber`|`string`|-|**Required** The train number for the booking.
-`wagonNumber`|`string`|-|The number of the wagon.
-`seatNumber`|`string`|-|The number of the seat.
-`startRailStation`|`string`|-|The code for the starting station of the segment leg.
-`startRailStationName`|`string`|-|The name of the starting station of the segment leg.
-`startLocation`|`object`|[`Location`](#schema-location)|**Required** The start location of the rail segment leg (Rail location schema).
-`endRailStation`|`string`|-|The code for the ending station of the segment leg.
-`endRailStationName`|`string`|-|The name of the ending station of the segment leg.
-`endLocation`|`object`|[`Location`](#schema-location)|**Required** The end location of the rail segment leg (Rail location schema).
-
-### <a name="schema-agencyproposalcarsegment"></a>Agency proposal car segment
-
-Name|Type|Format|Description
----|---|---|---
-`airConditioning`|`boolean`|-|Indicates if car has an air conditioner. Supported values: `R` - AC, `N` - No AC
-`carEquipment`|`string`|-|Any special equipment required by the renter.
-`classOfService`|`string`|-|The class of the segment leg.
-`transmissionPreference`|`string`|-|The character code that indicates if the car has auto-transmission. Supported values `A` - Auto, `M` - Manual
-`dropOffCollectionPhoneNumber`|`string`|-|The phone number for the drop-off address when the rental service offers drop-off.
-`endLocation`|`object`|[`Location`](#schema-location)|**Required** The end location of the car segment leg (city location schema).
-`pickupDeliveryPhoneNumber`|`string`|-|The phone number for the pickup address when the rental service offers pickup.
-`startLocation`|`object`|[`Location`](#schema-location)|**Required** The start location of the car segment leg (city location schema).
-`startLocationDetail`|`string`|-|Additional details about the start location.
-`endLocationDetail`|`string`|-|Additional details about the end location.
-
-### <a name="schema-agencyproposalhotelsegment"></a>Agency proposal hotel segment
-
-Name|Type|Format|Description
----|---|---|---
-`name`|`string`|-|**Required** The hotel name for the booking.
-`roomDescription`|`string`|-|The room description for the booking. Maximum Length: 2000
-`providerPhone`|`string`|-|The phone number for the booking.
-`location`|`object`|[`Location`](#schema-location)|**Required** The location of the hotel segment leg (city location schema).
-`locationDetail`|`string`|-|Additional details about the location.
-`address`|`string`|-|The address of the booking.
-`postalCode`|`string`|-|The address postal code of the booking.
-
-### <a name="schema-agencyproposalmiscsegment"></a>Agency proposal misc segment
-
-Name|Type|Format|Description
----|---|---|---
-`name`|`string`|-|**Required** The name for the booking.
-
-
