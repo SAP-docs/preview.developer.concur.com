@@ -2659,41 +2659,6 @@
         "vendorName"
       ],
       "properties": {
-        "agencyProposalAirSegments": {
-          "type": "array",
-          "description": "Additional fields for Air segments.",
-          "items": {
-            "$ref": "#/definitions/AgencyProposalAirSegment"
-          }
-        },
-        "agencyProposalCarSegments": {
-          "type": "array",
-          "description": "Additional fields for Car segments.",
-          "items": {
-            "$ref": "#/definitions/AgencyProposalCarSegment"
-          }
-        },
-        "agencyProposalHotelSegments": {
-          "type": "array",
-          "description": "Additional fields for Hotel segments.",
-          "items": {
-            "$ref": "#/definitions/AgencyProposalHotelSegment"
-          }
-        },
-        "agencyProposalMiscSegments": {
-          "type": "array",
-          "description": "Additional fields for Misc segments.",
-          "items": {
-            "$ref": "#/definitions/AgencyProposalMiscSegment"
-          }
-        },
-        "agencyProposalRailSegments": {
-          "type": "array",
-          "description": "Additional fields for Rail segments.",
-          "items": {
-            "$ref": "#/definitions/AgencyProposalRailSegment"
-          }
-        },
         "booked": {
           "type": "boolean",
           "example": false,
@@ -2778,7 +2743,7 @@
           "description": "The start time of the proposal segment (in the format HH:MM). It is expressed in the local time of the startLocation\""
         },
         "timeZone": {
-          "type": "zoneId",
+          "type": "string",
           "description": "The timezone. Either in UTC/GMT + offset format or matching TZDB names."
         },
         "vendorName": {
@@ -2786,214 +2751,129 @@
           "description": "The name of the vendor of this Proposal Segment.",
           "minLength": 0,
           "maxLength": 64
-        }
-      }
-    },
-    "AgencyProposalAirSegment": {
-      "type": "object",
-      "required": [
-        "startLocation",
-        "endLocation",
-        "classOfSerice",
-        "duration",
-        "flightNumber"
-      ],
-      "properties": {
+        },
         "aircraft": {
           "type": "string",
-          "description": "The code of the aircraft type"
+          "description": "The code of the aircraft type, for the AIR segment leg only"
+        },
+        "address": {
+          "type": "string",
+          "description": "The address of the booking, for the HOTEL segment leg only"
+        },
+        "airConditioning": {
+          "type": "boolean",
+          "description": "Indicates if car has an air conditioner. Y - AC, N - No AC. For the CAR segment leg only"
         },
         "arrivalTerminal": {
           "type": "string",
-          "description": "The arrival terminal for the air segment leg"
+          "description": "The arrival terminal for the AIR segment leg only"
         },
-        "classOfSerice": {
+        "carEquipment": {
           "type": "string",
-          "description": "The class of the air segment"
+          "description": "Any special equipment required by the renter, for the CAR segment leg only"
+        },
+        "classOfService": {
+          "type": "string",
+          "description": "The class of the AIR, CAR or RAIL segment leg only"
         },
         "departureTerminal": {
           "type": "string",
-          "description": "The departure terminal for the air segment leg"
+          "description": "The departure terminal, for the AIR segment leg only"
+        },
+        "dropOffCollectionPhoneNumber": {
+          "type": "string",
+          "description": "The phone number for the drop-off address when the rental service offers drop-off, for the CAR segment leg only"
         },
         "duration": {
           "type": "integer",
           "format": "int32",
-          "description": "The duration of the booked flight. Must be greater than 0",
+          "description": "The duration of the booked flight or train, for the AIR or RAIL segment leg only. Must be greater than 0",
           "minimum": 1
         },
         "endLocation": {
-          "description": "The end location of the air segment leg",
-          "$ref": "#/definitions/Location"
-        },
-        "flightNumber": {
-          "type": "string",
-          "description": "The flight number of the booking"
-        },
-        "seatNumber": {
-          "type": "string",
-          "description": "The number of the seat"
-        },
-        "startLocation": {
-          "description": "The start location of the air segment leg",
-          "$ref": "#/definitions/Location"
-        }
-      }
-    },
-    "AgencyProposalCarSegment": {
-      "type": "object",
-      "required": [
-        "startLocation",
-        "endLocation"
-      ],
-      "properties": {
-        "airConditioning": {
-          "type": "boolean",
-          "description": "Indicates if car has an air conditioner. Y - AC, N - No AC"
-        },
-        "classOfSerice": {
-          "type": "string",
-          "description": "The class of the car segment"
-        },
-        "carEquipment": {
-          "type": "string",
-          "description": "Any special equipment required by the renter"
-        },
-        "dropOffCollectionPhoneNumber": {
-          "type": "string",
-          "description": "The phone number for the drop-off address when the rental service offers drop-off"
-        },
-        "endLocation": {
-          "description": "The end location of the air segment leg",
+          "description": "The end location, for the AIR or CAR segment leg only",
           "$ref": "#/definitions/Location"
         },
         "endLocationDetail": {
           "type": "string",
-          "description": "Additional details about the end location"
+          "description": "Additional details about the end location, for the CAR segment leg only"
+        },
+        "endRailStation": {
+          "type": "string",
+          "description": "The code for the ending station, for the RAIL segment leg only"
+        },
+        "endRailStationName": {
+          "type": "string",
+          "description": "The name for the ending station, for the RAIL segment leg only"
+        },
+        "flightNumber": {
+          "type": "string",
+          "description": "The flight number of the booking, for the AIR segment leg only"
+        },
+        "location": {
+          "description": "The location of the hotel segment leg (city location schema), for the HOTEL segment leg only",
+          "$ref": "#/definitions/Location"
+        },
+        "locationDetail": {
+          "type": "string",
+          "description": "Additional details about the location, for the HOTEL segment leg only"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name for the booking, for the HOTEL or MISC segment leg only"
         },
         "pickupDeliveryPhoneNumber": {
           "type": "string",
-          "description": "The phone number for the pickup address when the rental service offers pickup"
+          "description": "The phone number for the pickup address when the rental service offers pickup, for the CAR segment leg only"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "The address postal code of the booking, for the HOTEL segment leg only"
+        },
+        "providerPhone": {
+          "type": "string",
+          "description": "The phone number for the booking, for the HOTEL segment leg only"
+        },
+        "roomDescription": {
+          "type": "string",
+          "description": "The room description for the booking, for the HOTEL segment leg only",
+          "maximum": 2000
+        },
+        "seatNumber": {
+          "type": "string",
+          "description": "The number of the seat, for the AIR or RAIL segment leg only"
+        },
+        "startLocation": {
+          "description": "The start location, for the AIR, CAR or RAIL segment leg only",
+          "$ref": "#/definitions/Location"
+        },
+        "startLocationDetail": {
+          "type": "string",
+          "description": "Additional details about the start location, for the CAR segment leg only"
+        },
+        "startRailStation": {
+          "type": "string",
+          "description": "The code for the starting station, for the RAIL segment leg only"
+        },
+        "startRailStationName": {
+          "type": "string",
+          "description": "The name for the starting station, for the RAIL segment leg only"
+        },
+        "trainNumber": {
+          "type": "string",
+          "description": "The train number for the booking, for the RAIL segment leg only"
         },
         "transmissionPreference": {
           "type": "string",
-          "description": "The character code that indicates if the car has auto-transmission. A - Auto, M - Manual",
+          "description": "The character code that indicates if the car has auto-transmission. A - Auto, M - Manual. For the CAR segment leg only",
           "enum": [
             "A",
             "M"
           ]
         },
-        "startLocation": {
-          "description": "The start location of the air segment leg",
-          "$ref": "#/definitions/Location"
-        },
-        "startLocationDetail": {
-          "type": "string",
-          "description": "Additional details about the start location"
-        }
-      }
-    },
-    "AgencyProposalHotelSegment": {
-      "type": "object",
-      "required": [
-        "location",
-        "name"
-      ],
-      "properties": {
-        "address": {
-          "type": "string",
-          "description": "The address of the booking"
-        },
-        "location": {
-          "description": "The location of the hotel segment leg (city location schema)",
-          "$ref": "#/definitions/Location"
-        },
-        "locationDetail": {
-          "type": "string",
-          "description": "Additional details about the location"
-        },
-        "name": {
-          "type": "string",
-          "description": "The hotel name for the booking"
-        },
-        "postalCode": {
-          "type": "string",
-          "description": "The address postal code of the booking"
-        },
-        "providerPhone": {
-          "type": "string",
-          "description": "The phone number for the booking"
-        },
-        "roomDescription": {
-          "type": "string",
-          "description": "The room description for the booking.",
-          "maximum": 2000
-        }
-      }
-    },
-    "AgencyProposalMiscSegment": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the booking"
-        }
-      }
-    },
-    "AgencyProposalRailSegment": {
-      "type": "object",
-      "required": [
-        "startLocation",
-        "endLocation",
-        "classOfSerice",
-        "duration",
-        "trainNumber"
-      ],
-      "properties": {
-        "classOfSerice": {
-          "type": "string",
-          "description": "The class of the air segment"
-        },
-        "duration": {
-          "type": "integer",
-          "format": "int32",
-          "description": "The duration of the booked flight. Must be greater than 0",
-          "minimum": 1
-        },
-        "endLocation": {
-          "description": "The end location of the rail segment leg",
-          "$ref": "#/definitions/Location"
-        },
-        "endRailStation": {
-          "type": "string",
-          "description": "The code for the ending station of the segment leg"
-        },
-        "endRailStationName": {
-          "type": "string",
-          "description": "The name for the ending station of the segment leg"
-        },
-        "trainNumber": {
-          "type": "string",
-          "description": "The train number for the booking"
-        },
-        "seatNumber": {
-          "type": "string",
-          "description": "The number of the seat"
-        },
-        "startLocation": {
-          "description": "The start location of the rail segment leg",
-          "$ref": "#/definitions/Location"
-        },
-        "startRailStation": {
-          "type": "string",
-          "description": "The code for the starting station of the segment leg"
-        },
-        "startRailStationName": {
-          "type": "string",
-          "description": "The name for the starting station of the segment leg"
-        },
         "wagonNumber": {
           "type": "string",
-          "description": "The number of the wagon"
+          "description": "The number of the wagon, for the RAIL segment leg only"
         }
       }
     },
