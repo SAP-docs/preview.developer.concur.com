@@ -3,7 +3,7 @@ title: Duty of Care
 layout: reference
 ---
 
-# Duty of Care 
+# Duty of Care
 
 ## <a name="introduction"></a>Introduction
 
@@ -197,9 +197,9 @@ Q: What should be the best practice to handle anonymization events?
 
 >   A: The best practice to handle anonymization events is to anonymize these trips by getting the updated anonymized trip and update on the partners end, only if these trips exist in the partner data store and not fetch the trip details if they are not part of the datastore. We offer data retention capabilities that are configurable based on our customer needs. There might be a scenario where you see a number of anonymize events as the data retention policy comes into play with immediate effect for old trips that don’t exist in the partner datastore.
 
-Q: Why do some trips have no contact information for the traveler sometimes?
+Q: Why do some trips have no contact information for the traveler?
 
->   A: SAP Concur supports trips for Non-Profiled or Guest travelers which allows a Concur user to book trips on behalf of non-profiled/guest users who don't have a profile in the system. These are the trips returned without email addresses or contact information for the traveler as that's not available in the system.
+>   A: The SAP Concur platform supports trips for Non-Profiled or Guest travelers, which allows a user to book trips on behalf of non-profiled/guest users who don't have a profile in the system. These are the trips returned without email addresses or contact information for the traveler as that's not available in the system.
 
 ## <a name="identity"></a>Identity V4 API
 
