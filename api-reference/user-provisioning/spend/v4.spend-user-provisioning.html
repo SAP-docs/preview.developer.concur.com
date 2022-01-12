@@ -1112,7 +1112,7 @@
 
 <p>Spend User Provisioning allows callers to provision a user in the SAP Concur spend domain. This is an asynchronous downstream process from the <a href="/api-reference/user-provisioning/v4.user-provisioning.html">User Provisioning v4</a> service. Currently spend user data can be created, modified, and replaced with the POST, PATCH, and PUT provisioning operations.</p>
 
-<h2 id="create-spend-user-resource---post-">Create Spend User Resource - POST <a name="create-spend-user-resource-post"></a></h2>
+<h2 id="create-spend-user-resource"><a name="create-spend-user-resource-post"></a>Create Spend User Resource</h2>
 
 <p>Allows callers to <strong>CREATE</strong> a user and associated data in the SAP Concur spend domain.</p>
 
@@ -1122,17 +1122,18 @@
 
 <p><strong>NOTE:</strong> The Spend User extension is the required foundation on which the other spend extensions depend. Without a successful Spend User save, or the existence of a Spend User, the other spend extensions cannot be leveraged for any further operation.</p>
 
-<h3 id="scopes-">Scopes <a name="scopes"></a></h3>
+<h3 id="scopes"><a name="scopes"></a>Scopes</h3>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="./v4.spend-user-get-started.md#scope-usage-a-namescope-usagea">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="./v4.spend-user-get-started.html#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-">Request <a name="request"></a></h3>
+<h3 id="request"><a name="request"></a>Request</h3>
 
-<h4 id="endpoint-bulk">Endpoint: Bulk</h4>
+<h4 id="uri">URI</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk?companyId<span class="o">={</span>CompanyId<span class="o">}</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell
+POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk?companyId={CompanyId}
 </code></pre></div></div>
 
 <h4 id="parameters">Parameters</h4>
@@ -1141,16 +1142,353 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
+      <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>CompanyId</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td>The unique identifier of a Company. Required with X509 authentication.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#bulk-request">Bulk Request</a></li>
+</ul>
+
+<h3 id="response"><a name="response"></a>Response</h3>
+
+<h3 id="examples"><a name="examples"></a>Examples</h3>
+
+<h4 id="bulk-request">Bulk Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:BulkRequest"
+    ],
+    "failOnErrors": 1,
+    "Operations": [
+        {
+            "method": "POST",
+            "path": "/Users",
+            "bulkId": "bulk-operation-1",
+            "data": {
+                "userName": "Chris.doe198@sap.com",
+                "active": true,
+                "name": {
+                    "formatted": "Chris Doe",
+                    "legalName": "Chris Doe",
+                    "familyName": "Doe",
+                    "givenName": "Chris"
+                },
+                "emails": [
+                    {
+                        "value": "Chris.doe198@sap.com",
+                        "type": "Work"
+                    }
+                ],
+                "entitlements": [
+                    "Expense"
+                ],
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+                    "employeeNumber": "3749",
+                    "companyId": "xxxxxxxx-xxx-xxx-xxx-9300b1c317xxx"
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:User": {
+                    "reimbursementCurrency": "USD",
+                    "reimbursementType": "CONCUR_PAY",
+                    "ledgerCode": "DEFAULT",
+                    "country": "US",
+                    "stateProvince": "WA",
+                    "locale": "en-US",
+                    "customData": [
+                        {
+                            "id": "custom1",
+                            "value": "testing"
+                        },
+                        {
+                            "id": "custom2",
+                            "value": "tested"
+                        },
+                        {
+                            "id": "orgUnit1",
+                            "value": "testDepartment"
+                        },
+                        {
+                            "id": "orgUnit2",
+                            "value": "testSquadAlpha"
+                        }
+                    ]
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {
+                    "request": [
+                        {
+                            "approver": {
+                                "employeeNumber": "requestApprover"
+                            },
+                            "primary": true
+                        }
+                    ],
+                    "report": [
+                        {
+                            "approver": {
+                                "employeeNumber": "reportApprover"
+                            },
+                            "primary": false
+                        }
+                    ]
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate": {
+                    "expense": [
+                        {
+                            "canApprove": true,
+                            "canPrepare": true,
+                            "canPrepareForApproval": true,
+                            "canReceiveApprovalEmail": true,
+                            "canReceiveEmail": true,
+                            "canSubmit": true,
+                            "canSubmitTravelRequest": true,
+                            "canUseBi": true,
+                            "canViewReceipt": true,
+                            "delegate": {
+                                "employeeNumber": "expenseDelegate"
+                            },
+                            "temporaryDelegatation": {
+                                "temporaryDelegationFromDate": "2020-02-19T03:15:00.000Z",
+                                "temporaryDelegationToDate": "2020-02-19T03:59:00.000Z"
+                            }
+                        }
+                    ]
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Role": {
+                    "roles": [
+                        {
+                            "roleName": "EXP_USER",
+                            "roleGroups": ["R&amp;D-Dev-Exp", "R&amp;D-QA-Exp"]
+                        }
+                    ]
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference": {
+                    "emailStatusChangeOnCashAdvance": true,
+                    "emailAwaitApprovalOnCashAdvance": true,
+                    "emailStatusChangeOnReport": true,
+                    "emailAwaitApprovalOnReport": true,
+                    "promptForApproverOnReportSubmit": true,
+                    "emailStatusChangeOnTravelRequest": true,
+                    "emailAwaitApprovalOnTravelRequest": true,
+                    "promptForApproverOnTravelRequestSubmit": true,
+                    "emailStatusChangeOnPayment": true,
+                    "emailAwaitApprovalOnPayment": true,
+                    "promptForApproverOnPaymentSubmit": true
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference": {
+                    "allowCreditCardTransArrivalEmails": true,
+                    "allowReceiptImageAvailEmails": true,
+                    "promptForCardTransactionsOnReport": true,
+                    "autoAddTripCardTransOnReport": true,
+                    "promptForReportPrintFormat": true,
+                    "defaultReportPrintFormat": "DETAILED",
+                    "showTotalOnReport": true,
+                    "showExpenseOnReport": "ALL",
+                    "showInstructHelpPanel": true,
+                    "showImagingIntro": true,
+                    "expenseAuditRequired": "REQUIRED",
+                    "useQuickItinAsDefault": true
+                },
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll": {
+                    "adp": {
+                        "companyCode": "companyCode",
+                        "deductionCode": "HLTH",
+                        "employeeFileNumber": "1234"
+                    }
+                }
+            }
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h2 id="replace-spend-user-resources---put"><a name="replace-spend-user-resource-put"></a>Replace Spend User Resources - PUT</h2>
+
+<p>Allows callers to <strong>REPLACE</strong> a user and associated information in the SAP Concur spend domain.</p>
+
+<p>By creating one or more provision requests using the <code class="language-plaintext highlighter-rouge">/Bulk</code> endpoint to replace existing spend user resources.</p>
+
+<p><strong>PUT</strong> is used as the provision operation for replacing an existing resource.</p>
+
+<p><strong>NOTE:</strong> We do not support an empty Spend User extension. However, if a PUT request is provided for an existing spend user with all blank fields, we will empty all other extensions and set the required fields back to the default values.</p>
+
+<h3 id="scopes-1"><a name="scopes"></a>Scopes</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="./v4.spend-user-get-started.html#scope-usage">Scope Usage</a> for full details.</li>
+</ul>
+
+<h3 id="request-1"><a name="request"></a>Request</h3>
+
+<h4 id="uri-1">URI</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell
+POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk?companyId={CompanyId}
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CompanyId</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td>The unique identifier of a Company. Required with X509 authentication.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#bulk-request">Bulk Request</a></li>
+</ul>
+
+<h3 id="response-1"><a name="response"></a>Response</h3>
+
+<h3 id="examples-1"><a name="examples"></a>Examples</h3>
+
+<h4 id="bulk-request-1">Bulk Request</h4>
+
+<p><strong>NOTE:</strong> The UUID within the ID attribute and path must be included within the data of the request.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:BulkRequest"
+    ],
+    "failOnErrors": 1,
+    "Operations": [
+        {
+            "method": "PUT",
+            "path": "/Users/aaaaaaaa-bbbb-cccc-aaaa-bbbbbbbbbbb1",
+            "bulkId": "Seattle",
+            "data": {
+                "id": "aaaaaaaa-bbbb-cccc-aaaa-bbbbbbbbbbb1",
+                "userName": "john.doe21224@sap.com",
+                "active": false,
+                "name": {
+                    "formatted": "Mr. John Doe",
+                    "legalName": "Mr. John Doe",
+                    "middleName": "Joe",
+                    "middleInitial": "J",
+                    "familyName": "Doe",
+                    "givenName": "John",
+                    "honorificPrefix": "Prof Dr Mr",
+                    "honorificSuffix": "VI",
+                    "hasNoMiddleName": true
+                },
+                "emails": [
+                    {
+                        "value": "john.doe193@sap.com",
+                        "type": "work"
+                    }
+                ],
+                "entitlements": [
+                    "Expense"
+                ],
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+                    "employeeNumber": "3749",
+                    "companyId": "xxxxxxxx-xxx-xxx-xxx-9300b1c317xxx"
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:User": {
+                    "reimbursementCurrency": "USD",
+                    "reimbursementType": "CONCUR_PAY",
+                    "ledgerCode": "DEFAULT",
+                    "country": "US",
+                    "budgetCountryCode": "US",
+                    "stateProvince": "WA",
+                    "locale": "en-US",
+                    "customData": [
+                        {
+                            "id": "custom1",
+                            "value": "testing"
+                        },
+                        {
+                            "id": "orgUnit2",
+                            "value": "testSquadAlpha"
+                        }
+                    ]
+                },
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {
+                    "request": [
+                        {
+                            "approver": {
+                                "employeeNumber": "requestApprover"
+                            },
+                            "primary": true
+                        }
+                    ],
+                },
+            }
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h2 id="modify-spend-user-resource---patch"><a name="modify-spend-user-resource-patch"></a>Modify Spend User Resource - PATCH</h2>
+
+<p>Allows callers to <strong>MODIFY</strong> a user and associated data in the SAP Concur spend domain.</p>
+
+<p>By creating one or more provision requests using the <code class="language-plaintext highlighter-rouge">/Bulk</code> endpoint to modify existing spend user resources, or using the <code class="language-plaintext highlighter-rouge">/Users</code> endpoint for modifying a single spend user resource.</p>
+
+<p><strong>PATCH</strong> is used as the provision operation or http method for modifying a new or existing resource.</p>
+
+<p><strong>NOTE:</strong> The Spend User extension is the required foundation on which the other spend extensions depend. Without a successful Spend User save, or the existence of a Spend User, the other spend extensions cannot be leveraged for any further operation.</p>
+
+<h3 id="scopes-2"><a name="scopes"></a>Scopes</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="./v4.spend-user-get-started.html#scope-usage">Scope Usage</a> for full details.</li>
+</ul>
+
+<h3 id="bulk-request-">Bulk Request <a name="bulk-request"></a></h3>
+
+<h4 id="uri-2">URI</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell
+POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk?companyId={CompanyId}
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CompanyId</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
       <td>The unique identifier of a Company. Required with X509 authentication.</td>
     </tr>
   </tbody>
@@ -1162,433 +1500,22 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
+      <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>concur-correlationid</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
       <td>A SAP Concur specific custom header used for technical support</td>
     </tr>
     <tr>
       <td>Content-Type</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></td>
-      <td>Specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html) &lt;/br&gt; Ex: <code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="payload">Payload</h4>
-
-<ul>
-  <li><a href="#bulk-request">Bulk Request</a></li>
-</ul>
-
-<h3 id="response-">Response <a name="response"></a></h3>
-
-<h4 id="status-codes">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">402 Payment Required</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-</ul>
-
-<h3 id="examples-">Examples <a name="examples"></a></h3>
-
-<h4 id="bulk-request">Bulk Request</h4>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:BulkRequest"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"failOnErrors"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"bulkId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bulk-operation-1"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"userName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chris.doe198@sap.com"</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"formatted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chris Doe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"legalName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chris Doe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"familyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"givenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chris"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="p">{</span><span class="w">
-                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Chris.doe198@sap.com"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Work"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                </span><span class="p">],</span><span class="w">
-                </span><span class="nl">"entitlements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="s2">"Expense"</span><span class="w">
-                </span><span class="p">],</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3749"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxxxxxxx-xxx-xxx-xxx-9300b1c317xxx"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"reimbursementCurrency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"reimbursementType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CONCUR_PAY"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"ledgerCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DEFAULT"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"stateProvince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"customData"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom1"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testing"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom2"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tested"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orgUnit1"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testDepartment"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orgUnit2"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testSquadAlpha"</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"requestApprover"</span><span class="w">
-                            </span><span class="p">},</span><span class="w">
-                            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                    </span><span class="nl">"report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reportApprover"</span><span class="w">
-                            </span><span class="p">},</span><span class="w">
-                            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"expense"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"canApprove"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canPrepare"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canPrepareForApproval"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canReceiveApprovalEmail"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canReceiveEmail"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canSubmit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canSubmitTravelRequest"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canUseBi"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"canViewReceipt"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"delegate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"expenseDelegate"</span><span class="w">
-                            </span><span class="p">},</span><span class="w">
-                            </span><span class="nl">"temporaryDelegatation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"temporaryDelegationFromDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T03:15:00.000Z"</span><span class="p">,</span><span class="w">
-                                </span><span class="nl">"temporaryDelegationToDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-02-19T03:59:00.000Z"</span><span class="w">
-                            </span><span class="p">}</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"roles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"roleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EXP_USER"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"roleGroups"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"R&amp;D-Dev-Exp"</span><span class="p">,</span><span class="w"> </span><span class="s2">"R&amp;D-QA-Exp"</span><span class="p">]</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"emailStatusChangeOnCashAdvance"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailAwaitApprovalOnCashAdvance"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailStatusChangeOnReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailAwaitApprovalOnReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"promptForApproverOnReportSubmit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailStatusChangeOnTravelRequest"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailAwaitApprovalOnTravelRequest"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"promptForApproverOnTravelRequestSubmit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailStatusChangeOnPayment"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"emailAwaitApprovalOnPayment"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"promptForApproverOnPaymentSubmit"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"allowCreditCardTransArrivalEmails"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"allowReceiptImageAvailEmails"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"promptForCardTransactionsOnReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"autoAddTripCardTransOnReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"promptForReportPrintFormat"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"defaultReportPrintFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DETAILED"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"showTotalOnReport"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"showExpenseOnReport"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ALL"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"showInstructHelpPanel"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"showImagingIntro"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"expenseAuditRequired"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REQUIRED"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"useQuickItinAsDefault"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"adp"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                        </span><span class="nl">"companyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"companyCode"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"deductionCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"HLTH"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"employeeFileNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h2 id="replace-spend-user-resources---put-">Replace Spend User Resources - PUT <a name="replace-spend-user-resource-put"></a></h2>
-
-<p>Allows callers to <strong>REPLACE</strong> a user and associated information in the SAP Concur spend domain.</p>
-
-<p>By creating one or more provision requests using the <code class="language-plaintext highlighter-rouge">/Bulk</code> endpoint to replace existing spend user resources.</p>
-
-<p><strong>PUT</strong> is used as the provision operation for replacing an existing resource.</p>
-
-<p><strong>NOTE:</strong> We do not support an empty Spend User extension. However, if a PUT request is provided for an existing spend user with all blank fields, we will empty all other extensions and set the required fields back to the default values.</p>
-
-<h3 id="scopes--1">Scopes <a name="scopes"></a></h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="./v4.spend-user-get-started.md#scope-usage">Scope Usage</a> for full details.</li>
-</ul>
-
-<h3 id="request--1">Request <a name="request"></a></h3>
-
-<h4 id="endpoint-bulk-1">Endpoint: Bulk</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk?companyId<span class="o">={</span>CompanyId<span class="o">}</span>
-</code></pre></div></div>
-
-<h4 id="parameters-1">Parameters</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>CompanyId</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
-      <td>The unique identifier of a Company. Required with X509 authentication.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="headers-1">Headers</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>concur-correlationid</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
-      <td>A SAP Concur specific custom header used for technical support</td>
-    </tr>
-    <tr>
-      <td>Content-Type</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></td>
-      <td>Specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html) &lt;/br&gt; Ex: <code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="payload-1">Payload</h4>
-
-<ul>
-  <li><a href="#bulk-request">Bulk Request</a></li>
-</ul>
-
-<h3 id="response--1">Response <a name="response"></a></h3>
-
-<h4 id="status-codes-1">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-</ul>
-
-<h3 id="examples--1">Examples <a name="examples"></a></h3>
-
-<h4 id="bulk-request-1">Bulk Request</h4>
-
-<p><strong>NOTE:</strong> The UUID within the ID attribute and path must be included within the data of the request.</p>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:BulkRequest"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"failOnErrors"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUT"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/aaaaaaaa-bbbb-cccc-aaaa-bbbbbbbbbbb1"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"bulkId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Seattle"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaaaaa-bbbb-cccc-aaaa-bbbbbbbbbbb1"</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"userName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe21224@sap.com"</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-                </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"formatted"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mr. John Doe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"legalName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mr. John Doe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"middleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"middleInitial"</span><span class="p">:</span><span class="w"> </span><span class="s2">"J"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"familyName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"givenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"honorificPrefix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prof Dr Mr"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"honorificSuffix"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VI"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"hasNoMiddleName"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="p">{</span><span class="w">
-                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe193@sap.com"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                </span><span class="p">],</span><span class="w">
-                </span><span class="nl">"entitlements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="s2">"Expense"</span><span class="w">
-                </span><span class="p">],</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3749"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"xxxxxxxx-xxx-xxx-xxx-9300b1c317xxx"</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"reimbursementCurrency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"reimbursementType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CONCUR_PAY"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"ledgerCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DEFAULT"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"budgetCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"stateProvince"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en-US"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"customData"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom1"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testing"</span><span class="w">
-                        </span><span class="p">},</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"orgUnit2"</span><span class="p">,</span><span class="w">
-                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testSquadAlpha"</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"requestApprover"</span><span class="w">
-                            </span><span class="p">},</span><span class="w">
-                            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">],</span><span class="w">
-                </span><span class="p">},</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h2 id="modify-spend-user-resource---patch-">Modify Spend User Resource - PATCH <a name="modify-spend-user-resource-patch"></a></h2>
-
-<p>Allows callers to <strong>MODIFY</strong> a user and associated data in the SAP Concur spend domain.</p>
-
-<p>By creating one or more provision requests using the <code class="language-plaintext highlighter-rouge">/Bulk</code> endpoint to modify existing spend user resources, or using the <code class="language-plaintext highlighter-rouge">/Users</code> endpoint for modifying a single spend user resource.</p>
-
-<p><strong>PATCH</strong> is used as the provision operation or http method for modifying a new/existing resource.</p>
-
-<p><strong>NOTE:</strong> The Spend User extension is the required foundation on which the other spend extensions depend. Without a successful Spend User save, or the existence of a Spend User, the other spend extensions cannot be leveraged for any further operation.</p>
-
-<h3 id="scopes--2">Scopes <a name="scopes"></a></h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="./v4.spend-user-get-started.md#scope-usage">Scope Usage</a> for full details.</li>
-</ul>
-
-<h3 id="bulk-request-">Bulk Request <a name="bulk-request"></a></h3>
-
-<h4 id="endpoint">Endpoint</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk?companyId<span class="o">={</span>CompanyId<span class="o">}</span>
-</code></pre></div></div>
-
-<h4 id="parameters-2">Parameters</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>CompanyId</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
-      <td>The unique identifier of a Company. Required with X509 authentication.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="headers-2">Headers</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>concur-correlationid</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
-      <td>A SAP Concur specific custom header used for technical support</td>
-    </tr>
-    <tr>
-      <td>Content-Type</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></td>
       <td>Specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html) &lt;/br&gt; Ex: <code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></td>
     </tr>
   </tbody>
@@ -1600,92 +1527,80 @@
   <li><a href="#bulk-examples-a-namebulk-examplesa">Bulk Request</a></li>
 </ul>
 
-<h3 id="response--2">Response <a name="response"></a></h3>
+<h3 id="response-2"><a name="response"></a>Response</h3>
 
-<h4 id="status-codes-2">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">402 Payment Required</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-</ul>
-
-<h3 id="bulk-examples-">Bulk Examples <a name="bulk-examples"></a></h3>
+<h3 id="bulk-examples"><a name="bulk-examples"></a>Bulk Examples</h3>
 
 <p><strong>NOTE:</strong> The UUID must be provided in the path of the request.</p>
 
-<h4 id="request">Request</h4>
+<h4 id="request-2">Request</h4>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:BulkRequest"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"failOnErrors"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PATCH"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="p">{</span><span class="w">
-                        </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:User:country"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="p">{</span><span class="w">
-                        </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es-419"</span><span class="p">,</span><span class="w">
-                                </span><span class="nl">"reimbursementType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CONCUR_PAY"</span><span class="p">,</span><span class="w">
-                                </span><span class="nl">"customData"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                                    </span><span class="p">{</span><span class="w">
-                                        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom1"</span><span class="p">,</span><span class="w">
-                                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"patchChangeCustom1"</span><span class="w">
-                                    </span><span class="p">},</span><span class="w">
-                                    </span><span class="p">{</span><span class="w">
-                                        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"custom8"</span><span class="p">,</span><span class="w">
-                                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"newCustomObject"</span><span class="w">
-                                    </span><span class="p">}</span><span class="w">
-                                </span><span class="p">]</span><span class="w">
-                            </span><span class="p">}</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">},</span><span class="w">
-                    </span><span class="p">{</span><span class="w">
-                        </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add"</span><span class="p">,</span><span class="w">
-                        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"budget"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                                    </span><span class="p">{</span><span class="w">
-                                        </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aaaaaaaa-bbbb-cccc-aaaa-bbbbbbbbbbb3"</span><span class="p">,</span><span class="w">
-                                            </span><span class="nl">"employeeNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"100001"</span><span class="w">
-                                        </span><span class="p">},</span><span class="w">
-                                        </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                                    </span><span class="p">}</span><span class="w">
-                                </span><span class="p">]</span><span class="w">
-                            </span><span class="p">}</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                </span><span class="p">]</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:BulkRequest",
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "failOnErrors": 1,
+    "Operations": [
+        {
+            "method": "PATCH",
+            "path": "/Users/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+            "data": {
+                "Operations": [
+                    {
+                        "op": "replace",
+                        "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:User:country",
+                        "value": "US"
+                    },
+                    {
+                        "op": "add",
+                        "value": {
+                            "urn:ietf:params:scim:schemas:extension:spend:2.0:User": {
+                                "locale": "es-419",
+                                "reimbursementType": "CONCUR_PAY",
+                                "customData": [
+                                    {
+                                        "id": "custom1",
+                                        "value": "patchChangeCustom1"
+                                    },
+                                    {
+                                        "id": "custom8",
+                                        "value": "newCustomObject"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "op": "add",
+                        "value": {
+                            "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {
+                                "budget": [
+                                    {
+                                        "approver": {
+                                            "value": "aaaaaaaa-bbbb-cccc-aaaa-bbbbbbbbbbb3",
+                                            "employeeNumber": "100001"
+                                        },
+                                        "primary": true
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}
+</code></pre></div></div>
 
-<h3 id="patch-request-">Patch Request <a name="patch-request"></a></h3>
+<h3 id="patch-request"><a name="patch-request"></a>Patch Request</h3>
 
-<h4 id="endpoint-1">Endpoint</h4>
+<h4 id="uri-3">URI</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Users/<span class="o">{</span>UserId<span class="o">}</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>shell
+PATCH https://www.us.api.concursolutions.com/provisioning/v4/Users/{UserId}
 </code></pre></div></div>
 
 <h4 id="parameters-3">Parameters</h4>
@@ -1694,50 +1609,23 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
+      <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>UserId</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
       <td>The unique identifier of an User</td>
     </tr>
     <tr>
       <td>CompanyId</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
       <td>The unique identifier of a Company. Required with X509 authentication.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="headers-3">Headers</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th style="text-align: center">Type</th>
-      <th style="text-align: center">Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>concur-correlationid</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
-      <td>A SAP Concur specific custom header used for technical support</td>
-    </tr>
-    <tr>
-      <td>Content-Type</td>
-      <td style="text-align: center"><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td style="text-align: center"><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></td>
-      <td>Specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html) &lt;/br&gt; Ex: <code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></td>
     </tr>
   </tbody>
 </table>
@@ -1748,178 +1636,186 @@
   <li><a href="#patch-request">Patch Request</a></li>
 </ul>
 
-<h3 id="patch-response-">Patch Response <a name="patch-response"></a></h3>
+<h3 id="patch-response"><a name="patch-response"></a>Patch Response</h3>
 
-<h4 id="status-codes-3">Status Codes</h4>
+<h3 id="patch-examples"><a name="patch-examples"></a>Patch Examples</h3>
 
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">402 Payment Required</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-</ul>
+<p>The following lists a few PATCH examples with the <strong>Approver</strong> extension.</p>
 
-<h3 id="patch-examples-">Patch Examples <a name="patch-examples"></a></h3>
+<h4 id="request-add-approver">Request: Add Approver</h4>
 
-<p><strong>Section1:</strong> The following lists a few PATCH examples with the <strong>Approver</strong> extension.</p>
-<h4 id="1-request-add-approver">1. Request: Add Approver</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dbc5c27f-afc8-4091-bd2b-d5beca9c8481"</span><span class="w">
-                            </span><span class="p">},</span><span class="w">
-                            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "add",
+            "value": {
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {
+                    "report": [
+                        {
+                            "approver": {
+                                "value": "dbc5c27f-afc8-4091-bd2b-d5beca9c8481"
+                            },
+                            "primary": true
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+</code></pre></div></div>
 
-<h4 id="2-request-replace-approver">2. Request: Replace Approver</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="p">{</span><span class="w">
-                            </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                                </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5d9b715d-7265-4532-a40d-38271837f538"</span><span class="w">
-                            </span><span class="p">},</span><span class="w">
-                            </span><span class="nl">"primary"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-                        </span><span class="p">}</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">}</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h4 id="request-replace-approver">Request: Replace Approver</h4>
 
-<h4 id="3-request-remove-a-single-approver">3. Request: Remove a single Approver</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"remove"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver:report[approver.value eq </span><span class="se">\"</span><span class="s2">5d9b715d-7265-4532-a40d-38271837f538</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "replace",
+            "value": {
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {
+                    "report": [
+                        {
+                            "approver": {
+                                "value": "5d9b715d-7265-4532-a40d-38271837f538"
+                            },
+                            "primary": true
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h4 id="request-remove-a-single-approver">Request: Remove a Single Approver</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "remove",
+            "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver:report[approver.value eq \"5d9b715d-7265-4532-a40d-38271837f538\"]"
+        }
+    ]
+}
+</code></pre></div></div>
+
 <p><strong>NOTE:</strong> Remove operation uses the attribute <strong>path</strong> for removing a specific identity.</p>
 
-<h4 id="4-request-remove-all-approvers">4. Request: Remove All Approvers</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"remove"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver:"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h4 id="request-remove-all-approvers">Request: Remove All Approvers</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "remove",
+            "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver:"
+        }
+    ]
+}
+</code></pre></div></div>
+
 <p><strong>NOTE:</strong> Remove operation uses the attribute <strong>path</strong> for removing resources.</p>
 
-<p><strong>Section2:</strong> The following lists a few PATCH examples with the <strong>Role</strong> extension.</p>
-<h4 id="1-request-add-role">1. Request: Add Role</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"add"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"roleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SHD_ROLE_ADMIN"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"roleGroups"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="s2">"R&amp;D-QA-Exp"</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<p>The following lists a few PATCH examples with the <strong>Role</strong> extension.</p>
 
-<h4 id="2-request-replace-role">2. Request: Replace Role</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="w">
-                    </span><span class="nl">"roleName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SHD_ROLE_ADMIN"</span><span class="p">,</span><span class="w">
-                    </span><span class="nl">"roleGroups"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                        </span><span class="s2">"R&amp;D-QA-Exp"</span><span class="w">
-                    </span><span class="p">]</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h4 id="request-add-role">Request: Add Role</h4>
 
-<h4 id="3-request-remove-a-single-role">3. Request: Remove a single Role</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"remove"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles[roleName eq </span><span class="se">\"</span><span class="s2">SHD_ROLE_ADMIN</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "add",
+            "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles",
+            "value": [
+                {
+                    "roleName": "SHD_ROLE_ADMIN",
+                    "roleGroups": [
+                        "R&amp;D-QA-Exp"
+                    ]
+                }
+            ]
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h4 id="request-replace-role">Request: Replace Role</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "replace",
+            "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles",
+            "value": [
+                {
+                    "roleName": "SHD_ROLE_ADMIN",
+                    "roleGroups": [
+                        "R&amp;D-QA-Exp"
+                    ]
+                }
+            ]
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h4 id="request-remove-a-single-role">Request: Remove a Single Role</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "remove",
+            "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles[roleName eq \"SHD_ROLE_ADMIN\"]"
+        }
+    ]
+}
+</code></pre></div></div>
+
 <p><strong>NOTE:</strong> Remove operation uses the attribute <strong>path</strong> for removing a specific identity.</p>
 
-<h4 id="4-request-remove-all-roles">4. Request: Remove All Roles</h4>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"remove"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role:"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h4 id="request-remove-all-roles">Request: Remove All Roles</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+    ],
+    "Operations": [
+        {
+            "op": "remove",
+            "path": "urn:ietf:params:scim:schemas:extension:spend:2.0:Role:"
+        }
+    ]
+}
+</code></pre></div></div>
+
 <p><strong>NOTE:</strong> Remove operation uses the attribute <strong>path</strong> for removing resources.</p>
 
       </div>
