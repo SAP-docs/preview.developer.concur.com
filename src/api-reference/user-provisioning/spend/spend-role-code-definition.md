@@ -7,15 +7,23 @@ layout: reference
 
 {% include prerelease.html %}
 
-## <a name="column-description"></a>Column Description
+The following lists contain the available permissions and roles for Expense, Request, Invoice, and Reporting. The roles are separated into tables based on the tabs/products in User Permissions.
+
+**NOTE:** The following spend roles map to entitlements, which cannot be modified through the Spend role extension individually, but only entitlement.
+
+| Role Code | Entitlements |
+| :--------:| :--------: |
+| EXP_USER | Expense |
+| REQ_USER | Request |
+| INV_PMT_USER | Invoice |
+
+## Column Description <a name="column-description"></a>
 
 |Role Code|Role Full Name|Description|Group-Aware|Product Area|
 |---|---|---|---|---|
-The role code value that can be used for provisioning with the `Spend Role Extension`.|The full name of the role.|The usage of the role.|When assigning this role, one or more groups must be given.|Shared with two or more SAP Concur products.|
+The role code value that can be used for provisioning with the `Spend Role Extension`.|The full name of the role.|The usage of the role.|When assigning this role, users may supply one or more groups. If no group is supplied, then the role is defaulted to the global group.|Shared with two or more SAP Concur products.|
 
----
-
-## <a name="expense-roles"></a>Expense Product Roles
+## Expense Product Roles <a name="expense-roles"></a>
 
 |Role Code|Role Full Name|Description|Group-Aware|Product Area|
 |---|---|---|---|---|
@@ -81,7 +89,7 @@ The role code value that can be used for provisioning with the `Spend Role Exten
 |`N/A`|UI Preview|**NOTE:** This field is not supported.|N|Y|
 |`SHD_WEB_SERVICES_ADMIN`|Web Services Administrator|The user assigned this role can access the **Partner Application Administration** page to register or enable partner applications to access the company’s data using the SAP Concur web services. The partner applications are required for some integrations, and do not appear in the SAP Concur App Center. They may also access the **Manage User Apps** page to restrict the User applications in the SAP Concur App Center for their company's users, as well as Enable Enterprise partner applications within the SAP Concur App Center.|N|SAP Concur Connect|
 
-## <a name="request-roles"></a>Request Product Roles
+## Request Product Roles <a name="request-roles"></a>
 
 |Role Code|Role Full Name|Description|Group-Aware|Product Area|
 |---|---|---|---|---|
@@ -97,7 +105,7 @@ The role code value that can be used for provisioning with the `Spend Role Exten
 |`REQ_RISK_ADMIN`|Risk Manager|This permission appears only if Request is integrated with Concur Risk Management. The user assigned this role can process requests waiting for Risk Manager processing and view submitted requests with risk.<br>**NOTE**: A user cannot be assigned this role and one of the other Request processor roles.|Y|N|
 |`REQ_PROCESSOR`|TMC Agent|**This is one of the Request processor roles.**<br>The SAP Concur client assigns this role to one or more agents of its Travel Management Company (TMC) or to the client's internal travel agent(s). In some regions, it is appropriate for the TMC Agent to access the request after the user submits it but before the approver receives it. This way, the TMC Agent can add/edit the segment amounts – ensuring accuracy for the request approver.|Y|N|
 
-## <a name="invoice-roles"></a>Invoice (Payment) Product Roles
+## Invoice (Payment) Product Roles <a name="invoice-roles"></a>
 
 |Role Code|Role Full Name|Description|Group-Aware|Product Area|
 |---|---|---|---|---|
@@ -135,7 +143,7 @@ The role code value that can be used for provisioning with the `Spend Role Exten
 |`INV_PURCH_REQ_USER`|Purchase Request User|The user assigned this role can create purchase requests in the Purchase Request module.|N|N|
 |`INV_RECEIPT_USER`|Receipt User|The user assigned this role can enter, update, and delete receipt data for their own purchase orders.|N|N|
 
-## <a name="reporting-roles"></a>Reporting Product Roles
+## Reporting Product Roles <a name="reporting-roles"></a>
 
 |Role Code|Role Full Name|Description|Group-Aware|Product Area|
 |---|---|---|---|---|

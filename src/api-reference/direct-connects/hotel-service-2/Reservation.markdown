@@ -362,6 +362,7 @@ Message to reserve a hotel.
 |`TransactionID`|`string`|**Required** For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
 |`ThreeDSServerTransactionID`|`string`|Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
 |`ECI`|`stringLength1to8`|**Required** Electronic Commerce Indicator|
+|`ExemptionCode`|`stringLength1to8`|Identifies SCA exemption type|
 
 ---
 
