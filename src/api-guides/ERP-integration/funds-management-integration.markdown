@@ -194,5 +194,5 @@ Your application should monitor event notifications for Requests that you have a
 
 ### Financial Data Posting and Feedback Loop
 
-* The ERP receives the posting data for the Concur Expense Report(s) linked to the Request via Financial Integration Service. See the [Financial Posting via Financial Integration Service](https://developer.concur.com/api-guides/ERP-integration/posting-via-financial-integration-service.html) guide for more information.
+* The ERP receives the posting data for the Concur Expense Report(s) linked to the Request via Financial Integration Service. See the [Financial Posting via Financial Integration Service](./posting-via-financial-integration-service.html) guide for more information.
 * For information on the various financial integration processes, see [Financial Integration Service Use Cases](/api-reference/financial-integration/v4.financial-integration-service-use-cases.html).
