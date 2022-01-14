@@ -188,11 +188,11 @@ Your application should monitor event notifications for Requests that you have a
       * Sent Back / Recalled: `statusChange.SENTBACK`
       * Approved: `statusChange.APPROVED`
    * Possible Funds Management actions based on the above events include:
-    * Encumbrance Creation
-    * Commitment Creation/Update
-    * Commitment Deletion
+      * Encumbrance Creation
+      * Commitment Creation/Update
+      * Commitment Deletion
 
 ### Financial Data Posting and Feedback Loop
 
 * The ERP receives the posting data for the Concur Expense Report(s) linked to the Request via Financial Integration Service. See the [Financial Posting via Financial Integration Service](./api-guides/ERP-integration/posting-via-financial-integration-service.html) guide for more information.
-* For information on the various financial integration processes, see [Financial Integration Service Use Cases](/api-reference/financial-integration/v4.financial-integration-service-use-cases.html)
+* For information on the various financial integration processes, see [Financial Integration Service Use Cases](/api-reference/financial-integration/v4.financial-integration-service-use-cases.html).
