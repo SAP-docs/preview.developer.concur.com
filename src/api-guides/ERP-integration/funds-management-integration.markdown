@@ -7,6 +7,8 @@ layout: reference
 
 This guide describes an integration between SAP Concur Solutions and client ERP Encumbrance or Funds Management Modules. This integration will provide near real-time budget validation of funds. The integration leverages the Event Subscription Services with Concur Request and Financial Services APIs to provide bi-directional communication between a client’s SAP Concur entity and their ERP Encumbrance or Funds Management Module.
 
+## Limitations
+
 This feature is only available to customers who have Concur Request and Concur Expense deployed in a Professional environment.
 
 ## Funds Management Workflow
@@ -192,5 +194,5 @@ Your application should monitor event notifications for Requests that you have a
 
 ### Financial Data Posting and Feedback Loop
 
-* The ERP receives the posting data for the Concur Expense Report(s) linked to the Request via Financial Integration Service. See the [Financial Posting via Financial Integration Service](./api-guides/ERP-integration/posting-via-financial-integration-service.html) guide for more information. 
-* For information on the variousfFinancial integration processes, see [Financial Integration Service Use Cases](/api-reference/financial-integration/v4.financial-integration-service-use-cases.html)
+* The ERP receives the posting data for the Concur Expense Report(s) linked to the Request via Financial Integration Service. See the [Financial Posting via Financial Integration Service](./api-guides/ERP-integration/posting-via-financial-integration-service.html) guide for more information.
+* For information on the various financial integration processes, see [Financial Integration Service Use Cases](/api-reference/financial-integration/v4.financial-integration-service-use-cases.html)
