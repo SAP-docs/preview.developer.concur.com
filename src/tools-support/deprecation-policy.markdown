@@ -6,7 +6,7 @@ layout: reference
 
 The API Lifecycle & Deprecation Policy is part of our [API terms and conditions of use.](/Terms-of-Use.html) We may make periodic updates to this policy, at which time we will notify those who have agreements with us.
 
->**NOTE**: For the policy that applies to APIs deprecated prior to August 2021, see: https://developer.concur.com/tools-support/deprecation-policy-legacy.html.
+>**NOTE**: For the policy that applies to APIs deprecated prior to August 2021, see: [https://developer.concur.com/tools-support/deprecation-policy-legacy.html](https://developer.concur.com/tools-support/deprecation-policy-legacy.html).
 
 ## API Version Status  
 

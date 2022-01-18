@@ -125,12 +125,20 @@ Message to reserve a hotel.
             <CustomField Name="user1" Value="value1u"></CustomField>
             <CustomField Name="user2"></CustomField>
           </CustomFields>
+          <ThreeDSecure>
+            <AVV>AHDUHSUHD17817</AVV>
+            <TransactionID>38ce7751-9c7b-4d8b-a0bd-80024a09cd06</TransactionID>
+            <ThreeDSServerTransactionID>59bd1110-8268-47ca-a3fb-e40af0e51584</ThreeDSServerTransactionID>
+            <ECI>01</ECI>
+            <MessageVersion>2.1.0</MessageVersion>
+          </ThreeDSecure>
         </TPA_Extensions>
       </HotelReservations>
     </OTA_HotelResRQ>
   </Body>
 </Envelope>
 ```
+
 
 #### <a name="req-schema"></a>OTA_HotelResRQ
 
@@ -323,6 +331,7 @@ Message to reserve a hotel.
 |--------------|---------|-------------|
 |`NotifyEmails`|`complex`|Email address which can be used by the vendor to contact the customer.|
 |`CustomFields`|`complex`|A reference to identify the booking.|
+|`ThreeDSecure`|`complex`|3D Secure Strong Customer Authentication payment verification parameters.|
 
 #### <a name="notify-emails"></a>NotifyEmails
 
@@ -342,6 +351,18 @@ Message to reserve a hotel.
 |---------|------------|-------------|
 |`Name`|`stringLength1to32`|**Required** Name of the custom field.|
 |`Value`|`stringLength1to32`|Value of the custom field.|
+
+#### <a name="ThreeDSecure"></a>ThreeDSecure
+
+|Name|Type|Description|
+|---------|------------|-------------|
+|`AVV`|`string`|**Required** For 3DS1, this is the CAVV. For 3DS2, this is the AVV.|
+|`CAVVAlgorithm`|`stringLength1to8`|Identifies the algorithm used to generate the CAVV for 3DS1.|
+|`MessageVersion`|`stringLength1to32`|**Required** 3D Secure version|
+|`TransactionID`|`string`|**Required** For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
+|`ThreeDSServerTransactionID`|`string`|Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
+|`ECI`|`stringLength1to8`|**Required** Electronic Commerce Indicator|
+|`ExemptionCode`|`stringLength1to8`|Identifies SCA exemption type|
 
 ---
 
