@@ -82,7 +82,7 @@ In order to subscribe to the relevant topic for your application `concur.request
        *	public.partner. {Integration Name}.concur-request.prod
    * Set filter to .* (regexp syntax), you can use it later to filter out unwanted types of events.
 4.	[Verify your Subscription](/api-reference/common/ess/subscription-management.html#get-subscription)
-   * You can [verify your subscription](/event-topics/index.html#verify-your-subscription) to an event. You might notice that your subscription contains some more parameters that you cannot modify for security reasons but can use them for troubleshooting purposes.
+   * You can [verify your subscription](/event-topics/index.html#verify-your-subscription) to an event. You might notice that your subscription contains some parameters that you cannot modify for security reasons but can use them for troubleshooting purposes.
        * `applicationId` - identifies your application as an owner of that subscription.
        *	`companyIds` - a list of UUIDs of companies that allowed your application to access their data, the process of connecting companies to your application is described later in this document.
        *	groups and scope - are used for complex access control scenarios.
