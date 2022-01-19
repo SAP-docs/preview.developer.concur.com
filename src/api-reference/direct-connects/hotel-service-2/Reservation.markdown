@@ -359,8 +359,8 @@ Message to reserve a hotel.
 |`AVV`|`string`|**Required** For 3DS1, this is the CAVV. For 3DS2, this is the AVV.|
 |`CAVVAlgorithm`|`stringLength1to8`|Identifies the algorithm used to generate the CAVV for 3DS1.|
 |`MessageVersion`|`stringLength1to32`|**Required** 3D Secure version|
-|`TransactionID`|`string`|**Required** For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
-|`ThreeDSServerTransactionID`|`string`|Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
+|`TransactionID`|`string`|**Required** Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
+|`ThreeDSServerTransactionID`|`string`|For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
 |`ECI`|`stringLength1to8`|**Required** Electronic Commerce Indicator|
 |`ExemptionCode`|`stringLength1to8`|Identifies SCA exemption type|
 
