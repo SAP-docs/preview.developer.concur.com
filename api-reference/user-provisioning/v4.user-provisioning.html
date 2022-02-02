@@ -1113,17 +1113,17 @@
   <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
 </div>
 
-<p>The User Provisioning Service allows callers to provision a user in the SAP Concur environment. Once a user is provisioned, the user profile is set up in Identity, Travel, and Spend.</p>
+<p>The User Provisioning Service allows callers to provision and update a user’s profile in the SAP Concur environment. Once a user is provisioned, the users profile is available to support the Identity, Travel and Spend services. The service allows clients and partners to modify profiles in bulk or individually using standard REST verbs to create, update objects following a defined schemas covering a users identity, spend and travel data attritubues.</p>
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
 <p>This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API.</p>
 
-<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
+<h2 id="-process-flow"><a name="process-flow"></a> Process Flow</h2>
 
-<p><img src="./v4-user-provisioning-process-flow-v2.png" alt="A process flow diagram of the User Provisioning API" /></p>
+<p><img src="./v4-user-provisioning-process-flow-v3.png" alt="A process flow diagram of the User Provisioning API" /></p>
 
-<h2 id="products-and-editions-">Products and Editions <a name="products-editions"></a></h2>
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
 <ul>
   <li>Concur Expense Professional Edition</li>
@@ -1136,7 +1136,7 @@
   <li>Concur Request Standard Edition</li>
 </ul>
 
-<h2 id="scope-usage-">Scope Usage <a name="scope-usage"></a></h2>
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
 
 <table>
   <thead>
@@ -1210,28 +1210,32 @@
   </tbody>
 </table>
 
-<h2 id="dependencies-">Dependencies <a name="dependencies"></a></h2>
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
 
-<p>SAP Concur users must purchase either Concur Expense or Concur Travel or both in order to use this API. This API only available to approved early adopter partners and clients. Please contact your SAP Concur representative for more information.</p>
+<p>SAP Concur users must purchase either Concur Expense or Concur Travel or both in order to use this API. This API is not available in the China Data Center.  Please contact your SAP Concur representative for more information.</p>
 
-<h2 id="access-token-usage-">Access Token Usage <a name="access-token-usage"></a></h2>
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
 
 <p>This API supports company level access tokens.</p>
 
-<h2 id="events-">Events <a name="event-usage"></a></h2>
+<h2 id="events"><a name="event-usage"></a>Events</h2>
 
-<p>UPS supports post event notification when provisioning process is complete.</p>
+<p>UPS supports post event notification when provisioning process is complete. Using the Event Subscription service will allows clients and partners to be notified through web services when certain actions take place in connected companies.</p>
 
-<p>https://developer.concur.com/api-reference/callouts/post-event-notification.html</p>
+<p>https://developer.concur.com/api-reference/ess/v4.event-subscription.html</p>
 
 <p>Event Type:</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">ProvisioningComplete</code></li>
 </ul>
 
-<h2 id="create-a-provisioning-request-for-one-or-more-users-">Create a Provisioning Request for One or More Users <a name="create-bulk-post"></a></h2>
+<h2 id="create-a-new-user-with-users-endpoint"><a name="create-users-post"></a>Create a new user with /Users endpoint</h2>
 
-<p>Creates one or more provisioning requests.</p>
+<p>Creates user provisioning requests via the /Users endpoint. Recommended for clients who are updating single user profiles at a time. Clients are partners are able to provision identity, spend and travel profile information via this endpoint. 
+Users can be created via POST with identity, spend and travel attributes within the same request or via a POST to create the identity first and PATCH spend and travel profile attributes.</p>
+<ul>
+  <li>Identity must be created prior to any spend or travel profile is added.</li>
+</ul>
 
 <h3 id="scopes">Scopes</h3>
 
@@ -1244,16 +1248,16 @@
 
 <h3 id="request">Request</h3>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Users/
 </code></pre></div></div>
 <h4 id="uri">URI</h4>
 
 <h5 id="template">Template</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Bulk/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Users/
 </code></pre></div></div>
-<h4 id="parameters">Parameters</h4>
 
+<h4 id="parameters">Parameters</h4>
 <p>None</p>
 
 <h4 id="headers">Headers</h4>
@@ -1262,13 +1266,12 @@
   <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
 </ul>
 
-<h4 id="payload">Payload</h4>
-
+<h3 id="payload">Payload</h3>
 <ul>
-  <li><a href="#bulk-request-schema">Bulk Request</a></li>
+  <li><a href="#users-request-schema">Users Request</a></li>
 </ul>
 
-<h3 id="response">Response</h3>
+<h3 id="request-1">Request</h3>
 
 <h4 id="status-codes">Status Codes</h4>
 
@@ -1291,14 +1294,565 @@
 </ul>
 
 <h4 id="payload-1">Payload</h4>
-
 <p>None</p>
 
 <h3 id="example">Example</h3>
 
-<h3 id="request-1">Request</h3>
+<h4 id="request-2">Request</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"schemas"</span>: <span class="o">[</span>
+        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>
+    <span class="o">]</span>,
+    <span class="s2">"userName"</span>: <span class="s2">"John4_29_4@sap.com"</span>,
+    <span class="s2">"active"</span>: <span class="nb">true</span>,
+    <span class="s2">"name"</span>: <span class="o">{</span>
+        <span class="s2">"formatted"</span>: <span class="s2">"Mr. John Doe"</span>,
+        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
+        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>,
+        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
+        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
+        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
+        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
+        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>
+    <span class="o">}</span>,
+    <span class="s2">"emails"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"value"</span>: <span class="s2">"John4_29_4@sap.com"</span>,
+            <span class="s2">"type"</span>: <span class="s2">"work"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"entitlements"</span>: <span class="o">[</span>
+        <span class="s2">"Expense"</span>,
+        <span class="s2">"Invoice"</span>,
+        <span class="s2">"Request"</span>,
+        <span class="s2">"Travel"</span>
+    <span class="o">]</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
+        <span class="s2">"employeeNumber"</span>: <span class="s2">"John4_29_4_EmployeeNumber"</span>,
+        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
+    <span class="o">}</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:User"</span>: <span class="o">{</span>
+        <span class="s2">"locale"</span>: <span class="s2">"en-US"</span>,
+        <span class="s2">"country"</span>: <span class="s2">"US"</span>,
+        <span class="s2">"stateProvince"</span>: <span class="s2">"WA"</span>,
+        <span class="s2">"ledgerCode"</span>: <span class="s2">"DEFAULT"</span>,
+        <span class="s2">"reimbursementCurrency"</span>: <span class="s2">"USD"</span>,
+        <span class="s2">"cashAdvanceAccountCode"</span>: <span class="s2">"Code"</span>,
+        <span class="s2">"customData"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"id"</span>: <span class="s2">"custom1"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"testing"</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"id"</span>: <span class="s2">"orgUnit1"</span>,
+                <span class="s2">"value"</span>: <span class="s2">"testDepartment"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role"</span>: <span class="o">{</span>
+        <span class="s2">"roles"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"roleName"</span>: <span class="s2">"EXP_APPROVER"</span>,
+                <span class="s2">"roleGroups"</span>: <span class="o">[]</span>
+            <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span>: <span class="o">{</span>
+        <span class="s2">"report"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"approver"</span>: <span class="o">{</span>
+                    <span class="s2">"value"</span>: <span class="s2">"d1eb15c1-ac9b-40d6-b5f7-ea2d2f5ae8a7"</span>,
+                    <span class="s2">"</span><span class="nv">$ref</span><span class="s2">"</span>: <span class="s2">"https://www.concursoultions.com/users/approver2"</span>,
+                    <span class="s2">"displayName"</span>: <span class="s2">"test.employee@sap.com"</span>,
+                    <span class="s2">"employeeNumber"</span>: <span class="s2">"37480"</span>
+                <span class="o">}</span>,
+                <span class="s2">"primary"</span>: <span class="nb">true</span>
+            <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-<p>The maximum file size allowed is 100 operations or 400kb per request.</p>
+<h4 id="response">Response</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>201 Created
+Content-Type: application/json
+</code></pre></div></div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"meta"</span>: <span class="o">{</span>
+        <span class="s2">"resourceType"</span>: <span class="s2">"User"</span>,
+        <span class="s2">"created"</span>: <span class="s2">"2021-04-26T20:07:55.000097Z"</span>,
+        <span class="s2">"lastModified"</span>: <span class="s2">"2021-04-26T20:07:55.000097Z"</span>,
+        <span class="s2">"version"</span>: 0,
+        <span class="s2">"location"</span>: <span class="s2">"https://us.api.concursolutions.com/profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
+        <span class="s2">"statusUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/provisioning/v4/provisions/2b41c0c1-15f7-41cc-99bb-a82b5da128a2/status"</span>,
+        <span class="s2">"provisionId"</span>: <span class="s2">"2b41c0c1-15f7-41cc-99bb-a82b5da128a2"</span>
+    <span class="o">}</span>,
+    <span class="s2">"displayName"</span>: <span class="s2">"John"</span>,
+    <span class="s2">"name"</span>: <span class="o">{</span>
+        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
+        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>,
+        <span class="s2">"formatted"</span>: <span class="s2">"Doe, John Joe"</span>,
+        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
+        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
+        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
+        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
+        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>
+    <span class="o">}</span>,
+    <span class="s2">"schemas"</span>: <span class="o">[</span>
+        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
+        <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
+        <span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span>
+    <span class="o">]</span>,
+    <span class="s2">"active"</span>: <span class="nb">true</span>,
+    <span class="s2">"id"</span>: <span class="s2">"ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
+    <span class="s2">"emails"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"value"</span>: <span class="s2">"John4_29_4@sap.com"</span>,
+            <span class="s2">"type"</span>: <span class="s2">"work"</span>,
+            <span class="s2">"notifications"</span>: <span class="nb">false</span>,
+            <span class="s2">"verified"</span>: <span class="nb">false</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"userName"</span>: <span class="s2">"John4_26_1@sap.com"</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
+        <span class="s2">"employeeNumber"</span>: <span class="s2">"John4_29_4_EmployeeNumber"</span>,
+        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “2b41c0c1-15f7-41cc-99bb-a82b5da128a2” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
+  <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user. This ID is required for future PATCH and PUT requests for this user. It is also displayed as <Concur UUID=""> within this document.</Concur></li>
+  <li><code class="language-plaintext highlighter-rouge">statusUrl</code>: The location to receive status on the provisioning request</li>
+</ul>
+
+<h3 id="update-user-with-users-endpoint"><a name="update-users-patch"></a>Update user with /Users endpoint</h3>
+
+<p>Updates to one or more user attritubes. 
+Using PATCH is recommended for updating single or multiple data attributes for a single user. PATCH will only update the data attributes listed within the request. 
+PATCH operations supported:</p>
+<ul>
+  <li>add</li>
+  <li>remove</li>
+  <li>replace</li>
+</ul>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">identity.user.coreenterprise.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">identity.user.externalID.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+</ul>
+
+<h3 id="request-3">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
+</code></pre></div></div>
+
+<h4 id="uri-1">URI</h4>
+
+<h5 id="template-1">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /provisioning/v4/Users/
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>The SAP Concur user UUID of the user to be updated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-1">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#users-request-schema">Users Request</a></li>
+</ul>
+
+<h3 id="response-1">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+<p>None</p>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-4">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"schemas"</span>: <span class="o">[</span>
+        <span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span>
+    <span class="o">]</span>,
+    <span class="s2">"Operations"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"op"</span>: <span class="s2">"add"</span>,
+            <span class="s2">"path"</span>: <span class="s2">"entitlements"</span>,
+            <span class="s2">"value"</span>: <span class="o">[</span>
+                <span class="s2">"Expense"</span>,
+                <span class="s2">"Invoice"</span>,
+                <span class="s2">"Request"</span>,
+                <span class="s2">"Travel"</span>
+            <span class="o">]</span>
+        <span class="o">}</span>,
+        <span class="o">{</span>
+            <span class="s2">"op"</span>: <span class="s2">"replace"</span>,
+            <span class="s2">"path"</span>: <span class="s2">"userName"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"John10_9_1_Replacement@sap.com"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"addresses"</span>: null,
+    <span class="s2">"meta"</span>: <span class="o">{</span>
+        <span class="s2">"resourceType"</span>: <span class="s2">"User"</span>,
+        <span class="s2">"created"</span>: <span class="s2">"2021-04-26T20:07:55.000097Z"</span>,
+        <span class="s2">"lastModified"</span>: <span class="s2">"2021-04-26T20:18:33.000701Z"</span>,
+        <span class="s2">"version"</span>: 3,
+        <span class="s2">"location"</span>: <span class="s2">"https://us.api.concursolutions.com/profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
+        <span class="s2">"statusUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/provisioning/v4/provisions/e820c001-c358-4a3e-964a-321dc2a76203/status"</span>,
+        <span class="s2">"provisionId"</span>: <span class="s2">"e820c001-c358-4a3e-964a-321dc2a76203"</span>
+    <span class="o">}</span>,
+    <span class="s2">"displayName"</span>: <span class="s2">"John"</span>,
+    <span class="s2">"name"</span>: <span class="o">{</span>
+        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
+        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>,
+        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
+        <span class="s2">"formatted"</span>: <span class="s2">"Doe, John Joe"</span>,
+        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
+        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
+        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
+        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>
+    <span class="o">}</span>,
+    <span class="s2">"schemas"</span>: <span class="o">[</span>
+        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
+        <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
+        <span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span>
+    <span class="o">]</span>,
+    <span class="s2">"active"</span>: <span class="nb">true</span>,
+    <span class="s2">"id"</span>: <span class="s2">"ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
+    <span class="s2">"emails"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"verified"</span>: <span class="nb">false</span>,
+            <span class="s2">"type"</span>: <span class="s2">"work"</span>,
+            <span class="s2">"value"</span>: <span class="s2">"John4_26_1@sap.com"</span>,
+            <span class="s2">"notifications"</span>: <span class="nb">false</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"userName"</span>: <span class="s2">"John_Updated_76@sap.com"</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
+        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>,
+        <span class="s2">"employeeNumber"</span>: <span class="s2">"John_Updated_56@sap.com"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “2b41c0c1-15f7-41cc-99bb-a82b5da128a2” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
+  <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user. This ID is required for future PATCH and PUT requests for this user. It is also displayed as <Concur UUID=""> within this document.</Concur></li>
+  <li><code class="language-plaintext highlighter-rouge">statusUrl</code>: The location to receive status on the provisioning request</li>
+</ul>
+
+<h3 id="replace-a-user-with-users-endpoint"><a name="replace-users-put"></a>Replace a user with /Users endpoint</h3>
+
+<p>Using PUT is recommended for updating all data attributes for a user. 
+PUT will replace data attributes for the user listed within the request.</p>
+<ul>
+  <li>When attributes are not provisioned, system default values will be provisioned.</li>
+</ul>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">identity.user.coreenterprise.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">identity.user.externalID.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+</ul>
+
+<h3 id="request-5">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://www.us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
+</code></pre></div></div>
+
+<h4 id="uri-2">URI</h4>
+
+<h5 id="template-2">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /provisioning/v4/Users/
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>The SAP Concur platform UUID of the user to be updated.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="payload-4">Payload</h4>
+
+<ul>
+  <li><a href="#users-request-schema">Users Request</a></li>
+</ul>
+
+<h3 id="request-6">Request</h3>
+
+<h4 id="status-codes-2">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+</ul>
+
+<h4 id="payload-5">Payload</h4>
+
+<p>None</p>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-7">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://www.us.api.concursolutions.com/provisioning/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
+</code></pre></div></div>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="o">{</span>
+    <span class="s2">"schemas"</span>: <span class="o">[</span>
+        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>
+    <span class="o">]</span>,
+    <span class="s2">"userName"</span>: <span class="s2">"John10_14_1_Replacement@sap.com"</span>,
+    <span class="s2">"id"</span>: <span class="s2">"ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
+    <span class="s2">"active"</span>: <span class="nb">false</span>,
+    <span class="s2">"name"</span>: <span class="o">{</span>
+        <span class="s2">"formatted"</span>: <span class="s2">"Mr. John Doe1"</span>,
+        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe1"</span>,
+        <span class="s2">"middleName"</span>: <span class="s2">"Joe1"</span>,
+        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
+        <span class="s2">"familyName"</span>: <span class="s2">"Doe1"</span>,
+        <span class="s2">"givenName"</span>: <span class="s2">"John1"</span>,
+        <span class="s2">"hasNoMiddleName"</span>: <span class="nb">true</span>
+    <span class="o">}</span>,
+    <span class="s2">"emails"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"value"</span>: <span class="s2">"John10_14_1_Replacement@sap.com"</span>,
+            <span class="s2">"type"</span>: <span class="s2">"work"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
+        <span class="s2">"employeeNumber"</span>: <span class="s2">"John10_8_1"</span>,
+        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"meta"</span>: <span class="o">{</span>
+        <span class="s2">"resourceType"</span>: <span class="s2">"User"</span>,
+        <span class="s2">"created"</span>: <span class="s2">"2021-04-29T17:17:47.000380Z"</span>,
+        <span class="s2">"lastModified"</span>: <span class="s2">"2021-04-29T17:17:47.000380Z"</span>,
+        <span class="s2">"version"</span>: 0,
+        <span class="s2">"location"</span>: <span class="s2">"https://us.api.concursolutions.com/profile/identity/v4/Users/61bd5549-d68c-407b-8228-9590ae40eaa0"</span>,
+        <span class="s2">"statusUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/provisioning/v4/provisions/03295e27-c9c2-4579-92d8-8b46ec91eff5/status"</span>,
+        <span class="s2">"provisionId"</span>: <span class="s2">"03295e27-c9c2-4579-92d8-8b46ec91eff5"</span>
+    <span class="o">}</span>,
+    <span class="s2">"displayName"</span>: <span class="s2">"John"</span>,
+    <span class="s2">"name"</span>: <span class="o">{</span>
+        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
+        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>,
+        <span class="s2">"formatted"</span>: <span class="s2">"Doe, John Joe"</span>,
+        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
+        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
+        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
+        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
+        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>
+    <span class="o">}</span>,
+    <span class="s2">"schemas"</span>: <span class="o">[</span>
+        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
+        <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
+        <span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span>
+    <span class="o">]</span>,
+    <span class="s2">"active"</span>: <span class="nb">true</span>,
+    <span class="s2">"id"</span>: <span class="s2">"ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
+    <span class="s2">"emails"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"value"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
+            <span class="s2">"type"</span>: <span class="s2">"work"</span>,
+            <span class="s2">"notifications"</span>: <span class="nb">false</span>,
+            <span class="s2">"verified"</span>: <span class="nb">false</span>
+        <span class="o">}</span>
+    <span class="o">]</span>,
+    <span class="s2">"userName"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
+    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
+        <span class="s2">"employeeNumber"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
+        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="create-a-new-users-with-bulk-endpoint"><a name="create-bulk-post"></a>Create a new users with /Bulk endpoint</h2>
+
+<p>Creates one or more new user requests via the /Bulk endpoint. Recommended for clients who are performing bulk updates to multiple users at the same time.</p>
+
+<ul>
+  <li>Limited to 100 operations or record size of 400KB per request.</li>
+</ul>
+
+<h3 id="scopes-3">Scopes</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">identity.user.coreenterprise.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">identity.user.externalID.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+</ul>
+
+<h3 id="request-8">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Bulk/
+</code></pre></div></div>
+<h4 id="uri-3">URI</h4>
+
+<h5 id="template-3">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Bulk/
+</code></pre></div></div>
+<h4 id="parameters-3">Parameters</h4>
+
+<p>None</p>
+
+<h4 id="headers-3">Headers</h4>
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h4 id="payload-6">Payload</h4>
+
+<ul>
+  <li><a href="#bulk-request-schema">Bulk Request</a></li>
+</ul>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+</ul>
+
+<h4 id="payload-7">Payload</h4>
+
+<p>None</p>
+
+<h3 id="example-3">Example</h3>
+
+<h3 id="request-9">Request</h3>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"schemas"</span>: <span class="o">[</span>
@@ -1332,7 +1886,7 @@
                 <span class="o">]</span>,
                 <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
                     <span class="s2">"employeeNumber"</span>: <span class="s2">"3749"</span>,
-                    <span class="s2">"companyId"</span>: <span class="s2">"xxxxxxxx-xxx-xxx-xxx-9300b1c317xxx"</span>
+                    <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
                 <span class="o">}</span>
             <span class="o">}</span>
         <span class="o">}</span>
@@ -1340,7 +1894,7 @@
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h3 id="response-1">Response</h3>
+<h3 id="response-5">Response</h3>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
 Content-Type: application/json
 </code></pre></div></div>
@@ -1371,11 +1925,18 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h3 id="update-one-or-more-provisioning-requests"><a name="update-bulk-patch"></a>Update One or More Provisioning Requests</h3>
+<h3 id="update-users-with-bulk-endpoint"><a name="update-bulk-patch"></a>Update users with /Bulk endpoint</h3>
 
-<p>Updates one or more provisioning requests.</p>
+<p>Updates one or more provisioning requests. Using PATCH is recommended for updating single or multiple data attributes within a request. PATCH will only update the data attributes listed within the request.</p>
+<ul>
+  <li>Limited to 100 operations or record size of 400KB per request.<br />
+PATCH operations supported:</li>
+  <li>add</li>
+  <li>remove</li>
+  <li>replace</li>
+</ul>
 
-<h3 id="scopes-1">Scopes</h3>
+<h3 id="scopes-4">Scopes</h3>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
@@ -1384,34 +1945,34 @@ Content-Type: application/json
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-2">Request</h3>
+<h3 id="request-10">Request</h3>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
-<h4 id="uri-1">URI</h4>
+<h4 id="uri-4">URI</h4>
 
-<h5 id="template-1">Template</h5>
+<h5 id="template-4">Template</h5>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /provisioning/v4/Bulk/
 </code></pre></div></div>
-<h4 id="parameters-1">Parameters</h4>
+<h4 id="parameters-4">Parameters</h4>
 
 <p>None.</p>
 
-<h4 id="headers-1">Headers</h4>
+<h4 id="headers-4">Headers</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
 </ul>
 
-<h4 id="payload-2">Payload</h4>
+<h4 id="payload-8">Payload</h4>
 
 <p><a href="#bulk-request-schema">Bulk Request</a></p>
 
-<h3 id="response-2">Response</h3>
+<h3 id="response-6">Response</h3>
 
-<h4 id="status-codes-1">Status Codes</h4>
+<h4 id="status-codes-4">Status Codes</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
@@ -1431,12 +1992,12 @@ Content-Type: application/json
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
 </ul>
 
-<h4 id="payload-3">Payload</h4>
+<h4 id="payload-9">Payload</h4>
 <p>None</p>
 
-<h3 id="example-1">Example</h3>
+<h3 id="example-4">Example</h3>
 
-<h4 id="request-3">Request</h4>
+<h4 id="request-11">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
 
@@ -1452,7 +2013,6 @@ Content-Type: application/json
             <span class="s2">"path"</span>: <span class="s2">"/Users/8f545a90-305f-441b-91cd-a69ad5f548f5"</span>,
             <span class="s2">"data"</span>: <span class="o">{</span>
                 <span class="s2">"Operations"</span>: <span class="o">[</span>
-
                     <span class="o">{</span>
                         <span class="s2">"op"</span>: <span class="s2">"add"</span>,
                         <span class="s2">"path"</span>: <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department"</span>,
@@ -1461,9 +2021,11 @@ Content-Type: application/json
                     <span class="o">{</span>
                         <span class="s2">"op"</span>: <span class="s2">"replace"</span>,
                         <span class="s2">"path"</span>: <span class="s2">"userName"</span>,
-                        <span class="s2">"value"</span>:
-                            <span class="s2">"Updated_Chris_Doe_Name@sap.com"</span>
-
+                        <span class="s2">"value"</span>:  <span class="s2">"Updated_Chris_Doe_Name@sap.com"</span>
+                    <span class="o">}</span>, 
+                    <span class="o">{</span>
+                       <span class="s2">"op"</span>: <span class="s2">"remove"</span>,
+                       <span class="s2">"path"</span>: <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles[roleName eq </span><span class="se">\"</span><span class="s2">SHD_BUDGET_APPROVER</span><span class="se">\"</span><span class="s2">]"</span>
                     <span class="o">}</span>
                 <span class="o">]</span>
             <span class="o">}</span>
@@ -1472,7 +2034,7 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="response-3">Response</h4>
+<h4 id="response-7">Response</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
 Content-Type: application/json
 </code></pre></div></div>
@@ -1508,11 +2070,15 @@ Content-Type: application/json
   <li><code class="language-plaintext highlighter-rouge">location</code>: The location to receive status on the provisioning request.</li>
 </ul>
 
-<h3 id="replace-one-or-more-resources"><a name="replace-bulk-put"></a>Replace One or More Resources</h3>
+<h3 id="replace-users-with-bulk-endpoint"><a name="replace-bulk-put"></a>Replace users with /Bulk endpoint</h3>
 
-<p>Replaces one or more existing resources. In the case where all attributes are not provisioned, system default values will be provisioned.</p>
+<p>Replaces one or more existing resources. 
+Using PUT is recommended for updating all data attributes for a user. PUT will replace data attributes for the user listed within the request and when attributes are not provisioned, system default values will be provisioned.</p>
+<ul>
+  <li>Limited to 100 operations or record size of 400KB per request.</li>
+</ul>
 
-<h3 id="scopes-2">Scopes</h3>
+<h3 id="scopes-5">Scopes</h3>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
@@ -1521,34 +2087,34 @@ Content-Type: application/json
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-4">Request</h3>
+<h3 id="request-12">Request</h3>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://www.us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
-<h4 id="uri-2">URI</h4>
+<h4 id="uri-5">URI</h4>
 
-<h5 id="template-2">Template</h5>
+<h5 id="template-5">Template</h5>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /provisioning/v4/Bulk/
 </code></pre></div></div>
-<h4 id="parameters-2">Parameters</h4>
+<h4 id="parameters-5">Parameters</h4>
 
 <p>None.</p>
 
-<h4 id="headers-2">Headers</h4>
+<h4 id="headers-5">Headers</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
 </ul>
 
-<h4 id="payload-4">Payload</h4>
+<h4 id="payload-10">Payload</h4>
 
 <p><a href="#bulk-request-schema">Bulk Request</a></p>
 
-<h3 id="response-4">Response</h3>
+<h3 id="response-8">Response</h3>
 
-<h4 id="status-codes-2">Status Codes</h4>
+<h4 id="status-codes-5">Status Codes</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
@@ -1568,13 +2134,13 @@ Content-Type: application/json
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
 </ul>
 
-<h4 id="payload-5">Payload</h4>
+<h4 id="payload-11">Payload</h4>
 
 <p>None</p>
 
-<h3 id="example-2">Example</h3>
+<h3 id="example-5">Example</h3>
 
-<h4 id="request-5">Request</h4>
+<h4 id="request-13">Request</h4>
 
 <ul>
   <li>Note that the SAP Concur platform UUID within the id attribute and path must be included within the data of the request.</li>
@@ -1617,7 +2183,7 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="response-5">Response</h4>
+<h4 id="response-9">Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
 Content-Type: application/json
@@ -1654,581 +2220,9 @@ Content-Type: application/json
   <li><code class="language-plaintext highlighter-rouge">location</code>: The location to receive status on the provisioning request.</li>
 </ul>
 
-<h2 id="create-a-user-provisioning-request-">Create a User Provisioning Request <a name="create-users-post"></a></h2>
+<h2 id="retrieve-user-profile-data"><a name="#get-user"></a>Retrieve User Profile Data</h2>
 
-<p>Allows the creation of a single user resource.</p>
-
-<h3 id="scopes-3">Scopes</h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">identity.user.coreenterprise.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">identity.user.externalID.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-</ul>
-
-<h3 id="request-6">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://www.us.api.concursolutions.com/provisioning/v4/Users/
-</code></pre></div></div>
-<h4 id="uri-3">URI</h4>
-
-<h5 id="template-3">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Users/
-</code></pre></div></div>
-
-<h4 id="parameters-3">Parameters</h4>
-<p>None</p>
-
-<h4 id="headers-3">Headers</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h3 id="payload-6">Payload</h3>
-<ul>
-  <li><a href="#users-request-schema">Users Request</a></li>
-</ul>
-
-<h3 id="request-7">Request</h3>
-
-<h4 id="status-codes-3">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-7">Payload</h4>
-<p>None</p>
-
-<h3 id="example-3">Example</h3>
-
-<h4 id="request-8">Request</h4>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-    <span class="s2">"schemas"</span>: <span class="o">[</span>
-        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>
-    <span class="o">]</span>,
-    <span class="s2">"userName"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-
-    <span class="s2">"active"</span>: <span class="nb">true</span>,
-    <span class="s2">"name"</span>: <span class="o">{</span>
-        <span class="s2">"formatted"</span>: <span class="s2">"Mr. John Doe"</span>,
-        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
-        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>,
-        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
-        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
-        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
-        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
-        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>,
-        <span class="s2">"hasNoMiddleName"</span>: <span class="nb">false</span>
-    <span class="o">}</span>,
-
-    <span class="s2">"emails"</span>: <span class="o">[</span>
-        <span class="o">{</span>
-            <span class="s2">"value"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-            <span class="s2">"type"</span>: <span class="s2">"work"</span>
-        <span class="o">}</span>
-    <span class="o">]</span>,
-    <span class="s2">"entitlements"</span>: <span class="o">[</span>
-        <span class="s2">"Expense"</span>,
-        <span class="s2">"Invoice"</span>,
-        <span class="s2">"Locate"</span>,
-        <span class="s2">"Request"</span>,
-        <span class="s2">"Travel"</span>
-    <span class="o">]</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
-        <span class="s2">"employeeNumber"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
-    <span class="o">}</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:User"</span>: <span class="o">{</span>
-        <span class="s2">"locale"</span>: <span class="s2">"en-US"</span>,
-        <span class="s2">"country"</span>: <span class="s2">"US"</span>,
-        <span class="s2">"stateProvince"</span>: <span class="s2">"WA"</span>,
-        <span class="s2">"ledgerCode"</span>: <span class="s2">"DEFAULT"</span>,
-        <span class="s2">"reimbursementCurrency"</span>: <span class="s2">"USD"</span>,
-        <span class="s2">"cashAdvanceAccountCode"</span>: <span class="s2">"Code"</span>,
-        <span class="s2">"customData"</span>: <span class="o">[</span>
-            <span class="o">{</span>
-                <span class="s2">"id"</span>: <span class="s2">"custom1"</span>,
-                <span class="s2">"value"</span>: <span class="s2">"testing"</span>
-            <span class="o">}</span>,
-            <span class="o">{</span>
-                <span class="s2">"id"</span>: <span class="s2">"orgUnit1"</span>,
-                <span class="s2">"value"</span>: <span class="s2">"testDepartment"</span>
-            <span class="o">}</span>
-        <span class="o">]</span>
-    <span class="o">}</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference"</span>: <span class="o">{</span>
-        <span class="s2">"emailStatusChangeOnCashAdvance"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailAwaitApprovalOnCashAdvance"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailStatusChangeOnReport"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailAwaitApprovalOnReport"</span>: <span class="nb">true</span>,
-        <span class="s2">"promptForApproverOnReportSubmit"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailStatusChangeOnTravelRequest"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailAwaitApprovalOnTravelRequest"</span>: <span class="nb">true</span>,
-        <span class="s2">"promptForApproverOnTravelRequestSubmit"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailStatusChangeOnPayment"</span>: <span class="nb">true</span>,
-        <span class="s2">"emailAwaitApprovalOnPayment"</span>: <span class="nb">true</span>,
-        <span class="s2">"promptForApproverOnPaymentSubmit"</span>: <span class="nb">true</span>,
-        <span class="s2">"promptForCardTransactionsOnReport"</span>: <span class="nb">true</span>
-    <span class="o">}</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference"</span>: <span class="o">{</span>
-        <span class="s2">"allowCreditCardTransArrivalEmails"</span>: <span class="nb">true</span>,
-        <span class="s2">"defaultReportPrintFormat"</span>: <span class="s2">"DETAILED"</span>,
-        <span class="s2">"showInstructHelpPanel"</span>: <span class="nb">true</span>,
-        <span class="s2">"expenseAuditRequired"</span>: <span class="s2">"ALWAYS"</span>,
-        <span class="s2">"showImagingIntro"</span>: <span class="nb">true</span>,
-        <span class="s2">"allowReceiptImageAvailEmails"</span>: <span class="nb">true</span>,
-        <span class="s2">"autoAddTripCardTransOnReport"</span>: <span class="nb">true</span>,
-        <span class="s2">"processorReportAccess"</span>: <span class="s2">"All reports excluding returned"</span>,
-        <span class="s2">"promptForCardTransactionsOnReport"</span>: <span class="nb">true</span>,
-        <span class="s2">"promptForReportPrintFormat"</span>: <span class="nb">true</span>,
-        <span class="s2">"showExpenseOnReport"</span>: <span class="s2">"ALL"</span>,
-        <span class="s2">"showTotalOnReport"</span>: <span class="nb">true</span>,
-        <span class="s2">"useQuickItinAsDefault"</span>: <span class="nb">false</span>
-    <span class="o">}</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role"</span>: <span class="o">{</span>
-        <span class="s2">"roles"</span>: <span class="o">[</span>
-            <span class="o">{</span>
-                <span class="s2">"roleName"</span>: <span class="s2">"EXP_APPROVER"</span>,
-                <span class="s2">"roleGroups"</span>: <span class="o">[]</span>
-            <span class="o">}</span>
-        <span class="o">]</span>
-    <span class="o">}</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Approver"</span>: <span class="o">{</span>
-        <span class="s2">"report"</span>: <span class="o">[</span>
-            <span class="o">{</span>
-                <span class="s2">"approver"</span>: <span class="o">{</span>
-                    <span class="s2">"value"</span>: <span class="s2">"d1eb15c1-ac9b-40d6-b5f7-ea2d2f5ae8a7"</span>,
-                    <span class="s2">"</span><span class="nv">$ref</span><span class="s2">"</span>: <span class="s2">"https://www.concursoultions.com/users/approver2"</span>,
-                    <span class="s2">"displayName"</span>: <span class="s2">"test.employee@sap.com"</span>,
-                    <span class="s2">"employeeNumber"</span>: <span class="s2">"37480"</span>
-                <span class="o">}</span>,
-                <span class="s2">"primary"</span>: <span class="nb">true</span>
-            <span class="o">}</span>
-        <span class="o">]</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<h4 id="response-6">Response</h4>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>201 Created
-Content-Type: application/json
-</code></pre></div></div>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-    <span class="s2">"meta"</span>: <span class="o">{</span>
-        <span class="s2">"resourceType"</span>: <span class="s2">"User"</span>,
-        <span class="s2">"created"</span>: <span class="s2">"2021-04-26T20:07:55.000097Z"</span>,
-        <span class="s2">"lastModified"</span>: <span class="s2">"2021-04-26T20:07:55.000097Z"</span>,
-        <span class="s2">"version"</span>: 0,
-        <span class="s2">"location"</span>: <span class="s2">"https://us.api.concursolutions.com/profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
-        <span class="s2">"statusUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/provisioning/v4/provisions/2b41c0c1-15f7-41cc-99bb-a82b5da128a2/status"</span>,
-        <span class="s2">"provisionId"</span>: <span class="s2">"2b41c0c1-15f7-41cc-99bb-a82b5da128a2"</span>
-    <span class="o">}</span>,
-    <span class="s2">"displayName"</span>: <span class="s2">"John"</span>,
-    <span class="s2">"name"</span>: <span class="o">{</span>
-        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
-        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>,
-        <span class="s2">"formatted"</span>: <span class="s2">"Doe, John Joe"</span>,
-        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
-        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
-        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
-        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
-        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>
-    <span class="o">}</span>,
-    <span class="s2">"schemas"</span>: <span class="o">[</span>
-        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
-        <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
-        <span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span>
-    <span class="o">]</span>,
-    <span class="s2">"active"</span>: <span class="nb">true</span>,
-    <span class="s2">"id"</span>: <span class="s2">"ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
-    <span class="s2">"emails"</span>: <span class="o">[</span>
-        <span class="o">{</span>
-            <span class="s2">"value"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-            <span class="s2">"type"</span>: <span class="s2">"work"</span>,
-            <span class="s2">"notifications"</span>: <span class="nb">false</span>,
-            <span class="s2">"verified"</span>: <span class="nb">false</span>
-        <span class="o">}</span>
-    <span class="o">]</span>,
-    <span class="s2">"userName"</span>: <span class="s2">"John4_26_1@cs-sso-us-prod.com"</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
-        <span class="s2">"employeeNumber"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-xxxx-xxxx-xxxx-9300b1c3171d"</span>
-
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “2b41c0c1-15f7-41cc-99bb-a82b5da128a2” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
-  <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user.</li>
-  <li><code class="language-plaintext highlighter-rouge">statusUrl</code>: The location to receive status on the provisioning request</li>
-</ul>
-
-<h3 id="update-the-profile-data-of-a-user"><a name="update-users-patch"></a>Update the Profile Data of a User</h3>
-
-<p>Allows the modification of a single resource.</p>
-
-<h3 id="scopes-4">Scopes</h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">identity.user.coreenterprise.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">identity.user.externalID.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-</ul>
-
-<h3 id="request-9">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
-</code></pre></div></div>
-
-<h4 id="uri-4">URI</h4>
-
-<h5 id="template-4">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /provisioning/v4/Users/
-</code></pre></div></div>
-
-<h4 id="parameters-4">Parameters</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">id</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>The SAP Concur platform UUID of the user to be updated.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="headers-4">Headers</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h4 id="payload-8">Payload</h4>
-
-<ul>
-  <li><a href="#users-request-schema">Users Request</a></li>
-</ul>
-
-<h3 id="response-7">Response</h3>
-
-<h4 id="status-codes-4">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-9">Payload</h4>
-<p>None</p>
-
-<h3 id="example-4">Example</h3>
-
-<h4 id="request-10">Request</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://www.us.api.concursolutions.com/provisioning/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
-</code></pre></div></div>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-    <span class="s2">"schemas"</span>: <span class="o">[</span>
-        <span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span>
-    <span class="o">]</span>,
-    <span class="s2">"Operations"</span>: <span class="o">[</span>
-        <span class="o">{</span>
-            <span class="s2">"op"</span>: <span class="s2">"add"</span>,
-            <span class="s2">"path"</span>: <span class="s2">"entitlements"</span>,
-            <span class="s2">"value"</span>: <span class="o">[</span>
-                <span class="s2">"Expense"</span>,
-                <span class="s2">"Invoice"</span>,
-                <span class="s2">"Locate"</span>,
-                <span class="s2">"Request"</span>,
-                <span class="s2">"Travel"</span>
-            <span class="o">]</span>
-        <span class="o">}</span>,
-        <span class="o">{</span>
-            <span class="s2">"op"</span>: <span class="s2">"replace"</span>,
-            <span class="s2">"path"</span>: <span class="s2">"userName"</span>,
-            <span class="s2">"value"</span>: <span class="s2">"John10_9_1_Replacement@sap.com"</span>
-        <span class="o">}</span>
-    <span class="o">]</span>
-<span class="o">}</span>
-
-</code></pre></div></div>
-
-<h4 id="response-8">Response</h4>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
-Content-Type: application/json
-</code></pre></div></div>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-    <span class="s2">"addresses"</span>: null,
-    <span class="s2">"meta"</span>: <span class="o">{</span>
-        <span class="s2">"resourceType"</span>: <span class="s2">"User"</span>,
-        <span class="s2">"created"</span>: <span class="s2">"2021-04-26T20:07:55.000097Z"</span>,
-        <span class="s2">"lastModified"</span>: <span class="s2">"2021-04-26T20:18:33.000701Z"</span>,
-        <span class="s2">"version"</span>: 3,
-        <span class="s2">"location"</span>: <span class="s2">"https://us.api.concursolutions.com/profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
-        <span class="s2">"statusUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/provisioning/v4/provisions/e820c001-c358-4a3e-964a-321dc2a76203/status"</span>,
-        <span class="s2">"provisionId"</span>: <span class="s2">"e820c001-c358-4a3e-964a-321dc2a76203"</span>
-    <span class="o">}</span>,
-    <span class="s2">"displayName"</span>: <span class="s2">"John"</span>,
-    <span class="s2">"name"</span>: <span class="o">{</span>
-        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
-        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>,
-        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
-        <span class="s2">"formatted"</span>: <span class="s2">"Doe, John Joe"</span>,
-        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
-        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
-        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
-        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>
-    <span class="o">}</span>,
-    <span class="s2">"schemas"</span>: <span class="o">[</span>
-        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
-        <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
-        <span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span>
-    <span class="o">]</span>,
-    <span class="s2">"active"</span>: <span class="nb">true</span>,
-    <span class="s2">"id"</span>: <span class="s2">"ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7"</span>,
-    <span class="s2">"emails"</span>: <span class="o">[</span>
-        <span class="o">{</span>
-            <span class="s2">"verified"</span>: <span class="nb">false</span>,
-            <span class="s2">"type"</span>: <span class="s2">"work"</span>,
-            <span class="s2">"value"</span>: <span class="s2">"John4_26_1@cs-sso-us-prod.com"</span>,
-            <span class="s2">"notifications"</span>: <span class="nb">false</span>
-        <span class="o">}</span>
-    <span class="o">]</span>,
-    <span class="s2">"userName"</span>: <span class="s2">"John_Updated_76@cs-sso-us-prod.com"</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
-        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>,
-        <span class="s2">"employeeNumber"</span>: <span class="s2">"John_Updated_56@cs-sso-us-prod.com"</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></div>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “e820c001-c358-4a3e-964a-321dc2a76203” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
-  <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user.</li>
-  <li><code class="language-plaintext highlighter-rouge">statusUrl</code>: The location to receive status on the provisioning request</li>
-</ul>
-
-<h3 id="replace-a-user-resource"><a name="replace-users-put"></a>Replace a User Resource</h3>
-
-<p>Allows the replacement of an existing resource. In the case where all attributes are not provisioned, system default values will be provisioned.</p>
-
-<h3 id="scopes-5">Scopes</h3>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">user.provision.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">identity.user.coreenterprise.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">identity.user.externalID.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-  <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
-</ul>
-
-<h3 id="request-11">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://www.us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
-</code></pre></div></div>
-
-<h4 id="uri-5">URI</h4>
-
-<h5 id="template-5">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /provisioning/v4/Users/
-</code></pre></div></div>
-
-<h4 id="parameters-5">Parameters</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">id</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>The SAP Concur platform UUID of the user to be updated.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="headers-5">Headers</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h4 id="payload-10">Payload</h4>
-
-<ul>
-  <li><a href="#users-request-schema">Users Request</a></li>
-</ul>
-
-<h3 id="request-12">Request</h3>
-
-<h4 id="status-codes-5">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-11">Payload</h4>
-
-<p>None</p>
-
-<h3 id="example-5">Example</h3>
-
-<h4 id="request-13">Request</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://www.us.api.concursolutions.com/provisioning/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
-</code></pre></div></div>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="o">{</span>
-    <span class="s2">"schemas"</span>: <span class="o">[</span>
-        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>
-    <span class="o">]</span>,
-    <span class="s2">"userName"</span>: <span class="s2">"John10_14_1_Replacement@sap.com"</span>,
-    <span class="s2">"id"</span>: <span class="s2">"8f545a90-305f-441b-91cd-a69ad5f548f5"</span>,
-    <span class="s2">"active"</span>: <span class="nb">false</span>,
-    <span class="s2">"name"</span>: <span class="o">{</span>
-        <span class="s2">"formatted"</span>: <span class="s2">"Mr. John Doe1"</span>,
-        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe1"</span>,
-        <span class="s2">"middleName"</span>: <span class="s2">"Joe1"</span>,
-        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
-        <span class="s2">"familyName"</span>: <span class="s2">"Doe1"</span>,
-        <span class="s2">"givenName"</span>: <span class="s2">"John1"</span>,
-        <span class="s2">"hasNoMiddleName"</span>: <span class="nb">true</span>
-    <span class="o">}</span>,
-    <span class="s2">"emails"</span>: <span class="o">[</span>
-        <span class="o">{</span>
-            <span class="s2">"value"</span>: <span class="s2">"John10_14_1_Replacement@sap.com"</span>,
-            <span class="s2">"type"</span>: <span class="s2">"work"</span>
-        <span class="o">}</span>
-    <span class="o">]</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
-        <span class="s2">"employeeNumber"</span>: <span class="s2">"John10_8_1"</span>,
-        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-xxxx-xxxx-xxxx-9300b1c3171d"</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></div>
-
-<h4 id="response-9">Response</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
-Content-Type: application/json
-</code></pre></div></div>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
-    <span class="s2">"meta"</span>: <span class="o">{</span>
-        <span class="s2">"resourceType"</span>: <span class="s2">"User"</span>,
-        <span class="s2">"created"</span>: <span class="s2">"2021-04-29T17:17:47.000380Z"</span>,
-        <span class="s2">"lastModified"</span>: <span class="s2">"2021-04-29T17:17:47.000380Z"</span>,
-        <span class="s2">"version"</span>: 0,
-        <span class="s2">"location"</span>: <span class="s2">"https://us.api.concursolutions.com/profile/identity/v4/Users/61bd5549-d68c-407b-8228-9590ae40eaa0"</span>,
-        <span class="s2">"statusUrl"</span>: <span class="s2">"https://us.api.concursolutions.com/provisioning/v4/provisions/03295e27-c9c2-4579-92d8-8b46ec91eff5/status"</span>,
-        <span class="s2">"provisionId"</span>: <span class="s2">"03295e27-c9c2-4579-92d8-8b46ec91eff5"</span>
-    <span class="o">}</span>,
-    <span class="s2">"displayName"</span>: <span class="s2">"John"</span>,
-    <span class="s2">"name"</span>: <span class="o">{</span>
-        <span class="s2">"middleInitial"</span>: <span class="s2">"J"</span>,
-        <span class="s2">"middleName"</span>: <span class="s2">"Joe"</span>,
-        <span class="s2">"formatted"</span>: <span class="s2">"Doe, John Joe"</span>,
-        <span class="s2">"honorificPrefix"</span>: <span class="s2">"Prof Dr Mr"</span>,
-        <span class="s2">"legalName"</span>: <span class="s2">"Mr. John Doe"</span>,
-        <span class="s2">"familyName"</span>: <span class="s2">"Doe"</span>,
-        <span class="s2">"givenName"</span>: <span class="s2">"John"</span>,
-        <span class="s2">"honorificSuffix"</span>: <span class="s2">"VI"</span>
-    <span class="o">}</span>,
-    <span class="s2">"schemas"</span>: <span class="o">[</span>
-        <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>,
-        <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>,
-        <span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span>
-    <span class="o">]</span>,
-    <span class="s2">"active"</span>: <span class="nb">true</span>,
-    <span class="s2">"id"</span>: <span class="s2">"61bd5549-d68c-407b-8228-9590ae40eaa0"</span>,
-    <span class="s2">"emails"</span>: <span class="o">[</span>
-        <span class="o">{</span>
-            <span class="s2">"value"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-            <span class="s2">"type"</span>: <span class="s2">"work"</span>,
-            <span class="s2">"notifications"</span>: <span class="nb">false</span>,
-            <span class="s2">"verified"</span>: <span class="nb">false</span>
-        <span class="o">}</span>
-    <span class="o">]</span>,
-    <span class="s2">"userName"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-    <span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span>: <span class="o">{</span>
-        <span class="s2">"employeeNumber"</span>: <span class="s2">"John4_29_4@cs-sso-us-prod.com"</span>,
-        <span class="s2">"companyId"</span>: <span class="s2">"aa076ada-80a9-4f57-8e98-9300b1c3171d"</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></div>
-
-<h2 id="retrieve-user-profile-data-">Retrieve User Profile Data <a name="#get-user"></a></h2>
-
-<p>To retrieve profile data for a specific user, the SAP Concur platform has enabled separate endpoints. For additional information for provisioning the specific profiles, please see the documentation for <a href="/api-reference/profile/v4.identity.html">Identity</a>, <a href="/api-reference/user-provisioning/spend/v4.spend-user-get-started.html">Spend</a>, and <a href="/api-reference/user-provisioning/travel/v4.travel-extension.html">Travel</a>.</p>
+<p>To retrieve profile data for a specific user, the SAP Concur platform has enabled separate endpoints. For additional information for provisioning the specific profiles, please see the documentation for <a href="/api-reference/profile/v4.identity.html">Identity</a>, <a href="/spend/v4.spend-user-get-started.html">Spend</a>, and <a href="/travel/v4.travel-extension.html">Travel</a>.</p>
 
 <h3 id="scopes-6">Scopes</h3>
 
@@ -2314,9 +2308,8 @@ GET https://us.api.concursolutions.com/profile/travel/v4/Users/8f545a90-305f-441
 </ul>
 
 <h3 id="example-6">Example</h3>
-
 <h4 id="request-15">Request</h4>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com//profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
 </code></pre></div></div>
 
 <h4 id="response-11">Response</h4>
@@ -2436,9 +2429,12 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="travel">Travel</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+<h4 id="response-12">Response</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+<span class="c">#### Travel</span>
+<span class="sb">```</span>shell
+<span class="o">{</span>
     <span class="s2">"id"</span>: <span class="s2">"8f545a90-305f-441b-91cd-a69ad5f548f5"</span>,
     <span class="s2">"urn:ietf:params:scim:schemas:extension:travel:2.0:User"</span>: <span class="o">{</span>
         <span class="s2">"ruleClass"</span>: <span class="o">{</span>
@@ -2461,26 +2457,11 @@ Content-Type: application/json
             <span class="o">}</span>
         <span class="o">]</span>,
         <span class="s2">"manager"</span>: null,
-        <span class="s2">"groups"</span>: <span class="o">[]</span>,
-          <span class="s2">"name"</span>: <span class="o">{</span> 
-                <span class="s2">"namePrefix"</span>: <span class="s2">"Mr"</span>, 
-                <span class="s2">"givenName"</span>: <span class="s2">"Frank"</span>, 
-                <span class="s2">"middleName"</span>: <span class="s2">"Jacob"</span>, 
-                <span class="s2">"familyName"</span>: <span class="s2">"Smith"</span>, 
-                <span class="s2">"honorificSuffix"</span>: <span class="s2">"Jr."</span>
-                <span class="s2">"hasNoMiddleName"</span>: <span class="nb">false</span>, 
-                <span class="o">}</span>
+        <span class="s2">"groups"</span>: <span class="o">[]</span>
     <span class="o">}</span>
-    
-    
-    
-    
-    
-<span class="o">}</span>
 </code></pre></div></div>
 
 <h4 id="spend">Spend</h4>
-
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"schemas"</span>: <span class="o">[</span>
         <span class="s2">"urn:com.concur.spend.user.model.scim.ScimResource"</span>,
@@ -2584,7 +2565,7 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h2 id="retrieve-a-summary-provisioning-request-status-">Retrieve a Summary Provisioning Request Status <a name="retrieve-summary-provision-request-status"></a></h2>
+<h2 id="retrieve-a-summary-provisioning-request-status"><a name="retrieve-summary-provision-request-status"></a>Retrieve a Summary Provisioning Request Status</h2>
 
 <p>Retrieves a summary provisioning request status.</p>
 
@@ -2636,7 +2617,7 @@ Content-Type: application/json
 
 <p>None</p>
 
-<h3 id="response-12">Response</h3>
+<h3 id="response-13">Response</h3>
 
 <h4 id="status-codes-7">Status Codes</h4>
 
@@ -2664,7 +2645,7 @@ Content-Type: application/json
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.us.api.concursolutions.com/provisioning/v4/provisions/0e00f6a4-6798-4f66-9f47-1e944b619b2e/status
 </code></pre></div></div>
 
-<h4 id="response-13">Response</h4>
+<h4 id="response-14">Response</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -2680,7 +2661,7 @@ Content-Type: application/json
         <span class="s2">"failed"</span>: 0,
         <span class="s2">"pending"</span>: 0
     <span class="o">}</span>,
-    <span class="s2">"status"</span>: <span class="o">{</span>
+eb    <span class="s2">"status"</span>: <span class="o">{</span>
         <span class="s2">"completed"</span>: <span class="nb">true</span>,
         <span class="s2">"success"</span>: <span class="nb">true</span>
     <span class="o">}</span>,
@@ -2693,7 +2674,8 @@ Content-Type: application/json
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<h2 id="retrieve-a-detailed-provisioning-request-status-">Retrieve a Detailed Provisioning Request Status <a name="retrieve-detailed-provision-request-status"></a></h2>
+
+<h2 id="retrieve-a-detailed-provisioning-request-status"><a name="retrieve-detailed-provision-request-status"></a>Retrieve a Detailed Provisioning Request Status</h2>
 
 <p>Retrieves a detailed provisioning request status.</p>
 
@@ -2753,7 +2735,7 @@ Content-Type: application/json
 
 <p>None</p>
 
-<h3 id="response-14">Response</h3>
+<h3 id="response-15">Response</h3>
 
 <h4 id="status-codes-8">Status Codes</h4>
 
@@ -2782,7 +2764,7 @@ Content-Type: application/json
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.us.api.concursolutions.com/provisioning/v4/provisions/0e00f6a4-6798-4f66-9f47-1e944b619b2e/status?attributes<span class="o">=</span>operations
 </code></pre></div></div>
 
-<h4 id="response-15">Response</h4>
+<h4 id="response-16">Response</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -2922,7 +2904,21 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h2 id="retrieve-supported-resource-types-">Retrieve Supported Resource Types <a name="retrieve-resource-types"></a></h2>
+<h3 id="extention-status-response">Extention Status Response</h3>
+<p>|Section|Description|
+|—|—|
+<code class="language-plaintext highlighter-rouge">completed</code>|Result if the request operation was competed on the extension.
+<code class="language-plaintext highlighter-rouge">success</code>|Result if the extension was successful in completing the operation on the extension.
+<code class="language-plaintext highlighter-rouge">code</code>|Http response code for the operation. </p>
+
+<p>### Result Response
+|Result|Error Code|Description|
+|—|—|—|
+<code class="language-plaintext highlighter-rouge">success</code>|200| The extension completed the request successfully
+<code class="language-plaintext highlighter-rouge">no-op</code>|200| The extension was not required to updated a record for the request or an upstream process did not complete which blocked the extension. 
+<code class="language-plaintext highlighter-rouge">error</code>|HTTP Error code| An issue with the request operation. UPS will respond with Error code and message.</p>
+
+<h2 id="retrieve-supported-resource-types"><a name="retrieve-resource-types"></a>Retrieve Supported Resource Types</h2>
 
 <p>Retrieves supported resource types.</p>
 
@@ -2953,7 +2949,7 @@ Content-Type: application/json
 
 <p>-</p>
 
-<h3 id="response-16">Response</h3>
+<h3 id="response-17">Response</h3>
 
 <h4 id="status-codes-9">Status Codes</h4>
 
@@ -2982,7 +2978,7 @@ Content-Type: application/json
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.us.api.concursolutions.com/provisioning/v4/ResourceTypes
 </code></pre></div></div>
 
-<h3 id="response-17">Response</h3>
+<h3 id="response-18">Response</h3>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -3043,7 +3039,7 @@ Content-Type: application/json
 <span class="o">]</span>
 </code></pre></div></div>
 
-<h2 id="retrieve-supported-schemas-">Retrieve Supported Schemas <a name="retrieve-schemas"></a></h2>
+<h2 id="retrieve-supported-schemas"><a name="retrieve-schemas"></a>Retrieve Supported Schemas</h2>
 
 <p>Retrieves supported schemas.</p>
 
@@ -3072,7 +3068,7 @@ Content-Type: application/json
 <h4 id="payload-20">Payload</h4>
 <p>None</p>
 
-<h3 id="response-18">Response</h3>
+<h3 id="response-19">Response</h3>
 
 <h4 id="status-codes-10">Status Codes</h4>
 
@@ -3100,7 +3096,7 @@ Content-Type: application/json
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://www.us.api.concursolutions.com/provisioning/v4/Schemas
 </code></pre></div></div>
 
-<h3 id="response-19">Response</h3>
+<h3 id="response-20">Response</h3>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -3212,14 +3208,10 @@ Content-Type: application/json
                     <span class="s2">"type"</span>: <span class="s2">"complex"</span>,
                     <span class="s2">"caseExact"</span>: <span class="nb">true</span>,
                     <span class="s2">"required"</span>: <span class="nb">true</span>
-                <span class="o">}</span>
-            <span class="o">]</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">]</span>
+                <span class="o">}</span>,
 </code></pre></div></div>
 
-<h2 id="schema-">Schema <a name="schema"></a></h2>
+<h2 id="schema"><a name="schema"></a>Schema</h2>
 
 <h3 id="user"><a name="user-schema"></a>User</h3>
 
@@ -3745,18 +3737,6 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">complex</code></td>
       <td>-</td>
       <td>User can set values to custom data fields.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">gender</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>male or female.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">name</code></td>
-      <td><code class="language-plaintext highlighter-rouge">complex</code></td>
-      <td>-</td>
-      <td>User’s Travel Name (as distinct from HR Name). This must match user’s travel documents.</td>
     </tr>
   </tbody>
 </table>
@@ -4592,7 +4572,7 @@ Content-Type: application/json
   </tbody>
 </table>
 
-<h2 id="definitions-">Definitions <a name="definitions"></a></h2>
+<h2 id="definitions"><a name="definitions"></a>Definitions</h2>
 
 <table>
   <thead>
