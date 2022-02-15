@@ -8,7 +8,7 @@ layout: reference
 {% include deprecation-alert.html %}
 
 **NOTE:** Find the newer version 3.0 [here.](/api-reference/expense/expense-report/v3.reports.html#retrieve-a-report-by-id-)  
----
+
 
 Retrieves the full set of information for the report. Includes the Report Header, Entry, Attendee, Itemization and Allocation details.  
 
