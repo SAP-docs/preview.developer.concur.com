@@ -59,16 +59,16 @@ All endpoints carry a timeout of 55 seconds.Some operations below support retrie
 
 SAP Concur has monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.
     
-| Operation                  | Max Response Times | Support Retries (for 5xx errors) |
-|----------------------------|--------------------|----------------------------------|
-| /hotels/search             | 10 seconds         | Yes                              |
-| /hotels/rates              | 5 seconds          | Yes                              |
-| /hotels/details            | 1 second           | Yes                              |
-| /hotels/ratedetails        | 1 second           | Yes                              |
-| /hotels/reservation        | 10 seconds         | No                               |
-| /hotels/reservation/read   | 1 second           | Yes                              |
-| /hotels/reservation/modify | 10 seconds         | No                               |
-| /hotels/reservation/cancel | 5 seconds          | No                               |
+| Operation                  | Recommended Response Times | Support Retries (for 5xx errors) |
+|----------------------------|----------------------------|----------------------------------|
+| /hotels/search             | < 5 seconds                | Yes                              |
+| /hotels/rates              | < 5 seconds                | Yes                              |
+| /hotels/details            | < 1 second                 | Yes                              |
+| /hotels/ratedetails        | < 1 second                 | Yes                              |
+| /hotels/reservation        | < 5 seconds                | No                               |
+| /hotels/reservation/read   | < 1 second                 | Yes                              |
+| /hotels/reservation/modify | < 5 seconds                | No                               |
+| /hotels/reservation/cancel | < 5 seconds                | No                               |
 
 **Note**: To prevent no show fees, duplicate bookings and other similar issues, SAP Concur recommends the Hotel Supplier auto-cancel the reservation if a corresponding /hotels/reservations/read call is not made by SAP Concur within 5 minutes after the /hotels/reservation call was made.
 
