@@ -6,7 +6,7 @@ layout: reference
 
 ## Overview <a name="itinerary-overview"></a>
 
-The Itinerary API can be used to programmatically access travel data such as trips and bookings in Concur Travel. Concur Travel uses this data to match and consolidate bookings it receives from disparate sources and put these into consolidated travelers’ itineraries, providing travelers a convenient way to view their trips in a single itinerary view. Travelers can view their itineraries through mobile applications or other services.
+The Itinerary API can be used to programmatically access travel data such as trips and bookings in Concur Travel. Concur Travel uses this data to match and consolidate bookings it receives from disparate sources and put these into consolidated travelers’ itineraries, providing travelers a convenient way to view their trips in a single itinerary view.
 
 ## Version <a name="itinver"></a>
 
@@ -43,7 +43,6 @@ TripLink suppliers, travel management companies (TMCs), and SAP Concur clients a
 * Get the full details of user trips from SAP Concur.
 * Can view the full set of fields for their customers' itineraries because TMCs have an existing relationship with their customers.
 * Can send proposed itineraries when the Agency Proposal feature of Concur Request is active.
-* Can cancel bookings on behalf of a user.
 
 ### TripLink Travel Suppliers
 
@@ -141,12 +140,10 @@ No.
 
 ## Best Practices <a name="itin-best-practices"></a>
 
-* When extracting past data:
-    * Extract a month of trip summaries to gauge volume. If hundreds are returned, then adjust extraction to weekly.
-    * Do not extract more than a year of data at any given time regardless of the volume. For longer look backs, extract six month segments maximum at a time.
-    * Do not multi-thread requests to retrieve multiple pages of data. Concurrent requests will impact your application’s performance.
-* This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, plans emailed to Concur, and most bookings from your travel agency.
-    * Some customers may have multiple booking options, which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.
+* Do not use Trip 1.1 to extract historical data.
+* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary/itinerary.markdown) instead.
+* This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and bookings from your travel agency.
+    * Some customers may have multiple booking options, which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list in Concur UI, then you can retrieve it from this API.
     * Because the data comes from many sources, data across itineraries may not be consistent. It’s recommended that you only consume the relevant segments and data (for example, air only or air + hotel) for your application’s function.
 * Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. You should address relevant changes only. This may mean comparing what your application considers relevant (for example, trip dates) across updated itineraries. In addition:
     * If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.
