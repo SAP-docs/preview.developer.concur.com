@@ -9,9 +9,9 @@ The SAP Concur Itinerary Web Service allows Travel Management Companies (TMC), S
 
 ##  <a name="getlist"></a>GET List of Itineraries
 
-Retrieves trip summaries for the traveler specified in the OAuth token. This endpoint can also be used to get details for trips for a different user or the whole company. This is most often done when a Travel Management Company needs to get a list of trips on behalf of a user or company. During the request, a user with one of the following user roles from the user's company must authenticate through OAuth: Web Services Administrator for Professional, or Can Administer for Standard.
+This endpoint is used to get a list of trips for a user.  Do not use this endpoint to get a list of trips for an entire company.  Subscribe to [Itinerary v4 events](/api-reference/travel/itinerary-v4/v4.itinerary.md) if you need itinerary data for multiple users.
 
-The response for this function can be divided into pages for easier processing.
+The response can be divided into pages for easier processing.
 
 ### Parameters
 
@@ -30,9 +30,6 @@ Name |  Description
 `includeCanceledTrips=_{true/false}_` | The includeCanceledTrips query parameter will cause the request to also return trips with a status of Canceled. When this query parameter is set to **true**, the response will include the **TripStatus** element.
 
 ### Examples:
-
-**To get itinerary list for the entire company (OAuth consumer must have Admin user role):**  
-https://www.concursolutions.com/api/travel/trip/v1.1/?startDate={_startdate_}&endDate={_enddate_}_&_createdAfterDate={_date_}&createdBeforeDate={_date_}&lastModifiedDate={_date_}&bookingType={_type_}&userid_type=login&userid_value=ALL
 
 **To get itinerary list for a single user (the OAuth consumer):**  
 https://www.concursolutions.com/api/travel/trip/v1.1/?startDate={_startdate_}&endDate={_enddate_}_&_createdAfterDate={_date_}&createdBeforeDate={_date_}&lastModifiedDate={_date_}&bookingType={_type_}
