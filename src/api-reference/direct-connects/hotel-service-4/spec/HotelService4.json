@@ -1,0 +1,2251 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "## Introduction\nHotelService API provides a method for Custom Hotel Source vendors to provide hotel inventory, rates and booking related functionality to users of Concur OBT (Online Booking Tool). \n\nOnce the Hotel Supplier has developed and certified their API implementation with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users.\n",
+    "version": "4.0-alpha",
+    "title": "HotelService API",
+    "contact": {
+      "name": "Concur Developer Center Support",
+      "url": "https://developer.concur.com/tools-support/support.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "service",
+      "description": "Hotel workflow endpoints"
+    }
+  ],
+  "security": [
+    {
+      "BasicAuth": []
+    }
+  ],
+  "paths": {
+    "/hotels/search": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Perform the initial search for hotels.",
+        "operationId": "search",
+        "description": "Perform the initial search for hotels.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchCriteria"
+              }
+            }
+          },
+          "description": "Hotel search criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Search results that meet criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    },
+    "/hotels/rates": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Retrieve rates for specific hotel properties",
+        "operationId": "rates",
+        "description": "Retrieve hotel rates",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatesCriteria"
+              }
+            }
+          },
+          "description": "Hotel rates criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Hotel rates for requested properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RatesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    },
+    "/hotels/ratedetails": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Retrieve hotel rate details",
+        "operationId": "ratedetails",
+        "description": "Retrieve hotel rate details for rates of a property - used when rate details are missing from /rates call and/or during checkout process.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateDetailsCriteria"
+              }
+            }
+          },
+          "description": "Hotel rates criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Hotel rates for requested properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    },
+    "/hotels/details": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Retrieve descriptive details about specified hotels.",
+        "operationId": "hoteldetails",
+        "description": "Retrieve hotel property information",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HotelDetailsCriteria"
+              }
+            }
+          },
+          "description": "Hotel details criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Hotel descriptive info for requested properties",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HotelDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    },
+    "/hotels/reservation": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Reserve the given hotel rate",
+        "operationId": "book",
+        "description": "Reserve hotel rate",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationCriteria"
+              }
+            }
+          },
+          "description": "Reservation criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Hotel reservation successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    },
+    "/hotels/reservation/read": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Returns detailed information about a hotel reservation.",
+        "operationId": "read",
+        "description": "Read reservation details. Used in a process of reserving a hotel to acknowledge receipt of booking confirmation as well as write information to Itinerary. Not invoked by user, but by automatic Concur process. Hotel Supplier should reply with the same response as provided for the book response.\n",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReadCriteria"
+              }
+            }
+          },
+          "description": "Read itinerary criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Successful read itinerary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Reservation record not found"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    },
+    "/hotels/reservation/modify": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Modify specific reservation",
+        "operationId": "modify",
+        "description": "Modify given reservation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModifyCriteria"
+              }
+            }
+          },
+          "description": "Modify reservation criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation succeessfully modified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Reservation record not found"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          },
+          "501": {
+            "description": "Endpoint not implemented"
+          }
+        }
+      }
+    },
+    "/hotels/reservation/cancel": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "summary": "Cancel specified reservation",
+        "operationId": "cancel",
+        "description": "Cancel specified reservation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelCriteria"
+              }
+            }
+          },
+          "description": "Cancel reservation criteria"
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation successfully cancelled",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Reservation record not found"
+          },
+          "500": {
+            "$ref": "#/components/responses/ProcessingError"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://hs-mock.service.cnqr.tech",
+      "description": "hs mock server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid client request. Request shouldn't be retried without changing it.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "ProcessingError": {
+        "description": "Error while processing the request. Request can be retried as is at a later time.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SearchCriteria": {
+        "type": "object",
+        "required": [
+          "requestorInfo",
+          "location",
+          "radius",
+          "maxRadius",
+          "checkin",
+          "checkout",
+          "includeDepositRequired"
+        ],
+        "properties": {
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "numGuests": {
+            "type": "integer",
+            "format": "int32",
+            "default": 1
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "radius": {
+            "$ref": "#/components/schemas/Radius"
+          },
+          "maxRadius": {
+            "$ref": "#/components/schemas/Radius"
+          },
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "customFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomField"
+            }
+          },
+          "includeDepositRequired": {
+            "type": "boolean"
+          },
+          "rateCategories": {
+            "type": "array",
+            "description": "Special rate categories requested if applicable",
+            "items": {
+              "$ref": "#/components/schemas/RateCategory"
+            }
+          },
+          "maxSearchResults": {
+            "description": "Maximum number of properties allowed to be included in search results",
+            "type": "integer",
+            "default": 100,
+            "example": 100
+          }
+        }
+      },
+      "RatesCriteria": {
+        "type": "object",
+        "required": [
+          "requestorInfo",
+          "hotelPropertyRefs",
+          "checkin",
+          "checkout"
+        ],
+        "properties": {
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "hotelPropertyRefs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelPropertyRef"
+            }
+          },
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "rateCategories": {
+            "type": "array",
+            "description": "Special rate categories requested if applicable",
+            "items": {
+              "$ref": "#/components/schemas/RateCategory"
+            }
+          },
+          "numGuests": {
+            "type": "integer",
+            "format": "int32",
+            "default": 1
+          },
+          "searchSessionToken": {
+            "$ref": "#/components/schemas/SearchSessionToken"
+          }
+        }
+      },
+      "RateDetailsCriteria": {
+        "type": "object",
+        "required": [
+          "requestorInfo",
+          "hotelPropertyRef",
+          "ratePlanIds",
+          "checkin",
+          "checkout"
+        ],
+        "properties": {
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "hotelPropertyRef": {
+            "$ref": "#/components/schemas/HotelPropertyRef"
+          },
+          "ratePlanIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "44SM3FAsfvgcZs9ehGlNOQ"
+            }
+          },
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "rateCategories": {
+            "type": "array",
+            "description": "Special rate categories requested if applicable",
+            "items": {
+              "$ref": "#/components/schemas/RateCategory"
+            }
+          },
+          "numGuests": {
+            "type": "integer",
+            "format": "int32",
+            "default": 1
+          },
+          "searchSessionToken": {
+            "$ref": "#/components/schemas/SearchSessionToken"
+          }
+        }
+      },
+      "HotelDetailsCriteria": {
+        "type": "object",
+        "required": [
+          "requestorInfo",
+          "hotelCodes"
+        ],
+        "properties": {
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "hotelCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelPropertyRef"
+            }
+          },
+          "searchSessionToken": {
+            "$ref": "#/components/schemas/SearchSessionToken"
+          }
+        }
+      },
+      "CustomField": {
+        "type": "object",
+        "required": [
+          "name",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "OrgUnit"
+          },
+          "value": {
+            "type": "string",
+            "example": "Travel Agents"
+          }
+        }
+      },
+      "HotelPropertyRef": {
+        "type": "object",
+        "required": [
+          "propertyCode"
+        ],
+        "properties": {
+          "chainCode": {
+            "type": "string",
+            "example": "HH"
+          },
+          "propertyCode": {
+            "type": "string",
+            "example": "HH498949"
+          }
+        }
+      },
+      "HotelProperty": {
+        "type": "object",
+        "required": [
+          "propertyCode",
+          "hotelName",
+          "contactInfo",
+          "leadRate",
+          "availabilityStatus",
+          "amenities",
+          "images",
+          "address"
+        ],
+        "properties": {
+          "propertyCode": {
+            "$ref": "#/components/schemas/PropertyCode"
+          },
+          "altPropertyCode": {
+            "type": "object",
+            "required": [
+              "catalogName",
+              "catalogCode"
+            ],
+            "properties": {
+              "catalogCode": {
+                "$ref": "#/components/schemas/PropertyCode"
+              },
+              "catalogName": {
+                "$ref": "#/components/schemas/CatalogName"
+              }
+            }
+          },
+          "chainCode": {
+            "type": "string",
+            "example": "HH"
+          },
+          "superChainCode": {
+            "type": "string",
+            "example": "EM"
+          },
+          "hotelName": {
+            "type": "string",
+            "example": "JW Marriott Parq"
+          },
+          "contactInfo": {
+            "$ref": "#/components/schemas/ContactInfo"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Geolocation"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "leadRate": {
+            "$ref": "#/components/schemas/LeadRate"
+          },
+          "availabilityStatus": {
+            "$ref": "#/components/schemas/AvailabilityStatus"
+          },
+          "preferenceRank": {
+            "$ref": "#/components/schemas/PreferenceRank"
+          },
+          "amenities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelAmenity"
+            }
+          },
+          "mediaItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelMedia"
+            }
+          },
+          "rating": {
+            "description": "Hotel rating should be an integer number from 1 to 5, representing its star rating.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "sustainabilityAwards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SustainabilityAward"
+            }
+          }
+        }
+      },
+      "CatalogName": {
+        "type": "string",
+        "enum": [
+          "Northstar",
+          "Giata",
+          "Leonardo",
+          "Amadeus",
+          "Sabre",
+          "WorldSpan",
+          "Galileo",
+          "CWT",
+          "Expedia",
+          "HRS",
+          "Booking.com"
+        ]
+      },
+      "BasicHotelProperty": {
+        "type": "object",
+        "required": [
+          "propertyCode",
+          "hotelName",
+          "contactInfo",
+          "cityCode"
+        ],
+        "properties": {
+          "propertyCode": {
+            "$ref": "#/components/schemas/PropertyCode"
+          },
+          "chainCode": {
+            "type": "string",
+            "example": "HH"
+          },
+          "hotelName": {
+            "type": "string",
+            "example": "JW Marriott Parq"
+          },
+          "contactInfo": {
+            "$ref": "#/components/schemas/ContactInfo"
+          },
+          "position": {
+            "$ref": "#/components/schemas/Geolocation"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "cityCode": {
+            "description": "IATA 3 char city code for this property (required for adding passive segments)",
+            "type": "string",
+            "example": "DFW"
+          }
+        }
+      },
+      "AvailabilityStatus": {
+        "type": "string",
+        "enum": [
+          "AVAILABLE_FOR_SALE",
+          "CLOSED_OUT"
+        ]
+      },
+      "PreferenceRank": {
+        "type": "string",
+        "enum": [
+          "PREFERRED",
+          "MORE_PREFERRED",
+          "MOST_PREFERRED"
+        ]
+      },
+      "HotelMedia": {
+        "type": "object",
+        "required": [
+          "url",
+          "type"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://images.samplehost.com/samplepath/hotelEntrance.jpg"
+          },
+          "category": {
+            "description": "OTA code describing the image as defined in OTA Picture Category Code (PIC) list",
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string",
+            "example": "Hotel entrance"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MediaType"
+          }
+        }
+      },
+      "MediaType": {
+        "type": "string",
+        "enum": [
+          "IMAGE",
+          "VIDEO"
+        ]
+      },
+      "Location": {
+        "type": "object",
+        "required": [
+          "geoLocation",
+          "locationType",
+          "name"
+        ],
+        "properties": {
+          "geoLocation": {
+            "$ref": "#/components/schemas/Geolocation"
+          },
+          "locationType": {
+            "$ref": "#/components/schemas/LocationType"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sheraton DFW Airport Hotel"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "iataCode": {
+            "description": "IATA code of airport if location searched is of type Airport",
+            "type": "string"
+          }
+        }
+      },
+      "LocationType": {
+        "description": "Type of location associated with this search",
+        "type": "string",
+        "enum": [
+          "COMPANY_LOCATION",
+          "HOTEL",
+          "ADDRESS",
+          "PLACE",
+          "AIRPORT"
+        ],
+        "example": "Hotel"
+      },
+      "Geolocation": {
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "example": 49.246292
+          },
+          "longitude": {
+            "type": "number",
+            "example": -123.116226
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "required": [
+          "addressLines",
+          "city",
+          "countryCode"
+        ],
+        "properties": {
+          "addressLines": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "910 Mainland Street"
+            }
+          },
+          "city": {
+            "type": "string",
+            "example": "Vancouver"
+          },
+          "state": {
+            "type": "string",
+            "example": "BC"
+          },
+          "countryCode": {
+            "description": "Two-character ISO code (ISO ALPHA-2) for country",
+            "type": "string",
+            "example": "CA"
+          },
+          "postalCode": {
+            "type": "string",
+            "example": "V5K 0A1"
+          }
+        }
+      },
+      "HotelRates": {
+        "type": "object",
+        "required": [
+          "propertyCode",
+          "rates"
+        ],
+        "properties": {
+          "propertyCode": {
+            "$ref": "#/components/schemas/PropertyCode"
+          },
+          "rates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelRate"
+            }
+          }
+        }
+      },
+      "HotelRate": {
+        "type": "object",
+        "required": [
+          "roomDescription",
+          "roomRate"
+        ],
+        "properties": {
+          "bedding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Bedding"
+            }
+          },
+          "mealsIncluded": {
+            "description": "Code based on OTA Meal Plan Type (MPT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32",
+              "example": 19
+            }
+          },
+          "roomDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "1 bedroom luxury suite",
+              "hearing accessible",
+              "workspace",
+              "garden facing balcony"
+            ]
+          },
+          "roomAmenities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoomAmenity"
+            }
+          },
+          "roomType": {
+            "description": "OTA code of type GRI (Guest Room Info) providing guest room type details",
+            "type": "integer",
+            "format": "int32",
+            "example": 82
+          },
+          "roomRate": {
+            "$ref": "#/components/schemas/RoomRate"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "description": "Name of the supplier for this source that can be shown in UI (Logo is given higher preference)",
+                "type": "string",
+                "example": "Expedia"
+              },
+              "logo": {
+                "description": "Logo of the supplier for this source that can be shown in UI",
+                "type": "string",
+                "format": "uri",
+                "example": "https://images.samplehost.com/samplepath/sourceLogo.png"
+              }
+            }
+          }
+        }
+      },
+      "RateCategory": {
+        "type": "object",
+        "required": [
+          "otaCode"
+        ],
+        "properties": {
+          "otaCode": {
+            "description": "Code based on OTA Rate Plan Type (RPT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "value": {
+            "description": "Optional value for the given rate plan type code",
+            "type": "string",
+            "example": "AAA"
+          }
+        }
+      },
+      "TotalPrice": {
+        "description": "Details about total pricing associated with the stay",
+        "type": "object",
+        "required": [
+          "totalBeforeTax",
+          "currencyCode"
+        ],
+        "properties": {
+          "totalBeforeTax": {
+            "type": "number",
+            "example": 170.95,
+            "multipleOf": 0.01
+          },
+          "taxes": {
+            "type": "number",
+            "example": 10,
+            "multipleOf": 0.01
+          },
+          "fees": {
+            "type": "number",
+            "example": 10,
+            "multipleOf": 0.01
+          },
+          "totalAfterTax": {
+            "type": "number",
+            "example": 190.95,
+            "multipleOf": 0.01
+          },
+          "currencyCode": {
+            "$ref": "#/components/schemas/CurrencyCode"
+          }
+        }
+      },
+      "Price": {
+        "type": "object",
+        "required": [
+          "amount",
+          "currencyCode"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 190.95,
+            "multipleOf": 0.01
+          },
+          "currencyCode": {
+            "$ref": "#/components/schemas/CurrencyCode"
+          }
+        }
+      },
+      "RoomRate": {
+        "type": "object",
+        "required": [
+          "ratePlanId",
+          "totalPrice",
+          "rateChangesOverStay"
+        ],
+        "properties": {
+          "rateDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Promotional Rate"
+            ]
+          },
+          "rateCategory": {
+            "$ref": "#/components/schemas/RateCategory"
+          },
+          "rateChangesOverStay": {
+            "type": "boolean"
+          },
+          "roomId": {
+            "type": "string",
+            "example": "kVNU66KLxuggtu2H"
+          },
+          "ratePlanId": {
+            "type": "string",
+            "example": "44SM3FAsfvgcZs9ehGlNOQ"
+          },
+          "guarantee": {
+            "type": "object",
+            "required": [
+              "guaranteeType"
+            ],
+            "properties": {
+              "guaranteeType": {
+                "$ref": "#/components/schemas/GuaranteeType"
+              },
+              "acceptedPayments": {
+                "$ref": "#/components/schemas/AcceptedPayments"
+              },
+              "cvvRequired": {
+                "type": "boolean"
+              }
+            }
+          },
+          "prepayRequired": {
+            "description": "Whether or not prepayment is required for booking this rate",
+            "type": "boolean",
+            "example": true
+          },
+          "totalPrice": {
+            "$ref": "#/components/schemas/TotalPrice"
+          },
+          "nightlyPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NightlyPrice"
+            },
+            "minItems": 1
+          },
+          "cancelPenalties": {
+            "$ref": "#/components/schemas/CancelPenalties"
+          }
+        }
+      },
+      "CancelPenalties": {
+        "type": "object",
+        "required": [
+          "penalties",
+          "isRefundable"
+        ],
+        "properties": {
+          "penalties": {
+            "description": "Cancel penalties associated with the rate",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CancelPenalty"
+            },
+            "minItems": 1
+          },
+          "isRefundable": {
+            "description": "Is this rate refundable or not (based on all cancel penalties)",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "RoomRateDetails": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RoomRate"
+          },
+          {
+            "type": "object",
+            "required": [
+              "guarantee",
+              "nightlyPrices",
+              "cancelPenalties"
+            ]
+          }
+        ]
+      },
+      "NightlyPrice": {
+        "type": "object",
+        "description": "Details about nightly price for a given date range",
+        "required": [
+          "basePrice",
+          "taxes",
+          "fees",
+          "startDate",
+          "endDate",
+          "totalPrice",
+          "currencyCode"
+        ],
+        "properties": {
+          "basePrice": {
+            "type": "number",
+            "example": 89.95,
+            "multipleOf": 0.01
+          },
+          "taxes": {
+            "$ref": "#/components/schemas/Taxes"
+          },
+          "fees": {
+            "$ref": "#/components/schemas/Fees"
+          },
+          "totalPrice": {
+            "type": "number",
+            "example": 100.05,
+            "multipleOf": 0.01
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-12-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-12-31"
+          },
+          "currencyCode": {
+            "$ref": "#/components/schemas/CurrencyCode"
+          }
+        }
+      },
+      "CurrencyCode": {
+        "description": "ISO 4217 currency code",
+        "type": "string",
+        "example": "USD",
+        "minLength": 3,
+        "maxLength": 3
+      },
+      "CancelPenalty": {
+        "type": "object",
+        "required": [
+          "cancelDeadline",
+          "description",
+          "refundableStatus"
+        ],
+        "properties": {
+          "cancelDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-10-13T13:00:00Z"
+          },
+          "description": {
+            "type": "string",
+            "example": "Free cancellation up to 1 week before checkin"
+          },
+          "refundableStatus": {
+            "$ref": "#/components/schemas/RefundableStatus"
+          },
+          "amountPercent": {
+            "$ref": "#/components/schemas/AmountPercent"
+          }
+        }
+      },
+      "RefundableStatus": {
+        "type": "string",
+        "enum": [
+          "FULLY_REFUNDABLE",
+          "PARTIALLY_REFUNDABLE",
+          "NON_REFUNDABLE"
+        ]
+      },
+      "AmountPercent": {
+        "type": "object",
+        "properties": {
+          "taxInclusive": {
+            "description": "If true, all taxes are included in the returned rate.",
+            "type": "boolean",
+            "example": true
+          },
+          "feesInclusive": {
+            "description": "If true, all fees are included in the returned rate.",
+            "type": "boolean",
+            "example": true
+          },
+          "numberOfNights": {
+            "description": "The number of nights that are to be spent in the property.",
+            "type": "integer",
+            "example": 5
+          },
+          "basisType": {
+            "$ref": "#/components/schemas/AmountPercentBasisType"
+          },
+          "applyAs": {
+            "$ref": "#/components/schemas/AmountPercentApplyAs"
+          },
+          "percent": {
+            "description": "The percentage used to calculate the amount of the cancel fee.",
+            "type": "number",
+            "example": 10.05,
+            "multipleOf": 0.01
+          },
+          "amount": {
+            "$ref": "#/components/schemas/Price"
+          }
+        }
+      },
+      "AmountPercentBasisType": {
+        "type": "string",
+        "enum": [
+          "FULL_STAY",
+          "NIGHTS",
+          "FIRST_LAST"
+        ]
+      },
+      "AmountPercentApplyAs": {
+        "type": "string",
+        "enum": [
+          "FIRST_NIGHT_DEPOSIT",
+          "LAST_NIGHT_DEPOST",
+          "FIRST_AND_LAST_NIGHT_DEPOSIT",
+          "FIRST_NIGHT_PAYMENT",
+          "LAST_NIGHT_PAYMENT",
+          "FIRST_AND_LAST_NIGHT_PAYMENT"
+        ]
+      },
+      "GuaranteeType": {
+        "type": "string",
+        "enum": [
+          "DEPOSIT_REQUIRED",
+          "GUARANTEE_REQUIRED",
+          "VENDOR_PROVIDED",
+          "NONE"
+        ]
+      },
+      "AcceptedPayments": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PaymentCardType"
+        }
+      },
+      "PaymentModeIndicator": {
+        "type": "string",
+        "enum": [
+          "PERSONAL_CARD",
+          "CORPORATE_CARD",
+          "CONCUR_VIRTUAL_CARD",
+          "VENDOR_VIRTUAL_CARD"
+        ],
+        "example": "PersonalCard"
+      },
+      "PaymentCardType": {
+        "type": "string",
+        "enum": [
+          "AMERICAN_AIRLINES",
+          "ALASKA_BARTER",
+          "AMEX",
+          "AWARD_CREDIT",
+          "CANADIAN",
+          "CARTE_BLANCHE",
+          "CHINA_UNION_PAY",
+          "CONFERMA",
+          "DELTA",
+          "DINERS_CLUB",
+          "DISCOVER",
+          "ENROUTE",
+          "EURO_CARD",
+          "JCB",
+          "MC",
+          "NORTHWEST",
+          "TWA",
+          "UATP",
+          "UNITED_TRAVEL",
+          "UNITED_CREDIT",
+          "VISA"
+        ],
+        "example": "VISA"
+      },
+      "PropertyCode": {
+        "type": "string",
+        "example": "HH498949"
+      },
+      "RequestorInfo": {
+        "type": "object",
+        "description": "Information about POS (Point Of Sale), traveler and user associated with this request",
+        "required": [
+          "posRequestorId",
+          "travelerUuid"
+        ],
+        "properties": {
+          "posRequestorId": {
+            "description": "An identifier of the entity making the request (e.g. ATA/IATA/ID number)",
+            "type": "string",
+            "example": "HTL:91369"
+          },
+          "travelerUuid": {
+            "description": "UUID that identifies the traveler within Concur",
+            "type": "string",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "loginId": {
+            "description": "Login ID of traveler within Concur. Only sent when available.",
+            "type": "string",
+            "example": "abc@concur.com"
+          },
+          "bookingForSelf": {
+            "description": "Is logged in person booking for self or on behalf of someone else",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "Radius": {
+        "type": "object",
+        "required": [
+          "value",
+          "unit"
+        ],
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 100,
+            "example": 5
+          },
+          "unit": {
+            "$ref": "#/components/schemas/DistanceUnit"
+          }
+        }
+      },
+      "DistanceUnit": {
+        "description": "Unit of distance",
+        "type": "string",
+        "enum": [
+          "MILE",
+          "KM"
+        ]
+      },
+      "SearchSessionToken": {
+        "description": "Session token to be generated and provided by server on initial \"search\" call that can be referenced back for future api calls on the same session.",
+        "type": "string",
+        "format": "uuid"
+      },
+      "HotelDetails": {
+        "type": "object",
+        "required": [
+          "propertyRef",
+          "descriptiveInfo"
+        ],
+        "properties": {
+          "propertyRef": {
+            "$ref": "#/components/schemas/HotelPropertyRef"
+          },
+          "hotelDescriptiveInfo": {
+            "type": "object",
+            "required": [
+              "propertyDescription",
+              "descriptiveInfos"
+            ],
+            "properties": {
+              "propertyDescription": {
+                "type": "string",
+                "example": "Offering a restaurant and a fitness centre, Hilton Garden Inn Long Island City is located in Long Island City. Free WiFi access is available. Each room here will provide you with a TV. Complete with a microwave, the dining area also has a refrigerator and a coffee machine. Guests will enjoy a full service restaurant and bar with evening room service. Other facilities offered at the property include a shared lounge and luggage storage. LaGuardia Airport is 8 km away. Guests are required to show a photo identification and credit card upon check-in. Please note that all Special Requests are subject to availability and additional charges may apply. Due to Coronavirus (COVID-19), wearing a face mask is mandatory in all indoor common areas. In response to Coronavirus (COVID-19), additional safety and sanitation measures are currently in effect at this property. Food &amp; beverage services at this property may be limited or unavailable due to Coronavirus (COVID-19). Due to Coronavirus (COVID-19), this property is taking steps to help protect the safety of guests and staff. Certain services and amenities may be reduced or unavailable as a result. Please note that the Extra Bed / Crib is subject to availability. The property will be under renovations to the lobby bar and lounge area from 6 January 2020 until 30 March 2020.\n"
+              },
+              "descriptiveInfos": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/HotelDescriptiveInfo"
+                }
+              }
+            }
+          }
+        }
+      },
+      "HotelDescriptiveInfo": {
+        "type": "object",
+        "required": [
+          "contents",
+          "otaCode"
+        ],
+        "properties": {
+          "otaCode": {
+            "description": "Code based on OTA Additional Detail Type (ADT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+            "type": "integer",
+            "format": "int32",
+            "example": 8
+          },
+          "contents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Check-in at 3:00PM",
+              "Check-out at 11:00AM"
+            ]
+          },
+          "startDate": {
+            "description": "Start date for descriptive info if applicable only for specific dates (e.g. for alerts or special events)",
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "endDate": {
+            "description": "End date for descriptive info if applicable only for specific dates (e.g. for alerts or special events)",
+            "type": "string",
+            "format": "date",
+            "example": "2021-11-20"
+          }
+        }
+      },
+      "ReservationCriteria": {
+        "type": "object",
+        "required": [
+          "hotelPropertyRef",
+          "requestorInfo",
+          "ratePlanId",
+          "guests",
+          "customFields",
+          "checkin",
+          "checkout"
+        ],
+        "properties": {
+          "hotelPropertyRef": {
+            "$ref": "#/components/schemas/HotelPropertyRef"
+          },
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "ratePlanId": {
+            "type": "string",
+            "example": "44SM3FAsfvgcZs9ehGlNOQ"
+          },
+          "guests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Guest"
+            }
+          },
+          "confirmationCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmationCode"
+            }
+          },
+          "paymentModeIndicator": {
+            "$ref": "#/components/schemas/PaymentModeIndicator"
+          },
+          "guarantee": {
+            "type": "object",
+            "required": [
+              "cardType",
+              "cardNumber"
+            ],
+            "properties": {
+              "cardType": {
+                "$ref": "#/components/schemas/PaymentCardType"
+              },
+              "cardNumber": {
+                "type": "string",
+                "example": "4242-4242-4242-4242"
+              },
+              "cvv": {
+                "description": "Card Verification Value - three or four-digit number on credit card for security",
+                "type": "string",
+                "example": "369"
+              },
+              "cardHolderName": {
+                "type": "string",
+                "example": "John Smith"
+              },
+              "cardHolderAddress": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          },
+          "loyalty": {
+            "type": "object",
+            "required": [
+              "programCode",
+              "accountId"
+            ],
+            "properties": {
+              "programCode": {
+                "type": "string",
+                "example": "EM"
+              },
+              "accountId": {
+                "type": "string",
+                "example": "209875030"
+              }
+            }
+          },
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "comments": {
+            "description": "Comments about special requests for this booking",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Accessible",
+              "NonSmoking",
+              "Upper floor away from elevator"
+            ]
+          },
+          "customFields": {
+            "description": "Vendor specific fields if setup for vendor integration",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomField"
+            }
+          },
+          "searchSessionToken": {
+            "$ref": "#/components/schemas/SearchSessionToken"
+          },
+          "legalEntity": {
+            "$ref": "#/components/schemas/LegalEntity"
+          }
+        }
+      },
+      "ReservationDetails": {
+        "type": "object",
+        "required": [
+          "confirmationCodes",
+          "status",
+          "basicHotelProperty",
+          "roomRate",
+          "guest",
+          "roomDescription",
+          "comments"
+        ],
+        "properties": {
+          "confirmationCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmationCode"
+            }
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReservationStatus"
+          },
+          "basicHotelProperty": {
+            "$ref": "#/components/schemas/BasicHotelProperty"
+          },
+          "roomRate": {
+            "$ref": "#/components/schemas/RoomRateDetails"
+          },
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "guests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Guest"
+            }
+          },
+          "roomDescription": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "1 bedroom luxury suite",
+              "hearing accessible",
+              "workspace",
+              "garden facing balcony"
+            ]
+          },
+          "comments": {
+            "description": "Comments about special requests for this booking",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Accessible",
+              "NonSmoking",
+              "Upper floor away from elevator"
+            ]
+          }
+        }
+      },
+      "ReservationStatus": {
+        "type": "string",
+        "enum": [
+          "PENDING_CONFIRMATION",
+          "RESERVED",
+          "CANCELLED"
+        ]
+      },
+      "ConfirmationCode": {
+        "type": "object",
+        "required": [
+          "codeType",
+          "code"
+        ],
+        "properties": {
+          "codeType": {
+            "$ref": "#/components/schemas/ConfirmationCodeType"
+          },
+          "code": {
+            "type": "string",
+            "example": "3704188022P5683"
+          }
+        }
+      },
+      "ConfirmationCodeType": {
+        "description": "Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=14, HOTEL_RESERVATION=40, CANCELLATION=50, MODIFICATION=1000)",
+        "type": "string",
+        "enum": [
+          "SYSTEM",
+          "HOTEL_RESERVATION",
+          "CANCELLATION",
+          "MODIFICATION",
+          "CONCUR_GDS_REFERENCE"
+        ]
+      },
+      "Guest": {
+        "type": "object",
+        "required": [
+          "firstname",
+          "lastname",
+          "address",
+          "companyName",
+          "contactInfo"
+        ],
+        "properties": {
+          "firstname": {
+            "type": "string",
+            "example": "Blake"
+          },
+          "lastname": {
+            "type": "string",
+            "example": "Smith"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "companyName": {
+            "type": "string",
+            "example": "SAP Concur"
+          },
+          "contactInfo": {
+            "$ref": "#/components/schemas/ContactInfo"
+          },
+          "birthdate": {
+            "type": "string",
+            "format": "date",
+            "example": "1990-04-17T00:00:00.000Z"
+          }
+        }
+      },
+      "ReadCriteria": {
+        "type": "object",
+        "required": [
+          "requestorInfo",
+          "confirmationCodes"
+        ],
+        "properties": {
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "confirmationCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmationCode"
+            }
+          }
+        }
+      },
+      "ModifyCriteria": {
+        "type": "object",
+        "required": [
+          "reservationCriteria",
+          "confirmationCodes"
+        ],
+        "properties": {
+          "reservationCriteria": {
+            "$ref": "#/components/schemas/ReservationCriteria"
+          },
+          "confirmationCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmationCode"
+            }
+          }
+        }
+      },
+      "CancelCriteria": {
+        "type": "object",
+        "required": [
+          "requestorInfo",
+          "confirmationCodes"
+        ],
+        "properties": {
+          "requestorInfo": {
+            "$ref": "#/components/schemas/RequestorInfo"
+          },
+          "confirmationCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmationCode"
+            }
+          }
+        }
+      },
+      "CancelDetails": {
+        "type": "object",
+        "required": [
+          "confirmationCodes"
+        ],
+        "properties": {
+          "confirmationCodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConfirmationCode"
+            }
+          },
+          "cancellationRemarks": {
+            "type": "string",
+            "example": "Reservation cancelled with no penalty"
+          }
+        }
+      },
+      "ContactInfo": {
+        "type": "object",
+        "required": [
+          "phoneNumbers",
+          "emails"
+        ],
+        "properties": {
+          "phoneNumbers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "+1-555-555-1234"
+            }
+          },
+          "faxNumber": {
+            "type": "string",
+            "example": "+1-555-555-5678"
+          },
+          "emails": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          }
+        }
+      },
+      "LeadRate": {
+        "type": "object",
+        "description": "Lead rate is the lowest average nightly rate, before taxes and fees",
+        "required": [
+          "avgNightlyRate"
+        ],
+        "properties": {
+          "avgNightlyRate": {
+            "$ref": "#/components/schemas/Price"
+          }
+        }
+      },
+      "HotelAmenity": {
+        "type": "object",
+        "description": "Hotel amentity containing code as described in OTA code list Hotel Amenity Code (HAC)",
+        "required": [
+          "amenityCode"
+        ],
+        "properties": {
+          "amenityCode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RoomAmenity": {
+        "type": "object",
+        "description": "Room amentity containing code as described in OTA code list Room Amenity Type (RMA)",
+        "required": [
+          "amenityCode"
+        ],
+        "properties": {
+          "amenityCode": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "description": "Error with OTA code and description",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "otaCode": {
+            "description": "Code based on OTA Error Codes list (https://www.opentraveldevelopersnetwork.com/code-list)",
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchResponse": {
+        "type": "object",
+        "required": [
+          "hotelProperties"
+        ],
+        "properties": {
+          "hotelProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelProperty"
+            }
+          },
+          "searchSessionToken": {
+            "$ref": "#/components/schemas/SearchSessionToken"
+          }
+        }
+      },
+      "RatesResponse": {
+        "type": "object",
+        "required": [
+          "hotelRates",
+          "checkin",
+          "checkout"
+        ],
+        "properties": {
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "hotelRates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelRates"
+            }
+          }
+        }
+      },
+      "RateDetailsResponse": {
+        "type": "object",
+        "required": [
+          "roomRate",
+          "checkin",
+          "checkout"
+        ],
+        "properties": {
+          "checkin": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-20"
+          },
+          "checkout": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-10-23"
+          },
+          "roomRate": {
+            "$ref": "#/components/schemas/RoomRateDetails"
+          }
+        }
+      },
+      "HotelDetailsResponse": {
+        "type": "object",
+        "required": [
+          "hotelDetailsList"
+        ],
+        "properties": {
+          "hotelDetailsList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HotelDetails"
+            }
+          }
+        }
+      },
+      "Bedding": {
+        "description": "Details about bedding associated with the room",
+        "type": "object",
+        "required": [
+          "bedTypeCode",
+          "quantity"
+        ],
+        "properties": {
+          "quantity": {
+            "description": "No. of beds",
+            "type": "integer",
+            "example": 1
+          },
+          "bedTypeCode": {
+            "description": "Code based on OTA Bed Type (BED) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+            "type": "integer",
+            "format": "int32",
+            "example": 3
+          }
+        }
+      },
+      "Taxes": {
+        "description": "Representation of nightly tax amount associated with a rate along with optional breakdown.",
+        "type": "object",
+        "required": [
+          "amount"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 5.55,
+            "multipleOf": 0.01
+          },
+          "taxBreakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeeTaxType"
+            }
+          }
+        }
+      },
+      "Fees": {
+        "description": "Representation of nightly fees associated with a rate for given dates along with optional breakdown.",
+        "type": "object",
+        "required": [
+          "amount"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 10.95,
+            "multipleOf": 0.01
+          },
+          "feeBreakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeeTaxType"
+            }
+          }
+        }
+      },
+      "FeeTaxType": {
+        "description": "Fee or Tax associated with rate - can be either included or excluded from total rate as marked with 'inclusive' field.",
+        "type": "object",
+        "required": [
+          "amount",
+          "fttCode",
+          "inclusive"
+        ],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 8.05,
+            "multipleOf": 0.01
+          },
+          "fttCode": {
+            "description": "Code based on OTA's Fee Tax Type (FTT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+            "type": "integer",
+            "format": "int32",
+            "example": 15
+          },
+          "inclusive": {
+            "description": "Whether or not this tax/fee is included in totalAmountAfterTax amount.",
+            "type": "boolean",
+            "example": true
+          }
+        }
+      },
+      "SustainabilityAward": {
+        "description": "Award/Certification related to sustainability awarded to the hotel",
+        "type": "object",
+        "required": [
+          "label"
+        ],
+        "properties": {
+          "label": {
+            "description": "Name or label of the award/certification",
+            "type": "string",
+            "example": "LEED"
+          },
+          "level": {
+            "description": "Optional level of certification",
+            "type": "string",
+            "example": "Gold"
+          }
+        }
+      },
+      "LegalEntity": {
+        "description": "Provides details about the legal entity associated with this booking if available",
+        "type": "object",
+        "required": [
+          "name",
+          "taxId"
+        ],
+        "properties": {
+          "name": {
+            "description": "Name of the legal entity",
+            "type": "string",
+            "example": "My Great Company"
+          },
+          "taxId": {
+            "description": "Tax identity of the legal entity",
+            "type": "string",
+            "example": "111-11-1111"
+          },
+          "address": {
+            "$ref": "#/components/schemas/Address"
+          }
+        }
+      }
+    }
+  }
+}

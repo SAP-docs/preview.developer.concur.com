@@ -28,7 +28,7 @@ SAP Concur will follow up a Reservation Request with a Read request as soon as p
 
 ## OpenAPI/ Swagger Specification
 Current OpenAPI/Swagger schema for Hotel Service 4:
-[HotelService4.yaml](./yaml/HotelService4.yaml)
+[HotelService4.json](spec/HotelService4.json)
 
 ## Supported Operations <a id="supported-ops"></a>
 
