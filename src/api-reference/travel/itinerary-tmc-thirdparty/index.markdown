@@ -9,7 +9,7 @@ The SAP Concur Itinerary Web Service allows Travel Management Companies (TMC), S
 
 ##  <a name="getlist"></a>GET List of Itineraries
 
-This endpoint is used to get a list of trips for a user.  Do not use this endpoint to get a list of trips for an entire company.  Subscribe to [Itinerary v4 events](/api-reference/travel/itinerary-v4/v4.itinerary.md) if you need itinerary data for multiple users.
+This endpoint is used to get a list of trips for a user.  Do not use this endpoint to get a list of trips for an entire company.  Subscribe to [Itinerary v4 events](/api-reference/travel/itinerary-v4/v4.itinerary.html) if you need itinerary data for multiple users.
 
 The response can be divided into pages for easier processing.
 
