@@ -1109,13 +1109,13 @@
   <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
 </div>
 
-<p>The User Provisioning Service allows callers to provision and update a user’s profile in the SAP Concur environment. Once a user is provisioned, the users profile is available to support the Identity, Travel and Spend services. The service allows clients and partners to modify profiles in bulk or individually using standard REST verbs to create, update objects following a defined schemas covering a users identity, spend and travel data attritubues. 
-The services are supported in both our US and EMEA datacenters. 
-Examples below are based off our US data center. For EMEA, please replace us.api.concursolutions.com with emea.api.concursolutions.com</p>
+<p>The User Provisioning Service (UPS) allows callers to provision and update a user’s profile. Once a user is provisioned, the user’s profile is available to support the Identity, Travel and Spend services. The service allows clients and partners to modify profiles in bulk or individually.</p>
+
+<p>Examples below are based off our US data center. For EMEA, please replace us.api.concursolutions.com with emea.api.concursolutions.com</p>
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
-<p>This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API.</p>
+<p>This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.</p>
 
 <h2 id="-process-flow"><a name="process-flow"></a> Process Flow</h2>
 
@@ -1210,7 +1210,7 @@ Examples below are based off our US data center. For EMEA, please replace us.api
 
 <h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
 
-<p>SAP Concur users must purchase either Concur Expense or Concur Travel or both in order to use this API. This API is not available in the China Data Center.  Please contact your SAP Concur representative for more information.</p>
+<p>SAP Concur users must purchase either Concur Expense or Concur Travel or both in order to use this API. This API is not available in the China Data Center. Please contact your SAP Concur representative for more information.</p>
 
 <h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
 
@@ -1218,18 +1218,11 @@ Examples below are based off our US data center. For EMEA, please replace us.api
 
 <h2 id="events"><a name="event-usage"></a>Events</h2>
 
-<p>UPS supports post event notification when provisioning process is complete. Using the Event Subscription service will allows clients and partners to be notified through web services when certain actions take place in connected companies.</p>
+<p>UPS supports post event notification when provisioning process is complete. Using the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Event Subscription Service</a> allows users to be notified through web services when certain actions take place in connected companies with the <code class="language-plaintext highlighter-rouge">provisionCompleted</code> event.</p>
 
-<p>https://developer.concur.com/api-reference/ess/v4.event-subscription.html</p>
+<h2 id="create-a-new-user-with-users"><a name="create-users-post"></a>Create a new user with /Users</h2>
 
-<p>Event Type:</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">provisionCompleted</code></li>
-</ul>
-
-<h2 id="create-a-new-user-with-users-endpoint"><a name="create-users-post"></a>Create a new user with /Users endpoint</h2>
-
-<p>Creates user provisioning requests via the /Users endpoint. Recommended for clients who are updating single user profiles at a time. Clients are partners are able to provision identity, spend and travel profile information via this endpoint. 
+<p>This endpoint is recommended for users who are updating a single user profile. Users are able to provision Identity, Spend, and Travel profile information via this endpoint.
 Users can be created via POST with identity, spend and travel attributes within the same request or via a POST to create the identity first and PATCH spend and travel profile attributes.</p>
 <ul>
   <li>Identity must be created prior to any spend or travel profile is added.</li>
@@ -1244,59 +1237,25 @@ Users can be created via POST with identity, spend and travel attributes within 
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request">Request</h3>
+<h4 id="uri">URI</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/provisioning/v4/Users/
 </code></pre></div></div>
-<h4 id="uri">URI</h4>
-
-<h5 id="template">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Users/
-</code></pre></div></div>
 
 <h4 id="parameters">Parameters</h4>
-<p>None</p>
 
-<h4 id="headers">Headers</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
+<p>None.</p>
 
-<h3 id="payload">Payload</h3>
-<ul>
-  <li><a href="#users-request-schema">Users Request</a></li>
-</ul>
-
-<h3 id="request-1">Request</h3>
-
-<h4 id="status-codes">Status Codes</h4>
+<h3 id="payloads">Payloads</h3>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+  <li>Request: <a href="#users-request-schema">Users Request</a></li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-1">Payload</h4>
-<p>None</p>
+<h3 id="examples">Examples</h3>
 
-<h3 id="example">Example</h3>
-
-<h4 id="request-2">Request</h4>
+<h4 id="request">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"schemas"</span>: <span class="o">[</span>
         <span class="s2">"urn:ietf:params:scim:schemas:core:2.0:User"</span>
@@ -1372,6 +1331,7 @@ Users can be created via POST with identity, spend and travel attributes within 
 </code></pre></div></div>
 
 <h4 id="response">Response</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>201 Created
 Content-Type: application/json
 </code></pre></div></div>
@@ -1419,7 +1379,7 @@ Content-Type: application/json
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<p>The successful response above is the creation of the identity of the user. Use the provisionId to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
+<p>The successful response above is the creation of the identity of the user. Use the <code class="language-plaintext highlighter-rouge">provisionId</code> to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “2b41c0c1-15f7-41cc-99bb-a82b5da128a2” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
   <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user. This ID is required for future PATCH and PUT requests for this user. It is also displayed as <Concur UUID=""> within this document.</Concur></li>
@@ -1427,14 +1387,8 @@ Content-Type: application/json
 </ul>
 
 <h2 id="update-a-user-with-users-endpoint"><a name="update-users-patch"></a>Update a user with /Users endpoint</h2>
-<p>Updates to one or more user attritubes. 
-Using PATCH is recommended for updating single or multiple data attributes for a single user. PATCH will only update the data attributes listed within the request. 
-PATCH operations supported:</p>
-<ul>
-  <li>add</li>
-  <li>remove</li>
-  <li>replace</li>
-</ul>
+
+<p>This method is recommended for updating single or multiple data attributes for a single user. PATCH will only update the data attributes listed within the request. You may add, remove, or replace data with this method.</p>
 
 <h3 id="scopes-1">Scopes</h3>
 
@@ -1445,16 +1399,9 @@ PATCH operations supported:</p>
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-3">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
-</code></pre></div></div>
-
 <h4 id="uri-1">URI</h4>
 
-<h5 id="template-1">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /provisioning/v4/Users/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
 </code></pre></div></div>
 
 <h4 id="parameters-1">Parameters</h4>
@@ -1478,47 +1425,16 @@ PATCH operations supported:</p>
   </tbody>
 </table>
 
-<h4 id="headers-1">Headers</h4>
+<h4 id="payloads-1">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li>Request: <a href="#users-request-schema">Users Request</a></li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-2">Payload</h4>
+<h3 id="examples-1">Examples</h3>
 
-<ul>
-  <li><a href="#users-request-schema">Users Request</a></li>
-</ul>
-
-<h3 id="response-1">Response</h3>
-
-<h4 id="status-codes-1">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-3">Payload</h4>
-<p>None</p>
-
-<h3 id="example-1">Example</h3>
-
-<h4 id="request-4">Request</h4>
+<h4 id="request-1">Request</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/provisioning/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
 </code></pre></div></div>
@@ -1548,7 +1464,8 @@ PATCH operations supported:</p>
 
 </code></pre></div></div>
 
-<h4 id="response-2">Response</h4>
+<h4 id="response-1">Response</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -1598,7 +1515,7 @@ Content-Type: application/json
 <span class="o">}</span>
 
 </code></pre></div></div>
-<p>The successful response above is the updating of the identity of the user. Use the provisionId to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
+<p>The successful response above is the updating of the identity of the user. Use the <code class="language-plaintext highlighter-rouge">provisionId</code> to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “2b41c0c1-15f7-41cc-99bb-a82b5da128a2” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
   <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user. This ID is required for future PATCH and PUT requests for this user. It is also displayed as <Concur UUID=""> within this document.</Concur></li>
@@ -1607,11 +1524,7 @@ Content-Type: application/json
 
 <h2 id="replace-a-user-with-users-endpoint"><a name="replace-users-put"></a>Replace a user with /Users endpoint</h2>
 
-<p>Using PUT is recommended for updating all data attributes for a user. 
-PUT will replace data attributes for the user listed within the request.</p>
-<ul>
-  <li>When attributes are not provisioned, system default values will be provisioned.</li>
-</ul>
+<p>Using PUT is recommended for updating all data attributes for a user. This method will replace data attributes for the user listed within the request. <strong>NOTE:</strong> When attributes are not provisioned, system default values will be provisioned.</p>
 
 <h3 id="scopes-2">Scopes</h3>
 
@@ -1622,16 +1535,9 @@ PUT will replace data attributes for the user listed within the request.</p>
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-5">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
-</code></pre></div></div>
-
 <h4 id="uri-2">URI</h4>
 
-<h5 id="template-2">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /provisioning/v4/Users/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/provisioning/v4/Users/&lt;Concur UUID&gt;
 </code></pre></div></div>
 
 <h4 id="parameters-2">Parameters</h4>
@@ -1655,48 +1561,16 @@ PUT will replace data attributes for the user listed within the request.</p>
   </tbody>
 </table>
 
-<h4 id="headers-2">Headers</h4>
+<h4 id="payloads-2">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li>Request: <a href="#users-request-schema">Users Request</a></li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-4">Payload</h4>
+<h3 id="examples-2">Examples</h3>
 
-<ul>
-  <li><a href="#users-request-schema">Users Request</a></li>
-</ul>
-
-<h3 id="request-6">Request</h3>
-
-<h4 id="status-codes-2">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-5">Payload</h4>
-
-<p>None</p>
-
-<h3 id="example-2">Example</h3>
-
-<h4 id="request-7">Request</h4>
+<h4 id="request-2">Request</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/provisioning/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
 </code></pre></div></div>
@@ -1730,7 +1604,7 @@ PUT will replace data attributes for the user listed within the request.</p>
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="response-3">Response</h4>
+<h4 id="response-2">Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
@@ -1779,7 +1653,7 @@ Content-Type: application/json
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<p>The successful response above is the updating of the identity of the user. Use the provisionId to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
+<p>The successful response above is the updating of the identity of the user. Use the <code class="language-plaintext highlighter-rouge">provisionId</code> to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">provisionId</code>: “2b41c0c1-15f7-41cc-99bb-a82b5da128a2” is the provisioning request ID. This is a unique number that is used for querying status on the request.</li>
   <li><code class="language-plaintext highlighter-rouge">id</code>: “ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7” is the SAP Concur user UUID. This is a unique number that is used for this particular user. This ID is required for future PATCH and PUT requests for this user. It is also displayed as <Concur UUID=""> within this document.</Concur></li>
@@ -1788,11 +1662,7 @@ Content-Type: application/json
 
 <h2 id="create-a-new-users-with-bulk-endpoint"><a name="create-bulk-post"></a>Create a new users with /Bulk endpoint</h2>
 
-<p>Creates one or more new user requests via the /Bulk endpoint. Recommended for clients who are performing bulk updates to multiple users at the same time.</p>
-
-<ul>
-  <li>Limited to 100 operations or record size of 400KB per request.</li>
-</ul>
+<p>Creates one or more new user requests via the /Bulk endpoint. Recommended for users who are performing bulk updates to multiple users at the same time. <strong>NOTE:</strong> Limited to 100 operations or record size of 400KB per request.</p>
 
 <h3 id="scopes-3">Scopes</h3>
 
@@ -1803,61 +1673,24 @@ Content-Type: application/json
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-8">Request</h3>
+<h4 id="uri-3">URI</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
-<h4 id="uri-3">URI</h4>
-
-<h5 id="template-3">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /provisioning/v4/Bulk/
-</code></pre></div></div>
 <h4 id="parameters-3">Parameters</h4>
 
-<p>None</p>
+<p>None.</p>
 
-<h4 id="headers-3">Headers</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h4 id="payload-6">Payload</h4>
+<h4 id="payloads-3">Payloads</h4>
 
 <ul>
-  <li><a href="#bulk-request-schema">Bulk Request</a></li>
+  <li>Request: <a href="#bulk-request-schema">Bulk Request</a></li>
+  <li>Response: None</li>
 </ul>
 
-<h3 id="response-4">Response</h3>
+<h3 id="examples-3">Examples</h3>
 
-<h4 id="status-codes-3">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-7">Payload</h4>
-
-<p>None</p>
-
-<h3 id="example-3">Example</h3>
-
-<h3 id="request-9">Request</h3>
+<h3 id="request-3">Request</h3>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"schemas"</span>: <span class="o">[</span>
@@ -1899,7 +1732,8 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h3 id="response-5">Response</h3>
+<h3 id="response-3">Response</h3>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
 Content-Type: application/json
 </code></pre></div></div>
@@ -1929,7 +1763,7 @@ Content-Type: application/json
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<p>The successful response above is the creation of the identity of the user(s). Use the provisionId to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
+<p>The successful response above is the creation of the identity of the user(s). Use the <code class="language-plaintext highlighter-rouge">provisionId</code> to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
 
 <table>
   <thead>
@@ -1969,7 +1803,7 @@ Content-Type: application/json
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td>a unique identifier value that is attached to requests and messages that allow reference to a particular reqeust.</td>
+      <td>a unique identifier value that is attached to requests and messages that allow reference to a particular request.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">location</code></td>
@@ -1980,14 +1814,7 @@ Content-Type: application/json
 
 <h2 id="update-users-with-bulk-endpoint"><a name="update-bulk-patch"></a>Update users with /Bulk endpoint</h2>
 
-<p>Updates one or more provisioning requests. Using PATCH is recommended for updating single or multiple data attributes within a request. PATCH will only update the data attributes listed within the request.</p>
-<ul>
-  <li>Limited to 100 operations or record size of 400KB per request.<br />
-PATCH operations supported:</li>
-  <li>add</li>
-  <li>remove</li>
-  <li>replace</li>
-</ul>
+<p>Updates one or more provisioning requests. Using PATCH is recommended for updating single or multiple data attributes within a request. PATCH will only update the data attributes listed within the request. <strong>NOTE:</strong> Limited to 100 operations or record size of 400KB per request.</p>
 
 <h3 id="scopes-4">Scopes</h3>
 
@@ -1998,59 +1825,25 @@ PATCH operations supported:</li>
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-10">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/provisioning/v4/Bulk/
-</code></pre></div></div>
 <h4 id="uri-4">URI</h4>
 
-<h5 id="template-4">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /provisioning/v4/Bulk/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
 <h4 id="parameters-4">Parameters</h4>
 
 <p>None.</p>
 
-<h4 id="headers-4">Headers</h4>
+<h4 id="payloads-4">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li>Request: <a href="#bulk-request-schema">Bulk Request</a></li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-8">Payload</h4>
+<h3 id="examples-4">Examples</h3>
 
-<p><a href="#bulk-request-schema">Bulk Request</a></p>
+<h4 id="request-4">Request</h4>
 
-<h3 id="response-6">Response</h3>
-
-<h4 id="status-codes-4">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-9">Payload</h4>
-<p>None</p>
-
-<h3 id="example-4">Example</h3>
-
-<h4 id="request-11">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
 
@@ -2075,7 +1868,7 @@ PATCH operations supported:</li>
                         <span class="s2">"op"</span>: <span class="s2">"replace"</span>,
                         <span class="s2">"path"</span>: <span class="s2">"userName"</span>,
                         <span class="s2">"value"</span>:  <span class="s2">"Updated_Chris_Doe_Name@sap.com"</span>
-                    <span class="o">}</span>, 
+                    <span class="o">}</span>,
                     <span class="o">{</span>
                        <span class="s2">"op"</span>: <span class="s2">"remove"</span>,
                        <span class="s2">"path"</span>: <span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:Role:roles[roleName eq </span><span class="se">\"</span><span class="s2">SHD_BUDGET_APPROVER</span><span class="se">\"</span><span class="s2">]"</span>
@@ -2087,7 +1880,8 @@ PATCH operations supported:</li>
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="response-7">Response</h4>
+<h4 id="response-4">Response</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
 Content-Type: application/json
 </code></pre></div></div>
@@ -2118,7 +1912,7 @@ Content-Type: application/json
 <span class="o">}</span>
 
 </code></pre></div></div>
-<p>The successful response above is the updating of the identity of the user(s). Use the provisionId to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
+<p>The successful response above is the updating of the identity of the user(s). Use the <code class="language-plaintext highlighter-rouge">provisionId</code> to <a href="#retrieve-detailed-provision-request-status">retrieve provisioning status for other services</a>.</p>
 
 <table>
   <thead>
@@ -2158,7 +1952,7 @@ Content-Type: application/json
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td>a unique identifier value that is attached to requests and messages that allow reference to a particular reqeust.</td>
+      <td>a unique identifier value that is attached to requests and messages that allow reference to a particular request.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">location</code></td>
@@ -2169,11 +1963,7 @@ Content-Type: application/json
 
 <h2 id="replace-users-with-bulk-endpoint"><a name="replace-bulk-put"></a>Replace users with /Bulk endpoint</h2>
 
-<p>Replaces one or more existing resources. 
-Using PUT is recommended for updating all data attributes for a user. PUT will replace data attributes for the user listed within the request and when attributes are not provisioned, system default values will be provisioned.</p>
-<ul>
-  <li>Limited to 100 operations or record size of 400KB per request.</li>
-</ul>
+<p>Replaces one or more existing resources. Using PUT is recommended for updating all data attributes for a user. PUT will replace data attributes for the user listed within the request and when attributes are not provisioned, system default values will be provisioned. <strong>NOTE:</strong> Limited to 100 operations or record size of 400KB per request.</p>
 
 <h3 id="scopes-5">Scopes</h3>
 
@@ -2184,63 +1974,27 @@ Using PUT is recommended for updating all data attributes for a user. PUT will r
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-12">Request</h3>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/provisioning/v4/Bulk/
-</code></pre></div></div>
 <h4 id="uri-5">URI</h4>
 
-<h5 id="template-5">Template</h5>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /provisioning/v4/Bulk/
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/provisioning/v4/Bulk/
 </code></pre></div></div>
 <h4 id="parameters-5">Parameters</h4>
 
 <p>None.</p>
 
-<h4 id="headers-5">Headers</h4>
+<h4 id="payloads-5">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li>Request: <a href="#bulk-request-schema">Bulk Request</a></li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-10">Payload</h4>
+<h3 id="examples-5">Examples</h3>
 
-<p><a href="#bulk-request-schema">Bulk Request</a></p>
-
-<h3 id="response-8">Response</h3>
-
-<h4 id="status-codes-5">Status Codes</h4>
+<h4 id="request-5">Request</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.11">413 Payload Too Large</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-11">Payload</h4>
-
-<p>None</p>
-
-<h3 id="example-5">Example</h3>
-
-<h4 id="request-13">Request</h4>
-
-<ul>
-  <li>Note that the SAP Concur platform UUID within the id attribute and path must be included within the data of the request.</li>
+  <li>Note that the SAP Concur platform UUID within the ID attribute and path must be included within the data of the request.</li>
 </ul>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
@@ -2280,7 +2034,7 @@ Using PUT is recommended for updating all data attributes for a user. PUT will r
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="response-9">Response</h4>
+<h4 id="response-5">Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
 Content-Type: application/json
@@ -2377,10 +2131,8 @@ Content-Type: application/json
   <li><code class="language-plaintext highlighter-rouge">spend.user.general.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
 </ul>
 
-<h3 id="request-14">Request</h3>
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4/Users
-</code></pre></div></div>
-<h4 id="request-example">Request Example</h4>
+<h3 id="uri-6">URI</h3>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4/Users/8f545a90-305f-441b-91cd-a69ad5f548f5
 GET https://us.api.concursolutions.com/spend/v4/Users/8f545a90-305f-441b-91cd-a69ad5f548f5
 GET https://us.api.concursolutions.com/travel/v4/Users/8f545a90-305f-441b-91cd-a69ad5f548f5
@@ -2407,58 +2159,40 @@ GET https://us.api.concursolutions.com/travel/v4/Users/8f545a90-305f-441b-91cd-a
   </tbody>
 </table>
 
-<h4 id="headers-6">Headers</h4>
+<h4 id="payloads-6">Payloads</h4>
+
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+  <li>Request: None</li>
+  <li>Response:
+    <ul>
+      <li><a href="#user-schema">User</a></li>
+      <li><a href="#enterprise-user-schema">Enterprise User</a></li>
+      <li><a href="#travel-user-schema">Travel User</a></li>
+      <li><a href="#spend-users-schema">Spend User</a></li>
+      <li><a href="#spend-role-schema">Spend Role</a></li>
+      <li><a href="#spend-delegate-schema">Spend Delegate</a></li>
+      <li><a href="#spend-approver-schema">Spend Approver</a></li>
+      <li><a href="#expense-user-preference-schema">Expense User Preference Extension</a></li>
+      <li><a href="#workflow-preference-schema">Workflow Preference Extension</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h4 id="payload-12">Payload</h4>
-<p>None</p>
+<h3 id="examples-6">Examples</h3>
 
-<h3 id="response-10">Response</h3>
+<h4 id="request-6">Request</h4>
 
-<h4 id="status-codes-6">Status Codes</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">202 Accepted</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h4 id="payload-13">Payload</h4>
-<ul>
-  <li><a href="#user-schema">User</a></li>
-  <li><a href="#enterprise-user-schema">Enterprise User</a></li>
-  <li><a href="#travel-user-schema">Travel User</a></li>
-  <li><a href="#spend-users-schema">Spend User</a></li>
-  <li><a href="#spend-role-schema">Spend Role</a></li>
-  <li><a href="#spend-delegate-schema">Spend Delegate</a></li>
-  <li><a href="#spend-approver-schema">Spend Approver</a></li>
-  <li><a href="#expense-user-preference-schema">Expense User Preference Extension</a></li>
-  <li><a href="#workflow-preference-schema">Workflow Preference Extension</a></li>
-</ul>
-
-<h3 id="example-6">Example</h3>
-<h4 id="request-15">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4/Users/ef0bffaf-863f-4b3e-9c4c-bd9c9a8b2ea7
 </code></pre></div></div>
 
-<h4 id="response-11">Response</h4>
+<h4 id="response-6">Response</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
 
 <h4 id="identity">Identity</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"localeOverrides"</span>: <span class="o">{</span>
         <span class="s2">"preferenceEndDayViewHour"</span>: 20,
@@ -2571,6 +2305,7 @@ Content-Type: application/json
 </code></pre></div></div>
 
 <h4 id="travel">Travel</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"id"</span>: <span class="s2">"8f545a90-305f-441b-91cd-a69ad5f548f5"</span>,
     <span class="s2">"urn:ietf:params:scim:schemas:extension:travel:2.0:User"</span>: <span class="o">{</span>
@@ -2586,9 +2321,7 @@ Content-Type: application/json
             <span class="o">{</span>
                 <span class="s2">"name"</span>: <span class="s2">"Canary ID"</span>
             <span class="o">}</span>
-
            ...
-
            <span class="o">{</span>
                 <span class="s2">"name"</span>: <span class="s2">"trainline trip purpose 1"</span>
             <span class="o">}</span>
@@ -2596,9 +2329,11 @@ Content-Type: application/json
         <span class="s2">"manager"</span>: null,
         <span class="s2">"groups"</span>: <span class="o">[]</span>
     <span class="o">}</span>
+  <span class="o">}</span>
 </code></pre></div></div>
 
 <h4 id="spend">Spend</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
     <span class="s2">"schemas"</span>: <span class="o">[</span>
         <span class="s2">"urn:com.concur.spend.user.model.scim.ScimResource"</span>,
@@ -2710,11 +2445,7 @@ Content-Type: application/json
 
 <p><code class="language-plaintext highlighter-rouge">user.provision.read</code>- Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-16">Request</h3>
-
-<h4 id="uri-6">URI</h4>
-
-<h5 id="template-6">Template</h5>
+<h4 id="uri-7">URI</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /provisioning/v4/provisions/<span class="o">{</span>provision-id<span class="o">}</span>/status
 </code></pre></div></div>
@@ -2741,56 +2472,60 @@ Content-Type: application/json
 </table>
 
 <h5 id="optional-parameters">Optional Parameters</h5>
-<p>Name|Type|Format|Description
-—|—|—|—
-<code class="language-plaintext highlighter-rouge">attributes</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">operations</code>|Response includes operations when specified.
-<code class="language-plaintext highlighter-rouge">startIndex</code>|<code class="language-plaintext highlighter-rouge">Integer</code>|<code class="language-plaintext highlighter-rouge">Non-negative Integer</code>|The 1-based index of the first result in the current set of list results.
-<code class="language-plaintext highlighter-rouge">count</code>|<code class="language-plaintext highlighter-rouge">Integer</code>|<code class="language-plaintext highlighter-rouge">Non-negative Integer</code>|Specifies the desired operations per page.
-<code class="language-plaintext highlighter-rouge">state</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">status</code>|Filter results based on:[pending, success, failed]</p>
 
-<h4 id="headers-7">Headers</h4>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attributes</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">operations</code></td>
+      <td>Response includes operations when specified.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startIndex</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Non-negative Integer</code></td>
+      <td>The 1-based index of the first result in the current set of list results.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">count</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Non-negative Integer</code></td>
+      <td>Specifies the desired operations per page.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">state</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td>Filter results based on:[pending, success, failed]</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payloads-7">Payloads</h4>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">Content-Type</code> is used to specify the nature of the data in the body of an entity, by giving type and subtype identifiers, and by providing auxiliary information that may be required for certain types (https://www.w3.org/Protocols/rfc1341/4_Content-Type.html)
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">application/json</code>, <code class="language-plaintext highlighter-rouge">application/scim+json</code></li>
-    </ul>
-  </li>
+  <li>Request: None</li>
+  <li>Response: <a href="#provision-status-schema">Provision Status</a></li>
 </ul>
 
-<h4 id="payload-14">Payload</h4>
+<h3 id="examples-7">Examples</h3>
 
-<p>None</p>
+<h4 id="request-7">Request</h4>
 
-<h3 id="response-12">Response</h3>
-
-<h4 id="status-codes-7">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
-</ul>
-
-<h3 id="payload-15">Payload</h3>
-<p><a href="#provision-status-schema">Provision Status</a></p>
-
-<h3 id="example-7">Example</h3>
-
-<h4 id="request-17">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/provisioning/v4/provisions/0e00f6a4-6798-4f66-9f47-1e944b619b2e/status
 </code></pre></div></div>
 
-<h4 id="response-13">Response</h4>
+<h4 id="response-7">Response</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -2860,7 +2595,7 @@ eb    <span class="s2">"status"</span>: <span class="o">{</span>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td>a unique identifier value that is attached to requests and messages that allow reference to a particular reqeust.</td>
+      <td>a unique identifier value that is attached to requests and messages that allow reference to a particular request.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">location</code></td>
@@ -2871,15 +2606,14 @@ eb    <span class="s2">"status"</span>: <span class="o">{</span>
 
 <h2 id="retrieve-a-detailed-provisioning-request-status"><a name="retrieve-detailed-provision-request-status"></a>Retrieve a Detailed Provisioning Request Status</h2>
 
-<p>Retrieves a detailed provisioning request status. The detailed status returns the success or failure for each extention / service called to create a profile within Concur. The extention responses should be reviewed to determine the provisioing status of each extention. When all extentions return success or no-op, the provisoning is complete. When an error is returned, the error should be reviewed and resolved.</p>
-
-<p>Using ?attributes=operations allows a greater detail from each extension for success or error.</p>
+<p>Retrieves a detailed provisioning request status. The detailed status returns the success or failure for each extension/service called to create a profile. The extension responses should be reviewed to determine the provisioning status of each extension. When all extension return success or no-op, the provisioning is complete. When an error is returned, the error should be reviewed and resolved.</p>
 
 <h3 id="scopes-8">Scopes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">user.provision.read</code>- Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-18">Request</h3>
+<h4 id="uri-8">URI</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/provisioning/v4/provisions/<span class="o">{</span>provision-id<span class="o">}</span>/status?attributes<span class="o">=</span>operations
 </code></pre></div></div>
 <h4 id="parameters-8">Parameters</h4>
@@ -2921,46 +2655,22 @@ eb    <span class="s2">"status"</span>: <span class="o">{</span>
   </tbody>
 </table>
 
-<h4 id="headers-8">Headers</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h4 id="payload-16">Payload</h4>
-
-<p>None</p>
-
-<h3 id="response-14">Response</h3>
-
-<h4 id="status-codes-8">Status Codes</h4>
+<h4 id="payloads-8">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+  <li>Request: None</li>
+  <li>Response: <a href="#provision-status-schema">Provision Status</a></li>
 </ul>
 
-<h3 id="payload-17">Payload</h3>
-<p><a href="#provision-status-schema">Provision Status</a></p>
+<h3 id="examples-8">Examples</h3>
 
-<h3 id="example-8">Example</h3>
-
-<h4 id="request-19">Request</h4>
+<h4 id="request-8">Request</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/provisioning/v4/provisions/0e00f6a4-6798-4f66-9f47-1e944b619b2e/status?attributes<span class="o">=</span>operations
 </code></pre></div></div>
 
-<h4 id="response-15">Response</h4>
+<h4 id="response-8">Response</h4>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -3100,7 +2810,7 @@ Content-Type: application/json
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h3 id="extention-status-response">Extention Status Response</h3>
+<h3 id="extension-status-response">Extension Status Response</h3>
 
 <table>
   <thead>
@@ -3139,7 +2849,7 @@ Content-Type: application/json
     <tr>
       <td><code class="language-plaintext highlighter-rouge">success</code></td>
       <td>200</td>
-      <td>The extension completed the request successfully</td>
+      <td>The extension completed the request successfully.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">no-op</code></td>
@@ -3162,59 +2872,31 @@ Content-Type: application/json
 
 <p><code class="language-plaintext highlighter-rouge">user.provision.read</code>- Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-20">Request</h3>
-
-<h4 id="uri-7">URI</h4>
-
-<h5 id="template-7">Template</h5>
+<h4 id="uri-9">URI</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /provisioning/v4/ResourceTypes
 </code></pre></div></div>
 
 <h5 id="parameters-9">Parameters</h5>
 
-<p>None</p>
+<p>None.</p>
 
-<h4 id="headers-9">Headers</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h4 id="payload-18">Payload</h4>
-
-<p>-</p>
-
-<h3 id="response-16">Response</h3>
-
-<h4 id="status-codes-9">Status Codes</h4>
+<h4 id="payloads-9">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+  <li>Request: None</li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-19">Payload</h4>
+<h3 id="examples-9">Examples</h3>
 
-<p>None</p>
+<h4 id="request-9">Request</h4>
 
-<h3 id="example-9">Example</h3>
-
-<h4 id="request-21">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/provisioning/v4/ResourceTypes
 </code></pre></div></div>
 
-<h3 id="response-17">Response</h3>
+<h3 id="response-9">Response</h3>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -3283,56 +2965,31 @@ Content-Type: application/json
 
 <p><code class="language-plaintext highlighter-rouge">user.provision.read</code>- Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-22">Request</h3>
+<h4 id="uri-10">URI</h4>
 
-<h4 id="uri-8">URI</h4>
-
-<h5 id="template-8">Template</h5>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /provisioning/v4/Schemas
 </code></pre></div></div>
 
 <h5 id="parameters-10">Parameters</h5>
 
-<p>None</p>
+<p>None.</p>
 
-<h4 id="headers-10">Headers</h4>
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
-</ul>
-
-<h4 id="payload-20">Payload</h4>
-<p>None</p>
-
-<h3 id="response-18">Response</h3>
-
-<h4 id="status-codes-10">Status Codes</h4>
+<h4 id="payloads-10">Payloads</h4>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.7">408 Request Timeout</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc6585#section-4">429 Too Many Requests</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">501 Not Implemented</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">502 Bad Gateway</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">503 Service Unavailable</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">504 Gateway Timeout</a></li>
+  <li>Request: None</li>
+  <li>Response: None</li>
 </ul>
 
-<h4 id="payload-21">Payload</h4>
-<p>None</p>
+<h3 id="examples-10">Examples</h3>
 
-<h3 id="example-10">Example</h3>
+<h4 id="request-10">Request</h4>
 
-<h4 id="request-23">Request</h4>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/provisioning/v4/Schemas
 </code></pre></div></div>
 
-<h3 id="response-19">Response</h3>
+<h3 id="response-10">Response</h3>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
