@@ -384,22 +384,15 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
             <RoomStay>
               <RatePlans>
                 <RatePlan RatePlanID="EZ57LL7">
-                  <CancelPenalties CancelPolicyIndicator="true">
-                    <CancelPenalty>
+                  <CancelPenalties>
+                    <CancelPenalty NoCancelInd="true">
+                      <Deadline AbsoluteDeadline="2017-01-26T18:00"/>
                       <PenaltyDescription>
                         <Text>test cancel policy 1</Text>
-                      </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <PenaltyDescription>
                         <Text>test cancel policy 2</Text>
-                      </PenaltyDescription>
-                      <PenaltyDescription>
                         <Text>test cancel policy 3</Text>
                       </PenaltyDescription>
                     </CancelPenalty>
-                    <CancelPenalty>
-                      <Deadline AbsoluteDeadline="2017-01-26T18:00"/>
                     </CancelPenalty>
                   </CancelPenalties>
                 </RatePlan>
