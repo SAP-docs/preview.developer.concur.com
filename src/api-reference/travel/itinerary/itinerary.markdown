@@ -141,7 +141,7 @@ No.
 ## Best Practices <a name="itin-best-practices"></a>
 
 * Do not use Trip 1.1 to extract historical data.
-* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary/itinerary.html) instead.
+* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html) instead.
 * This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and bookings from your travel agency.
     * Some customers may have multiple booking options, which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list in Concur UI, then you can retrieve it from this API.
     * Because the data comes from many sources, data across itineraries may not be consistent. It’s recommended that you only consume the relevant segments and data (for example, air only or air + hotel) for your application’s function.
