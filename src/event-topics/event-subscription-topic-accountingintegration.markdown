@@ -14,36 +14,36 @@ The Accounting Integration API provides clients and authorized partners access t
 
 ## <a name="scope-usage"></a>Scope Usage
 
-| Name                               | Description |
+|Name|Description|
 |---|---|
-| `spend.accountingintegration.read` | Accounting Integration API related events |
+|`spend.accountingintegration.read`|Accounting Integration API related events|
 
 ## <a name="events"></a>Events
 
-| Event Type | Condition that triggers event | Recommended Partner Action |
+|Event Type|Condition that triggers event|Recommended Partner Action|
 |---|---|---|
-| `listMapping.created` | This event will be published after the customer administrator has mapped the SAP Concur list with the ERP list name. (Professional Edition Note: The customer admin must first import the list, then map them in the `Forms and Fields` interface. Multiple fields can be linked to a single list. Only the first mapping of a list will trigger this event) | This is a trigger telling the Partner that it's time for the ERP data to be synchronized (Via the List Items API) with SAP Concur data.                          |
-| `listMapping.deleted` | This event will be published after the customer administrator has removed the mapping between the SAP Concur list and the ERP list name. (Professional Edition Note: As multiple-fields can be mapped to the same list - this event will only trigger when all fields are unmapped from a given list) | The indicated list is no longer mapped and allows the Partner to do it's own data cleanup. This should also stop the indicated list data from being synchronized. |
-| `data.resetRequested` | This event will be published when the customer administrator has requested to reset the ERP data cached in SAP Concur data-center. | Data should be resynchronized to SAP Concur systems. |
-| `data.statusUpdated`  | This event will be sent to notify the partner that the data they sent to SAP Concur systems via the PATCH action with the `Accounts`, `Lists` and `Vendors` APIs has been processed on SAP Concur side. One notification is sent for each PATCH request that the partner performs. | The status may be interesting for the Partner to perform actions such as notification, logging, cleanup, etc. |
+|`listMapping.created`| This event will be published after the customer administrator has mapped the SAP Concur list with the ERP list name. (Professional Edition Note: The customer admin must first import the list, then map them in the `Forms and Fields` interface. Multiple fields can be linked to a single list. Only the first mapping of a list will trigger this event) | This is a trigger telling the Partner that it's time for the ERP data to be synchronized (Via the List Items API) with SAP Concur data.|
+|`listMapping.deleted`| This event will be published after the customer administrator has removed the mapping between the SAP Concur list and the ERP list name. (Professional Edition Note: As multiple-fields can be mapped to the same list - this event will only trigger when all fields are unmapped from a given list) | The indicated list is no longer mapped and allows the Partner to do it's own data cleanup. This should also stop the indicated list data from being synchronized.|
+|`data.resetRequested`| This event will be published when the customer administrator has requested to reset the ERP data cached in SAP Concur data-center. | Data should be resynchronized to SAP Concur systems.|
+|`data.statusUpdated`| This event will be sent to notify the partner that the data they sent to SAP Concur systems via the PATCH action with the `Accounts`, `Lists` and `Vendors` APIs has been processed on SAP Concur side. One notification is sent for each PATCH request that the partner performs. | The status may be interesting for the Partner to perform actions such as notification, logging, cleanup, etc.|
 
 ## <a name="schema"></a>Schema
 
 ### <a name="listMappingCreated"></a>Schema for Event `listMapping.created` and `listMapping.deleted`
 
-| Name | Type | Format | Description                                                       |
-|---|---|---|-------------------------------------------------------------------|
+|Name|Type|Format|Description|
+|---|---|---|---|
 | `data` | `array` | [`ListMapping`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#list-mapping) | List of ERP list to SAP Concur list mappings (See examples below) |
 
 ### <a name="resetRequested"></a>Schema for Event `data.resetRequested`
 
-| Name | Type | Format | Description |
+|Name|Type|Format|Description|
 |---|---|---|---|
 | `data` | `array` | [`ObjectType`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#object-type) | Accounting object type |
 
 ### <a name="statusUpdated"></a>Schema for Event `data.statusUpdated`
 
-| Name | Type | Format | Description |
+|Name|Type|Format|Description|
 |---|---|---|---|
 | `data` | [`RequestStatus`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#request-status) | -      | Details of the request status |
 
