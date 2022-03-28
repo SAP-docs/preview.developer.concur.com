@@ -33,7 +33,7 @@ The Accounting Integration API provides clients and authorized partners access t
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-| `data` | `array` | [`ListMapping`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#list-mapping) | List of ERP list to SAP Concur list mappings (See examples below) |
+| `data` | `array` | [`ListMapping`](/api-reference/accounting-integration/v4.accountingintegration-schema.html#list-mapping) | Array of list-mappings between ERP and SAP Concur data (See examples below) |
 
 ### <a name="resetRequested"></a>Schema for Event `data.resetRequested`
 
