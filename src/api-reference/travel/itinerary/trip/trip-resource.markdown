@@ -21,11 +21,11 @@ In order to obtain itinerary data when making Itinerary API calls, the value of 
 
 ## Get Trip Summaries <a name="getts"></a>
 
-The Get Itinerary Summaries endpoint is used for retrieving trip summaries for a single user.  Do not use this to get trips for an entire company.  Use [Itinerary v4 events](api-reference/travel/itinerary-v4/v4.itinerary.html) instead.
+The Get Itinerary Summaries endpoint is used for retrieving trip summaries for a single user.  Do not use this to get trips for an entire company.  Use [Itinerary v4 events](/event-topics/travel/v4.itinerary-events.html) instead.
 
 ## Best Practices
 * Do not use Trip 1.1 to extract historical data.
-* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary/itinerary.markdown) instead.
+* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html) instead.
 * Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.
 * This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and most bookings from your travel agency. Some customers may have multiple booking options which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.
 
