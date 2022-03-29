@@ -281,9 +281,9 @@
 
 <p>The Accounting Integration API provides clients and authorized partners access to the configuration settings and the mappings between SAP Concur systems and ERP data through the events on the topic <code class="language-plaintext highlighter-rouge">public.concur.spend.accountingintegration</code>. To subscribe to these events follow the steps described on the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Event Subscription Service v4</a> page.</p>
 
-<h2 id="limitations">Limitations</h2>
-
-<p>This event subscription is only available to partners who have been granted access to Accounting Integration v4 API. Access to this documentation does not provide access to the subscription.</p>
+<blockquote>
+  <p><strong>Limitation</strong>: This event subscription is only available to partners who have been granted access to Accounting Integration API.</p>
+</blockquote>
 
 <h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
 
@@ -297,7 +297,7 @@
   <tbody>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">spend.accountingintegration.read</code></td>
-      <td>Accounting Integration v4 API related events.</td>
+      <td>Accounting Integration API related events</td>
     </tr>
   </tbody>
 </table>
@@ -307,31 +307,31 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Condition</th>
-      <th>User Case</th>
+      <th>Event Type</th>
+      <th>Condition that triggers event</th>
+      <th>Recommended Partner Action</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">listMapping.created</code></td>
-      <td>This event will be published after the customer has mapped the SAP Concur systems list with the ERP list name.</td>
-      <td>The subscriber may send over the list items.</td>
+      <td>This event will be published after the customer administrator has mapped the SAP Concur data (custom field) with the ERP data (list name). (Professional Edition Note: The customer admin must first import the list, then map them in the <code class="language-plaintext highlighter-rouge">Forms and Fields</code> interface. Multiple fields can be linked to a single list. Only the first mapping of a list will trigger this event)</td>
+      <td>This is a trigger telling the Partner that it’s time for the ERP data to be synchronized (Via the List Items API) with SAP Concur data.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">listMapping.deleted</code></td>
-      <td>This event will be published after the customer has removed the mapping between the SAP Concur systems list and the ERP list name.</td>
-      <td>The subscriber may remove the list items from SAP Concur.</td>
+      <td>This event will be published after the customer administrator has removed the mapping between the SAP Concur data (custom field) and the ERP data (list name). (Professional Edition Note: As multiple fields can be mapped to the same list - this event will only trigger when all fields are unmapped from a given list)</td>
+      <td>The indicated list is no longer mapped and allows the Partner to do it’s own data cleanup. This should also stop the indicated list data from being synchronized.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">data.resetRequested</code></td>
-      <td>This event will be published when the customer has requested to reset the ERP data cache.</td>
-      <td>The subscriber may reset the ERP data cache.</td>
+      <td>This event will be published when the customer administrator has requested to reset the ERP data cached in SAP Concur data-center.</td>
+      <td>Data should be resynchronized to SAP Concur systems.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">data.statusUpdated</code></td>
-      <td>This event will be published after the completion of the processing of the ERP data.</td>
-      <td>The subscriber may query for the status details.</td>
+      <td>This event will be sent to notify the partner that the data they sent to SAP Concur systems via the PATCH action with the <code class="language-plaintext highlighter-rouge">Accounts</code>, <code class="language-plaintext highlighter-rouge">Lists</code> and <code class="language-plaintext highlighter-rouge">Vendors</code> APIs has been processed on our side. One notification is sent for each PATCH request that the partner performs.</td>
+      <td>The status may be interesting for the Partner to perform actions such as notification, logging, cleanup, etc.</td>
     </tr>
   </tbody>
 </table>
@@ -354,7 +354,7 @@
       <td><code class="language-plaintext highlighter-rouge">data</code></td>
       <td><code class="language-plaintext highlighter-rouge">array</code></td>
       <td><a href="/api-reference/accounting-integration/v4.accountingintegration-schema.html#list-mapping"><code class="language-plaintext highlighter-rouge">ListMapping</code></a></td>
-      <td>List of ERP list to SAP Concur list mappings.</td>
+      <td>Array of list-mappings between ERP and SAP Concur data (See examples below)</td>
     </tr>
   </tbody>
 </table>
@@ -375,7 +375,7 @@
       <td><code class="language-plaintext highlighter-rouge">data</code></td>
       <td><code class="language-plaintext highlighter-rouge">array</code></td>
       <td><a href="/api-reference/accounting-integration/v4.accountingintegration-schema.html#object-type"><code class="language-plaintext highlighter-rouge">ObjectType</code></a></td>
-      <td>Accounting object type.</td>
+      <td>Accounting object type</td>
     </tr>
   </tbody>
 </table>
@@ -396,10 +396,140 @@
       <td><code class="language-plaintext highlighter-rouge">data</code></td>
       <td><a href="/api-reference/accounting-integration/v4.accountingintegration-schema.html#request-status"><code class="language-plaintext highlighter-rouge">RequestStatus</code></a></td>
       <td>-</td>
-      <td>Details of the request status.</td>
+      <td>Details of the request status</td>
     </tr>
   </tbody>
 </table>
+
+<h2 id="sample-events"><a name="samples"></a>Sample Events</h2>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"correlationId"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"685fa226-b72d-47f9-b9ad-e621de12d094"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"listMapping.created"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"261a88ef-44f2-4102-b303-db4ac2a4a8ba"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"erpListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"erpListId1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"concurListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concurListId1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"fieldMappings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"formTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allocation"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyFieldId"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"connectedLists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyConnectedFieldID1"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyConnectedFieldID2"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"erpListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"erpListId2"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"concurListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concurListId2"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"fieldMappings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"formTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allocation"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyFieldId2"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"connectedLists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyOtherConnectedFieldID1"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MyOtherConnectedFieldID2"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+              </span><span class="p">}</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">},</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"041eebf8-d1de-43d4-9303-c84d303f69e4"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d60faf21-aeed-48fd-9a0d-8232f4bad0ad"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"listMapping.deleted"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"261a88ef-44f2-4102-b303-db4ac2a4a8ba"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"erpListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"erpListId1"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"concurListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concurListId1"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">},</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"21a659cc-9397-45f5-81ce-7960ad3f9709"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"761fa1dc-3e8b-46b6-9e9f-2e7016216b9f"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data.resetRequested"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"ACCOUNT"</span><span class="p">,</span><span class="w"> </span><span class="s2">"VENDOR"</span><span class="p">,</span><span class="w"> </span><span class="s2">"LIST"</span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">},</span><span class="w">
+</span><span class="p">{</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fece38ea-f06e-4dbc-98ae-5aca3a2016d6"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b406d1ab-a41c-461c-9404-0bd958e86ae2"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data.statusUpdated"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"261a88ef-44f2-4102-b303-db4ac2a4a8ba"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fde670e0-4aa2-451e-8431-7bcdc574cc6b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"_links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/49d30324-7f69-4f9c-b3fa-ca7639e1fc35/requests/fde670e0-4aa2-451e-8431-7bcdc574cc6b/errors"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}]</span><span class="w">
+</span></code></pre></div></div>
 
       </div>
       <!--/col-md-8-->
