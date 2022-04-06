@@ -7,6 +7,10 @@ layout: reference
 
 The SAP Concur Itinerary Web Service allows Travel Management Companies (TMC), SAP Concur clients, and third-party developers to view and create travel related events in the Concur Travel system. TMCs can post bookings for any travel type. This web service can also be used by SAP Concur clients and third-party developers to request trip information for SAP Concur users. The public Itinerary XSD can be found [here.](/api-reference/travel/itinerary/ItinServices_Public_0.xsd)  In addition, the GetList XSD can be found [here.](/api-reference/travel/itinerary/GetListOfItinerariesImport_v1_1.xsd)
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ##  <a name="getlist"></a>GET List of Itineraries
 
 This endpoint is used to get a list of trips for a user.  Do not use this endpoint to get a list of trips for an entire company.  Subscribe to [Itinerary v4 events](/api-reference/travel/itinerary-v4/v4.itinerary.html) if you need itinerary data for multiple users.

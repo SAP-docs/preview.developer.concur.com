@@ -9,6 +9,10 @@ The Users resource represents a set of SAP Concur users. It is always managed as
 
 1.0
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Process Flow
 
 ![Process Flow for the User Resource](./create-user.png)

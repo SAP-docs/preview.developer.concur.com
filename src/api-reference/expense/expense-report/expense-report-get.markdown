@@ -16,6 +16,10 @@ Some elements will appear only if the OAuth consumer has the Web Services Admin 
 
 GET list of reports can be found [here](/api-reference/expense/expense-report/v2.reports.html)
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request <a name="request"></a>
 
 ### Request Parameters

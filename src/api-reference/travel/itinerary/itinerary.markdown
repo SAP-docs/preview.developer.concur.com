@@ -12,6 +12,10 @@ The Itinerary API can be used to programmatically access travel data such as tri
 
 Version 1.0
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Resources <a name="itinres"></a>
 
 [Trip](/api-reference/travel/itinerary/trip/trip-resource.html)
