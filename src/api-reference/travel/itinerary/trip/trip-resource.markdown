@@ -5,7 +5,7 @@ layout: reference
 
 # Trips v1.1
 
-The Trips resource represents itineraries in the Concur Travel system. TripLink suppliers use this resource to display a subset of the full booking fields.
+The Trips resource represents itineraries in the Concur Travel system.
 
 ### Version
 
@@ -21,14 +21,11 @@ In order to obtain itinerary data when making Itinerary API calls, the value of 
 
 ## Get Trip Summaries <a name="getts"></a>
 
-The Get Itinerary Summaries endpoint is used for retrieving trip summaries for the traveler whose account is associated with the OAuth access token used to make the API call. This endpoint can also be used to get trip summaries for a different user or the whole company. This is usually done when a Travel Management Company (TMC) needs to get trip summaries on behalf of a user or company.
+The Get Itinerary Summaries endpoint is used for retrieving trip summaries for a single user.  Do not use this to get trips for an entire company.  Use [Itinerary v4 events](/event-topics/travel/v4.itinerary-events.html) instead.
 
 ## Best Practices
-
-* When extracting past data:
-    * Extract a month of trip summaries to gauge volume. If hundreds are returned, then adjust extraction to weekly.
-    * Do not extract more than a year of data at any given time regardless of the volume. For longer look backs, extract 6 month segments maximum at a time.
-    * Do not multi-thread requests to retrieve multiple pages of data.  Concurrent requests will impact your application’s performance.
+* Do not use Trip 1.1 to extract historical data.
+* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html) instead.
 * Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.
 * This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and most bookings from your travel agency. Some customers may have multiple booking options which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.
 
