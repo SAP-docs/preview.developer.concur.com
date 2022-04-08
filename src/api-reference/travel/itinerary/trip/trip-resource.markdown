@@ -11,6 +11,10 @@ The Trips resource represents itineraries in the Concur Travel system.
 
 1.1
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI  
 
 `/travel/trip/v1.1/{query_parameters}`

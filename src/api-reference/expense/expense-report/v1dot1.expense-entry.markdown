@@ -16,6 +16,10 @@ An expense entry in an expense report.
 
 **NOTE:** You can find version 3.0 [here](/api-reference/expense/expense-report/expense-entry.html)
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## URI
 
 ```
@@ -302,4 +306,3 @@ Content-Type: application/xml
   </ReportEntryStatus>
 </ReportEntryStatusList>
 ```
-
