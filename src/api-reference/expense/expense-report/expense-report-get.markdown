@@ -89,7 +89,7 @@ This request will return a **ReportDetails** parent element.
 | -------- | ------------ |
 |  ReportEntryID |  The ID of the report entry. Maximum 13 characters. |
 |  ExpenseTypeID |  The expense type ID for the expense entry. Expense Type IDs are returned in the **ExpKey** element by the Get Expense Group Configuration endpoint. |
-|  LegacyEntryID |  A unique numeric identifier for the expense entry. Corresponds to the report entry key in accounting extracts and the legacyEntryId field in the FIS endpoints. |
+|  LegacyEntryID |  A unique numeric identifier for the expense entry. Corresponds to the report entry key in accounting extracts and the legacyEntryId field in the FIS endpoints. Maximum 11 characters.|
 |  ExpenseTypeName |  The expense type name. Maximum 64 characters. |
 |  SpendCategory |  The spend category specified for this expense type. Varies by client, used in reporting. |
 |  PaymentTypeCode |  The code for the payment type. Maximum 4 characters. |
