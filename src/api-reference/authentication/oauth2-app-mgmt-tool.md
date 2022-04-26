@@ -38,13 +38,13 @@ On the **Application List** page, is a list of previously created applications. 
 
 ### To Create a New App
 
-1. Click **Create New App**.
+Click **Create New App**.
 
 ![Product screen showing the Create New App page](./tool-images/app-manage-tool-03.png)
 
 >**NOTE**: The App Type is read-only.
 
-2. Populate the fields as indicated below.
+Populate the fields as indicated below.
 
 Field Name|	Definition|	Required|	Description
 ---|---|---|---
@@ -54,10 +54,10 @@ Field Name|	Definition|	Required|	Description
 `Allowed Scopes`|	Selected Scopes|	Y	|Scopes limit access to the APIs required for your application. All scopes listed on the Developer Center are available in the tool. Scopes that are not listed can be requested. NOTE: For more information, refer to [Scopes](https://developer.concur.com/api-reference/authentication/scopes.html)
 SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is only enabled for SAP ICS client apps.
 
-3. Click **Submit**. The **App Credentials** page appears.
+Click **Submit**. The **App Credentials** page appears.
 
 ![Product screen showing the Create New App page](./tool-images/company-refresh-tool-04.png)
 
-4. The **App Credentials** page displays the **Client ID** and **Client Secret**. Before clicking **OK**, record the **Client ID** and **Client Secret**. They will be required to obtain a **Company Request Token**.
+The **App Credentials** page displays the **Client ID** and **Client Secret**. Before clicking **OK**, record the **Client ID** and **Client Secret**. They will be required to obtain a **Company Request Token**.
 
-5. Once you click **OK** the new application appears in the list on the **Application List** page. You can confirm the details of the app, including the **Client ID** and **Client Secret** by clicking the **Client ID** in the list on the **Application List** page.
+Once you click **OK** the new application appears in the list on the **Application List** page. You can confirm the details of the app, including the **Client ID** and **Client Secret** by clicking the **Client ID** in the list on the **Application List** page.
