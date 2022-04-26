@@ -15,7 +15,7 @@ This tool is currently only available in the US (North America) and EMEA data ce
 
 There are three steps for completing the company authentication workflow:
 
-1. Obtain a Client ID and Client Secret via the [OAuth 2.0 Application Management tool](/oauth2-app-mgmt-tool.html)
+1. Obtain a Client ID and Client Secret via the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html).
 2. Obtain a Company Request Token via the Company Request Token tool.
 3. Exchange the Company Request Token for Access and Refresh Tokens.
 
