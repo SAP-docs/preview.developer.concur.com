@@ -641,6 +641,7 @@ In all cases, the friendly error description should be displayed to the user.
 | 121  | `invalid_request` | `login_type` is invalid     |
 | 122  | `invalid_request` | proxies supplied are invalid     |
 | 123  | `invalid_request` | principal is disabled     |
+| 134  | `invalid_request` | Company undergoing scheduled maintenance.     |
 
 ##### /otp
 
