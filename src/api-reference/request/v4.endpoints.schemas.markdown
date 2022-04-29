@@ -22,7 +22,7 @@ Name|Type|Format|Description
 `creationDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date the Request was created.
 `custom1` to `custom20`|`object`|[`CustomField`](#schema-customfield)|The details from the Custom fields. These fields may not have data, depending on the configuration.
 `endDate`|`date`|[ISO 8601] `yyyy-MM-dd`|The end date of the Request.
-`endTime`|`time`|[ISO 8601] `yyyy-MM-dd`|The end time of the Request.
+`endTime`|`time`|`HH:mm`|The end time of the Request.
 `everSentBack`|`boolean`|-|Indicates whether the Request has ever been sent back to the employee.
 `exceptions`|`object`|[`ResourceLink`](#schema-resourcelink)|The list of exceptions that have been raised to this Request.
 `expenses`|`array`|[`ResourceLink`](#schema-resourcelink)|Expected expenses attached to this Request.
@@ -35,11 +35,12 @@ Name|Type|Format|Description
 `mainDestination`|`object`|[`Location`](#location)|The main destination of the Request.
 `name`|`string`|-|The name of the Request.
 `owner`|`object`|[`Employee`](#schema-employee)|The employee who owns the Request.
+`paymentType`|`object`|[`PaymentType`](#schema-payment-type)|Represents the payment type applied to the Request.
 `pendingApproval`|`boolean`|-|Indicates whether this Request is pending approval.
 `policy`|`object`|[`ResourceLink`](#schema-resourcelink)|The policy that applies to the Request.
 `requestId`|`string`|4 to 6 alphanumeric characters|The public key of the Request (unique per customer).
 `startDate`|`date`|[ISO 8601] `yyyy-MM-dd`|The start date of the Request.
-`startTime`|`time`|[ISO 8601] `yyyy-MM-dd`|The start time of the Request.
+`startTime`|`time`|`HH:mm`|The start time of the Request.
 `submitDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date the Request was submitted (last submit date in case of recall).
 `totalApprovedAmount`|`object`|[`Amount`](#amount)|The total amount of approved expected expenses in the Request, expressed in the reimbursement currency of the employee at the time they created the Request.
 `totalPostedAmount`|`object`|[`Amount`](#amount)|The total amount of the Request, expressed in the reimbursement currency of the employee at the time they created the Request.
@@ -212,6 +213,14 @@ Location Type|Railway company
 `STD`|Standard locations
 
 
+## <a name="schema-payment-type"></a>PaymentType
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The payment code of the defined expense.
+`name`|`string`|-|The payment name of the defined expense.
+`id`|`string`|-|**Required** The payment key of the defined expense.
+
 ## <a name="schema-resourcelink"></a>ResourceLink
 
 Name|Type|Format|Description
@@ -310,13 +319,13 @@ Name|Type|Format|Description
 `endDate`|`date`|[ISO 8601] `YYYY-MM-DD`|The date of the end of this segment leg. It represents the arrival date of `AIRFR` and `TRAIN` segments, check out date for `HOTEL`, or drop off for `CARRT`.
 `endLocation`|`object`|[`ResourceLink`](#schema-resourcelink)|The location where this segment leg arrives. For example, the arrival location for an air segment.
 `endLocationDetail`|`string`|-|Details about the end location. This would contain details about the name of a hotel, or some details about a car rental agency for example.
-`endTime`|`time`|[ISO 8601] `HH:MM`|The time for the end of this segment leg.
+`endTime`|`time`|`HH:mm`|The time for the end of this segment leg.
 `id`|`string`|-|The unique identifier of the segment leg.
 `returnLeg`|`boolean`|-|Indicates whether this leg is the return leg of a round trip. In case of a `ROUND_TRIP`, if not explicitly set, the second segment leg will be considered as the return leg.
 `startDate`|`date`|[ISO 8601] `YYYY-MM-DD`|The date of the beginning of this segment leg.
 `startLocation`|`object`|[`ResourceLink`](#schema-resourcelink)|The start location of this segment leg. This would be the departure location for an air segment for example.
 `startLocationDetail`|`string`|-|Details about the start location. This would contain details about the name of a hotel, or some details about a car rental agency for example.
-`startTime`|`time`|[ISO 8601] `HH:MM`|The time for the beginning of this segment leg.
+`startTime`|`time`|`HH:mm`|The time for the beginning of this segment leg.
 `segmentLocator`|`string`|-|This is the identifier for Concur Travel segments (if applicable).
 `vendorName`|`string`|-|Contains the vendor description of the segment leg.
 
@@ -345,7 +354,9 @@ Name|Type|Format|Description
 `emailAddress`|`string`|-|The travel agency email address.
 `id`|`string`|-|The travel agency unique identifier.
 `name`|`string`|-|The travel agency office name.
-`proposalType`|`string`|-|The travel agency proposal type. Supported values: `CWTF`, `AEBT`, `API`
+`proposalType`|`string`|-|The travel agency proposal type.
+`customerAccountCode`|`string`|-|The code of the customer account configured within the Travel Agency Office admin page. Available only if proposalType is `AEBT` or `API`.
+`customerAccountName`|`string`|-|The name of the customer account configured within the Travel Agency Office admin page. Available only if proposalType is `AEBT` or `API`.
 
 ## <a name="schema-travelallowance"></a>Travel Allowance
 
@@ -382,8 +393,8 @@ Name|Type|Format|Description
 `proposalOrder`|`integer`|-|**Required** Sequence order of the proposal for the request. Up to 3 proposals can be submitted with values `1`, `2`, `3`.
 `booked`|`boolean`|-|**Required** `true` if this trip is pre-booked by a travel agency. It will pre-select this proposal within the agency proposal comparison screen.
 `approvalLimitDate`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|Limit approval date of the proposal. Past this date, the proposal will not be viable any more. <br>Note: Offset MUST be in form YYYY-MM-DDThh:mm:ss.
-`status`|`string`|-|**Required** Supported values: `PROPOSAL`,`CONFIRMED`,`TICKETISSUED`.
-`proposal`|`boolean`|-|**Read only** `true` if this “proposal” is still in the `PROPOSAL` status; `false` if the "proposal" status is `CONFIRMED` (tickets issued).
+`status`|`string`|-|The agency proposal status value. Supported value: `PROPOSAL`. If not provided, will be set by default to `PROPOSAL`.
+`proposal`|`boolean`|-|**Read only** `true` by default corresponding to the `PROPOSAL` status.
 `comments`|`string`|-|Free text.
 `itineraryLocator`|`string`|-|The unique identifier for ConcurTravel itinerary. Not provided if this is not a Concur Travel itinerary. Max length 32 characters.
 `selected`|`boolean`|-|**Read only** Value becomes `true` when that proposal is selected by the user.
@@ -412,10 +423,10 @@ Name|Type|Format|Description
 `policyCompliant`|`boolean`|-|Whether the Agency Proposal segment is policy compliant or not. `true` if segment is policy compliant; `false` if segment is out of policy. If no value is provided, the policy compliancy information will not be displayed within the proposal comparison screen.
 `comments`|`string`|-|Free text.
 `startDate`|`date`|`yyyy-MM-dd`|**Required** The date of the beginning of this segment.
-`startTime`|`time`|`hh:mm`|The local time of the beginning of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
+`startTime`|`time`|`HH:mm`|The local time of the beginning of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
 `endDate`|`date`|`yyyy-MM-dd`|**Required** The date of the ending of this segment.
-`endTime`|`time`|`hh:mm`|The local time of the ending of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
-`vendorName`|`string`|-|**Required** The vendor name for this segment.
+`endTime`|`time`|`HH:mm`|The local time of the ending of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
+`vendorName`|`string`|-|**Required** The vendor name for this segment. Max length 64 characters.
 `confirmationNumber`|`string`|-|The record locator or confirmation number for the flight from the airline. Max length 32 characters.
 `proposalSegmentType`|`string`|-|**Required** Supported values: `AIR`, `RAIL`, `CAR`, `HOTEL`, `MISC`
 `segmentTypeCode`|`object`|[`Segment Type`](#schema-segmenttype)|**Read only** The type of the segment. Supported values: `AIRFR`, `CARRT`, `HOTEL`, `RAILF`, `MISC`
