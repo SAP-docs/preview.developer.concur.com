@@ -15,6 +15,10 @@ redirect_from:
 
 The expense report header contains classification information for the expense report, and serves as the container for the expense entries.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Resource URI
 
 ```
@@ -274,4 +278,3 @@ Content-Type: application/xml
   </ReportDetails>
 </report-batch-result>
 ```
-

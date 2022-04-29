@@ -519,14 +519,12 @@ WIth Availability response also cancellation information comes which can be disp
             <RoomStay>
               <RatePlans>
                 <RatePlan RatePlanID="EZ57LL7">
-                  <CancelPenalties CancelPolicyIndicator="true">
-                    <CancelPenalty>
+                  <CancelPenalties>
+                    <CancelPenalty NoCancelInd="true">
+                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                       <PenaltyDescription>
                         <Text>test cancel policy 1</Text>
                       </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                     </CancelPenalty>
                   </CancelPenalties>
                 </RatePlan>
@@ -676,22 +674,14 @@ WIth Availability response also cancellation information comes which can be disp
             <RoomStay>
               <RatePlans>
                 <RatePlan RatePlanID="P4PGI5Q">
-                  <CancelPenalties CancelPolicyIndicator="true">
-                    <CancelPenalty>
+                  <CancelPenalties>
+                    <CancelPenalty NoCancelInd="true">
+                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                       <PenaltyDescription>
                         <Text>test cancel policy 1</Text>
-                      </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <PenaltyDescription>
                         <Text>test cancel policy 2</Text>
-                      </PenaltyDescription>
-                      <PenaltyDescription>
                         <Text>test cancel policy 3</Text>
                       </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                     </CancelPenalty>
                   </CancelPenalties>
                 </RatePlan>

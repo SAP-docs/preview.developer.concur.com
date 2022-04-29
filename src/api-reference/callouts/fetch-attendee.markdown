@@ -13,6 +13,10 @@ This callout differs from the standard SAP Concur web services in the following 
 * Clients can either choose to create their own application connector using PHP, Java, .NET etc or can use one of SAP Concur Partner's Attendee Fetch applications.
 * The client SAP Concur Administrator must select the attendee types that will use this functionality during application connector registration. Once the attendee types are selected, they will be automatically configured to not allow users to create new attendees manually.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## <a name="process-flow"></a>Process Flow
 
 ![A process flow diagram showing flow between the SAP Concur platform, an application connector, and client's data source](./fetch-attendee.png)

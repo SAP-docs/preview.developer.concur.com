@@ -5,11 +5,20 @@ layout: reference
 
 # Get Report Details
 
+{% include deprecation-alert.html %}
+
+**NOTE:** Find the newer version 3.0 [here.](/api-reference/expense/expense-report/v3.reports.html#retrieve-a-report-by-id-)  
+
+
 Retrieves the full set of information for the report. Includes the Report Header, Entry, Attendee, Itemization and Allocation details.  
 
 Some elements will appear only if the OAuth consumer has the Web Services Admin role. These include: The **ReportKey** element, the employee's credit card information, and the employee's bank account information, VAT information, Journal entries. Connectors that utilize this information go through a review process with SAP Concur that includes verification of secure data handling.
 
 GET list of reports can be found [here](/api-reference/expense/expense-report/v2.reports.html)
+
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ## Request <a name="request"></a>
 

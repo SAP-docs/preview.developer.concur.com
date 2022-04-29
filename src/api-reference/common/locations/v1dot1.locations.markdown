@@ -15,6 +15,10 @@ redirect_from:
 
 The valid city location codes in Concur. These location codes are used in the Post requests for the Expense Report service, when the City field is provided/required. The location codes vary by client, and cannot be used across multiple clients.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## URI
 
 ```
@@ -102,4 +106,3 @@ Content-Type: application/xml
   </Location>
 </LocationList>
 ```
-
