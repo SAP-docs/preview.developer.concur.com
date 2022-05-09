@@ -349,8 +349,8 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |---------|------------|-------------|
-|`Name`|`stringLength1to32`|**Required** Name of the custom field.|
-|`Value`|`stringLength1to32`|Value of the custom field.|
+|`Name`|`string`|**Required** Name of the custom field.|
+|`Value`|`string`|Value of the custom field.|
 
 #### <a name="ThreeDSecure"></a>ThreeDSecure
 
