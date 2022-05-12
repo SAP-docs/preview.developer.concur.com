@@ -9,6 +9,10 @@ The Expense Entries API is used to manage expense reports and their entries in S
 
 1.1 documentation is available [here.](/api-reference/expense/expense-report/v1dot1.expense-entry.html)  
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve All Expense Entries <a name="get"></a>
 
 [Version 2.0](/api-reference/expense/expense-report/expense-report-get.html), covers a wider range of partner scenarios and is recommended as the first step. However, depending on  the entries you need to retrieve, using a combination of version 2.0 and version 3.0 should be considered. To see examples, review the [VAT Reclaim](/api-guides/vat-reclaim/vat-reclaim-guide.html) integration guide.

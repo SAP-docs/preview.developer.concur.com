@@ -7,6 +7,10 @@ layout: reference
 
 1.1 documentation is available [here](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)  
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve all expense itemizations owned by the user <a name="get"></a>
 
 **DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  

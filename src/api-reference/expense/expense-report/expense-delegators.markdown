@@ -12,6 +12,10 @@ Retrieves the list of users that have granted delegate permissions to the user s
 ### Version
 1.1
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI
 `https://www.concursolutions.com/api/expense/expensereport/v1.1/Delegators`
 

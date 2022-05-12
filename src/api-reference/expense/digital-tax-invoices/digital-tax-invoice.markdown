@@ -10,6 +10,10 @@ The Digital Tax Invoice web service allows digital tax invoice validators to vie
 ### Version
 3.0
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve All Digital Tax Invoices That Can Be Validated by the User Based On the Search Criteria <a name="get"></a>
 
     GET  /api/v3.0/expense/digitaltaxinvoices
