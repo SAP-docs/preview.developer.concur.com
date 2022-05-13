@@ -6,7 +6,7 @@ layout: reference
 
 HotelService API provides a method for Custom Hotel Source suppliers to provide hotel inventory, rates and booking related functionality to users of Concur OBT (Online Booking Tool).
 
-The Hotel Service 4.0 API from SAP Concur is a REST specification for Hotel Suppliers. Please refer to OpenAPI (Swagger) specification for details. This Guide provides information how the Hotel Supplier can make their content available for Concur Travel users using Hotel Service 4.0 API. Once the Hotel Supplier has developed and certified their interface with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users. 
+The Hotel Service 4.0 API from SAP Concur is a REST specification for Hotel Suppliers. Please refer to OpenAPI (Swagger) specification for details. This Guide provides information how the Hotel Supplier can make their content available for Concur Travel users using Hotel Service 4.0 API. Once the Hotel Supplier has developed and certified their interface with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users.
 
 This API has client/server architecture, where SAP Concur acts as client, pulling information from the Hotel Supplier, who acts as server, responding to SAP Concur’s requests. This guide specifies the request and response format required by SAP Concur.
 
@@ -32,33 +32,33 @@ Current OpenAPI/Swagger schema for Hotel Service 4:
 
 ## Supported Operations <a id="supported-ops"></a>
 
-* Search Hotels: [/hotels/search](#endpointSearch)
-* Rates: [/hotels/rates](#endpointRates)
-* Rate Details: [/hotels/ratedetails](#endpointRatedetails)
-* Hotel Details: [/hotels/details](#endpointDetails)
-* Reserve Hotel: [/hotels/reservation](#endpointReservation)
-* Read Reservation: [/hotels/reservation/read](#endpointRead)
-* Modify Reservation: [/hotels/reservation/modify](#endpointModify)
-* Cancel Reservation: [/hotels/reservation/cancel](#endpointCancel)
+* Search Hotels: [/hotels/search](#opIdsearch)
+* Rates: [/hotels/rates](#opIdrates)
+* Rate Details: [/hotels/ratedetails](#opIdratedetails)
+* Hotel Details: [/hotels/details](#opIdhoteldetails)
+* Reserve Hotel: [/hotels/reservation](#opIdreservation)
+* Read Reservation: [/hotels/reservation/read](#opIdread)
+* Modify Reservation: [/hotels/reservation/modify](#opIdmodify)
+* Cancel Reservation: [/hotels/reservation/cancel](#opIdcancel)
 
 ## Non Functional Requirements <a id="nonfunctional-requirements"/>
 ### <a id="payload-limits"/> Payload Limits
 Please note that responses higher than below content-length may be dropped/truncated and result in error back to the user.
-    
+
 | Operation           | Maximum Response (content-length) |
 |---------------------|-----------------------------------|
 | /hotels/search      | 5 MB                              |
 | /hotels/rates       | 5 MB                              |
-| /hotels/details     | 500 KB                            |
+| /hotels/details     | 5 MB                              |
 | /hotels/ratedetails | 5 MB                              |
-    
-### <a id="response-times"></a> Recommended Response Times and Retries 
+
+### <a id="response-times"></a> Recommended Response Times and Retries
 Achieving lower response times helps get information to the traveler sooner which leads to a better user experience. SAP Concur understands that not every hotel program manages their own inventory and requires relays out to other vendors and the numbers below take that scenario into consideration.
 
 All endpoints carry a timeout of 55 seconds.Some operations below support retries in case of 5xx errors as noted. No endpoints will attempt a retry in the event there is a timeout.
 
 SAP Concur has monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.
-    
+
 | Operation                  | Recommended Response Times | Support Retries (for 5xx errors) |
 |----------------------------|----------------------------|----------------------------------|
 | /hotels/search             | < 5 seconds                | Yes                              |
@@ -70,7 +70,21 @@ SAP Concur has monitoring in place for each endpoint and will open a ticket with
 | /hotels/reservation/modify | < 5 seconds                | No                               |
 | /hotels/reservation/cancel | < 5 seconds                | No                               |
 
-**Note**: To prevent no show fees, duplicate bookings and other similar issues, SAP Concur recommends the Hotel Supplier auto-cancel the reservation if a corresponding /hotels/reservations/read call is not made by SAP Concur within 5 minutes after the /hotels/reservation call was made.
+### <a id="response-times"></a> Recommended Throughput
+Higher throughput allows system to scale and serve large number of travelers. SAP Concur recommends suppliers to provision for resources to support the following throughput.
+
+| Operation                  | Recommended Throughput (Requests Per Minute) |
+|----------------------------|----------------------------------------------|
+| /hotels/search             | > 50                                         |
+| /hotels/rates              | > 100                                        |
+| /hotels/details            | > 100                                        |
+| /hotels/ratedetails        | > 50                                         |
+| /hotels/reservation        | > 20                                         |
+| /hotels/reservation/read   | > 20                                         |
+| /hotels/reservation/modify | > 10                                         |
+| /hotels/reservation/cancel | > 10                                         |
+
+**Note**: To prevent no show fees, duplicate bookings and other similar issues, SAP Concur requires the Hotel Supplier auto-cancel the reservation if a corresponding /hotels/reservations/read call is not made by SAP Concur within 5 minutes after the /hotels/reservation call was made.
 
 ### <a id="max-connections"></a>Maximum Connections and Throttling
 SAP Concur is unable to share details regarding maximum connections and/or throttling questions due to their sensitivity in nature.
@@ -91,12 +105,16 @@ SAP Concur requires TLS 1.2 (Transport Layer Security) or higher SSL protocol fo
 ### URLs
 SAP Concur will receive a single URL from the Hotel Supplier. All requests will go to that URL.   
 
-## <a id="endpointSearch"></a> Search
+
+## search
+
+<a id="opIdsearch"></a>
+
 `POST /hotels/search`
 
 *Perform the initial search for hotels.*
 
-Perform the initial search for hotels for with a given search criteria including geolocation and radius. Response is expected to include list of hotels with their availability status as well as lead rates.
+Perform the initial search for hotels.
 
 > Body parameter
 
@@ -109,32 +127,41 @@ Perform the initial search for hotels for with a given search criteria including
     "bookingForSelf": true
   },
   "numGuests": 1,
-  "location": {
-    "geoLocation": {
-      "latitude": 49.246292,
-      "longitude": -123.116226
+  "guestCountryCode": "CA",
+  "locationSearch": {
+    "location": {
+      "geoLocation": {
+        "latitude": 49.246292,
+        "longitude": -123.116226
+      },
+      "locationType": "Hotel",
+      "name": "Sheraton DFW Airport Hotel",
+      "address": {
+        "addressLines": [
+          "910 Mainland Street"
+        ],
+        "city": "Vancouver",
+        "state": "BC",
+        "countryCode": "CA",
+        "postalCode": "V5K 0A1"
+      },
+      "iataCode": "string"
     },
-    "locationType": "Hotel",
-    "name": "Sheraton DFW Airport Hotel",
-    "address": {
-      "addressLines": [
-        "910 Mainland Street"
-      ],
-      "city": "Vancouver",
-      "state": "BC",
-      "countryCode": "CA",
-      "postalCode": "V5K 0A1"
+    "radius": {
+      "value": 5,
+      "unit": "MILE"
     },
-    "iataCode": "string"
+    "maxRadius": {
+      "value": 5,
+      "unit": "MILE"
+    }
   },
-  "radius": {
-    "value": 5,
-    "unit": "MILE"
-  },
-  "maxRadius": {
-    "value": 5,
-    "unit": "MILE"
-  },
+  "hotelPropertyRefs": [
+    {
+      "chainCode": "HH",
+      "propertyCode": "HH498949"
+    }
+  ],
   "checkin": "2021-10-20",
   "checkout": "2021-10-23",
   "customFields": [
@@ -221,7 +248,10 @@ Perform the initial search for hotels for with a given search criteria including
           "type": "IMAGE"
         }
       ],
-      "rating": 1,
+      "rating": {
+        "value": 4,
+        "source": "NORTHSTAR"
+      },
       "sustainabilityAwards": [
         {
           "label": "LEED",
@@ -248,12 +278,15 @@ To perform this operation, you must be authenticated by means of one of the foll
 BasicAuth
 </aside>
 
-## <a id="endpointRates"></a> Rates
+## rates
+
+<a id="opIdrates"></a>
+
 `POST /hotels/rates`
 
 *Retrieve rates for specific hotel properties*
 
-It is possible to include all details about rates including cancel penalties, nightly price breakdowns and guarantee information with this endpoint response. If everything is provided upfront, `/hotel/ratedetails` endpoint will not be used. If it is not possible to provide everything upfront, it will be required to provide missing details via `/hotel/ratedetails`.
+Retrieve hotel rates
 
 > Body parameter
 
@@ -280,6 +313,7 @@ It is possible to include all details about rates including cancel penalties, ni
     }
   ],
   "numGuests": 1,
+  "guestCountryCode": "CA",
   "searchSessionToken": "b41168ba-7ee1-4b68-9934-47f5c55337d6"
 }
 ```
@@ -342,9 +376,22 @@ It is possible to include all details about rates including cancel penalties, ni
               "acceptedPayments": [
                 "VISA"
               ],
-              "cvvRequired": true
+              "cvvRequired": true,
+              "amountPercent": {
+                "taxInclusive": true,
+                "feesInclusive": true,
+                "numberOfNights": 5,
+                "basisType": "FULL_STAY",
+                "applyAs": "FIRST_NIGHT_DEPOSIT",
+                "percent": 10.05,
+                "amount": {
+                  "amount": 190.95,
+                  "currencyCode": "USD"
+                }
+              }
             },
             "prepayRequired": true,
+            "isRefundable": true,
             "totalPrice": {
               "totalBeforeTax": 170.95,
               "taxes": 10,
@@ -376,7 +423,7 @@ It is possible to include all details about rates including cancel penalties, ni
             "cancelPenalties": {
               "penalties": [
                 {
-                  "cancelDeadline": "2021-10-13T13:00:00Z",
+                  "cancelDeadline": "2017-07-21T17:32:28Z",
                   "description": "Free cancellation up to 1 week before checkin",
                   "refundableStatus": "FULLY_REFUNDABLE",
                   "amountPercent": {
@@ -389,13 +436,13 @@ It is possible to include all details about rates including cancel penalties, ni
                     "amount": {}
                   }
                 }
-              ],
-              "isRefundable": true
+              ]
             }
           },
           "source": {
             "name": "Expedia",
-            "logo": "https://images.samplehost.com/samplepath/sourceLogo.png"
+            "logo": "https://images.samplehost.com/samplepath/sourceLogo.png",
+            "suppress": true
           }
         }
       ]
@@ -406,25 +453,27 @@ It is possible to include all details about rates including cancel penalties, ni
 
 <h3 id="rates-responses">Responses</h3>
 
-| Status | Meaning                                                                    | Description                                                                       | Schema                                |
-|--------|----------------------------------------------------------------------------|-----------------------------------------------------------------------------------|---------------------------------------|
-| 200    | [OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)                    | Hotel rates for requested properties                                              | [RatesResponse](#schemaratesresponse) |
-| 400    | [Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)           | Invalid client request. Request shouldn't be retried without changing it.         | [Error](#schemaerror)                 |
-| 401    | [Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)            | Unauthorized                                                                      | None                                  |
-| 500    | [Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1) | Error while processing the request. Request can be retried as is at a later time. | [Error](#schemaerror)                 |
+|Status|Meaning|Description|Schema|
+|---|---|---|---|
+|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Hotel rates for requested properties|[RatesResponse](#schemaratesresponse)|
+|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid client request. Request shouldn't be retried without changing it.|[Error](#schemaerror)|
+|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
+|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Error while processing the request. Request can be retried as is at a later time.|[Error](#schemaerror)|
 
 <aside class="warning">
 To perform this operation, you must be authenticated by means of one of the following methods:
 BasicAuth
 </aside>
 
-## <a id="endpointRatedetails"></a> Rate Details
+## ratedetails
+
+<a id="opIdratedetails"></a>
 
 `POST /hotels/ratedetails`
 
 *Retrieve hotel rate details*
 
-Retrieve hotel rate details for rates of a property - used when rate details (cancel penalties, guarantee, nightly pricing breakdown) are missing from /rates call during checkout process.
+Retrieve hotel rate details for rates of a property - used when rate details are missing from /rates call and/or during checkout process.
 
 > Body parameter
 
@@ -452,6 +501,7 @@ Retrieve hotel rate details for rates of a property - used when rate details (ca
     }
   ],
   "numGuests": 1,
+  "guestCountryCode": "CA",
   "searchSessionToken": "b41168ba-7ee1-4b68-9934-47f5c55337d6"
 }
 ```
@@ -488,9 +538,22 @@ Retrieve hotel rate details for rates of a property - used when rate details (ca
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -530,7 +593,7 @@ Retrieve hotel rate details for rates of a property - used when rate details (ca
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -546,8 +609,7 @@ Retrieve hotel rate details for rates of a property - used when rate details (ca
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   }
 }
@@ -567,7 +629,8 @@ To perform this operation, you must be authenticated by means of one of the foll
 BasicAuth
 </aside>
 
-## <a id="endpointDetails"></a> Hotel Details
+## hoteldetails
+
 <a id="opIdhoteldetails"></a>
 
 `POST /hotels/details`
@@ -648,9 +711,10 @@ Retrieve hotel property information
 To perform this operation, you must be authenticated by means of one of the following methods:
 BasicAuth
 </aside>
- 
-## <a id="endpointReservation"></a> Reserve Hotel
-<a id="opIdbook"></a>
+
+## reservation
+
+<a id="opIdreservation"></a>
 
 `POST /hotels/reservation`
 
@@ -701,7 +765,7 @@ Reserve hotel rate
   ],
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -751,11 +815,20 @@ Reserve hotel rate
       "countryCode": "CA",
       "postalCode": "V5K 0A1"
     }
+  },
+  "threeDSecure": {
+    "avv": "string",
+    "cavvAlgorithm": "string",
+    "messageVersion": "string",
+    "transactionId": "string",
+    "threeDSServerTransactionID": "string",
+    "eci": "string",
+    "exemptionCode": "string"
   }
 }
 ```
 
-<h3 id="book-parameters">Parameters</h3>
+<h3 id="reservation-parameters">Parameters</h3>
 
 |Name|In|Type|Required|Description|
 |---|---|---|---|---|
@@ -771,7 +844,7 @@ Reserve hotel rate
 {
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -820,9 +893,22 @@ Reserve hotel rate
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -862,7 +948,7 @@ Reserve hotel rate
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -878,8 +964,7 @@ Reserve hotel rate
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   },
   "checkin": "2021-10-20",
@@ -924,7 +1009,7 @@ Reserve hotel rate
 }
 ```
 
-<h3 id="book-responses">Responses</h3>
+<h3 id="reservation-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
 |---|---|---|---|
@@ -938,7 +1023,8 @@ To perform this operation, you must be authenticated by means of one of the foll
 BasicAuth
 </aside>
 
-## <a id="endpointRead"></a> Read Reservation
+## read
+
 <a id="opIdread"></a>
 
 `POST /hotels/reservation/read`
@@ -959,7 +1045,7 @@ Read reservation details. Used in a process of reserving a hotel to acknowledge 
   },
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ]
@@ -982,7 +1068,7 @@ Read reservation details. Used in a process of reserving a hotel to acknowledge 
 {
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -1031,9 +1117,22 @@ Read reservation details. Used in a process of reserving a hotel to acknowledge 
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -1073,7 +1172,7 @@ Read reservation details. Used in a process of reserving a hotel to acknowledge 
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -1089,8 +1188,7 @@ Read reservation details. Used in a process of reserving a hotel to acknowledge 
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   },
   "checkin": "2021-10-20",
@@ -1150,7 +1248,8 @@ To perform this operation, you must be authenticated by means of one of the foll
 BasicAuth
 </aside>
 
-## <a id="endpointModify"></a> Modify Reservation
+## modify
+
 <a id="opIdmodify"></a>
 
 `POST /hotels/reservation/modify`
@@ -1203,7 +1302,7 @@ Modify given reservation
     ],
     "confirmationCodes": [
       {
-        "codeType": "SYSTEM",
+        "codeType": "RESERVATION",
         "code": "3704188022P5683"
       }
     ],
@@ -1253,11 +1352,20 @@ Modify given reservation
         "countryCode": "CA",
         "postalCode": "V5K 0A1"
       }
+    },
+    "threeDSecure": {
+      "avv": "string",
+      "cavvAlgorithm": "string",
+      "messageVersion": "string",
+      "transactionId": "string",
+      "threeDSServerTransactionID": "string",
+      "eci": "string",
+      "exemptionCode": "string"
     }
   },
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ]
@@ -1280,7 +1388,7 @@ Modify given reservation
 {
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -1329,9 +1437,22 @@ Modify given reservation
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -1371,7 +1492,7 @@ Modify given reservation
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -1387,8 +1508,7 @@ Modify given reservation
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   },
   "checkin": "2021-10-20",
@@ -1432,6 +1552,7 @@ Modify given reservation
   ]
 }
 ```
+
 <h3 id="modify-responses">Responses</h3>
 
 |Status|Meaning|Description|Schema|
@@ -1448,7 +1569,7 @@ To perform this operation, you must be authenticated by means of one of the foll
 BasicAuth
 </aside>
 
-## <a id="endpointCancel"></a> Cancel Reservation
+## cancel
 
 <a id="opIdcancel"></a>
 
@@ -1470,7 +1591,7 @@ Cancel specified reservation
   },
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ]
@@ -1493,7 +1614,7 @@ Cancel specified reservation
 {
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -1534,6 +1655,88 @@ BasicAuth
     "bookingForSelf": true
   },
   "numGuests": 1,
+  "guestCountryCode": "CA",
+  "locationSearch": {
+    "location": {
+      "geoLocation": {
+        "latitude": 49.246292,
+        "longitude": -123.116226
+      },
+      "locationType": "Hotel",
+      "name": "Sheraton DFW Airport Hotel",
+      "address": {
+        "addressLines": [
+          "910 Mainland Street"
+        ],
+        "city": "Vancouver",
+        "state": "BC",
+        "countryCode": "CA",
+        "postalCode": "V5K 0A1"
+      },
+      "iataCode": "string"
+    },
+    "radius": {
+      "value": 5,
+      "unit": "MILE"
+    },
+    "maxRadius": {
+      "value": 5,
+      "unit": "MILE"
+    }
+  },
+  "hotelPropertyRefs": [
+    {
+      "chainCode": "HH",
+      "propertyCode": "HH498949"
+    }
+  ],
+  "checkin": "2021-10-20",
+  "checkout": "2021-10-23",
+  "customFields": [
+    {
+      "name": "OrgUnit",
+      "value": "Travel Agents"
+    }
+  ],
+  "includeDepositRequired": true,
+  "rateCategories": [
+    {
+      "otaCode": 1,
+      "value": "AAA"
+    }
+  ],
+  "maxSearchResults": 100
+}
+
+```
+
+Search by either location or exact property reference if already available
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
+|numGuests|integer(int32)|false|none|No. of guests for accomodation as entered by traveler|
+|guestCountryCode|string|false|none|Two-character ISO code (ISO ALPHA-2) for country|
+|locationSearch|[LocationSearch](#schemalocationsearch)|false|none|Reference to location details for search|
+|hotelPropertyRefs|[[HotelPropertyRef](#schemahotelpropertyref)]|false|none|Reference Ids to hotel properties if we already have them. When provided 'locationSearch'  will not be used and may not be set.|
+|checkin|string(date)|true|none|Check in date as entered by traveler|
+|checkout|string(date)|true|none|Check out date as entered by traveler|
+|customFields|[[CustomField](#schemacustomfield)]|false|none|Custom fields that are supported by vendor (e.g. CostCenter)|
+|includeDepositRequired|boolean|true|none|Whether to include properties where deposit is required or not|
+|rateCategories|[[RateCategory](#schemaratecategory)]|false|none|Special rate categories requested if applicable|
+|maxSearchResults|integer|false|none|Maximum number of properties allowed to be included in search results|
+
+<h2 id="tocS_LocationSearch">LocationSearch</h2>
+<!-- backwards compatibility -->
+<a id="schemalocationsearch"></a>
+<a id="schema_LocationSearch"></a>
+<a id="tocSlocationsearch"></a>
+<a id="tocslocationsearch"></a>
+
+```json
+{
   "location": {
     "geoLocation": {
       "latitude": 49.246292,
@@ -1559,42 +1762,20 @@ BasicAuth
   "maxRadius": {
     "value": 5,
     "unit": "MILE"
-  },
-  "checkin": "2021-10-20",
-  "checkout": "2021-10-23",
-  "customFields": [
-    {
-      "name": "OrgUnit",
-      "value": "Travel Agents"
-    }
-  ],
-  "includeDepositRequired": true,
-  "rateCategories": [
-    {
-      "otaCode": 1,
-      "value": "AAA"
-    }
-  ],
-  "maxSearchResults": 100
+  }
 }
 
 ```
+
+Reference to location details for search
 
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
-|numGuests|integer(int32)|false|none|none|
-|location|[Location](#schemalocation)|true|none|none|
-|radius|[Radius](#schemaradius)|true|none|none|
-|maxRadius|[Radius](#schemaradius)|true|none|none|
-|checkin|string(date)|true|none|none|
-|checkout|string(date)|true|none|none|
-|customFields|[[CustomField](#schemacustomfield)]|false|none|none|
-|includeDepositRequired|boolean|true|none|none|
-|rateCategories|[[RateCategory](#schemaratecategory)]|false|none|Special rate categories requested if applicable|
-|maxSearchResults|integer|false|none|Maximum number of properties allowed to be included in search results|
+|location|[Location](#schemalocation)|true|none|Defines Geo Location for search|
+|radius|[Radius](#schemaradius)|true|none|Radius to restrict the search for hotels. 'maxRadius' allows extending search radius for preferred hotel properties and can be more than radius defined by traveler|
+|maxRadius|[Radius](#schemaradius)|true|none|Radius to restrict the search for hotels. 'maxRadius' allows extending search radius for preferred hotel properties and can be more than radius defined by traveler|
 
 <h2 id="tocS_RatesCriteria">RatesCriteria</h2>
 <!-- backwards compatibility -->
@@ -1626,6 +1807,7 @@ BasicAuth
     }
   ],
   "numGuests": 1,
+  "guestCountryCode": "CA",
   "searchSessionToken": "b41168ba-7ee1-4b68-9934-47f5c55337d6"
 }
 
@@ -1636,11 +1818,12 @@ BasicAuth
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
-|hotelPropertyRefs|[[HotelPropertyRef](#schemahotelpropertyref)]|true|none|none|
-|checkin|string(date)|true|none|none|
-|checkout|string(date)|true|none|none|
+|hotelPropertyRefs|[[HotelPropertyRef](#schemahotelpropertyref)]|true|none|Reference Ids to hotel properties for which rate is requested|
+|checkin|string(date)|true|none|Check in date as entered by traveler|
+|checkout|string(date)|true|none|Check out date as entered by traveler|
 |rateCategories|[[RateCategory](#schemaratecategory)]|false|none|Special rate categories requested if applicable|
-|numGuests|integer(int32)|false|none|none|
+|numGuests|integer(int32)|false|none|No. of guests for accomodation|
+|guestCountryCode|string|false|none|Two-character ISO code (ISO ALPHA-2) for country|
 |searchSessionToken|[SearchSessionToken](#schemasearchsessiontoken)|false|none|Session token to be generated and provided by server on initial "search" call that can be referenced back for future api calls on the same session.|
 
 <h2 id="tocS_RateDetailsCriteria">RateDetailsCriteria</h2>
@@ -1674,6 +1857,7 @@ BasicAuth
     }
   ],
   "numGuests": 1,
+  "guestCountryCode": "CA",
   "searchSessionToken": "b41168ba-7ee1-4b68-9934-47f5c55337d6"
 }
 
@@ -1684,12 +1868,13 @@ BasicAuth
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
-|hotelPropertyRef|[HotelPropertyRef](#schemahotelpropertyref)|true|none|none|
-|ratePlanIds|[string]|true|none|none|
-|checkin|string(date)|true|none|none|
-|checkout|string(date)|true|none|none|
-|rateCategories|[[RateCategory](#schemaratecategory)]|false|none|Special rate categories requested if applicable|
-|numGuests|integer(int32)|false|none|none|
+|hotelPropertyRef|[HotelPropertyRef](#schemahotelpropertyref)|true|none|Reference to hotel property using provider specific property code|
+|ratePlanIds|[string]|true|none|Rate Product Ids for which detail rates are requested|
+|checkin|string(date)|true|none|Check in date as entered by traveler|
+|checkout|string(date)|true|none|Check out date as entered by traveler|
+|rateCategories|[[RateCategory](#schemaratecategory)]|false|none|Special rate categories requested if applicable. Rate category is a value used to request a particular rate code if the guest qualifies for a special rate, such as AARP, AAA or a corporate rate. Uses RPT OTA code type.|
+|numGuests|integer(int32)|false|none|No. of guests for accomodation as entered by traveler|
+|guestCountryCode|string|false|none|Two-character ISO code (ISO ALPHA-2) for country|
 |searchSessionToken|[SearchSessionToken](#schemasearchsessiontoken)|false|none|Session token to be generated and provided by server on initial "search" call that can be referenced back for future api calls on the same session.|
 
 <h2 id="tocS_HotelDetailsCriteria">HotelDetailsCriteria</h2>
@@ -1723,7 +1908,7 @@ BasicAuth
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
-|hotelCodes|[[HotelPropertyRef](#schemahotelpropertyref)]|true|none|none|
+|hotelCodes|[[HotelPropertyRef](#schemahotelpropertyref)]|true|none|Reference Ids to hotel properties for which rate is requested|
 |searchSessionToken|[SearchSessionToken](#schemasearchsessiontoken)|false|none|Session token to be generated and provided by server on initial "search" call that can be referenced back for future api calls on the same session.|
 
 <h2 id="tocS_CustomField">CustomField</h2>
@@ -1741,12 +1926,14 @@ BasicAuth
 
 ```
 
+Vendor supported custom field
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|name|string|true|none|none|
-|value|string|true|none|none|
+|name|string|true|none|Name of the custom field|
+|value|string|true|none|Value of the custom field|
 
 <h2 id="tocS_HotelPropertyRef">HotelPropertyRef</h2>
 <!-- backwards compatibility -->
@@ -1763,12 +1950,14 @@ BasicAuth
 
 ```
 
+Reference to hotel property using provider specific property code
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|chainCode|string|false|none|none|
-|propertyCode|string|true|none|none|
+|chainCode|string|false|none|Chain code associated with hotel if any|
+|propertyCode|string|true|none|Provider's property code as given in search response|
 
 <h2 id="tocS_HotelProperty">HotelProperty</h2>
 <!-- backwards compatibility -->
@@ -1830,7 +2019,10 @@ BasicAuth
       "type": "IMAGE"
     }
   ],
-  "rating": 1,
+  "rating": {
+    "value": 4,
+    "source": "NORTHSTAR"
+  },
   "sustainabilityAwards": [
     {
       "label": "LEED",
@@ -1841,27 +2033,62 @@ BasicAuth
 
 ```
 
+Hotel property object returned by hotel search
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |propertyCode|[PropertyCode](#schemapropertycode)|true|none|none|
-|altPropertyCode|object|false|none|none|
+|altPropertyCode|object|false|none|Alternate property code|
 |» catalogCode|[PropertyCode](#schemapropertycode)|true|none|none|
-|» catalogName|[CatalogName](#schemacatalogname)|true|none|none|
-|chainCode|string|false|none|none|
+|» catalogName|[CatalogName](#schemacatalogname)|true|none|Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time|
+|chainCode|string|false|none|Chain code associated with hotel if any|
 |superChainCode|string|false|none|none|
 |hotelName|string|true|none|none|
 |contactInfo|[ContactInfo](#schemacontactinfo)|true|none|none|
 |position|[Geolocation](#schemageolocation)|false|none|none|
 |address|[Address](#schemaaddress)|true|none|none|
-|leadRate|[LeadRate](#schemaleadrate)|true|none|Lead rate is the lowest average nightly rate, before taxes and fees|
+|leadRate|[LeadRate](#schemaleadrate)|true|none|Lead rate is the lowest nightly rate averaged over the stay, before taxes and fees|
 |availabilityStatus|[AvailabilityStatus](#schemaavailabilitystatus)|true|none|none|
 |preferenceRank|[PreferenceRank](#schemapreferencerank)|false|none|none|
-|amenities|[[HotelAmenity](#schemahotelamenity)]|true|none|[Hotel amentity containing code as described in OTA code list Hotel Amenity Code (HAC)]|
+|amenities|[[HotelAmenity](#schemahotelamenity)]|true|none|[Hotel amenity containing code as described in OTA code list Hotel Amenity Code (HAC)]|
 |mediaItems|[[HotelMedia](#schemahotelmedia)]|false|none|none|
-|rating|integer|false|none|Hotel rating should be an integer number from 1 to 5, representing its star rating.|
+|rating|[HotelRating](#schemahotelrating)|false|none|Hotel rating details along with source|
 |sustainabilityAwards|[[SustainabilityAward](#schemasustainabilityaward)]|false|none|[Award/Certification related to sustainability awarded to the hotel]|
+
+<h2 id="tocS_HotelRating">HotelRating</h2>
+<!-- backwards compatibility -->
+<a id="schemahotelrating"></a>
+<a id="schema_HotelRating"></a>
+<a id="tocShotelrating"></a>
+<a id="tocshotelrating"></a>
+
+```json
+{
+  "value": 4,
+  "source": "NORTHSTAR"
+}
+
+```
+
+Hotel rating details along with source
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|value|integer|true|none|Hotel rating value should be an integer number from 1 to 5, representing its star rating.|
+|source|string|true|none|Source of rating|
+
+#### Enumerated Values
+
+|Property|Value|
+|---|---|
+|source|NORTHSTAR|
+|source|AAA_DIAMONDS|
+|source|HOTELSTAR|
+|source|STAR_RATING_AUSTRALIA|
 
 <h2 id="tocS_CatalogName">CatalogName</h2>
 <!-- backwards compatibility -->
@@ -1875,11 +2102,13 @@ BasicAuth
 
 ```
 
+Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|string|false|none|none|
+|*anonymous*|string|false|none|Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time|
 
 #### Enumerated Values
 
@@ -1890,7 +2119,6 @@ BasicAuth
 |*anonymous*|Leonardo|
 |*anonymous*|Amadeus|
 |*anonymous*|Sabre|
-|*anonymous*|WorldSpan|
 |*anonymous*|Galileo|
 |*anonymous*|CWT|
 |*anonymous*|Expedia|
@@ -2079,6 +2307,8 @@ BasicAuth
 
 ```
 
+Defines Geo Location for search
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
@@ -2166,8 +2396,8 @@ Type of location associated with this search
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |addressLines|[string]|true|none|none|
-|city|string|true|none|none|
-|state|string|false|none|none|
+|city|string|true|none|City name|
+|state|string|false|none|Two-character state code|
 |countryCode|string|true|none|Two-character ISO code (ISO ALPHA-2) for country|
 |postalCode|string|false|none|none|
 
@@ -2220,9 +2450,22 @@ Type of location associated with this search
           "acceptedPayments": [
             "VISA"
           ],
-          "cvvRequired": true
+          "cvvRequired": true,
+          "amountPercent": {
+            "taxInclusive": true,
+            "feesInclusive": true,
+            "numberOfNights": 5,
+            "basisType": "FULL_STAY",
+            "applyAs": "FIRST_NIGHT_DEPOSIT",
+            "percent": 10.05,
+            "amount": {
+              "amount": 190.95,
+              "currencyCode": "USD"
+            }
+          }
         },
         "prepayRequired": true,
+        "isRefundable": true,
         "totalPrice": {
           "totalBeforeTax": 170.95,
           "taxes": 10,
@@ -2262,7 +2505,7 @@ Type of location associated with this search
         "cancelPenalties": {
           "penalties": [
             {
-              "cancelDeadline": "2021-10-13T13:00:00Z",
+              "cancelDeadline": "2017-07-21T17:32:28Z",
               "description": "Free cancellation up to 1 week before checkin",
               "refundableStatus": "FULLY_REFUNDABLE",
               "amountPercent": {
@@ -2278,13 +2521,13 @@ Type of location associated with this search
                 }
               }
             }
-          ],
-          "isRefundable": true
+          ]
         }
       },
       "source": {
         "name": "Expedia",
-        "logo": "https://images.samplehost.com/samplepath/sourceLogo.png"
+        "logo": "https://images.samplehost.com/samplepath/sourceLogo.png",
+        "suppress": true
       }
     }
   ]
@@ -2345,9 +2588,22 @@ Type of location associated with this search
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -2387,7 +2643,7 @@ Type of location associated with this search
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -2403,13 +2659,13 @@ Type of location associated with this search
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   },
   "source": {
     "name": "Expedia",
-    "logo": "https://images.samplehost.com/samplepath/sourceLogo.png"
+    "logo": "https://images.samplehost.com/samplepath/sourceLogo.png",
+    "suppress": true
   }
 }
 
@@ -2422,12 +2678,13 @@ Type of location associated with this search
 |bedding|[[Bedding](#schemabedding)]|false|none|[Details about bedding associated with the room]|
 |mealsIncluded|[integer]|false|none|Code based on OTA Meal Plan Type (MPT) list (https://www.opentraveldevelopersnetwork.com/code-list)|
 |roomDescription|[string]|true|none|none|
-|roomAmenities|[[RoomAmenity](#schemaroomamenity)]|false|none|[Room amentity containing code as described in OTA code list Room Amenity Type (RMA)]|
+|roomAmenities|[[RoomAmenity](#schemaroomamenity)]|false|none|[Room amenity containing code as described in OTA code list Room Amenity Type (RMA)]|
 |roomType|integer(int32)|false|none|OTA code of type GRI (Guest Room Info) providing guest room type details|
 |roomRate|[RoomRate](#schemaroomrate)|true|none|none|
-|source|object|false|none|none|
-|» name|string|true|none|Name of the supplier for this source that can be shown in UI (Logo is given higher preference)|
+|source|object|false|none|Details about source attributed to this rate. Please note that logo is given preference to name and nothing is displayed as source if suppress is true|
+|» name|string|false|none|Name of the supplier for this source that can be shown in UI (Logo is given higher preference)|
 |» logo|string(uri)|false|none|Logo of the supplier for this source that can be shown in UI|
+|» suppress|boolean|false|none|If true, will suppress all source attributions for this rate|
 
 <h2 id="tocS_RateCategory">RateCategory</h2>
 <!-- backwards compatibility -->
@@ -2527,9 +2784,22 @@ Details about total pricing associated with the stay
     "acceptedPayments": [
       "VISA"
     ],
-    "cvvRequired": true
+    "cvvRequired": true,
+    "amountPercent": {
+      "taxInclusive": true,
+      "feesInclusive": true,
+      "numberOfNights": 5,
+      "basisType": "FULL_STAY",
+      "applyAs": "FIRST_NIGHT_DEPOSIT",
+      "percent": 10.05,
+      "amount": {
+        "amount": 190.95,
+        "currencyCode": "USD"
+      }
+    }
   },
   "prepayRequired": true,
+  "isRefundable": true,
   "totalPrice": {
     "totalBeforeTax": 170.95,
     "taxes": 10,
@@ -2569,7 +2839,7 @@ Details about total pricing associated with the stay
   "cancelPenalties": {
     "penalties": [
       {
-        "cancelDeadline": "2021-10-13T13:00:00Z",
+        "cancelDeadline": "2017-07-21T17:32:28Z",
         "description": "Free cancellation up to 1 week before checkin",
         "refundableStatus": "FULLY_REFUNDABLE",
         "amountPercent": {
@@ -2585,8 +2855,7 @@ Details about total pricing associated with the stay
           }
         }
       }
-    ],
-    "isRefundable": true
+    ]
   }
 }
 
@@ -2605,7 +2874,9 @@ Details about total pricing associated with the stay
 |» guaranteeType|[GuaranteeType](#schemaguaranteetype)|true|none|none|
 |» acceptedPayments|[AcceptedPayments](#schemaacceptedpayments)|false|none|none|
 |» cvvRequired|boolean|false|none|none|
+|» amountPercent|[AmountPercent](#schemaamountpercent)|false|none|none|
 |prepayRequired|boolean|false|none|Whether or not prepayment is required for booking this rate|
+|isRefundable|boolean|false|none|Is this rate refundable or not (based on all cancel penalties)|
 |totalPrice|[TotalPrice](#schematotalprice)|true|none|Details about total pricing associated with the stay|
 |nightlyPrices|[[NightlyPrice](#schemanightlyprice)]|false|none|[Details about nightly price for a given date range]|
 |cancelPenalties|[CancelPenalties](#schemacancelpenalties)|false|none|none|
@@ -2621,7 +2892,7 @@ Details about total pricing associated with the stay
 {
   "penalties": [
     {
-      "cancelDeadline": "2021-10-13T13:00:00Z",
+      "cancelDeadline": "2017-07-21T17:32:28Z",
       "description": "Free cancellation up to 1 week before checkin",
       "refundableStatus": "FULLY_REFUNDABLE",
       "amountPercent": {
@@ -2637,8 +2908,7 @@ Details about total pricing associated with the stay
         }
       }
     }
-  ],
-  "isRefundable": true
+  ]
 }
 
 ```
@@ -2648,7 +2918,6 @@ Details about total pricing associated with the stay
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
 |penalties|[[CancelPenalty](#schemacancelpenalty)]|true|none|Cancel penalties associated with the rate|
-|isRefundable|boolean|true|none|Is this rate refundable or not (based on all cancel penalties)|
 
 <h2 id="tocS_RoomRateDetails">RoomRateDetails</h2>
 <!-- backwards compatibility -->
@@ -2674,9 +2943,22 @@ Details about total pricing associated with the stay
     "acceptedPayments": [
       "VISA"
     ],
-    "cvvRequired": true
+    "cvvRequired": true,
+    "amountPercent": {
+      "taxInclusive": true,
+      "feesInclusive": true,
+      "numberOfNights": 5,
+      "basisType": "FULL_STAY",
+      "applyAs": "FIRST_NIGHT_DEPOSIT",
+      "percent": 10.05,
+      "amount": {
+        "amount": 190.95,
+        "currencyCode": "USD"
+      }
+    }
   },
   "prepayRequired": true,
+  "isRefundable": true,
   "totalPrice": {
     "totalBeforeTax": 170.95,
     "taxes": 10,
@@ -2716,7 +2998,7 @@ Details about total pricing associated with the stay
   "cancelPenalties": {
     "penalties": [
       {
-        "cancelDeadline": "2021-10-13T13:00:00Z",
+        "cancelDeadline": "2017-07-21T17:32:28Z",
         "description": "Free cancellation up to 1 week before checkin",
         "refundableStatus": "FULLY_REFUNDABLE",
         "amountPercent": {
@@ -2732,8 +3014,7 @@ Details about total pricing associated with the stay
           }
         }
       }
-    ],
-    "isRefundable": true
+    ]
   }
 }
 
@@ -2834,7 +3115,7 @@ ISO 4217 currency code
 
 ```json
 {
-  "cancelDeadline": "2021-10-13T13:00:00Z",
+  "cancelDeadline": "2017-07-21T17:32:28Z",
   "description": "Free cancellation up to 1 week before checkin",
   "refundableStatus": "FULLY_REFUNDABLE",
   "amountPercent": {
@@ -2857,7 +3138,7 @@ ISO 4217 currency code
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|cancelDeadline|string(date-time)|true|none|none|
+|cancelDeadline|string|true|none|date string in the date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z|
 |description|string|true|none|none|
 |refundableStatus|[RefundableStatus](#schemarefundablestatus)|true|none|none|
 |amountPercent|[AmountPercent](#schemaamountpercent)|false|none|none|
@@ -3157,6 +3438,8 @@ Information about POS (Point Of Sale), traveler and user associated with this re
 
 ```
 
+Radius to restrict the search for hotels. 'maxRadius' allows extending search radius for preferred hotel properties and can be more than radius defined by traveler
+
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
@@ -3246,7 +3529,7 @@ Session token to be generated and provided by server on initial "search" call th
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|propertyRef|[HotelPropertyRef](#schemahotelpropertyref)|true|none|none|
+|propertyRef|[HotelPropertyRef](#schemahotelpropertyref)|true|none|Reference to hotel property using provider specific property code|
 |hotelDescriptiveInfo|object|false|none|none|
 |» propertyDescription|string|true|none|none|
 |» descriptiveInfos|[[HotelDescriptiveInfo](#schemahoteldescriptiveinfo)]|true|none|none|
@@ -3328,7 +3611,7 @@ Session token to be generated and provided by server on initial "search" call th
   ],
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -3378,6 +3661,15 @@ Session token to be generated and provided by server on initial "search" call th
       "countryCode": "CA",
       "postalCode": "V5K 0A1"
     }
+  },
+  "threeDSecure": {
+    "avv": "string",
+    "cavvAlgorithm": "string",
+    "messageVersion": "string",
+    "transactionId": "string",
+    "threeDSServerTransactionID": "string",
+    "eci": "string",
+    "exemptionCode": "string"
   }
 }
 
@@ -3387,7 +3679,7 @@ Session token to be generated and provided by server on initial "search" call th
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|hotelPropertyRef|[HotelPropertyRef](#schemahotelpropertyref)|true|none|none|
+|hotelPropertyRef|[HotelPropertyRef](#schemahotelpropertyref)|true|none|Reference to hotel property using provider specific property code|
 |requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
 |ratePlanId|string|true|none|none|
 |guests|[[Guest](#schemaguest)]|true|none|none|
@@ -3408,6 +3700,7 @@ Session token to be generated and provided by server on initial "search" call th
 |customFields|[[CustomField](#schemacustomfield)]|true|none|Vendor specific fields if setup for vendor integration|
 |searchSessionToken|[SearchSessionToken](#schemasearchsessiontoken)|false|none|Session token to be generated and provided by server on initial "search" call that can be referenced back for future api calls on the same session.|
 |legalEntity|[LegalEntity](#schemalegalentity)|false|none|Provides details about the legal entity associated with this booking if available|
+|threeDSecure|[ThreeDSecure](#schemathreedsecure)|false|none|3D Secure Strong Customer Authentication payment verification parameters|
 
 <h2 id="tocS_ReservationDetails">ReservationDetails</h2>
 <!-- backwards compatibility -->
@@ -3420,7 +3713,7 @@ Session token to be generated and provided by server on initial "search" call th
 {
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -3469,9 +3762,22 @@ Session token to be generated and provided by server on initial "search" call th
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -3511,7 +3817,7 @@ Session token to be generated and provided by server on initial "search" call th
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -3527,8 +3833,7 @@ Session token to be generated and provided by server on initial "search" call th
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   },
   "checkin": "2021-10-20",
@@ -3623,7 +3928,7 @@ Session token to be generated and provided by server on initial "search" call th
 
 ```json
 {
-  "codeType": "SYSTEM",
+  "codeType": "RESERVATION",
   "code": "3704188022P5683"
 }
 
@@ -3633,7 +3938,7 @@ Session token to be generated and provided by server on initial "search" call th
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|codeType|[ConfirmationCodeType](#schemaconfirmationcodetype)|true|none|Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=14, HOTEL_RESERVATION=40, CANCELLATION=50, MODIFICATION=1000)|
+|codeType|[ConfirmationCodeType](#schemaconfirmationcodetype)|true|none|Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, MODIFICATION=1000, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives|
 |code|string|true|none|none|
 
 <h2 id="tocS_ConfirmationCodeType">ConfirmationCodeType</h2>
@@ -3644,26 +3949,27 @@ Session token to be generated and provided by server on initial "search" call th
 <a id="tocsconfirmationcodetype"></a>
 
 ```json
-"SYSTEM"
+"RESERVATION"
 
 ```
 
-Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=14, HOTEL_RESERVATION=40, CANCELLATION=50, MODIFICATION=1000)
+Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, MODIFICATION=1000, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives
 
 ### Properties
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|*anonymous*|string|false|none|Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=14, HOTEL_RESERVATION=40, CANCELLATION=50, MODIFICATION=1000)|
+|*anonymous*|string|false|none|Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, MODIFICATION=1000, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives|
 
 #### Enumerated Values
 
 |Property|Value|
 |---|---|
-|*anonymous*|SYSTEM|
-|*anonymous*|HOTEL_RESERVATION|
+|*anonymous*|RESERVATION|
+|*anonymous*|SUPPLIER_CONFIRMATION|
 |*anonymous*|CANCELLATION|
 |*anonymous*|MODIFICATION|
+|*anonymous*|HOTEL_CONFIRMATION|
 |*anonymous*|CONCUR_GDS_REFERENCE|
 
 <h2 id="tocS_Guest">Guest</h2>
@@ -3707,7 +4013,7 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
 |---|---|---|---|---|
 |firstname|string|true|none|none|
 |lastname|string|true|none|none|
-|address|[Address](#schemaaddress)|true|none|none|
+|address|[Address](#schemaaddress)|false|none|none|
 |companyName|string|true|none|none|
 |contactInfo|[ContactInfo](#schemacontactinfo)|true|none|none|
 |birthdate|string(date)|false|none|none|
@@ -3729,7 +4035,7 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
   },
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ]
@@ -3793,7 +4099,7 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
     ],
     "confirmationCodes": [
       {
-        "codeType": "SYSTEM",
+        "codeType": "RESERVATION",
         "code": "3704188022P5683"
       }
     ],
@@ -3843,11 +4149,20 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
         "countryCode": "CA",
         "postalCode": "V5K 0A1"
       }
+    },
+    "threeDSecure": {
+      "avv": "string",
+      "cavvAlgorithm": "string",
+      "messageVersion": "string",
+      "transactionId": "string",
+      "threeDSServerTransactionID": "string",
+      "eci": "string",
+      "exemptionCode": "string"
     }
   },
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ]
@@ -3879,7 +4194,7 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
   },
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ]
@@ -3905,7 +4220,7 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
 {
   "confirmationCodes": [
     {
-      "codeType": "SYSTEM",
+      "codeType": "RESERVATION",
       "code": "3704188022P5683"
     }
   ],
@@ -3966,7 +4281,7 @@ Confirmation Code Types that maps to OTA codes for Unique Id Types list (SYSTEM=
 
 ```
 
-Lead rate is the lowest average nightly rate, before taxes and fees
+Lead rate is the lowest nightly rate averaged over the stay, before taxes and fees
 
 ### Properties
 
@@ -3988,7 +4303,7 @@ Lead rate is the lowest average nightly rate, before taxes and fees
 
 ```
 
-Hotel amentity containing code as described in OTA code list Hotel Amenity Code (HAC)
+Hotel amenity containing code as described in OTA code list Hotel Amenity Code (HAC)
 
 ### Properties
 
@@ -4010,7 +4325,7 @@ Hotel amentity containing code as described in OTA code list Hotel Amenity Code 
 
 ```
 
-Room amentity containing code as described in OTA code list Room Amenity Type (RMA)
+Room amenity containing code as described in OTA code list Room Amenity Type (RMA)
 
 ### Properties
 
@@ -4104,7 +4419,10 @@ Error with OTA code and description
           "type": "IMAGE"
         }
       ],
-      "rating": 1,
+      "rating": {
+        "value": 4,
+        "source": "NORTHSTAR"
+      },
       "sustainabilityAwards": [
         {
           "label": "LEED",
@@ -4122,7 +4440,7 @@ Error with OTA code and description
 
 |Name|Type|Required|Restrictions|Description|
 |---|---|---|---|---|
-|hotelProperties|[[HotelProperty](#schemahotelproperty)]|true|none|none|
+|hotelProperties|[[HotelProperty](#schemahotelproperty)]|true|none|[Hotel property object returned by hotel search]|
 |searchSessionToken|[SearchSessionToken](#schemasearchsessiontoken)|false|none|Session token to be generated and provided by server on initial "search" call that can be referenced back for future api calls on the same session.|
 
 <h2 id="tocS_RatesResponse">RatesResponse</h2>
@@ -4178,9 +4496,22 @@ Error with OTA code and description
               "acceptedPayments": [
                 "VISA"
               ],
-              "cvvRequired": true
+              "cvvRequired": true,
+              "amountPercent": {
+                "taxInclusive": true,
+                "feesInclusive": true,
+                "numberOfNights": 5,
+                "basisType": "FULL_STAY",
+                "applyAs": "FIRST_NIGHT_DEPOSIT",
+                "percent": 10.05,
+                "amount": {
+                  "amount": 190.95,
+                  "currencyCode": "USD"
+                }
+              }
             },
             "prepayRequired": true,
+            "isRefundable": true,
             "totalPrice": {
               "totalBeforeTax": 170.95,
               "taxes": 10,
@@ -4212,7 +4543,7 @@ Error with OTA code and description
             "cancelPenalties": {
               "penalties": [
                 {
-                  "cancelDeadline": "2021-10-13T13:00:00Z",
+                  "cancelDeadline": "2017-07-21T17:32:28Z",
                   "description": "Free cancellation up to 1 week before checkin",
                   "refundableStatus": "FULLY_REFUNDABLE",
                   "amountPercent": {
@@ -4225,13 +4556,13 @@ Error with OTA code and description
                     "amount": {}
                   }
                 }
-              ],
-              "isRefundable": true
+              ]
             }
           },
           "source": {
             "name": "Expedia",
-            "logo": "https://images.samplehost.com/samplepath/sourceLogo.png"
+            "logo": "https://images.samplehost.com/samplepath/sourceLogo.png",
+            "suppress": true
           }
         }
       ]
@@ -4276,9 +4607,22 @@ Error with OTA code and description
       "acceptedPayments": [
         "VISA"
       ],
-      "cvvRequired": true
+      "cvvRequired": true,
+      "amountPercent": {
+        "taxInclusive": true,
+        "feesInclusive": true,
+        "numberOfNights": 5,
+        "basisType": "FULL_STAY",
+        "applyAs": "FIRST_NIGHT_DEPOSIT",
+        "percent": 10.05,
+        "amount": {
+          "amount": 190.95,
+          "currencyCode": "USD"
+        }
+      }
     },
     "prepayRequired": true,
+    "isRefundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -4318,7 +4662,7 @@ Error with OTA code and description
     "cancelPenalties": {
       "penalties": [
         {
-          "cancelDeadline": "2021-10-13T13:00:00Z",
+          "cancelDeadline": "2017-07-21T17:32:28Z",
           "description": "Free cancellation up to 1 week before checkin",
           "refundableStatus": "FULLY_REFUNDABLE",
           "amountPercent": {
@@ -4334,8 +4678,7 @@ Error with OTA code and description
             }
           }
         }
-      ],
-      "isRefundable": true
+      ]
     }
   }
 }
@@ -4559,7 +4902,37 @@ Provides details about the legal entity associated with this booking if availabl
 |taxId|string|true|none|Tax identity of the legal entity|
 |address|[Address](#schemaaddress)|false|none|none|
 
+<h2 id="tocS_ThreeDSecure">ThreeDSecure</h2>
+<!-- backwards compatibility -->
+<a id="schemathreedsecure"></a>
+<a id="schema_ThreeDSecure"></a>
+<a id="tocSthreedsecure"></a>
+<a id="tocsthreedsecure"></a>
 
+```json
+{
+  "avv": "string",
+  "cavvAlgorithm": "string",
+  "messageVersion": "string",
+  "transactionId": "string",
+  "threeDSServerTransactionID": "string",
+  "eci": "string",
+  "exemptionCode": "string"
+}
 
+```
 
+3D Secure Strong Customer Authentication payment verification parameters
+
+### Properties
+
+|Name|Type|Required|Restrictions|Description|
+|---|---|---|---|---|
+|avv|string|true|none|For 3DS1, this is the CAVV. For 3DS2, this is the AVV.|
+|cavvAlgorithm|string|false|none|Identifies the algorithm used to generate the CAVV for 3DS1.|
+|messageVersion|string|true|none|3D Secure version|
+|transactionId|string|false|none|Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
+|threeDSServerTransactionID|string|false|none|For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
+|eci|string|true|none|Electronic Commerce Indicator|
+|exemptionCode|string|false|none|Identifies SCA exemption type|
 
