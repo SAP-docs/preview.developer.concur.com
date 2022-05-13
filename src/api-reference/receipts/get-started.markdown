@@ -24,6 +24,10 @@ These two different resources are sent/fetched from the Receipts V4 API via diff
 
 > **Note**: The Receipts V4 API only provides GET access to individual or user’s receipts that have been submitted through this API, and, therefore the response will not be comprehensive of every user receipt within SAP Concur. All other images should be obtained via the [Image v1 API](https://developer.concur.com/api-reference/image/v1.image.html). Additionally, only the receipts will be returned, there will not be any corresponding entry data. Examples of Enterprise apps that should use the Image v1 API include: ERP integrations for financial journal entry postings, VAT reclaim integrations that obtain transactions to calculate VAT reclaim, project billing integrations used to substantiate expenses billed back, etc.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## <a name="usage-restrictions"></a>Important Usage Restrictions
 
  SAP Concur systems and clients rely on e-receipts to be legally valid tax documents in the relevant government jurisdictions. Use of the Receipts endpoint to post e-receipts must therefore meet the following criteria:

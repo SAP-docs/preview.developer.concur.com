@@ -3,21 +3,14 @@ title: Getting Started
 layout: reference
 ---
 
-{% include prerelease.html %}
-
-* [Overview](#ess)
-* [Terminology](#ess-terminology)
-* [Delivery model](#ess-delivery)
-* [Access control](#access-control)
-* [Subscribing](#subscribing)
-* [Endpoint Requirements](#endpoint-requirements)
-* [Authentication](#ess-authentication)
-* [Service behavior](#ess-behavior")
 
 ## Event Subscription Service (ESS) <a name="ess"></a>
 
-
 The Event Subscription Service (ESS) implements Publish/Subscribe pattern using principles of Event Driven Architecture in SAP Concur. It allows clients and partners to be notified through web services when certain actions take place in connected SAP Concur companies. When the business/system event occurs in SAP Concur, ESS sends that event to the configured endpoint with relevant information.
+
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ## ESS Terminology <a name="ess-terminology"></a>
 * Event - a state of business/system object or entity. Always has EventType that represents a type of entity change or specific state in a workflow. Example: Report Created, Report Submitted, etc
@@ -98,5 +91,3 @@ The Event Subscription service has the following characteristics from the subscr
 * Request will be retried until delivery OR event retention period expiry
 * Event retention period is 72 hours from the time of event being published
 * Events are not archived, but all of the event delivery attempts/responses are logged and retained for 30 days
-
-

@@ -37,7 +37,7 @@ Name | Type | Format | Description
 -----|------| ------ | -----------
 `total`|`string` | - |The total number of users within the company.
 `offset`|`string` | - |The offset to begin returning the list of users.
-`limit`|`string` | - |The number of user records to return in that call. Maximum: 1000
+`limit`|`string` | - |The number of user records to return in that call. Maximum: 100
 `<name_of_filter>`|`string` | - |Filters results based on the desired field. Supported values: `isactive`, `loginid`, `lastname`, `employeeid`, `primaryemail`, `countrycode`, `id`
 
 ### Example

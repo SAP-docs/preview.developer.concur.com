@@ -12,6 +12,10 @@ redirect_from:
 
 Retrieves the full set of information for the report. Includes the Report Header, Entry, Attendee, Itemization and Allocation details.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Get expense report full details
 
 ### Request
@@ -706,4 +710,3 @@ Content-Type: application/xml
   </Entries>
 </ReportDetails>
 ```
-

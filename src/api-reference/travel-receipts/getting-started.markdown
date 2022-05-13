@@ -14,6 +14,10 @@ If the partner supplies a timestamp as a parameter, it is used as the start time
 ### Version
 1.0  
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### Regional Availability
 
 #### US
