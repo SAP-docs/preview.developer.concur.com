@@ -103,7 +103,7 @@ As sensitive data and payment card details are transferred via API, the Hotel Su
 SAP Concur requires TLS 1.2 (Transport Layer Security) or higher SSL protocol for data transfers. The Hotel Supplier will provide SAP Concur HTTPS URL of its end-point. Standard HTTPS port 443 should be used.
 
 ### URLs
-SAP Concur will receive a single URL from the Hotel Supplier. All requests will go to that URL.   
+SAP Concur will receive a single URL for each environment (Test and PROD) from the Hotel Supplier. All requests will go to that URL.   
 
 
 ## search
@@ -391,7 +391,7 @@ Retrieve hotel rates
               }
             },
             "prepayRequired": true,
-            "isRefundable": true,
+            "refundable": true,
             "totalPrice": {
               "totalBeforeTax": 170.95,
               "taxes": 10,
@@ -553,7 +553,7 @@ Retrieve hotel rate details for rates of a property - used when rate details are
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -908,7 +908,7 @@ Reserve hotel rate
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -1132,7 +1132,7 @@ Read reservation details. Used in a process of reserving a hotel to acknowledge 
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -1452,7 +1452,7 @@ Modify given reservation
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -2465,7 +2465,7 @@ Type of location associated with this search
           }
         },
         "prepayRequired": true,
-        "isRefundable": true,
+        "refundable": true,
         "totalPrice": {
           "totalBeforeTax": 170.95,
           "taxes": 10,
@@ -2603,7 +2603,7 @@ Type of location associated with this search
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -2799,7 +2799,7 @@ Details about total pricing associated with the stay
     }
   },
   "prepayRequired": true,
-  "isRefundable": true,
+  "refundable": true,
   "totalPrice": {
     "totalBeforeTax": 170.95,
     "taxes": 10,
@@ -2876,7 +2876,7 @@ Details about total pricing associated with the stay
 |» cvvRequired|boolean|false|none|none|
 |» amountPercent|[AmountPercent](#schemaamountpercent)|false|none|none|
 |prepayRequired|boolean|false|none|Whether or not prepayment is required for booking this rate|
-|isRefundable|boolean|false|none|Is this rate refundable or not (based on all cancel penalties)|
+|refundable|boolean|false|none|Is this rate refundable or not (based on all cancel penalties)|
 |totalPrice|[TotalPrice](#schematotalprice)|true|none|Details about total pricing associated with the stay|
 |nightlyPrices|[[NightlyPrice](#schemanightlyprice)]|false|none|[Details about nightly price for a given date range]|
 |cancelPenalties|[CancelPenalties](#schemacancelpenalties)|false|none|none|
@@ -2958,7 +2958,7 @@ Details about total pricing associated with the stay
     }
   },
   "prepayRequired": true,
-  "isRefundable": true,
+  "refundable": true,
   "totalPrice": {
     "totalBeforeTax": 170.95,
     "taxes": 10,
@@ -3777,7 +3777,7 @@ Session token to be generated and provided by server on initial "search" call th
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
@@ -4511,7 +4511,7 @@ Error with OTA code and description
               }
             },
             "prepayRequired": true,
-            "isRefundable": true,
+            "refundable": true,
             "totalPrice": {
               "totalBeforeTax": 170.95,
               "taxes": 10,
@@ -4622,7 +4622,7 @@ Error with OTA code and description
       }
     },
     "prepayRequired": true,
-    "isRefundable": true,
+    "refundable": true,
     "totalPrice": {
       "totalBeforeTax": 170.95,
       "taxes": 10,
