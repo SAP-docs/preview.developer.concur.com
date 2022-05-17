@@ -33,7 +33,7 @@ Clients who are using an integration between SAP Concur and another SAP product 
 
 The **Company Request Token Successfully Created** dialog appears.
 
-![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/company-refresh-tool-02.png)
+![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/refresh-token-created.png)
 
 This dialog contains the Company UUID and the Company Request Token. The admin must copy and save both the Company UUID and the Company Request Token before signing out or navigating away from this dialog.
 
@@ -50,7 +50,7 @@ The Company Request Token has a token expiry lifetime of 24 hours. The admin mus
 
 3. In the **App ID** field, type the **Client ID**.
 
-    ![Product screen showing the Company Request dialog](./tool-images/company-refresh-tool-04.png)
+    ![Product screen showing the Company Request dialog](./tool-images/refresh-token-submit.png)
 
 4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
 
