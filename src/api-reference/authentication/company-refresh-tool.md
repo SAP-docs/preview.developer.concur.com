@@ -31,11 +31,7 @@ On the **Company Request Tokens** page, the admin enters their **Client ID** in 
 Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm).
 * Clients who do not have Client Web Services or an SAP Concur integration can contact SAP Concur support to obtain an App ID as needed.
 
-The **Company Request Token Successfully Created** dialog appears.
-
-![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/refresh-token-created.png)
-
-This dialog contains the Company UUID and the Company Request Token. The admin must copy and save both the Company UUID and the Company Request Token before signing out or navigating away from this dialog.
+The **Company Request Token Successfully Created** dialog appears. This dialog contains the Company UUID and the Company Request Token. The admin must copy and save both the Company UUID and the Company Request Token before signing out or navigating away from this dialog.
 
 The admin can use the Company Request Token to generate a Company JWT, using the Password Grant process or the tools required to configure the integration. Instructions for the Password Grant process are on the Company Request Token page, as well as the [SAP Concur Developer Center](https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant).
 
@@ -52,9 +48,10 @@ The Company Request Token has a token expiry lifetime of 24 hours. The admin mus
 
     ![Product screen showing the Company Request dialog](./tool-images/refresh-token-submit.png)
 
-4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
+4. Click **Submit**.
+The Company Request Token Successfully Created dialog appears, displaying the Company UUID and the Company Request Token. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
 
-    ![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-06.png)
+![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/refresh-token-created.png)
 
     >**NOTE**: The Company Request Token expires after 24 hours. If you cannot complete the workflow within 24 hours of generating the Company Request Token, you must regenerate the token before completing the workflow. You can regenerate the Company Request Token by reentering the Client ID in the App ID and clicking Submit again.
 
