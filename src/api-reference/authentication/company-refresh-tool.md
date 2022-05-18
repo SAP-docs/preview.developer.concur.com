@@ -48,8 +48,7 @@ The Company Request Token has a token expiry lifetime of 24 hours. The admin mus
 
     ![Product screen showing the Company Request dialog](./tool-images/refresh-token-submit.png)
 
-4. Click **Submit**.
-The Company Request Token Successfully Created dialog appears, displaying the Company UUID and the Company Request Token. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
+4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears, displaying the **Company UUID** and the **Company Request Token**. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
 
 ![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/refresh-token-created.png)
 
