@@ -97,6 +97,7 @@ This request will return a **ReportDetails** parent element.
 |  Element |  Description |
 | -------- | ------------ |
 |  ReportEntryID |  The ID of the report entry. Maximum 13 characters. |
+|  LegacyEntryID |  A unique numeric identifier for the expense entry. Corresponds to the report entry key in accounting extracts and the legacyEntryId field in the FIS endpoints. Maximum 11 characters.|
 |  ExpenseTypeID |  The expense type ID for the expense entry. Expense Type IDs are returned in the **ExpKey** element by the Get Expense Group Configuration endpoint. |
 |  ExpenseTypeName |  The expense type name. Maximum 64 characters. |
 |  SpendCategory |  The spend category specified for this expense type. Varies by client, used in reporting. |
@@ -359,6 +360,7 @@ Content-Type: application/xml
     <ExpenseEntriesList>
         <ExpenseEntry>
             <ReportEntryID>nE0avYnILN9mHdTErNSd2pH45udFoNQ$po</ReportEntryID>
+            <LegacyEntryID>3651</LegacyEntryID>
             <ExpenseTypeID>BUSML</ExpenseTypeID>
             <ExpenseTypeName>Business Meal (attendees)</ExpenseTypeName>
             <SpendCategory>Entertainment</SpendCategory>
