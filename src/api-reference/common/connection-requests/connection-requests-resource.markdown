@@ -15,6 +15,10 @@ Our recommendation for suppliers is to match users requesting to connect utilizi
 * Connection Requests v3.0 is deprecated.
 * Connection Requests v3.1 is deprecated.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve all connection requests that match the TripLink supplier ID <a name="get"></a>
 
 ```

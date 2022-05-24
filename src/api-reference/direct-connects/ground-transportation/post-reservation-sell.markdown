@@ -7,6 +7,10 @@ layout: reference
 
 A post reservation sell request is sent when a Travel user attempts to book a ground transportation reservation.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request <a name="request"></a>
 
 ### Supported Accept Types

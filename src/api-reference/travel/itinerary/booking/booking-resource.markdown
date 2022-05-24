@@ -11,6 +11,10 @@ The Booking resource represents booking segments in the SAP Concur Travel system
 
 Version 1.1
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI
 `/travel/booking/v1.1/{query_parameters}`
 

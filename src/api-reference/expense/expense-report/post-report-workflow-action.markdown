@@ -7,6 +7,10 @@ layout: reference
 
 Posts a workflow action for the supplied expense report. The workflow action moves the expense report through the workflow process.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Workflow Actions <a name="workflow-actions"></a>
 
 The available actions are:

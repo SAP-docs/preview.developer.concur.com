@@ -12,6 +12,10 @@ Retrieves a list of unassigned company card charges for the user specified in th
 ### Version
 1.1
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI
 `https://www.concursolutions.com/api/expense/expensereport/v1.1/CardCharges`
 
