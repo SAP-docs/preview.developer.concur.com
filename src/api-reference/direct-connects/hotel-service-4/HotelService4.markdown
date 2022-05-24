@@ -59,62 +59,59 @@ SAP Concur services have monitoring in place for each endpoint and will open a t
 
 | Operation| Recommended Response Times | Support Retries (for 5xx errors) |
 |---|---|---|
-| /hotels/search             | < 5 seconds                | Yes                              |
-| /hotels/rates              | < 5 seconds                | Yes                              |
-| /hotels/details            | < 1 second                 | Yes                              |
-| /hotels/ratedetails        | < 1 second                 | Yes                              |
-| /hotels/reservation        | < 5 seconds                | No                               |
-| /hotels/reservation/read   | < 1 second                 | Yes                              |
-| /hotels/reservation/modify | < 5 seconds                | No                               |
-| /hotels/reservation/cancel | < 5 seconds                | No                               |
+|`/hotels/search`|< 5 seconds|Yes|
+|`/hotels/rates`|< 5 seconds|Yes|
+|`/hotels/details`|< 1 second|Yes|
+|`/hotels/ratedetails`|< 1 second|Yes|
+|`/hotels/reservation`|< 5 seconds|No|
+|`/hotels/reservation/read`|< 1 second|Yes|
+|`/hotels/reservation/modify`|< 5 seconds|No|
+|`/hotels/reservation/cancel`|< 5 seconds|No|
 
-### <a id="response-times"></a> Recommended Throughput
-Higher throughput allows system to scale and serve large number of travelers. SAP Concur recommends suppliers to provision for resources to support the following throughput.
+### Recommended Throughput
 
-| Operation                  | Recommended Throughput (Requests Per Minute) |
-|----------------------------|----------------------------------------------|
-| /hotels/search             | > 50                                         |
-| /hotels/rates              | > 100                                        |
-| /hotels/details            | > 100                                        |
-| /hotels/ratedetails        | > 50                                         |
-| /hotels/reservation        | > 20                                         |
-| /hotels/reservation/read   | > 20                                         |
-| /hotels/reservation/modify | > 10                                         |
-| /hotels/reservation/cancel | > 10                                         |
+Higher throughput allows system to scale and serve large number of travelers. We recommed suppliers provision for resources to support the following throughput.
 
-**Note**: To prevent no show fees, duplicate bookings and other similar issues, SAP Concur requires the Hotel Supplier auto-cancel the reservation if a corresponding /hotels/reservations/read call is not made by SAP Concur within 5 minutes after the /hotels/reservation call was made.
+| Operation|Recommended Throughput (Requests Per Minute)|
+|---|---|
+|`/hotels/search`|< 50|
+|`/hotels/rates`|< 100|
+|`/hotels/details`|< 100|
+|`/hotels/ratedetails`|< 50 |
+|`/hotels/reservation`|< 20|
+|`/hotels/reservation/read`|< 20|
+|`/hotels/reservation/modify`|< 10|
+|`/hotels/reservation/cancel`|< 10|
 
-### <a id="max-connections"></a>Maximum Connections and Throttling
-SAP Concur is unable to share details regarding maximum connections and/or throttling questions due to their sensitivity in nature.
+**Note**: To prevent no show fees, duplicate bookings and other similar issues, we requires the Hotel Supplier auto-cancel a reservation if a corresponding `/hotels/reservations/read` call is not made by SAP Concur systems within 5 minutes after the `/hotels/reservation` call was made.
 
-### <a id="emergency-tech-contact"></a>Emergency Technical Contact
-The Hotel supplier needs to provide emergency technical contact email that will be used for communication in case of blocking technical issues.
+### Emergency Technical Contact
 
-### <a id="testing-enviro"></a>Testing Environment
-To allow SAP Concur performing testing, the Hotel Supplier needs to provide testing URL or specify properties for testing in production URL. SAP Concur needs to be able to perform test bookings with testing credit cards.
+The hotel supplier needs to provide emergency technical contact email that will be used for communication in case of blocking technical issues.
 
-### <a id="security"></a>Security
+### Testing Environment
+
+We require the hotel supplier to provide a testing URL or specify properties for testing in a production URL. We require the ability to preform test bookings with test credit cards.
+
+### Security
+
 #### PCI DSS Compliance
-As sensitive data and payment card details are transferred via API, the Hotel Suppliers need to comply with PCI DSS standard. SAP Concur is compliant with PCI DSS standard and undergoes regular security audits.
+
+As sensitive data and payment card details are transferred via API, the hotel suppliers need to comply with PCI DSS standard.
 
 #### HTTPS
-SAP Concur requires TLS 1.2 (Transport Layer Security) or higher SSL protocol for data transfers. The Hotel Supplier will provide SAP Concur HTTPS URL of its end-point. Standard HTTPS port 443 should be used.
+
+We require Transport Layer Security v1.2 (TLS 1.2) or higher SSL protocol for data transfers. The hotel supplier is required to provide HTTPS URLs of its end-point. Standard HTTPS port 443 should be used.
 
 ### URLs
-SAP Concur will receive a single URL for each environment (Test and PROD) from the Hotel Supplier. All requests will go to that URL.   
 
+We will receive a single URL for each environment (Test and Production) from the hotel supplier. All requests will go to that URL.   
 
-## search
-
-<a id="opIdsearch"></a>
+## Search Hotels <a id="opIdsearch"></a>
 
 `POST /hotels/search`
 
-*Perform the initial search for hotels.*
-
 Perform the initial search for hotels.
-
-> Body parameter
 
 ```json
 {
