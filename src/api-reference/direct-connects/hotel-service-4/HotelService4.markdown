@@ -2,35 +2,32 @@
 title: Direct Connect - Hotel v4
 layout: reference
 ---
+
+# Direct Connect - Hotel Service v4
+
 {% include prerelease.html %}
 
-HotelService API provides a method for Custom Hotel Source suppliers to provide hotel inventory, rates and booking related functionality to users of Concur OBT (Online Booking Tool).
+Hotel Service v4 API provides a method for Custom Hotel Source suppliers to provide hotel inventory, rates, and booking related functionality to users of the SAP Concur Online Booking Tool (OBT).
 
-The Hotel Service 4.0 API from SAP Concur is a REST specification for Hotel Suppliers. Please refer to OpenAPI (Swagger) specification for details. This Guide provides information how the Hotel Supplier can make their content available for Concur Travel users using Hotel Service 4.0 API. Once the Hotel Supplier has developed and certified their interface with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users.
+This guide provides information on how the hotel supplier can make their content available for Concur Travel users. Once the interface has developed and certified their with SAP Concur, the inventory will begin appearing in hotel searches by opted-in Travel users.
 
-This API has client/server architecture, where SAP Concur acts as client, pulling information from the Hotel Supplier, who acts as server, responding to SAP Concur’s requests. This guide specifies the request and response format required by SAP Concur.
+This API has client/server architecture, where SAP Concur services act as client, pulling information from the hotel suppliers, who acts as server, responding to requests.
 
-This call-out differs from the in-bound SAP Concur web services in the following ways:
+## Limitations
 
-* It uses an out-bound call where SAP Concur calls a public facing API end-point provided by the hotel supplier.
-* The supplier configures and maintains the public web service interface. This guide specifies the request and response format required by SAP Concur.
+Access to this documentation does not provide access to the API. SAP Concur products are highly configurable, and not all clients will have access to all features.
 
-## <a id="limitations"></a>Limitations
-SAP Concur products are highly configurable, and not all clients will have access to all features.
+## Process Flow
 
-## <a id="process-flow"></a>Process Flow
 Basic scenario encompassing all the functionality provided by Hotel Service 4 incorporated into Concur Travel starting from a hotel search, through to confirmation of a booking, modification of booking and ending with a cancellation.
 
-![./media/image1.png](./images/diagrams/hs4-sequence-diagram.png)
+![A process flow diagram of the Hotel Service v4 API](./images/diagrams/hs4-sequence-diagram.png)
 
-### Reservation and Read Requests <a id="reservation-read-requests"></a>
-SAP Concur will follow up a Reservation Request with a Read request as soon as possible after processing the Reservation Response. If a Read request does not arrive within 5 minutes for a given Reservation, then the supplier should treat that Reservation as an orphan and should thus seek to cancel it.
+### Reservation and Read Requests
 
-## OpenAPI/ Swagger Specification
-Current OpenAPI/Swagger schema for Hotel Service 4:
-[HotelService4.json](spec/HotelService4.json)
+If a Read request does not arrive within 5 minutes for a given reservation, the supplier should treat that reservation as an orphan and should seek to cancel it.
 
-## Supported Operations <a id="supported-ops"></a>
+## Supported Operations
 
 * Search Hotels: [/hotels/search](#opIdsearch)
 * Rates: [/hotels/rates](#opIdrates)
@@ -41,26 +38,27 @@ Current OpenAPI/Swagger schema for Hotel Service 4:
 * Modify Reservation: [/hotels/reservation/modify](#opIdmodify)
 * Cancel Reservation: [/hotels/reservation/cancel](#opIdcancel)
 
-## Non Functional Requirements <a id="nonfunctional-requirements"/>
-### <a id="payload-limits"/> Payload Limits
+## Non Functional Requirements
+
+### Payload Limits
+
 Please note that responses higher than below content-length may be dropped/truncated and result in error back to the user.
 
-| Operation           | Maximum Response (content-length) |
-|---------------------|-----------------------------------|
-| /hotels/search      | 5 MB                              |
-| /hotels/rates       | 5 MB                              |
-| /hotels/details     | 5 MB                              |
-| /hotels/ratedetails | 5 MB                              |
+|Operation|Maximum Response (content-length)|
+|---|---|
+|`/hotels/search`|5 MB|
+|`/hotels/rates`|5 MB|
+|`/hotels/details`|5 MB|
+|`/hotels/ratedetails`|5 MB|
 
-### <a id="response-times"></a> Recommended Response Times and Retries
-Achieving lower response times helps get information to the traveler sooner which leads to a better user experience. SAP Concur understands that not every hotel program manages their own inventory and requires relays out to other vendors and the numbers below take that scenario into consideration.
+### Recommended Response Times and Retries
 
-All endpoints carry a timeout of 55 seconds.Some operations below support retries in case of 5xx errors as noted. No endpoints will attempt a retry in the event there is a timeout.
+All endpoints carry a timeout of 55 seconds. Some operations below support retries in case of 5xx errors as noted. No endpoints will attempt a retry in the event there is a timeout.
 
-SAP Concur has monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.
+SAP Concur services have monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.
 
-| Operation                  | Recommended Response Times | Support Retries (for 5xx errors) |
-|----------------------------|----------------------------|----------------------------------|
+| Operation| Recommended Response Times | Support Retries (for 5xx errors) |
+|---|---|---|
 | /hotels/search             | < 5 seconds                | Yes                              |
 | /hotels/rates              | < 5 seconds                | Yes                              |
 | /hotels/details            | < 1 second                 | Yes                              |
@@ -4935,4 +4933,3 @@ Provides details about the legal entity associated with this booking if availabl
 |threeDSServerTransactionID|string|false|none|For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
 |eci|string|true|none|Electronic Commerce Indicator|
 |exemptionCode|string|false|none|Identifies SCA exemption type|
-
