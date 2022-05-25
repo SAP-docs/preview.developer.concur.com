@@ -17,11 +17,31 @@ This API has client/server architecture, where SAP Concur services act as client
 
 Access to this documentation does not provide access to the API. SAP Concur products are highly configurable, and not all clients will have access to all features.
 
+## Prior Versions
+
+-
+
 ## Process Flow
 
 Basic scenario encompassing all the functionality provided by Hotel Service 4 incorporated into Concur Travel starting from a hotel search, through to confirmation of a booking, modification of booking and ending with a cancellation.
 
 ![A process flow diagram of the Hotel Service v4 API](./images/diagrams/hs4-sequence-diagram.png)
+
+## Products and Editions
+
+-
+
+## Scope Usage <a name="scope-usage"></a>
+
+-
+
+## Dependencies <a name="dependencies"></a>
+
+-
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+-
 
 ### Reservation and Read Requests
 
@@ -109,9 +129,24 @@ We will receive a single URL for each environment (Test and Production) from the
 
 ## Search Hotels <a id="opIdsearch"></a>
 
-`POST /hotels/search`
-
 Perform the initial search for hotels.
+
+### URI
+
+```shell
+POST /hotels/search
+```
+### Parameters
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|Accept-Language|header|string|false|none|
+|concur-correlationid|header|string|true|none|
+|body|body|[SearchCriteria](#schemasearchcriteria)|true|Hotel search criteria|
+
+### Example
+
+#### Request
 
 ```json
 {
@@ -176,17 +211,7 @@ Perform the initial search for hotels.
 }
 ```
 
-<h3 id="search-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|Accept-Language|header|string|false|none|
-|concur-correlationid|header|string|true|none|
-|body|body|[SearchCriteria](#schemasearchcriteria)|true|Hotel search criteria|
-
-> Example responses
-
-> 200 Response
+#### Request
 
 ```json
 {
@@ -259,31 +284,27 @@ Perform the initial search for hotels.
 }
 ```
 
-<h3 id="search-responses">Responses</h3>
+## Rates <a id="opIdrates"></a>
 
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Search results that meet criteria|[SearchResponse](#schemasearchresponse)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid client request. Request shouldn't be retried without changing it.|[Error](#schemaerror)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Error while processing the request. Request can be retried as is at a later time.|[Error](#schemaerror)|
+Retrieve rates for specific hotel properties.
 
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-BasicAuth
-</aside>
+### URI
 
-## rates
+```shell
+POST /hotels/rates
+```
 
-<a id="opIdrates"></a>
+### Parameters
 
-`POST /hotels/rates`
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|Accept-Language|header|string|false|none|
+|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
+|body|body|[RatesCriteria](#schemaratescriteria)|true|Hotel rates criteria|
 
-*Retrieve rates for specific hotel properties*
+### Example
 
-Retrieve hotel rates
-
-> Body parameter
+#### Request
 
 ```json
 {
@@ -313,17 +334,7 @@ Retrieve hotel rates
 }
 ```
 
-<h3 id="rates-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|Accept-Language|header|string|false|none|
-|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
-|body|body|[RatesCriteria](#schemaratescriteria)|true|Hotel rates criteria|
-
-> Example responses
-
-> 200 Response
+### Response
 
 ```json
 {
@@ -446,31 +457,27 @@ Retrieve hotel rates
 }
 ```
 
-<h3 id="rates-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Hotel rates for requested properties|[RatesResponse](#schemaratesresponse)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid client request. Request shouldn't be retried without changing it.|[Error](#schemaerror)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Error while processing the request. Request can be retried as is at a later time.|[Error](#schemaerror)|
-
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-BasicAuth
-</aside>
-
-## ratedetails
-
-<a id="opIdratedetails"></a>
-
-`POST /hotels/ratedetails`
-
-*Retrieve hotel rate details*
+## Rate Details <a id="opIdratedetails"></a>
 
 Retrieve hotel rate details for rates of a property - used when rate details are missing from /rates call and/or during checkout process.
 
-> Body parameter
+### URI
+
+```shell
+POST /hotels/ratedetails
+```
+
+### Parameters
+
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|Accept-Language|header|string|false|none|
+|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
+|body|body|[RateDetailsCriteria](#schemaratedetailscriteria)|true|Hotel rates criteria|
+
+### Example
+
+#### Request
 
 ```json
 {
@@ -501,17 +508,7 @@ Retrieve hotel rate details for rates of a property - used when rate details are
 }
 ```
 
-<h3 id="ratedetails-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|Accept-Language|header|string|false|none|
-|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
-|body|body|[RateDetailsCriteria](#schemaratedetailscriteria)|true|Hotel rates criteria|
-
-> Example responses
-
-> 200 Response
+### Response
 
 ```json
 {
@@ -610,31 +607,27 @@ Retrieve hotel rate details for rates of a property - used when rate details are
 }
 ```
 
-<h3 id="ratedetails-responses">Responses</h3>
+## Hotel Details <a id="opIdhoteldetails"></a>
 
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Hotel rates for requested properties|[RateDetailsResponse](#schemaratedetailsresponse)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid client request. Request shouldn't be retried without changing it.|[Error](#schemaerror)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Error while processing the request. Request can be retried as is at a later time.|[Error](#schemaerror)|
+Retrieve descriptive details about specified hotels.
 
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-BasicAuth
-</aside>
+### URI
 
-## hoteldetails
+```shell
+POST /hotels/details
+```
 
-<a id="opIdhoteldetails"></a>
+### Parameters
 
-`POST /hotels/details`
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|Accept-Language|header|string|false|none|
+|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
+|body|body|[HotelDetailsCriteria](#schemahoteldetailscriteria)|true|Hotel details criteria|
 
-*Retrieve descriptive details about specified hotels.*
+### Example
 
-Retrieve hotel property information
-
-> Body parameter
+#### Request
 
 ```json
 {
@@ -654,17 +647,7 @@ Retrieve hotel property information
 }
 ```
 
-<h3 id="hoteldetails-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|Accept-Language|header|string|false|none|
-|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
-|body|body|[HotelDetailsCriteria](#schemahoteldetailscriteria)|true|Hotel details criteria|
-
-> Example responses
-
-> 200 Response
+### Response
 
 ```json
 {
@@ -693,31 +676,27 @@ Retrieve hotel property information
 }
 ```
 
-<h3 id="hoteldetails-responses">Responses</h3>
+## Reservation <a id="opIdreservation"></a>
 
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Hotel descriptive info for requested properties|[HotelDetailsResponse](#schemahoteldetailsresponse)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid client request. Request shouldn't be retried without changing it.|[Error](#schemaerror)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Error while processing the request. Request can be retried as is at a later time.|[Error](#schemaerror)|
+Reserve a hotel rate.
 
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-BasicAuth
-</aside>
+### URI
 
-## reservation
+```shell
+POST /hotels/reservation
+```
 
-<a id="opIdreservation"></a>
+### Parameters
 
-`POST /hotels/reservation`
+|Name|In|Type|Required|Description|
+|---|---|---|---|---|
+|Accept-Language|header|string|false|none|
+|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
+|body|body|[ReservationCriteria](#schemareservationcriteria)|true|Reservation criteria|
 
-*Reserve the given hotel rate*
+### Example
 
-Reserve hotel rate
-
-> Body parameter
+#### Request
 
 ```json
 {
@@ -823,17 +802,7 @@ Reserve hotel rate
 }
 ```
 
-<h3 id="reservation-parameters">Parameters</h3>
-
-|Name|In|Type|Required|Description|
-|---|---|---|---|---|
-|Accept-Language|header|string|false|none|
-|concur-correlationid|header|string|true|This unique code can be used during troubleshooting as it identifies the API call in the log files.|
-|body|body|[ReservationCriteria](#schemareservationcriteria)|true|Reservation criteria|
-
-> Example responses
-
-> 200 Response
+### Response
 
 ```json
 {
@@ -1003,20 +972,6 @@ Reserve hotel rate
   ]
 }
 ```
-
-<h3 id="reservation-responses">Responses</h3>
-
-|Status|Meaning|Description|Schema|
-|---|---|---|---|
-|200|[OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)|Hotel reservation successful|[ReservationDetails](#schemareservationdetails)|
-|400|[Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)|Invalid client request. Request shouldn't be retried without changing it.|[Error](#schemaerror)|
-|401|[Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)|Unauthorized|None|
-|500|[Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)|Error while processing the request. Request can be retried as is at a later time.|[Error](#schemaerror)|
-
-<aside class="warning">
-To perform this operation, you must be authenticated by means of one of the following methods:
-BasicAuth
-</aside>
 
 ## read
 
