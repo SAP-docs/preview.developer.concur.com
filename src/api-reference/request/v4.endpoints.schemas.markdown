@@ -35,8 +35,8 @@ Name|Type|Format|Description
 `mainDestination`|`object`|[`Location`](#location)|The main destination of the Request.
 `name`|`string`|-|The name of the Request.
 `owner`|`object`|[`Employee`](#schema-employee)|The employee who owns the Request.
-`paymentType`|`object`|[`PaymentType`](#schema-payment-type)|Represents the payment type applied to the Request.
 `pendingApproval`|`boolean`|-|Indicates whether this Request is pending approval.
+`pnr`|`string`|-|The value of the pnr provided within the agency proposals by the travel agency.
 `policy`|`object`|[`ResourceLink`](#schema-resourcelink)|The policy that applies to the Request.
 `requestId`|`string`|4 to 6 alphanumeric characters|The public key of the Request (unique per customer).
 `startDate`|`date`|[ISO 8601] `yyyy-MM-dd`|The start date of the Request.
@@ -168,7 +168,7 @@ Name|Type|Format|Description
 `iataCode`|`string`|-|**Required if `air` is used** The IATA code of an airport location.
 `id`|`string`|-|The id of the location.
 `latitude`|`number`|-|The latitude of the location.
-`locationCode`|`string`|-|**Required if `rail` is used with RAIL_xx locationType** The code of the location. Optional for segments based on city locations (will be required in case of duplicate locations within database).
+`locationCode`|`string`|-|**Required if `rail` is used with RAIL_xx locationType** The code of the location. Optional for segments based on city locations: will be required in case of duplicate locations within database; if provided (with city and countryCode still required), it will be considered first, and if not found then city & countryCode will be considered.
 `locationType`|`string`|-|**Required if `rail` is used** The type of the location.
 `longitude`|`number`|-|The longitude of the location.
 `name`|`string`|-|The name of the location. Always provide the `countryCode` value in addition to the `name`.
@@ -185,8 +185,9 @@ Airport
 City
 ```json
 "endLocation": {
-       "city": "Vienna",
-       "countryCode": "AT"
+       "city": "Oslo",
+       "countryCode": "NO",
+       "locationCode": "NOOSL"
 }
 ```
 
@@ -264,6 +265,7 @@ Name|Type|Format|Description
 `orgUnit1` to `orgUnit6`|`object`|[`Amount`](#amount)|The details from the Custom fields. These fields may not have data, depending on the configuration.
 `postedAmount`|`object`|[`Amount`](#schema-amount)|The posted amount of the expected expense entry, in the transaction currency of the Request.
 `parentRequest`|`object`|[`ResourceLink`](#schema-resourcelink)|The parent Request of the expected expense.
+`paymentType`|`object`|[`PaymentType`](#schema-payment-type)|Represents the payment type applied to the expected expense.
 `remainingAmount`|`object`|[`Amount`](#schema-amount)|The remaining amount of the expected expense entry, in the transaction currency of the Request.
 `source`|`enum`|-|The source that created the expected expense. Supported values: `CASH_ADVANCE` or `TRAVEL_ALLOWANCE`. This field will be empty in any other case
 `transactionAmount`|`object`|[`Amount`](#schema-amount)|**Required** The amount of the expected expense entry, in the transaction currency paid to the vendor.
@@ -312,6 +314,8 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 ---|---|---|---
+`cardProgram`|`string`|-|The value of the card program provided in the segment leg.
+`cardValidity`|`string`|-|The value of the card validity provided in the segment leg.
 `class`|`list`|[`List Item Field`](#schema-listitemfield)|The booking class of the segment leg.
 `classOfService`|`string`|-|The class of service of the segment leg. For example, in the case of an air segment, this field would contain the one-letter booking code: `Y` for economy class, or `F` for first class.
 `comment`|`string`|-|Contains the last comment saved in this segment leg.
@@ -321,11 +325,13 @@ Name|Type|Format|Description
 `endLocationDetail`|`string`|-|Details about the end location. This would contain details about the name of a hotel, or some details about a car rental agency for example.
 `endTime`|`time`|`HH:mm`|The time for the end of this segment leg.
 `id`|`string`|-|The unique identifier of the segment leg.
+`flightNumber`|`string`|-|The value of the flight number provided in the Air segment leg.
 `returnLeg`|`boolean`|-|Indicates whether this leg is the return leg of a round trip. In case of a `ROUND_TRIP`, if not explicitly set, the second segment leg will be considered as the return leg.
 `startDate`|`date`|[ISO 8601] `YYYY-MM-DD`|The date of the beginning of this segment leg.
 `startLocation`|`object`|[`ResourceLink`](#schema-resourcelink)|The start location of this segment leg. This would be the departure location for an air segment for example.
 `startLocationDetail`|`string`|-|Details about the start location. This would contain details about the name of a hotel, or some details about a car rental agency for example.
 `startTime`|`time`|`HH:mm`|The time for the beginning of this segment leg.
+`serviceName`|`string`|-|The value of the service name provided in the segment leg.
 `segmentLocator`|`string`|-|This is the identifier for Concur Travel segments (if applicable).
 `vendorName`|`string`|-|Contains the vendor description of the segment leg.
 
