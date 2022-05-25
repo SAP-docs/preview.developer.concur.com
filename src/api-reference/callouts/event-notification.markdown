@@ -13,6 +13,10 @@ This callout differs from the standard SAP Concur web services in the following 
 * The developer or client can configure and maintain the public web service interface (the application connector), or the connector can be maintained by us. This guide specifies the request and response format we require.
 * The developer or client can choose to create their own application connector using a different language, such as PHP, if preferred.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Process Flow <a name="process-flow"></a>
 
 ![Process Flow for the Event Notification Callout](./event-notification-process-flow.png)

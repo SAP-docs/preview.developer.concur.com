@@ -192,3 +192,4 @@ Code|Error|Description
 121|`invalid_request`|`login_type` is invalid
 122|`invalid_request`|proxies supplied are invalid
 123|`invalid_request`|principal is disabled
+134| `invalid_request`|Company undergoing scheduled maintenance.

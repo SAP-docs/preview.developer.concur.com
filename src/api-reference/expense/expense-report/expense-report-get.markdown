@@ -5,11 +5,20 @@ layout: reference
 
 # Get Report Details
 
+{% include deprecation-alert.html %}
+
+**NOTE:** Find the newer version 3.0 [here.](/api-reference/expense/expense-report/v3.reports.html#retrieve-a-report-by-id-)  
+
+
 Retrieves the full set of information for the report. Includes the Report Header, Entry, Attendee, Itemization and Allocation details.  
 
 Some elements will appear only if the OAuth consumer has the Web Services Admin role. These include: The **ReportKey** element, the employee's credit card information, and the employee's bank account information, VAT information, Journal entries. Connectors that utilize this information go through a review process with SAP Concur that includes verification of secure data handling.
 
 GET list of reports can be found [here](/api-reference/expense/expense-report/v2.reports.html)
+
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ## Request <a name="request"></a>
 
@@ -88,6 +97,7 @@ This request will return a **ReportDetails** parent element.
 |  Element |  Description |
 | -------- | ------------ |
 |  ReportEntryID |  The ID of the report entry. Maximum 13 characters. |
+|  LegacyEntryID |  A unique numeric identifier for the expense entry. Corresponds to the report entry key in accounting extracts and the legacyEntryId field in the FIS endpoints. Maximum 11 characters.|
 |  ExpenseTypeID |  The expense type ID for the expense entry. Expense Type IDs are returned in the **ExpKey** element by the Get Expense Group Configuration endpoint. |
 |  ExpenseTypeName |  The expense type name. Maximum 64 characters. |
 |  SpendCategory |  The spend category specified for this expense type. Varies by client, used in reporting. |
@@ -350,6 +360,7 @@ Content-Type: application/xml
     <ExpenseEntriesList>
         <ExpenseEntry>
             <ReportEntryID>nE0avYnILN9mHdTErNSd2pH45udFoNQ$po</ReportEntryID>
+            <LegacyEntryID>3651</LegacyEntryID>
             <ExpenseTypeID>BUSML</ExpenseTypeID>
             <ExpenseTypeName>Business Meal (attendees)</ExpenseTypeName>
             <SpendCategory>Entertainment</SpendCategory>

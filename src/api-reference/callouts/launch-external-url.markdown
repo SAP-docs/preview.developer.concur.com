@@ -22,7 +22,7 @@ This callout differs from the standard SAP Concur web services in the following 
 
 ## <a name="limitations"></a>Limitations
 
-For all new Launch External URL solutions, please use the [Launch External URL v4](https://developer.concur.com/api-reference/callouts/v4.launch-external-url.html) API.
+Access to this documentation does not provide access to the API. For all new Launch External URL solutions, please use the [Launch External URL v4](https://developer.concur.com/api-reference/callouts/v4.launch-external-url.html) API.
 
 ## <a name="process-flow"></a>Process Flow
 

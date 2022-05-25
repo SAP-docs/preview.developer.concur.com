@@ -7,6 +7,9 @@ layout: reference
 
 The configured fields for the specified expense form.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ### URI
 `https://www.concursolutions.com/api/expense/expensereport/v1.1/report/Form/_{FormId}_/Fields`

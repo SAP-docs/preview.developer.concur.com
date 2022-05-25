@@ -9,6 +9,10 @@ layout: reference
 
 This request is sent when the ground transportation service provider needs to send an update to the reservation to Travel.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request <a name="request"></a>
 
 ### URI

@@ -7,6 +7,10 @@ layout: reference
 
 Posts an exception to the report, and associates it with one of the following data levels: Report Header, Entry, Itemization, Allocation. This endpoint requires familiarity with the company's exception code configuration.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request <a name="request"></a>
 
 ### Request Parameters

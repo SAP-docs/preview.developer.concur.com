@@ -14,6 +14,10 @@ This call-out differs from the in-bound SAP Concur web services in the following
 * It uses an out-bound message where SAP Concur calls a public facing API end-point provided by the hotel supplier.
 * The supplier configures and maintains the public web service interface. This guide specifies the request and response format required by SAP Concur.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Product Restrictions <a name="product-restrictions"></a>
 SAP Concur products are highly configurable, and not all clients will have access to all features.
 
