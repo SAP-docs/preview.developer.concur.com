@@ -1902,140 +1902,140 @@ Information about Point of Sale (POS), traveler, and user associated with the re
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|confirmationCodes|[[ConfirmationCode](#schemaconfirmationcode)]|true|none|none|
-|status|[ReservationStatus](#schemareservationstatus)|true|none|Supported values: `PENDING_CONFIRMATION`, `RESERVED`, `CANCELLED`|
-|basicHotelProperty|[BasicHotelProperty](#schemabasichotelproperty)|true|none|none|
-|roomRate|[RoomRateDetails](#schemaroomratedetails)|true|none|none|
-|checkin|string(date)|false|none|none|
-|checkout|string(date)|false|none|none|
-|guests|[[Guest](#schemaguest)]|false|none|none|
-|roomDescription|[string]|true|none|none|
-|comments|[string]|true|none|Comments about special requests for this booking|
+`confirmationCodes`|[`ConfirmationCode`](#schemaconfirmationcode)|-|**Required**|
+`status`|[`ReservationStatus`](#schemareservationstatus)|-|**Required** Supported values: `PENDING_CONFIRMATION`, `RESERVED`, `CANCELLED`|
+`basicHotelProperty`|[`BasicHotelProperty`](#schemabasichotelproperty)|-|**Required**|
+`roomRate`|[`RoomRateDetails`](#schemaroomratedetails)|-|**Required**|
+`checkin`|`string`|`date`|-|
+`checkout`|`string`|`date`|-|
+`guests`|[`Guest`](#schemaguest)|-|-|
+`roomDescription`|`string`|-|**Required**|
+`comments`|`string`|-|**Required** Comments about special requests for the booking.|
 
 ### ConfirmationCode
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|codeType|[ConfirmationCodeType](#schemaconfirmationcodetype)|true|none|Confirmation Code Types that maps to OTA codes for Unique Id Types list `RESERVATION`(Record Locator)=14, `SUPPLIER_CONFIRMATION`=40, `CANCELLATION`=50, `MODIFICATION`=1000, `HOTEL_CONFIRMATION`(Property Confirmation No.)=10, `CONCUR_GDS_REFERENCE` -> Concur Booking Record Locator for Passives|
-|code|string|true|none|none|
+`codeType`|[`ConfirmationCodeType`](#schemaconfirmationcodetype)|-|**Required** Confirmation code type that maps to OTA codes for unique ID types. Supported values: `RESERVATION`(Record Locator)=14, `SUPPLIER_CONFIRMATION`=40, `CANCELLATION`=50, `MODIFICATION`=1000, `HOTEL_CONFIRMATION`(Property Confirmation Number)=10, `CONCUR_GDS_REFERENCE`= SAP Concur Booking Record Locator for Passives|
+`code`|`string`|-|**Required**|
 
 ### Guest
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|firstname|string|true|none|none|
-|lastname|string|true|none|none|
-|address|[Address](#schemaaddress)|false|none|none|
-|companyName|string|true|none|none|
-|contactInfo|[ContactInfo](#schemacontactinfo)|true|none|none|
-|birthdate|string(date)|false|none|none|
+`firstname`|`string`|-|**Required** |
+`lastname`|`string`|-|**Required** |
+`address`|[`Address`](#schemaaddress)|-|-|
+`companyName`|`string`|-|**Required** |
+`contactInfo`|[`ContactInfo`](#schemacontactinfo)|-|**Required** |
+`birthdate`|`string`|`date`|-|
 
 ### ReadCriteria
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
-|confirmationCodes|[[ConfirmationCode](#schemaconfirmationcode)]|true|none|none|
+`requestorInfo`|[`RequestorInfo`](#schemarequestorinfo)|-|**Required** Information about POS, traveler, and user associated with this request.|
+`confirmationCodes`|[`ConfirmationCode`](#schemaconfirmationcode)|-|**Required** |
 
 ### ModifyCriteria
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|reservationCriteria|[ReservationCriteria](#schemareservationcriteria)|true|none|none|
-|confirmationCodes|[[ConfirmationCode](#schemaconfirmationcode)]|true|none|none|
+`reservationCriteria`|[`ReservationCriteria`](#schemareservationcriteria)|-|**Required** |
+`confirmationCodes`|[`ConfirmationCode`](#schemaconfirmationcode)|-|**Required** |
 
 ### CancelCriteria
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|requestorInfo|[RequestorInfo](#schemarequestorinfo)|true|none|Information about POS (Point Of Sale), traveler and user associated with this request|
-|confirmationCodes|[[ConfirmationCode](#schemaconfirmationcode)]|true|none|none|
+`requestorInfo`|[`RequestorInfo`](#schemarequestorinfo)|-|**Required** Information about POS, traveler, and user associated with this request.|
+`confirmationCodes`|[`ConfirmationCode`](#schemaconfirmationcode)|-|**Required** |
 
 ### CancelDetails
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|confirmationCodes|[[ConfirmationCode](#schemaconfirmationcode)]|true|none|none|
-|cancellationRemarks|string|false|none|none|
+`confirmationCodes`|[`ConfirmationCode`](#schemaconfirmationcode)|-|**Required** |
+`cancellationRemarks`|`string`|-|-|
 
 ### ContactInfo
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|phoneNumbers|[string]|true|none|none|
-|faxNumber|string|false|none|none|
-|emails|[string]|true|none|none|
+`phoneNumbers`|`string`|-|**Required** |
+`faxNumber`|`string`|-|-|
+`emails`|`string`|-|**Required** |
 
 ### LeadRate
 
-Lead rate is the lowest nightly rate averaged over the stay, before taxes and fees
+The lowest nightly rate averaged over the stay, before taxes and fees.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|avgNightlyRate|[Price](#schemaprice)|true|none|none|
+`avgNightlyRate`|[`Price`](#schemaprice)|-|**Required** |
 
 ### HotelAmenity
 
-Hotel amenity containing code as described in OTA code list Hotel Amenity Code (HAC)
+Hotel amenity containing code as described in OTA code list Hotel Amenity Code.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|amenityCode|integer(int32)|true|none|none|
+`amenityCode`|`integer`|`int32`|**Required** |
 
 ### RoomAmenity
 
-Room amenity containing code as described in OTA code list Room Amenity Type (RMA)
+Room amenity containing code as described in OTA code list Room Amenity Type.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|amenityCode|integer(int32)|true|none|none|
+`amenityCode`|`integer`|`int32`|**Required** |
 
 ### Error
 
-Error with OTA code and description
+Error with OTA code and description.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|otaCode|integer(int32)|false|none|Code based on OTA Error Codes list (https://www.opentraveldevelopersnetwork.com/code-list)|
-|message|string|true|none|none|
+`otaCode`|`integer`|`int32`|Code based on [OTA Error Codes list](https://www.opentraveldevelopersnetwork.com/code-list).|
+`message`|`string`|-|**Required** |
 
 ### SearchResponse
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|hotelProperties|[[HotelProperty](#schemahotelproperty)]|true|none|[Hotel property object returned by hotel search]|
-|searchSessionToken|[SearchSessionToken](#schemasearchsessiontoken)|false|none|Session token to be generated and provided by server on initial "search" call that can be referenced back for future api calls on the same session.|
+`hotelProperties`|[`HotelProperty`](#schemahotelproperty)|-|**Required** Hotel property object returned by hotel search.|
+`searchSessionToken`|[`SearchSessionToken`](#schemasearchsessiontoken)|-|Session token to be generated and provided by server on initial search call that can be referenced back for future calls on the same session.|
 
 ### RatesResponse
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|checkin|string(date)|true|none|none|
-|checkout|string(date)|true|none|none|
-|hotelRates|[[HotelRates](#schemahotelrates)]|true|none|none|
+`checkin`|`string`|`date`|**Required** |
+`checkout`|`string`|`date`|**Required** |
+`hotelRates`|[`HotelRates`](#schemahotelrates)|`date`|**Required** |
 
 ### RateDetailsResponse
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|checkin|string(date)|true|none|none|
-|checkout|string(date)|true|none|none|
-|roomRate|[RoomRateDetails](#schemaroomratedetails)|true|none|none|
+`checkin`|`string`|`date`|**Required** |
+`checkout`|`string`|`date`|**Required** |
+`roomRate`|[`RoomRateDetails`](#schemaroomratedetails)|-|**Required** |
 
 ### HotelDetailsResponse
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|hotelDetailsList|[[HotelDetails](#schemahoteldetails)]|true|none|none|
+`hotelDetailsList`|[`HotelDetails`](#schemahoteldetails)|-|**Required** |
 
 ### Bedding
 
-Details about bedding associated with the room
+Details about bedding associated with the room.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|quantity|integer|true|none|No. of beds|
-|bedTypeCode|integer(int32)|true|none|Code based on OTA Bed Type (BED) list (https://www.opentraveldevelopersnetwork.com/code-list)|
+`quantity`|`integer`|-|**Required** Number of beds.|
+`bedTypeCode`|`integer`|`int32`|Code based on [OTA Bed Type (BED) list](https://www.opentraveldevelopersnetwork.com/code-list).|
 
 ### Taxes
 
@@ -2043,8 +2043,8 @@ Representation of nightly tax amount associated with a rate along with optional 
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|amount|number|true|none|none|
-|taxBreakdown|[[FeeTaxType](#schemafeetaxtype)]|false|none|[Fee or Tax associated with rate - can be either included or excluded from total rate as marked with 'inclusive' field.]|
+`amount`|`number`|-|**Required** |
+`taxBreakdown`|[`FeeTaxType`](#schemafeetaxtype)|-|Fee or tax associated with rate. Can be either included or excluded from total rate as marked with `inclusive` field.|
 
 ### Fees
 
@@ -2052,48 +2052,46 @@ Representation of nightly fees associated with a rate for given dates along with
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|amount|number|true|none|none|
-|feeBreakdown|[[FeeTaxType](#schemafeetaxtype)]|false|none|[Fee or Tax associated with rate - can be either included or excluded from total rate as marked with 'inclusive' field.]|
+`amount`|`number`|-|**Required** |
+`taxBreakdown`|[`FeeTaxType`](#schemafeetaxtype)|-|Fee or tax associated with rate. Can be either included or excluded from total rate as marked with `inclusive` field.|
 
 ### FeeTaxType
 
-Fee or Tax associated with rate - can be either included or excluded from total rate as marked with 'inclusive' field.
-
 |Name|Type|Format|Description|
 |---|---|---|---|
-|amount|number|true|none|none|
-|fttCode|integer(int32)|true|none|Code based on OTA's Fee Tax Type (FTT) list (https://www.opentraveldevelopersnetwork.com/code-list)|
-|inclusive|boolean|true|none|Whether or not this tax/fee is included in totalAmountAfterTax amount.|
+`amount`|`number`|-|**Required** |
+`fttCode`|`integer`|`int32`|**Required** Code based on [OTA's Fee Tax Type (FTT) list](https://www.opentraveldevelopersnetwork.com/code-list).|
+`inclusive`|`boolean`|`true` / `false`|**Required** If `true`, this tax/fee is included in `totalAmountAfterTax` amount.|
 
 ### SustainabilityAward
 
-Award/Certification related to sustainability awarded to the hotel
+Award or certification related to sustainability awarded to the hotel.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|label|string|true|none|Name or label of the award/certification|
-|level|string|false|none|Optional level of certification|
+`label`|`string`|-|**Required** Name or label of the award/certification.|
+`level`|`string`|-|Optional level of certification.|
 
 ### LegalEntity
 
-Provides details about the legal entity associated with this booking if available
+Provides details about the legal entity associated with this booking, if available.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|name|string|true|none|Name of the legal entity|
-|taxId|string|true|none|Tax identity of the legal entity|
-|address|[Address](#schemaaddress)|false|none|none|
+`name`|`string`|-|**Required** Name of the legal entity.|
+`taxId`|`string`|-|**Required** Tax identity of the legal entity.|
+`address`|[`Address`](#schemaaddress)|-|-|
 
 ### ThreeDSecure
 
-3D Secure Strong Customer Authentication payment verification parameters
+3D Secure strong customer authentication payment verification parameters.
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|avv|string|true|none|For 3DS1, this is the CAVV. For 3DS2, this is the AVV.|
-|cavvAlgorithm|string|false|none|Identifies the algorithm used to generate the CAVV for 3DS1.|
-|messageVersion|string|true|none|3D Secure version|
-|transactionId|string|false|none|Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
-|threeDSServerTransactionID|string|false|none|For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.|
-|eci|string|true|none|Electronic Commerce Indicator|
-|exemptionCode|string|false|none|Identifies SCA exemption type|
+`avv`|`string`|-|**Required** For 3DS1, this is the `CAVV`. For 3DS2, this is the `AVV`.|
+`cavvAlgorithm`|`string`|-|Identifies the algorithm used to generate the CAVV for 3DS1.|
+`messageVersion`|`string`|-|**Required** 3D Secure version.|
+`transactionId`|`string`|-|Unique transaction identifier assigned by the 3DS Server to identify a single transaction.|
+`threeDSServerTransactionID`|`string`|-|For 3DS1, this identifies the `XID`. For 3DS2, this identifies the `dsTransactionID`.|
+`eci`|`string`|-|**Required** Electronic Commerce Indicator.|
+`exemptionCode`|`string`|-|Identifies SCA exemption type.|
