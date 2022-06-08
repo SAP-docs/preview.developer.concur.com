@@ -170,7 +170,7 @@
     },
     "/hotels/ratedetails" : {
       "post" : {
-        "description" : "Retrieve hotel rate details for rates of a property - used when rate details are missing from /rates call and/or during checkout process.",
+        "description" : "Retrieve details for rates of a property including guarantee, cancel penalty and nightly price breakdown - required if these details are missing from /hotels/rates call",
         "operationId" : "ratedetails",
         "parameters" : [ {
           "explode" : false,
@@ -933,11 +933,10 @@
             },
             "type" : "array"
           },
-          "mediaItems" : {
-            "items" : {
-              "$ref" : "#/components/schemas/HotelMedia"
-            },
-            "type" : "array"
+          "leadImageURI" : {
+            "description" : "Contains an HTTPS URL pointing to a .png or .jpg hotel image file. The image will be used as a thumbnail and should be limited to 70x70 pixels to prevent image artifacts by scaling.",
+            "example" : "https://images.samplehost.com/samplepath/leadimage.jpg",
+            "type" : "string"
           },
           "rating" : {
             "$ref" : "#/components/schemas/HotelRating"
@@ -949,7 +948,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "address", "amenities", "availabilityStatus", "contactInfo", "hotelName", "images", "leadRate", "propertyCode" ],
+        "required" : [ "address", "amenities", "availabilityStatus", "contactInfo", "hotelName", "leadImageURI", "leadRate", "propertyCode" ],
         "type" : "object"
       },
       "HotelRating" : {
@@ -1017,6 +1016,7 @@
         "type" : "string"
       },
       "HotelMedia" : {
+        "description" : "Hotel media details",
         "properties" : {
           "url" : {
             "example" : "https://images.samplehost.com/samplepath/hotelEntrance.jpg",
@@ -1040,6 +1040,7 @@
         "type" : "object"
       },
       "MediaType" : {
+        "description" : "Note that currently only \"IMAGE\" type is supported in Concur application",
         "enum" : [ "IMAGE", "VIDEO" ],
         "type" : "string"
       },
@@ -1060,7 +1061,7 @@
             "$ref" : "#/components/schemas/Address"
           },
           "iataCode" : {
-            "description" : "IATA code of airport if location searched is of type Airport",
+            "description" : "IATA code of airport if location searched is of type AIRPORT",
             "type" : "string"
           }
         },
@@ -1456,7 +1457,7 @@
         "properties" : {
           "posRequestorId" : {
             "description" : "An identifier of the entity making the request (e.g. ATA/IATA/ID number)",
-            "example" : "HTL:91369",
+            "example" : "abc1234",
             "type" : "string"
           },
           "travelerUuid" : {
@@ -2143,9 +2144,15 @@
               "$ref" : "#/components/schemas/HotelDescriptiveInfo"
             },
             "type" : "array"
+          },
+          "mediaItems" : {
+            "items" : {
+              "$ref" : "#/components/schemas/HotelMedia"
+            },
+            "type" : "array"
           }
         },
-        "required" : [ "descriptiveInfos", "propertyDescription" ],
+        "required" : [ "descriptiveInfos", "mediaItems", "propertyDescription" ],
         "type" : "object"
       },
       "ReservationCriteria_guarantee" : {
