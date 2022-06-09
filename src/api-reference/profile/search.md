@@ -48,13 +48,13 @@ Retrieves users of a given company. The filter operations can be used to fetch a
 | Parameter | Description | Required | Value |
 | --- | --- | --- | --- |
 | `companyId` | Scope of search is within user's authorized boundary | Yes | UUID
-| `filter`    | Narrow returned users matching expression | No | See #Filtering
+| `filter`    | Narrow returned users matching expression | No | See [Filtering](#Filtering)
 | `count`     | Number of users to return | No | 1 - 1000
 | `attributes`| Return only specified fields. Delimited by commas. | No | active,id,meta
 | `excludedAttributes` | Return all other fields than specified. Delimited by commas.| No | active,meta
-| `continuationToken` | Enable user to continue session to the next page | No | See #Pagination
+| `continuationToken` | Enable user to continue session to the next page | No | See [Pagination](#Pagination)
 
-### Filtering
+### <a name="Filtering"></a>Filtering
 
 Filters are comprised of Attribute Operators, Logical Operators, and Grouping Operators.
 
@@ -113,7 +113,7 @@ Evaluate an expression in explicit order.
 | ( ) | Precedence grouping, (evaluate first) and overrides precedence | `(name.givenName eq "John" or name.givenName eq "James") and name.familyName eq "Smith"`
 | [ ] | Complex attribute filtering, used with multi-valued attributes | `emails[type eq "work" and value co "@example.com"]`
 
-## Pagination
+## <a name="Pagination"></a>Pagination 
 By default, a single query will return `100` users. To retrieve more than `100` users for a single query, SCIM defines the [count](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.4) query parameter. 
 
 Note: The `startIndex` query parameter is *not supported* by Pv4 Search, due to the behavior of Deep Pagination. 
