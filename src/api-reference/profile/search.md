@@ -44,7 +44,7 @@ This API supports only company level access tokens.
 
 Retrieves users of a given company. The filter operations can be used to fetch a unique user or users identity information.
 
-### Query Parameters
+### Parameters
 | Parameter | Description | Required | Value |
 | --- | --- | --- | --- |
 | `companyId` | Scope of search is within user's authorized boundary | Yes | UUID
@@ -128,24 +128,13 @@ The upper limit of `count` is `1,000` users for a single query. To go *beyond* t
 ##### Template
 
 ```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users
+GET https://us.api.concursolutions.com/profile/identity/v4.1/Users
 ```
 
-```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users?count=20
-```
-
-```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users/<Concur UUID>
-```
-
-```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users?filter=attributes eq "value"
-```
 ### Example
 
 ```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users?filter=employeeNumber eq "123456789_1"
+GET https://us.api.concursolutions.com/v4/Users?filter=emails[type eq "work" and value ew "@example.com"]
 ```
 
 #### Headers
@@ -184,7 +173,7 @@ None.
 #### Request
 
 ```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users/
+GET https://us.api.concursolutions.com/profile/identity/v4.1/Users/
 Accept: application/json
 Authorization: BEARER {token}
 ```
@@ -212,9 +201,9 @@ Content-Type: application/json
 }
 ```
 
-## Retrieve a User's Identity Profile <a name="GET-user-identity"></a>
+## Search for a User's Identity <a name="GET-user-identity"></a>
 
-Retrieves a unique user based on the user’s UUID.
+Retrieves a unique users based on search criteria.
 
 ### Request
 
@@ -223,14 +212,22 @@ Retrieves a unique user based on the user’s UUID.
 ##### Template
 
 ```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users/
+GET https://us.api.concursolutions.com/v4.1/Users?filter=emails[type eq "work" and value ew "@example.com"]
 ```
 ##### Parameters
 
 Name|Type|Format|Description
 ---|---|---|---
-`id`|`string`|-|Requested user's UUID.
+`id`|`string`|-|Requested company UUID.
 
+| Name | Type | Format |Description | Required |
+| --- | --- | --- | --- |
+| `companyId` | `UUID` | UUID |Scope of search is within user's authorized boundary | No (Only cert requests)
+| `filter`    | `string` | See [Filtering](#Filtering) |Narrow returned users matching expression | No
+| `count`     | `integer` | 1 - 1000 |Number of users to return | No
+| `attributes`| `string` |-|Return only specified fields. Delimited by commas. Supported attributes: `active`, `meta`, `id` | No
+| `excludedAttributes` | `string` |-| Return all other fields than specified. Delimited by commas. Supported attributes: `active`, `meta` | No
+| `continuationToken` | `string` | See [Pagination](#Pagination) | Enables request to continue session to the next page | No 
 
 #### Headers
 
@@ -268,7 +265,7 @@ None.
 #### Request
 
 ```
-GET https://us.api.concursolutions.com/profile/identity/v4/Users/
+GET https://us.api.concursolutions.com/v4/Users?filter=emails[type eq "work" and value ew "@example.com"]
 Accept: application/json
 Authorization: BEARER {token}
 ```
@@ -282,67 +279,63 @@ Content-Type: application/json
 
 ```json
 {
-    "localeOverrides": {
-        "preferenceEndDayViewHour": 20,
-        "preferenceFirstDayOfWeek": "Sunday",
-        "preferenceDateFormat": "mm/dd/yyyy",
-        "preferenceCurrencySymbolLocation": "BeforeAmount",
-        "preferenceHourMinuteSeparator": ":",
-        "preferenceDistance": "mile",
-        "preferenceDefaultCalView": "month",
-        "preference24Hour": "H:mm AM/PM",
-        "preferenceNumberFormat": "1,000.00",
-        "preferenceStartDayViewHour": 8,
-        "preferenceNegativeCurrencyFormat": null,
-        "preferenceNegativeNumberFormat": null
-    },
-    "addresses": [],
-    "timezone": "America/New_York",
-    "meta": {
-        "resourceType": "User",
-        "created": "2021-11-17T22:44:09.000164Z",
-        "lastModified": "2021-11-17T22:48:31.000891Z",
-        "version": 4,
-        "location": "https://us.api.concursolutions.com/profile/identity/v4/Users/3df11695-e8bb-40ff-8e98-c85913ab2789"
-    },
-    "displayName": "John",
-    "name": {
-        "familyName": "Doe",
-        "givenName": "John",
-        "honorificSuffix": "VI",
-        "familyNamePrefix": null
-    },
-    "phoneNumbers": [],
-    "emergencyContacts": null,
-    "preferredLanguage": "en-US",
-    "title": null,
-    "dateOfBirth": null,
-    "nickName": null,
     "schemas": [
-        "urn:ietf:params:scim:schemas:core:2.0:User",
-        "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
-        "urn:ietf:params:scim:schemas:extension:sap:2.0:User"
-    ],
-    "externalId": "1234_externalId",
-    "active": true,
-    "id": "3df11695-e8bb-40ff-8e98-c85913ab2789",
-    "emails": [
+        "urn:ietf:params:scim:api:messages:2.0:ListResponse" ],
+    "totalResults": 1000,
+    "startIndex": 1,
+    "itemsPerPage": 100,
+    "Resources": [
+        {},
         {
-            "verified": false,
-            "type": "work",
-            "value": "John11_17_1@sap.com",
-            "notifications": true
+         User in company
+         with one or more emails matching type (field) equal to "work" (value)
+         AND value (field) ends with "@example.com" (value)
+        },
+        {
+            "emails": [
+                {
+                    "verified": true,
+                    "type": "work",
+                    "value": "John@example.com",
+                    "notifications": true
+                }
+            ]
         }
-    ],
-    "userName": "John11_17_1@sap.com",
-    "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
-        "terminationDate": null,
-        "companyId": "aa076ada-80a9-4f57-8e98-9300b1c3171d",
-        "manager": null,
-        "costCenter": null,
-        "startDate": "2021-11-17T00:00:00.000",
-        "employeeNumber": "1234_employeeNumber"
-    }
+    ]
 }
 ```
+
+#### Request for single user with UUID
+
+```
+GET https://us.api.concursolutions.com/v4/Users?filter=urn:ietf:params:scim:schemas:extension:sap:2.0:User eq c7e128ed-a8a6-4627-bd5d-42f7f89cdeb4
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+#### Response
+
+```
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+    ],
+    "totalResults": 1,
+    "startIndex": 1,
+    "itemsPerPage": 1,
+    "Resources": [
+        {},
+        {
+            "urn:ietf:params:scim:schemas:extension:sap:2.0:User": {
+                "userUuid": "c7e128ed-a8a6-4627-bd5d-42f7f89cdeb4"
+        }
+    ]
+}
+```
+
 
