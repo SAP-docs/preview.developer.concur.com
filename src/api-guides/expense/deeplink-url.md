@@ -45,6 +45,19 @@ https://www.concursolutions.com/goto/expense-report/{reportID}?companyUUID={comp
 |`companyUUID`|`string`|-|The unique identifier of the company, in UUID format, to which the expense report belongs to.|
 |`context`|`string`|-|The access level of the user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `MANAGER`, or `PROCESSOR`|
 
+### Order of Precedence
+
+The following order of precedence will be applied to determine the appropriate role to use in opening the report if the context is not defined in the URL, based on the applicable roles assigned to the user.  Provision of context can narrow the roles considered in this evaluation to more accurately direct the UI to the appropriate role.
+
+||Role|Context|
+|---|---|---|
+|1|Expense User (report owner)|TRAVELER|
+|2|Delegate for report owner|TRAVELER|
+|3|Expense Approver|MANAGER|
+|4|Delegate for expense approver|MANAGER|
+|5|Expense Proxy for the report owner’s group|TRAVELER|
+|6|Expense Processor for the report owner’s group|PROCESSOR|
+
 When the deep link URL is generated without the company UUID, the user will be prompted with a sign in page to provide login ID in order to discover the company UUID. The user will be prompted with the identity provider (IdP) sign in page to provide the appropriate login ID, which is used for authentication purposes.
 
 #### Example:
