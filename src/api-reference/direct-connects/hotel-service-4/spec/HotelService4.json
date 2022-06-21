@@ -933,10 +933,11 @@
             },
             "type" : "array"
           },
-          "leadImageURI" : {
-            "description" : "Contains an HTTPS URL pointing to a .png or .jpg hotel image file. The image will be used as a thumbnail and should be limited to 70x70 pixels to prevent image artifacts by scaling.",
-            "example" : "https://images.samplehost.com/samplepath/leadimage.jpg",
-            "type" : "string"
+          "mediaItems" : {
+            "items" : {
+              "$ref" : "#/components/schemas/HotelMedia"
+            },
+            "type" : "array"
           },
           "rating" : {
             "$ref" : "#/components/schemas/HotelRating"
@@ -948,7 +949,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "address", "amenities", "availabilityStatus", "contactInfo", "hotelName", "leadImageURI", "leadRate", "propertyCode" ],
+        "required" : [ "address", "amenities", "availabilityStatus", "contactInfo", "hotelName", "images", "leadRate", "propertyCode" ],
         "type" : "object"
       },
       "HotelRating" : {
@@ -973,7 +974,7 @@
       },
       "CatalogName" : {
         "description" : "Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time",
-        "enum" : [ "Northstar", "Giata", "Leonardo", "Amadeus", "Sabre", "Galileo", "CWT", "Expedia", "HRS", "Booking.com" ],
+        "enum" : [ "NORTHSTAR", "GIATA", "LEONARDO", "AMADEUS", "SABRE", "GALILEO", "CWT", "EXPEDIA", "HRS", "BOOKING.COM" ],
         "type" : "string"
       },
       "BasicHotelProperty" : {
@@ -1304,9 +1305,14 @@
             },
             "minItems" : 1,
             "type" : "array"
+          },
+          "isRefundable" : {
+            "description" : "Is this rate refundable or not (based on all cancel penalties)",
+            "example" : true,
+            "type" : "boolean"
           }
         },
-        "required" : [ "penalties" ],
+        "required" : [ "isRefundable", "penalties" ],
         "type" : "object"
       },
       "RoomRateDetails" : {
@@ -1515,7 +1521,7 @@
             "$ref" : "#/components/schemas/HotelDetails_hotelDescriptiveInfo"
           }
         },
-        "required" : [ "descriptiveInfo", "propertyRef" ],
+        "required" : [ "hotelDescriptiveInfo", "propertyRef" ],
         "type" : "object"
       },
       "HotelDescriptiveInfo" : {
@@ -1669,7 +1675,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "basicHotelProperty", "comments", "confirmationCodes", "guest", "roomDescription", "roomRate", "status" ],
+        "required" : [ "basicHotelProperty", "comments", "confirmationCodes", "guests", "roomDescription", "roomRate", "status" ],
         "type" : "object"
       },
       "ReservationStatus" : {
@@ -1904,11 +1910,14 @@
             "format" : "date",
             "type" : "string"
           },
-          "roomRate" : {
-            "$ref" : "#/components/schemas/RoomRateDetails"
+          "roomRates" : {
+            "items" : {
+              "$ref" : "#/components/schemas/RoomRateDetails"
+            },
+            "type" : "array"
           }
         },
-        "required" : [ "checkin", "checkout", "roomRate" ],
+        "required" : [ "checkin", "checkout", "roomRates" ],
         "type" : "object"
       },
       "HotelDetailsResponse" : {
@@ -2060,8 +2069,8 @@
             "description" : "Unique transaction identifier assigned by the 3DS Server to identify a single transaction.",
             "type" : "string"
           },
-          "threeDSServerTransactionID" : {
-            "description" : "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.",
+          "threeDSServerTransactionId" : {
+            "description" : "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionId.",
             "type" : "string"
           },
           "eci" : {
@@ -2077,7 +2086,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "avv", "eci", "messageVersion", "transactionID" ],
+        "required" : [ "avv", "eci", "messageVersion", "transactionId" ],
         "type" : "object"
       },
       "HotelProperty_altPropertyCode" : {
