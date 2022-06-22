@@ -170,7 +170,7 @@
     },
     "/hotels/ratedetails" : {
       "post" : {
-        "description" : "Retrieve details for rates of a property including guarantee, cancel penalty and nightly price breakdown - required if these details are missing from /hotels/rates call",
+        "description" : "Retrieve hotel rate details for rates of a property - used when rate details are missing from /rates call and/or during checkout process.",
         "operationId" : "ratedetails",
         "parameters" : [ {
           "explode" : false,
@@ -973,7 +973,7 @@
       },
       "CatalogName" : {
         "description" : "Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time",
-        "enum" : [ "Northstar", "Giata", "Leonardo", "Amadeus", "Sabre", "Galileo", "CWT", "Expedia", "HRS", "Booking.com" ],
+        "enum" : [ "NORTHSTAR", "GIATA", "LEONARDO", "AMADEUS", "SABRE", "GALILEO", "CWT", "EXPEDIA", "HRS", "BOOKING.COM" ],
         "type" : "string"
       },
       "BasicHotelProperty" : {
@@ -1061,7 +1061,7 @@
             "$ref" : "#/components/schemas/Address"
           },
           "iataCode" : {
-            "description" : "IATA code of airport if location searched is of type AIRPORT",
+            "description" : "IATA code of airport if location searched is of type Airport",
             "type" : "string"
           }
         },
@@ -1304,9 +1304,14 @@
             },
             "minItems" : 1,
             "type" : "array"
+          },
+          "isRefundable" : {
+            "description" : "Is this rate refundable or not (based on all cancel penalties)",
+            "example" : true,
+            "type" : "boolean"
           }
         },
-        "required" : [ "penalties" ],
+        "required" : [ "isRefundable", "penalties" ],
         "type" : "object"
       },
       "RoomRateDetails" : {
@@ -1515,7 +1520,7 @@
             "$ref" : "#/components/schemas/HotelDetails_hotelDescriptiveInfo"
           }
         },
-        "required" : [ "descriptiveInfo", "propertyRef" ],
+        "required" : [ "hotelDescriptiveInfo", "propertyRef" ],
         "type" : "object"
       },
       "HotelDescriptiveInfo" : {
@@ -1669,7 +1674,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "basicHotelProperty", "comments", "confirmationCodes", "guest", "roomDescription", "roomRate", "status" ],
+        "required" : [ "basicHotelProperty", "comments", "confirmationCodes", "guests", "roomDescription", "roomRate", "status" ],
         "type" : "object"
       },
       "ReservationStatus" : {
@@ -1904,11 +1909,14 @@
             "format" : "date",
             "type" : "string"
           },
-          "roomRate" : {
-            "$ref" : "#/components/schemas/RoomRateDetails"
+          "roomRates" : {
+            "items" : {
+              "$ref" : "#/components/schemas/RoomRateDetails"
+            },
+            "type" : "array"
           }
         },
-        "required" : [ "checkin", "checkout", "roomRate" ],
+        "required" : [ "checkin", "checkout", "roomRates" ],
         "type" : "object"
       },
       "HotelDetailsResponse" : {
@@ -2060,8 +2068,8 @@
             "description" : "Unique transaction identifier assigned by the 3DS Server to identify a single transaction.",
             "type" : "string"
           },
-          "threeDSServerTransactionID" : {
-            "description" : "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.",
+          "threeDSServerTransactionId" : {
+            "description" : "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionId.",
             "type" : "string"
           },
           "eci" : {
@@ -2077,7 +2085,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "avv", "eci", "messageVersion", "transactionID" ],
+        "required" : [ "avv", "eci", "messageVersion", "transactionId" ],
         "type" : "object"
       },
       "HotelProperty_altPropertyCode" : {
