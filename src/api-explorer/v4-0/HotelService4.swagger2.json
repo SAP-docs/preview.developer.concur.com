@@ -1,14 +1,2443 @@
 {
-	"swagger": "2.0",
-	"info": {
-		"title": "API Title",
-		"version": "1.0"
-	},
-	"host": "api.server.test",
-	"basePath": "/",
-	"schemes": [
-		"https"
-	],
-	"paths": {
-	}
+  "swagger": "2.0",
+  "tags": [
+    {
+      "description": "Hotel workflow endpoints",
+      "name": "service"
+    }
+  ],
+  "basePath": "/",
+  "host": "hs-mock.service.cnqr.tech",
+  "info": {
+    "contact": {
+      "name": "Concur Developer Center Support",
+      "url": "https://developer.concur.com/tools-support/support.html"
+    },
+    "description": "## Introduction\nHotelService API provides a method for Custom Hotel Source vendors to provide hotel inventory, rates and booking related functionality to users of Concur OBT (Online Booking Tool). \n\nOnce the Hotel Supplier has developed and certified their API implementation with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users.\n",
+    "title": "HotelService API",
+    "version": "4.0-alpha"
+  },
+  "paths": {
+    "/hotels/details": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Retrieve hotel property information",
+        "operationId": "hoteldetails",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Hotel details criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HotelDetailsCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Hotel descriptive info for requested properties",
+            "schema": {
+              "$ref": "#/definitions/HotelDetailsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Retrieve descriptive details about specified hotels.",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/ratedetails": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Retrieve hotel rate details for rates of a property - used when rate details are missing from /rates call and/or during checkout process.",
+        "operationId": "ratedetails",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Hotel rates criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RateDetailsCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Hotel rates for requested properties",
+            "schema": {
+              "$ref": "#/definitions/RateDetailsResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Retrieve hotel rate details",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/rates": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Retrieve hotel rates",
+        "operationId": "rates",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Hotel rates criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RatesCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Hotel rates for requested properties",
+            "schema": {
+              "$ref": "#/definitions/RatesResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Retrieve rates for specific hotel properties",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/reservation": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Reserve hotel rate",
+        "operationId": "reservation",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Reservation criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReservationCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Hotel reservation successful",
+            "schema": {
+              "$ref": "#/definitions/ReservationDetails"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Reserve the given hotel rate",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/reservation/cancel": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Cancel specified reservation",
+        "operationId": "cancel",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Cancel reservation criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CancelCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Reservation successfully cancelled",
+            "schema": {
+              "$ref": "#/definitions/CancelDetails"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Reservation record not found"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Cancel specified reservation",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/reservation/modify": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Modify given reservation",
+        "operationId": "modify",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Modify reservation criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ModifyCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Reservation succeessfully modified",
+            "schema": {
+              "$ref": "#/definitions/ReservationDetails"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Reservation record not found"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "501": {
+            "description": "Endpoint not implemented"
+          }
+        },
+        "summary": "Modify specific reservation",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/reservation/read": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Read reservation details. Used in a process of reserving a hotel to acknowledge receipt of booking confirmation as well as write information to Itinerary. Not invoked by user, but by automatic Concur process. Hotel Supplier should reply with the same response as provided for the book response.\n",
+        "operationId": "read",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "description": "This unique code can be used during troubleshooting as it identifies the API call in the log files.",
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Read itinerary criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReadCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful read itinerary",
+            "schema": {
+              "$ref": "#/definitions/ReservationDetails"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Reservation record not found"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Returns detailed information about a hotel reservation.",
+        "tags": [
+          "service"
+        ]
+      }
+    },
+    "/hotels/search": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "description": "Perform the initial search for hotels.",
+        "operationId": "search",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Accept-Language",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "concur-correlationid",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Hotel search criteria",
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SearchCriteria"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results that meet criteria",
+            "schema": {
+              "$ref": "#/definitions/SearchResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid client request. Request shouldn't be retried without changing it.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Error while processing the request. Request can be retried as is at a later time.",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "summary": "Perform the initial search for hotels.",
+        "tags": [
+          "service"
+        ]
+      }
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "security": [
+    {
+      "BasicAuth": []
+    }
+  ],
+  "securityDefinitions": {
+    "BasicAuth": {
+      "type": "basic"
+    }
+  },
+  "definitions": {
+    "AcceptedPayments": {
+      "items": {
+        "$ref": "#/definitions/PaymentCardType"
+      },
+      "type": "array"
+    },
+    "Address": {
+      "properties": {
+        "addressLines": {
+          "items": {
+            "example": "910 Mainland Street",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "city": {
+          "description": "City name",
+          "example": "Vancouver",
+          "type": "string"
+        },
+        "countryCode": {
+          "description": "Two-character ISO code (ISO ALPHA-2) for country",
+          "example": "CA",
+          "type": "string"
+        },
+        "postalCode": {
+          "example": "V5K 0A1",
+          "type": "string"
+        },
+        "state": {
+          "description": "Two-character state code",
+          "example": "BC",
+          "type": "string"
+        }
+      },
+      "required": [
+        "addressLines",
+        "city",
+        "countryCode"
+      ],
+      "type": "object"
+    },
+    "AmountPercent": {
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Price"
+        },
+        "applyAs": {
+          "$ref": "#/definitions/AmountPercentApplyAs"
+        },
+        "basisType": {
+          "$ref": "#/definitions/AmountPercentBasisType"
+        },
+        "feesInclusive": {
+          "description": "If true, all fees are included in the returned rate.",
+          "example": true,
+          "type": "boolean"
+        },
+        "numberOfNights": {
+          "description": "The number of nights that are to be spent in the property.",
+          "example": 5,
+          "type": "integer"
+        },
+        "percent": {
+          "description": "The percentage used to calculate the amount of the cancel fee.",
+          "example": 10.05,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "taxInclusive": {
+          "description": "If true, all taxes are included in the returned rate.",
+          "example": true,
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "AmountPercentApplyAs": {
+      "enum": [
+        "FIRST_NIGHT_DEPOSIT",
+        "LAST_NIGHT_DEPOST",
+        "FIRST_AND_LAST_NIGHT_DEPOSIT",
+        "FIRST_NIGHT_PAYMENT",
+        "LAST_NIGHT_PAYMENT",
+        "FIRST_AND_LAST_NIGHT_PAYMENT"
+      ],
+      "type": "string"
+    },
+    "AmountPercentBasisType": {
+      "enum": [
+        "FULL_STAY",
+        "NIGHTS",
+        "FIRST_LAST"
+      ],
+      "type": "string"
+    },
+    "AvailabilityStatus": {
+      "enum": [
+        "AVAILABLE_FOR_SALE",
+        "CLOSED_OUT"
+      ],
+      "type": "string"
+    },
+    "BasicHotelProperty": {
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "chainCode": {
+          "example": "HH",
+          "type": "string"
+        },
+        "cityCode": {
+          "description": "IATA 3 char city code for this property (required for adding passive segments)",
+          "example": "DFW",
+          "type": "string"
+        },
+        "contactInfo": {
+          "$ref": "#/definitions/ContactInfo"
+        },
+        "hotelName": {
+          "example": "JW Marriott Parq",
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/definitions/Geolocation"
+        },
+        "propertyCode": {
+          "$ref": "#/definitions/PropertyCode"
+        }
+      },
+      "required": [
+        "cityCode",
+        "contactInfo",
+        "hotelName",
+        "propertyCode"
+      ],
+      "type": "object"
+    },
+    "Bedding": {
+      "description": "Details about bedding associated with the room",
+      "properties": {
+        "bedTypeCode": {
+          "description": "Code based on OTA Bed Type (BED) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+          "example": 3,
+          "format": "int32",
+          "type": "integer"
+        },
+        "quantity": {
+          "description": "No. of beds",
+          "example": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "bedTypeCode",
+        "quantity"
+      ],
+      "type": "object"
+    },
+    "CancelCriteria": {
+      "properties": {
+        "confirmationCodes": {
+          "items": {
+            "$ref": "#/definitions/ConfirmationCode"
+          },
+          "type": "array"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        }
+      },
+      "required": [
+        "confirmationCodes",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "CancelDetails": {
+      "properties": {
+        "cancellationRemarks": {
+          "example": "Reservation cancelled with no penalty",
+          "type": "string"
+        },
+        "confirmationCodes": {
+          "items": {
+            "$ref": "#/definitions/ConfirmationCode"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "confirmationCodes"
+      ],
+      "type": "object"
+    },
+    "CancelPenalties": {
+      "properties": {
+        "penalties": {
+          "description": "Cancel penalties associated with the rate",
+          "items": {
+            "$ref": "#/definitions/CancelPenalty"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "penalties"
+      ],
+      "type": "object"
+    },
+    "CancelPenalty": {
+      "properties": {
+        "amountPercent": {
+          "$ref": "#/definitions/AmountPercent"
+        },
+        "cancelDeadline": {
+          "description": "date string in the date-time notation as defined by RFC 3339, section 5.6, for example, 2017-07-21T17:32:28Z",
+          "example": "2017-07-21T17:32:28Z",
+          "type": "string"
+        },
+        "description": {
+          "example": "Free cancellation up to 1 week before checkin",
+          "type": "string"
+        },
+        "refundableStatus": {
+          "$ref": "#/definitions/RefundableStatus"
+        }
+      },
+      "required": [
+        "cancelDeadline",
+        "description",
+        "refundableStatus"
+      ],
+      "type": "object"
+    },
+    "CatalogName": {
+      "description": "Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time",
+      "enum": [
+        "NORTHSTAR",
+        "GIATA",
+        "LEONARDO",
+        "AMADEUS",
+        "SABRE",
+        "GALILEO",
+        "CWT",
+        "EXPEDIA",
+        "HRS",
+        "BOOKING.COM"
+      ],
+      "type": "string"
+    },
+    "ConfirmationCode": {
+      "properties": {
+        "code": {
+          "example": "3704188022P5683",
+          "type": "string"
+        },
+        "codeType": {
+          "$ref": "#/definitions/ConfirmationCodeType"
+        }
+      },
+      "required": [
+        "code",
+        "codeType"
+      ],
+      "type": "object"
+    },
+    "ConfirmationCodeType": {
+      "description": "Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives",
+      "enum": [
+        "RESERVATION",
+        "SUPPLIER_CONFIRMATION",
+        "CANCELLATION",
+        "HOTEL_CONFIRMATION",
+        "CONCUR_GDS_REFERENCE"
+      ],
+      "type": "string"
+    },
+    "ContactInfo": {
+      "properties": {
+        "emails": {
+          "items": {
+            "format": "email",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "faxNumber": {
+          "example": "+1-555-555-5678",
+          "type": "string"
+        },
+        "phoneNumbers": {
+          "items": {
+            "example": "+1-555-555-1234",
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "emails",
+        "phoneNumbers"
+      ],
+      "type": "object"
+    },
+    "CurrencyCode": {
+      "description": "ISO 4217 currency code",
+      "example": "USD",
+      "maxLength": 3,
+      "minLength": 3,
+      "type": "string"
+    },
+    "CustomField": {
+      "description": "Vendor supported custom field",
+      "properties": {
+        "name": {
+          "description": "Name of the custom field",
+          "example": "OrgUnit",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value of the custom field",
+          "example": "Travel Agents",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "type": "object"
+    },
+    "DistanceUnit": {
+      "description": "Unit of distance",
+      "enum": [
+        "MILE",
+        "KM"
+      ],
+      "type": "string"
+    },
+    "Error": {
+      "description": "Error with OTA code and description",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "otaCode": {
+          "description": "Code based on OTA Error Codes list (https://www.opentraveldevelopersnetwork.com/code-list)",
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "type": "object"
+    },
+    "FeeTaxType": {
+      "description": "Fee or Tax associated with rate - can be either included or excluded from total rate as marked with 'inclusive' field.",
+      "properties": {
+        "amount": {
+          "example": 8.05,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "fttCode": {
+          "description": "Code based on OTA's Fee Tax Type (FTT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+          "example": 15,
+          "format": "int32",
+          "type": "integer"
+        },
+        "inclusive": {
+          "description": "Whether or not this tax/fee is included in totalAmountAfterTax amount.",
+          "example": true,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "amount",
+        "fttCode",
+        "inclusive"
+      ],
+      "type": "object"
+    },
+    "Fees": {
+      "description": "Representation of nightly fees associated with a rate for given dates along with optional breakdown.",
+      "properties": {
+        "amount": {
+          "example": 10.95,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "feeBreakdown": {
+          "items": {
+            "$ref": "#/definitions/FeeTaxType"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "amount"
+      ],
+      "type": "object"
+    },
+    "Geolocation": {
+      "properties": {
+        "latitude": {
+          "example": 49.246292,
+          "type": "number"
+        },
+        "longitude": {
+          "example": -123.116226,
+          "type": "number"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "type": "object"
+    },
+    "GuaranteeType": {
+      "enum": [
+        "DEPOSIT_REQUIRED",
+        "GUARANTEE_REQUIRED",
+        "VENDOR_PROVIDED",
+        "NONE"
+      ],
+      "type": "string"
+    },
+    "Guest": {
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "birthdate": {
+          "example": "1990-04-17",
+          "format": "date",
+          "type": "string"
+        },
+        "companyName": {
+          "example": "SAP Concur",
+          "type": "string"
+        },
+        "contactInfo": {
+          "$ref": "#/definitions/ContactInfo"
+        },
+        "firstname": {
+          "example": "Blake",
+          "type": "string"
+        },
+        "lastname": {
+          "example": "Smith",
+          "type": "string"
+        }
+      },
+      "required": [
+        "companyName",
+        "contactInfo",
+        "firstname",
+        "lastname"
+      ],
+      "type": "object"
+    },
+    "HotelAmenity": {
+      "description": "Hotel amenity containing code as described in OTA code list Hotel Amenity Code (HAC)",
+      "properties": {
+        "amenityCode": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "amenityCode"
+      ],
+      "type": "object"
+    },
+    "HotelDescriptiveInfo": {
+      "properties": {
+        "contents": {
+          "example": [
+            "Check-in at 3:00PM",
+            "Check-out at 11:00AM"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "endDate": {
+          "description": "End date for descriptive info if applicable only for specific dates (e.g. for alerts or special events)",
+          "example": "2021-11-20",
+          "format": "date",
+          "type": "string"
+        },
+        "otaCode": {
+          "description": "Code based on OTA Additional Detail Type (ADT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+          "example": 8,
+          "format": "int32",
+          "type": "integer"
+        },
+        "startDate": {
+          "description": "Start date for descriptive info if applicable only for specific dates (e.g. for alerts or special events)",
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        }
+      },
+      "required": [
+        "contents",
+        "otaCode"
+      ],
+      "type": "object"
+    },
+    "HotelDetails": {
+      "properties": {
+        "hotelDescriptiveInfo": {
+          "$ref": "#/definitions/HotelDetails_hotelDescriptiveInfo"
+        },
+        "propertyRef": {
+          "$ref": "#/definitions/HotelPropertyRef"
+        }
+      },
+      "required": [
+        "hotelDescriptiveInfo",
+        "propertyRef"
+      ],
+      "type": "object"
+    },
+    "HotelDetailsCriteria": {
+      "properties": {
+        "hotelCodes": {
+          "description": "Reference Ids to hotel properties for which rate is requested",
+          "items": {
+            "$ref": "#/definitions/HotelPropertyRef"
+          },
+          "type": "array"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        },
+        "searchSessionToken": {
+          "$ref": "#/definitions/SearchSessionToken"
+        }
+      },
+      "required": [
+        "hotelCodes",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "HotelDetailsResponse": {
+      "properties": {
+        "hotelDetailsList": {
+          "items": {
+            "$ref": "#/definitions/HotelDetails"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "hotelDetailsList"
+      ],
+      "type": "object"
+    },
+    "HotelDetails_hotelDescriptiveInfo": {
+      "properties": {
+        "descriptiveInfos": {
+          "items": {
+            "$ref": "#/definitions/HotelDescriptiveInfo"
+          },
+          "type": "array"
+        },
+        "mediaItems": {
+          "items": {
+            "$ref": "#/definitions/HotelMedia"
+          },
+          "type": "array"
+        },
+        "propertyDescription": {
+          "example": "Offering a restaurant and a fitness centre, Hilton Garden Inn Long Island City is located in Long Island City. Free WiFi access is available. Each room here will provide you with a TV. Complete with a microwave, the dining area also has a refrigerator and a coffee machine. Guests will enjoy a full service restaurant and bar with evening room service. Other facilities offered at the property include a shared lounge and luggage storage. LaGuardia Airport is 8 km away. Guests are required to show a photo identification and credit card upon check-in. Please note that all Special Requests are subject to availability and additional charges may apply. Due to Coronavirus (COVID-19), wearing a face mask is mandatory in all indoor common areas. In response to Coronavirus (COVID-19), additional safety and sanitation measures are currently in effect at this property. Food &amp; beverage services at this property may be limited or unavailable due to Coronavirus (COVID-19). Due to Coronavirus (COVID-19), this property is taking steps to help protect the safety of guests and staff. Certain services and amenities may be reduced or unavailable as a result. Please note that the Extra Bed / Crib is subject to availability. The property will be under renovations to the lobby bar and lounge area from 6 January 2020 until 30 March 2020.\n",
+          "type": "string"
+        }
+      },
+      "required": [
+        "descriptiveInfos",
+        "mediaItems",
+        "propertyDescription"
+      ],
+      "type": "object"
+    },
+    "HotelMedia": {
+      "description": "Hotel media details",
+      "properties": {
+        "category": {
+          "description": "OTA code describing the image as defined in OTA Picture Category Code (PIC) list",
+          "format": "int32",
+          "type": "integer"
+        },
+        "description": {
+          "example": "Hotel entrance",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/MediaType"
+        },
+        "url": {
+          "example": "https://images.samplehost.com/samplepath/hotelEntrance.jpg",
+          "format": "uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "url"
+      ],
+      "type": "object"
+    },
+    "HotelProperty": {
+      "description": "Hotel property object returned by hotel search",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "altPropertyCode": {
+          "$ref": "#/definitions/HotelProperty_altPropertyCode"
+        },
+        "amenities": {
+          "items": {
+            "$ref": "#/definitions/HotelAmenity"
+          },
+          "type": "array"
+        },
+        "availabilityStatus": {
+          "$ref": "#/definitions/AvailabilityStatus"
+        },
+        "chainCode": {
+          "description": "Chain code associated with hotel if any",
+          "example": "HH",
+          "type": "string"
+        },
+        "contactInfo": {
+          "$ref": "#/definitions/ContactInfo"
+        },
+        "hotelName": {
+          "example": "JW Marriott Parq",
+          "type": "string"
+        },
+        "leadImageURI": {
+          "description": "Contains an HTTPS URL pointing to a .png or .jpg hotel image file. The image will be used as a thumbnail and should be limited to 70x70 pixels to prevent image artifacts by scaling.",
+          "example": "https://images.samplehost.com/samplepath/leadimage.jpg",
+          "type": "string"
+        },
+        "leadRate": {
+          "$ref": "#/definitions/LeadRate"
+        },
+        "position": {
+          "$ref": "#/definitions/Geolocation"
+        },
+        "preferenceRank": {
+          "$ref": "#/definitions/PreferenceRank"
+        },
+        "propertyCode": {
+          "$ref": "#/definitions/PropertyCode"
+        },
+        "rating": {
+          "$ref": "#/definitions/HotelRating"
+        },
+        "superChainCode": {
+          "example": "EM",
+          "type": "string"
+        },
+        "sustainabilityAwards": {
+          "items": {
+            "$ref": "#/definitions/SustainabilityAward"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "address",
+        "amenities",
+        "availabilityStatus",
+        "contactInfo",
+        "hotelName",
+        "leadImageURI",
+        "leadRate",
+        "propertyCode"
+      ],
+      "type": "object"
+    },
+    "HotelPropertyRef": {
+      "description": "Reference to hotel property using provider specific property code",
+      "properties": {
+        "chainCode": {
+          "description": "Chain code associated with hotel if any",
+          "example": "HH",
+          "type": "string"
+        },
+        "propertyCode": {
+          "description": "Provider's property code as given in search response",
+          "example": "HH498949",
+          "type": "string"
+        }
+      },
+      "required": [
+        "propertyCode"
+      ],
+      "type": "object"
+    },
+    "HotelProperty_altPropertyCode": {
+      "description": "Alternate property code",
+      "properties": {
+        "catalogCode": {
+          "$ref": "#/definitions/PropertyCode"
+        },
+        "catalogName": {
+          "$ref": "#/definitions/CatalogName"
+        }
+      },
+      "required": [
+        "catalogCode",
+        "catalogName"
+      ],
+      "type": "object"
+    },
+    "HotelRate": {
+      "properties": {
+        "bedding": {
+          "items": {
+            "$ref": "#/definitions/Bedding"
+          },
+          "type": "array"
+        },
+        "mealsIncluded": {
+          "description": "Code based on OTA Meal Plan Type (MPT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+          "items": {
+            "example": 19,
+            "format": "int32",
+            "type": "integer"
+          },
+          "type": "array"
+        },
+        "roomAmenities": {
+          "items": {
+            "$ref": "#/definitions/RoomAmenity"
+          },
+          "type": "array"
+        },
+        "roomDescription": {
+          "example": [
+            "1 bedroom luxury suite",
+            "hearing accessible",
+            "workspace",
+            "garden facing balcony"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "roomRate": {
+          "$ref": "#/definitions/RoomRate"
+        },
+        "roomType": {
+          "description": "OTA code of type GRI (Guest Room Info) providing guest room type details",
+          "example": 82,
+          "format": "int32",
+          "type": "integer"
+        },
+        "source": {
+          "$ref": "#/definitions/HotelRate_source"
+        }
+      },
+      "required": [
+        "roomDescription",
+        "roomRate"
+      ],
+      "type": "object"
+    },
+    "HotelRate_source": {
+      "description": "Details about source attributed to this rate. Please note that logo is given preference to name and nothing is displayed as source if suppress is true",
+      "properties": {
+        "logo": {
+          "description": "Logo of the supplier for this source that can be shown in UI",
+          "example": "https://images.samplehost.com/samplepath/sourceLogo.png",
+          "format": "uri",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the supplier for this source that can be shown in UI (Logo is given higher preference)",
+          "example": "Expedia",
+          "type": "string"
+        },
+        "suppress": {
+          "description": "If true, will suppress all source attributions for this rate",
+          "example": true,
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "HotelRates": {
+      "properties": {
+        "propertyCode": {
+          "$ref": "#/definitions/PropertyCode"
+        },
+        "rates": {
+          "items": {
+            "$ref": "#/definitions/HotelRate"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "propertyCode",
+        "rates"
+      ],
+      "type": "object"
+    },
+    "HotelRating": {
+      "description": "Hotel rating details along with source",
+      "properties": {
+        "source": {
+          "description": "Source of rating",
+          "enum": [
+            "NORTHSTAR",
+            "AAA_DIAMONDS",
+            "HOTELSTAR",
+            "STAR_RATING_AUSTRALIA"
+          ],
+          "example": "NORTHSTAR",
+          "type": "string"
+        },
+        "value": {
+          "description": "Hotel rating value should be an integer number from 1 to 5, representing its star rating.",
+          "example": 4,
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "source",
+        "value"
+      ],
+      "type": "object"
+    },
+    "LeadRate": {
+      "description": "Lead rate is the lowest nightly rate averaged over the stay, before taxes and fees",
+      "properties": {
+        "avgNightlyRate": {
+          "$ref": "#/definitions/Price"
+        }
+      },
+      "required": [
+        "avgNightlyRate"
+      ],
+      "type": "object"
+    },
+    "LegalEntity": {
+      "description": "Provides details about the legal entity associated with this booking if available",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "name": {
+          "description": "Name of the legal entity",
+          "example": "My Great Company",
+          "type": "string"
+        },
+        "taxId": {
+          "description": "Tax identity of the legal entity",
+          "example": "111-11-1111",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "taxId"
+      ],
+      "type": "object"
+    },
+    "Location": {
+      "description": "Defines Geo Location for search",
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "geoLocation": {
+          "$ref": "#/definitions/Geolocation"
+        },
+        "iataCode": {
+          "description": "IATA code of airport if location searched is of type Airport",
+          "type": "string"
+        },
+        "locationType": {
+          "$ref": "#/definitions/LocationType"
+        },
+        "name": {
+          "example": "Sheraton DFW Airport Hotel",
+          "type": "string"
+        }
+      },
+      "required": [
+        "geoLocation",
+        "locationType",
+        "name"
+      ],
+      "type": "object"
+    },
+    "LocationSearch": {
+      "description": "Reference to location details for search",
+      "properties": {
+        "location": {
+          "$ref": "#/definitions/Location"
+        },
+        "maxRadius": {
+          "$ref": "#/definitions/Radius"
+        },
+        "radius": {
+          "$ref": "#/definitions/Radius"
+        }
+      },
+      "required": [
+        "location",
+        "maxRadius",
+        "radius"
+      ],
+      "type": "object"
+    },
+    "LocationType": {
+      "description": "Type of location associated with this search",
+      "enum": [
+        "COMPANY_LOCATION",
+        "HOTEL",
+        "ADDRESS",
+        "PLACE",
+        "AIRPORT"
+      ],
+      "example": "Hotel",
+      "type": "string"
+    },
+    "MediaType": {
+      "description": "Note that currently only \"IMAGE\" type is supported in Concur application",
+      "enum": [
+        "IMAGE",
+        "VIDEO"
+      ],
+      "type": "string"
+    },
+    "ModifyCriteria": {
+      "properties": {
+        "confirmationCodes": {
+          "items": {
+            "$ref": "#/definitions/ConfirmationCode"
+          },
+          "type": "array"
+        },
+        "reservationCriteria": {
+          "$ref": "#/definitions/ReservationCriteria"
+        }
+      },
+      "required": [
+        "confirmationCodes",
+        "reservationCriteria"
+      ],
+      "type": "object"
+    },
+    "NightlyPrice": {
+      "description": "Details about nightly price for a given date range",
+      "properties": {
+        "basePrice": {
+          "example": 89.95,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "currencyCode": {
+          "$ref": "#/definitions/CurrencyCode"
+        },
+        "endDate": {
+          "example": "2021-12-31",
+          "format": "date",
+          "type": "string"
+        },
+        "fees": {
+          "$ref": "#/definitions/Fees"
+        },
+        "startDate": {
+          "example": "2021-12-01",
+          "format": "date",
+          "type": "string"
+        },
+        "taxes": {
+          "$ref": "#/definitions/Taxes"
+        },
+        "totalPrice": {
+          "example": 100.05,
+          "multipleOf": 0.01,
+          "type": "number"
+        }
+      },
+      "required": [
+        "basePrice",
+        "currencyCode",
+        "endDate",
+        "fees",
+        "startDate",
+        "taxes",
+        "totalPrice"
+      ],
+      "type": "object"
+    },
+    "PaymentCardType": {
+      "enum": [
+        "AMERICAN_AIRLINES",
+        "ALASKA_BARTER",
+        "AMEX",
+        "AWARD_CREDIT",
+        "CANADIAN",
+        "CARTE_BLANCHE",
+        "CHINA_UNION_PAY",
+        "CONFERMA",
+        "DELTA",
+        "DINERS_CLUB",
+        "DISCOVER",
+        "ENROUTE",
+        "EURO_CARD",
+        "JCB",
+        "MC",
+        "NORTHWEST",
+        "TWA",
+        "UATP",
+        "UNITED_TRAVEL",
+        "UNITED_CREDIT",
+        "VISA"
+      ],
+      "example": "VISA",
+      "type": "string"
+    },
+    "PaymentModeIndicator": {
+      "enum": [
+        "PERSONAL_CARD",
+        "CORPORATE_CARD",
+        "CONCUR_VIRTUAL_CARD",
+        "VENDOR_VIRTUAL_CARD"
+      ],
+      "example": "PersonalCard",
+      "type": "string"
+    },
+    "PreferenceRank": {
+      "enum": [
+        "PREFERRED",
+        "MORE_PREFERRED",
+        "MOST_PREFERRED"
+      ],
+      "type": "string"
+    },
+    "Price": {
+      "properties": {
+        "amount": {
+          "example": 190.95,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "currencyCode": {
+          "$ref": "#/definitions/CurrencyCode"
+        }
+      },
+      "required": [
+        "amount",
+        "currencyCode"
+      ],
+      "type": "object"
+    },
+    "PropertyCode": {
+      "example": "HH498949",
+      "type": "string"
+    },
+    "Radius": {
+      "description": "Radius to restrict the search for hotels. 'maxRadius' allows extending search radius for preferred hotel properties and can be more than radius defined by traveler",
+      "properties": {
+        "unit": {
+          "$ref": "#/definitions/DistanceUnit"
+        },
+        "value": {
+          "example": 5,
+          "format": "int32",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "unit",
+        "value"
+      ],
+      "type": "object"
+    },
+    "RateCategory": {
+      "properties": {
+        "otaCode": {
+          "description": "Code based on OTA Rate Plan Type (RPT) list (https://www.opentraveldevelopersnetwork.com/code-list)",
+          "example": 1,
+          "format": "int32",
+          "type": "integer"
+        },
+        "value": {
+          "description": "Optional value for the given rate plan type code",
+          "example": "AAA",
+          "type": "string"
+        }
+      },
+      "required": [
+        "otaCode"
+      ],
+      "type": "object"
+    },
+    "RateDetailsCriteria": {
+      "properties": {
+        "checkin": {
+          "description": "Check in date as entered by traveler",
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "description": "Check out date as entered by traveler",
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "guestCountryCode": {
+          "description": "Two-character ISO code (ISO ALPHA-2) for country",
+          "example": "CA",
+          "type": "string"
+        },
+        "hotelPropertyRef": {
+          "$ref": "#/definitions/HotelPropertyRef"
+        },
+        "numGuests": {
+          "default": 1,
+          "description": "No. of guests for accomodation as entered by traveler",
+          "format": "int32",
+          "type": "integer"
+        },
+        "rateCategories": {
+          "description": "Special rate categories requested if applicable. Rate category is a value used to request a particular rate code if the guest qualifies for a special rate, such as AARP, AAA or a corporate rate. Uses RPT OTA code type.",
+          "items": {
+            "$ref": "#/definitions/RateCategory"
+          },
+          "type": "array"
+        },
+        "ratePlanIds": {
+          "description": "Rate Product Ids for which detail rates are requested",
+          "items": {
+            "example": "44SM3FAsfvgcZs9ehGlNOQ",
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        },
+        "searchSessionToken": {
+          "$ref": "#/definitions/SearchSessionToken"
+        }
+      },
+      "required": [
+        "checkin",
+        "checkout",
+        "hotelPropertyRef",
+        "ratePlanIds",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "RateDetailsResponse": {
+      "properties": {
+        "checkin": {
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "roomRates": {
+          "items": {
+            "$ref": "#/definitions/RoomRateDetails"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "checkin",
+        "checkout",
+        "roomRates"
+      ],
+      "type": "object"
+    },
+    "RatesCriteria": {
+      "properties": {
+        "checkin": {
+          "description": "Check in date as entered by traveler",
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "description": "Check out date as entered by traveler",
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "guestCountryCode": {
+          "description": "Two-character ISO code (ISO ALPHA-2) for country",
+          "example": "CA",
+          "type": "string"
+        },
+        "hotelPropertyRefs": {
+          "description": "Reference Ids to hotel properties for which rate is requested",
+          "items": {
+            "$ref": "#/definitions/HotelPropertyRef"
+          },
+          "type": "array"
+        },
+        "numGuests": {
+          "default": 1,
+          "description": "No. of guests for accomodation",
+          "format": "int32",
+          "type": "integer"
+        },
+        "rateCategories": {
+          "description": "Special rate categories requested if applicable",
+          "items": {
+            "$ref": "#/definitions/RateCategory"
+          },
+          "type": "array"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        },
+        "searchSessionToken": {
+          "$ref": "#/definitions/SearchSessionToken"
+        }
+      },
+      "required": [
+        "checkin",
+        "checkout",
+        "hotelPropertyRefs",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "RatesResponse": {
+      "properties": {
+        "checkin": {
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "hotelRates": {
+          "items": {
+            "$ref": "#/definitions/HotelRates"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "checkin",
+        "checkout",
+        "hotelRates"
+      ],
+      "type": "object"
+    },
+    "ReadCriteria": {
+      "properties": {
+        "confirmationCodes": {
+          "items": {
+            "$ref": "#/definitions/ConfirmationCode"
+          },
+          "type": "array"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        }
+      },
+      "required": [
+        "confirmationCodes",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "RefundableStatus": {
+      "enum": [
+        "FULLY_REFUNDABLE",
+        "PARTIALLY_REFUNDABLE",
+        "NON_REFUNDABLE"
+      ],
+      "type": "string"
+    },
+    "RequestorInfo": {
+      "description": "Information about POS (Point Of Sale), traveler and user associated with this request",
+      "properties": {
+        "bookingForSelf": {
+          "description": "Is logged in person booking for self or on behalf of someone else",
+          "example": true,
+          "type": "boolean"
+        },
+        "loginId": {
+          "description": "Login ID of traveler within Concur. Only sent when available.",
+          "example": "abc@concur.com",
+          "type": "string"
+        },
+        "posRequestorId": {
+          "description": "An identifier of the entity making the request (e.g. ATA/IATA/ID number)",
+          "example": "abc1234",
+          "type": "string"
+        },
+        "travelerUuid": {
+          "description": "UUID that identifies the traveler within Concur",
+          "example": "123e4567-e89b-12d3-a456-426614174000",
+          "type": "string"
+        }
+      },
+      "required": [
+        "posRequestorId",
+        "travelerUuid"
+      ],
+      "type": "object"
+    },
+    "ReservationCriteria": {
+      "properties": {
+        "checkin": {
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "comments": {
+          "description": "Comments about special requests for this booking",
+          "example": [
+            "Accessible",
+            "NonSmoking",
+            "Upper floor away from elevator"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "confirmationCodes": {
+          "items": {
+            "$ref": "#/definitions/ConfirmationCode"
+          },
+          "type": "array"
+        },
+        "customFields": {
+          "description": "Vendor specific fields if setup for vendor integration",
+          "items": {
+            "$ref": "#/definitions/CustomField"
+          },
+          "type": "array"
+        },
+        "guarantee": {
+          "$ref": "#/definitions/ReservationCriteria_guarantee"
+        },
+        "guests": {
+          "items": {
+            "$ref": "#/definitions/Guest"
+          },
+          "type": "array"
+        },
+        "hotelPropertyRef": {
+          "$ref": "#/definitions/HotelPropertyRef"
+        },
+        "legalEntity": {
+          "$ref": "#/definitions/LegalEntity"
+        },
+        "loyalty": {
+          "$ref": "#/definitions/ReservationCriteria_loyalty"
+        },
+        "paymentModeIndicator": {
+          "$ref": "#/definitions/PaymentModeIndicator"
+        },
+        "ratePlanId": {
+          "example": "44SM3FAsfvgcZs9ehGlNOQ",
+          "type": "string"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        },
+        "searchSessionToken": {
+          "$ref": "#/definitions/SearchSessionToken"
+        },
+        "threeDSecure": {
+          "$ref": "#/definitions/ThreeDSecure"
+        }
+      },
+      "required": [
+        "checkin",
+        "checkout",
+        "customFields",
+        "guests",
+        "hotelPropertyRef",
+        "ratePlanId",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "ReservationCriteria_guarantee": {
+      "properties": {
+        "cardHolderAddress": {
+          "$ref": "#/definitions/Address"
+        },
+        "cardHolderName": {
+          "example": "John Smith",
+          "type": "string"
+        },
+        "cardNumber": {
+          "example": "4242-4242-4242-4242",
+          "type": "string"
+        },
+        "cardType": {
+          "$ref": "#/definitions/PaymentCardType"
+        },
+        "cvv": {
+          "description": "Card Verification Value - three or four-digit number on credit card for security",
+          "example": "369",
+          "type": "string"
+        }
+      },
+      "required": [
+        "cardNumber",
+        "cardType"
+      ],
+      "type": "object"
+    },
+    "ReservationCriteria_loyalty": {
+      "properties": {
+        "accountId": {
+          "example": "209875030",
+          "type": "string"
+        },
+        "programCode": {
+          "example": "EM",
+          "type": "string"
+        }
+      },
+      "required": [
+        "accountId",
+        "programCode"
+      ],
+      "type": "object"
+    },
+    "ReservationDetails": {
+      "properties": {
+        "basicHotelProperty": {
+          "$ref": "#/definitions/BasicHotelProperty"
+        },
+        "checkin": {
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "comments": {
+          "description": "Comments about special requests for this booking",
+          "example": [
+            "Accessible",
+            "NonSmoking",
+            "Upper floor away from elevator"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "confirmationCodes": {
+          "items": {
+            "$ref": "#/definitions/ConfirmationCode"
+          },
+          "type": "array"
+        },
+        "guests": {
+          "items": {
+            "$ref": "#/definitions/Guest"
+          },
+          "type": "array"
+        },
+        "roomDescription": {
+          "example": [
+            "1 bedroom luxury suite",
+            "hearing accessible",
+            "workspace",
+            "garden facing balcony"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "roomRate": {
+          "$ref": "#/definitions/RoomRateDetails"
+        },
+        "status": {
+          "$ref": "#/definitions/ReservationStatus"
+        }
+      },
+      "required": [
+        "basicHotelProperty",
+        "comments",
+        "confirmationCodes",
+        "guests",
+        "roomDescription",
+        "roomRate",
+        "status"
+      ],
+      "type": "object"
+    },
+    "ReservationStatus": {
+      "enum": [
+        "PENDING_CONFIRMATION",
+        "RESERVED",
+        "CANCELLED"
+      ],
+      "type": "string"
+    },
+    "RoomAmenity": {
+      "description": "Room amenity containing code as described in OTA code list Room Amenity Type (RMA)",
+      "properties": {
+        "amenityCode": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "amenityCode"
+      ],
+      "type": "object"
+    },
+    "RoomRate": {
+      "properties": {
+        "cancelPenalties": {
+          "$ref": "#/definitions/CancelPenalties"
+        },
+        "guarantee": {
+          "$ref": "#/definitions/RoomRate_guarantee"
+        },
+        "nightlyPrices": {
+          "items": {
+            "$ref": "#/definitions/NightlyPrice"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "prepayRequired": {
+          "description": "Whether or not prepayment is required for booking this rate",
+          "example": true,
+          "type": "boolean"
+        },
+        "rateCategory": {
+          "$ref": "#/definitions/RateCategory"
+        },
+        "rateChangesOverStay": {
+          "type": "boolean"
+        },
+        "rateDescription": {
+          "example": [
+            "Promotional Rate"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "ratePlanId": {
+          "example": "44SM3FAsfvgcZs9ehGlNOQ",
+          "type": "string"
+        },
+        "refundable": {
+          "description": "Is this rate refundable or not (based on all cancel penalties)",
+          "example": true,
+          "type": "boolean"
+        },
+        "roomId": {
+          "example": "kVNU66KLxuggtu2H",
+          "type": "string"
+        },
+        "totalPrice": {
+          "$ref": "#/definitions/TotalPrice"
+        }
+      },
+      "required": [
+        "rateChangesOverStay",
+        "ratePlanId",
+        "totalPrice"
+      ],
+      "type": "object"
+    },
+    "RoomRateDetails": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/RoomRate"
+        },
+        {
+          "required": [
+            "cancelPenalties",
+            "guarantee",
+            "nightlyPrices"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "RoomRate_guarantee": {
+      "properties": {
+        "acceptedPayments": {
+          "$ref": "#/definitions/AcceptedPayments"
+        },
+        "amountPercent": {
+          "$ref": "#/definitions/AmountPercent"
+        },
+        "cvvRequired": {
+          "type": "boolean"
+        },
+        "guaranteeType": {
+          "$ref": "#/definitions/GuaranteeType"
+        }
+      },
+      "required": [
+        "guaranteeType"
+      ],
+      "type": "object"
+    },
+    "SearchCriteria": {
+      "description": "Search by either location or exact property reference if already available",
+      "properties": {
+        "checkin": {
+          "description": "Check in date as entered by traveler",
+          "example": "2021-10-20",
+          "format": "date",
+          "type": "string"
+        },
+        "checkout": {
+          "description": "Check out date as entered by traveler",
+          "example": "2021-10-23",
+          "format": "date",
+          "type": "string"
+        },
+        "customFields": {
+          "description": "Custom fields that are supported by vendor (e.g. CostCenter)",
+          "items": {
+            "$ref": "#/definitions/CustomField"
+          },
+          "type": "array"
+        },
+        "guestCountryCode": {
+          "description": "Two-character ISO code (ISO ALPHA-2) for country",
+          "example": "CA",
+          "type": "string"
+        },
+        "hotelPropertyRefs": {
+          "description": "Reference Ids to hotel properties if we already have them. When provided 'locationSearch'  will not be used and may not be set.",
+          "items": {
+            "$ref": "#/definitions/HotelPropertyRef"
+          },
+          "type": "array"
+        },
+        "includeDepositRequired": {
+          "description": "Whether to include properties where deposit is required or not",
+          "type": "boolean"
+        },
+        "locationSearch": {
+          "$ref": "#/definitions/LocationSearch"
+        },
+        "maxSearchResults": {
+          "default": 100,
+          "description": "Maximum number of properties allowed to be included in search results",
+          "example": 100,
+          "type": "integer"
+        },
+        "numGuests": {
+          "default": 1,
+          "description": "No. of guests for accomodation as entered by traveler",
+          "format": "int32",
+          "type": "integer"
+        },
+        "rateCategories": {
+          "description": "Special rate categories requested if applicable",
+          "items": {
+            "$ref": "#/definitions/RateCategory"
+          },
+          "type": "array"
+        },
+        "requestorInfo": {
+          "$ref": "#/definitions/RequestorInfo"
+        }
+      },
+      "required": [
+        "checkin",
+        "checkout",
+        "includeDepositRequired",
+        "requestorInfo"
+      ],
+      "type": "object"
+    },
+    "SearchResponse": {
+      "properties": {
+        "hotelProperties": {
+          "items": {
+            "$ref": "#/definitions/HotelProperty"
+          },
+          "type": "array"
+        },
+        "searchSessionToken": {
+          "$ref": "#/definitions/SearchSessionToken"
+        }
+      },
+      "required": [
+        "hotelProperties"
+      ],
+      "type": "object"
+    },
+    "SearchSessionToken": {
+      "description": "Session token to be generated and provided by server on initial \"search\" call that can be referenced back for future api calls on the same session.",
+      "format": "uuid",
+      "type": "string"
+    },
+    "SustainabilityAward": {
+      "description": "Award/Certification related to sustainability awarded to the hotel",
+      "properties": {
+        "label": {
+          "description": "Name or label of the award/certification",
+          "example": "LEED",
+          "type": "string"
+        },
+        "level": {
+          "description": "Optional level of certification",
+          "example": "Gold",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "type": "object"
+    },
+    "Taxes": {
+      "description": "Representation of nightly tax amount associated with a rate along with optional breakdown.",
+      "properties": {
+        "amount": {
+          "example": 5.55,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "taxBreakdown": {
+          "items": {
+            "$ref": "#/definitions/FeeTaxType"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "amount"
+      ],
+      "type": "object"
+    },
+    "ThreeDSecure": {
+      "description": "3D Secure Strong Customer Authentication payment verification parameters",
+      "properties": {
+        "avv": {
+          "description": "For 3DS1, this is the CAVV. For 3DS2, this is the AVV.",
+          "type": "string"
+        },
+        "cavvAlgorithm": {
+          "description": "Identifies the algorithm used to generate the CAVV for 3DS1.",
+          "maxLength": 8,
+          "minLength": 1,
+          "type": "string"
+        },
+        "eci": {
+          "description": "Electronic Commerce Indicator",
+          "maxLength": 8,
+          "minLength": 1,
+          "type": "string"
+        },
+        "exemptionCode": {
+          "description": "Identifies SCA exemption type",
+          "maxLength": 8,
+          "minLength": 1,
+          "type": "string"
+        },
+        "messageVersion": {
+          "description": "3D Secure version",
+          "maxLength": 32,
+          "minLength": 1,
+          "type": "string"
+        },
+        "threeDSServerTransactionId": {
+          "description": "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionId.",
+          "type": "string"
+        },
+        "transactionId": {
+          "description": "Unique transaction identifier assigned by the 3DS Server to identify a single transaction.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "avv",
+        "eci",
+        "messageVersion",
+        "transactionId"
+      ],
+      "type": "object"
+    },
+    "TotalPrice": {
+      "description": "Details about total pricing associated with the stay",
+      "properties": {
+        "currencyCode": {
+          "$ref": "#/definitions/CurrencyCode"
+        },
+        "fees": {
+          "example": 10,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "taxes": {
+          "example": 10,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "totalAfterTax": {
+          "example": 190.95,
+          "multipleOf": 0.01,
+          "type": "number"
+        },
+        "totalBeforeTax": {
+          "example": 170.95,
+          "multipleOf": 0.01,
+          "type": "number"
+        }
+      },
+      "required": [
+        "currencyCode",
+        "totalBeforeTax"
+      ],
+      "type": "object"
+    }
+  },
+  "x-components": {
+    "responses": {
+      "BadRequest": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "description": "Invalid client request. Request shouldn't be retried without changing it."
+      },
+      "ProcessingError": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "description": "Error while processing the request. Request can be retried as is at a later time."
+      }
+    }
+  }
 }
