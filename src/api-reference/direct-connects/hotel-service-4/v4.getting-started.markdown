@@ -5,8 +5,6 @@ layout: reference
 
 # Direct Connect - Hotel Service v4 - Getting Started
 
-{% include prerelease.html %}
-
 Hotel Service v4 API provides a method for Custom Hotel Source suppliers to provide hotel inventory, rates, and booking related functionality to users of the SAP Concur Online Booking Tool (OBT).
 
 This guide provides information on how the hotel supplier can make their content available for Concur Travel users. Once the interface has been developed and certified with SAP Concur, the inventory will begin appearing in hotel searches by opted-in Travel users.
@@ -19,8 +17,7 @@ Access to this documentation does not provide access to the API. SAP Concur prod
 
 ## Prior Versions
 
-- [Hotel-Service-v2](../hotel-service-2/Introduction.markdown)
-
+Hotel Service v2 documentation is available [here](./hotel-service-2/Introduction.html).
 
 ## Process Flow
 
@@ -29,44 +26,46 @@ This is a basic scenario encompassing all the functionality provided by Hotel Se
 ![A process flow diagram of the Hotel Service v4 API](./images/diagrams/hs4-sequence-diagram.png)
 
 ## Products and Editions
-- Concur Travel Professional Edition
-- Concur Travel Standard Edition
+
+* Concur Travel Professional Edition
+* Concur Travel Standard Edition
 
 ## Scope Usage <a name="scope-usage"></a>
 
-- N/A
+* None
 
 ## Dependencies <a name="dependencies"></a>
 
-- None
+* None
 
 ## Access Token Usage <a name="access-token-usage"></a>
 
-- N/A
+* None
 
 ### Reservation and Read Requests
 
-If a Read request does not arrive within 5 minutes for a given reservation, the supplier should treat that reservation as an orphan and should seek to cancel it.
+If a Read request does not arrive within five minutes for a given reservation, the supplier should treat that reservation as an orphan and should seek to cancel it.
 
 ## Supported Operations
 
-| Operation                                                   | Description                                                                                                                                                               |
-|-------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [/hotels/search](./v4.endpoints.md/#opIdsearch)             | Perform the initial search for hotels                                                                                                                                     |
-| [/hotels/rates](./v4.endpoints.md/#opIdrates)               | Retrieve hotel rates                                                                                                                                                      |
-| [/hotels/ratedetails](./v4.endpoints.md/#opIdratedetails)   | (Optional) Retrieve details for rates of a property viz. guarantee, cancel penalty and nightly prices - required if these details are missing from /hotels/rates response |
-| [/hotels/details](/.v4.endpoints.md/#opIdhoteldetails)      | Retrieve hotel descriptive info including media                                                                                                                           |
-| [/hotels/reservation](./v4.endpoints.md/#opIdreservation)   | Reserve hotel rate                                                                                                                                                        |
-| [/hotels/reservation/read](./v4.endpoints.md/#opIdread)     | Read reservation details. Used in a process of reserving a hotel to acknowledge receipt of booking confirmation as well as write information to Itinerary                 | 
-| [/hotels/reservation/modify](./v4.endpoints.md/#opIdmodify) | (Optional) Modify given reservation                                                                                                                                       |
-| [/hotels/reservation/cancel](./v4.endpoints.md/#opIdcancel) | Cancel specified reservation                                                                                                                                              |
-
+|Operation|Description|
+|---|---|
+[`/hotels/search`](./v4.endpoints.md/#opIdsearch)|Perform the initial search for hotels.|
+[`/hotels/rates`](./v4.endpoints.md/#opIdrates)|Retrieve hotel rates.|
+[`/hotels/ratedetails`](./v4.endpoints.md/#opIdratedetails)|Retrieve details the rates of a property, guarantee, cancellation penalty, or nightly prices. This action is required if these details are missing from the `/hotels/rates` response.|
+[`/hotels/details`](/.v4.endpoints.md/#opIdhoteldetails)|Retrieve hotel description info including media.|
+[`/hotels/reservation`](./v4.endpoints.md/#opIdreservation)|Reserve hotel rate.|
+[`/hotels/reservation/read`](./v4.endpoints.md/#opIdread)|Read reservation details. Used to acknowledge the receipt of booking confirmation, as well as write information to itinerary while reserving a hotel.|
+[`/hotels/reservation/modify`](./v4.endpoints.md/#opIdmodify)|Modify given reservation.|
+[`/hotels/reservation/cancel`](./v4.endpoints.md/#opIdcancel)|Cancel specified reservation.|
 
 ## Supported OTA Codes <a id="supported-ota-codes"></a>
-Current list of supported OTA codes for different code list types (RMA, HAC etc.): [Supported OTA Codes](./v4.supported-ota-codes.md)
+
+The current list of supported OTA codes for different code list types (RMA, HAC etc.) can be found [here](./v4.supported-ota-codes.md).
 
 ## Supported Error Codes <a id="supported-error-codes"></a>
-Current list of supported OTA error codes: [Supported Error Codes](./v4.supported-error-codes.md)
+
+The current list of supported OTA error codes can be found [here](./v4.supported-error-codes.md).
 
 ## Non Functional Requirements
 
@@ -87,7 +86,7 @@ All endpoints carry a timeout of 55 seconds. Some operations below support retri
 
 SAP Concur services have monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.
 
-| Operation| Recommended Response Times | Support Retries (for 5xx errors) |
+|Operation|Recommended Response Times|Support Retries (for 5xx errors)|
 |---|---|---|
 `/hotels/search`|< 5 seconds|Yes|
 `/hotels/rates`|< 5 seconds|Yes|
@@ -100,9 +99,9 @@ SAP Concur services have monitoring in place for each endpoint and will open a t
 
 ### Recommended Throughput
 
-Higher throughput allows system to scale and serve large number of travelers. We recommed suppliers provision for resources to support the following throughput.
+Higher throughput allows system to scale and serve large number of travelers. We recommend suppliers provision for resources to support the following throughput.
 
-| Operation|Recommended Throughput (Requests Per Minute)|
+|Operation|Recommended Throughput (Requests Per Minute)|
 |---|---|
 `/hotels/search`|< 50|
 `/hotels/rates`|< 100|
@@ -138,15 +137,16 @@ We require Transport Layer Security v1.2 (TLS 1.2) or higher SSL protocol for da
 We will receive a single URL for each environment (Test and Production) from the hotel supplier. All requests will go to that URL.   
 
 ### Authentication
-SAP Concur will send the user-name and password in the HTTP header (Authorization) where value of the header will be base64 encoded string in the form of "Basic <username:password>". If the username and password generates an authentication error, then SAP Concur expects an HTTP 401 response.
+
+SAP Concur services will send a username and password in the HTTP header (Authorization) where the value of the header will be a `base64` encoded `string` in the form of `Basic <username:password>`. If the username and password generates an authentication error, then there will be a HTTP 401 response.
 
 ## HTTP Headers <a name="http-headers"></a>
 
-SAP Concur will send the following HTTP headers in every request. Please note that some libraries used to handle the requests may be case sensitive. Also note that Concur login-id and traveler uuid are now part of the payload for each request and no longer available as headers.
+SAP Concur services will send the following HTTP headers in every request. Please note that some libraries used to handle the requests may be case sensitive and that the SAP Concur `login-id` and traveler `uuid` are now part of the payload for each request and no longer available as headers.
 
-| Name                   | Type     | Description                                                                                                                                                                                                   |
-|------------------------|----------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `Authorization`        | `string` | A Base64 encoded string in the form of `Basic <username:password>`.                                                                                                                                           |
-| `Content-Type`         | `string` | All communication with the HS2 API is by way of a `application/xml` content type.                                                                                                                             |
-| `Accept`               | `string` | SAP Concur will always set the `Accept` header to `application/xml`.                                                                                                                                          |
-| `concur-correlationid` | `string` | In order to assist with troubleshooting, SAP Concur provides a unique correlationId in the request header.This unique code can be used during troubleshooting as it identifies the API call in the log files. |
+|Name|Type|Format|Description|
+|---|---|---|---|
+`Authorization`|`string`|`base64`|An encoded string in the form of `Basic <username:password>`.|
+`Content-Type`|`string`|-|All communication with the HS2 API is by way of a `application/xml` content type.|
+`Accept`|`string`|-|SAP Concur will always set the `Accept` header to `application/xml`.|
+`concur-correlationid`|`string`|-|In order to assist with troubleshooting, SAP Concur provides a unique `correlationId` in the request header. This unique code can be used during troubleshooting as it identifies the API call in the log files.|
