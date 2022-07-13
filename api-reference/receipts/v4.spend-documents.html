@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Travel Profile v2</title>
+  <title> SAP Concur Developer Center | Spend Documents v4</title>
 
 
 <!-- Meta -->
@@ -28,7 +28,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/travel-profile/v2.profile-service.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/receipts/v4.spend-documents.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -986,13 +986,13 @@
 
     
 
-    <li class="list-group-item list-toggle active">
+    <li class="list-group-item list-toggle ">
       <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-travel-profile">
         Travel Profile
       </a>
-      <ul id="collapse-travel-profile" class="collapse in">
+      <ul id="collapse-travel-profile" class="collapse ">
         
-          <li  class="active" >
+          <li >
             <a href="/api-reference/travel-profile/v2.profile-service.html">Travel Profile v2</a>
           </li>
         
@@ -1128,25 +1128,876 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="travel-profile-v2">Travel Profile v2</h1>
+        <h1 id="spend-documents-v4">Spend Documents V4</h1>
 
-<p>The Travel Profile service consists of a set of resources that provide travel profile functionality customized in specific ways for developers, travel suppliers, and travel management companies (TMCs).</p>
+<div id="attn-prerelease">
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
 
-<h2 id="profile-v2"><a href="./v2.profile-resource.html">Profile v2</a></h2>
+<p>The Spend Documents v4 API can be used to read receipt details, post a receipt and download a receipt compliance document image to be used while filing expense reports. This API can be used to read attributes like amount, receipt date, vendor, and so on.</p>
 
-<p>These web services can be used to retrieve travel profile information for a specified user, or a list of travel profile summaries.</p>
+<h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
-<p>Available to Developers, travel suppliers, and TMCs.</p>
+<p>This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.</p>
 
-<h2 id="loyalty-program-v1"><a href="./v1.loyalty-program-resource.html">Loyalty Program v1</a></h2>
+<h2 id="-process-flow"><a name="process-flow"></a> Process Flow</h2>
 
-<p>This web service can be used to update loyalty information for the user as entered in Concur.</p>
+<p><img src="./v4.spend-docs-process-flow.png" alt="A process flow diagram of the Spend Documents v4 API" /></p>
 
-<p>Available to Travel suppliers and TMCs.</p>
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
-<h2 id="configuration">Configuration</h2>
+<ul>
+  <li>Concur Expense Professional Edition</li>
+  <li>Concur Expense Standard Edition</li>
+</ul>
 
-<p>Travel supplier or TMC partner applications must complete the <a href="/manage-apps/app-certification.html">Concur application review process</a> before they can access production user data. Suppliers can only update Loyalty Program information for the programs that they manage. TMCs can access all the user’s Travel Profile data, regardless of vendor.</p>
+<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code></td>
+      <td>Read access to receipt information</td>
+      <td>GET /spend-documents/v4/receipts/{receiptId}</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.readwrite</code></td>
+      <td>Read and write access to receipt information</td>
+      <td>POST /spend-documents/v4/receipts</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeonly</code></td>
+      <td>Write access to receipt information</td>
+      <td>POST /spend-documents/v4/receipts</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.delete</code></td>
+      <td>Delete access to receipt information</td>
+      <td>DELETE /spend-documents/v4/receipts/{receiptId}</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.read</code></td>
+      <td>Read access to receipt compliance information</td>
+      <td>GET /spend-documents/v4/receipts/{receiptId}/representations?type=display</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.readwrite</code></td>
+      <td>Read and write access to receipt compliance information</td>
+      <td>PUT /spend-documents/v4/receipts/{receiptId}</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.writeonly</code></td>
+      <td>Write access to receipt compliance information</td>
+      <td>PUT /spend-documents/v4/receipts/{receiptId}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+
+<p>The user can use the Identity v4 API to retrieve the <code class="language-plaintext highlighter-rouge">userId</code> and <code class="language-plaintext highlighter-rouge">companyId</code>.</p>
+
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports user and company level access tokens only.</p>
+
+<h2 id="get-receipt-by-id"><a name="get-receipt-id"></a>Get Receipt by Id</h2>
+
+<p>This endpoint returns the details of the receipt along with any compliance documents hrefs.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p>Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">customer.write</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.readwrite</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.delete</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.read</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.readwrite</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.writeonly</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.delete</code></li>
+</ul>
+
+<h4 id="uri">URI</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/spend-documents/v4/receipts/<span class="o">{</span>receiptId<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receiptId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Note required when applicable.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payload">Payload</h4>
+
+<p>Request: <a href="#receipt-schema">GET /spend-docs/v4/receipts/{receiptId}</a>
+Response:<a href="#receipt-schema">GET /spend-docs/v4/receipts/{receiptId}</a></p>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/spend-documents/v4/receipts/123
+Accept: application/json
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: application/json
+Date: Wed, 06 Jul 2022 17:33:03 GMT
+Etag: "359670651"
+Expires: Wed, 13 Jul 2022 17:33:03 GMT
+Last-Modified: Fri, 09 Aug 2021 23:54:35 GMT
+Content-Length: 1270
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "metadata": {
+        "userId": "3e2c1b7e-0969-41b1-b5a6-590eb6a5f885",
+        "forwardId": "testForwardId",
+        "imageId": "AA88A752317B3B5AA8FB19DAEC7BF1CF",
+        "id": "8a490956-d2d0-4c53-8cf3-e6d5a10be900",
+        "companyId": "8f8fd1d8-bbc6-4611-861d-af714a02275f",
+        "dateTimeReceived": "2022-07-06T23:23:25.789Z",
+        "origin": "email",
+        "captureMethod": "email",
+        "complianceCountryCode": null,
+        "feature": "simpleReceipt",
+        "category": null,
+        "status": "processed",
+        "quality": "userProvided",
+        "complianceStatus": "no_processing_required",
+        "isReceiptPromoted": false
+    },
+    "receiptData": null,
+    "representations": [
+        {
+            "representation": "display",
+            "type": "image/jpeg",
+            "href": "https://integration.api.concursolutions.com/receipts/v5/8a490956-d2d0-4c53-8cf3-e6d5a10be900/documents?type=display",
+            "isRenderable": true
+        }
+    ]
+}
+</code></pre></div></div>
+
+<h2 id="get-receipt-representations"><a name="get-receipt-representations"></a>Get Receipt Representations</h2>
+
+<p>This endpoint returns representations of a receipt compliance document by Id. Returns all the different types of representations in a stream.</p>
+
+<h4 id="uri-1">URI</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/spend-documents/v4/receipts/<span class="o">{</span>receiptId<span class="o">}</span>/representations?type<span class="o">=</span> compliance
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receiptId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Note required when applicable.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Default value is display. Possible values: display, compliance, original</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payload-1">Payload</h4>
+
+<p>Request:
+Response</p>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/spend-documents/v4/receipts/{receiptId}/representations?type=original
+Accept: application/json
+</code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<p>Returns the image in the same format that it was originally received by the API (image/png, image/jpg, image/jpeg, image/tiff, image/tif, image/gif, or application/pdf).</p>
+
+<h2 id="upload-compliance-documents"><a name="upload-compliance-documents"></a>Upload Compliance Documents</h2>
+
+<p>Upload compliance documents of a receipt by Id.</p>
+
+<h4 id="uri-2">URI</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://<span class="o">{</span>datacenterURI<span class="o">}</span>/spend-documents/v4/receipts/<span class="o">{</span>receiptId<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receiptId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Note required when applicable.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payload-2">Payload</h4>
+
+<p>Request:
+Response:</p>
+
+<h3 id="examples-2">Examples</h3>
+
+<h4 id="request-2">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/spend-documents/v4/receipts/{receiptId}
+--form 'image=@"/expectedImages/Puppy.pdf"
+--header 'concur-correlationid: 9f926223-8591-4ca2-b64f-4610bb695be5'
+</code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Status Code : 202 Accepted
+Content-Type: application/json
+Transfer-Encoding: chunked
+Last-Modified: Fri, 09 Aug 2021 23:54:35 GMT
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="receipt"><a name="receipt-schema"></a>Receipt</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">metadata</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#receipt-metadata-schema"><code class="language-plaintext highlighter-rouge">receipt metadata</code></a></td>
+      <td>Metadata for the receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receiptData</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#receiptdata-schema"><code class="language-plaintext highlighter-rouge">receiptData</code></a></td>
+      <td>receiptData</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">representations</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#representations-schema"><code class="language-plaintext highlighter-rouge">representations</code></a></td>
+      <td>Compliance representation hrefs for the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="receipt-metadata"><a name="receipt-metadata-schema"></a>Receipt Metadata</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>User’s UUID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">forwardId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Forward Id that clients provide.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">imageId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>Image Id in Imaging Service.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Receipt Id</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>Company UUID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dateTimeReceived</code></td>
+      <td><a href="#datetime-schema"><code class="language-plaintext highlighter-rouge">dateTime</code></a></td>
+      <td>Date/time the receipt was uploaded.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">origin</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Origin of the request - supported origins listed.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">captureMethod</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Type of the receipt capture method.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">provider</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Compliance country code based on user group configuration.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">feature</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Feature enrichment for the receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Status of the receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">quality</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Quality of the receipt data that would dictate operations allowed on the receipt. Verified data is immutable, userProvided - user manually enters the data, predicted - ML predicted.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">complianceStatus</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Compliance status of the receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="representations"><a name="representations-schema"></a>representations</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isRenderable</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>True/false</td>
+      <td>Boolean indicating whether the document can be rendered in UI.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">documentHref</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>URI</td>
+      <td>Href to download the document.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>File type of the receipt document ex: jpeg, png, pdf, etc.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">representation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>For a given receipt document three representations can be stored in the system. Display - a downsized image version to cater for web and mobile UI, compliance - reflects the signed or certified or verified document, original - original document that was submitted.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="receiptdata"><a name="receiptData-schema"></a>receiptData</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">time</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Transaction Time.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Transaction Date.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#amount-schema"><code class="language-plaintext highlighter-rouge">Amount</code></a></td>
+      <td>Amount object.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#vendor-schema"><code class="language-plaintext highlighter-rouge">Vendor</code></a></td>
+      <td>Vendor object.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#paymenttype-schema"><code class="language-plaintext highlighter-rouge">paymentType</code></a></td>
+      <td>Payment Type of a receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lineItems</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td>Array of objects</td>
+      <td>Array of line items.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxCompliance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#taxcompliance-schema"><code class="language-plaintext highlighter-rouge">taxCompliance</code></a></td>
+      <td>Tax compliance properties for a receipt.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customAttributes</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#customeattributes-schema"><code class="language-plaintext highlighter-rouge">customAttributes</code></a></td>
+      <td>Custom attributes of a receipt.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="amount"><a name="amount-schema"></a>Amount</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">total</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Transaction Amount - Total.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">subTotal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Transaction Amount - Sub-Total.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxesTotal</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Transation Amount - Taxes-total.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>3 char</td>
+      <td>Transaction Currency Code.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="vendor"><a name="vendor-schema"></a>Vendor</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Transaction Amount - Total.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Transaction Amount - Sub-Total.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">city</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Transation Amount - Taxes-total.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">state</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>3 char</td>
+      <td>Transaction Currency Code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>2 char</td>
+      <td>Country Code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Postal Code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Tax Id.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">phone</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Phone.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="paymenttype"><a name="paymenttype-schema"></a>paymentType</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentMethod</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Supported Payment methods.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">creditCard</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#creditcard-schema"><code class="language-plaintext highlighter-rouge">creditCard</code></a></td>
+      <td>Credit card type if the payment classification is credit card.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">digitalWallet</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Supported digital payment types ex: ApplePay, PayTM, Rupay, GooglePay.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="creditcard"><a name="creditcard-schema"></a>creditCard</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Name of the card type ex: American Express, MasterCard,Discover etc.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lastFour</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Last 4 digits of credit card number if the payment method is credit card.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="lineitems"><a name="lineitems-schema"></a>lineItems</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">title</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Title.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">description</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Description.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>10 char</td>
+      <td>Date.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">folioType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Folio line item type.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">amount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Amount - Line item.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="taxcompliance-currently-fapiao-only"><a name="taxcompliance-schema"></a>taxCompliance (Currently Fapiao only)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyTaxId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Tax id of the company the customer of the receipt belongs to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Name of the company the customer of the receipt belongs to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">issueDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>date-time</td>
+      <td>Issue Date as defined by RFC3339, section 5.6 , ex:YYYY-MM-DDThhZ.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Code representing the Fapiao type.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoiceSeries</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Invoice Series.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">invoiceNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Invoice Number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">verificationCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Verification Code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>100 char</td>
+      <td>Source.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="customattributes"><a name="customattributes-schema"></a>customAttributes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">additionalProperties</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Additional properties.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="error"><a name="error"></a>Error</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Required Machine readable code associated with the error which is static and never localized. Examples: dateTimeMissing, OutOfMem and invalidUser. These could also be UUID4 (a1d7bb3bb19348b0858687acc9e303ec), number (123456) or a URI (https://example.com/errors/invaliduser) which ideally provides additional information when dereferenced. Whatever form is chosen it’s worth noting contextual strings are helpful to developers reading the code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Required Message associated with the error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dataPath</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Relative data path.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemaPath</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Relative schema path.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">errors</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#error"><code class="language-plaintext highlighter-rouge">error</code></a></td>
+      <td>An array of errors. <strong>Note</strong>: this points to this schema as errors can nest.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="definitions"><a name="definitions"></a>Definitions</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dateTime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>DateTime of where the transaction happened in format specified in ISO 8601, using UTC + Offset. For example, 2016-04-22T12:20+0700 (12:20 PM in Pacific Time).</td>
+    </tr>
+  </tbody>
+</table>
 
       </div>
       <!--/col-md-8-->
@@ -1198,7 +2049,7 @@
       <a href="https://www.concur.com/en-us/privacy-policy">Privacy Policy</a> |
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/travel-profile/v2.profile-service.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/receipts/v4.spend-documents.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
