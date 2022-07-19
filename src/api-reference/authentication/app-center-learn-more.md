@@ -41,7 +41,7 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `identity.user.core.read` <a name="identity-user-core-read"></a> |Read user core data|[Identity v4](/api-reference/profile/v4.identity.html)
 `identity.user.coresensitive.read` <a name="identity-user-coresensitive-read"></a> |Read core sensitive data|[Identity v4](/api-reference/profile/v4.identity.html)
 `identity.user.enterprise.read` <a name="identity-user-enterprise-read"></a> |Read user enterprise data|[Identity v4](/api-reference/profile/v4.identity.html)
-`identity.user.coreenterprise.writeonly` <a name="identity-user-coresensitive-writeonly"></a> |Write access to all core and enterprise fields except externalID|[Identity v4](/api-reference/profile/v4.identity.html)
+`identity.user.coreenterprise.writeonly` <a name="identity-user-coreeenterprise-writeonly"></a> |Write access to all core and enterprise fields except externalID|[Identity v4](/api-reference/profile/v4.identity.html)
 `identity.user.externalID.writeonly` <a name="identity-user-externalid-writeonly"></a> |Write access to externalID only|[Identity v4](/api-reference/profile/v4.identity.html)
 `IMAGE` <a name="image"></a> |Add or get invoice and receipt images|[Receipt Image v3](/api-reference/image/v3.image.html), [Receipt Image v1](/api-reference/image/v1.image.html)
 `INSGHT` <a name="insght"></a> |Access itineraries and identify missing trip segments|[Insights-Latest Bookings](/api-reference/insights/latest-bookings-resource.html), [Insights-Opportunities](/api-reference/insights/opportunities-resource.html)
