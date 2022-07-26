@@ -41,6 +41,7 @@ The following application programming interfaces (APIs) and other resources have
   * Travel Profile v1
     * [Travel Profile v1 - Company Notification](/api-reference/travel-profile/v1.notification-company-resource.html)
     * [Travel Profile v1 - User Notification](/api-reference/travel-profile/v1.notification-user-resource.html)
+* [Travel Request Validation](/api-reference/callouts/request-validation.html)
 * Travel Web Service v1
   * [Profile Resource](/api-reference/travel-profile/v1.profile-resource.html)
 * [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)
