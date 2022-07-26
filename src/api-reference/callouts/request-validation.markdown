@@ -5,6 +5,8 @@ layout: reference
 
 # Travel Request Validation
 
+{% include deprecation-alert.html %}
+
 Requests in the SAP Concur platform can be validated in an external system by using a combination of callouts and web services.  
 
 This guide provides a step by step overview of how to set up and use the external validation functionality for Requests. This guide does not provide instruction on the process of programming the application connector, but provides an overview of the required functionality.
