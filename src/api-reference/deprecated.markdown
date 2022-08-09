@@ -27,7 +27,6 @@ The following application programming interfaces (APIs) and other resources have
   * [Locations](/api-reference/common/locations/v1dot1.locations.html)
 * [Report Details](/api-reference/expense/expense-report/expense-report-get.html)
 * [Expense Report v2](/api-reference/expense/expense-report/v2.reports.html)
-* [Imaging v1](/api-reference/image/v1.image.html)
 * List Item Web Service v1
   * [List Item Web Service](/api-reference/common/list-item/v1.list-item.html)
   * [List Resource](/api-reference/common/list-item/v1.list-resource.html)
@@ -42,6 +41,7 @@ The following application programming interfaces (APIs) and other resources have
   * Travel Profile v1
     * [Travel Profile v1 - Company Notification](/api-reference/travel-profile/v1.notification-company-resource.html)
     * [Travel Profile v1 - User Notification](/api-reference/travel-profile/v1.notification-user-resource.html)
+* [Travel Request Validation](/api-reference/callouts/request-validation.html)
 * Travel Web Service v1
   * [Profile Resource](/api-reference/travel-profile/v1.profile-resource.html)
 * [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)

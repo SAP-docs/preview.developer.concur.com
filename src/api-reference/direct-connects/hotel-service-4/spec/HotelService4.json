@@ -933,11 +933,10 @@
             },
             "type" : "array"
           },
-          "mediaItems" : {
-            "items" : {
-              "$ref" : "#/components/schemas/HotelMedia"
-            },
-            "type" : "array"
+          "leadImageURI" : {
+            "description" : "Contains an HTTPS URL pointing to a .png or .jpg hotel image file. The image will be used as a thumbnail and should be limited to 70x70 pixels to prevent image artifacts by scaling.",
+            "example" : "https://images.samplehost.com/samplepath/leadimage.jpg",
+            "type" : "string"
           },
           "rating" : {
             "$ref" : "#/components/schemas/HotelRating"
@@ -949,7 +948,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "address", "amenities", "availabilityStatus", "contactInfo", "hotelName", "images", "leadRate", "propertyCode" ],
+        "required" : [ "address", "amenities", "availabilityStatus", "contactInfo", "hotelName", "leadImageURI", "leadRate", "propertyCode" ],
         "type" : "object"
       },
       "HotelRating" : {
@@ -974,7 +973,7 @@
       },
       "CatalogName" : {
         "description" : "Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time",
-        "enum" : [ "Northstar", "Giata", "Leonardo", "Amadeus", "Sabre", "Galileo", "CWT", "Expedia", "HRS", "Booking.com" ],
+        "enum" : [ "NORTHSTAR", "GIATA", "LEONARDO", "AMADEUS", "SABRE", "GALILEO", "CWT", "EXPEDIA", "HRS", "BOOKING.COM" ],
         "type" : "string"
       },
       "BasicHotelProperty" : {
@@ -1017,6 +1016,7 @@
         "type" : "string"
       },
       "HotelMedia" : {
+        "description" : "Hotel media details",
         "properties" : {
           "url" : {
             "example" : "https://images.samplehost.com/samplepath/hotelEntrance.jpg",
@@ -1040,6 +1040,7 @@
         "type" : "object"
       },
       "MediaType" : {
+        "description" : "Note that currently only \"IMAGE\" type is supported in Concur application",
         "enum" : [ "IMAGE", "VIDEO" ],
         "type" : "string"
       },
@@ -1456,7 +1457,7 @@
         "properties" : {
           "posRequestorId" : {
             "description" : "An identifier of the entity making the request (e.g. ATA/IATA/ID number)",
-            "example" : "HTL:91369",
+            "example" : "abc1234",
             "type" : "string"
           },
           "travelerUuid" : {
@@ -1514,7 +1515,7 @@
             "$ref" : "#/components/schemas/HotelDetails_hotelDescriptiveInfo"
           }
         },
-        "required" : [ "descriptiveInfo", "propertyRef" ],
+        "required" : [ "hotelDescriptiveInfo", "propertyRef" ],
         "type" : "object"
       },
       "HotelDescriptiveInfo" : {
@@ -1668,7 +1669,7 @@
             "type" : "array"
           }
         },
-        "required" : [ "basicHotelProperty", "comments", "confirmationCodes", "guest", "roomDescription", "roomRate", "status" ],
+        "required" : [ "basicHotelProperty", "comments", "confirmationCodes", "guests", "roomDescription", "roomRate", "status" ],
         "type" : "object"
       },
       "ReservationStatus" : {
@@ -1689,8 +1690,8 @@
         "type" : "object"
       },
       "ConfirmationCodeType" : {
-        "description" : "Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, MODIFICATION=1000, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives",
-        "enum" : [ "RESERVATION", "SUPPLIER_CONFIRMATION", "CANCELLATION", "MODIFICATION", "HOTEL_CONFIRMATION", "CONCUR_GDS_REFERENCE" ],
+        "description" : "Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives",
+        "enum" : [ "RESERVATION", "SUPPLIER_CONFIRMATION", "CANCELLATION", "HOTEL_CONFIRMATION", "CONCUR_GDS_REFERENCE" ],
         "type" : "string"
       },
       "Guest" : {
@@ -1903,11 +1904,14 @@
             "format" : "date",
             "type" : "string"
           },
-          "roomRate" : {
-            "$ref" : "#/components/schemas/RoomRateDetails"
+          "roomRates" : {
+            "items" : {
+              "$ref" : "#/components/schemas/RoomRateDetails"
+            },
+            "type" : "array"
           }
         },
-        "required" : [ "checkin", "checkout", "roomRate" ],
+        "required" : [ "checkin", "checkout", "roomRates" ],
         "type" : "object"
       },
       "HotelDetailsResponse" : {
@@ -2059,8 +2063,8 @@
             "description" : "Unique transaction identifier assigned by the 3DS Server to identify a single transaction.",
             "type" : "string"
           },
-          "threeDSServerTransactionID" : {
-            "description" : "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.",
+          "threeDSServerTransactionId" : {
+            "description" : "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionId.",
             "type" : "string"
           },
           "eci" : {
@@ -2076,7 +2080,7 @@
             "type" : "string"
           }
         },
-        "required" : [ "avv", "eci", "messageVersion", "transactionID" ],
+        "required" : [ "avv", "eci", "messageVersion", "transactionId" ],
         "type" : "object"
       },
       "HotelProperty_altPropertyCode" : {
@@ -2143,9 +2147,15 @@
               "$ref" : "#/components/schemas/HotelDescriptiveInfo"
             },
             "type" : "array"
+          },
+          "mediaItems" : {
+            "items" : {
+              "$ref" : "#/components/schemas/HotelMedia"
+            },
+            "type" : "array"
           }
         },
-        "required" : [ "descriptiveInfos", "propertyDescription" ],
+        "required" : [ "descriptiveInfos", "mediaItems", "propertyDescription" ],
         "type" : "object"
       },
       "ReservationCriteria_guarantee" : {

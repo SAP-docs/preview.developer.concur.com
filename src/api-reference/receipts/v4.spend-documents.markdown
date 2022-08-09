@@ -1,0 +1,337 @@
+---
+title: Spend Documents v4
+layout: reference
+---
+
+# Spend Documents V4
+
+{% include prerelease.html %}
+
+The Spend Documents v4 API can be used to read receipt details, post a receipt and download a receipt compliance document image to be used while filing expense reports. This API can be used to read attributes like amount, receipt date, vendor, and so on.
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.
+
+## <a name="process-flow"></a> Process Flow
+
+![A process flow diagram of the Spend Documents v4 API](./v4.spend-docs-process-flow.png)
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name|Description|Endpoint
+---|---|---
+`spenddocs.receipts.read`|Read access to receipt information|GET /spend-documents/v4/receipts/{receiptId}
+`spenddocs.receipts.readwrite`|Read and write access to receipt information|POST /spend-documents/v4/receipts
+`spenddocs.receipts.writeonly`|Write access to receipt information|POST /spend-documents/v4/receipts
+`spenddocs.receipts.delete`|Delete access to receipt information|DELETE /spend-documents/v4/receipts/{receiptId}
+`spenddocs.receipts.compliance.read`|Read access to receipt compliance information|GET /spend-documents/v4/receipts/{receiptId}/representations?type=display
+`spenddocs.receipts.compliance.readwrite`|Read and write access to receipt compliance information|PUT /spend-documents/v4/receipts/{receiptId}
+`spenddocs.receipts.compliance.writeonly`|Write access to receipt compliance information|PUT /spend-documents/v4/receipts/{receiptId}
+
+## <a name="dependencies"></a>Dependencies
+
+The user can use the Identity v4 API to retrieve the `userId` and `companyId`.
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+This API supports user and company level access tokens only.
+
+## <a name="get-receipt-id"></a>Get Receipt by Id
+
+This endpoint returns the details of the receipt along with any compliance documents hrefs.
+
+### Scopes
+
+Refer to [Scope Usage](#scope-usage) for full details.
+
+* `customer.write`
+* `spenddocs.receipts.read`
+* `spenddocs.receipts.readwrite`
+* `spenddocs.receipts.delete`
+* `spenddocs.receipts.compliance.read`
+* `spenddocs.receipts.compliance.readwrite`
+* `spenddocs.receipts.compliance.writeonly`
+* `spenddocs.receipts.compliance.delete`
+
+#### URI
+
+```shell
+GET https://{datacenterURI}/spend-documents/v4/receipts/{receiptId}
+```
+
+#### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`receiptId`|`string`|	-	|**Required** Note required when applicable.
+
+#### Payload
+
+Request: [GET /spend-docs/v4/receipts/{receiptId}](#receipt-schema)
+Response:[GET /spend-docs/v4/receipts/{receiptId}](#receipt-schema)
+
+### Examples
+
+#### Request
+
+```
+GET https://us.api.concursolutions.com/spend-documents/v4/receipts/123
+Accept: application/json
+```
+
+#### Response
+
+```
+HTTP/1.1 200 OK
+Cache-Control: max-age=604800
+Content-Type: application/json
+Date: Wed, 06 Jul 2022 17:33:03 GMT
+Etag: "359670651"
+Expires: Wed, 13 Jul 2022 17:33:03 GMT
+Last-Modified: Fri, 09 Aug 2021 23:54:35 GMT
+Content-Length: 1270
+```
+```
+{
+    "metadata": {
+        "userId": "3e2c1b7e-0969-41b1-b5a6-590eb6a5f885",
+        "forwardId": "testForwardId",
+        "imageId": "AA88A752317B3B5AA8FB19DAEC7BF1CF",
+        "id": "8a490956-d2d0-4c53-8cf3-e6d5a10be900",
+        "companyId": "8f8fd1d8-bbc6-4611-861d-af714a02275f",
+        "dateTimeReceived": "2022-07-06T23:23:25.789Z",
+        "origin": "email",
+        "captureMethod": "email",
+        "complianceCountryCode": null,
+        "feature": "simpleReceipt",
+        "category": null,
+        "status": "processed",
+        "quality": "userProvided",
+        "complianceStatus": "no_processing_required",
+        "isReceiptPromoted": false
+    },
+    "receiptData": null,
+    "representations": [
+        {
+            "representation": "display",
+            "type": "image/jpeg",
+            "href": "https://integration.api.concursolutions.com/receipts/v5/8a490956-d2d0-4c53-8cf3-e6d5a10be900/documents?type=display",
+            "isRenderable": true
+        }
+    ]
+}
+```
+
+## <a name="get-receipt-representations"></a>Get Receipt Representations
+
+This endpoint returns representations of a receipt compliance document by Id. Returns all the different types of representations in a stream.
+
+#### URI
+
+```shell
+GET https://{datacenterURI}/spend-documents/v4/receipts/{receiptId}/representations?type= compliance
+```
+
+#### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`receiptId`|`string`|	-	|**Required** Note required when applicable.
+`type`|`string`|-|Default value is display. Possible values: display, compliance, original
+
+#### Payload
+
+Request: [Get /spend-documents/v4/receipts/{receiptId}/representations?type=display](#representations-schema)
+Response: None  (as this is binary data in the response)
+
+### Examples
+
+#### Request
+
+```
+GET https://us.api.concursolutions.com/spend-documents/v4/receipts/{receiptId}/representations?type=original
+Accept: application/json
+```
+
+#### Response
+
+Returns the image in the same format that it was originally received by the API (image/png, image/jpg, image/jpeg, image/tiff, image/tif, image/gif, or application/pdf).
+
+## <a name="upload-compliance-documents"></a>Upload Compliance Documents
+
+Upload compliance documents of a receipt by Id.
+
+#### URI
+
+```shell
+PUT https://{datacenterURI}/spend-documents/v4/receipts/{receiptId}
+```
+
+#### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`receiptId`|`string`|	-	|**Required** Note required when applicable.
+
+#### Payload
+
+Request: [/spend-documents/v4/receipts/{receiptId}](#taxcompliance-schema)
+Response: [/spend-documents/v4/receipts/{receiptId}](#taxcompliance-schema)
+
+### Examples
+
+#### Request
+
+```
+PUT https://us.api.concursolutions.com/spend-documents/v4/receipts/{receiptId}
+--form 'image=@"/expectedImages/Puppy.pdf"
+--header 'concur-correlationid: 9f926223-8591-4ca2-b64f-4610bb695be5'
+```
+
+#### Response
+
+```
+Status Code : 202 Accepted
+Content-Type: application/json
+Transfer-Encoding: chunked
+Last-Modified: Fri, 09 Aug 2021 23:54:35 GMT
+```
+
+## <a name="schema"></a>Schema
+
+### <a name="receipt-schema"></a>Receipt
+
+Name|Type|Format|Description
+---|---|---|---
+`metadata`|`object`|[`receipt metadata`](#receipt-metadata-schema)|Metadata for the receipt.
+`receiptData`|`object`|[`receiptData`](#receiptdata-schema)|receiptData
+`representations`|`object`|[`representations`](#representations-schema)|Compliance representation hrefs for the receipt.
+
+### <a name="receipt-metadata-schema"></a>Receipt Metadata
+
+Name|Type|Format|Description
+---|---|---|---
+`userId`|`string`|`UUID`|User's UUID
+`forwardId`|`string`|-|Forward Id that clients provide.
+`imageId`|`string`|`UUID`|Image Id in Imaging Service.
+`id`|`string`|-|Receipt Id
+`companyId`|`string`|`UUID`|Company UUID
+`dateTimeReceived`|[`dateTime`](#datetime-schema)|Date/time the receipt was uploaded.
+`origin`|`string`|-|Origin of the request - supported origins listed.
+`captureMethod`|`string`|-|Type of the receipt capture method.
+`provider`|`string`|-|Compliance country code based on user group configuration.
+`feature`|`string`|-|Feature enrichment for the receipt.
+`status`|`string`|-|Status of the receipt.
+`quality`|`string`|-|Quality of the receipt data that would dictate operations allowed on the receipt. Verified data is immutable, userProvided - user manually enters the data, predicted - ML predicted.
+`complianceStatus`|`string`|-|Compliance status of the receipt.
+
+### <a name="representations-schema"></a>representations
+
+Name|Type|Format|Description
+---|---|---|---
+`isRenderable`|`string`|True/false|Boolean indicating whether the document can be rendered in UI.
+`documentHref`|`string`|URI|Href to download the document.
+`type`|`string`|-|File type of the receipt document ex: jpeg, png, pdf, etc.
+`representation`|`string`|-|For a given receipt document three representations can be stored in the system. Display - a downsized image version to cater for web and mobile UI, compliance - reflects the signed or certified or verified document, original - original document that was submitted.
+
+### <a name="receiptData-schema"></a>receiptData
+
+Name|Type|Format|Description
+---|---|---|---
+`time`|`string`|-|Transaction Time.
+`date`|`string`	|-|Transaction Date.
+`amount`|`object`|[`Amount`](#amount-schema)|Amount object.
+`vendor`|`object`|[`Vendor`](#vendor-schema)|Vendor object.
+`paymentType`|`object`|[`paymentType`](#paymenttype-schema)|Payment Type of a receipt.
+`lineItems`|`array`|Array of objects|Array of line items.
+`taxCompliance`|`object`|[`taxCompliance`](#taxcompliance-schema)|Tax compliance properties for a receipt.
+`customAttributes`|`object`|[`customAttributes`](#customeattributes-schema)|Custom attributes of a receipt.
+
+### <a name="amount-schema"></a>Amount
+
+Name|Type|Format|Description
+---|---|---|---
+`total`|`string`|100 char|Transaction Amount - Total.
+`subTotal`|`string`|100 char|Transaction Amount - Sub-Total.
+`taxesTotal`|`string`|100 char|Transation Amount - Taxes-total.
+`currency`|`string`|3 char|Transaction Currency Code.
+
+### <a name="vendor-schema"></a>Vendor
+
+Name|Type|Format|Description
+---|---|---|---
+`name`|`string`|100 char|Vendor name.
+`addressLine`|`string`|100 char|Vendor street address.
+`city`|`string`|100 char|Vendor city.
+`state`|`string`|3 char|Vendor state.
+`country`|`string`|2 char|Country Code.
+`postalCode`|`string`|-|Postal Code.
+`taxId`|`string`|-|Tax Id.
+`phone`|`string`|-|Phone.
+
+### <a name="paymenttype-schema"></a>paymentType
+
+Name|Type|Format|Description
+---|---|---|---
+`paymentMethod`|`string`|-|Supported Payment methods.
+`creditCard`|`object`|[`creditCard`](#creditcard-schema)|Credit card type if the payment classification is credit card.
+`digitalWallet`|`string`|-|Supported digital payment types ex: ApplePay, PayTM, Rupay, GooglePay.
+
+### <a name="creditcard-schema"></a>creditCard
+
+Name|Type|Format|Description
+---|---|---|---
+`type`|`string`|-|Name of the card type ex: American Express, MasterCard,Discover etc.
+`lastFour`|`string`|-|Last 4 digits of credit card number if the payment method is credit card.
+
+
+### <a name="lineitems-schema"></a>lineItems
+
+Name|Type|Format|Description
+---|---|---|---
+`title`|`string`|100 char|Title.
+`description`|`string`|100 char|Description.
+`date`|`string`|10 char|Date.
+`folioType`|`string`|100 char|Folio line item type.
+`amount`|`string`|100 char|Amount - Line item.
+
+### <a name="taxcompliance-schema"></a>taxCompliance (Currently Fapiao only)
+
+Name|Type|Format|Description
+---|---|---|---
+`companyTaxId`|`string`|100 char|Tax id of the company the customer of the receipt belongs to.
+`companyName`|`string`|100 char|Name of the company the customer of the receipt belongs to.
+`issueDate`|`string`|date-time|Issue Date as defined by RFC3339, section 5.6 , ex:YYYY-MM-DDThhZ.
+`type`|`string`|-|Code representing the Fapiao type.
+`invoiceSeries`|`string`|100 char|Invoice Series.
+`invoiceNumber`|`string`|100 char|Invoice Number.
+`verificationCode`|`string`|100 char|Verification Code.
+`source`|`string`|100 char|Source.
+
+### <a name="customattributes-schema"></a>customAttributes
+
+Name|Type|Format|Description
+---|---|---|---
+`additionalProperties`|`string`|-|Additional properties.
+
+## <a name="error"></a>Error
+
+Name|Type|Format|Description
+---|---|---|---
+`errorCode`|`string`|-|Required Machine readable code associated with the error which is static and never localized. Examples: dateTimeMissing, OutOfMem and invalidUser. These could also be UUID4 (a1d7bb3bb19348b0858687acc9e303ec), number (123456) or a URI (https://example.com/errors/invaliduser) which ideally provides additional information when dereferenced. Whatever form is chosen it's worth noting contextual strings are helpful to developers reading the code.
+`errorMessage`|`string`|-|Required Message associated with the error.
+`dataPath`|`string`|-|Relative data path.
+`schemaPath`|`string`|-|Relative schema path.
+`errors`|`array`|[`error`](#error)|An array of errors. **Note**: this points to this schema as errors can nest.
+
+## <a name="definitions"></a>Definitions
+
+Name|Type|Format|Description
+---|---|---|---
+`dateTime`|`string`|-|DateTime of where the transaction happened in format specified in ISO 8601, using UTC + Offset. For example, 2016-04-22T12:20+0700 (12:20 PM in Pacific Time).
