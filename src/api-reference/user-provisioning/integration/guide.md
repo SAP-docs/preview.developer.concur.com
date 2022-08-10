@@ -27,9 +27,53 @@ schemas:extension:spend:2.0:Role|Supporting information for spend role provision
  
 All preceeded by: urn:ietf:params:scim:
 
-## Implementing the User Provisioning API's
+## Implemention steps for the User Provisioning API's
 
-### Steps to mapping attributes UPS for conversion from Flat File import or Users V1 API
+1. Authentication and verification
+    * Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints.
+      1.  Verify access
+      2.  Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation or request [schemas](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-supported-schemas) to verfiy access.
+3. Perform a GET operation for known user(s)
+    * With a known user, perform a GET operation for that user to validate authentication. This will validate your authorization has been successful and will give an example of data the response data from Concur
+      1. To retrieve 1 known user: [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
+```shell
+GET /profile/identity/v4/users/lookup/?userName={{Username}}
+```
+
+    2.  To retrieve all users:Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) 
+ 
+ ```shell
+      GET /profile/identity/v4/users/
+ ```
+
+4. Identity Creation
+* Create new identity with required fields in the core and enterprise extensions. example: Identity Creation
+Verify response response from SAP Concur is correct. example: Identity Response
+Perform a get request for the specific UUID of the user.  
+If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
+Updating an Identity
+Using the UUID of the identity that was just created, update an attribute of that identity. example: Identity Patch Request
+Verify response response from SAP Concur is correct. example: Identity Patch Response
+Verify that data provisioned is correct by a GET request for the specific UUID of the user.  
+If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
+Spend or Travel extension updating
+Using the UUID of the identity that was created, provision attributes to a spend or travel extension. example: Identity Patch Request
+Verify response response from SAP Concur is correct. 
+Request status: Status Request
+Verify that the operation was successful. Status Response
+If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
+Perform a get request for the specific UUID of the user.  
+Continue to add attributes and extensions to complete your profile
+Add attributes to the appropriate extensions to be provisioned.
+Verify response response from SAP Concur is correct. 
+Request status: Status Request
+Verify that the operation was successful. Status Response
+If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
+Perform a GET request for the specific UUID of the user to validate
+
+
+
+### Clients & Partners migrating from from Flat File import or Users V1 API
 1. List the attributes your application currently supports within the flat file import or users V1 API. 
 2. Map the attributes required to create a users profile that meet the products used.
     * It can be helpful to break down your requirements into the attributes needed for the minimum requirements to create an:
