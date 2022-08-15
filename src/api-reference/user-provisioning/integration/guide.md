@@ -29,48 +29,45 @@ All preceeded by: urn:ietf:params:scim:
 
 ## Implemention steps for the User Provisioning API's
 
-1. Authentication and verification
-    * Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints.
-      1.  Verify access
-      2.  Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation or request [schemas](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-supported-schemas) to verfiy access.
-3. Perform a GET operation for known user(s)
-    * With a known user, perform a GET operation for that user to validate authentication. This will validate your authorization has been successful and will give an example of data the response data from Concur
-      1. To retrieve 1 known user: [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
-```shell
-GET /profile/identity/v4/users/lookup/?userName={{Username}}
-```
+1. ### Authentication and verification
+    * Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. 
+2. ### Retrieve Users 
+  * With a known users (UUID, logIn, or employeeNumber) perform a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation for that user. 
 
-    2.  To retrieve all users:Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) 
- 
- ```shell
+    1. This will validate access to the Concur solution and give an example of data the response data from Concur.
+      To retrieve 1 known user: [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
+
+      GET /profile/identity/v4/users/lookup/?userName={{Username}}
+
+    2. To retrieve all users:Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) 
+    
+
       GET /profile/identity/v4/users/
- ```
 
-4. Identity Creation
-* Create new identity with required fields in the core and enterprise extensions. example: Identity Creation
-Verify response response from SAP Concur is correct. example: Identity Response
-Perform a get request for the specific UUID of the user.  
-If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
-Updating an Identity
-Using the UUID of the identity that was just created, update an attribute of that identity. example: Identity Patch Request
-Verify response response from SAP Concur is correct. example: Identity Patch Response
-Verify that data provisioned is correct by a GET request for the specific UUID of the user.  
-If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
-Spend or Travel extension updating
-Using the UUID of the identity that was created, provision attributes to a spend or travel extension. example: Identity Patch Request
-Verify response response from SAP Concur is correct. 
-Request status: Status Request
-Verify that the operation was successful. Status Response
-If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
-Perform a get request for the specific UUID of the user.  
-Continue to add attributes and extensions to complete your profile
-Add attributes to the appropriate extensions to be provisioned.
-Verify response response from SAP Concur is correct. 
-Request status: Status Request
-Verify that the operation was successful. Status Response
-If there are errors in response, resolve errors and try again. If there are questions, please reach out to your POC for help.
-Perform a GET request for the specific UUID of the user to validate
-
+4. ### Identity Creation
+  * Create new identity with required fields in the core and enterprise extensions. example: [User Creation](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users)
+  * Verify response response from SAP Concur is correct. example: [User Creation Response](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users)
+  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
+5. ### Updating an Identity
+  * Using the UUID of the identity that was just created, update an attribute of that identity. example: [User Updating](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint)
+  * Verify response response from SAP Concur is correct. example: [User Update Response](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint)
+  * Verify that data provisioned is correct, by a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
+ request from above with the UUID of the newly created user.  
+  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
+6. ### Spend or Travel extension profile update
+  * Using the UUID of the identity that was created, provision attributes to a spend or travel extension. example: [User Updating](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint)
+  * Verify that data provisioned is correct, by a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
+ request from above with the UUID of the newly created user.  
+  * Continue to add attributes and extensions to complete the user profile.
+  *  
+7. ### Verifying status of provisoining request
+Concur uses an asynchronous provisioning design for all extentions other then core & enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve. 
+  * Using the provisioningID of the request, query the status endpoint for results: [Provisioning status](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status)
+  * Status results are: 
+    1. success - no action necessary
+    2. no-op - no action necessary. The system responds with no-op to verify the listenting service recieved the request with no work required.
+    3. processing - no action necessary. The system is processing the provisioning request. 
+    4. error - action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your Concur support representitive for assistance.
 
 
 ### Clients & Partners migrating from from Flat File import or Users V1 API
@@ -86,15 +83,20 @@ Perform a GET request for the specific UUID of the user to validate
 ### Import File Formats
 File Type|File Name|Mapping
 --|--|--
-300|Employee Import|300 Employee Import 
-305|Employee Import|305 Employee Import
-310 |User Primary Field Addendum|310 User Primary Field Addendum
-320|Update ID Information Import|320 Update ID Information Import
-350|File type Travel Addendum|350 File type Travel Addendum
-370|Statement Employee Import|370 Statement Employee Import
-400|Role Import|400 Role Import
-500|Delegate Import|500 Delegate Import
-550|Enhanced Delegate Import|550 Enhanced Delegate Import
+300|Employee Import|[300 Employee Import](/api-reference/user-provisioning/mapping/300.html)
+305|Employee Import|[305 Employee Import](/api-reference/user-provisioning/mapping/305.html)
+310 |User Primary Field Addendum|[310 User Primary Field Addendum](/api-reference/user-provisioning/mapping/310.html)
+320|Update ID Information Import|[320 Update ID Information Import](/api-reference/user-provisioning/mapping/320.html)
+350|File type Travel Addendum|[350 File type Travel Addendum](/api-reference/user-provisioning/mapping/350.html)
+370|Statement Employee Import|[370 Statement Employee Import](/api-reference/user-provisioning/mapping/370.html)
+400|Role Import|[400 Role Import](/api-reference/user-provisioning/mapping/400.html)
+500|Delegate Import|[500 Delegate Import](/api-reference/user-provisioning/mapping/500.html)
+550|Enhanced Delegate Import|[550 Enhanced Delegate Import](/api-reference/user-provisioning/mapping/550.html)
+
+### Legacy API Mapping
+--|--|--
+Users V1||[Users V1](/api-reference/user-provisioning/mapping/v1-mapping.html)
+Bulk 3.0 or 3.1||[Bulk](/api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
 
 
 
