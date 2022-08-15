@@ -5,7 +5,7 @@ As a client or partner of SAP Concur, you can use the System for Cross-Domain Id
 
 ## <a name="process-flow"></a> Process Flow
 
-![A process flow diagram of the User Provisioning API](./v4-user-provisioning-process-flow-v3.png)
+![Process flow diagram of the User Provisioning API](/api-reference/user-provisioning/v4-user-provisioning-process-flow-v3.png)
 SAP Concur User Provisioning services supports the SCIM core and enterprise user extensions for identity creation.
 
 Identity information is centralized within Concur and attributes are shared between Spend and Travel services. Custom extensions have been created under Spend and Travel extension name space for provisioning service specific profile data. 
