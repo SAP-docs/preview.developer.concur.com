@@ -7,7 +7,7 @@ layout: reference
 
 The Event Subscription Service (ESS) implements the Publish/Subscribe pattern using principles of Event Driven Architecture in the SAP Concur platform. It allows clients and partners to be notified through web services when certain actions take place in connected companies. When the business/system event occurs ESS sends that event to the configured endpoint with relevant information.
 
-* **Event** - a state of a business/system object or entity. Always has an `EventType` that represents a type of entity change or specific state in a workflow. Example: Report Created, Report Submitted, etc.
+* **Event** - a state of a business/system object or entity. Always has an `EventType` that represents a type of entity change or specific state in a workflow. Example: StatusChanged, etc.
 * **Topic** - a stream of events of business/system object or entity. Example: `concur.user`, `concur.expense.report`, `concur.travel.request`.
 * **Subscription** - a topic consumer. Each subscription has a topic it is subscribed to.  
 * **Webhook** - an ESS application that uses a subscription model and delivers events to the endpoint.
@@ -16,7 +16,7 @@ In order to begin receiving events, you must first subscribe to the relevant top
 
 ## Limitations
 
-Access to this documentation does not provide access to the API. 
+Access to this documentation does not provide access to the API.
 
 ## Scope Usage <a name="scope-usage"></a>
 
@@ -28,6 +28,7 @@ Name                | Description                       | Endpoint
 `%topic scope%`     | Access to specific topic (events) | GET, POST, PUT, DELETE
 
 * If application has only the `events.topic.read` scope an empty list of topics will always be returned.
+* See the [Event Topics](https://developer.concur.com/event-topics/) section for the various Topics and corresponding required scope(s).
 
 ## Process Flow <a name="process-flow"></a>
 
@@ -58,7 +59,7 @@ ESS guarantees at least once event delivery. This is accomplished through the r
 * The subscriber must maintain a reasonable uptime to support the requirements of the integration scenario.
 * Your HTTPS server endpoint must be accessible from the public web with a non-self-signed certificate.  The certificate should be signed by a known Certificate Authority and should be reachable through DNS.
 
-### <a name="ess-authentication"></a> ESS Authentication
+### ESS Authentication <a name="ess-authentication"></a>
 
 There are several ways that you can be sure that your endpoint being accessed by our service.
 
@@ -78,12 +79,12 @@ HlbTP6jE7MqB5sJ9r2EEzrJzJZjD13UqlzvI61tTC8SKpuk5AEaSsUV7RKlKUCjB
 -----END PUBLIC KEY-----
 ```
 
-### <a name="ess-behavior"></a>ESS Behavior
+### ESS Behavior<a name="ess-behavior"></a>
 
 The Event Subscription service has the following characteristics from the subscriber perspective:
 
 * Requests will come from `us.api.concursolutions.com`, `emea.api.concursolutions.com`, or `cn.api.concursolutions.com`.
-* Connection will always be established using a client x509 certificate.
+* Connection will always be established using a mutual TLS with `webhook.api.concursolutions.com` x509 certificate.
 * Requests will always have a digital signature.
 * Requests will be re-tried when the subscriber responds with HTTP Response Code(s): 5xx, 401, 403, or 429.
 * Requests will not be re-tried when subscriber responds with HTTP Response Code(s):
@@ -92,6 +93,15 @@ The Event Subscription service has the following characteristics from the subscr
 * Request will be retried until delivery OR event retention period expiration.
 * Event retention period is 72 hours from the time of event being published.
 * Events are not archived, but all of the event delivery attempts/responses are logged and retained for 30 days.
+
+### ESS Resourse usage<a name="ess-resources"></a>
+
+Every ESS subscription is a separate application with dedicated resources. In order to make sure that resources are used efficiently we have several limitations and guidelines.
+
+* Each application can have up to 5 subscriptions.
+* Subscriptions that are not working properly will be deleted after 30 days. This includes unused subscriptions with incomplete setup (missing company ids) and subscriptions with no successful deliveries due to endpoint errors.
+* When creating a new subscription please choose a name that reflects the subscription purpose or workflow, eg. test, prod, etc.
+* Please make sure you delete your unused subscriptions created for testing purposes after testing is complete.
 
 ## Related Topics
 

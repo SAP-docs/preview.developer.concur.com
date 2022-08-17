@@ -31,6 +31,8 @@ FIS has these benefits over the Extract file process:
 
 <a name="comparison"></a>To see the mapping of extract files vs. FIS, review the [Standard Accounting Extract (SAE)](./standard-accounting-extract-expense.xlsx) and/or [Payment Request Accounting Extract (PRAE)](./payment-request-accounting-extract-invoice.xlsx) files.
 
+<a name="setup"></a>For more information on using FIS, see the [Setup Guide](https://www.concurtraining.com/customers/tech_pubs/Integration/Shr_SG_FIS.pdf).
+
 ## <a name="quick-connect"></a>Quick Connect
 
 Quick Connect describes the process customers use to connect their SAP Concur site with an App Center Partner’s Enterprise application. See the separate [Quick Connect](./quick-connect-scope-for-enterprise-apps.html) scope document for details to guide you through the development of this required piece to your certified application.

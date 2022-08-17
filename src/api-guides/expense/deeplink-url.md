@@ -9,7 +9,7 @@ The Deeplink URL integration provides the ability for a user on a third-party we
 
 ## <a name="limitations"></a>Limitations
 
-This functionality is only available in US and EMEA data centers. Users must purchase Concur Expense in order to use this integration capability. This integration is only available to partners who have been granted access and to customers who either use username/password or SSO SAML2 implementation for authenticating. Access to this documentation does not provide access to the integration.
+Users must purchase Concur Expense in order to use this integration capability. This integration is only available to partners who have been granted access and to customers who either use username/password or SSO SAML2 implementation for authenticating. Access to this documentation does not provide access to the integration.
 
 ## <a name="pre-req"></a>Prerequisites
 
