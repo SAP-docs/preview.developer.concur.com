@@ -3,51 +3,53 @@
 As a client or partner of SAP Concur, you can use the System for Cross-Domain Identity Management (SCIM) user management API to enable automatic provisioning of users between your system and SAP Concur. This onboarding document describes how to build a SCIM endpoint and integrate with the SAP Concur provisioning service. The SCIM specification provides a common user schema for provisioning. When used in conjunction with federation standards, SCIM gives administrators an end-to-end, standards-based solution for access management.
 
 
-### UPS has these benefits over the Extract file process:
-#### Maintains consistency between SAP Concur solutions and the HCM or provisioning source:
+### UPS has these benefits over the flat file process:
+ Maintains consistency between SAP Concur solutions and the HCM or provisioning source:
 * UPS supports close to real time experience vs. SAP Concur overnight processing with built in retry logic for outages. If there is an outage within Concur, HCM or provisioning source can contine to provision new and updated user data to Concur. UPS will queue that data until services are operational and can process reqeust. If there is a failure at the HCM and a large change set is created, once back on line - UPS is able to recieve that large dataset and will process them in sequence and as quickly as services can process.  
-#### Real-time integration into the ERP:
+Real-time integration:
 * Close to real time experience vs. SAP Concur overnight processing. Ablility process changes throughout the day  instead of waiting for the file-based interval to occur once per day. 
-#### Single API to support multiple SAP Concur products:
+Single API to support multiple SAP Concur products:
 * UPS allows clients and partners to provision user information to a single API that supports mulitple SAP Concur products without the need to know different file types for provisioning user information dependant on specific products. 
 
 ## <a name="limitations"></a>Limitations
 
 This API is only available to clients and partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.
 
-## <a name="process-flow"></a> Process Flow
+## <a name="process-flow"></a> API Process Flow
 
 ![Process flow diagram of the User Provisioning API](/api-reference/user-provisioning/v4-user-provisioning-process-flow-v3.png)
 UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (Name, address, username, etc) is centralized within Concur and attributes are shared between Spend and Travel services.  For Concur spend and travel services, UPS supports [spend and travel](#supported_extentions) extentions for product specific information. 
 
-## Implemention steps for the User Provisioning API's
+
+
+## Recommended steps to integrate the UPS API:
+* If migrating from an existing flat file definition:
+  1. Using the mapping documents list below
+
+
+* If migrating from an existing SAP Concur provisioning API:
+
 
 ### Prerequisite: Authentication
 To use UPS and supporting API's, the approproate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authenticaion applicaiton. Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
     
 ### 1. Retrieve Users 
-  * With a known users (UUID, logIn, or employeeNumber) perform a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation for that user. 
-
-    1. This will validate access to the Concur solution and give an example of data the response data from Concur.
-      To retrieve 1 known user: [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
-
-      GET /profile/identity/v4/users/lookup/?userName={{Username}}
-
-    2. To retrieve all users:Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) 
-    
-      GET /profile/identity/v4/users/
-
-### 4. Identity Creation
+  * With an existing users infomation: (UUID, logIn, or employeeNumber) perform a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation for that user. 
+      1. To retrieve a single user: [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
+      ```GET /profile/identity/v4/users/lookup/?userName={{Username}}```
+      2. To retrieve all users for the company: [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
+     ``` GET /profile/identity/v4/users/```
+### 2. Identity Creation
   * Create new identity with required fields in the core and enterprise extensions. example: [User Creation](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users)
   * Verify response response from SAP Concur is correct. example: [User Creation Response](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users)
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
-5. ### Updating an Identity
+### 3. Updating an Identity
   * Using the UUID of the identity that was just created, update an attribute of that identity. example: [User Updating](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint)
   * Verify response response from SAP Concur is correct. example: [User Update Response](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint)
   * Verify that data provisioned is correct, by a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
  request from above with the UUID of the newly created user.  
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
-6. ### Spend or Travel extension profile update
+ ### 4. Spend or Travel extension profile update
   * Using the UUID of the identity that was created, provision attributes to a spend or travel extension. example: [User Updating](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint)
   * Verify that data provisioned is correct, by a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users)
  request from above with the UUID of the newly created user.  
@@ -62,7 +64,6 @@ Concur uses an asynchronous provisioning design for all extentions other then co
     3. processing - no action necessary. The system is processing the provisioning request. 
     4. error - action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your Concur support representitive for assistance.
 
-
 ### Clients & Partners migrating from from Flat File import or Users V1 API
 1. List the attributes your application currently supports within the flat file import or users V1 API. 
 2. Map the attributes required to create a users profile that meet the products used.
@@ -73,7 +74,7 @@ Concur uses an asynchronous provisioning design for all extentions other then co
 3. Using mapping fields below, map your attributes to Concur SCIM attributes within one of the Core, Enterprise, Spend and Travel extensions. 
 4. Add additional profile information in the appropriate extension for your user. 
 
-### Import File Formats
+### <a name="import_formats"></a> Import File Formats
 File Type|File Name|Mapping
 --|--|--
 300|Employee Import|[300 Employee Import](/api-reference/user-provisioning/mapping/300.html)
@@ -86,7 +87,7 @@ File Type|File Name|Mapping
 500|Delegate Import|[500 Delegate Import](/api-reference/user-provisioning/mapping/500.html)
 550|Enhanced Delegate Import|[550 Enhanced Delegate Import](/api-reference/user-provisioning/mapping/550.html)
 
-### Legacy API Mapping
+### <a name="legacy_API"></a> Legacy API Mapping
 --|--|--
 Users V1||[Users V1](/api-reference/user-provisioning/mapping/v1-mapping.html)
 Bulk 3.0 or 3.1||[Bulk](/api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
