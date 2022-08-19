@@ -3,34 +3,30 @@
 As a client or partner of SAP Concur, you can use the System for Cross-Domain Identity Management (SCIM) user management API to enable automatic provisioning of users between your system and SAP Concur. This onboarding document describes how to build a SCIM endpoint and integrate with the SAP Concur provisioning service. The SCIM specification provides a common user schema for provisioning. When used in conjunction with federation standards, SCIM gives administrators an end-to-end, standards-based solution for access management.
 
 
+### UPS has these benefits over the Extract file process:
+
+#### Maintains consistency between SAP Concur solutions and the HCM or provisioning source:
+* UPS supports close to real time experience vs. SAP Concur overnight processing with built in retry logic for outages. If there is an outage within Concur, HCM or provisioning source can contine to provision new and updated user data to Concur. UPS will queue that data until services are operational and can process reqeust. If there is a failure at the HCM and a large change set is created, once back on line - UPS is able to recieve that large dataset and will process them in sequence and as quickly as services can process.  
+#### Real-time integration into the ERP:
+* Close to real time experience vs. SAP Concur overnight processing. Ablility process changes throughout the day  instead of waiting for the file-based interval to occur once per day.
+#### Provisioning Confirmation:
+* Using [ESS](https://developer.concur.com/api-reference/ess/v4.event-subscription.html) clients and partners have the ablity to know when an provisoining request has been compelted. 
+#### Single API to support multiple SAP Concur products:
+* UPS allows clients and partners to provision user information to a single API that supports mulitple SAP Concur products without the need to know different file types for provisioning user information dependant on specific products. 
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to clients and partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.
+
 ## <a name="process-flow"></a> Process Flow
 
 ![Process flow diagram of the User Provisioning API](/api-reference/user-provisioning/v4-user-provisioning-process-flow-v3.png)
-SAP Concur User Provisioning services supports the SCIM core and enterprise user extensions for identity creation.
-
-Identity information is centralized within Concur and attributes are shared between Spend and Travel services. Custom extensions have been created under Spend and Travel extension name space for provisioning service specific profile data. 
-
-## Supported Extentions
-Name of extension|Area of Coverage|Schemas Supported|Support
---|--|--|--
-schemas:core:2.0:User|SCIM core user information|api:messages:2.0:BulkRequest|Supported 
-schemas:core:2.0:User|SCIM core user information|api:messages:2.0:BulkRequest|Supported
-schemas:extension:enterprise:2.0:User|SCIM extension support|schemas:core:2.0:User|Supported
-schemas:extension:spend:2.0:User|Supporting information for spend users|schemas:extension:concur:2.0:Provision:Status	Supported
-schemas:extension:spend:2.0:Approver|Supporting information for spend approvers	|schemas:extension:concur:2.0:Provision:Schema	Supported
-schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates	|schemas:extension:concur:2.0:Provision:ServiceProviderConfig|Supported
-|schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences	|schemas:extension:concur:2.0:Provision:ResourceType|Supported
-|schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences	
-schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning
-|schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning
-|schemas:extension:travel:2.0:User|Supporting information for travel users
- 
-All preceeded by: urn:ietf:params:scim:
+UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (Name, address, username, etc) is centralized within Concur and attributes are shared between Spend and Travel services.  For Concur spend and travel services, UPS supports [spend and travel](#supported_extentions) extentions for product specific information. 
 
 ## Implemention steps for the User Provisioning API's
 
 1. ### Authentication and verification
-    * Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. 
+    * Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
 2. ### Retrieve Users 
   * With a known users (UUID, logIn, or employeeNumber) perform a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation for that user. 
 
@@ -98,5 +94,20 @@ File Type|File Name|Mapping
 Users V1||[Users V1](/api-reference/user-provisioning/mapping/v1-mapping.html)
 Bulk 3.0 or 3.1||[Bulk](/api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
 
-
+## <a name="supported_extentions"></a> Supported Extentions
+Name of extension|Area of Coverage|Schemas Supported|Support
+--|--|--|--
+schemas:core:2.0:User|SCIM core user information|api:messages:2.0:BulkRequest|Supported 
+schemas:core:2.0:User|SCIM core user information|api:messages:2.0:BulkRequest|Supported
+schemas:extension:enterprise:2.0:User|SCIM extension support|schemas:core:2.0:User|Supported
+schemas:extension:spend:2.0:User|Supporting information for spend users|schemas:extension:concur:2.0:Provision:Status	Supported
+schemas:extension:spend:2.0:Approver|Supporting information for spend approvers	|schemas:extension:concur:2.0:Provision:Schema	Supported
+schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates	|schemas:extension:concur:2.0:Provision:ServiceProviderConfig|Supported
+|schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences	|schemas:extension:concur:2.0:Provision:ResourceType|Supported
+|schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences	
+schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning
+|schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning
+|schemas:extension:travel:2.0:User|Supporting information for travel users
+ 
+All preceeded by: urn:ietf:params:scim:
 
