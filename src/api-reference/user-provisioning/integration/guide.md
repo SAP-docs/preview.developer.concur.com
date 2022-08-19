@@ -4,13 +4,10 @@ As a client or partner of SAP Concur, you can use the System for Cross-Domain Id
 
 
 ### UPS has these benefits over the Extract file process:
-
 #### Maintains consistency between SAP Concur solutions and the HCM or provisioning source:
 * UPS supports close to real time experience vs. SAP Concur overnight processing with built in retry logic for outages. If there is an outage within Concur, HCM or provisioning source can contine to provision new and updated user data to Concur. UPS will queue that data until services are operational and can process reqeust. If there is a failure at the HCM and a large change set is created, once back on line - UPS is able to recieve that large dataset and will process them in sequence and as quickly as services can process.  
 #### Real-time integration into the ERP:
-* Close to real time experience vs. SAP Concur overnight processing. Ablility process changes throughout the day  instead of waiting for the file-based interval to occur once per day.
-#### Provisioning Confirmation:
-* Using [ESS](https://developer.concur.com/api-reference/ess/v4.event-subscription.html) clients and partners have the ablity to know when an provisoining request has been compelted. 
+* Close to real time experience vs. SAP Concur overnight processing. Ablility process changes throughout the day  instead of waiting for the file-based interval to occur once per day. 
 #### Single API to support multiple SAP Concur products:
 * UPS allows clients and partners to provision user information to a single API that supports mulitple SAP Concur products without the need to know different file types for provisioning user information dependant on specific products. 
 
@@ -25,9 +22,10 @@ UPS supports the SCIM core and enterprise user extensions for identity support. 
 
 ## Implemention steps for the User Provisioning API's
 
-1. ### Authentication and verification
-    * Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
-2. ### Retrieve Users 
+### Prerequisite: Authentication
+To use UPS and supporting API's, the approproate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authenticaion applicaiton. Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
+    
+### 1. Retrieve Users 
   * With a known users (UUID, logIn, or employeeNumber) perform a [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) operation for that user. 
 
     1. This will validate access to the Concur solution and give an example of data the response data from Concur.
@@ -37,10 +35,9 @@ UPS supports the SCIM core and enterprise user extensions for identity support. 
 
     2. To retrieve all users:Using [GET](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) 
     
-
       GET /profile/identity/v4/users/
 
-4. ### Identity Creation
+### 4. Identity Creation
   * Create new identity with required fields in the core and enterprise extensions. example: [User Creation](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users)
   * Verify response response from SAP Concur is correct. example: [User Creation Response](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users)
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
