@@ -5,11 +5,11 @@ As a client or partner of SAP Concur, you can use the System for Cross-Domain Id
 
 ### User Provisioning Service benefits over the flat file process:
  Maintains consistency between SAP Concur solutions and the HCM or provisioning source:
-* UPS supports close to real time experience vs. SAP Concur overnight processing with built in retry logic for outages. If there is an outage within Concur, HCM or provisioning source can contine to provision new and updated user data to Concur. UPS will queue that data until services are operational and can process reqeust. If there is a failure at the HCM and a large change set is created, once back on line - UPS is able to recieve that large dataset and will process them in sequence and as quickly as services can process.  
+* UPS supports close to real time experience vs. SAP Concur overnight processing with built in retry logic for outages. If there is an outage within Concur, HCM or provisioning source can continue to provision new and updated user data to Concur. UPS will queue that data until services are operational and can process request. If there is a failure at the HCM and a large change set is created, once back on line - UPS is able to receive that large dataset and will process them in sequence and as quickly as services can process.  
 Real-time integration:
-* Close to real time experience vs. SAP Concur overnight processing. Ablility process changes throughout the day  instead of waiting for the file-based interval to occur once per day. 
+* Close to real time experience vs. SAP Concur overnight processing. Ability process changes throughout the day  instead of waiting for the file-based interval to occur once per day. 
 Single API to support multiple SAP Concur products:
-* UPS allows clients and partners to provision user information to a single API that supports mulitple SAP Concur products without the need to know different file types for provisioning user information dependant on specific products. 
+* UPS allows clients and partners to provision user information to a single API that supports multiple SAP Concur products without the need to know different file types for provisioning user information dependent on specific products. 
 
 ## <a name="limitations"></a>Limitations
 
@@ -18,10 +18,11 @@ This API is only available to clients and partners who have been granted access.
 ## <a name="process-flow"></a> API Process Flow
 
 ![Process flow diagram of the User Provisioning API](./v4-user-provisioning-process-flow-v3.png)
-UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (Name, address, username, etc) is centralized within Concur and attributes are shared between Spend and Travel services.  For Concur spend and travel services, UPS supports [spend and travel](#supported_extentions) extentions for product specific information. 
+UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (Name, address, username, etc) is centralized within Concur and attributes are shared between Spend and Travel services.  For Concur spend and travel services, UPS supports [spend and travel](#supported_extentions) extensions for product specific information. 
+When provisioning users into Concur, the provisioning of the identity creates a Concur UUID that spend and travel use for reference. The identity must be created prior to or the same time as provisioning spend and travel profile information.
 
 ## Recommended steps adoption of the UPS API's
-### 1. Map existing profile data to UPS API attritubes for Clients & Partners migrating from from Flat File import or Users V1 API
+### 1. Map existing profile data to UPS API attributes for Clients & Partners migrating from from Flat File import or Users V1 API
 * New clients and partners move to step 2.
 1. List the attributes your application currently supports within the flat file import or users V1 API. 
 2. Map the attributes required to create a users profile that meet the products used.
@@ -30,12 +31,12 @@ UPS supports the SCIM core and enterprise user extensions for identity support. 
       2. [Spend](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (cashAdvanceAccountCode, country, locale, reimbursementCurrency, etc..)
       3. [Travel](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (ruleClass, travelCrsName, etc..)
 3. Using mapping fields below, map your attributes to Concur SCIM attributes within one of the Core, Enterprise, Spend and Travel extensions. 
-   * If migrating from an existing flat file definition, map API attritubes to your provisioned [flat file](#import_formats) format below. 
-   * If migrating from an existing SAP Concur provisioning API, map API attritubes to your provisioned [legacy API](#legacy_API) format below.  
+   * If migrating from an existing flat file definition, map API attributes to your provisioned [flat file](#import_formats) format below. 
+   * If migrating from an existing SAP Concur provisioning API, map API attributes to your provisioned [legacy API](#legacy_API) format below.  
 4. Add additional profile information in the appropriate extension for your user. 
   
 ### 2.  Authentication (Required)
-To use UPS and supporting API's, the approproate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authenticaion applicaiton. Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authenticaion Application, please verify the scopes on your Authenticaion Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
+To use UPS and supporting API's, the appropriate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authentication application. Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authentication Application, please verify the scopes on your Authentication Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
 ### 3. Retrieve User(s) 
   * [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) using using: (Concur UUID, userName, or employeeNumber) 
       1. A single user.
@@ -45,17 +46,17 @@ To use UPS and supporting API's, the approproate [scopes](https://developer.conc
 ### 2. Identity Creation
   1. [Create new identity](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users) with required fields in the core and enterprise extensions.
   * Temporarily save the Concur UUID the ID of user for user retrieval.
-  * Temporarily save the provisioning the ID of request for verfifying provision status.
+  * Temporarily save the provisioning the ID of request for verifying provision status.
   2. [Verify response](#verify_response) response from SAP Concur is correct using the provisioning request ID from user creation. 
   3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness.
  request from above with the Concur UUID of the newly created user.
-  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
+  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representative for assistance.
 ### 3. Updating an Identity
   1. [Update](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) an attribute of the new identity using the Concur UUID of the identity that was created.
  2. [Verify response](#verify_response) response from SAP Concur is correct using the provisioning request ID from user update. 
   3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness.
  request from above with the Concur UUID of the created user. 
-  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
+  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representative for assistance.
  ### 4. Spend or Travel extension profile update
   1. [Add](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) spend or travel attribute of the new identity using the Concur UUID of the identity that was created.
   * Verify [required](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) fields for spend and travel.
@@ -63,16 +64,16 @@ To use UPS and supporting API's, the approproate [scopes](https://developer.conc
   3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness.
  request from above with the Concur UUID of the created user. 
    * Continue to add attributes and extensions to complete the user profile.
-  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representitive for assistance.
+  * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representative for assistance.
 
-  ### <a name="verify_response"></a>Verifying status of provisoining request
-Concur uses an asynchronous provisioning design for all extentions other then core & enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve. 
+  ### <a name="verify_response"></a>Verifying status of provisioning request
+Concur uses an asynchronous provisioning design for all extensions other then core & enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve. 
   * Using the provisioningID of the request, query the status endpoint for results: [Provisioning status](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status)
   * Status results are: 
     1. success - no action necessary
-    2. no-op - no action necessary. The system responds with no-op to verify the listenting service recieved the request with no work required.
+    2. no-op - no action necessary. The system responds with no-op to verify the listening service received the request with no work required.
     3. processing - no action necessary. The system is processing the provisioning request. 
-    4. error - action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your Concur support representitive for assistance.
+    4. error - action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your Concur support representative for assistance.
 
 ### <a name="import_formats"></a> Import File Formats
 File Type|File Name|Mapping
@@ -93,7 +94,7 @@ API|Mapping
 Users V1|[Users V1](/api-reference/user-provisioning/mapping/v1-mapping.html)
 Bulk 3.0 or 3.1|[Bulk](/api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
 
-## <a name="supported_extentions"></a> Supported Extentions
+## <a name="supported_extentions"></a> Supported Extensions
 
 Name of extension|Area of Coverage|Schemas Supported|Support
 --|--|--|--
@@ -109,5 +110,18 @@ schemas:extension:spend:2.0:Role|Supporting information for spend role provision
 |schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning
 |schemas:extension:travel:2.0:User|Supporting information for travel users
  
-All preceeded by: urn:ietf:params:scim:
+All proceeded by: urn:ietf:params:scim:
 
+## Helpfull Hints
+### Travel Extension Roles
+
+Group and Rule Classes are set up in advance during company set up and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into their Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes (and individuals) by an Admin User in the UI at any time. 
+
+Groups are generally related to how the software behaves and what part of the application a user has access (e.g. reporting). A user can be a member of one or more Groups, though this is not required in provisioning. Every user is assigned a default "All" Group by default. 
+Rule Class generally relates to what travel options the user has (e.g. what fares they are able to see, what travel policies are enforced). An individual MUST be in one and only one Rule Class. This is the only field required to provision a user within the Travel extension. 
+Travel Names vs HR Names
+
+### Within Concur there are two sets of names for each user:
+
+HR Name fields (First, Last, etc.) are provisioned within the Core/Identity extension and come from the HR system or the identity provider. This is the name the user will see when using Expense and is generally not editable by the user.
+Travel Name fields must match the user's travel documents and loyalty programs. They are part of the Travel Extension and generally SHOULD be editable by the user so that they match their travel documents. If a user's name on their passport, for example, is different than the name provided by SAP Concur for the reservation, the traveler may have problems getting through airport security or even renting a car. The name that users see on their My Profile - Personal Information page in the SAP Concur UI is the Travel Name.
