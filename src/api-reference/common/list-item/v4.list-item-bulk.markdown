@@ -3,6 +3,8 @@ title: List Item Bulk v4
 layout: reference
 ---
 
+{% include prerelease.html %}
+
 The SAP Concur List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items. Use of the API is subject to some limitations on the volume of list data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of list values involves a large volume.
 
 > **Limitations**: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
@@ -22,7 +24,6 @@ The SAP Concur List Item Bulk API provides an automated solution to clients who 
   * [Bulk List Item Update Request](#schema-bulk-list-item-update-request)
   * [Bulk List Item Update Request Part](#schema-bulk-list-update-request-part)
   * [Bulk List Item Response](#schema-bulk-list-item-response)
-  * [Bulk List Error](#schema-bulk-list-error)
   * [Bulk List Item Request](#schema-bulk-list-request)
   * [Error Message](#schema-error-message)
   * [Validation Error](#schema-validation-error)
@@ -50,7 +51,6 @@ The SAP Concur List Item Bulk API provides an automated solution to clients who 
 |Name|Description|Endpoint|
 |---|---|---|
 |`spend.listitem.write`|Read and write access to spend list items.|GET, POST, PUT, PATCH|
-|`spend.listitem.delete`|Delete capabilities for spend list items.|DELETE|
 
 ## <a name="dependencies"></a>Dependencies
 Users must be an Expense, Invoice, Shared or Request Configuration Administrator in order to perform POST, PUT, PATCH, and DELETE actions.
@@ -58,7 +58,6 @@ Users must be an Expense, Invoice, Shared or Request Configuration Administrator
 ## <a name="access-token-usage"></a>Access Token Usage
 
 This API supports both company level and user level access tokens.
-
 
 ## <a name="post-list-item-bulk"></a>Create List Items
 
@@ -79,12 +78,10 @@ POST /list/v4/items/{listId}/bulk
 ##### Parameters
 
 |Name|Type|Description|
-|---|---|---|
+|---|--|---|
 |`Accept-Language`|`string`|Language code. Default: `en` |
-|`company-uuid`|`string`|Company UUID of the user.|
-|`concur-correlationid`|`string`|The unique identifier of the consumer making the API calls. Minimum length: 6 characters|
-|`concur-uuid`|`string`|SAP Concur employee UUID of the caller.|
 |`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+|`itemCreateRequests`|-|**Required** Array of list item objects to be created for the company.|
 
 #### Headers
 
@@ -95,8 +92,7 @@ POST /list/v4/items/{listId}/bulk
 
 #### Payload
 
-* [Bulk List Item Create Request](#schema-list-item-create-request)
-* [Bulk List Item Create Request Part](#schema-list-item-create-request-part)
+* [Bulk List Item Create Request](#schema-bulk-list-item-create-request)
 
 ### Response
 
@@ -123,8 +119,6 @@ POST /list/v4/items/{listId}/bulk
 #### Payload
 
 * [Bulk List Item Response](#schema-bulk-list-item-response)
-* [Bulk List Error](#schema-bulk-list-error)
-* [Bulk List Item Request](#schema-bulk-list-item-request)
 * [Error Message](#schema-error-message)
 
 ### Example
@@ -245,7 +239,7 @@ Example 3:
 ```
 ## <a name="patch-list-item-bulk"></a>Update List Items
 
-Update list items by long code for a specific list with provided request body.
+Update and delete list items by long code for a specific list with provided request body.
 
 ### Scopes
 
@@ -266,11 +260,8 @@ PATCH /list/v4/lists/{listId}/bulk
 |Name|Type|Description|
 |---|---|---|
 |`Accept-Language`|`string`|Language code. Default: `en` |
-|`company-uuid`|`string`|Company UUID of the user.|
-|`concur-correlationid`|`string`|The unique identifier of the consumer making the API calls. Minimum length: 6 characters|
-|`concur-uuid`|`string`|SAP Concur employee UUID of the caller.|
 |`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
-
+|`itemUpdateRequests`|-|**Required** Array of list item objects to be updated.|
 #### Headers
 
 * [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
@@ -308,8 +299,6 @@ PATCH /list/v4/lists/{listId}/bulk
 #### Payload
 
 * [Bulk List Item Response](#schema-bulk-list-item-response)
-* [Bulk List Error](#schema-bulk-list-error)
-* [Bulk List Item Request](#schema-bulk-list-item-request)
 * [Error Message](#schema-error-message)
 
 ### Example
@@ -423,28 +412,28 @@ Example 3:
 ## <a name="schema"></a>Schema
 
 ### <a name="schema-bulk-list-item-create-request"></a>Bulk List Item Create Request
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`requests`|`list`|[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part)|The requests in the bulk list create request|
+|Name| Type    |Format|Description|
+|---|---------|---|---|
+|`requests`| `array` |[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part)|**Required** The requests in the bulk list create request|
 
 
 ### <a name="schema-bulk-list-item-create-request-part"></a>Bulk List Item Create Request Part
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`shortCode`|`string`|-|List item short code|
-|`value`|`string`|-|List item value|
+|`shortCode`|`string`|-|**Required** List item short code|
+|`value`|`string`|-|**Required** List item value|
 |`parentCode`|`string`|-|The long code of parent list item|
 
 
 ### <a name="schema-bulk-list-item-update-request"></a>Bulk List Item Update Request
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`requests`|`list`|[`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|The requests in the bulk list update request|
+|Name| Type  |Format|Description|
+|---|-------|---|---|
+|`requests`|`array`|[`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|**Required** The requests in the bulk list update request|
 
 ### <a name="schema-bulk-list-item-update-request-part"></a>Bulk List Item Update Request Part
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`code`|`string`|-|List item long code|
+|`code`|`string`|-|**Required** List item long code|
 |`value`|`string`|-|List item value|
 |`deleted`|`boolean`|-|List item deleted status|
 
@@ -454,8 +443,7 @@ Example 3:
 |`status`|`string`|-|Response status ( Enum:`SUCCESS`, `PARTIAL_SUCCESS`, `FAILURE`)|
 |`recordsSucceeded`|`int`|-|Number of list items successfully created for the list|
 |`recordsFailed`|`int`|-|Number of list items failed to be created for the list|
-|`errors`|`list`|[`BulkListError`](#schema-bulk-list-error)|List of error codes and list items failed to be created|
-
+|`errors`|`array`|[`BulkListError`](#schema-bulk-list-error)|List of error codes and list items failed to be created/updated|
 
 ### <a name="schema-bulk-list-error"></a>Bulk List Error
 |Name|Type|Format|Description|
@@ -464,9 +452,9 @@ Example 3:
 |`listItem`|[`BulkListItemRequest`](#schema-bulk-list-item-request)|-|List item corresponding to the error|
 
 ### <a name="schema-bulk-list-item-request"></a>Bulk List Item Request
-|Name|Type|Format|Description|
+|Name| Type|Format|Description|
 |---|---|---|---|
-|-|-|-|	List item corresponding to the error|
+|-| [`BulkListItemCreateRequest`](#schema-bulk-list-item-create-request) or [`BulkListItemUpdateRequest`](#schema-bulk-list-item-update-request)|-|List item corresponding to the error|
 
 ### <a name="schema-error-message"></a>Error Message
 
