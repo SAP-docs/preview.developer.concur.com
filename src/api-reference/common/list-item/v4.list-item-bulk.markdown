@@ -5,7 +5,7 @@ layout: reference
 
 {% include prerelease.html %}
 
-The SAP Concur List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items. Use of the API is subject to some limitations on the volume of list data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of list values involves a large volume.
+The SAP Concur List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items (up to 250 list items can be modified per bulk request). Use of the API is subject to some limitations on the volume of list data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of list values involves a large volume.
 
 > **Limitations**: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
 
@@ -105,6 +105,7 @@ POST /list/v4/items/{listId}/bulk
 * [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [429 Too Many Requests](https://datatracker.ietf.org/doc/html/rfc6585#section-4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
 #### Headers
@@ -302,6 +303,7 @@ PATCH /list/v4/lists/{listId}/bulk
 * [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [429 Too Many Requests](https://datatracker.ietf.org/doc/html/rfc6585#section-4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
 #### Headers
@@ -376,6 +378,7 @@ Example 3:
 
 #### Response
 
+Example 1:
 ```shell
 HTTP/1.1 200
 concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065 
@@ -385,8 +388,6 @@ location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-82
 date: Fri,26 Aug 2022 17:11:35 GMT 
 cache-control: no-cache, private
 ```
-
-Example 1:
 ```json
 {
   "status": "SUCCESS",
@@ -409,6 +410,15 @@ Example 2:
 ```
 
 Example 3:
+```shell
+HTTP/1.1 206
+concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
+content-length: 165
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:14:35 GMT
+cache-control: no-cache, private
+```
 ```json
 {
   "status": "PARTIAL_SUCCESS",
@@ -431,7 +441,7 @@ Example 3:
 ### <a name="schema-bulk-list-item-create-request"></a>Bulk List Item Create Request
 |Name| Type    |Format|Description|
 |---|---------|---|---|
-|`requests`| `array` |[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part)|**Required** The requests in the bulk list create request|
+|`requests`| `array` |[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part)|**Required** The requests in the bulk list item create request|
 
 
 ### <a name="schema-bulk-list-item-create-request-part"></a>Bulk List Item Create Request Part
@@ -445,7 +455,7 @@ Example 3:
 ### <a name="schema-bulk-list-item-update-request"></a>Bulk List Item Update Request
 |Name| Type  |Format|Description|
 |---|-------|---|---|
-|`requests`|`array`|[`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|**Required** The requests in the bulk list update request|
+|`requests`|`array`|[`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|**Required** The requests in the bulk list item update request|
 
 ### <a name="schema-bulk-list-item-update-request-part"></a>Bulk List Item Update Request Part
 |Name|Type|Format|Description|
