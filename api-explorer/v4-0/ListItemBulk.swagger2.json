@@ -1,0 +1,404 @@
+{
+  "x-sap-shortText":"Manage list items in your configured SAP Concur lists.",
+  "swagger":"2.0",
+  "host":"www.concursolutions.com",
+  "basePath":"/",
+  "schemes":[
+    "https"
+  ],
+  "info":{
+    "title":"List Item Bulk",
+    "description":"Provides an automated solution to clients who would like to manage list items. This API provides methods to add, update or delete list items owned by the specified lists.",
+    "version":"4.0"
+  },
+  "tags":[
+    {
+      "name":"List Item Bulk API",
+      "description":"List Item Bulk Controller"
+    }
+  ],
+  "paths":{
+    "/list/v4/lists/{listId}/bulk":{
+      "post":{
+        "tags":[
+          "List Item Bulk API"
+        ],
+        "summary":"Create list items for a specific list with provided request body",
+        "description":"Returns the status of the bulk request",
+        "operationId":"createBulkListItem",
+        "consumes":[
+          "application/json"
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"listId",
+            "in":"path",
+            "description":"The unique identifier of the list (SYNC_GUID)",
+            "required":true,
+            "type":"string",
+            "format":"uuid"
+          },
+          {
+            "name":"Accept-Language",
+            "in":"header",
+            "description":"Language code",
+            "type":"string"
+          },
+          {
+            "in":"body",
+            "name":"itemCreateRequests",
+            "description":"List items to create",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/BulkListItemCreateRequest"
+            }
+          }
+        ],
+        "responses":{
+          "201":{
+            "description":"Successfully created the list items",
+            "schema":{
+              "$ref":"#/definitions/BulkListItemResponse"
+            }
+          },
+          "429":{
+            "description":"Too many requests",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "404":{
+            "description":"List not found",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "206":{
+            "description":"Partial success",
+            "schema":{
+              "$ref":"#/definitions/BulkListItemResponse"
+            }
+          },
+          "400":{
+            "description":"Company does not exist",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "401":{
+            "description":"Access Denied",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "500":{
+            "description":"Internal server error",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "415":{
+            "description":"Unsupported Media Type",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          }
+        }
+      },
+      "patch":{
+        "tags":[
+          "List Item Bulk API"
+        ],
+        "summary":"Update or delete list items by long code for a specific list with provided request body",
+        "description":"Returns the status of the bulk request",
+        "operationId":"updateBulkListItem",
+        "consumes":[
+          "application/json"
+        ],
+        "produces":[
+          "application/json"
+        ],
+        "parameters":[
+          {
+            "name":"listId",
+            "in":"path",
+            "description":"The unique identifier of the list (SYNC_GUID)",
+            "required":true,
+            "type":"string",
+            "format":"uuid"
+          },
+          {
+            "name":"Accept-Language",
+            "in":"header",
+            "description":"Language code",
+            "type":"string"
+          },
+          {
+            "in":"body",
+            "name":"itemUpdateRequests",
+            "description":"List items to update",
+            "required":true,
+            "schema":{
+              "$ref":"#/definitions/BulkListItemUpdateRequest"
+            }
+          }
+        ],
+        "responses":{
+          "200":{
+            "description":"Successfully updated the list items",
+            "schema":{
+              "$ref":"#/definitions/BulkListItemResponse"
+            }
+          },
+          "429":{
+            "description":"Too many requests",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "404":{
+            "description":"List not found",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "206":{
+            "description":"Partial success",
+            "schema":{
+              "$ref":"#/definitions/BulkListItemResponse"
+            }
+          },
+          "400":{
+            "description":"Company does not exist",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "401":{
+            "description":"Access Denied",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "500":{
+            "description":"Internal server error",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          },
+          "415":{
+            "description":"Unsupported Media Type",
+            "schema":{
+              "$ref":"#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions":{
+    "BulkListItemError":{
+      "type":"object",
+      "properties":{
+        "message":{
+          "type":"string",
+          "description":"The detailed error message"
+        },
+        "listItem":{
+          "$ref":"#/definitions/BulkListItemRequest"
+        }
+      },
+      "description":"List of error codes and list items failed to be created "
+    },
+    "BulkListItemCreateRequest":{
+      "type":"object",
+      "properties":{
+        "requests":{
+          "type":"array",
+          "description":"The requests in the bulk list item create request. There is a limit of 250 request parts per bulk request.",
+          "items":{
+            "$ref":"#/definitions/BulkListItemCreateRequestPart"
+          }
+        }
+      },
+      "description":"List items to create for the company"
+    },
+    "BulkListItemCreateRequestPart":{
+      "required":[
+        "shortCode",
+        "value"
+      ],
+      "type":"object",
+      "properties":{
+        "shortCode":{
+          "type":"string",
+          "description":"List item short code"
+        },
+        "value":{
+          "type":"string",
+          "description":"List item value"
+        },
+        "parentCode":{
+          "type":"string",
+          "description":"The long code of parent list item"
+        }
+      },
+      "description":"The requests in the bulk list item create request"
+    },
+    "BulkListItemRequest":{
+      "type":"object",
+      "description":"List item corresponding to the error"
+    },
+    "BulkListItemResponse":{
+      "type":"object",
+      "properties":{
+        "status":{
+          "type":"string",
+          "description":"Response status",
+          "enum":[
+            "SUCCESS",
+            "PARTIAL_SUCCESS",
+            "FAILURE"
+          ]
+        },
+        "recordsSucceeded":{
+          "type":"integer",
+          "description":"Number of list items successfully created/updated for the list",
+          "format":"int32"
+        },
+        "recordsFailed":{
+          "type":"integer",
+          "description":"Number of list items failed to be created/updated for the list",
+          "format":"int32"
+        },
+        "errors":{
+          "type":"array",
+          "description":"List of error codes and list items failed to be created/updated",
+          "items":{
+            "$ref":"#/definitions/BulkListItemError"
+          }
+        }
+      }
+    },
+    "BulkListItemUpdateRequest":{
+      "type":"object",
+      "properties":{
+        "requests":{
+          "type":"array",
+          "description":"The requests in the bulk list item update request. There is a limit of 250 request parts per bulk request.",
+          "items":{
+            "$ref":"#/definitions/BulkListItemUpdateRequestPart"
+          }
+        }
+      },
+      "description":"List items to update"
+    },
+    "BulkListItemUpdateRequestPart":{
+      "required":[
+        "code"
+      ],
+      "type":"object",
+      "properties":{
+        "code":{
+          "type":"string",
+          "description":"List item long code"
+        },
+        "value":{
+          "type":"string",
+          "description":"List item value"
+        },
+        "deleted":{
+          "type":"boolean",
+          "description":"List item deleted status"
+        }
+      },
+      "description":"The requests in the bulk list item update request"
+    },
+    "ErrorMessage":{
+      "required":[
+        "error",
+        "httpStatus",
+        "path",
+        "timestamp"
+      ],
+      "type":"object",
+      "properties":{
+        "timestamp":{
+          "type":"string",
+          "description":"The time when the error was captured",
+          "format":"date-time"
+        },
+        "httpStatus":{
+          "type":"string",
+          "description":"The http response code and phrase for the response"
+        },
+        "error":{
+          "$ref":"#/definitions/Message"
+        },
+        "validationErrors":{
+          "type":"array",
+          "description":"The validation error messages",
+          "items":{
+            "$ref":"#/definitions/ValidationError"
+          }
+        },
+        "path":{
+          "type":"string",
+          "description":"The URI of the attempted request"
+        }
+      }
+    },
+    "Message":{
+      "required":[
+        "message"
+      ],
+      "type":"object",
+      "properties":{
+        "id":{
+          "type":"string",
+          "description":"The unique identifier of the error associated with the response"
+        },
+        "message":{
+          "type":"string",
+          "description":"The detailed error message"
+        }
+      },
+      "description":"The detail of the error"
+    },
+    "ValidationError":{
+      "type":"object",
+      "properties":{
+        "source":{
+          "type":"string",
+          "description":"The type of validation which failed"
+        },
+        "message":{
+          "type":"string",
+          "description":"The detailed message of the validation error"
+        }
+      },
+      "description":"The validation error messages"
+    }
+  },
+  "x-servers":[
+    {
+      "url":"https://www.concursolutions.com/api/v4.0",
+      "description":"Concur API EndPoint"
+    }
+  ]
+}
