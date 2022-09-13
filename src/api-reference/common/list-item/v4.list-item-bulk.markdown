@@ -1,0 +1,509 @@
+---
+title: List Item Bulk v4
+layout: reference
+---
+
+{% include prerelease.html %}
+
+The SAP Concur List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items (up to 250 list items can be modified per bulk request). Use of the API is subject to some limitations on the volume of list data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of list values involves a large volume.
+
+> **Limitations**: This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+
+## Contents
+
+* [Process Flow](#process-flow)
+* [Products and Editions](#products-editions)
+* [Scope Usage](#scope-usage)
+* [Dependencies](#dependencies)
+* [Access Token Usage](#access-token-usage)
+* [Create List Items](#post-list-item-bulk)
+* [Update List Items](#patch-list-item-bulk)
+* [Schema](#schema)
+  * [Bulk List Item Create Request](#schema-bulk-list-item-create-request)
+  * [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part)
+  * [Bulk List Item Update Request](#schema-bulk-list-item-update-request)
+  * [Bulk List Item Update Request Part](#schema-bulk-list-update-request-part)
+  * [Bulk List Item Response](#schema-bulk-list-item-response)
+  * [Bulk List Item Request](#schema-bulk-list-request)
+  * [Error Message](#schema-error-message)
+  * [Validation Error](#schema-validation-error)
+  * [Message](#schema-message)
+
+## Prior Versions
+
+* List Items v1 documentation is available [here](https://developer.concur.com/api-reference/common/list-item/v1.list-item.html).
+
+## <a name="process-flow"></a>Process Flow
+
+![A process flow diagram of the List Item Bulk API](./v4-list-item-bulk-process-flow.png)
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+* Concur Request Professional Edition
+* Concur Request Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+|Name|Description|Endpoint|
+|---|---|---|
+|`spend.listitem.write`|Read and write access to spend list items.|GET, POST, PUT, PATCH|
+
+## <a name="dependencies"></a>Dependencies
+Users must be an Expense, Invoice, Shared or Request Configuration Administrator in order to perform POST, PUT, PATCH, and DELETE actions.
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+This API supports both company level and user level access tokens.
+
+## <a name="post-list-item-bulk"></a>Create List Items
+
+Create list items for a specific list with the provided request body.
+
+### Scopes
+
+`spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+##### Template
+
+```shell
+POST /list/v4/items/{listId}/bulk
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|--|---|
+|`Accept-Language`|`string`|Language code. Default: `en` |
+|`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+|`itemCreateRequests`|-|**Required** Array of list item objects to be created for the company.|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [Bulk List Item Create Request](#schema-bulk-list-item-create-request)
+
+### Response
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [206 Partial Content](https://www.rfc-editor.org/rfc/rfc7233#section-4.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [429 Too Many Requests](https://datatracker.ietf.org/doc/html/rfc6585#section-4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7231 Location](https://tools.ietf.org/html/rfc7231#section-7.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Bulk List Item Response](#schema-bulk-list-item-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```http
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+Example 1:
+```json
+{
+  "requests": [
+    {
+      "shortCode": "ITEM",
+      "value": "ITEM"
+    }
+  ]
+}
+```
+
+Example 2:
+```json
+{
+  "requests": [
+    {
+      "shortCode": "CHILD_ITEM",
+      "value": "CHILD_ITEM",
+      "parentCode": "ITEM"
+    }
+  ]
+}
+```
+
+Example 3:
+```json
+{
+  "requests": [
+    {
+      "shortCode": "CHILD_ITEM_ONE",
+      "value": "CHILD_ITEM_ONE",
+      "parentCode": "ITEM"
+    },
+    {
+      "shortCode": "CHILD_ITEM_B",
+      "value": "CHILD_ITEM_B",
+      "parentCode": "ITEM"
+    },
+    {
+      "shortCode": "ITEM_THREE",
+      "value": "ITEM_THREE"
+    }
+  ]
+}
+```
+
+#### Response
+Example 1:
+```shell
+HTTP/1.1 201
+concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9 
+content-length: 71 
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:13:17 GMT 
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 1,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+Example 2:
+```shell
+HTTP/1.1 400
+concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
+content-length: 227 
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:15:17 GMT 
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+````json
+{
+  "status": "FAILURE",
+  "recordsSucceeded": 0,
+  "recordsFailed": 1,
+  "errors": [
+    {
+      "message": "This item code is already used by another item in the same list",
+      "listItem": {
+        "shortCode": "CHILD_ITEM",
+        "value": "CHILD_ITEM",
+        "parentCode": "ITEM"
+      }
+    }
+  ]
+}
+````
+
+Example 3:
+```shell
+HTTP/1.1 206
+concur-correlationid: 97a8db78-9f87-427c-928a-c92c9ff2349a
+content-length: 233 
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:17:17 GMT 
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "PARTIAL_SUCCESS",
+  "recordsSucceeded": 2,
+  "recordsFailed": 1,
+  "errors": [
+    {
+      "message": "This item code is already used by another item in the same list",
+      "listItem": {
+        "shortCode": "CHILD_ITEM_ONE",
+        "value": "CHILD_ITEM_ONE",
+        "parentCode": "ITEM"
+      }
+    }
+  ]
+}
+```
+## <a name="patch-list-item-bulk"></a>Update List Items
+
+Update and delete list items by long code for a specific list with provided request body.
+
+### Scopes
+
+`spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+PATCH /list/v4/lists/{listId}/bulk
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`|Language code. Default: `en` |
+|`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+|`itemUpdateRequests`|-|**Required** Array of list item objects to be updated.|
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [Bulk List Item Update Request](#schema-bulk-list-item-update-request)
+* [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [206 Partial Content](https://www.rfc-editor.org/rfc/rfc7233#section-4.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [429 Too Many Requests](https://datatracker.ietf.org/doc/html/rfc6585#section-4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+
+#### Payload
+
+* [Bulk List Item Response](#schema-bulk-list-item-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```http
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+Example 1:
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "value": "ITEM UPDATED"
+    }
+  ]
+}
+```
+
+Example 2:
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "deleted": true
+    }
+  ]
+}
+```
+
+Example 3:
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "value": "ITEM"
+    },
+    {
+      "code": "ITEM_TWO",
+      "value": "ITEM_TWO UPDATED"
+    },
+    {
+      "code": "ITEM_THREE",
+      "value": "ITEM_THREE UPDATED"
+    }
+  ]
+}
+```
+
+#### Response
+
+Example 1:
+```shell
+HTTP/1.1 200
+concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065 
+content-length: 289
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:11:35 GMT 
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 1,
+  "recordsFailed": 0,
+  "errors": []
+}
+
+```
+
+Example 2:
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 1,
+  "recordsFailed": 0,
+  "errors": []
+}
+
+```
+
+Example 3:
+```shell
+HTTP/1.1 206
+concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
+content-length: 165
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:14:35 GMT
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "PARTIAL_SUCCESS",
+  "recordsSucceeded": 2,
+  "recordsFailed": 1,
+  "errors": [
+    {
+      "message": "The list item has been deleted",
+      "listItem": {
+        "code": "ITEM",
+        "value": "ITEM"
+      }
+    }
+  ]
+}
+```
+
+## <a name="schema"></a>Schema
+
+### <a name="schema-bulk-list-item-create-request"></a>Bulk List Item Create Request
+|Name| Type    |Format|Description|
+|---|---------|---|---|
+|`requests`| `array` |[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part)|**Required** The requests in the bulk list item create request|
+
+
+### <a name="schema-bulk-list-item-create-request-part"></a>Bulk List Item Create Request Part
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`shortCode`|`string`|-|**Required** List item short code|
+|`value`|`string`|-|**Required** List item value|
+|`parentCode`|`string`|-|The long code of parent list item|
+
+
+### <a name="schema-bulk-list-item-update-request"></a>Bulk List Item Update Request
+|Name| Type  |Format|Description|
+|---|-------|---|---|
+|`requests`|`array`|[`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|**Required** The requests in the bulk list item update request|
+
+### <a name="schema-bulk-list-item-update-request-part"></a>Bulk List Item Update Request Part
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`code`|`string`|-|**Required** List item long code|
+|`value`|`string`|-|List item value|
+|`deleted`|`boolean`|-|List item deleted status|
+
+### <a name="schema-bulk-list-item-response"></a>Bulk List Item Response
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`status`|`string`|-|Response status ( Enum:`SUCCESS`, `PARTIAL_SUCCESS`, `FAILURE`)|
+|`recordsSucceeded`|`int`|-|Number of list items successfully created for the list|
+|`recordsFailed`|`int`|-|Number of list items failed to be created for the list|
+|`errors`|`array`|[`BulkListItemError`](#schema-bulk-list-item-error)|List of error codes and list items failed to be created/updated|
+
+### <a name="#schema-bulk-list-item-error"></a>Bulk List Item Error
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`message`|`string`|-|The detailed error message|
+|`listItem`|[`BulkListItemRequest`](#schema-bulk-list-item-request)|-|List item corresponding to the error|
+
+### <a name="schema-bulk-list-item-request"></a>Bulk List Item Request
+|Name| Type|Format|Description|
+|---|---|---|---|
+|-| [`BulkListItemCreateRequest`](#schema-bulk-list-item-create-request) or [`BulkListItemUpdateRequest`](#schema-bulk-list-item-update-request)|-|List item corresponding to the error|
+
+### <a name="schema-error-message"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`error`|[`Message`](#schema-message)|-|**Required** The detailed error message.|
+|`httpStatus`|`string`|-|**Required** The http response code and phrase for the response.|
+|`path`|`string`|-|**Required** The URI of the attempted request.|
+|`timestamp`|`string`|`date-time`|**Required** The time when the error was captured.|
+|`validationErrors`|`array`|[`ValidationError`](#schema-validation-error)|The validation error messages.|
+
+### <a name="schema-validation-error"></a>Validation Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`message`|`string`|-|The detailed message of the validation error.|
+|`source`|`string`|-|The type of validation which failed.|
+
+### <a name="schema-message"></a>Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`msg`|`string`|-|The detailed error message.|
+|`id`|`string`|-|The identifier of the error.|
+
