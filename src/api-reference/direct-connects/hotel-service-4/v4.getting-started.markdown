@@ -160,3 +160,25 @@ Please note current definitions of `ConfirmationCodeType` differ from what was u
 * `HOTEL_CONFIRMATION`: Maps to OTA Unique ID Type `10`. Used by travelers if they want to change their reservation outside of SAP Concur Online Booking Tool. If the property confirmation code is not available, the supplier may send the aggregator confirmation code in this field. (Equivalent to `1000` in HSv2). This field will appear on the itinerary page together with `SUPPLIER_CONFIRMATION` confirmation number.
 * `CANCELLATION`: **(Required)** Maps to OTA Unique ID Type `15` and is same as HSv2 and must be provided as a part of `CancelDetails` response object.
 * `CONCUR_GDS_REFERENCE`: This is custom code for **future** use (Type `14`) which will be sent by SAP Concur in read/modify requests and will provide Concur Booking Record Locator for passives.
+
+## Error Handling <a name="error-handling"></a>
+
+All HSv4 endpoints use consistent error handling. API responses can have one of the following HTTP response code:
+
+|HTTP Code|Description|
+|---|---|
+|200|Operation successful without any errors.|
+|400|Invalid client request. Request shouldn’t be retried without changing it. Response should follow [Error](./v4.endpoints.md#schemaerror) schema and include OTA Code providing accurate reason for request being invalid.| 
+|401|Request unauthorized. Credentials used for the request are not valid.|
+|500|System error while processing the request. Request can be retried as is at a later time. Response should follow [Error](./v4.endpoints.md#schemaerror) schema. OTA Code is optional for such errors but we expect useful message for better troubleshooting.| 
+
+As noted above, please ensure to provide appropriate OTA code for all application level errors (with HTTP 400 response code). SAP Concur rely on OTA Code to display localized message to end users. Please refer to [OTA error code list](./v4.supported-error-codes.html) for extensive list of error codes that are supported today. If you see a need for additional OTA codes to be supported, please contact Concur Support.
+
+Errors should always be returned in an [Error](./v4.endpoints.md#schemaerror) schema response. For example:
+```
+{
+  "otaCode": 69,
+  "message": “Minimum stay criteria not fulfilled"
+}
+```
+If `otaCode` is missing in an error, then only generic error is displayed to user and may not provide error context to end user.  Any message text from the supplier will be logged but SAP Concur does not support displaying of supplier generated error messages directly in the UI.
