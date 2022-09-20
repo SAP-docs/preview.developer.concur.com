@@ -788,16 +788,16 @@
     "CatalogName": {
       "description": "Northstar, Giata and GDS (Sabre, Amadeus, Galileo) are preferred options at this time",
       "enum": [
-        "NORTHSTAR",
-        "GIATA",
-        "LEONARDO",
-        "AMADEUS",
-        "SABRE",
-        "GALILEO",
+        "Northstar",
+        "Giata",
+        "Leonardo",
+        "Amadeus",
+        "Sabre",
+        "Galileo",
         "CWT",
-        "EXPEDIA",
+        "Expedia",
         "HRS",
-        "BOOKING.COM"
+        "Booking.com"
       ],
       "type": "string"
     },
@@ -818,13 +818,14 @@
       "type": "object"
     },
     "ConfirmationCodeType": {
-      "description": "Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives",
+      "description": "Confirmation Code Types that maps to OTA codes for Unique Id Types list RESERVATION(Record Locator)=14, SUPPLIER_CONFIRMATION=40, CANCELLATION=50, HOTEL_CONFIRMATION(Property Confirmation No.)=10, CONCUR_GDS_REFERENCE -> Concur Booking Record Locator for Passives, PASSIVE_CONFIRMATION",
       "enum": [
         "RESERVATION",
         "SUPPLIER_CONFIRMATION",
         "CANCELLATION",
         "HOTEL_CONFIRMATION",
-        "CONCUR_GDS_REFERENCE"
+        "CONCUR_GDS_REFERENCE",
+        "PASSIVE_CONFIRMATION"
       ],
       "type": "string"
     },
@@ -1201,6 +1202,7 @@
         "leadImageURI": {
           "description": "Contains an HTTPS URL pointing to a .png or .jpg hotel image file. The image will be used as a thumbnail and should be limited to 70x70 pixels to prevent image artifacts by scaling.",
           "example": "https://images.samplehost.com/samplepath/leadimage.jpg",
+          "format": "uri",
           "type": "string"
         },
         "leadRate": {
@@ -1399,7 +1401,7 @@
       "type": "object"
     },
     "LeadRate": {
-      "description": "Lead rate is the lowest nightly rate averaged over the stay, before taxes and fees",
+      "description": "Lead rate is the lowest nightly rate averaged over the stay",
       "properties": {
         "avgNightlyRate": {
           "$ref": "#/definitions/Price"
@@ -1443,7 +1445,7 @@
           "$ref": "#/definitions/Geolocation"
         },
         "iataCode": {
-          "description": "IATA code of airport if location searched is of type Airport",
+          "description": "IATA code of airport if location searched is of type AIRPORT",
           "type": "string"
         },
         "locationType": {
@@ -1913,12 +1915,6 @@
           },
           "type": "array"
         },
-        "confirmationCodes": {
-          "items": {
-            "$ref": "#/definitions/ConfirmationCode"
-          },
-          "type": "array"
-        },
         "customFields": {
           "description": "Vendor specific fields if setup for vendor integration",
           "items": {
@@ -2056,6 +2052,11 @@
           },
           "type": "array"
         },
+        "isModifiable": {
+          "description": "Whether or not this reservation can be modified.",
+          "example": true,
+          "type": "boolean"
+        },
         "roomDescription": {
           "example": [
             "1 bedroom luxury suite",
@@ -2080,6 +2081,7 @@
         "comments",
         "confirmationCodes",
         "guests",
+        "isModifiable",
         "roomDescription",
         "roomRate",
         "status"
@@ -2365,8 +2367,8 @@
           "minLength": 1,
           "type": "string"
         },
-        "threeDSServerTransactionId": {
-          "description": "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionId.",
+        "threeDSServerTransactionID": {
+          "description": "For 3DS1, this identifies the XID. For 3DS2, this identifies the dsTransactionID.",
           "type": "string"
         },
         "transactionId": {
@@ -2378,7 +2380,7 @@
         "avv",
         "eci",
         "messageVersion",
-        "transactionId"
+        "transactionID"
       ],
       "type": "object"
     },
@@ -2392,6 +2394,11 @@
           "example": 10,
           "multipleOf": 0.01,
           "type": "number"
+        },
+        "isTotalBeforeTaxDisplayEligible": {
+          "description": "Controls what value is shown on property details page for rates. Displays totalBeforeTax if set to true otherwise display totalAftertax",
+          "example": true,
+          "type": "boolean"
         },
         "taxes": {
           "example": 10,
@@ -2411,6 +2418,10 @@
       },
       "required": [
         "currencyCode",
+        "fees",
+        "isTotalBeforeTaxDisplayEligible",
+        "taxes",
+        "totalAfterTax",
         "totalBeforeTax"
       ],
       "type": "object"
