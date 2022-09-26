@@ -1,0 +1,781 @@
+---
+title: Invoice Payment Confirmation v4
+layout: reference
+---
+# Table of Contents
+1. [Invoice Payment Confirmation v4](#invoice-payment-confirmation)
+    1. [Limitations](#limitations)
+    2. [Process Flow](#process-flow)
+    3. [Products and Editions](#products-editions)
+    4. [Scope Usage](#process-flow)
+    5. [Dependencies](#dependencies)
+    6. [Access Token Usage](#access-token-usage)
+2. [Retrieve New Invoice Payments](#retrieve-new-payment)
+    1. [Request](#retrieve-new-payment-request)
+    2. [Response](#retrieve-new-payment-response)
+    3. [Example](#retrieve-new-payment-example)
+3. [Retrieve Historical Invoice Payments](#retrieve-historical-payment)
+    1. [Request](#retrieve-historical-payment-request)
+    2. [Response](#retrieve-historical-payment-response)
+    3. [Example](#retrieve-historical-payment-example)
+4. [Update Invoices with Payment Information](#update-payment)
+    1. [Request](#update-payment-request)
+    2. [Response](#update-payment-response)
+    3. [Example](#update-payment-example)
+5. [Schema](#schema)
+    1. [Payments](#schema-payments)
+    2. [Payment](#schema-payment)
+    3. [Bulk Update Payment](#schema-payment-bulk-update)
+    4. [Payment Update](#schema-payment-update)
+    5. [Custom Fields](#schema-custom-fields)
+    6. [Bulk Update Payment Result](#schema-payment-bulk-update-result)
+    7. [Payment Update Result](#schema-payment-update-result)
+    8. [Errors](#schema-errors)
+    9. [Error](#schema-error)
+6. [Definitions](#definitions)
+    1. [Payment Update Status](#schema-payment-update-status)
+    2. [Payment Method](#schema-payment-method)
+
+# Invoice Payment Confirmation v4  <a name="invoice-payment-confirmation"></a>
+
+This API gives SAP Concur Invoice clients and Partners the ability to retrieve and update invoice payment data between Concur and a client’s external financial system. information for new and historical invoice payments processed through an Invoice Pay feature can be retrieved for posting to a client’s external financial system. Concur invoices paid through an external system and not by an Invoice Pay feature can be updated with payment information from the external system.
+
+## Limitations <a name="limitations"></a>
+
+This API is only available for direct integrations with an existing SAP Concur Invoice client. Clients developing their own integrations between Concur and their external system must purchase SAP Concur Web Services to utilize this API. SAP Concur Partner applications must complete the certification process to utilize the API scopes. This API is not available in the China Data Center. Access to this documentation does not provide access to the API.
+
+## Process Flow <a name="process-flow"></a>
+<img src=./v4-invoice-payment-confirmation-process-flow-1.png width="700" height="500">
+
+## Products and Editions <a name="products-editions"></a>
+
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+
+## Scope Usage <a name="scope-usage"></a>
+
+Name|Description|Endpoint
+---|---|---
+`invoice.paymentconfirmation.write`|Write access to update payment status and write access to fetch new payments |POST,BULK POST
+`invoice.paymentconfirmation.read`|Read access to retrieved payments |GET
+
+## Dependencies <a name="dependencies"></a>
+
+This API can only be used with SAP Concur clients who have purchased Concur Invoice.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports only Company access tokens.
+
+## Retrieve New Invoice Payments <a name="retrieve-new-payment"></a>
+
+Use this endpoint to retrieve information for new invoice payments processed through an Invoice Pay feature and have not been extracted (by the Invoice Payment Confirmation Extract job or this API). A maximum of 500 records can be returned at a time. To ensure all payments are retrieved, call this API until you receive an empty payment in the response. After new invoice payments are retrieved, they will automatically be updated as extracted and cannot be retrieved again with this endpoint or the extract job. Retrieving new invoice payments is a POST call because the invoice payments must be updated to extracted.
+
+### Request <a name="retrieve-new-payment-request"></a>
+
+#### URI
+
+##### Template
+
+```
+POST https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments
+```
+
+##### Parameters
+
+Name|Type|Format or Field Length|Description
+---|---|---|---
+`limit`|`integer`|1-500|**Optional**: Limit of record (Default 500).
+`page`|`integer`|Cannot be 0|**Optional**: Page number (Default 1).
+
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+
+#### Payload
+
+None.
+
+### Response <a name="retrieve-new-payment-response"></a>
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+[Payments](#schema-payments)
+
+### Example <a name="retrieve-new-payment-example"></a>
+
+#### Request
+
+```
+POST https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+#### Response
+
+```
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+    "pageNumber": 1,
+    "pageLimit": 500,
+    "totalRecordCount": 2,
+    "payments": [
+        {
+            "requestId": "35D9AB75E27F46D9B83C",
+            "invoiceNumber": "3453453",
+            "requestName": "Test invoice 7",
+            "paymentMethodType": "PAYPVD",
+            "paymentStatusDate": "2022-07-14",
+            "checkNumber": "CHECK",
+            "paymentStatus": "PAID",
+            "supplierName": "Candys100",
+            "vendorCode": "VEN100",
+            "vendorAddressCode": "VEN100ADDR1",
+            "fundingSourceReference": "B",
+            "fundingRequestReference": "A",
+            "providerPaymentMethod": "CHECK",
+            "thirdPartyReference": "C",
+            "invoiceCurrency": "GBP",
+            "fundingCurrency": "GBP",
+            "paymentCurrency": "GBP",
+            "foreignExchangeRate": 0.100000
+        },
+        {
+            "requestId": "7B928D5E6EEF4ADF8216",
+            "invoiceNumber": "ewrewr234",
+            "requestName": "New invoice test",
+            "paymentMethodType": "PAYPVD",
+            "paymentStatusDate": "2022-07-15",
+            "checkNumber": "CHECK",
+            "paymentStatus": "PAID",
+            "supplierName": "Candys101",
+            "vendorCode": "VEN101",
+            "vendorAddressCode": "VEN101ADDR1",
+            "fundingSourceReference": "B",
+            "fundingRequestReference": "A",
+            "providerPaymentMethod": "CHECK",
+            "thirdPartyReference": "C",
+            "invoiceCurrency": "AUD",
+            "fundingCurrency": "AUD",
+            "paymentCurrency": "AUD",
+            "foreignExchangeRate": 0.100000
+        }
+    ]
+}
+
+```
+
+## Retrieve Historical Invoice Payments <a name="retrieve-historical-payment"></a>
+
+Use this endpoint to retrieve information for invoice payments processed through an Invoice Pay feature and have previously been extracted (by the Invoice Payment Confirmation Extract job or this API). A maximum of 500 records can be returned at a time. New invoice payments that have not been retrieved/extracted are excluded. Parameters can be used to retrieve specific historical invoice payments. 
+
+
+### Request <a name="retrieve-historical-payment-request"></a>
+
+#### URI
+
+##### Template
+
+```
+GET https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments
+```
+
+#### Parameters
+
+Name|Type|Format or Field Length|Description
+---|---|---|---
+`limit`|`integer`|1-500|**Optional**: Limit of record (Default 500).
+`page`|`integer`|Cannot be 0|**Optional**: Page number (Default 1).
+`payStatusToDate`|`date`|YYYY-MM-DD|**Optional**: Payment Status To Date.
+`payStatusFromDate`|`date`|YYYY-MM-DD|**Optional**: Payment Status From Date.
+`invoiceFromDate`|`date`|YYYY-MM-DD|**Optional**: Invoice To Date.
+`invoiceToDate`|`date`|YYYY-MM-DD|**Optional**: Invoice From Date.
+`vendorName`|`string`|255|**Optional**: Vendor Name.
+`vendorCode`|`string`|32|**Optional**: Vendor Code.
+`addressCode`|`string`|64|**Optional**: Vendor Address Code.
+`invoiceNumber`|`string`|50|**Optional**: Invoice Number.
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+
+#### Payload
+
+None.
+
+### Response <a name="retrieve-historical-payment-response"></a>
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+
+#### Payload
+
+[Payments](#schema-payments)
+
+### Example <a name="retrieve-historical-payment-example"></a>
+
+#### Request
+
+```
+GET https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments
+Authorization: BEARER {token}
+Content-Type: application/json
+```
+
+#### Response
+
+```
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+    "pageNumber": 1,
+    "pageLimit": 500,
+    "totalRecordCount": 2,
+    "payments": [
+        {
+            "requestId": "35D9AB75E27F46D9B83C",
+            "invoiceNumber": "3453453",
+            "requestName": "Test invoice 7",
+            "paymentMethodType": "PAYPVD",
+            "paymentStatusDate": "2022-07-14",
+            "checkNumber": "CHECK",
+            "paymentStatus": "PAID",
+            "supplierName": "Candys100",
+            "vendorCode": "VEN100",
+            "vendorAddressCode": "VEN100ADDR1",
+            "fundingSourceReference": "B",
+            "fundingRequestReference": "A",
+            "providerPaymentMethod": "CHECK",
+            "thirdPartyReference": "C",
+            "invoiceCurrency": "GBP",
+            "fundingCurrency": "GBP",
+            "paymentCurrency": "GBP",
+            "foreignExchangeRate": 0.100000
+        },
+        {
+            "requestId": "7B928D5E6EEF4ADF8216",
+            "invoiceNumber": "ewrewr234",
+            "requestName": "New invoice test",
+            "paymentMethodType": "PAYPVD",
+            "paymentStatusDate": "2022-07-15",
+            "checkNumber": "CHECK",
+            "paymentStatus": "PAID",
+            "supplierName": "Candys101",
+            "vendorCode": "VEN101",
+            "vendorAddressCode": "VEN101ADDR1",
+            "fundingSourceReference": "B",
+            "fundingRequestReference": "A",
+            "providerPaymentMethod": "CHECK",
+            "thirdPartyReference": "C",
+            "invoiceCurrency": "AUD",
+            "fundingCurrency": "AUD",
+            "paymentCurrency": "AUD",
+            "foreignExchangeRate": 0.100000
+        }
+    ]
+}    
+```
+
+
+## Update Invoices with Payment Information <a name="update-payment"></a>
+
+Use this endpoint to update invoices in Concur that have been paid through an external system and not with an Invoice Pay feature with payment information. 
+
+### Request <a name="update-payment-request"></a>
+
+#### URI
+
+##### Template
+
+```
+POST https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments/bulkUpdate
+```
+
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+
+#### Payload
+
+[Bulk Update Payment](#schema-payment-bulk-update)
+
+### Response <a name="update-payment-response"></a>
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [207 Multi-Status](https://tools.ietf.org/html/rfc2518#section-10.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+
+#### Payload
+
+[Payment Bulk Update Result](#schema-payment-bulk-update-result)
+
+### Example <a name="update-payment-example"></a>
+
+#### Request
+
+```
+Request (When all payments get successfully validated and persisted)
+POST https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments/bulkUpdate
+Authorization: BEARER {token}
+Content-Type: application/json
+```
+
+```json
+[
+    {
+        "requestId": "BB673A3B47DD41D2BCD1",
+        "invoiceNumber": "invoice1",
+        "vendorCode": "VEN118",
+        "vendorAddressCode": "VEN118ADDR1",
+        "invoiceAmount": 10,
+        "paymentStatus": "PAID",
+        "paymentMethodType": "CLIENT",
+        "paymentStatusDate": "2022-08-08",
+        "checkNumbers": [
+            "2345",
+            "678"
+        ],
+        "paymentAmount": 7.58,
+        "notesToSupplier": "Notes to vendor",
+        "paymentAdjNotes": "Payment Adjustment Notes",
+        "customFields": {
+            "custom1": "test custom field 1",
+            "custom2": "test custom field 2"
+        }
+    },
+    {
+        "invoiceNumber": "invoice2",
+        "vendorCode": "VEN118",
+        "vendorAddressCode": "VEN118ADDR1",
+        "invoiceAmount": 5,
+        "paymentStatus": "VOID",
+       
+        "paymentStatusDate": "2022-08-07",
+        "notesToSupplier": "test notes to vendor",
+        "paymentAdjNotes": "Payment Adjustment Test Notes",
+        "customFields": {
+            "custom1": "custom 1",
+            "custom2": "2022-08-07"
+        }
+    }
+]
+```
+
+#### Response
+
+```
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+    "status": "OK",
+    "successCount": 2,
+    "failureCount": 0,
+    "successfulPayments": [
+        {
+            "requestId": "BB673A3B47DD41D2BCD1",
+            "invoiceNumber": "invoice1",
+            "invoiceAmount": 10,
+            "vendorCode": "VEN118",
+            "vendorAddressCode": "VEN118ADDR1",
+            "paymentStatus": "PAID",
+            "paymentStatusDate": "2022-08-08",
+            "checkNumbers": [
+                "2345",
+                "678"
+            ],
+            "paymentMethodType": "CLIENT",
+            "paymentAmount": 7.58,
+            "notesToSupplier": "Notes to vendor",
+            "paymentAdjNotes": "Payment Adjustment Notes"
+        },
+        {
+            "invoiceNumber": "invoice2",
+            "invoiceAmount": 5,
+            "vendorCode": "VEN118",
+            "vendorAddressCode": "VEN118ADDR1",
+            "paymentStatus": "VOID",
+            "paymentStatusDate": "2022-08-07",
+            "notesToSupplier": "test notes to vendor",
+            "paymentAdjNotes": "Payment Adjustment Test Notes"
+        }
+    ]
+}
+  
+```
+
+```
+Request (When all payments get invalidated)
+POST https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments/bulkUpdate
+Authorization: BEARER {token}
+Content-Type: application/json
+```
+
+```json
+[
+    {
+        "requestId": "Y042925D892D4725BF23",
+        "invoiceAmount": 2,
+        "paymentStatus": "PAID",
+        "paymentMethodType": "CLIENT",
+        "paymentStatusDate": "2022-08-03",
+        "checkNumbers": [
+            "2345",
+            "12907",
+            "678"
+        ],
+        "paymentAmount": 1.58,
+        "notesToSupplier": "Sample notes to vendor",
+        "paymentAdjNotes": "Payment Adjustment Notes",
+        "customFields": {
+            "custom1": "12",
+            "custom6": "13",
+            "custom10": "14"
+        }
+    },
+    {
+        "invoiceNumber": "wrwrr",
+        "vendorCode": "VEN115",
+        "vendorAddressCode": "VEN115ADDR1",
+        "invoiceAmount": 5,
+        "paymentStatus": "VOID",
+        "paymentMethodType": "CLIENT",
+        "paymentStatusDate": "2022-08-04",
+        "notesToSupplier": "Notes to vendor",
+        "paymentAdjNotes": "Payment Adjustment Notes",
+        "customFields": {
+            "custom1": "custom 1",
+            "custom2": "custom 2"
+        }
+    }
+]
+```
+
+#### Response
+
+```
+400 BAD REQUEST
+Content-Type: application/json
+```
+
+```json
+{
+    "status": "BAD_REQUEST",
+    "successCount": 0,
+    "failureCount": 2,
+    "failedPayments": [
+        {
+            "requestId": "Y042925D892D4725BF23",
+            "invoiceAmount": 2,
+            "paymentStatus": "PAID",
+            "paymentStatusDate": "2022-08-03",
+            "checkNumbers": [
+                "2345",
+                "12907",
+                "678"
+            ],
+            "paymentMethodType": "CLIENT",
+            "paymentAmount": 1.58,
+            "notesToSupplier": "Sample notes to vendor",
+            "paymentAdjNotes": "Payment Adjustment Notes",
+            "errorMessage": "No request found for requestId Y042925D892D4725BF23"
+        },
+        {
+            "invoiceNumber": "wrwrr",
+            "invoiceAmount": 5,
+            "vendorCode": "VEN115",
+            "vendorAddressCode": "VEN115ADDR1",
+            "paymentStatus": "VOID",
+            "paymentStatusDate": "2022-08-04",
+            "paymentMethodType": "CLIENT",
+            "notesToSupplier": "Notes to vendor",
+            "paymentAdjNotes": "Payment Adjustment Notes",
+            "errorMessage": "Request does not have a Payment Status of Extracted"
+        }
+    ]
+}
+
+       
+```
+
+
+```
+Request (When we have partial successful payments)
+POST https://us.api.concursolutions.com/invoice/payment-confirmation/v4/payments/bulkUpdate
+Authorization: BEARER {token}
+Content-Type: application/json
+```
+
+```json
+[
+    {
+        "requestId": "BB673A3B47DD41D2BCD1",
+        "invoiceAmount": 2,
+        "paymentStatus": "PAID",
+        "paymentMethodType": "CLIENT",
+        "paymentStatusDate": "2022-08-03",
+        "checkNumbers": [
+            "2345",
+            "12907"
+        ],
+        "paymentAmount": 1.589,
+        "notesToSupplier": "Sample notes to vendor",
+        "paymentAdjNotes": "Payment Adjustment Notes",
+        "customFields": {
+            "custom1": "12",
+            "custom2": "2022-08-07"
+        }
+    },
+    {
+        "vendorCode": "VEN118",
+        "vendorAddressCode": "VEN118ADDR1",
+        "invoiceAmount": 5,
+        "paymentStatus": "VOID",
+        "paymentMethodType": "CLIENT",
+        "paymentStatusDate": "2022-08-07",
+        "notesToSupplier": "Notes to vendor",
+        "paymentAdjNotes": "Payment Adjustment Notes",
+        "customFields": {
+            "custom1": "custom 1",
+            "custom2": "2022-08-07"
+        }
+    }
+]
+```
+
+#### Response
+
+```
+207 MULTI STATUS
+Content-Type: application/json
+```
+
+```json
+{
+    "status": "MULTI_STATUS",
+    "successCount": 1,
+    "failureCount": 1,
+    "successfulPayments": [
+        {
+            "requestId": "BB673A3B47DD41D2BCD1",
+            "invoiceAmount": 2,
+            "paymentStatus": "PAID",
+            "paymentStatusDate": "2022-08-03",
+            "checkNumbers": [
+                "2345",
+                "12907"
+            ],
+            "paymentMethodType": "CLIENT",
+            "paymentAmount": 1.589,
+            "notesToSupplier": "Sample notes to vendor",
+            "paymentAdjNotes": "Payment Adjustment Notes"
+        }
+    ],
+    "failedPayments": [
+        {
+            "invoiceAmount": 5,
+            "vendorCode": "VEN118",
+            "vendorAddressCode": "VEN118ADDR1",
+            "paymentStatus": "VOID",
+            "paymentStatusDate": "2022-08-07",
+            "paymentMethodType": "CLIENT",
+            "notesToSupplier": "Notes to vendor",
+            "paymentAdjNotes": "Payment Adjustment Notes",
+            "errorMessage": "Missing parameter requestId/invoiceNumber"
+        }
+    ]
+}
+       
+```
+
+## Schema <a name="schema"></a>
+
+### <a name="schema-payments"></a>Payments
+
+Name | Type | Format or Field Length| Description
+-----|------|--------|------------
+`paymentsList`|`array`|[Payment](#schema-payment)|Contains the list of payments
+
+### <a name="schema-payment"></a>Payment
+
+Name | Type | Format or Field Length | Description
+-----|------|--------|------------
+`requestId`|`string`|20|Unique identifier of the payment.
+`invoiceNumber`|`string`|50|The invoice number for the invoice that the financial system paid.
+`purchaseOrderNumber`|`string`|32|The Purchase Order (PO) number associated with the invoice.
+`paymentMethodType`|`string`|6|The code associated with the payment method type, for example "VCHER" (Voucher Card Payment). The PAYPVD code is associated with the payment made by a payment provider.
+`paymentAmount`|`numeric`|23,8|The amount paid.
+`paymentAdjustmentNotes`|`string`|500|Notes on why an invoice may have been short-paid or otherwise changed.
+`paymentStatusDate`|`date`|YYYY-MM-DD|The effective date associated with the Payment Status field.
+`checkNumber`|`string`|100|The number of the bank check used to pay the invoice.
+`paymentStatus`|`string`|6|The status of the invoice is updated to the value provided in this record. Extracted invoices within Invoice Pay (ACH, CHECK, VCHER), which are later marked as Client Pay, will show in the Payment Confirmation Extract.
+`supplierName`|`string`|255|The name the financial system uses for the vendor indicated on the invoice.
+`vendorCode`|`string`|32|The specific code associated with the vendor.
+`vendorAddressCode`|`string`|64|The specific address code associated with the vendor.
+`paymentDemandId`|`string`|20|
+`fundingInitiationDate`|`string`|YYYY-MM-DD|
+`fundingSettlementDate`|`string`|YYYY-MM-DD|
+`returnInitiationDate`|`string`|YYYY-MM-DD|
+`returnSettlementDate`|`string`|YYYY-MM-DD|
+`paymentInitiationDate`|`string`|YYYY-MM-DD|The date the payment was initiated.
+`paymentSettlementDate`|`string`|YYYY-MM-DD|The date the payment will be in the payees account.
+`cashAccountCode`|`string`|48|
+`liabilityAccountCode`|`string`|48|
+`batchId`|`string`|20|
+`fundingSourceReference`|`string`|200|Used by Payment Providers for identifying the funding source a payment was made from
+`fundingRequestReference`|`string`|200|Used by Payment Providers for the transaction number of the debit from a funding source.
+`providerPaymentMethod`|`string`|30|Used by Payment Providers for the payment method for which they processed the payment.
+`thirdPartyReference`|`string`|510|Used by Payment Providers for the transaction number of the payment to the vendor.
+`invoiceCurrency`|`string`|3|The three character ISO Currency Code for the invoice.
+`fundingCurrency`|`string`|3|Used by Payment Providers for the three-character ISO Currency Code a payment was issued in.
+`paymentCurrency`|`string`|3|Used by Payment Providers for the three-character ISO Currency Code a payment was issued in.
+`foreignExchangeRate`|`numeric`|23,6|Used by Payment Providers for the exchange rate used to calculate the payment amount in the payment currency from the funding currency.
+
+### <a name="schema-payment-bulk-update"></a>Bulk Update Payment
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`updatePaymentsList`|`array`|[Payment Update](#schema-payment-update)|Contains the list of payments
+
+### <a name="schema-payment-update"></a>Payment Update
+
+Name | Type | Format or Field Length | Description
+-----|------|--------|------------
+`requestId`|`string`|20|Unique identifier of the payment. Maximum 20 characters. Required if invoiceNumber is not provided.
+`invoiceAmount`|`numeric`|23,8|The invoice amount for the invoice that the financial system paid. Maximum 23 and 8 decimal places.
+`paymentStatus`|`string`|[Payment Update Status](#schema-payment-update-status)|The status of the invoice is updated to the value provided in this record. A status of PAID is automatically applied if no value is specified for this optional field.
+`paymentMethodType`|`string`|[Payment Method](#schema-payment-method)|The option used to pay the vendor for the good or service. Leave blank to default to the payment method associated with the vendor.Valid options include the following, which are passed to Payment Manager for processing: ACH, CHECK. The following values are specified on import only if the client has configured the vendor to one these default payment methods: CARD, CLIENT, VCHER (Voucher), WIRE
+`paymentStatusDate`|`string`|YYYY-MM-DD|The effective date associated with the Payment Status field.
+`checkNumbers`|`array`|100|The number of the bank check used to pay the invoice. Multiple check numbers are permitted.
+`paymentAmount`|`numeric`|23,8|The amount paid for a given payment amount (may not match the original total amount, given partial pay or similar).
+`notesToSupplier`|`string`|500|Comments entered for the benefit of the vendor explaining special payment circumstances, payment amount, date or similar. Maximum 500 characters.
+`paymentAdjNotes`|`string`|500|Comments entered explaining why the payment may have been adjusted (for example, short-shipped, or damage to items). Maximum 500 characters.
+`customFields`|`object`|[Custom Fields](#schema-custom-fields)|Custom field data
+`vendorName`|`string`|255|The name the financial system uses for the vendor indicated on the invoice.Refer to below Note *
+`invoiceNumber`|`string`|50|The invoice number for the invoice that the financial system paid. Required if requestId is not provided.Refer to below Note *
+`vendorCode`|`string`|32|The vendor code associated with this payment.Refer to below Note *
+`vendorAddressCode`|`string`|64|The vendor address code associated with this payment.Refer to below Note *
+
+* Note : Identifiers for the invoices being updated can be provided as below, 
+1. 	vendor name + invoice number
+2. 	vendor code + invoice number
+3. 	vendor code + vendor address code + invoice number
+
+
+### <a name="schema-custom-fields"></a>Custom Fields
+
+Name | Type | Format or Field Length | Description
+-----|------|--------|------------
+`custom1` through `custom24`|`string`|48|The details for the Custom fields. These may not have data, depending on configuration.
+
+### <a name="schema-payment-bulk-update-result"></a>Bulk Update Payment Result
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`successfulPayments`|`array`|[Payment Update Result](#schema-payment-update-result)|Contains the list of payments which got validated successfully along with its persistence in the DB
+`failedPayments`|`array`|[Payment Update Result](#schema-payment-update-result)|Contains the list of payments which got invalidated along with the error message of its validation failure
+`status`|`HTTP Status`|-|Http Status : 200 OK - If all payments get successfully validated, 400 BAD_REQUEST - If all payments get invalidated, 207 MULTI_STATUS - If the list has both valid and invalid payments
+`successCount`|`int`|-|It is the count of successful payments in the list
+`failureCount`|`int`|-|It is the count of failed payments in the list
+
+### <a name="schema-payment-update-result"></a>Payment Update Result
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`requestId`|`string`|20|Unique identifier of the payment. Maximum 20 characters. Required if invoiceNumber is not provided.
+`invoiceAmount`|`numeric`|23,8|The invoice amount for the invoice that the financial system paid. Maximum 23 and 8 decimal places.
+`paymentStatus`|`string`|[Payment Update Status](#schema-payment-update-status)|The status of the invoice is updated to the value provided in this record. A status of PAID is automatically applied if no value is specified for this optional field.
+`paymentMethodType`|`string`|[Payment Method](#schema-payment-method)|The option used to pay the vendor for the good or service. Leave blank to default to the payment method associated with the vendor.Valid options include the following, which are passed to Payment Manager for processing: ACH, CHECK. The following values are specified on import only if the client has configured the vendor to one these default payment methods: CARD, CLIENT, VCHER (Voucher), WIRE
+`paymentStatusDate`|`string`|YYYY-MM-DD|The effective date associated with the Payment Status field.
+`checkNumbers`|`array`|100|The number of the bank check used to pay the invoice. Multiple check numbers are permitted.
+`paymentAmount`|`numeric`|23,8|The amount paid for a given payment amount (may not match the original total amount, given partial pay or similar).
+`notesToSupplier`|`string`|500|Comments entered for the benefit of the vendor explaining special payment circumstances, payment amount, date or similar. Maximum 255 characters.
+`paymentAdjNotes`|`string`|500|Comments entered explaining why the payment may have been adjusted (for example, short-shipped, or damage to items). Maximum 255 characters.
+`vendorName`|`string`|255|The name the financial system uses for the vendor indicated on the invoice.
+`invoiceNumber`|`string`|50|The invoice number for the invoice that the financial system paid. Required if requestId is not provided.
+`vendorCode`|`string`|32|The vendor code associated with this payment.
+`vendorAddressCode`|`string`|64|The vendor address code associated with this payment.
+`errorMessage`|`string`|200|Only displays when we have invalid payments - error message which tells about the invalid request data
+
+### <a name="schema-errors"></a>Errors
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`errors`|`array`|[Error](#schema-error)|An array of errors.
+
+### <a name="schema-error"></a>Error
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`errorCode`|`string`|-|**Required** Machine readable code associated with the error.
+`errorMessage`|`string`|-|**Required** Human readable message associated with the error.
+
+## Definitions <a name="definitions"></a>
+
+### <a name="schema-payment-update-status"></a>Payment Update Status
+
+Value|Description
+---|---
+`PAID`|Payment is paid
+`VOID`|Payment is voided
+`CANCEL`|Payment is cancelled
+
+
+### <a name="schema-payment-method"></a>Payment Method
+
+Value|Description
+---|---
+`ACH`|ACH payment
+`CHECK`|Check payment
+`WIRE`|Wire payment
+`CARD`|Card payment
+`VCHER`|Card Voucher payment method
+`CLIENT`|Client payment method
