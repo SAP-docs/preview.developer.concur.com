@@ -15,13 +15,19 @@ Single API to support multiple SAP Concur products:
 
 This API is only available to clients and partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.
 
-## <a name="process-flow"></a> API Process Flow
+## <a name="process-flow"></a>API Process Flow
 
 ![Process flow diagram of the User Provisioning API](./v4-user-provisioning-process-flow-v3.png)
 UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (Name, address, username, etc) is centralized within Concur and attributes are shared between Spend and Travel services.  For Concur spend and travel services, UPS supports [spend and travel](#supported_extentions) extensions for product specific information. 
 When provisioning users into Concur, the provisioning of the identity creates a Concur UUID that spend and travel use for reference. The identity must be created prior to or the same time as provisioning spend and travel profile information.
 
-## Recommended steps adoption of the UPS API's
+## <a name="system-design"></a>SCIM System Design
+Following the SCIM standard, Concur has grouped the identity attritubes of a user into the [core](https://datatracker.ietf.org/doc/html/rfc7643) and [enterprise](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4) extentions seperate from spend and travel attritubes. When a new user is provisioned into Concur, an immutable UUID is created for that user is required for spend and travel provisioning updates. 
+
+### How this impacts new user provisioning
+Clients must provision the core and enterpise extentions prior or with spend and/or Travel extentions. The UUID of the user will be created and shared within the response body of the new user request. 
+
+## Recommended steps for adoption
 ### 1. Map existing profile data to UPS API attributes for Clients & Partners migrating from from Flat File import or Users V1 API
 * New clients and partners move to step 2.
 1. List the attributes your application currently supports within the flat file import or users V1 API. 
@@ -39,11 +45,7 @@ When provisioning users into Concur, the provisioning of the identity creates a 
 To use UPS and supporting API's, the appropriate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authentication application. Contact your Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your Authentication Application, please verify the scopes on your Authentication Application. If you have questions regarding granting scopes, please contact your Concur account representative. 
 ### 3. Retrieve User(s) 
   * [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) using using: (Concur UUID, userName, or employeeNumber) 
-      1. A single user.
-      ```GET /profile/identity/v4/users/lookup/?userName={{Username}}```
-      2. All users for the company.
-     ``` GET /profile/identity/v4/users/```
-### 2. Identity Creation
+### 4. Identity Creation
   1. [Create new identity](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users) with required fields in the core and enterprise extensions.
   * Temporarily save the Concur UUID the ID of user for user retrieval.
   * Temporarily save the provisioning the ID of request for verifying provision status.
@@ -51,13 +53,13 @@ To use UPS and supporting API's, the appropriate [scopes](https://developer.conc
   3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness.
  request from above with the Concur UUID of the newly created user.
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representative for assistance.
-### 3. Updating an Identity
+### 5. Updating an Identity
   1. [Update](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) an attribute of the new identity using the Concur UUID of the identity that was created.
  2. [Verify response](#verify_response) response from SAP Concur is correct using the provisioning request ID from user update. 
   3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness.
  request from above with the Concur UUID of the created user. 
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your Concur support representative for assistance.
- ### 4. Spend or Travel extension profile update
+ ### 6. Spend or Travel extension profile update
   1. [Add](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) spend or travel attribute of the new identity using the Concur UUID of the identity that was created.
   * Verify [required](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) fields for spend and travel.
  2. [Verify response](#verify_response) response from SAP Concur is correct using the provisioning request ID from user update. 
@@ -112,7 +114,7 @@ schemas:extension:spend:2.0:Role|Supporting information for spend role provision
  
 All proceeded by: urn:ietf:params:scim:
 
-## Helpfull Hints
+## Helpful Hints
 ### Travel Extension Roles
 
 Group and Rule Classes are set up in advance during company set up and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into their Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes (and individuals) by an Admin User in the UI at any time. 
