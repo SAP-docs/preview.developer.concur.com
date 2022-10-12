@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | User Provisioning</title>
+  <title> SAP Concur Developer Center | User Provisioning Service Implementation Guide</title>
 
 
 <!-- Meta -->
@@ -490,9 +490,329 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="implementing-user-provisioning-apis">Implementing User Provisioning APIs</h1>
+        <h1 id="user-provisioning-service-implementation-guide">User Provisioning Service Implementation Guide</h1>
 
-<p>You can use the System for Cross-Domain Identity Management (SCIM) user management API to enable automatic provisioning of users between your system and the SAP Concur platform. This document describes how to build a SCIM endpoint and integrate with the user provisioning service. The SCIM specification provides a common user schema for provisioning. When used in conjunction with federation standards, SCIM gives administrators an end-to-end, standards-based solution for access management.</p>
+<p>The System for Cross-Domain Identity Management (SCIM) user management API enables automatic provisioning of users between your system and the SAP Concur platform. This document describes how to build a SCIM endpoint and integrate with the SAP Concur provisioning service. The SCIM specification provides a common user schema for provisioning. When used in conjunction with federation standards, SCIM gives administrators an end-to-end, standards-based solution for access management.</p>
+
+<h2 id="benefits-over-the-flat-file-process"><a name="benefits"></a>Benefits Over the Flat File Process</h2>
+
+<ul>
+  <li><strong>Maintains consistency between SAP Concur solutions and the HCM or provisioning source.</strong> UPS supports a close to real time experience vs. overnight processing with built in retry logic for outages. If there is an outage within the SAP Concur platform, HCM or the provisioning source can continue to provision new and updated user data. UPS will queue that data until services are operational and can process request. If there is a failure at the HCM and a large change set is created, once back on line - UPS is able to receive that large dataset and will process them in sequence and as quickly as services can process.</li>
+  <li><strong>Real-time integration.</strong> Close to real time experience vs. overnight processing. Ability process changes throughout the day instead of waiting for the file-based interval to occur once per day.</li>
+  <li><strong>Single API to support multiple SAP Concur products.</strong> UPS allows clients and partners to provision user information to a single API that supports multiple SAP Concur products without the need to know different file types for provisioning user information dependent on specific products.</li>
+</ul>
+
+<h2 id="api-process-flow"><a name="process-flow"></a>API Process Flow</h2>
+
+<p><img src="./v4-user-provisioning-process-flow-v3.png" alt="Process flow diagram of the User Provisioning API" /></p>
+
+<p>UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (name, address, username, etc.) is centralized and attributes are shared between spend and travel services. UPS supports <a href="#supported-extensions">spend and travel</a> extensions for product specific information.</p>
+
+<p>When provisioning users, the provisioning of the identity creates a UUID that spend and travel use for reference. The identity must be created prior to or at the same time as provisioning spend and travel profile information.</p>
+
+<h2 id="scim-system-design"><a name="system-design"></a>SCIM System Design</h2>
+
+<p>Following the SCIM standard, we have grouped the identity attributes of a user into the <a href="https://datatracker.ietf.org/doc/html/rfc7643">core</a> and <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4">enterprise</a> extensions separate from spend and travel attributes. When a new user is provisioned, an immutable UUID is created for that user is required for spend and travel provisioning updates.</p>
+
+<h3 id="how-this-impacts-new-user-provisioning">How this Impacts New User Provisioning</h3>
+
+<p>Clients must provision the core and enterprise extensions prior to, or with spend and/or Travel extensions. The UUID of the user will be created and shared within the response body of the new user request.</p>
+
+<h2 id="recommended-steps-for-adoption">Recommended Steps for Adoption</h2>
+
+<h3 id="map-existing-profile-data-to-ups-api-attributes">Map Existing Profile Data to UPS API Attributes</h3>
+
+<p>Clients and partners migrating from flat file import or Users V1 API must complete the steps in this section.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: New clients and partners skip this step and move to the following section on Authentication.</p>
+</blockquote>
+
+<ol>
+  <li>List the attributes your application currently supports within the flat file import or users V1 API.</li>
+  <li>Map the attributes required to create a user’s profile that meets the products used. It can be helpful to break down your requirements into the attributes needed for the minimum requirements to create:
+    <ul>
+      <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema">Identity</a> (name, username, email, company ID number, employee number and active flag) - Identity is required for any user.</li>
+      <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema">Spend</a> (cashAdvanceAccountCode, country, locale, reimbursementCurrency, etc.)</li>
+      <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema">Travel</a> (ruleClass, travelCrsName, etc.)</li>
+    </ul>
+  </li>
+  <li>Using mapping fields below, map your attributes to SAP Concur SCIM attributes within one of the Core, Enterprise, Spend and Travel extensions.
+    <ul>
+      <li>If migrating from an existing flat file definition, map API attributes to your provisioned <a href="#import-formats">flat file</a> format below.</li>
+      <li>If migrating from an existing SAP Concur provisioning API, map API attributes to your provisioned <a href="#legacy-api">legacy API</a> format below.</li>
+    </ul>
+  </li>
+  <li>Add additional profile information in the appropriate extension for your user.</li>
+</ol>
+
+<h3 id="authentication-required">Authentication (Required)</h3>
+
+<p>To use UPS and supporting APIs, the appropriate <a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage">scopes</a> must be provisioned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT <a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage">scopes</a> to access the provisioning endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.</p>
+
+<h3 id="retrieve-users">Retrieve Users</h3>
+
+<p><a href="https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users">Retrieve</a> using using: (UUID, userName, or employeeNumber)</p>
+
+<h3 id="identity-creation">Identity Creation</h3>
+
+<ol>
+  <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users">Create new identity</a> with required fields in the core and enterprise extensions.
+    <ul>
+      <li>Temporarily save the UUID the ID of user for user retrieval.</li>
+      <li>Temporarily save the provisioning the ID of request for verifying provision status.</li>
+    </ul>
+  </li>
+  <li><a href="#verify-response">Verify response</a> SAP Concur data response is correct using the provisioning request ID from user creation.</li>
+  <li><a href="https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users">Retrieve</a> user data to verify data completion and correctness of request from above with the UUID of the newly created user.
+    <ul>
+      <li>If there are errors in response, resolve errors and try again. If there are questions, please reach out to your SAP Concur support representative for assistance.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="updating-an-identity">Updating an Identity</h3>
+
+<ol>
+  <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint">Update</a> an attribute of the new identity using the UUID of the identity that was created.</li>
+  <li><a href="#verify-response">Verify response</a> SAP Concur data response is correct using the provisioning request ID from user update.</li>
+  <li><a href="https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users">Retrieve</a> user data to verify data completion and correctness of request from above with the UUID of the created user.
+    <ul>
+      <li>If there are errors in response, resolve errors and try again. If there are questions, please reach out to your SAP Concur support representative for assistance.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="spend-or-travel-extension-profile-update">Spend or Travel Extension Profile Update</h3>
+
+<ol>
+  <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint">Add</a> spend or travel attribute of the new identity using the UUID of the identity that was created.</li>
+  <li><a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema">Verify required</a> fields for spend and travel.</li>
+  <li><a href="#verify-response">Verify response</a> SAP Concur data response is correct using the provisioning request ID from user update.</li>
+  <li><a href="https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users">Retrieve</a> user data to verify data completion and correctness.
+ request from above with the UUID of the created user.
+    <ul>
+      <li>Continue to add attributes and extensions to complete the user profile.</li>
+      <li>If there are errors in response, resolve errors and try again. If there are questions, please reach out to your SAP Concur support representative for assistance.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="verifying-status-of-provisioning-request"><a name="verify-response"></a>Verifying Status of Provisioning Request</h3>
+
+<p>SAP Concur products use an asynchronous provisioning design for all extensions other than core and enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve.</p>
+<ul>
+  <li>Using the provisioningID of the request, query the status endpoint for results: <a href="https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status">Provisioning status</a></li>
+  <li>Status results are:
+    <ul>
+      <li>success - No action necessary.</li>
+      <li>no-op - No action necessary. The system responds with no-op to verify the listening service received the request with no work required.</li>
+      <li>processing - No action necessary. The system is processing the provisioning request.</li>
+      <li>error - Action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your SAP Concur support representative for assistance.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="-import-file-formats"><a name="import-formats"></a> Import File Formats</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>File Type</th>
+      <th>File Name</th>
+      <th>Mapping</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>300</td>
+      <td>Employee Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/300.html">300 Employee Import</a></td>
+    </tr>
+    <tr>
+      <td>305</td>
+      <td>Employee Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/305.html">305 Employee Import</a></td>
+    </tr>
+    <tr>
+      <td>310</td>
+      <td>User Primary Field Addendum</td>
+      <td><a href="/api-reference/user-provisioning/mapping/310.html">310 User Primary Field Addendum</a></td>
+    </tr>
+    <tr>
+      <td>320</td>
+      <td>Update ID Information Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/320.html">320 Update ID Information Import</a></td>
+    </tr>
+    <tr>
+      <td>350</td>
+      <td>File Type Travel Addendum</td>
+      <td><a href="/api-reference/user-provisioning/mapping/350.html">350 File type Travel Addendum</a></td>
+    </tr>
+    <tr>
+      <td>370</td>
+      <td>Statement Employee Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/370.html">370 Statement Employee Import</a></td>
+    </tr>
+    <tr>
+      <td>400</td>
+      <td>Role Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/400.html">400 Role Import</a></td>
+    </tr>
+    <tr>
+      <td>500</td>
+      <td>Delegate Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/500.html">500 Delegate Import</a></td>
+    </tr>
+    <tr>
+      <td>550</td>
+      <td>Enhanced Delegate Import</td>
+      <td><a href="/api-reference/user-provisioning/mapping/550.html">550 Enhanced Delegate Import</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-legacy-api-mapping"><a name="legacy-api"></a> Legacy API Mapping</h3>
+<p>API|Mapping
+–|–
+Users V1|<a href="/api-reference/user-provisioning/mapping/v1-mapping.html">Users V1</a>
+Bulk 3.0 or 3.1|<a href="/api-reference/user-provisioning/mapping/3.0_3.1_mapping.md">Bulk</a></p>
+
+<h2 id="-supported-extensions"><a name="supported-extensions"></a> Supported Extensions</h2>
+
+<blockquote>
+  <p><strong>Note</strong>: All extensions are preceded by: urn:ietf:params:scim:</p>
+</blockquote>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name of Extension</th>
+      <th>Area of Coverage</th>
+      <th>Schemas Supported</th>
+      <th>Support</th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>schemas:core:2.0:User</td>
+      <td>SCIM core user information.</td>
+      <td>api:messages:2.0:BulkRequest</td>
+      <td>Supported</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:core:2.0:User</td>
+      <td>SCIM core user information.</td>
+      <td>api:messages:2.0:BulkRequest</td>
+      <td>Supported</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:enterprise:2.0:User</td>
+      <td>SCIM extension support.</td>
+      <td>schemas:core:2.0:User</td>
+      <td>Supported</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:User</td>
+      <td>Supporting information for spend users.</td>
+      <td>schemas:extension:concur:2.0:Provision:Status</td>
+      <td>Supported</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:Approver</td>
+      <td>Supporting information for spend approvers.</td>
+      <td>schemas:extension:concur:2.0:Provision:Schema</td>
+      <td>Supported</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:Delegate</td>
+      <td>Supporting information for spend delegates.</td>
+      <td>schemas:extension:concur:2.0:Provision:ServiceProviderConfig</td>
+      <td>Supported</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:UserPreference</td>
+      <td>Supporting information for spend users user preferences.</td>
+      <td> </td>
+      <td>schemas:extension:concur:2.0:Provision:ResourceType</td>
+      <td> </td>
+      <td> </td>
+      <td>Supported</td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:WorkflowPreference</td>
+      <td>Supporting information for spend users workflow preferences.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:Role</td>
+      <td>Supporting information for spend role provisioning.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:spend:2.0:Payroll</td>
+      <td>Supporting information for spend payroll provisioning.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>schemas:extension:travel:2.0:User</td>
+      <td>Supporting information for travel users.</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="helpful-hints">Helpful Hints</h2>
+
+<h3 id="travel-extension-roles">Travel Extension Roles</h3>
+
+<p>Group and Rule Classes are set up in advance during company set up and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes, (and individuals) by an Admin User in the UI at any time.</p>
+
+<p>Groups are generally related to how the software behaves and what part of the application a user can access (for example, reporting). A user can be a member of one or more Groups, though this is not required in provisioning. Every user is assigned a default “All” Group by default. Rule Class generally relates to what travel options the user has (for example, what fares they are able to see, what travel policies are enforced). An individual MUST be in one and only one Rule Class. This is the only field required to provision a user within the travel extension.</p>
+
+<h3 id="there-are-two-sets-of-names-for-each-user">There Are Two Sets of Names for Each User</h3>
+
+<ul>
+  <li><strong>HR Name</strong> fields (First, Last, etc.) are provisioned within the Core/Identity extension and come from the HR system or the identity provider. This is the name the user will see when using Concur Expense and is generally not editable by the user.</li>
+  <li><strong>Travel Name</strong> fields must match the user’s travel documents and loyalty programs. They are part of the Travel Extension and generally SHOULD be editable by the user so that they match their travel documents. If a user’s name on their passport, for example, is different than the name provided by Concur Travel for the reservation, the traveler may have problems getting through airport security or even renting a car. The name that users see on their My Profile - Personal Information page in the UI is the Travel Name.</li>
+</ul>
 
       </div>
       <!--/col-md-8-->
