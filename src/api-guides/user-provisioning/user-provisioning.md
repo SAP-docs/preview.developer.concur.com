@@ -94,7 +94,7 @@ SAP Concur products use an asynchronous provisioning design for all extensions o
 ### <a name="import-formats"></a> Import File Formats
 
 File Type|File Name|Mapping
---|--|--
+---|---|---
 300|Employee Import|[300 Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/300.html)
 305|Employee Import|[305 Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/305.html)
 310 |User Primary Field Addendum|[310 User Primary Field Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/310.html)
@@ -108,7 +108,7 @@ File Type|File Name|Mapping
 ### <a name="legacy-api"></a> Legacy API Mapping
 
 API|Mapping
---|--
+---|---
 Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/v1-mapping.html)
 Bulk 3.0 or 3.1|[Bulk](https://developer.concur.com/api-reference/user-provisioning/mapping/3.0_3.1_mapping.html)
 
@@ -117,18 +117,17 @@ Bulk 3.0 or 3.1|[Bulk](https://developer.concur.com/api-reference/user-provision
 > **Note**: All extensions are preceded by: urn:ietf:params:scim:
 
 Name of Extension|Area of Coverage|Schemas Supported
---|--|--
-schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest
-schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest
-schemas:extension:enterprise:2.0:User|SCIM extension support.|schemas:core:2.0:User
-schemas:extension:spend:2.0:User|Supporting information for spend users.|schemas:extension:concur:2.0:Provision:Status
-schemas:extension:spend:2.0:Approver|Supporting information for spend approvers.|schemas:extension:concur:2.0:Provision:Schema
-schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates.|schemas:extension:concur:2.0:Provision:ServiceProviderConfig
-schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences.|	schemas:extension:concur:2.0:Provision:ResourceType||
-schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences.|
-schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.|
-schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|
-schemas:extension:travel:2.0:User|Supporting information for travel users.|
+|---|---|---|
+|schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest|
+|schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest|
+|schemas:extension:spend:2.0:User|Supporting information for spend users.|schemas:extension:concur:2.0:Provision:Status|
+|schemas:extension:spend:2.0:Approver|Supporting information for spend approvers.|schemas:extension:concur:2.0:Provision:Schema|
+|schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates.|schemas:extension:concur:2.0:Provision:ServiceProviderConfig|
+|schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences.|-|	|schemas:extension:concur:2.0:Provision:ResourceType|-|-|
+|schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences.|-|
+|schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.|-|
+|schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|-|
+|schemas:extension:travel:2.0:User|Supporting information for travel users.|-|
 
 ## Helpful Hints
 
