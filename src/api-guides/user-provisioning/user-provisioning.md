@@ -116,19 +116,19 @@ Bulk 3.0 or 3.1|[Bulk](https://developer.concur.com/api-reference/user-provision
 
 > **Note**: All extensions are preceded by: urn:ietf:params:scim:
 
-Name of Extension|Area of Coverage|Schemas Supported|Support
---|--|--|--
-schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest|Supported
-schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest|Supported
-schemas:extension:enterprise:2.0:User|SCIM extension support.|schemas:core:2.0:User|Supported
-schemas:extension:spend:2.0:User|Supporting information for spend users.|schemas:extension:concur:2.0:Provision:Status|Supported
-schemas:extension:spend:2.0:Approver|Supporting information for spend approvers.|schemas:extension:concur:2.0:Provision:Schema|Supported
-schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates.|schemas:extension:concur:2.0:Provision:ServiceProviderConfig|Supported
-schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences.||	schemas:extension:concur:2.0:Provision:ResourceType|||Supported
-schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences.||
-schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.||
-schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.||
-schemas:extension:travel:2.0:User|Supporting information for travel users.||
+Name of Extension|Area of Coverage|Schemas Supported
+--|--|--
+schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest
+schemas:core:2.0:User|SCIM core user information.|api:messages:2.0:BulkRequest
+schemas:extension:enterprise:2.0:User|SCIM extension support.|schemas:core:2.0:User
+schemas:extension:spend:2.0:User|Supporting information for spend users.|schemas:extension:concur:2.0:Provision:Status
+schemas:extension:spend:2.0:Approver|Supporting information for spend approvers.|schemas:extension:concur:2.0:Provision:Schema
+schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates.|schemas:extension:concur:2.0:Provision:ServiceProviderConfig
+schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences.|	schemas:extension:concur:2.0:Provision:ResourceType||
+schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences.|
+schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.|
+schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|
+schemas:extension:travel:2.0:User|Supporting information for travel users.|
 
 ## Helpful Hints
 
