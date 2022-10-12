@@ -38,13 +38,13 @@ Clients and partners migrating from flat file import or Users V1 API must comple
 > **Note**: New clients and partners skip this step and move to the following section on Authentication.
 
 1. List the attributes your application currently supports within the flat file import or users V1 API.
-2. Map the attributes required to create a user's profile that meets the products used. It can be helpful to break down your requirements into the attributes needed for the minimum requirements to create:
-  * [Identity](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (name, username, email, company ID number, employee number and active flag) - Identity is required for any user.
-  * [Spend](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (cashAdvanceAccountCode, country, locale, reimbursementCurrency, etc.)
-  * [Travel](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (ruleClass, travelCrsName, etc.)
-3. Using mapping fields below, map your attributes to SAP Concur SCIM attributes within one of the Core, Enterprise, Spend and Travel extensions.
-   * If migrating from an existing flat file definition, map API attributes to your provisioned [flat file](#import-formats) format below.
-   * If migrating from an existing SAP Concur provisioning API, map API attributes to your provisioned [legacy API](#legacy-api) format below.  
+2. Map the attributes required to create a user's profile that meets the products used. It can be helpful to break down your requirements into the attributes needed for the minimum requirements to create:  
+  * [Identity](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (name, username, email, company ID number, employee number and active flag) - Identity is required for any user.  
+  * [Spend](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (cashAdvanceAccountCode, country, locale, reimbursementCurrency, etc.)  
+  * [Travel](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) (ruleClass, travelCrsName, etc.)  
+3. Using mapping fields below, map your attributes to SAP Concur SCIM attributes within one of the Core, Enterprise, Spend and Travel extensions.  
+   * If migrating from an existing flat file definition, map API attributes to your provisioned [flat file](#import-formats) format below.  
+   * If migrating from an existing SAP Concur provisioning API, map API attributes to your provisioned [legacy API](#legacy-api) format below.   
 4. Add additional profile information in the appropriate extension for your user.
 
 ### Authentication (Required)
@@ -57,39 +57,39 @@ To use UPS and supporting APIs, the appropriate [scopes](https://developer.concu
 
 ### Identity Creation
 
-1. [Create new identity](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users) with required fields in the core and enterprise extensions.
-  * Temporarily save the UUID the ID of user for user retrieval.
-  * Temporarily save the provisioning the ID of request for verifying provision status.
-2. [Verify response](#verify-response) SAP Concur data response is correct using the provisioning request ID from user creation.
-3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness of request from above with the UUID of the newly created user.
+1. [Create new identity](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#create-a-new-user-with-users) with required fields in the core and enterprise extensions.  
+  * Temporarily save the UUID the ID of user for user retrieval.  
+  * Temporarily save the provisioning the ID of request for verifying provision status.  
+2. [Verify response](#verify-response) SAP Concur data response is correct using the provisioning request ID from user creation.  
+3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness of request from above with the UUID of the newly created user.  
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your SAP Concur support representative for assistance.
 
 ### Updating an Identity
 
-1. [Update](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) an attribute of the new identity using the UUID of the identity that was created.
-2. [Verify response](#verify-response) SAP Concur data response is correct using the provisioning request ID from user update.
-3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness of request from above with the UUID of the created user.
+1. [Update](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) an attribute of the new identity using the UUID of the identity that was created.  
+2. [Verify response](#verify-response) SAP Concur data response is correct using the provisioning request ID from user update.  
+3. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness of request from above with the UUID of the created user.  
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your SAP Concur support representative for assistance.
 
 ### Spend or Travel Extension Profile Update
 
-1. [Add](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) spend or travel attribute of the new identity using the UUID of the identity that was created.
-2. [Verify required](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) fields for spend and travel.
-3. [Verify response](#verify-response) SAP Concur data response is correct using the provisioning request ID from user update.
+1. [Add](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#update-a-user-with-users-endpoint) spend or travel attribute of the new identity using the UUID of the identity that was created.  
+2. [Verify required](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#schema) fields for spend and travel.  
+3. [Verify response](#verify-response) SAP Concur data response is correct using the provisioning request ID from user update.  
 4. [Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) user data to verify data completion and correctness.
- request from above with the UUID of the created user.
-  * Continue to add attributes and extensions to complete the user profile.
+ request from above with the UUID of the created user.  
+  * Continue to add attributes and extensions to complete the user profile.  
   * If there are errors in response, resolve errors and try again. If there are questions, please reach out to your SAP Concur support representative for assistance.
 
 ### <a name="verify-response"></a>Verifying Status of Provisioning Request
 
-SAP Concur products use an asynchronous provisioning design for all extensions other than core and enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve.
-  * Using the provisioningID of the request, query the status endpoint for results: [Provisioning status](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status)
-  * Status results are:
-    * success - No action necessary.
-    * no-op - No action necessary. The system responds with no-op to verify the listening service received the request with no work required.
-    * processing - No action necessary. The system is processing the provisioning request.
-    * error - Action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your SAP Concur support representative for assistance.
+SAP Concur products use an asynchronous provisioning design for all extensions other than core and enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve.  
+  * Using the provisioningID of the request, query the status endpoint for results: [Provisioning status](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status)  
+  * Status results are:  
+    * success - No action necessary.  
+    * no-op - No action necessary. The system responds with no-op to verify the listening service received the request with no work required.  
+    * processing - No action necessary. The system is processing the provisioning request.  
+    * error - Action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your SAP Concur support representative for assistance.  
 
 ### <a name="import-formats"></a> Import File Formats
 
