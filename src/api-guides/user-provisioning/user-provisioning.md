@@ -95,21 +95,21 @@ SAP Concur products use an asynchronous provisioning design for all extensions o
 
 File Type|File Name|Mapping
 --|--|--
-300|Employee Import|[300 Employee Import](./api-reference/user-provisioning/mapping/300.html)
-305|Employee Import|[305 Employee Import](./api-reference/user-provisioning/mapping/305.html)
-310 |User Primary Field Addendum|[310 User Primary Field Addendum](./api-reference/user-provisioning/mapping/310.html)
-320|Update ID Information Import|[320 Update ID Information Import](./api-reference/user-provisioning/mapping/320.html)
-350|File Type Travel Addendum|[350 File type Travel Addendum](./api-reference/user-provisioning/mapping/350.html)
-370|Statement Employee Import|[370 Statement Employee Import](./api-reference/user-provisioning/mapping/370.html)
-400|Role Import|[400 Role Import](./api-reference/user-provisioning/mapping/400.html)
-500|Delegate Import|[500 Delegate Import](./api-reference/user-provisioning/mapping/500.html)
-550|Enhanced Delegate Import|[550 Enhanced Delegate Import](./api-reference/user-provisioning/mapping/550.html)
+300|Employee Import|[300 Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/300.html)
+305|Employee Import|[305 Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/305.html)
+310 |User Primary Field Addendum|[310 User Primary Field Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/310.html)
+320|Update ID Information Import|[320 Update ID Information Import](https://developer.concur.com/api-reference/user-provisioning/mapping/320.html)
+350|File Type Travel Addendum|[350 File type Travel Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/350.html)
+370|Statement Employee Import|[370 Statement Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/370.html)
+400|Role Import|[400 Role Import](https://developer.concur.com/api-reference/user-provisioning/mapping/400.html)
+500|Delegate Import|[500 Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/500.html)
+550|Enhanced Delegate Import|[550 Enhanced Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/550.html)
 
 ### <a name="legacy-api"></a> Legacy API Mapping
 API|Mapping
 --|--
-Users V1|[Users V1](./api-reference/user-provisioning/mapping/v1-mapping.html)
-Bulk 3.0 or 3.1|[Bulk](./api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
+Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/v1-mapping.html)
+Bulk 3.0 or 3.1|[Bulk](https://developer.concur.com/api-reference/user-provisioning/mapping/3.0_3.1_mapping.html)
 
 ## <a name="supported-extensions"></a> Supported Extensions
 
