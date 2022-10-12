@@ -106,6 +106,7 @@ File Type|File Name|Mapping
 550|Enhanced Delegate Import|[550 Enhanced Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/550.html)
 
 ### <a name="legacy-api"></a> Legacy API Mapping
+
 API|Mapping
 --|--
 Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/v1-mapping.html)
