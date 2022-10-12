@@ -15,7 +15,7 @@ The System for Cross-Domain Identity Management (SCIM) user management API enabl
 
 ## <a name="process-flow"></a>API Process Flow
 
-![Process flow diagram of the User Provisioning API](./v4-user-provisioning-process-flow-v3.png)
+![Process flow diagram of the User Provisioning API](/api-reference/user-provisioning/v4-user-provisioning-process-flow-v3.png)
 
 UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (name, address, username, etc.) is centralized and attributes are shared between spend and travel services. UPS supports [spend and travel](#supported-extensions) extensions for product specific information.
 
@@ -49,11 +49,11 @@ Clients and partners migrating from flat file import or Users V1 API must comple
 
 ### Authentication (Required)
 
-To use UPS and supporting APIs, the appropriate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) to access the provisioning endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.
+To use UPS and supporting APIs, the appropriate [scopes](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#scope-usage) must be provisioned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT scopes to access the provisioning endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.
 
 ### Retrieve Users
 
-[Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) using using: (UUID, userName, or employeeNumber)
+[Retrieve](https://developer.concur.com/api-reference/profile/v4.identity.html#retrieve-users) using: (UUID, userName, or employeeNumber)
 
 ### Identity Creation
 
@@ -84,7 +84,7 @@ To use UPS and supporting APIs, the appropriate [scopes](https://developer.concu
 ### <a name="verify-response"></a>Verifying Status of Provisioning Request
 
 SAP Concur products use an asynchronous provisioning design for all extensions other than core and enterprise. Verifying the status of the request is required to determine success or failures and associated errors to resolve.  
-  * Using the provisioningID of the request, query the status endpoint for results: [Provisioning status](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status)  
+  * Using the provisioningID of the request, query the status endpoint for results [Provisioning status](https://developer.concur.com/api-reference/user-provisioning/v4.user-provisioning.html#retrieve-a-detailed-provisioning-request-status):  
   * Status results are:  
     * success - No action necessary.  
     * no-op - No action necessary. The system responds with no-op to verify the listening service received the request with no work required.  
@@ -95,21 +95,21 @@ SAP Concur products use an asynchronous provisioning design for all extensions o
 
 File Type|File Name|Mapping
 --|--|--
-300|Employee Import|[300 Employee Import](/api-reference/user-provisioning/mapping/300.html)
-305|Employee Import|[305 Employee Import](/api-reference/user-provisioning/mapping/305.html)
-310 |User Primary Field Addendum|[310 User Primary Field Addendum](/api-reference/user-provisioning/mapping/310.html)
-320|Update ID Information Import|[320 Update ID Information Import](/api-reference/user-provisioning/mapping/320.html)
-350|File Type Travel Addendum|[350 File type Travel Addendum](/api-reference/user-provisioning/mapping/350.html)
-370|Statement Employee Import|[370 Statement Employee Import](/api-reference/user-provisioning/mapping/370.html)
-400|Role Import|[400 Role Import](/api-reference/user-provisioning/mapping/400.html)
-500|Delegate Import|[500 Delegate Import](/api-reference/user-provisioning/mapping/500.html)
-550|Enhanced Delegate Import|[550 Enhanced Delegate Import](/api-reference/user-provisioning/mapping/550.html)
+300|Employee Import|[300 Employee Import](./api-reference/user-provisioning/mapping/300.html)
+305|Employee Import|[305 Employee Import](./api-reference/user-provisioning/mapping/305.html)
+310 |User Primary Field Addendum|[310 User Primary Field Addendum](./api-reference/user-provisioning/mapping/310.html)
+320|Update ID Information Import|[320 Update ID Information Import](./api-reference/user-provisioning/mapping/320.html)
+350|File Type Travel Addendum|[350 File type Travel Addendum](./api-reference/user-provisioning/mapping/350.html)
+370|Statement Employee Import|[370 Statement Employee Import](./api-reference/user-provisioning/mapping/370.html)
+400|Role Import|[400 Role Import](./api-reference/user-provisioning/mapping/400.html)
+500|Delegate Import|[500 Delegate Import](./api-reference/user-provisioning/mapping/500.html)
+550|Enhanced Delegate Import|[550 Enhanced Delegate Import](./api-reference/user-provisioning/mapping/550.html)
 
 ### <a name="legacy-api"></a> Legacy API Mapping
 API|Mapping
 --|--
-Users V1|[Users V1](/api-reference/user-provisioning/mapping/v1-mapping.html)
-Bulk 3.0 or 3.1|[Bulk](/api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
+Users V1|[Users V1](./api-reference/user-provisioning/mapping/v1-mapping.html)
+Bulk 3.0 or 3.1|[Bulk](./api-reference/user-provisioning/mapping/3.0_3.1_mapping.md)
 
 ## <a name="supported-extensions"></a> Supported Extensions
 
