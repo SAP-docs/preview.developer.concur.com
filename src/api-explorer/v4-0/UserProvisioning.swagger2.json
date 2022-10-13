@@ -170,11 +170,11 @@
                                 "properties": {
                                     "temporaryDelegationFromDate": {
                                         "type": "string",
-                                        "description": "Start date for delegates temporary approval permissions"
+                                        "description": "Start date for delegates temporary approval permissions. Valid ISO 8601 Date"
                                     },
                                     "temporaryDelegationToDate": {
                                         "type": "string",
-                                        "description": "End date for delegates temporary approval permissions"
+                                        "description": "End date for delegates temporary approval permissions. Valid ISO 8601 Date"
                                     }
                                 }
                             }
@@ -211,9 +211,13 @@
                         }
                     }
                 },
+                "gender": {
+                    "type": "string",
+                    "description": "gender of travel user"
+                },
                 "groups": {
                     "type": "array",
-                    "description": "List of user groups that user belongs to for certain permissions",
+                    "description": "List of user groups that user belongs to for certain permissions ",
                     "items": {
                         "type": "integer"
                     }
@@ -231,6 +235,40 @@
                             "description": "The referenced user's UUID"
                         }
                     }
+                },
+                "name": {
+                    "type": "object",
+                    "description": "",
+                    "properties": {
+                        "familyName": {
+                            "type": "string",
+                            "description": "travel family name of user"
+                        },
+                        "givenName": {
+                            "type": "string",
+                            "description": "travel given name of user"
+                        },
+                        "hasNoMiddleName": {
+                            "type": "boolean",
+                            "description": "flag for if user has no middle name"
+                        },
+                        "honorificSuffix": {
+                            "type": "string",
+                            "description": "travel honorific suffix of user"
+                        },
+                        "middleName": {
+                            "type": "string",
+                            "description": "travel middle name of user"
+                        },
+                        "namePrefix": {
+                            "type": "string",
+                            "description": "travel name prefix of user"
+                        }
+                    }
+                },
+                "orgUnit": {
+                    "type": "string",
+                    "description": "The name of the org unit user belongs to "
                 },
                 "ruleClass": {
                     "type": "object",
@@ -252,7 +290,7 @@
                 },
                 "travelNameRemark": {
                     "type": "string",
-                    "description": "ravel name remark"
+                    "description": "travel name remark"
                 },
                 "xmlProfileSyncId": {
                     "type": "string",
@@ -261,6 +299,7 @@
             },
             "required": [
                 "ruleClass",
+                "name",
                 "travelCrsName"
             ]
         },
@@ -273,7 +312,7 @@
                 },
                 "addresses": {
                     "type": "array",
-                    "description": "A physical mailing address for this User. Canonical type values of 'work', 'home', and 'other'. This attribute is a complex type with the following sub-attributes.",
+                    "description": "Physical mailing addresses for the User.",
                     "items": {
                         "type": "object",
                         "properties": {
@@ -322,32 +361,23 @@
                 },
                 "emails": {
                     "type": "array",
-                    "description": "Email addresses for the user. The value SHOULD be canonicalized by the service provider, e.g., 'bjensen@example.com' instead of 'bjensen@EXAMPLE.COM'. Canonical type values of 'work', 'home', and 'other'.",
+                    "description": "Email addresses for the user.",
                     "items": {
                         "type": "object",
                         "properties": {
-                            "dateAdded": {
-                                "type": "string",
-                                "description": "The date and time the email was added to the user's profile."
-                            },
-                            "dateVerified": {
-                                "type": "string",
-                                "description": "The date and time the email was verified"
-                            },
                             "notifications": {
                                 "type": "boolean",
                                 "description": "Notifications opt-in for emails"
                             },
                             "type": {
                                 "type": "string",
-                                "description": "A label indicating the attribute's function, e.g., 'Work' or 'Home'.",
+                                "description": "A label indicating the function of the address, e.g., 'work' or 'home'.",
                                 "enum": [
                                     "work",
                                     "home",
-                                    "other",
-                                    "other2",
                                     "work2",
-                                    "sms"
+                                    "other",
+                                    "other2"
                                 ]
                             },
                             "value": {
@@ -360,7 +390,8 @@
                             }
                         },
                         "required": [
-                            "value"
+                            "value",
+                            "type"
                         ]
                     }
                 },
@@ -437,22 +468,15 @@
                             "Invoice",
                             "Locate",
                             "Request",
-                            "Travel"
+                            "Travel",
+                            "Analytics",
+                            "Unified Analytics"
                         ]
                     }
                 },
                 "externalId": {
                     "type": "string",
                     "description": "User identifier from the provisioning client"
-                },
-                "gender": {
-                    "type": "string",
-                    "description": "The user's gender",
-                    "enum": [
-                        "Male",
-                        "Female",
-                        "Others"
-                    ]
                 },
                 "id": {
                     "type": "string",
@@ -464,10 +488,10 @@
                     "properties": {
                         "preference24Hour": {
                             "type": "string",
-                            "description": "preferred 24 hour format for the user",
+                            "description": "preferred time format for the user",
                             "enum": [
-                                "h:mm AM/PM",
-                                "H:mm"
+                                "H:mm AM/PM",
+                                "hh:mm"
                             ]
                         },
                         "preferenceCurrencySymbolLocation": {
@@ -518,13 +542,13 @@
                             "type": "string",
                             "description": "preferred first day of the week for the user",
                             "enum": [
+                                "Sunday",
                                 "Monday",
                                 "Tuesday",
                                 "Wednesday",
                                 "Thursday",
                                 "Friday",
-                                "Saturday",
-                                "Sunday"
+                                "Saturday"
                             ]
                         },
                         "preferenceHourMinuteSeparator": {
@@ -564,9 +588,20 @@
                         },
                         "preferenceStartDayViewHour": {
                             "type": "integer",
-                            "description": "preferred start of day for the user, from 1"
+                            "description": "preferred hour setting for the start of day, 0-23"
                         }
-                    }
+                    },
+                    "required": [
+                        "preferenceEndDayViewHour",
+                        "preferenceFirstDayOfWeek",
+                        "preferenceDateFormat",
+                        "preferenceCurrencySymbolLocation",
+                        "preferenceHourMinuteSeparator",
+                        "preferenceDefaultCalView",
+                        "preference24Hour",
+                        "preferenceNumberFormat",
+                        "preferenceStartDayViewHour"
+                    ]
                 },
                 "meta": {
                     "type": "object",
@@ -576,9 +611,31 @@
                     "type": "object",
                     "description": "The user's name",
                     "properties": {
+                        "academicTitle": {
+                            "type": "string",
+                            "description": "Title signifying level of academic achievement",
+                            "enum": [
+                                "Dr.",
+                                "Doctor",
+                                "Prof.",
+                                "Professor",
+                                "Prof. Dr.",
+                                "Professor Doctor",
+                                "B.A.",
+                                "Bachelor of Arts",
+                                "MBA",
+                                "Master of Business Administration",
+                                "Ph.D",
+                                "Doctor of Philosophy"
+                            ]
+                        },
                         "familyName": {
                             "type": "string",
                             "description": "The family name of the User, or last name in most Western languages (e.g., 'Jensen' given the full name 'Ms. Barbara J Jensen, III')."
+                        },
+                        "familyNamePrefix": {
+                            "type": "string",
+                            "description": "The family name prefix of the User (e.g. 'van' given the full name 'Vincent van Gogh')"
                         },
                         "formatted": {
                             "type": "string",
@@ -588,63 +645,13 @@
                             "type": "string",
                             "description": "The given name of the User, or first name in most Western languages (e.g., 'Barbara' given the full name 'Ms. Barbara J Jensen, III')."
                         },
-                        "hasNoMiddleName": {
-                            "type": "boolean",
-                            "description": "A boolean indicating that the user does not have a middle name"
-                        },
                         "honorificPrefix": {
                             "type": "string",
-                            "description": "The honorific prefix(es) of the User, or title in most Western languages (e.g., 'Ms.' given the full name 'Ms. Barbara J Jensen, III').",
-                            "enum": [
-                                "Miss",
-                                "Mr",
-                                "Mrs",
-                                "Ms",
-                                "Mx",
-                                "B.A.",
-                                "B.Sc.",
-                                "CPA",
-                                "D.D.",
-                                "D.D.S.",
-                                "D.P.S.",
-                                "Dr",
-                                "Dr Mr",
-                                "Dr Mrs",
-                                "Dr Ms",
-                                "Eng.",
-                                "Ing.",
-                                "Lady",
-                                "Lord",
-                                "M.D.",
-                                "MBA",
-                                "P.Eng.",
-                                "Ph.D",
-                                "Ph.D.",
-                                "Prof",
-                                "Prof Dr",
-                                "Prof Dr Mr",
-                                "Prof Dr Mrs",
-                                "Prof Dr Ms",
-                                "Prof Mr",
-                                "Prof Mrs",
-                                "Prof Ms",
-                                "Rev",
-                                "Sir"
-                            ]
+                            "description": "The honorific prefix(es) of the User, or title in most Western languages (e.g., 'Ms.' given the full name 'Ms. Barbara J Jensen, III')."
                         },
                         "honorificSuffix": {
                             "type": "string",
-                            "description": "The honorific suffix(es) of the User, or  suffix in most Western languages (e.g., 'III' given the full name  'Ms. Barbara J Jensen, III').",
-                            "enum": [
-                                "Jr.",
-                                "Sr.",
-                                "I",
-                                "II",
-                                "III",
-                                "IV",
-                                "V",
-                                "VI"
-                            ]
+                            "description": "The honorific suffix(es) of the User, or suffix in most Western languages (e.g., 'III' given the full name 'Ms. Barbara J Jensen, III')."
                         },
                         "legalName": {
                             "type": "string",
@@ -670,41 +677,29 @@
                 },
                 "phoneNumbers": {
                     "type": "array",
-                    "description": "Phone numbers for the User.  The value SHOULD be canonicalized by the service provider according to the format specified in RFC 3966, e.g., 'tel:+1-201-555-0123'. Canonical type values of 'work', 'home', 'mobile', 'fax', 'pager', and 'other'.",
+                    "description": "Phone numbers for the user",
                     "items": {
                         "type": "object",
                         "properties": {
                             "display": {
                                 "type": "string",
-                                "description": "A human-readable phone number for display"
+                                "description": "Phone number canonicalized to RFC3966 format"
+                            },
+                            "issuingCountry": {
+                                "type": "string",
+                                "description": "Issuing country for mobile devices (type=mobile); two-letter code per ISO 3166-1 alpha-2"
                             },
                             "notifications": {
                                 "type": "boolean",
-                                "description": "LNA Opt-in for mobile devices (type=Mobile)"
-                            },
-                            "operatingSystem": {
-                                "type": "string",
-                                "description": "The OS of the  device, when the phone is a cellphone type",
-                                "enum": [
-                                    "Android Phone",
-                                    "Android Tablet",
-                                    "Blackberry",
-                                    "iOS Phone",
-                                    "iOS Tablet",
-                                    "Not a smartphone",
-                                    "Other iOS device",
-                                    "Other smartphone",
-                                    "Unknown",
-                                    "Window Mobile"
-                                ]
+                                "description": "LNA Opt-in for mobile devices (type=mobile)"
                             },
                             "primary": {
                                 "type": "boolean",
-                                "description": "Primary device for mobile devices (type=Mobile)"
+                                "description": "Primary device for mobile devices (type=mobile)"
                             },
                             "type": {
                                 "type": "string",
-                                "description": "A label indicating the attribute's function, e.g., 'Work', 'Home'.",
+                                "description": "A label indicating the phone number's function, e.g., 'work', 'home'.",
                                 "enum": [
                                     "work",
                                     "home",
@@ -717,9 +712,17 @@
                             },
                             "value": {
                                 "type": "string",
-                                "description": "Phone number value. Attempts to format to RFC3966 standards on create/update"
+                                "description": "Phone number value"
+                            },
+                            "workExtension": {
+                                "type": "string",
+                                "description": "Extension for work phone (type=work)"
                             }
-                        }
+                        },
+                        "required": [
+                            "value",
+                            "type"
+                        ]
                     }
                 },
                 "preferredLanguage": {
@@ -729,6 +732,10 @@
                 "timezone": {
                     "type": "string",
                     "description": "The User's time zone in the 'Olson' time zone database format, e.g., 'America/Los_Angeles'."
+                },
+                "title": {
+                    "type": "string",
+                    "description": "user's job title in the company"
                 },
                 "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll": {
                     "$ref": "#/definitions/PayrollExtension"
@@ -763,7 +770,9 @@
                 }
             },
             "required": [
+                "timezone",
                 "name",
+                "preferredLanguage",
                 "active",
                 "id",
                 "emails",
@@ -848,7 +857,6 @@
                             "request",
                             "report",
                             "statement",
-                            "authorizationRequest",
                             "payment",
                             "cashAdvance",
                             "purchaseRequest",
@@ -866,7 +874,7 @@
             "properties": {
                 "adp": {
                     "type": "object",
-                    "description": "Adp settings for Employee",
+                    "description": "A user's ADP settings",
                     "properties": {
                         "companyCode": {
                             "type": "string",
@@ -912,10 +920,6 @@
                     "type": "string",
                     "description": "Client supplied employee's number within the company, unique for the company"
                 },
-                "jobTitle": {
-                    "type": "string",
-                    "description": "user's job title in the company"
-                },
                 "manager": {
                     "type": "object",
                     "description": "The manager of this user",
@@ -930,55 +934,33 @@
                         },
                         "employeeNumber": {
                             "type": "string",
-                            "description": "The referenced user's employee number, if it is an Enterprise user"
+                            "description": "The referenced user's employee number"
                         },
                         "value": {
                             "type": "string",
                             "description": "The referenced user's UUID"
                         }
-                    }
-                },
-                "orgUnit": {
-                    "type": "string",
-                    "description": "Client supplied org unit name"
+                    },
+                    "required": [
+                        "value"
+                    ]
                 },
                 "organization": {
                     "type": "string",
                     "description": "Company name"
                 },
-                "self": {
-                    "type": "object",
-                    "description": "A reference to this user",
-                    "properties": {
-                        "$ref": {
-                            "type": "string",
-                            "description": "The URI of the SCIM resource representing the referenced user."
-                        },
-                        "displayName": {
-                            "type": "string",
-                            "description": "The referenced user's display name"
-                        },
-                        "employeeNumber": {
-                            "type": "string",
-                            "description": "The referenced user's employee number, if it is an Enterprise user"
-                        },
-                        "value": {
-                            "type": "string",
-                            "description": "The referenced user's UUID"
-                        }
-                    }
-                },
                 "startDate": {
                     "type": "string",
-                    "description": "Start Date, in YYYY-MM-DD format"
+                    "description": "Start Date, in YYYY-MM-DD'T'hh:mm:ss'Z' format"
                 },
                 "terminationDate": {
                     "type": "string",
-                    "description": "Termination Date, in YYYY-MM-DD format, if the employee is terminated, this can also be used to calculate the data retention period"
+                    "description": "Termination Date, in YYYY-MM-DD'T'hh:mm:ss'Z' format, if the employee is terminated, this can also be used to calculate the data retention period"
                 }
             },
             "required": [
-                "companyId"
+                "companyId",
+                "startDate"
             ]
         },
         "ExpenseUserPreferenceExtension": {
@@ -1061,6 +1043,49 @@
         "SpendUser": {
             "type": "object",
             "properties": {
+                "biHierarchy": {
+                    "type": "object",
+                    "description": "The object containing the long code and the sync guid of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur).",
+                    "properties": {
+                        "code": {
+                            "type": "string",
+                            "description": "The long code of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                        },
+                        "href": {
+                            "type": "string",
+                            "description": "The URI to the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                        },
+                        "syncGuid": {
+                            "type": "string",
+                            "description": "The sync guid of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                        }
+                    }
+                },
+                "biManager": {
+                    "type": "object",
+                    "description": "The UUID of the Reporting Manager",
+                    "properties": {
+                        "$ref": {
+                            "type": "string",
+                            "description": "The URI reference for the user"
+                        },
+                        "displayName": {
+                            "type": "string",
+                            "description": "The username for the user"
+                        },
+                        "employeeNumber": {
+                            "type": "string",
+                            "description": "The employee number for the user"
+                        },
+                        "value": {
+                            "type": "object",
+                            "description": "The internal UUID identifier for the user"
+                        }
+                    },
+                    "required": [
+                        "employeeNumber"
+                    ]
+                },
                 "budgetCountryCode": {
                     "type": "string",
                     "description": "Valid ISO 3166 country code for Budget"
@@ -1079,7 +1104,7 @@
                 },
                 "locale": {
                     "type": "string",
-                    "description": "Valid locale from the list of configured locales as defined in [RFC5646], i.e en-US"
+                    "description": "Valid locale from the list of configured locales as defined in [RFC5646]"
                 },
                 "nonEmployee": {
                     "type": "boolean",
@@ -1087,7 +1112,7 @@
                 },
                 "reimbursementCurrency": {
                     "type": "string",
-                    "description": "Valid three digit currency code in the list of system reimbursement currencies"
+                    "description": "Valid three digit or letter currency code in the list of system reimbursement currencies"
                 },
                 "reimbursementType": {
                     "type": "object",
@@ -1105,9 +1130,17 @@
                     "items": {
                         "type": "object",
                         "properties": {
+                            "href": {
+                                "type": "string",
+                                "description": "The list service endpoint to fetch the specific item information."
+                            },
                             "id": {
                                 "type": "string",
                                 "description": "custom1 - custom22, orgUnit1 - orgUnit6"
+                            },
+                            "syncGuid": {
+                                "type": "string",
+                                "description": "The sync_guid value of the custom field"
                             },
                             "value": {
                                 "type": "string",
@@ -1115,18 +1148,20 @@
                             }
                         },
                         "required": [
+                            "href",
                             "id",
+                            "syncGuid",
                             "value"
                         ]
                     }
                 },
                 "stateProvince": {
                     "type": "string",
-                    "description": "Valid ISO sub country code, i.e - WA"
+                    "description": "Valid ISO sub country code"
                 },
                 "testEmployee": {
                     "type": "boolean",
-                    "description": "A Boolean value indicating whether the User is a test user. Can't be modified after the user is created."
+                    "description": "A Boolean value indicating whether the User is a test user. Can't be modified after the user is created. Can only be set at creation."
                 }
             },
             "required": [
@@ -1379,7 +1414,8 @@
         }
     ],
     "basePath": "/provisioning/v4",
-    "host": "provisioning.seapr1.uscom.cnqr.delivery",
+    "host": "provisioning.service.cnqr.tech",
+    "x-sap-shortText": "A synchronous user provisioning service",
     "info": {
         "contact": {
             "email": "profile@concur.com"
@@ -1393,7 +1429,258 @@
         "title": "Provisioning APIs",
         "termsOfService": "http://us.api.concursolutions.com/terms"
     },
+    "x-servers": [
+        {
+            "url": "https://us.api.concursolutions.com/profile/v4",
+            "description": "Example production endpoint"
+        }
+    ],
     "paths": {
+        "/Users/{id}": {
+            "put": {
+                "operationId": "user.replace",
+                "summary": "Replace User",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "description": "User Id",
+                        "required": true
+                    },
+                    {
+                        "in": "body",
+                        "name": "User",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "description": "User"
+                    }
+                },
+                "tags": [
+                    "User"
+                ]
+            },
+            "patch": {
+                "operationId": "user.patch",
+                "summary": "Patch User",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "description": "User Id",
+                        "required": true
+                    },
+                    {
+                        "in": "body",
+                        "name": "Patch Request",
+                        "schema": {
+                            "type": "object",
+                            "description": "https://tools.ietf.org/html/rfc7644#section-3.5.2"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "description": "User"
+                    }
+                },
+                "tags": [
+                    "User"
+                ]
+            },
+            "delete": {
+                "operationId": "user.delete",
+                "summary": "Delete User",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "description": "User Id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "204": {
+                        "description": "No error, the operation was successful"
+                    }
+                },
+                "tags": [
+                    "User"
+                ]
+            },
+            "get": {
+                "operationId": "user.get",
+                "summary": "Get User",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "description": "User Id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "200": {
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "description": "User"
+                    }
+                },
+                "tags": [
+                    "User"
+                ]
+            }
+        },
+        "/Schemas/{id}": {
+            "get": {
+                "operationId": "schema.id.get",
+                "summary": "Get a schema.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    }
+                },
+                "tags": [
+                    "Schemas"
+                ]
+            }
+        },
+        "/ResourceTypes/{id}": {
+            "get": {
+                "operationId": "resourcetypes.get.id",
+                "summary": "Get Resource Type",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "description": "Resource Type Id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    }
+                },
+                "tags": [
+                    "ResourceTypes"
+                ]
+            }
+        },
+        "/Schemas": {
+            "get": {
+                "operationId": "schema.get",
+                "summary": "Get all supported schemas.",
+                "parameters": [],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    }
+                },
+                "tags": [
+                    "Schemas"
+                ]
+            }
+        },
+        "/Bulk": {
+            "post": {
+                "operationId": "bulk.provision.create",
+                "summary": "Create a bulk provisioning request.",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Bulk Request",
+                        "schema": {
+                            "$ref": "#/definitions/BulkRequest"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "companyId",
+                        "type": "string",
+                        "description": "Company Id, optional for callers with bearer token",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "202": {
+                        "schema": {
+                            "$ref": "#/definitions/ProvisionStatus"
+                        },
+                        "description": "accepted provision request"
+                    }
+                },
+                "tags": [
+                    "Bulk"
+                ]
+            }
+        },
         "/provisions/{id}/status": {
             "get": {
                 "operationId": "provisions.id.status.get",
@@ -1447,6 +1734,9 @@
                     "default": {
                         "description": ""
                     },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
                     "200": {
                         "schema": {
                             "$ref": "#/definitions/ProvisionStatus"
@@ -1459,70 +1749,71 @@
                 ]
             }
         },
-        "/Bulk": {
-            "post": {
-                "operationId": "bulk.provision.create",
-                "summary": "Create a bulk provisioning request.",
+        "/provisions/{id}/success": {
+            "get": {
+                "operationId": "provisions.id.success",
+                "summary": "Is the provisioning request successful?",
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "Bulk Request",
-                        "schema": {
-                            "$ref": "#/definitions/BulkRequest"
-                        },
+                        "in": "path",
+                        "name": "id",
+                        "type": "string",
+                        "description": "Provision Id",
                         "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "attributes",
+                        "type": "string",
+                        "description": "Additional attributes to include in response",
+                        "enum": [
+                            "operations"
+                        ],
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "startIndex",
+                        "type": "integer",
+                        "description": "The 1-based index of the first operation in the set of operations",
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "count",
+                        "type": "integer",
+                        "description": "The number of operations to be returned in response",
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "state",
+                        "type": "string",
+                        "description": "Filter operations to be returned in response based on status",
+                        "enum": [
+                            "success",
+                            "failed",
+                            "pending"
+                        ],
+                        "required": false
                     }
                 ],
                 "responses": {
                     "default": {
                         "description": ""
                     },
-                    "202": {
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "200": {
                         "schema": {
                             "$ref": "#/definitions/ProvisionStatus"
                         },
-                        "description": "accepted provision request"
+                        "description": "provision status"
                     }
                 },
                 "tags": [
-                    "Bulk"
-                ]
-            }
-        },
-        "/Schemas": {
-            "get": {
-                "operationId": "schema.get",
-                "summary": "Get all supported schemas.",
-                "parameters": [],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "Schemas"
-                ]
-            }
-        },
-        "/Schemas/{id}": {
-            "get": {
-                "operationId": "schema.id.get",
-                "summary": "Get a schema.",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "default": {
-                        "description": ""
-                    }
-                },
-                "tags": [
-                    "Schemas"
+                    "Provisions"
                 ]
             }
         },
@@ -1534,10 +1825,64 @@
                 "responses": {
                     "default": {
                         "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
                     }
                 },
                 "tags": [
                     "ServiceProviderConfig"
+                ]
+            }
+        },
+        "/ResourceTypes": {
+            "get": {
+                "operationId": "resourcetypes.get",
+                "summary": "Get types of resources supported",
+                "parameters": [],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    }
+                },
+                "tags": [
+                    "ResourceTypes"
+                ]
+            }
+        },
+        "/Users": {
+            "post": {
+                "operationId": "user.create",
+                "summary": "Create User",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "User",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Malformed syntax or bad query."
+                    },
+                    "201": {
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        },
+                        "description": "User"
+                    }
+                },
+                "tags": [
+                    "User"
                 ]
             }
         }
