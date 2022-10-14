@@ -8,8 +8,6 @@ The SAP Concur new OAuth2 framework is a very simple way to implement a Unified 
 
 Sample code that demonstrates how to obtain your refresh token, automate its management, and use it to get an access token to call an API can be found [here](/api-reference/authentication/SampleCode-Pwd_AuthToken_Profile_ID_Pv4.zip) 
 
-**Note:** The Pre-2017 Authorization (Deprecated) documentation can be found [here](/api-reference/authentication/authorization-pre-2017.html)
-
 ## Obtain Your Application clientID and clientSecret <a name="obtain-clientID"></a>
 Before you can obtain an `accessToken`, you need to register an application with SAP Concur. You can do this by contacting your Partner Enablement Manager or Partner Account Manager. Once you have registered an application, you will receive a `clientId`, `clientSecret` and `geolocation`. The `clientId` is a unique UUID4 identifier for your application, and the `clientSecret` is your application's password. You will be using this credential to obtain tokens either for the application itself, or on behalf of a user. The `geolocation` is your default base URI for initiating all new connections.
 
