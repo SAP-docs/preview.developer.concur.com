@@ -19,7 +19,8 @@ In order for an application to call a SAP Concur API, you need to obtain an `acc
 
 This section provides a quick start guide for generating an access token. If you are developing an application to be certified for the App Center or as a TripLink supplier, please refer to the [certification documentation](/manage-apps/app-certification.html) for the grant types your application must support.
 
-For simplicity, we will use the Password grant flow as an example.  The Password grant flow is used when you need to authenticate a user, using its `username` and `password`. This is typically reserved from SAP Concur applications (i.e. where the user's credentials will be captured and stored) but is used here for demonstration purposes.
+For simplicity, we will use the Password grant flow as an example. This is typically used for user-level SAP Concur partner applications (i.e. where the user’s credentials will be captured and stored) but is used here for demonstration purposes.
+For company level authentication using the password grant, the username should equal the “Company UUID” and for the password, it will be the 24 hour temporary “request token”.
 
 When making the call, you will use your app's `geolocation` as the base URI followed by the endpoint. For example, if your geolocation is https://us.api.concursolutions.com, you will call https://us.api.concursolutions.com/oauth2/v0/token.
 
@@ -29,8 +30,8 @@ Example shell script using cURL to obtain an `accessToken`:
 
 ```shell
 oauth2_base=https://us.api.concursolutions.com/oauth2
-username=<concur_username> eg. john.doe@gmail.com
-password=<password> eg. password1
+username=<concur_username> eg. john.doe@gmail.com OR Company UUID
+password=<password> eg. password1 OR request token (24 hours)
 client_id=<clientId> eg. e01f725d-b4ce-4ce3-a664-b670cb5876cb0
 client_secret=<clientSecret> eg. 35c3bd92-fcb8-405e-a886-47ff3fba5664
 curl -X POST -H 'concur-correlationid: nameofapp' "$oauth2_base/v0/token" --data "username=$username&password=$password&grant_type=password&client_secret=$client_secret&client_id=$client_id"
@@ -38,7 +39,7 @@ curl -X POST -H 'concur-correlationid: nameofapp' "$oauth2_base/v0/token" --data
 
 Full docs: <https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant>
 
-Store the token and geolocation.
+Store the refresh token and geolocation.
 
 ## Calling an API with the Access Token <a name="calling-API"></a>
 Once you have the `accessToken`, you need to supply this in an Authorization header in the form of `Authorization: Bearer <accessToken>` when making a HTTPS call. The `accessToken` is a large string that looks something like this:
