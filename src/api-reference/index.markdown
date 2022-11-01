@@ -31,14 +31,3 @@ SAP Concur also supports an alternative type of API referred to as a Callout. Th
 ## Explore the APIs
 
 For the basic information on the APIs and what they do, you can check out the Swagger docs in [API Explorer](/api-explorer/). Need more in-depth information? You can find information on each API using the links on the left side of the page. Finally, there are some [Integration Guides](/api-guides/) that describe specific workflows. Even if none of them maps to your use case, they’re a good way to learn how to work with the SAP Concur APIs.
-
-## Resources
-
-The information in these overviews will provide insight into what to expect
-during the certification process:
-
-* [Enterprise (B2B apps)]( https://prezi.com/p/lw0qqy51zcmd/)
-* [eReceipt apps (B2C apps)](https://prezi.com/p/ur2i1m8thynz/)
-
-> NOTE: These do not apply to a Triplink app integration.
-
