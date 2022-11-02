@@ -50,7 +50,7 @@ Field Name|	Definition|	Required|	Description
 ---|---|---|---
 `App Name`|	String|	Y	|Name of the App. NOTE: Include Company, Partner, or Team Name
 `App Type`|	NA|	NA|	This field defaults to Client and is read-only.
-`Allowed Grants`|	Selected Grants|	Y	|In order to obtain a token, the client application needs to call the OAuth2 endpoint using various grants depending on the authentication scenarios required. NOTE: For more information, refer to Authorization Grants (https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant).
+`Allowed Grants`|	Selected Grants|	Y	|In order to obtain a token, the client application needs to call the OAuth2 endpoint using various grants depending on the authentication scenarios required. NOTE: For more information, refer to [Authorization Grants](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant).
 `Allowed Scopes`|	Selected Scopes|	Y	|Scopes limit access to the APIs required for your application. All scopes listed on the Developer Center are available in the tool. Scopes that are not listed can be requested. NOTE: For more information, refer to [Scopes](https://developer.concur.com/api-reference/authentication/scopes.html)
 SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is only enabled for SAP ICS client apps.
 

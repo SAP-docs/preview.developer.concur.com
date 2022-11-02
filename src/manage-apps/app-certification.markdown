@@ -19,11 +19,6 @@ Once you choose the desired path and the relevant contract is in place, you will
 
 As you develop your app, your Certification Project Manager will record the exact APIs (including the version and verbs) that you will use for your application. See the requirements to pass certification in these Overview docs (including Support requirements expected of the Partner):
 
-* [Enterprise apps](https://prezi.com/p/lw0qqy51zcmd/)
-* [eReceipt apps](https://prezi.com/p/ur2i1m8thynz/)
-
-> Note: These do not apply a Triplink app integration.
-
 Once you complete the walkthrough demonstration(s) of your integration, you may be asked for additional information or be requested to make changes to your app integration depending on the outcome of the review.  
 
 After your app is approved, your SAP Concur App Center Listing will be reviewed before publishing in the [SAP Concur App Center](https://www.concur.com/en-us/app-center).  
