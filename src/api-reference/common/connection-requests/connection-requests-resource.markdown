@@ -14,13 +14,13 @@ Access to this documentation does not provide access to the API.
 
 ## <a name="connection-request-lifecycle"></a>Connection Request Lifecycle
 
-After retrieving Connection Requests as part of a polling process, the partner is expected to match the user information with that of their own database. Upon a successful match, the partner is expected to exchange each request token contained in each Connection Request for an access token. The partner is also expected to put back a status indicating if the connection could be established, for each Connection Request, at most 24h after retrieving them. In case of failure, the Connection Request will be returned in future polls for retrial (see the diagram below for details).
+After retrieving Connection Requests as part of a polling process, the partner is expected to match the user information with that of their own database. Upon a successful match, the partner is expected to exchange each request token contained in each Connection Request for an access token. The partner is also expected to put back a status indicating if the connection could be established, for each Connection Request, at most 24 hours after retrieving them. In case of failure, the Connection Request will be returned in future polls for retrial (see the diagram below for details).
 
 ![Supplier flow](./supplier-flow.png)
 
 ## Retrieve Connection Requests
 
-This method returns a page of connection requests to the partner app, limited by the `limit` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 24h - see the [Connection Request Lifecycle](#connection-request-lifecycle).
+This method returns a page of connection requests to the partner app, limited by the `limit` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 24 hours - see the [Connection Request Lifecycle](#connection-request-lifecycle).
 
 ### Request
 
