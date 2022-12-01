@@ -2,7 +2,6 @@
 title: Connection Requests v3.2
 layout: reference
 ---
-# Connection Requests v3.2
 
 A Connection Request is an object representing the willingness of an SAP Concur user to connect with a specific TripLink partner. Connection Requests are created by users, while TripLink partners should poll for them. Connection Requests contain the following information, which can be used by the TripLink partner to link users to their loyalty program:
 
