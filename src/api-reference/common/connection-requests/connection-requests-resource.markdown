@@ -14,13 +14,13 @@ Access to this documentation does not provide access to the API.
 
 ## <a name="connection-request-lifecycle"></a>Connection Request Lifecycle
 
-After retrieving Connection Requests as part of a polling process, the partner is expected to match the user information with that of their own database. Upon a successful match, the partner is expected to exchange each request token contained in each Connection Request for an access token. The partner is also expected to put back a status indicating if the connection could be established, for each Connection Request, at most 12h after retrieving them. In case of failure, the Connection Request will be returned in future polls for retrial (see the diagram below for details).
+After retrieving Connection Requests as part of a polling process, the partner is expected to match the user information with that of their own database. Upon a successful match, the partner is expected to exchange each request token contained in each Connection Request for an access token. The partner is also expected to put back a status indicating if the connection could be established, for each Connection Request, at most 24h after retrieving them. In case of failure, the Connection Request will be returned in future polls for retrial (see the diagram below for details).
 
 ![Supplier flow](./supplier-flow.png)
 
 ## Retrieve Connection Requests
 
-This method returns a page of connection requests to the partner app, limited by the `limit` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 12h - see the [Connection Request Lifecycle](#connection-request-lifecycle).
+This method returns a page of connection requests to the partner app, limited by the `limit` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 24h - see the [Connection Request Lifecycle](#connection-request-lifecycle).
 
 ### Request
 
@@ -99,7 +99,7 @@ curl \
 
 ### <a name="connection-status"></a>Connection Status
 
-The status of the connection as indicated by the partner. Both the successful (`CRSUC`) and error statuses (`CREU1`, `CREU2`, `CREU3`) generate email notifications to the user when PUT back by the partner. This lets the user know they can already book with the partner in case of success, or, in case of error, that they need to check the loyalty account information they supplied. In case of error, the Connection Request is requeued (returned in future GETs) after 24 hours. This can be done 4 times, after that the Connection Request is set with an error status and is not returned in future GETs. Finally, the `CRRET` status does not generate an email notification to the user, it's intended purpose is to requeue a Connection Request (after 1 hour) for another processing attempt by the supplier to retry the connection. This can be done at most 48 times, after that the Connection Request is set with an error status and is not returned in future GETs. As previously mentioned, if the supplier does not PUT back any status, the Connection Request is automatically requeued after 12 hours (again, at most 48 times). 
+The status of the connection as indicated by the partner. Both the successful (`CRSUC`) and error statuses (`CREU1`, `CREU2`, `CREU3`) generate email notifications to the user when PUT back by the partner. This lets the user know they can already book with the partner in case of success, or, in case of error, that they need to check the loyalty account information they supplied. In case of error, the Connection Request is requeued (returned in future GETs) after 24 hours. This can be done 4 times, after that the Connection Request is set with an error status and is not returned in future GETs. Finally, the `CRRET` status does not generate an email notification to the user, it's intended purpose is to requeue a Connection Request (after 1 hour) for another processing attempt by the supplier to retry the connection. This can be done at most 48 times, after that the Connection Request is set with an error status and is not returned in future GETs. As previously mentioned, if the supplier does not PUT back any status, the Connection Request is automatically requeued after 24 hours (again, at most 48 times). 
 
 
 Name|Type|Format|Description
