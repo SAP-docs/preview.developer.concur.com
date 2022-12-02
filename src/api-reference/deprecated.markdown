@@ -16,6 +16,21 @@ The following application programming interfaces (APIs) and other resources have
 * [Cash Advance v4](/api-reference/cash-advance/v4.cash-advance.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
+* Direct Connect - Hotel Service v2
+  * [Introduction](/api-reference/direct-connects/hotel-service-2/Introduction.html)
+  * [Use Cases](/api-reference/direct-connects/hotel-service-2/Use-cases.html)
+  * [Headers](/api-reference/direct-connects/hotel-service-2/Headers.html)
+  * [Error Handling](/api-reference/direct-connects/hotel-service-2/Error-handling.html)
+  * [Search](/api-reference/direct-connects/hotel-service-2/Search.html)
+  * [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html)
+  * [Descriptive Information](/api-reference/direct-connects/hotel-service-2/Descriptive-info.html)
+  * [Rate Details](/api-reference/direct-connects/hotel-service-2/Rate-details.html)
+  * [Reservation](/api-reference/direct-connects/hotel-service-2/Reservation.html)
+  * [Read Itinerary](/api-reference/direct-connects/hotel-service-2/Read-Itinerary.html)
+  * [Cancel](/api-reference/direct-connects/hotel-service-2/Cancel.html)
+  * [Virtual Payment](/api-reference/direct-connects/hotel-service-2/V-payment.html)
+  * [Appendix](/api-reference/direct-connects/hotel-service-2/Appendix.html)
+  * [XSD Schema](/api-reference/direct-connects/hotel-service-2/xsd-schema.html)
 * Expense Entry v1.1
   * [Expense Entry Itemization](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)
   * [Expense Entry](/api-reference/expense/expense-report/v1dot1.expense-entry.html)
