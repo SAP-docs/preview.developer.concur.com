@@ -107,8 +107,8 @@ Name|Type|Format|Description
 `CRSUC`|`string`|-|Successful connection.
 `CRSRET`|`string`|-|Retry connection.
 `CREU1`|`string`|-|Loyalty account not found.
-`CREU1`|`string`|-|Loyalty account does not match.
-`CREU1`|`string`|-|Loyalty account needs attention.
+`CREU2`|`string`|-|Loyalty account does not match.
+`CREU3`|`string`|-|Loyalty account needs attention.
 
 ### <a name="connection-requests"></a>Connection Requests
 
