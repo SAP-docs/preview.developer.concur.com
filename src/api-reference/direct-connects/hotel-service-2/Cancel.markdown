@@ -5,6 +5,13 @@ layout: reference
 
 # Hotel v2 - Cancel
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 10/14/2022</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 Message used to indicate to the hotel supplier that a given reservation should be cancelled.
 
 |SOAPAction|OTA Name|Message Structure|
@@ -79,4 +86,3 @@ The maximum allowed size of OTA_CancelRS is 150 KB. Any response that exceeds th
 |`Status`|`string`|**Required** Supported values: `Cancelled`, `Unsuccessful`|
 |`Success`|`successType`|An element that is not intended to contain any data. The mere presence of a success element within the response message indicates that the incoming request message was processed successfully.|
 |`UniqueID`|`string`|**Required** See `UniqueID` above. SAP Concur expects two (2) `UniqueID`s to be returned in the response. The first with an `Type` of `14` containing the original reservation number, and the second `Type` of `15` containing a confirmation number. Both elements are mandatory.|
-
