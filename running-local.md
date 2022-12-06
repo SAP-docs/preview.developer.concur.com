@@ -18,7 +18,7 @@ export DEVCENTER_API_FORMS=http://localhost:3000
 
 * Install bundler (`gem install bundler`)
 * `bundle install` to install Ruby dependencies
-  * `npm install` to install Node dependencies
+* `npm install` to install Node dependencies
 * `npm start` to run the development server. This command will ensure the following happens before starting the server.
   * Ruby gems are up-to-date.
   * Build Jekyll and Webpack assets.
