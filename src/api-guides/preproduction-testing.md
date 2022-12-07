@@ -5,11 +5,11 @@ layout: reference
 
 # Testing App Center Partner Applications
 
-Many App Center partner applications do not need to be validated in a test environment because they are obtaining data directly from the customer's site and processing it on the partner's side. In other words, the presence of the partner's application has no impact on the normal use of the SAP Concur site as a result of obtaining data. However, some Enterprise Applications send data to the customer's SAP Concur site, which the customer may want to test before deploying.
+Many App Center partner applications do not need to be validated in a test environment because they are obtaining data directly from the customer's site and processing it on the partner's side. In other words, the presence of the partner's application has no impact on the normal use of the SAP Concur site as a result of obtaining data. However, some Enterprise Applications send data to the customer's SAP Concur site, which the customer may want to test before deploying. This page includes instructions for both the Partner and Customer to follow in order to test via 2 options: Test User and Production Sandbox Environment. 
 
 ## Test User Functionality
 
-In most cases, customers can test App Center partner applications using the Test User functionality. This feature is available within their Professional Edition SAP Concur site and is the recommended option.
+In most cases, customers can test App Center partner applications using the Test User functionality. This feature is available within their Professional Edition SAP Concur site.
 
 >**Important**: The Test User functionality only applies to Professional Edition customers. Standard Edition customers need to deploy the app in their production site.
 
@@ -31,8 +31,35 @@ At the customer’s request SAP Concur will configure the following:
 * If desired, request a test user extract file be created.
 * Deploy the App Center partner application, limited to the test users and complete the desired tests. The user profiles marked as "Is a Test User" must be used. (*client or SAP Concur*)
 
-## Pre-Production Alternative
+## Test in Production Sandbox Environment
 
-If the partner's application cannot be tested using the Test User functionality and the customer is still in **implementation**, then the customer can deploy the application in their site during implementation, which is a production site in a test state. The test state remains until the site is moved to production. Any configuration related to the app will not need to be redone once the customer moves their site to production. However, the customer will need to reauthenticate.
+If a customer has purchased a Production Sandbox Environment (PSE), then this is another testing option for customers. A PSE is hosted in the production environment but is a separate site from the customer’s production entity so that any changes made in a PSE are kept distinct from and will not affect production. Limitations are that PSEs are Professional edition only; Spend apps can be tested but not Travel.  
 
-> **Important**: Testing App Center Partner apps are not able to be tested in Test Entity sites.  The test entities are also not in a production environment so the infrastructure is not conducive to a complete test of web traffic (API transactions).
+A snapshot of most production data (configuration + transactional) is copied over to a PSE; however, there may need to be some manual reconfiguration and reimplementation to ensure that the app functions properly in a PSE. Billable hours can be purchased for SAP assistance.  
+
+Only a few easy steps are needed before a customer can test App Center in a PSE:  
+
+* In Concur Module Management, SAP Concur must update the App Center module “Property value” to true. This makes the App Center tab available in the site.  
+  
+  <Need to Add ModuleMgmt.png>
+    
+* Users can navigate to the App Center tab and click on the Connect button within the desired App Center listing. 
+    * Note that Admin role is only required to connect to Enterprise application listings. User Connections do not require Admin role.  
+    * Listings will be displayed based on the customer’s configuration such as product and geographic location among others; however, customer can remove the filters to see other apps as desired.  
+  
+  <Need to Add PSE_AppCenter.png>
+
+**Guidance for Partners:**
+  
+With customers now using partner apps in production and PSE (for testing purposes), partners should distinguish between a testing vs production site connection on their side. This is imperative to keep reporting distinct for accounting purposes. Below is the guidance from SAP Concur to assist partners with this delineation.  
+
+A customer will experience one of 2 types of a Partner “Landing Page” during the connection flow:  
+  
+**Verification Code Landing Page option:**
+* The Partner should manage two sets of verification codes for their Landing page: test vs prod. The Partner can provide the applicable code to the customer prior to their connection. 
+* It is important the partner remains organized between the Production vs. Testing verification codes to ensure reporting is accurate since a single customer can have more than one connection (PSE connection + Production site connection). 
+ 
+**Sign In/Sign Up Landing Page option:**
+* The Partner should manage two sets of login accounts for their customers: test vs prod. 
+* The Partner will need to recognize logins with a .uat at the end of each login-related to the PSE connection  
+* It is important the partner remains organized between the Production vs. Testing Log-in ID values to ensure reporting is accurate since a single customer can have more than one connection (PSE connection + Production site connection). 
