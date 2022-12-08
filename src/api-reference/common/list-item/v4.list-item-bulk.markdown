@@ -47,6 +47,18 @@ This API supports both company level and user level access tokens.
 
 Create list items for a specific list with the provided request body.
 
+Each API request contains up to 250 [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part). 
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) represents one item to be created. 
+
+The [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) are executed in order. 
+The caller will need to manage the ordering of the [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) within the request 
+to ensure dependencies are met, such as
+when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.
+
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) executes individually so a single API request can have
+some request parts that execute successfully and some request parts that fail. See the [Error Messages](#post-list-item-error-messages) for the
+execution failure error messages.
+
 ### Scopes
 
 `spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
@@ -78,7 +90,7 @@ POST /list/v4/items/{listId}/bulk
 * [Bulk List Item Response](#schema-bulk-list-item-response)
 * [Error Message](#schema-error-message)
 
-### Error Messages
+### <a name="post-list-item-error-messages"></a>Error Messages
 The values for the "message" field of the [Bulk List Item Error](#schema-bulk-list-item-error)
 
 | Description                                                                                                                                                                                          |"message" field value|
@@ -137,6 +149,53 @@ cache-control: no-cache, private
 }
 ```
 
+#### Create Parent and Child Items with Successful Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "PARENT_ITEM",
+      "value": "PARENT_ITEM"
+    },
+    {
+      "shortCode": "CHILD_ITEM",
+      "value": "CHILD_ITEM",
+      "parentCode": "PARENT_ITEM"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
+content-length: 227
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:15:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 2,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
 #### Create Child Item with Failure Response Example
 
 ##### Request
@@ -160,7 +219,7 @@ Authorization: Bearer {token}
 }
 ```
 
-#### Response
+##### Response
 
 ```shell
 HTTP/1.1 400
@@ -255,6 +314,17 @@ cache-control: no-cache, private
 
 Update and delete list items by long code for a specific list with provided request body.
 
+Each API request contains up to 250 [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part).
+Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) represents one item to be updated or deleted.
+
+The [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) are executed in order.
+The caller will need to manage the ordering of the [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) 
+within the request to ensure dependencies are met.
+
+Each [Bulk List Item Update Request Part](#schema-bulk-list-item-create-request-part) executes individually so a single API request can have
+some request parts that execute successfully and some request parts that fail. See the [Error Messages](#patch-list-item-error-messages) for the 
+execution failure error messages.
+
 ### Scopes
 
 `spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
@@ -289,7 +359,7 @@ PATCH /list/v4/lists/{listId}/bulk
 * [Bulk List Item Response](#schema-bulk-list-item-response)
 * [Error Message](#schema-error-message)
 
-### Error Messages
+### <a name="patch-list-item-error-messages"></a>Error Messages
 The values for the "message" field of the [Bulk List Item Error](#schema-bulk-list-item-error)
 
 | Description                                 | "message" field value|
@@ -519,3 +589,17 @@ cache-control: no-cache, private
 |---|---|---|---|
 |`msg`|`string`|-|The detailed error message.|
 |`id`|`string`|-|The identifier of the error.|
+
+
+## Migration from List Import 
+
+For callers who are migrating from using a flat file list import, be aware of the following differences:
+
+**Transactional vs Incremental Update:** The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental. 
+For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged. 
+When sending a List Item Bulk API request with 10 list items, if 1 list item modification fails, the 9 list item modifications that were successful are updated, and only the 1 list item modification that failed remains unchanged.
+
+**Modifications permitted in single request:** The list import can support create, update and delete in the same import file. The List Item Bulk API requires separate create (POST) and update/delete (PATCH).
+
+**Managing dependencies within a request:** The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item. 
+With the List Item Bulk API, the caller needs to manage the ordering of dependencies to make sure the create parent list item comes before the create child item within the API request.
