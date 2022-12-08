@@ -37,7 +37,14 @@ PSCC|Production|https://www-usg.api.concursolutions.com |Default for all API cal
 
 ### <a name="implementation"></a>Implementation
 
-The implementation base domains are used for implementation sites. An implementation site is a copy of an SAP Concur platform entity made from a backup of a client’s production site. This feature is only available for the Professional and Premium editions of SAP Concur products. Clients have the option to have a permanent implementation site established, contact your Client Executive or Account Manager for details.
+The implementation base domains are used for implementation sites, also known as Production Sandbox Environments (PSE). A PSE is a copy of an SAP Concur platform entity made from a backup of a client’s production site. This feature is only available for the Professional edition of SAP Concur products. Prior to 2022, PSEs had been hosted on the implementation base domain which is separate from production though now PSEs are in the same environment as production. 
+
+>**Important**: Please note that Base URI may differ based on whether PSE client was migrated from Implementation to production environment.
+
+* For migrated clients: 
+  * Because the API credential had been created in Implementation and not updated after migration, customers by default must use the below Implementation-specific links for API calls which will automatically be redirected to production. If migrated clients perform a direct API call using production URLs as listed above, it will fail with an error like “invalid client id.” 
+* For net new clients: 
+  * Net new PSE clients can use the same URLs as their production entities for their API calls as listed in table above.
 
 Data Center|Environment|Base URI|Description
 -----------|-----------|--------|-----------
