@@ -1119,15 +1119,74 @@
 
 <p>This API supports only company level access tokens.</p>
 
-<h2 id="retrieve-users"><a name="GET-user"></a>Retrieve Users</h2>
+<h2 id="schemas-">Schemas <a name="schemas"></a></h2>
+<p>The <code class="language-plaintext highlighter-rouge">schemas</code> parameter is required for all queries.</p>
 
+<p>Below are a list of allowed schemas available for POST /.search
+| Name | Path | 
+| — | — | 
+| <a href="#SearchRequest">SearchRequest</a> | urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest</p>
+
+<h2 id="notes">Notes</h2>
+<ul>
+  <li>This URI contains version 4.1.</li>
+  <li>Complex searches may result in delayed response times.</li>
+  <li><code class="language-plaintext highlighter-rouge">startIndex</code> has been removed from query-parameters. To paginate a unique query, the caller must include <code class="language-plaintext highlighter-rouge">continuationToken</code> from preceding response in the next request. See <a href="#pagination">Pagination</a> examples.</li>
+  <li>String values, or values that are enclosed in “quotes”, must be in JSON-string format. <code class="language-plaintext highlighter-rouge">"foo" -&gt; \"foo\"</code>.</li>
+  <li>The endpoint no longer supports GET requests. Query parameters, example: <code class="language-plaintext highlighter-rouge">{host}/v4.1/Users?filter=active eq true</code> have moved to the JSON body of a POST request. See all of the available <a href="#schemas">Schemas</a>.</li>
+</ul>
+
+<h3 id="-search-request"><a name="SearchRequest"></a> Search Request</h3>
 <p>Retrieves users of a given company. The filter operations can be used to fetch a unique user or users identity information.</p>
 
-<p><strong>NOTES:</strong></p>
-<ul>
-  <li>This URI contains version 4.1. Additionally, <code class="language-plaintext highlighter-rouge">startIndex</code> has been removed from query-parameters. To paginate a unique query, the caller must include <code class="language-plaintext highlighter-rouge">continuationToken</code> from preceding response in the next request.</li>
-  <li>Complex searches may result in delayed response times.</li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Required</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemas</code></td>
+      <td>Validate request against schema object</td>
+      <td>Yes</td>
+      <td>List of Strings <br /> <a href="#schemas">Schemas</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">filter</code></td>
+      <td>Narrow returned users matching expression</td>
+      <td>No</td>
+      <td>Query String <br /> <a href="#filtering">Examples</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">count</code></td>
+      <td>Number of users to return</td>
+      <td>No</td>
+      <td>1 - 1000 <br /> <a href="#pagination">Pagination</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attributes</code></td>
+      <td>Return only specified fields.</td>
+      <td>No</td>
+      <td>List of Strings <br /> <a href="#allowed-attributes">Examples</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">excludedAttributes</code></td>
+      <td>Return all other fields than specified.</td>
+      <td>No</td>
+      <td>List of Strings <br /> <a href="#allowed-attributes">Examples</a></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">continuationToken</code></td>
+      <td>Enable user to continue session to the next page</td>
+      <td>No</td>
+      <td>Encoded String <br /> <a href="#pagination">Pagination</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 id="filtering"><a name="filtering"></a>Filtering</h3>
 
@@ -1456,152 +1515,343 @@
 
 <p><strong>NOTE:</strong> The <code class="language-plaintext highlighter-rouge">startIndex</code> query parameter is <strong>not supported</strong> due to the behavior of Deep Pagination.</p>
 
-<p>The upper limit of <code class="language-plaintext highlighter-rouge">count</code> is <code class="language-plaintext highlighter-rouge">1,000</code> users for a single query. To go beyond the first <code class="language-plaintext highlighter-rouge">1,000</code> users, this API returns a <code class="language-plaintext highlighter-rouge">continuationToken</code>. When passed, the <code class="language-plaintext highlighter-rouge">continuationToken</code> is used to return the next page of matching records for a single, unique query.</p>
+<p>The upper limit of <code class="language-plaintext highlighter-rouge">count</code> is <code class="language-plaintext highlighter-rouge">1,000</code> users for a single query. To go <em>beyond</em> the first <code class="language-plaintext highlighter-rouge">1,000</code> users, v4.1 Search returns a <code class="language-plaintext highlighter-rouge">continuationToken</code>. When passed, the continuationToken is used to return the next page of matching records for a single, unique query. The token will <em>not</em> be returned on the last-page.</p>
 
-<h3 id="payloads">Payloads</h3>
+<h2 id="request-example-">Request Example <a name="request_example"></a></h2>
+<p>Retrieves a unique users based on search criteria.</p>
 
-<p>Request: None.
-Response: <a href="https://developer.concur.com/api-reference/profile/v4.identity.html#schema">User Schema</a></p>
-
-<h3 id="examples">Examples</h3>
+<h3 id="retrieve-all-users-within-company-">Retrieve all users within company <a name="all_users_reqeuest_example"></a></h3>
+<p>Company JWT contains companyId, and used to retrieve for all users.</p>
 
 <h4 id="request">Request</h4>
-
-<p>Using <code class="language-plaintext highlighter-rouge">continuationToken</code></p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://{host}/profile/identity/v4.1/Users?continuationToken=eyJjcmVhdGVkLWlkIjoiMTYxMzc2MTkxNF9hYTA0NzQ1MS04MTBkLTQ5MDMtYWE0OS1lYzhjODZlZjUwNTMiLCJzdGFydEluZGV4IjoxMDF9
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
 </code></pre></div></div>
-
-<h5 id="filter-by-active-field">Filter By Active Field</h5>
-
-<p>Return the first 1000 users who have active (field) set to true (value).</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=active eq true&amp;count=1000
-</code></pre></div></div>
-
-<h5 id="filter-by-addresses-sub-attributes">Filter By Addresses Sub-Attributes</h5>
-
-<p>Return a list of addresses.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[country eq "US"]&amp;count=100
-</code></pre></div></div>
-
-<h6 id="logical-and-queries">Logical AND queries</h6>
-
-<p>Return users who live in <code class="language-plaintext highlighter-rouge">Bellevue</code> in <code class="language-plaintext highlighter-rouge">US</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[country eq "US" and locality eq "Bellevue"]
-</code></pre></div></div>
-
-<p>Return users who work in <code class="language-plaintext highlighter-rouge">Bellevue</code> in <code class="language-plaintext highlighter-rouge">US</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[country eq "US" and locality eq "Bellevue" and region eq "WA" and type eq "work"]
-</code></pre></div></div>
-
-<p>Return users who do NOT have an address in <code class="language-plaintext highlighter-rouge">US</code> OR <code class="language-plaintext highlighter-rouge">EU</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[not(country eq "US") and country ne "EU"]
-</code></pre></div></div>
-
-<p>Return users with a SAP <code class="language-plaintext highlighter-rouge">userUuid</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=urn:ietf:params:scim:schemas:extension:sap:2.0:User.userUuid pr&amp;
-attributes=urn:ietf:params:scim:schemas:extension:sap:2.0:User
-</code></pre></div></div>
-
-<h6 id="logical-or-queries">Logical OR queries</h6>
-
-<p>Return users who may have a work address or an entry with <code class="language-plaintext highlighter-rouge">US</code> or <code class="language-plaintext highlighter-rouge">Bellevue</code>.  Note: Results may include users with all three attributes in a single entry.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[country eq "US" or locality eq "Bellevue" or type eq "work"]
-</code></pre></div></div>
-
-<p>Returns users who work in <code class="language-plaintext highlighter-rouge">US</code> or <code class="language-plaintext highlighter-rouge">EU</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[type eq "work" and (country eq "US" or country eq "EU")]
-</code></pre></div></div>
-
-<p>Return users who do not contain entries for address with <code class="language-plaintext highlighter-rouge">EU</code> or <code class="language-plaintext highlighter-rouge">US</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[not(country eq "US" or country eq "EU")]
-</code></pre></div></div>
-
-<h6 id="combined-logical-queries">Combined Logical queries</h6>
-
-<p>Return users who do not contain entries for address with <code class="language-plaintext highlighter-rouge">EU</code> or <code class="language-plaintext highlighter-rouge">US</code>.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=addresses[country eq "US" and type eq "home" or country eq "EU" and type eq "work"]
-</code></pre></div></div>
-
-<h5 id="filter-by-emails-sub-attributes">Filter By Emails Sub-Attributes</h5>
-
-<p>Returns a list of work emails.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=emails[type eq "work"]
-</code></pre></div></div>
-
-<h6 id="logical-and-queries-1">Logical AND queries</h6>
-
-<p>Returns users who have a work emails equal to admin@concur.com.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=emails[type eq "work" and value eq "admin@concur.com"]
-</code></pre></div></div>
-
-<p>Returns users who work at SAP Concur and have verified the email.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=emails[type eq "work" and and verified eq true and value ew "@concur.com"]
-</code></pre></div></div>
-
-<p>Returns user’s that are do not have <code class="language-plaintext highlighter-rouge">work</code> OR <code class="language-plaintext highlighter-rouge">home</code> emails.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=emails[not(type eq "work") and type ne "home"]
-
-</code></pre></div></div>
-
-<h6 id="combined-logical-queries-1">Combined Logical queries</h6>
-
-<p>Returns user’s that are do not have <code class="language-plaintext highlighter-rouge">work</code> OR <code class="language-plaintext highlighter-rouge">home</code> emails.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=emails[type eq "work" and value ew "@concur.com" or type eq "home" and value ew ".com"]
-
-</code></pre></div></div>
-
-<h5 id="filter-by-name-field">Filter By Name Field</h5>
-
-<p>Returns a list of names.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=name.givenName eq "John"&amp;count=100
-</code></pre></div></div>
-
-<h6 id="logical-and-queries-2">Logical AND queries</h6>
-
-<p>Return users by full name (combination of given and family).</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=name.givenName eq "John" and name.familyName eq "Smith"
-</code></pre></div></div>
-
-<p>Return users who have the first name John and do not have last name Bob. When using <code class="language-plaintext highlighter-rouge">ne</code>, results can include <code class="language-plaintext highlighter-rouge">null</code> values.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=name.givenName ne "John" and not(name.givenName eq "Bob")
-</code></pre></div></div>
-
-<p>Return users who must start with and ending with characters. Case insensitive.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=name.givenName sw "J" and name.givenName ew "n"
-</code></pre></div></div>
-
-<p>Return users by “contains” query and check if field, <code class="language-plaintext highlighter-rouge">name.givenName</code> has a value.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=not(name.givenName co "admin") and name.givenName pr
-</code></pre></div></div>
-
-<h6 id="combined-logical-queries-2">Combined Logical queries</h6>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?filter=name.givenName eq "John" and name.familyName eq "Smith" or name.givenName eq "Bob" and name.familyName eq "Joe"
-</code></pre></div></div>
+<h4 id="payload">Payload</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response">Response</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ac2527c5-14c8-433e-8394-6894ec11462c"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6eed4eb2-95bb-4edf-86aa-36aec1263321"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f341a2b-6a0a-4ace-b9cd-4a9a0c96e789"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6eed4eb2-95bb-4edf-86aa-36aec1263321"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8bce6823-6858-4c92-a019-f1900299c59f"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6eed4eb2-95bb-4edf-86aa-36aec1263321"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="search-for-multi-valued-attributes-example-">Search for multi-valued attributes example <a name="email_reqeuest_example"></a></h3>
+<p>Retrieve zero or more users who work at “example.com” within authorized companyId, pulled from token.</p>
+
+<h4 id="request-1">Request</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+<h4 id="payload-1">Payload</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2"> and value ew </span><span class="se">\"</span><span class="s2">@example.com</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w"> 
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John@example.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Appleseed@example.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="single-user-search-example-">Single user search example <a name="sinlge_users_reqeuest_example"></a></h3>
+
+<h4 id="request-2">Request</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+<h4 id="payload-2">Payload</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User.userUuid eq </span><span class="se">\"</span><span class="s2">c7e128ed-a8a6-4627-bd5d-42f7f89cdeb4</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:sap:2.0:User:userUuid"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-    "schemas": [
-        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
-    ],
-    "totalResults": 123456,
-    "startIndex": 101,
-    "itemsPerPage": 100,
-    "Resources": [
-        {},
-        {},
-    ],
-    "continuationToken": "eyJjcmVhdGVkLWlkIjoiMTYxMzgwNjU4NF85YjQyNTI1NC04ZDE1LTRjM2QtYmE2ZS03MzZkMmJkMTEzN2IiLCJzdGFydEluZGV4IjoyMDF9"
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42f7f89cdeb4-a4d2-2343-bddf-c7e128ed"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"urn:ietf:params:scim:schemas:extension:sap:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"userUuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"c7e128ed-a8a6-4627-bd5d-42f7f89cdeb4"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<p>A new continuationToken is generated, and may be used to fetch the next page of users matching filter.</p>
 
+<h3 id="additional-detailed-examples-">Additional Detailed Examples <a name="detailed_examples"></a></h3>
+
+<h5 id="filter-by-active-field-">Filter By Active Field <a name="filter_by_active_fields"></a></h5>
+<p>Return the first <code class="language-plaintext highlighter-rouge">1000</code> users who have <code class="language-plaintext highlighter-rouge">active</code> (field) set to <code class="language-plaintext highlighter-rouge">true</code> (value)</p>
+<blockquote>
+  <p>POST {host}/profile/identity/v4.1/Users/.search</p>
+  <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active eq true"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w">
+</span><span class="p">}</span><span class="w">  
+</span></code></pre></div>  </div>
+</blockquote>
+
+<h5 id="filter-by-addresses-sub-attributes-">Filter By Addresses Sub-Attributes <a name="filter_by_address"></a></h5>
+
+<blockquote>
+  <p>POST {host}/profile/identity/v4.1/Users/.search</p>
+</blockquote>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="logical-and-queries">Logical AND queries</h6>
+
+<p>Return users who have at least 1 entry in <code class="language-plaintext highlighter-rouge">Bellevue</code> within the <code class="language-plaintext highlighter-rouge">US</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2"> and locality eq </span><span class="se">\"</span><span class="s2">Bellevue</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+<p>Return users who work in <code class="language-plaintext highlighter-rouge">Bothell, WA</code> in <code class="language-plaintext highlighter-rouge">US</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2"> and locality eq </span><span class="se">\"</span><span class="s2">Bellevue</span><span class="se">\"</span><span class="s2"> and region eq </span><span class="se">\"</span><span class="s2">WA</span><span class="se">\"</span><span class="s2"> and type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+<p>Return users who do NOT have an address in <code class="language-plaintext highlighter-rouge">US</code> OR <code class="language-plaintext highlighter-rouge">EU</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[not(country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2">) and country ne </span><span class="se">\"</span><span class="s2">EU</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="logical-or-queries">Logical OR queries</h6>
+
+<p>Return users who may have a work address or an entry with <code class="language-plaintext highlighter-rouge">US</code> or <code class="language-plaintext highlighter-rouge">Bellevue</code>.</p>
+
+<p>Note: Results may include users with all three attributes in a single entry</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2"> or locality eq </span><span class="se">\"</span><span class="s2">Bellevue</span><span class="se">\"</span><span class="s2"> or type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+<p>Returns users who work in <code class="language-plaintext highlighter-rouge">US</code> or <code class="language-plaintext highlighter-rouge">EU</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2"> and (country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2"> or country eq </span><span class="se">\"</span><span class="s2">EU</span><span class="se">\"</span><span class="s2">)]"</span><span class="w">
+</span></code></pre></div></div>
+<p>Return users who do not contain entries for address with <code class="language-plaintext highlighter-rouge">EU</code> or <code class="language-plaintext highlighter-rouge">US</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[not(country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2"> or country eq </span><span class="se">\"</span><span class="s2">EU</span><span class="se">\"</span><span class="s2">)]"</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="combined-logical-queries">Combined Logical queries</h6>
+
+<p>Return users who live in the <code class="language-plaintext highlighter-rouge">US</code> or work in <code class="language-plaintext highlighter-rouge">EU</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[country eq </span><span class="se">\"</span><span class="s2">US</span><span class="se">\"</span><span class="s2"> and type eq </span><span class="se">\"</span><span class="s2">home</span><span class="se">\"</span><span class="s2"> or country eq </span><span class="se">\"</span><span class="s2">EU</span><span class="se">\"</span><span class="s2"> and type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="filter-by-emails-sub-attributes-">Filter By Emails Sub-Attributes <a name="filter_by_emails"></a></h5>
+
+<blockquote>
+  <p>POST {host}/profile/identity/v4.1/Users/.search</p>
+</blockquote>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="logical-and-queries-1">Logical AND queries</h6>
+
+<p>Returns users who have a work emails equal to admin@SAP.com</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2"> and value eq </span><span class="se">\"</span><span class="s2">admin@SAP.com</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Returns users who work at Concur and have verified the email</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2"> and and verified eq true and value ew </span><span class="se">\"</span><span class="s2">@SAP.com</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Returns user’s that are do not have <code class="language-plaintext highlighter-rouge">work</code> OR <code class="language-plaintext highlighter-rouge">home</code> emails</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[not(type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">) and type ne </span><span class="se">\"</span><span class="s2">home</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="combined-logical-queries-1">Combined Logical queries</h6>
+
+<p>Returns user’s that either have work emails that end with <code class="language-plaintext highlighter-rouge">@SAP.com</code> or have home emails that end with <code class="language-plaintext highlighter-rouge">.com</code></p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2"> and value ew </span><span class="se">\"</span><span class="s2">@SAP.com</span><span class="se">\"</span><span class="s2"> or type eq </span><span class="se">\"</span><span class="s2">home</span><span class="se">\"</span><span class="s2"> and value ew </span><span class="se">\"</span><span class="s2">.com</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="filter-by-name-field-">Filter By Name Field <a name="filter_by_name_fields"></a></h5>
+
+<blockquote>
+  <p>POST {host}/profile/identity/v4.1/Users/.search</p>
+</blockquote>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name.givenName eq </span><span class="se">\"</span><span class="s2">John</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="logical-and-queries-2">Logical AND queries</h6>
+
+<p>Return users by Full Name (combination of given and family)</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name.givenName eq </span><span class="se">\"</span><span class="s2">John</span><span class="se">\"</span><span class="s2"> and name.familyName eq </span><span class="se">\"</span><span class="s2">Smith</span><span class="se">\"</span><span class="s2">"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Return users who have the first name John and do not have last name Bob</p>
+
+<p>Note: When using <code class="language-plaintext highlighter-rouge">ne</code>, results can include <code class="language-plaintext highlighter-rouge">null</code> values</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name.givenName ne </span><span class="se">\"</span><span class="s2">John</span><span class="se">\"</span><span class="s2"> and not(name.givenName eq </span><span class="se">\"</span><span class="s2">Bob</span><span class="se">\"</span><span class="s2">)"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Return users who must start with and ending with characters. Case insensitive</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name.givenName sw </span><span class="se">\"</span><span class="s2">J</span><span class="se">\"</span><span class="s2"> and name.givenName ew </span><span class="se">\"</span><span class="s2">n</span><span class="se">\"</span><span class="s2">"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Return users by “contains” query and check if field, <code class="language-plaintext highlighter-rouge">name.givenName</code> has a value</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"not(name.givenName co </span><span class="se">\"</span><span class="s2">admin</span><span class="se">\"</span><span class="s2">) and name.givenName pr"</span><span class="w">
+</span></code></pre></div></div>
+
+<h6 id="combined-logical-queries-2">Combined Logical queries</h6>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name.givenName eq </span><span class="se">\"</span><span class="s2">John</span><span class="se">\"</span><span class="s2"> and name.familyName eq </span><span class="se">\"</span><span class="s2">Smith</span><span class="se">\"</span><span class="s2"> or name.givenName eq </span><span class="se">\"</span><span class="s2">Bob</span><span class="se">\"</span><span class="s2"> and name.familyName eq </span><span class="se">\"</span><span class="s2">Joe</span><span class="se">\"</span><span class="s2">"</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="example-request-">Example Request <a name="example_request"></a></h4>
+
+<p>Parameter <code class="language-plaintext highlighter-rouge">attributes=active</code> will return a list of user-objects with <code class="language-plaintext highlighter-rouge">active</code> and <code class="language-plaintext highlighter-rouge">id</code> (default) in the blob.</p>
+<blockquote>
+  <p>POST https://{host}/v4.1/Users/.search</p>
+  <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"active"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>  </div>
+</blockquote>
+
+<h4 id="example-response-">Example Response <a name="example_response"></a></h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+Content-Type: application/json
 </code></pre></div></div>
 
-<p>A new token is generated, and may be used to fetch the next page of users matching filter.</p>
+<p>{
+  “schemas”: [
+    “urn:ietf:params:scim:api:messages:2.0:ListResponse” 
+  ],
+  “totalResults”: 1234,
+  “startIndex”: 1,
+  “itemsPerPage”: 100,
+  “Resources”: [
+    {
+      “id”: “uuid-v4-user-1”,
+      “active”: “true”
+    },
+    {
+      “id”: “uuid-v4-user-2”,
+      “active”: “false”
+    },
+    {
+      “id”: “uuid-v4-user-100”,
+      “active”: “true”
+    }
+  ]
+}</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>### Continuation Token &lt;a name="continuation_token"&gt;&lt;/a&gt;  
+
+Using the `continuationToken`
+&gt; POST https://{host}/profile/identity/v4.1/Users/.search
+```json
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
+  ...
+  "continuationToken": "eyJjcmVhdGVkLWlkIjoiMTYxMzc2MTkxNF9hYTA0NzQ1MS04MTBkLTQ5MDMtYWE0OS1lYzhjODZlZjUwNTMiLCJzdGFydEluZGV4IjoxMDF9"
+}
+</code></pre></div></div>
+<p>Response:</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w"> 
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">123456</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+    </span><span class="p">{},</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"continuationToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJjcmVhdGVkLWlkIjoiMTYxMzgwNjU4NF85YjQyNTI1NC04ZDE1LTRjM2QtYmE2ZS03MzZkMmJkMTEzN2IiLCJzdGFydEluZGV4IjoyMDF9"</span><span class="w">
+</span></code></pre></div></div>
 
       </div>
       <!--/col-md-8-->
