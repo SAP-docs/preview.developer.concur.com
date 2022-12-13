@@ -7,12 +7,38 @@ layout: reference
 
 #  Itemizations v4
 
+The Itemizations API can be used to read the itemizations that belong to a specific expense.
+
+## Prior Versions
+
 * Itemizations 1.1 documentation is available [here](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)  
 * Expense Itemizations v3 documentation is available [here](./api-reference/expense/expense-report/expense-itemization.html)
 
 ## Limitations
 
-Access to this documentation does not provide access to the API. 
+This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+
+## Scope Usage <a name="scope-usage"></a>
+
+Required Scopes:
+
+|Name|Description|Endpoint|
+|---|---|---|
+|`expense.report.read`|Get information about expense reports.|GET|
+
+## Dependencies <a name="dependencies"></a>
+
+SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports user level access tokens.
 
 ## Retrieve Itemizations on a Specific Expense ID <a name="specific-expense-itemizations"></a>
 
@@ -39,27 +65,7 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 | `expenseId`   |`string`|-| **Required** The unique identifier of the expense that is being read.                                                                               |
 
 
-#### Headers
-
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
 ### Response
-
-#### Status Codes
-
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
 #### Headers
 
@@ -257,3 +263,42 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
     }
 ]
 ```
+
+## Schema <a name="schema"></a>
+
+### <a name="report-expense-itemization-summary-schema"></a>ReportExpenseItemizationSummary
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`allocationSetId`|`string`|-|The identifier of the allocation set associated with the expense. Allocations which belong to the same set were created at the same time.|
+|`allocationState`|`string`|-|**Required** Allocation state for the expense. Supported values: `FULLY_ALLOCATED`, `NOT_ALLOCATED`, `PARTIALLY_ALLOCATED`|
+|`approvedAmount`|[`Amount`](#amount-schema)|-|The approved amount of the expense, in the report currency.|
+|`approverAdjustedAmount`|[`Amount`](#amount-schema)|-|The total amount adjusted for the expense by the approver|
+|`attendeeCount`|`integer`|`int32`|The total number of attendees associated with the expense.|
+|`businessPurpose`|`string`|-|The text input for the business purpose by the user.|
+|`claimedAmount`|[`Amount`](#amount-schema)|-|The total non-personal amount claimed for reimbursement for the expense.|
+|`ereceiptImageId`|`string`|-|The unique identifier of the eReceipt image associated with the expense.|
+|`exchangeRate`|[`ExchangeRate`](#exchange-rate-schema)|-|**Required** Exchange rate data for the expense.|
+|`expenseId`|`string`|-|**Required** The unique identifier for the expense.|
+|`expenseSourceIdentifiers`|[`ExpenseSourceIdentifiers`](#schemaexpensesourceidentifiers)|-|The list of expense sources associated with the expense|
+|`expenseType`|[`ExpenseType`](#expense-type-schema)|-|**Required** The expense type information for the expense.|
+|`fuelTypeListItem`|[`CustomData`](#custom-data-schema)|-| The unique id of Fuel Type.|
+|`hasBlockingExceptions`|`boolean`|-|**Required** Whether the expense has any exceptions that block it from being submitted.|
+|`hasExceptions`|`boolean`|`true`/`false`|**Required** Whether the expense has any exceptions.|
+|`hasMissingReceiptDeclaration`|`boolean`|`true`/`false`|**Required** Whether the expense has an affidavit declaration for missing receipt.|
+|`imageCertificationStatus`|`string`|-|The final status of the receipt image associated with the expense.|
+|`isAutoCreated`|`boolean`|`true`/`false`|**Required** Whether the expense is auto-created.|
+|`isImageRequired`|`boolean`|`true`/`false`|**Required** Whether the image is required for the expense.|
+|`isPaperReceiptRequired`|`boolean`|`true`/`false`|**Required** Whether the paper receipt is required for the expense to be submitted.|
+|`isPersonalExpense`|`boolean`|`true`/`false`|**Required** Whether the expense is marked as personal (non-reimbursable) by the user.|
+|`jptRouteId`|`string`|-|The unique route ID to identify a Japan rail route.|
+|`links`|[`Link`](#link-schema)|-|Resource links related to this call.|
+|`location`|[`Location`](#location-schema)|-|The location information of the expense.|
+|`paymentType`|[`PaymentType`](#payment-type-schema)|-|**Required** The payment type information for the expense.|
+|`postedAmount`|[`Amount`](#amount-schema)|-|**Required** The amount of the expense, in the report currency.|
+|`receiptImageId`|`string`|-|The unique identifier of the image associated with the expense.|
+|`ticketNumber`|`string`|-|The ticket number associated with the travel.|
+|`transactionAmount`|[`Amount`](#amount-schema)|-|**Required** The amount of the expense, in the transaction currency paid to the vendor.|
+|`transactionDate`|`string`|`YYYY-MM-DD`|The transaction date.|
+|`travelAllowance`|[`TravelAllowance`](#travel-allowance-schema)|-|The travel allowance data associated with the expense.|
+|`vendor`|[`Vendor`](#vendor-schema)|-|The vendor information for the expense.|
