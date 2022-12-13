@@ -1,0 +1,254 @@
+# Document Compliance Gateway v4 API
+
+Document Compliance Gateway serves an important role as a router and abstraction layer between Concur core and DRC.
+
+Enables Concur core to have a loose coupling with different compliance providers. Brings extensibility into the architecture which would enable integration of new compliance providers in Document Compliance Gateway layer without any changes in the core services. Makes the architecture homogenous for both pull and push model of receipt/invoice compliance. Any implementation specific to concur such as retrieval of the non-digitized documents from core and storage of the compliant documents in the core shall be done in Document Compliance Gateway and not in DRC. Can perform necessary mappings from a generic document model to Concur Invoice and Concur Expense specific data model for invoice/receipts
+* [Limitation](#limitations)
+* [Process Flow](#process-flow)
+* [Products and Editions](#products-editions)
+* [Scope Usage](#scope-usage)
+* [Authentication](#authentication)
+* [Dependencies](#dependencies)
+* [Endpoint Detail](#endpoint)
+
+## Prior Versions
+
+- No prior API version available
+
+##  <a name="limitations"></a>Limitations
+API access is available only to the authenticated companies with granted permission. Access to this documentation does not provide access to the API. The API is planned to be deployed to US2 & EU2 data centers.
+
+## <a name="process-flow"></a>Process Flow
+
+![](images/DCG_Sequence_Diagram.png)
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name| Description               |Endpoint
+---|---------------------------|---
+`receipts.read receipts.write`| Receipts - Tax Validation |GET, PUT
+
+## <a name="authentication"></a>Authentication
+
+Authentication is provided through an App for company JWT. This API requires the valid access token with required scopes. Before making requests to the API, please obtain an access token from the [Authentication API](https://developer.concur.com/api-reference/authentication/getting-started.html).
+
+## <a name="dependencies"></a>Dependencies
+
+SAP Concur Companies must purchase Concur Invoice in order to use this API. This API may require additional SAP Concur APIs for some use cases:
+
+* [Mexico CFDI API Link]
+
+## <a name="endpoint"></a>DCG Endpoints
+
+#### GET API CALL
+
+`Get DCG Documents`
+
+### Scopes
+
+`receipts.read`
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}
+```
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+
+
+#### Headers
+
+* Authorization
+    * Authentication would be provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
+* concur-correlationid
+    * concur-correlationid is used to track the workflow for evey steps.
+
+#### Notes
+
+1. The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API
+2. To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to DCG API.
+3. Once you have the token use the following curl command to POST invoice details
+```sh
+curl --location --request GET 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}' -H 'Authorization: Bearer <JWT token>'
+  -H 'concur-correlationid: {LogicalId}'
+```
+
+### Response
+
+#### Error Codes
+
+Code|Description
+---|---
+400|Validation errors in request body.
+401|Unauthorized (invalid JWT or expired etc..,)
+404|DCG Company Not Found
+500|Internal Server Error
+503|Service Unavailable
+502|Bad Gateway
+
+### Example
+
+#### Request
+
+```shell
+GET https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+Authorization: Bearer <JWT Token>
+concur-correlationid: "Test-FlOW"
+```
+
+#### Response
+```shell
+HTTP/1.1 200 OK
+Content-Type: XML
+```
+
+```XML
+<note>
+<to>Tove</to>
+<from>Jani</from>
+<heading>Reminder</heading>
+
+<body>Dont forget me this weekend!</body>
+</note>
+```
+
+#### PUT API CALL
+
+`Upload Digital Tax Token for DCG Documents`
+
+### Scopes
+
+`receipts.write`
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}
+```
+##### Parameters
+
+| Name       | Type | Format | Description
+|------------|------|--------|------------
+| `Receipts` |-|`body`|The tax information for the receipt that is to be updated.
+
+
+#### Headers
+
+* Authorization
+  * Authentication would be provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
+* concur-correlationid
+  * concur-correlationid is used to track the workflow for evey steps.
+
+### Payload
+* DigitalTax Token
+
+#### Notes
+
+1. The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API
+2. To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to DCG API.
+3. Once you have the token use the following curl command to POST invoice details
+```sh
+curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}' -H 'Authorization: Bearer <JWT token>'
+  -H "concur-correlationid": {LogicalId}\
+  --form "digitalTaxDocument"=@"DigitalTaxToken.json"
+```
+
+### Response
+
+#### Error Codes
+
+Code|Description
+---|---
+400|Validation errors in request body.
+401|Unauthorized (invalid JWT or expired etc..,)
+404|DCG Company Not Found
+500|Internal Server Error
+503|Service Unavailable
+502|Bad Gateway
+
+### Example
+
+#### Request
+
+```shell
+POST https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+Authorization: Bearer <JWT Token>
+concur-correlationid: "Test-FlOW"
+digitalTaxDocument:
+{
+  "Status": "VALID",
+  "DocumentData": {
+    "FormatVersion": "4.0",
+    "Code": "pos",
+    "Number": "1234",
+    "IssueDateTime": "2021-12-07T23:59:59",
+    "UUID": "ED1752FE-E865-4FF2-BFE1-0F552E770DC9",
+    "PaymentType": "Credit Card",
+    "GrossAmount": 0.0,
+    "Discount": 0.0,
+    "Currency": "MXN",
+    "ExchangeRate": "0.0",
+    "NetAmount": 0.0,
+    "PaymentMethod": "PUE",
+    "TotalWithholdingTax": 0.0,
+    "TotalSalesTax": 0.0,
+    "Vendor": {
+      "CertificateNumber": "0000",
+      "TaxNumber": "TXN-No-1000",
+      "Name": "Vendor 1",
+	  "city": "Bellevue",
+      "state": "WA",
+      "country": "US",
+	  "phone": "888-867-5309",
+	  "addressLine": "123 Main St"
+    },
+    "Buyer": {
+      "TaxNumber": "TXN-No-10001",
+      "Name": "Buyer 1",
+      "PostalCode": "MX-000001"
+    },
+    "LineItems": [
+      {
+        "ProductCode": "P1",
+        "Quantity": 1,
+        "UnitOfMeasure": "KMT",
+        "Description": "Decription",
+        "UnitPrice": 0.0,
+        "Amount": 0.0,
+        "Discount": 0.0
+      }
+    ],
+    "DocumentPostalCode": "MX-000002"
+  },
+  "Description": "Document is valid",
+  "Code": "200"
+}
+```
+#### Response
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "DocumentId": "c92565ca-78c7-47be-a730-1d33ef35cdac",
+  "Description": "Tokens have been received."
+}
+```
