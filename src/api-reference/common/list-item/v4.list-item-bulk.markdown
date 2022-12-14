@@ -37,6 +37,7 @@ This API is only available to partners who have been granted access. Access to t
 |`spend.listitem.write`|Read and write access to spend list items.|POST, PATCH|
 
 ## <a name="dependencies"></a>Dependencies
+
 Users must be a Concur Expense, Concur Invoice, Shared, or Concur Request Configuration Administrator in order to perform POST and PATCH actions.
 
 ## <a name="access-token-usage"></a>Access Token Usage
@@ -47,17 +48,16 @@ This API supports both company level and user level access tokens.
 
 Create list items for a specific list with the provided request body.
 
-Each API request contains up to 250 [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part). 
-Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) represents one item to be created. 
+Each API request contains up to 250 [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part).
 
-The [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) are executed in order. 
-The caller will need to manage the ordering of the [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) within the request 
-to ensure dependencies are met, such as
-when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) represents one item to be created.
 
-Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) executes individually so a single API request can have
-some request parts that execute successfully and some request parts that fail. See the [Error Messages](#post-list-item-error-messages) for the
-execution failure error messages.
+The [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) are executed in order.
+
+The caller will need to manage the ordering of the [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) within the request
+to ensure dependencies are met, such as when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.
+
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the [Error Messages](#post-list-item-error-messages) for the execution failure error messages.
 
 ### Scopes
 
@@ -73,11 +73,11 @@ POST /list/v4/items/{listId}/bulk
 
 #### Parameters
 
-|Name| Type     |Description|
-|---|----------|---|
-|`Accept-Language`| `string` |Language code. Default: `en` |
-|`listId`| -        |**Required** The unique identifier of the list (SYNC_GUID).|
-|`itemCreateRequests`| -        |**Required** Array of list item objects to be created for the company.|
+|Name|Type|Description|
+|---|---|---|
+`Accept-Language`|`string`|Language code. Default: `en`
+`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+`itemCreateRequests`|-|**Required** Array of list item objects to be created for the company.|
 
 #### Payload
 
@@ -92,21 +92,22 @@ POST /list/v4/items/{listId}/bulk
 * [Error Message](#schema-error-message)
 
 ### <a name="post-list-item-error-messages"></a>Error Messages
-The values for the "message" field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
 
-| Description                                                                                                                                                                                          |"message" field value|
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
-| List not found                                                                                                                                                                                       | "List not found" | 
-| Deleted list                                                                                                                                                                                         | "The list is currently deleted" |
-| Duplicate item                                                                                                                                                                                       | "This item code is already used by another item in the same list" | 
-| Parent list item doesn't exist                                                                                                                                                                       | "Parent listItem not found" |
-| Parent list item is deleted                                                                                                                                                                          | "Parent listItem has been deleted" |
-| Parent list item is in a different list                                                                                                                                                              | "List Id does not match that of parent listItem" |
-| The child list item cannot be added because it would exceed the maximum allowed list levels (10)                                                                                                     | "Parent at max level.List items cannot be added to this parent." | 
-| There exists a list item in the same list category with this list item code. <br/>List item code must be unique within a category. <br/>If categories are enabled, this list item can be shared between lists. | "The list item already exists in another list with the same list category" <br/>"This list item already exists in another linked list" |
+The values for the `message` field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
 
+|Description|Value|
+|---|---|
+`List not found`|List not found.|
+`Deleted list`|The list is currently deleted.|
+`Duplicate item`|This item code is already used by another item in the same list.|
+`Parent list item doesn't exist`|.Parent `listItem` not found.|
+`Parent list item is deleted`|Parent `listItem` has been deleted.|
+`Parent list item is in a different list`|List ID does not match that of parent `listItem`.|
+`The child list item cannot be added because it would exceed the maximum allowed list levels (10)`|Parent at max level. List items cannot be added to this parent.|
+`There exists a list item in the same list category with this list item code. List item code must be unique within a category. If categories are enabled, this list item can be shared between lists.` |The list item already exists in another list with the same list category. This list item already exists in another linked list.|
 
 The [Error Message](#schema-error-message) will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:
+
 ```shell
 {
   "timestamp":"2022-12-13T20:30:06.230+00:00",
@@ -335,15 +336,12 @@ cache-control: no-cache, private
 Update and delete list items by long code for a specific list with provided request body.
 
 Each API request contains up to 250 [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part).
+
 Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) represents one item to be updated or deleted.
 
-The [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) are executed in order.
-The caller will need to manage the ordering of the [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) 
-within the request to ensure dependencies are met.
+The [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) are executed in order. The caller will need to manage the ordering of the [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) within the request to ensure dependencies are met.
 
-Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) executes individually so a single API request can have
-some request parts that execute successfully and some request parts that fail. See the [Error Messages](#patch-list-item-error-messages) for the 
-execution failure error messages.
+Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the [Error Messages](#patch-list-item-error-messages) for the execution failure error messages.
 
 ### Scopes
 
@@ -380,17 +378,17 @@ PATCH /list/v4/lists/{listId}/bulk
 ### <a name="patch-list-item-error-messages"></a>Error Messages
 The values for the "message" field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
 
-| Description                                 | "message" field value|
-|---------------------------------------------|---|
-| List item not found                         | "listItem not found" |
-| Parent list item is in a different list     | "List Id does not match that of parent listItem" |
-| List not found                              | "List not found" |
-| A previously deleted item cannot be updated | "The list item has been deleted" |
-| Duplicate item                              | "This item code is already used by another item in the same list" |
-| Duplicate item where the duplicate is deleted | "This item code is already used by other item that's been deleted" |
-
+|Description|Value|
+|---|---|
+`List item not found`|`listItem` not found.|
+`Parent list item is in a different list`|List ID does not match that of parent `listItem`.|
+`List not found`|List not found.|
+`A previously deleted item cannot be updated`|The list item has been deleted.|
+`Duplicate item`|This item code is already used by another item in the same list.|
+`Duplicate item where the duplicate is deleted`|This item code is already used by other item that's been deleted.|
 
 The [Error Message](#schema-error-message) will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:
+
 ```shell
 {
   "timestamp":"2022-12-13T20:30:06.230+00:00",
@@ -411,7 +409,7 @@ The [Error Message](#schema-error-message) will be returned in the case of a req
 
 ### Examples
 
-#### Update Single Item with Successful Response 
+#### Update Single Item with Successful Response
 
 ##### Request
 
@@ -628,16 +626,15 @@ cache-control: no-cache, private
 |`msg`|`string`|-|The detailed error message.|
 |`id`|`string`|-|The identifier of the error.|
 
-
-## Migration from List Import 
+## Migration from List Import
 
 For callers who are migrating from using a flat file list import, be aware of the following differences:
 
-**Transactional vs Incremental Update:** The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental. 
-For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged. 
+**Transactional vs Incremental Update:** The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental.
+For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged.
 When sending a List Item Bulk API request with 10 list items, if 1 list item modification fails, the 9 list item modifications that were successful are updated, and only the 1 list item modification that failed remains unchanged.
 
 **Modifications permitted in single request:** The list import can support create, update and delete in the same import file. The List Item Bulk API requires separate create (POST) and update/delete (PATCH).
 
-**Managing dependencies within a request:** The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item. 
+**Managing dependencies within a request:** The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item.
 With the List Item Bulk API, the caller needs to manage the ordering of dependencies to make sure the create parent list item comes before the create child item within the API request.
