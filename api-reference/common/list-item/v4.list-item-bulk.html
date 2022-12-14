@@ -1117,18 +1117,30 @@
 
 <p>Create list items for a specific list with the provided request body.</p>
 
+<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a>. 
+Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> represents one item to be created.</p>
+
+<p>The <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> are executed in order. 
+The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> within the request 
+to ensure dependencies are met, such as
+when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.</p>
+
+<p>Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> executes individually so a single API request can have
+some request parts that execute successfully and some request parts that fail. See the <a href="#post-list-item-error-messages">Error Messages</a> for the
+execution failure error messages.</p>
+
 <h3 id="scopes">Scopes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">spend.listitem.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <h3 id="request">Request</h3>
 
-<h5 id="template">Template</h5>
+<h4 id="template">Template</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /list/v4/items/<span class="o">{</span>listId<span class="o">}</span>/bulk
 </code></pre></div></div>
 
-<h5 id="parameters">Parameters</h5>
+<h4 id="parameters">Parameters</h4>
 
 <table>
   <thead>
@@ -1161,6 +1173,7 @@
 
 <ul>
   <li><a href="#schema-bulk-list-item-create-request">Bulk List Item Create Request</a></li>
+  <li><a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a></li>
 </ul>
 
 <h3 id="response">Response</h3>
@@ -1172,9 +1185,75 @@
   <li><a href="#schema-error-message">Error Message</a></li>
 </ul>
 
-<h3 id="example">Example</h3>
+<h3 id="error-messages"><a name="post-list-item-error-messages"></a>Error Messages</h3>
+<p>The values for the “message” field of the <a href="#schema-bulk-list-item-error">Bulk List Item Error</a> in the <a href="#schema-bulk-list-item-response">Bulk List Item Response</a>:</p>
 
-<h4 id="request-1">Request</h4>
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>“message” field value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>List not found</td>
+      <td>“List not found”</td>
+    </tr>
+    <tr>
+      <td>Deleted list</td>
+      <td>“The list is currently deleted”</td>
+    </tr>
+    <tr>
+      <td>Duplicate item</td>
+      <td>“This item code is already used by another item in the same list”</td>
+    </tr>
+    <tr>
+      <td>Parent list item doesn’t exist</td>
+      <td>“Parent listItem not found”</td>
+    </tr>
+    <tr>
+      <td>Parent list item is deleted</td>
+      <td>“Parent listItem has been deleted”</td>
+    </tr>
+    <tr>
+      <td>Parent list item is in a different list</td>
+      <td>“List Id does not match that of parent listItem”</td>
+    </tr>
+    <tr>
+      <td>The child list item cannot be added because it would exceed the maximum allowed list levels (10)</td>
+      <td>“Parent at max level.List items cannot be added to this parent.”</td>
+    </tr>
+    <tr>
+      <td>There exists a list item in the same list category with this list item code. <br />List item code must be unique within a category. <br />If categories are enabled, this list item can be shared between lists.</td>
+      <td>“The list item already exists in another list with the same list category” <br />“This list item already exists in another linked list”</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <a href="#schema-error-message">Error Message</a> will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+  <span class="s2">"timestamp"</span>:<span class="s2">"2022-12-13T20:30:06.230+00:00"</span>,
+  <span class="s2">"httpStatus"</span>:<span class="s2">"400 - Bad Request"</span>,
+  <span class="s2">"error"</span>:<span class="o">{</span>
+    <span class="s2">"id"</span>:<span class="s2">"request.validation.error"</span>,
+    <span class="s2">"message"</span>:<span class="s2">"Please check your request parameter"</span>
+  <span class="o">}</span>,
+  <span class="s2">"validationErrors"</span>:[
+    <span class="o">{</span>
+      <span class="s2">"source"</span>:<span class="s2">"requests"</span>,
+      <span class="s2">"message"</span>:<span class="s2">"size must be between 1 and 250"</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"path"</span>:<span class="s2">"/list/v4/lists/ab2bdee3-71d9-c549-977f-6172a4502f34/bulk"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="create-single-item-with-successful-response-example">Create Single Item with Successful Response Example</h4>
+
+<h5 id="request-1">Request</h5>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
@@ -1182,7 +1261,6 @@ Accept-Language: en
 Content-Type: application/json
 Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 </code></pre></div></div>
-<p>Example 1:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
@@ -1193,41 +1271,8 @@ Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Example 2:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h5 id="response-1">Response</h5>
 
-<p>Example 3:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_ONE"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_ONE"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_B"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_B"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h4 id="response-1">Response</h4>
-<p>Example 1:</p>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 201
 concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
 content-length: 71
@@ -1244,7 +1289,72 @@ cache-control: no-cache, private
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Example 2:</p>
+<h4 id="create-parent-and-child-items-with-successful-response-example">Create Parent and Child Items with Successful Response Example</h4>
+
+<h5 id="request-2">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="response-2">Response</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 201
+concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
+content-length: 227
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Fri,26 Aug 2022 16:15:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SUCCESS"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"recordsSucceeded"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"recordsFailed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="create-child-item-with-failure-response-example">Create Child Item with Failure Response Example</h4>
+
+<h5 id="request-3">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="response-3">Response</h5>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 400
 concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
 content-length: 227
@@ -1270,7 +1380,38 @@ cache-control: no-cache, private
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Example 3:</p>
+<h4 id="create-multiple-items-with-partial-success-response-example">Create Multiple Items with Partial Success Response Example</h4>
+
+<h5 id="request-4">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_ONE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_ONE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_B"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM_B"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="response-4">Response</h5>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 206
 concur-correlationid: 97a8db78-9f87-427c-928a-c92c9ff2349a
 content-length: 233
@@ -1295,24 +1436,34 @@ cache-control: no-cache, private
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
 <h2 id="update-list-items"><a name="patch-list-item-bulk"></a>Update List Items</h2>
 
 <p>Update and delete list items by long code for a specific list with provided request body.</p>
+
+<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a>.
+Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> represents one item to be updated or deleted.</p>
+
+<p>The <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> are executed in order.
+The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> 
+within the request to ensure dependencies are met.</p>
+
+<p>Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> executes individually so a single API request can have
+some request parts that execute successfully and some request parts that fail. See the <a href="#patch-list-item-error-messages">Error Messages</a> for the 
+execution failure error messages.</p>
 
 <h3 id="scopes-1">Scopes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">spend.listitem.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-2">Request</h3>
+<h3 id="request-5">Request</h3>
 
-<h4 id="uri">URI</h4>
-
-<h5 id="template-1">Template</h5>
+<h4 id="template-1">Template</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /list/v4/lists/<span class="o">{</span>listId<span class="o">}</span>/bulk
 </code></pre></div></div>
 
-<h5 id="parameters-1">Parameters</h5>
+<h4 id="parameters-1">Parameters</h4>
 
 <table>
   <thead>
@@ -1348,7 +1499,7 @@ cache-control: no-cache, private
   <li><a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a></li>
 </ul>
 
-<h3 id="response-2">Response</h3>
+<h3 id="response-5">Response</h3>
 
 <h4 id="payload-3">Payload</h4>
 
@@ -1357,9 +1508,67 @@ cache-control: no-cache, private
   <li><a href="#schema-error-message">Error Message</a></li>
 </ul>
 
-<h3 id="example-1">Example</h3>
+<h3 id="error-messages-1"><a name="patch-list-item-error-messages"></a>Error Messages</h3>
+<p>The values for the “message” field of the <a href="#schema-bulk-list-item-error">Bulk List Item Error</a> in the <a href="#schema-bulk-list-item-response">Bulk List Item Response</a>:</p>
 
-<h4 id="request-3">Request</h4>
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>“message” field value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>List item not found</td>
+      <td>“listItem not found”</td>
+    </tr>
+    <tr>
+      <td>Parent list item is in a different list</td>
+      <td>“List Id does not match that of parent listItem”</td>
+    </tr>
+    <tr>
+      <td>List not found</td>
+      <td>“List not found”</td>
+    </tr>
+    <tr>
+      <td>A previously deleted item cannot be updated</td>
+      <td>“The list item has been deleted”</td>
+    </tr>
+    <tr>
+      <td>Duplicate item</td>
+      <td>“This item code is already used by another item in the same list”</td>
+    </tr>
+    <tr>
+      <td>Duplicate item where the duplicate is deleted</td>
+      <td>“This item code is already used by other item that’s been deleted”</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The <a href="#schema-error-message">Error Message</a> will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+  <span class="s2">"timestamp"</span>:<span class="s2">"2022-12-13T20:30:06.230+00:00"</span>,
+  <span class="s2">"httpStatus"</span>:<span class="s2">"400 - Bad Request"</span>,
+  <span class="s2">"error"</span>:<span class="o">{</span>
+    <span class="s2">"id"</span>:<span class="s2">"request.validation.error"</span>,
+    <span class="s2">"message"</span>:<span class="s2">"Please check your request parameter"</span>
+  <span class="o">}</span>,
+  <span class="s2">"validationErrors"</span>:[
+    <span class="o">{</span>
+      <span class="s2">"source"</span>:<span class="s2">"requests"</span>,
+      <span class="s2">"message"</span>:<span class="s2">"size must be between 1 and 250"</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"path"</span>:<span class="s2">"/list/v4/lists/ab2bdee3-71d9-c549-977f-6172a4502f34/bulk"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="update-single-item-with-successful-response">Update Single Item with Successful Response</h4>
+
+<h5 id="request-6">Request</h5>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
@@ -1367,8 +1576,6 @@ Accept-Language: en
 Content-Type: application/json
 Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 </code></pre></div></div>
-
-<p>Example 1:</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
@@ -1379,39 +1586,8 @@ Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Example 2:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
+<h5 id="response-6">Response</h5>
 
-<p>Example 3:</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_TWO"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_TWO UPDATED"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE UPDATED"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h4 id="response-3">Response</h4>
-
-<p>Example 1:</p>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
 concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
 content-length: 289
@@ -1426,20 +1602,75 @@ cache-control: no-cache, private
   </span><span class="nl">"recordsFailed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-
 </span></code></pre></div></div>
 
-<p>Example 2:</p>
+<h4 id="delete-single-item-with-successful-response">Delete Single Item with Successful Response</h4>
+
+<h5 id="request-7">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="response-7">Response</h5>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
+content-length: 289
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<span class="nb">date</span>: Fri,26 Aug 2022 17:11:35 GMT
+cache-control: no-cache, private
+</code></pre></div></div>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SUCCESS"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"recordsSucceeded"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
   </span><span class="nl">"recordsFailed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
-
 </span></code></pre></div></div>
 
-<p>Example 3:</p>
+<h4 id="update-multiple-items-with-partial-success-response">Update Multiple Items with Partial Success Response</h4>
+
+<h5 id="request-8">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_TWO"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ITEM_THREE UPDATED"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="response-8">Response</h5>
+
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 206
 concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
 content-length: 165
@@ -1759,6 +1990,19 @@ cache-control: no-cache, private
     </tr>
   </tbody>
 </table>
+
+<h2 id="migration-from-list-import">Migration from List Import</h2>
+
+<p>For callers who are migrating from using a flat file list import, be aware of the following differences:</p>
+
+<p><strong>Transactional vs Incremental Update:</strong> The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental. 
+For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged. 
+When sending a List Item Bulk API request with 10 list items, if 1 list item modification fails, the 9 list item modifications that were successful are updated, and only the 1 list item modification that failed remains unchanged.</p>
+
+<p><strong>Modifications permitted in single request:</strong> The list import can support create, update and delete in the same import file. The List Item Bulk API requires separate create (POST) and update/delete (PATCH).</p>
+
+<p><strong>Managing dependencies within a request:</strong> The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item. 
+With the List Item Bulk API, the caller needs to manage the ordering of dependencies to make sure the create parent list item comes before the create child item within the API request.</p>
 
       </div>
       <!--/col-md-8-->
