@@ -1107,7 +1107,6 @@
 </table>
 
 <h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
-
 <p>Users must be a Concur Expense, Concur Invoice, Shared, or Concur Request Configuration Administrator in order to perform POST and PATCH actions.</p>
 
 <h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
@@ -1118,16 +1117,17 @@
 
 <p>Create list items for a specific list with the provided request body.</p>
 
-<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a>.</p>
+<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a>. 
+Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> represents one item to be created.</p>
 
-<p>Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> represents one item to be created.</p>
+<p>The <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> are executed in order. 
+The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> within the request 
+to ensure dependencies are met, such as
+when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.</p>
 
-<p>The <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> are executed in order.</p>
-
-<p>The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> within the request
-to ensure dependencies are met, such as when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.</p>
-
-<p>Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the <a href="#post-list-item-error-messages">Error Messages</a> for the execution failure error messages.</p>
+<p>Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> executes individually so a single API request can have
+some request parts that execute successfully and some request parts that fail. See the <a href="#post-list-item-error-messages">Error Messages</a> for the
+execution failure error messages.</p>
 
 <h3 id="scopes">Scopes</h3>
 
@@ -1186,54 +1186,52 @@ to ensure dependencies are met, such as when creating list items in a connected 
 </ul>
 
 <h3 id="error-messages"><a name="post-list-item-error-messages"></a>Error Messages</h3>
-
-<p>The values for the <code class="language-plaintext highlighter-rouge">message</code> field of the <a href="#schema-bulk-list-item-error">Bulk List Item Error</a> in the <a href="#schema-bulk-list-item-response">Bulk List Item Response</a>:</p>
+<p>The values for the “message” field of the <a href="#schema-bulk-list-item-error">Bulk List Item Error</a> in the <a href="#schema-bulk-list-item-response">Bulk List Item Response</a>:</p>
 
 <table>
   <thead>
     <tr>
       <th>Description</th>
-      <th>Value</th>
+      <th>“message” field value</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">List not found</code></td>
-      <td>List not found.</td>
+      <td>List not found</td>
+      <td>“List not found”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Deleted list</code></td>
-      <td>The list is currently deleted.</td>
+      <td>Deleted list</td>
+      <td>“The list is currently deleted”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Duplicate item</code></td>
-      <td>This item code is already used by another item in the same list.</td>
+      <td>Duplicate item</td>
+      <td>“This item code is already used by another item in the same list”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item doesn't exist</code></td>
-      <td>.Parent <code class="language-plaintext highlighter-rouge">listItem</code> not found.</td>
+      <td>Parent list item doesn’t exist</td>
+      <td>“Parent listItem not found”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item is deleted</code></td>
-      <td>Parent <code class="language-plaintext highlighter-rouge">listItem</code> has been deleted.</td>
+      <td>Parent list item is deleted</td>
+      <td>“Parent listItem has been deleted”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item is in a different list</code></td>
-      <td>List ID does not match that of parent <code class="language-plaintext highlighter-rouge">listItem</code>.</td>
+      <td>Parent list item is in a different list</td>
+      <td>“List Id does not match that of parent listItem”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">The child list item cannot be added because it would exceed the maximum allowed list levels (10)</code></td>
-      <td>Parent at max level. List items cannot be added to this parent.</td>
+      <td>The child list item cannot be added because it would exceed the maximum allowed list levels (10)</td>
+      <td>“Parent at max level.List items cannot be added to this parent.”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">There exists a list item in the same list category with this list item code. List item code must be unique within a category. If categories are enabled, this list item can be shared between lists.</code></td>
-      <td>The list item already exists in another list with the same list category. This list item already exists in another linked list.</td>
+      <td>There exists a list item in the same list category with this list item code. <br />List item code must be unique within a category. <br />If categories are enabled, this list item can be shared between lists.</td>
+      <td>“The list item already exists in another list with the same list category” <br />“This list item already exists in another linked list”</td>
     </tr>
   </tbody>
 </table>
 
 <p>The <a href="#schema-error-message">Error Message</a> will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:</p>
-
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
   <span class="s2">"timestamp"</span>:<span class="s2">"2022-12-13T20:30:06.230+00:00"</span>,
   <span class="s2">"httpStatus"</span>:<span class="s2">"400 - Bad Request"</span>,
@@ -1443,13 +1441,16 @@ cache-control: no-cache, private
 
 <p>Update and delete list items by long code for a specific list with provided request body.</p>
 
-<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a>.</p>
+<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a>.
+Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> represents one item to be updated or deleted.</p>
 
-<p>Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> represents one item to be updated or deleted.</p>
+<p>The <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> are executed in order.
+The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> 
+within the request to ensure dependencies are met.</p>
 
-<p>The <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> are executed in order. The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> within the request to ensure dependencies are met.</p>
-
-<p>Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the <a href="#patch-list-item-error-messages">Error Messages</a> for the execution failure error messages.</p>
+<p>Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> executes individually so a single API request can have
+some request parts that execute successfully and some request parts that fail. See the <a href="#patch-list-item-error-messages">Error Messages</a> for the 
+execution failure error messages.</p>
 
 <h3 id="scopes-1">Scopes</h3>
 
@@ -1514,39 +1515,38 @@ cache-control: no-cache, private
   <thead>
     <tr>
       <th>Description</th>
-      <th>Value</th>
+      <th>“message” field value</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">List item not found</code></td>
-      <td><code class="language-plaintext highlighter-rouge">listItem</code> not found.</td>
+      <td>List item not found</td>
+      <td>“listItem not found”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item is in a different list</code></td>
-      <td>List ID does not match that of parent <code class="language-plaintext highlighter-rouge">listItem</code>.</td>
+      <td>Parent list item is in a different list</td>
+      <td>“List Id does not match that of parent listItem”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">List not found</code></td>
-      <td>List not found.</td>
+      <td>List not found</td>
+      <td>“List not found”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">A previously deleted item cannot be updated</code></td>
-      <td>The list item has been deleted.</td>
+      <td>A previously deleted item cannot be updated</td>
+      <td>“The list item has been deleted”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Duplicate item</code></td>
-      <td>This item code is already used by another item in the same list.</td>
+      <td>Duplicate item</td>
+      <td>“This item code is already used by another item in the same list”</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Duplicate item where the duplicate is deleted</code></td>
-      <td>This item code is already used by other item that’s been deleted.</td>
+      <td>Duplicate item where the duplicate is deleted</td>
+      <td>“This item code is already used by other item that’s been deleted”</td>
     </tr>
   </tbody>
 </table>
 
 <p>The <a href="#schema-error-message">Error Message</a> will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:</p>
-
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
   <span class="s2">"timestamp"</span>:<span class="s2">"2022-12-13T20:30:06.230+00:00"</span>,
   <span class="s2">"httpStatus"</span>:<span class="s2">"400 - Bad Request"</span>,
@@ -1995,13 +1995,13 @@ cache-control: no-cache, private
 
 <p>For callers who are migrating from using a flat file list import, be aware of the following differences:</p>
 
-<p><strong>Transactional vs Incremental Update:</strong> The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental.
-For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged.
+<p><strong>Transactional vs Incremental Update:</strong> The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental. 
+For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged. 
 When sending a List Item Bulk API request with 10 list items, if 1 list item modification fails, the 9 list item modifications that were successful are updated, and only the 1 list item modification that failed remains unchanged.</p>
 
 <p><strong>Modifications permitted in single request:</strong> The list import can support create, update and delete in the same import file. The List Item Bulk API requires separate create (POST) and update/delete (PATCH).</p>
 
-<p><strong>Managing dependencies within a request:</strong> The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item.
+<p><strong>Managing dependencies within a request:</strong> The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item. 
 With the List Item Bulk API, the caller needs to manage the ordering of dependencies to make sure the create parent list item comes before the create child item within the API request.</p>
 
       </div>
