@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://document-compliance-gateway.service.cnqr.tech",
+      "url": "https://unstable-document-compliance-gateway.service.cnqr.tech",
       "description": "Generated server url"
     }
   ],
@@ -380,8 +380,6 @@
     "schemas": {
       "Buyer": {
         "required": [
-          "Name",
-          "PostalCode",
           "TaxNumber"
         ],
         "type": "object",
@@ -412,7 +410,8 @@
             "type": "string",
             "description": "Status of the CFDI document",
             "enum": [
-              "VALID, INVLD, WARNG"
+              "processed",
+              "failed"
             ]
           },
           "DocumentData": {
@@ -431,22 +430,13 @@
       },
       "DocumentData": {
         "required": [
-          "Buyer",
-          "Code",
           "Currency",
-          "Discount",
-          "DocumentPostalCode",
           "ExchangeRate",
-          "FormatVersion",
           "GrossAmount",
           "IssueDateTime",
-          "LineItems",
           "NetAmount",
           "Number",
           "PaymentMethod",
-          "PaymentType",
-          "TotalSalesTax",
-          "TotalWithholdingTax",
           "UUID",
           "Vendor"
         ],
@@ -477,9 +467,11 @@
           },
           "PaymentType": {
             "type": "string",
-            "description": "Means of payment (01 (Cash), 02 (Cheque), 03 (Bank Transfer))",
+            "description": "Means of payment (Cash, Credit Card, Digital Wallet)",
             "enum": [
-              "01, 02, 03"
+              "Cash",
+              "Credit Card",
+              "Digital Wallet"
             ]
           },
           "GrossAmount": {
@@ -523,6 +515,13 @@
             "type": "number",
             "description": "Sum of all sales tax amounts of line items"
           },
+          "VerificationCode": {
+            "type": "string",
+            "description": "Company's certificate used to generate digital signature"
+          },
+          "Comments": {
+            "type": "string"
+          },
           "Vendor": {
             "$ref": "#/components/schemas/Vendor"
           },
@@ -531,7 +530,7 @@
           },
           "LineItems": {
             "type": "array",
-            "description": "line itnes present in the CFDI",
+            "description": "line items present in the CFDI",
             "items": {
               "$ref": "#/components/schemas/LineItem"
             }
@@ -542,12 +541,7 @@
       "LineItem": {
         "required": [
           "Amount",
-          "Description",
-          "Discount",
-          "ProductCode",
-          "Quantity",
-          "UnitOfMeasure",
-          "UnitPrice"
+          "ProductCode"
         ],
         "type": "object",
         "properties": {
@@ -555,43 +549,20 @@
             "type": "string",
             "description": "Key of product or service covered - 10101502 (Dogs), 10101506 (Horses) (Catalogue: c_ClaveProdServ)"
           },
-          "Quantity": {
-            "type": "number",
-            "description": "Billed quantity"
-          },
-          "UnitOfMeasure": {
-            "type": "string",
-            "description": "unit of measure code (Catalogue: c_ClaveUnidad) - KMT (Kilometer), G23 (peck)"
-          },
           "Description": {
             "type": "string",
             "description": "Product Description"
           },
-          "UnitPrice": {
-            "type": "number",
-            "description": "Unit price of the good or service"
-          },
           "Amount": {
             "type": "number",
             "description": "Total amount of good or service"
-          },
-          "Discount": {
-            "type": "number",
-            "description": "Discount of product or service"
           }
         },
-        "description": "line itnes present in the CFDI"
+        "description": "line items present in the CFDI"
       },
       "Vendor": {
         "required": [
-          "CertificateNumber",
-          "Name",
-          "TaxNumber",
-          "addressLine",
-          "city",
-          "country",
-          "phone",
-          "state"
+          "TaxNumber"
         ],
         "type": "object",
         "properties": {
@@ -750,7 +721,7 @@
         }
       }
     },
-    "securitySchemes": {
+    "securitySchemes": {git
       "JWT-Token": {
         "type": "http",
         "description": "Partner JWT Token",
