@@ -1,5 +1,5 @@
 ---
-title: [Time zone reference]
+title: Time Zone Reference
 layout: reference
 ---
 
