@@ -5,6 +5,13 @@ layout: reference
 
 # Hotel v2 - Virtual Payment Solution
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 10/14/2022</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 The goal of this document is to establish the flow for virtual / alternative payment methods in conjunction with booking hotels via Concur’s hotel API (HS2).   While doing so, it seeks to minimize complexity of implementation that often arises when configuration work needs to be done on both ends (Concur and supplier side).
 Since the payment solution is typically handled on suppliers’ side, the supplier should control which form of payment will be made available in Concur for each specific client and property by passing the form of payment to Concur. Concur will then offer the accepted payment method to users in the booking flow.
 
@@ -53,4 +60,3 @@ Org units can also be integrated in this workflow. If enabled, they will be made
 **5.	Reservation**
 
 After the user has selected a rate with GuaranteeType marked as ‘none’ the reservation request will be sent with OTA_HotelResRQ. The OTA_HotelResRQ also contains descriptive billing information.
-
