@@ -4,9 +4,9 @@ layout: reference
 ---
 # Getting Started
 
-The SAP Concur new OAuth2 framework is a very simple way to implement a Unified Token Authentication mechanism within your application. Here is a four step guide to helping you get up to speed and making calls to a SAP Concur API.  
+The SAP Concur new OAuth2 framework is a very simple way to implement a Unified Token Authentication mechanism within your application. Here is a four step guide to helping you get up to speed and making calls to a SAP Concur API. 
 
-**Note:** The Pre-2017 Authorization (Deprecated) documentation can be found [here](/api-reference/authentication/authorization-pre-2017.html)
+Sample code that demonstrates how to obtain your refresh token, automate its management, and use it to get an access token to call an API can be found [here](/api-reference/authentication/SampleCode-Pwd_AuthToken_Profile_ID_Pv4.zip).
 
 ## Obtain Your Application clientID and clientSecret <a name="obtain-clientID"></a>
 Before you can obtain an `accessToken`, you need to register an application with SAP Concur. You can do this by contacting your Partner Enablement Manager or Partner Account Manager. Once you have registered an application, you will receive a `clientId`, `clientSecret` and `geolocation`. The `clientId` is a unique UUID4 identifier for your application, and the `clientSecret` is your application's password. You will be using this credential to obtain tokens either for the application itself, or on behalf of a user. The `geolocation` is your default base URI for initiating all new connections.
@@ -17,7 +17,8 @@ In order for an application to call a SAP Concur API, you need to obtain an `acc
 
 This section provides a quick start guide for generating an access token. If you are developing an application to be certified for the App Center or as a TripLink supplier, please refer to the [certification documentation](/manage-apps/app-certification.html) for the grant types your application must support.
 
-For simplicity, we will use the Password grant flow as an example.  The Password grant flow is used when you need to authenticate a user, using its `username` and `password`. This is typically reserved from SAP Concur applications (i.e. where the user's credentials will be captured and stored) but is used here for demonstration purposes.
+For simplicity, we will use the Password grant flow as an example. This is typically used for user-level SAP Concur partner applications (i.e. where the user’s credentials will be captured and stored) but is used here for demonstration purposes.
+For company level authentication using the password grant, the username should equal the “Company UUID” and for the password, it will be the 24 hour temporary “request token”.
 
 When making the call, you will use your app's `geolocation` as the base URI followed by the endpoint. For example, if your geolocation is https://us.api.concursolutions.com, you will call https://us.api.concursolutions.com/oauth2/v0/token.
 
@@ -27,8 +28,8 @@ Example shell script using cURL to obtain an `accessToken`:
 
 ```shell
 oauth2_base=https://us.api.concursolutions.com/oauth2
-username=<concur_username> eg. john.doe@gmail.com
-password=<password> eg. password1
+username=<concur_username> eg. john.doe@gmail.com OR Company UUID
+password=<password> eg. password1 OR request token (24 hours)
 client_id=<clientId> eg. e01f725d-b4ce-4ce3-a664-b670cb5876cb0
 client_secret=<clientSecret> eg. 35c3bd92-fcb8-405e-a886-47ff3fba5664
 curl -X POST -H 'concur-correlationid: nameofapp' "$oauth2_base/v0/token" --data "username=$username&password=$password&grant_type=password&client_secret=$client_secret&client_id=$client_id"
@@ -36,7 +37,7 @@ curl -X POST -H 'concur-correlationid: nameofapp' "$oauth2_base/v0/token" --data
 
 Full docs: <https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant>
 
-Store the token and geolocation.
+Store the refresh token and geolocation.
 
 ## Calling an API with the Access Token <a name="calling-API"></a>
 Once you have the `accessToken`, you need to supply this in an Authorization header in the form of `Authorization: Bearer <accessToken>` when making a HTTPS call. The `accessToken` is a large string that looks something like this:

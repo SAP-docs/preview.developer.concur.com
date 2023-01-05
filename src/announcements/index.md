@@ -4,6 +4,18 @@ layout: reference
 ---
 # Announcements
 
+### 2022-12-02 :: December 2022 Release Notes Published
+
+The December 2022 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
+
+### 2022-11-10 :: November 2022 Release Notes Published
+
+The November 2022 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
+
+### 2022-10-14 :: October 2022 Release Notes Published
+
+The October 2022 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
+
 ### 2022-09-16 :: September 2022 Release Notes Published
 
 The September 2022 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.

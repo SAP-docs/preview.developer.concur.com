@@ -22,10 +22,11 @@ The Accounting Integration API provides clients and authorized partners access t
 
 |Event Type|Condition that triggers event|Recommended Partner Action|
 |---|---|---|
-|`listMapping.created`| This event will be published after the customer administrator has mapped the SAP Concur data (custom field) with the ERP data (list name). (Professional Edition Note: The customer admin must first import the list, then map them in the `Forms and Fields` interface. Multiple fields can be linked to a single list. Only the first mapping of a list will trigger this event) | This is a trigger telling the Partner that it's time for the ERP data to be synchronized (Via the List Items API) with SAP Concur data.|
-|`listMapping.deleted`| This event will be published after the customer administrator has removed the mapping between the SAP Concur data (custom field) and the ERP data (list name). (Professional Edition Note: As multiple fields can be mapped to the same list - this event will only trigger when all fields are unmapped from a given list) | The indicated list is no longer mapped and allows the Partner to do it's own data cleanup. This should also stop the indicated list data from being synchronized.|
+|`listMapping.created`| This event will be published after the customer administrator has mapped the SAP Concur data (custom field) with the ERP data (list name). (Professional Edition Note: When a list is imported from ERP and created in the SAP Concur system, this event will be triggered) | This is a trigger telling the Partner that it's time for the ERP data to be synchronized (Via the List Items API) with SAP Concur data.|
+|`listMapping.deleted`| This event will be published after the customer administrator has removed the mapping between the SAP Concur data (custom field) and the ERP data (list name). (Professional Edition Note: When the list is unmapped in the SAP Concur system, this event will be triggered) | The indicated list is no longer mapped and allows the Partner to do it's own data cleanup. This should also stop the indicated list data from being synchronized.|
 |`data.resetRequested`| This event will be published when the customer administrator has requested to reset the ERP data cached in SAP Concur data-center. | Data should be resynchronized to SAP Concur systems.|
 |`data.statusUpdated`| This event will be sent to notify the partner that the data they sent to SAP Concur systems via the PATCH action with the `Accounts`, `Lists` and `Vendors` APIs has been processed on our side. One notification is sent for each PATCH request that the partner performs. | The status may be interesting for the Partner to perform actions such as notification, logging, cleanup, etc.|
+|`mapping.updated`| This event will be published to notify the partner that the data in the Configuration Settings and Mappings API has been updated. Such updates are: Payment Types Configuration updates, List Mappings updates, Is Billable field updates,  Expense and Invoice ERP Ledger updates, Invoice Liability Account Code mapping updates, Feature Settings updates. **Note that changes in Invoice Policies will not trigger this event** | The event may be used by the Partner to call the Get Configuration Settings and Mappings API to obtain the most recent mappings data.|
 
 ## <a name="schema"></a>Schema
 
@@ -142,16 +143,17 @@ The Accounting Integration API provides clients and authorized partners access t
   }
 },
 {
-  "correlationId": "21a659cc-9397-45f5-81ce-7960ad3f9709",
-  "id": "761fa1dc-3e8b-46b6-9e9f-2e7016216b9f",
-  "topic": "public.concur.spend.accountingintegration",
-  "subtopic": null,
+  "id": "91d301b9-29df-425a-99cc-7b2f5e995187",
+  "correlationId": "e27f2040-6280-4550-b9dc-ae41dfd58b62",
   "eventType": "data.resetRequested",
-  "timeStamp": "2021-03-18T23:11:51.034Z", 
+  "topic": "public.concur.spend.accountingintegration",
+  "timeStamp": "2022-09-08T22:49:41.973Z",
+  "data": null,
   "facts": {
-    "companyId": "49d30324-7f69-4f9c-b3fa-ca7639e1fc35",
-    "partnerId": "4f434150-5a74-4d43-8050-f7b57d0c8840",
-    "data": ["ACCOUNT", "VENDOR", "LIST"]
+    "companyId": "4045cab7-532d-45ba-801d-937688a89ddf",
+    "data": "{\"accountingObjects\":[\"ACCOUNT\",\"VENDOR\",\"LIST\"]}",
+    "erpId": "a4542f54-a27a-4178-96a4-e9bbda79c48d",
+    "partnerId": "646a2339-1632-4692-8be6-84534f5b41fc"
   }
 },
 {
@@ -174,6 +176,18 @@ The Accounting Integration API provides clients and authorized partners access t
         }
       }
     }
+  }
+},
+{
+  "id": "de32e71c-f797-4841-8578-c3d870c28629",
+  "correlationId": "ce33f8e586e9c30dd10f81a5dfe83fae",
+  "eventType": "mapping.updated",
+  "topic": "public.concur.spend.accountingintegration",
+  "timeStamp": "2022-10-03T21:25:28.913Z",
+  "facts": {
+    "companyId": "5bfa738a-1ae7-471d-8286-3984c54223a7",
+    "erpId": "f1f9852c-860a-496b-b38b-eb29fff67b81",
+    "partnerId": "8b820d40-8e47-40a0-8c8e-f92eb8f5a0a7"
   }
 }]
 ```

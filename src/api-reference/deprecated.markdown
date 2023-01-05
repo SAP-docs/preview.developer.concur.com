@@ -13,8 +13,24 @@ The following application programming interfaces (APIs) and other resources have
 * [Attendee Types v1](/api-reference/expense/attendee-types/v1.attendee-types.html)
 * [Authorization (Pre-2017)](/api-reference/authentication/authorization-pre-2017.html)
 * [Bulk Users v3.1](/api-reference/authentication/get-users31.html)
+* [Cash Advance v4](/api-reference/cash-advance/v4.cash-advance.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
+* Direct Connect - Hotel Service v2
+  * [Introduction](/api-reference/direct-connects/hotel-service-2/Introduction.html)
+  * [Use Cases](/api-reference/direct-connects/hotel-service-2/Use-cases.html)
+  * [Headers](/api-reference/direct-connects/hotel-service-2/Headers.html)
+  * [Error Handling](/api-reference/direct-connects/hotel-service-2/Error-handling.html)
+  * [Search](/api-reference/direct-connects/hotel-service-2/Search.html)
+  * [Availability](/api-reference/direct-connects/hotel-service-2/Availability.html)
+  * [Descriptive Information](/api-reference/direct-connects/hotel-service-2/Descriptive-info.html)
+  * [Rate Details](/api-reference/direct-connects/hotel-service-2/Rate-details.html)
+  * [Reservation](/api-reference/direct-connects/hotel-service-2/Reservation.html)
+  * [Read Itinerary](/api-reference/direct-connects/hotel-service-2/Read-Itinerary.html)
+  * [Cancel](/api-reference/direct-connects/hotel-service-2/Cancel.html)
+  * [Virtual Payment](/api-reference/direct-connects/hotel-service-2/V-payment.html)
+  * [Appendix](/api-reference/direct-connects/hotel-service-2/Appendix.html)
+  * [XSD Schema](/api-reference/direct-connects/hotel-service-2/xsd-schema.html)
 * Expense Entry v1.1
   * [Expense Entry Itemization](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)
   * [Expense Entry](/api-reference/expense/expense-report/v1dot1.expense-entry.html)
@@ -45,6 +61,7 @@ The following application programming interfaces (APIs) and other resources have
 * Travel Web Service v1
   * [Profile Resource](/api-reference/travel-profile/v1.profile-resource.html)
 * [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)
+* [User v1](/api-reference/user/index.html)
 
 * Resources
   * [Videos](/tools-support/videos/index.html)

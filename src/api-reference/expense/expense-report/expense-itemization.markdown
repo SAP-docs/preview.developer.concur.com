@@ -13,8 +13,6 @@ Access to this documentation does not provide access to the API. 
 
 ## Retrieve all expense itemizations owned by the user <a name="get"></a>
 
-**DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
-
     GET  /api/v3.0/expense/itemizations
 
 ### Parameters
