@@ -1067,6 +1067,7 @@
 <ul>
   <li>Expense entry v1.1 (Deprecated) documentation is available <a href="./v1dot1.expense-entry.html">here</a></li>
   <li>Expense Entry v3 documentation is available <a href="./expense-entry.html">here</a></li>
+  <li>Expense Itemizations v3 documentation is available <a href="./api-reference/expense/expense-report/expense-itemization.html">here</a></li>
 </ul>
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
@@ -1678,22 +1679,275 @@
     <span class="s2">"travel"</span>: null,
 <span class="o">}</span>
 </code></pre></div></div>
+<h2 id="retrieve-itemizations-on-a-specific-expense-id-">Retrieve Itemizations on a Specific Expense ID <a name="specific-expense-itemizations"></a></h2>
+
+<p>Retrieves the itemizations that belong to a specific expense ID.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-4">Request</h3>
+<h4 id="uri-template-2">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/expenses/<span class="o">{</span>expenseId<span class="o">}</span>/itemizations
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value: <code class="language-plaintext highlighter-rouge">TRAVELER</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report that is being read.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the expense that is being read.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-2">Payload</h4>
+
+<ul>
+  <li><a href="#itemizations-response-schema">Expenses Response</a></li>
+</ul>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/itemizations'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Expense-Report-test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="-response-2"><a name="itemizations-response-schema"></a> Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">[</span>
+    <span class="o">{</span>
+        <span class="s2">"expenseId"</span>: <span class="s2">"95GCBB92AE4E5342B849DAC29FD163A1"</span>,
+        <span class="s2">"approverAdjustedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 25.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"allocationState"</span>: <span class="s2">"NOT_ALLOCATED"</span>,
+        <span class="s2">"allocationSetId"</span>: null,
+        <span class="s2">"approvedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 25.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"businessPurpose"</span>: <span class="s2">"test"</span>,
+        <span class="s2">"claimedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 25.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"ereceiptImageId"</span>: null,
+        <span class="s2">"exchangeRate"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 1.00000000000000,
+            <span class="s2">"operation"</span>: <span class="s2">"MULTIPLY"</span>
+        <span class="o">}</span>,
+        <span class="s2">"expenseSourceIdentifiers"</span>: null,
+        <span class="s2">"expenseType"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"LUNCH"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Lunch"</span>,
+            <span class="s2">"code"</span>: <span class="s2">"OTHER"</span>,
+            <span class="s2">"isDeleted"</span>: <span class="nb">false</span>
+        <span class="o">}</span>,
+        <span class="s2">"hasBlockingExceptions"</span>: <span class="nb">false</span>,
+        <span class="s2">"hasExceptions"</span>: <span class="nb">false</span>,
+        <span class="s2">"hasMissingReceiptDeclaration"</span>: <span class="nb">false</span>,
+        <span class="s2">"isAutoCreated"</span>: <span class="nb">false</span>,
+        <span class="s2">"imageCertificationStatus"</span>: null,
+        <span class="s2">"isImageRequired"</span>: <span class="nb">true</span>,
+        <span class="s2">"isPaperReceiptRequired"</span>: <span class="nb">false</span>,
+        <span class="s2">"isPersonalExpense"</span>: <span class="nb">false</span>,
+        <span class="s2">"location"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"04F3ED00D0884F4681628E3337A5B515"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Bellevue, Washington"</span>,
+            <span class="s2">"city"</span>: <span class="s2">"Bellevue"</span>,
+            <span class="s2">"countrySubDivisionCode"</span>: <span class="s2">"US-WA"</span>,
+            <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>
+        <span class="o">}</span>,
+        <span class="s2">"paymentType"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"CASH"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Cash"</span>,
+            <span class="s2">"code"</span>: <span class="s2">"CASH"</span>
+        <span class="o">}</span>,
+        <span class="s2">"postedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 25.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"receiptImageId"</span>: null,
+        <span class="s2">"ticketNumber"</span>: null,
+        <span class="s2">"transactionAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 25.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"transactionDate"</span>: <span class="s2">"2020-03-11"</span>,
+        <span class="s2">"travelAllowance"</span>: <span class="o">{</span>
+            <span class="s2">"dailyLimitAmount"</span>: null,
+            <span class="s2">"dailyTravelAllowanceId"</span>: null,
+            <span class="s2">"isExpensePartOfTravelAllowance"</span>: <span class="nb">false</span>
+        <span class="o">}</span>,
+        <span class="s2">"vendor"</span>: null,
+        <span class="s2">"attendeeCount"</span>: 1,
+        <span class="s2">"links"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"rel"</span>: <span class="s2">"self"</span>,
+                <span class="s2">"href"</span>: <span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/95GCBB92AE4E5342B849DAC29FD163A1"</span>,
+                <span class="s2">"method"</span>: <span class="s2">"GET"</span>,
+                <span class="s2">"isTemplated"</span>: <span class="nb">false</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"rel"</span>: <span class="s2">"comments"</span>,
+                <span class="s2">"href"</span>: <span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/95GCBB92AE4E5342B849DAC29FD163A1/comments"</span>,
+                <span class="s2">"method"</span>: <span class="s2">"GET"</span>,
+                <span class="s2">"isTemplated"</span>: <span class="nb">false</span>
+            <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>,
+    <span class="o">{</span>
+        <span class="s2">"expenseId"</span>: <span class="s2">"30FF3C62F5D844458828A5C1086072D1"</span>,
+        <span class="s2">"approverAdjustedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 500.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"allocationState"</span>: <span class="s2">"NOT_ALLOCATED"</span>,
+        <span class="s2">"allocationSetId"</span>: null,
+        <span class="s2">"approvedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 500.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"businessPurpose"</span>: <span class="s2">"Facility supplies"</span>,
+        <span class="s2">"claimedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 500.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"ereceiptImageId"</span>: null,
+        <span class="s2">"exchangeRate"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 1.00000000000000,
+            <span class="s2">"operation"</span>: <span class="s2">"MULTIPLY"</span>
+        <span class="o">}</span>,
+        <span class="s2">"expenseSourceIdentifiers"</span>: null,
+        <span class="s2">"expenseType"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"OFCSP"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Office Supplies"</span>,
+            <span class="s2">"code"</span>: <span class="s2">"OTHER"</span>,
+            <span class="s2">"isDeleted"</span>: <span class="nb">false</span>
+        <span class="o">}</span>,
+        <span class="s2">"hasBlockingExceptions"</span>: <span class="nb">false</span>,
+        <span class="s2">"hasExceptions"</span>: <span class="nb">false</span>,
+        <span class="s2">"hasMissingReceiptDeclaration"</span>: <span class="nb">false</span>,
+        <span class="s2">"isAutoCreated"</span>: <span class="nb">false</span>,
+        <span class="s2">"imageCertificationStatus"</span>: null,
+        <span class="s2">"isImageRequired"</span>: <span class="nb">true</span>,
+        <span class="s2">"isPaperReceiptRequired"</span>: <span class="nb">false</span>,
+        <span class="s2">"isPersonalExpense"</span>: <span class="nb">false</span>,
+        <span class="s2">"location"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"0BC6B782B77349898E2CA814F5B57C08"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Seattle, Washington"</span>,
+            <span class="s2">"city"</span>: <span class="s2">"Seattle"</span>,
+            <span class="s2">"countrySubDivisionCode"</span>: <span class="s2">"US-WA"</span>,
+            <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>
+        <span class="o">}</span>,
+        <span class="s2">"paymentType"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: <span class="s2">"1022"</span>,
+            <span class="s2">"name"</span>: <span class="s2">"Mastercard"</span>,
+            <span class="s2">"code"</span>: <span class="s2">"CBCP"</span>
+        <span class="o">}</span>,
+        <span class="s2">"postedAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 500.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"receiptImageId"</span>: null,
+        <span class="s2">"ticketNumber"</span>: null,
+        <span class="s2">"transactionAmount"</span>: <span class="o">{</span>
+            <span class="s2">"value"</span>: 500.00000000,
+            <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+        <span class="o">}</span>,
+        <span class="s2">"transactionDate"</span>: <span class="s2">"2020-03-11"</span>,
+        <span class="s2">"travelAllowance"</span>: <span class="o">{</span>
+            <span class="s2">"dailyLimitAmount"</span>: null,
+            <span class="s2">"dailyTravelAllowanceId"</span>: null,
+            <span class="s2">"isExpensePartOfTravelAllowance"</span>: <span class="nb">false</span>
+        <span class="o">}</span>,
+        <span class="s2">"vendor"</span>: <span class="o">{</span>
+            <span class="s2">"id"</span>: null,
+            <span class="s2">"name"</span>: null,
+            <span class="s2">"description"</span>: <span class="s2">"Antioch Construction"</span>
+        <span class="o">}</span>,
+        <span class="s2">"attendeeCount"</span>: 0,
+        <span class="s2">"links"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"rel"</span>: <span class="s2">"self"</span>,
+                <span class="s2">"href"</span>: <span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/30FF3C62F5D844458828A5C1086072D1"</span>,
+                <span class="s2">"deprecation"</span>: null,
+                <span class="s2">"method"</span>: <span class="s2">"GET"</span>,
+                <span class="s2">"isTemplated"</span>: <span class="nb">false</span>
+            <span class="o">}</span>,
+            <span class="o">{</span>
+                <span class="s2">"rel"</span>: <span class="s2">"comments"</span>,
+                <span class="s2">"href"</span>: <span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/30FF3C62F5D844458828A5C1086072D1/comments"</span>,
+                <span class="s2">"method"</span>: <span class="s2">"GET"</span>,
+                <span class="s2">"isTemplated"</span>: <span class="nb">false</span>
+            <span class="o">}</span>
+        <span class="o">]</span>
+    <span class="o">}</span>
+<span class="o">]</span>
+</code></pre></div></div>
 
 <h2 id="update-a-specific-expense-entry-in-an-unsubmitted-report-">Update a Specific Expense Entry in an Unsubmitted Report <a name="update-expense-entry-in-an-unsubmitted-report"></a></h2>
 
 <p>Updates the specified expense in an unsubmitted report and is flexible for modifying multiple attributes in the schema detailed below</p>
 
-<h3 id="scopes-2">Scopes</h3>
+<h3 id="scopes-3">Scopes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-4">Request</h3>
-<h4 id="uri-template-2">URI Template</h4>
+<h3 id="request-6">Request</h3>
+<h4 id="uri-template-3">URI Template</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/expenses/<span class="o">{</span>expenseId<span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="parameters-2">Parameters</h4>
+<h4 id="parameters-3">Parameters</h4>
 
 <table>
   <thead>
@@ -1732,7 +1986,7 @@
   </tbody>
 </table>
 
-<h4 id="headers-4">Headers</h4>
+<h4 id="headers-5">Headers</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
@@ -1753,13 +2007,13 @@
   <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
 </ul>
 
-<h4 id="payload-2">Payload</h4>
+<h4 id="payload-3">Payload</h4>
 
 <ul>
   <li><a href="#patch-unsubmitted-expense-request-schema">Patch Expense Request</a></li>
 </ul>
 
-<h3 id="response-2">Response</h3>
+<h3 id="response-3">Response</h3>
 
 <h4 id="status-codes-2">Status Codes</h4>
 
@@ -1772,19 +2026,19 @@
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
 </ul>
 
-<h4 id="headers-5">Headers</h4>
+<h4 id="headers-6">Headers</h4>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
 </ul>
 
-<h4 id="payload-3">Payload</h4>
+<h4 id="payload-4">Payload</h4>
 
 <ul>
   <li><a href="#patch-expense-response-schema">Patch Expense Response</a></li>
 </ul>
 
-<h3 id="example-2">Example</h3>
+<h3 id="example-3">Example</h3>
 
 <h4 id="-request"><a name="patch-unsubmitted-expense-request-schema"></a> Request</h4>
 
@@ -1810,7 +2064,7 @@
 }'</span>
 </code></pre></div></div>
 
-<h4 id="-response-2"><a name="patch-expense-response-schema"></a> Response</h4>
+<h4 id="-response-3"><a name="patch-expense-response-schema"></a> Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
 </code></pre></div></div>
@@ -1818,17 +2072,17 @@
 
 <p>Updates the specified expense in an unsubmitted or submitted report and is restricted to modify ‘Business Purpose’ and ‘Custom/Org unit’ fields only.</p>
 
-<h3 id="scopes-3">Scopes</h3>
+<h3 id="scopes-4">Scopes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-5">Request</h3>
-<h4 id="uri-template-3">URI Template</h4>
+<h3 id="request-7">Request</h3>
+<h4 id="uri-template-4">URI Template</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/expenses/<span class="o">{</span>expenseId<span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="parameters-3">Parameters</h4>
+<h4 id="parameters-4">Parameters</h4>
 
 <table>
   <thead>
@@ -1855,7 +2109,7 @@
   </tbody>
 </table>
 
-<h4 id="headers-6">Headers</h4>
+<h4 id="headers-7">Headers</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
@@ -1876,13 +2130,13 @@
   <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
 </ul>
 
-<h4 id="payload-4">Payload</h4>
+<h4 id="payload-5">Payload</h4>
 
 <ul>
   <li><a href="#patch-submitted-expense-request-schema">Patch Submitted Expense Request</a></li>
 </ul>
 
-<h3 id="response-3">Response</h3>
+<h3 id="response-4">Response</h3>
 
 <h4 id="status-codes-3">Status Codes</h4>
 
@@ -1895,13 +2149,13 @@
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
 </ul>
 
-<h4 id="headers-7">Headers</h4>
+<h4 id="headers-8">Headers</h4>
 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
 </ul>
 
-<h4 id="payload-5">Payload</h4>
+<h4 id="payload-6">Payload</h4>
 
 <ul>
   <li><a href="#patch-submitted-expense-response-schema">Patch Submitted Expense Response</a></li>
@@ -1973,7 +2227,7 @@
   </tbody>
 </table>
 
-<h3 id="example-3">Example</h3>
+<h3 id="example-4">Example</h3>
 
 <h4 id="-request-1"><a name="patch-submitted-expense-request-schema"></a> Request</h4>
 
@@ -1995,7 +2249,7 @@
 }'</span>
 </code></pre></div></div>
 
-<h4 id="-response-3"><a name="patch-submitted-expense-response-schema"></a> Response</h4>
+<h4 id="-response-4"><a name="patch-submitted-expense-response-schema"></a> Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
 </code></pre></div></div>
