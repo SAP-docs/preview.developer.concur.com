@@ -7,7 +7,7 @@ layout: reference
 ## Developer Platform Release Notes
 
 * [January 2023](./api/2023-01-05.html)
-* [December 2022](./api/2022-12-10.html)
+* [December 2022](./api/2022-12-02.html)
 * [November 2022](./api/2022-11-10.html)
 * [October 2022](./api/2022-10-14.html)
 * [September 2022](./api/2022-09-16.html)
