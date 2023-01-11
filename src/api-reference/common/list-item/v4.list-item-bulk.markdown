@@ -5,7 +5,9 @@ layout: reference
 
 {% include prerelease.html %}
 
-The List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items (up to 250 list items can be modified per bulk request). Use of the API is subject to some limitations on the volume of list data. You may need to manage the initial load of large volumes of data via a file import due to capacity limitations. This is also true if ongoing maintenance of list values involves a large volume.
+# List Item Bulk v4
+
+The List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items (up to 250 list items can be modified per bulk request).
 
 ## <a name="limitations"></a>Limitations
 
@@ -35,7 +37,8 @@ This API is only available to partners who have been granted access. Access to t
 |`spend.listitem.write`|Read and write access to spend list items.|POST, PATCH|
 
 ## <a name="dependencies"></a>Dependencies
-Users must be a Concur Expense, Concur Invoice, Shared, or Concur Request Configuration Administrator in order to perform POST, PUT, PATCH, and DELETE actions.
+
+Users must be a Concur Expense, Concur Invoice, Shared, or Concur Request Configuration Administrator in order to perform POST and PATCH actions.
 
 ## <a name="access-token-usage"></a>Access Token Usage
 
@@ -45,29 +48,44 @@ This API supports both company level and user level access tokens.
 
 Create list items for a specific list with the provided request body.
 
+Each API request contains up to 250 [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part).
+
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) represents one item to be created.
+
+The [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) are executed in order.
+
+The caller will need to manage the ordering of the [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) within the request
+to ensure dependencies are met, such as when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.
+
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the [Error Messages](#post-list-item-error-messages) for the execution failure error messages.
+
+#### List Item Code Naming Restrictions
+Hyphens are not supported and should not be used in item names or item codes. When an item name or item code with a hyphen is created or saved, the hyphen might be interpreted as a delimiter (separator) which can have unpredictable results on the saved data including possible corruption of the item list. 
+
 ### Scopes
 
 `spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
-##### Template
+#### Template
 
 ```shell
 POST /list/v4/items/{listId}/bulk
 ```
 
-##### Parameters
+#### Parameters
 
 |Name|Type|Description|
-|---|--|---|
-|`Accept-Language`|`string`|Language code. Default: `en` |
-|`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
-|`itemCreateRequests`|-|**Required** Array of list item objects to be created for the company.|
+|---|---|---|
+`Accept-Language`|`string`|Language code. Default: `en`
+`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+`itemCreateRequests`|-|**Required** Array of list item objects to be created for the company.|
 
 #### Payload
 
 * [Bulk List Item Create Request](#schema-bulk-list-item-create-request)
+* [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part)
 
 ### Response
 
@@ -76,9 +94,46 @@ POST /list/v4/items/{listId}/bulk
 * [Bulk List Item Response](#schema-bulk-list-item-response)
 * [Error Message](#schema-error-message)
 
-### Example
+### <a name="post-list-item-error-messages"></a>Error Messages
 
-#### Request
+The values for the `message` field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
+
+|Description|Value|
+|---|---|
+`List not found`|List not found.|
+`Deleted list`|The list is currently deleted.|
+`Duplicate item`|This item code is already used by another item in the same list.|
+`Parent list item doesn't exist`|.Parent `listItem` not found.|
+`Parent list item is deleted`|Parent `listItem` has been deleted.|
+`Parent list item is in a different list`|List ID does not match that of parent `listItem`.|
+`The child list item cannot be added because it would exceed the maximum allowed list levels (10)`|Parent at max level. List items cannot be added to this parent.|
+`There exists a list item in the same list category with this list item code. List item code must be unique within a category. If categories are enabled, this list item can be shared between lists.` |The list item already exists in another list with the same list category. This list item already exists in another linked list.|
+
+The [Error Message](#schema-error-message) will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:
+
+```shell
+{
+  "timestamp":"2022-12-13T20:30:06.230+00:00",
+  "httpStatus":"400 - Bad Request",
+  "error":{
+    "id":"request.validation.error",
+    "message":"Please check your request parameter"
+  },
+  "validationErrors":[
+    {
+      "source":"requests",
+      "message":"size must be between 1 and 250"
+    }
+  ],
+  "path":"/list/v4/lists/ab2bdee3-71d9-c549-977f-6172a4502f34/bulk"
+}
+```
+
+### Examples
+
+#### Create Single Item with Successful Response Example
+
+##### Request
 
 ```shell
 POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
@@ -87,7 +142,6 @@ Accept-Language: en
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
-Example 1:
 ```json
 {
   "requests": [
@@ -99,43 +153,8 @@ Example 1:
 }
 ```
 
-Example 2:
-```json
-{
-  "requests": [
-    {
-      "shortCode": "CHILD_ITEM",
-      "value": "CHILD_ITEM",
-      "parentCode": "ITEM"
-    }
-  ]
-}
-```
+##### Response
 
-Example 3:
-```json
-{
-  "requests": [
-    {
-      "shortCode": "CHILD_ITEM_ONE",
-      "value": "CHILD_ITEM_ONE",
-      "parentCode": "ITEM"
-    },
-    {
-      "shortCode": "CHILD_ITEM_B",
-      "value": "CHILD_ITEM_B",
-      "parentCode": "ITEM"
-    },
-    {
-      "shortCode": "ITEM_THREE",
-      "value": "ITEM_THREE"
-    }
-  ]
-}
-```
-
-#### Response
-Example 1:
 ```shell
 HTTP/1.1 201
 concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
@@ -154,7 +173,78 @@ cache-control: no-cache, private
 }
 ```
 
-Example 2:
+#### Create Parent and Child Items with Successful Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "PARENT_ITEM",
+      "value": "PARENT_ITEM"
+    },
+    {
+      "shortCode": "CHILD_ITEM",
+      "value": "CHILD_ITEM",
+      "parentCode": "PARENT_ITEM"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
+content-length: 227
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:15:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 2,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+#### Create Child Item with Failure Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "CHILD_ITEM",
+      "value": "CHILD_ITEM",
+      "parentCode": "ITEM"
+    }
+  ]
+}
+```
+
+##### Response
+
 ```shell
 HTTP/1.1 400
 concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
@@ -182,7 +272,40 @@ cache-control: no-cache, private
 }
 ````
 
-Example 3:
+#### Create Multiple Items with Partial Success Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "CHILD_ITEM_ONE",
+      "value": "CHILD_ITEM_ONE",
+      "parentCode": "ITEM"
+    },
+    {
+      "shortCode": "CHILD_ITEM_B",
+      "value": "CHILD_ITEM_B",
+      "parentCode": "ITEM"
+    },
+    {
+      "shortCode": "ITEM_THREE",
+      "value": "ITEM_THREE"
+    }
+  ]
+}
+```
+
+##### Response
+
 ```shell
 HTTP/1.1 206
 concur-correlationid: 97a8db78-9f87-427c-928a-c92c9ff2349a
@@ -209,9 +332,25 @@ cache-control: no-cache, private
   ]
 }
 ```
+
+
 ## <a name="patch-list-item-bulk"></a>Update List Items
 
 Update and delete list items by long code for a specific list with provided request body.
+
+Each API request contains up to 250 [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part).
+
+Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) represents one item to be updated or deleted.
+
+The [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) are executed in order. The caller will need to manage the ordering of the [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) within the request to ensure dependencies are met.
+
+Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the [Error Messages](#patch-list-item-error-messages) for the execution failure error messages.
+
+#### List Item Code Naming Restrictions
+Hyphens are not supported and should not be used in item names or item codes. When an item name or item code with a hyphen is created or saved, the hyphen might be interpreted as a delimiter (separator) which can have unpredictable results on the saved data including possible corruption of the item list.
+
+#### Delete List Item Behavior
+In a connected list, when deleting a list item, all children of that list item are also deleted.
 
 ### Scopes
 
@@ -219,15 +358,13 @@ Update and delete list items by long code for a specific list with provided requ
 
 ### Request
 
-#### URI
-
-##### Template
+#### Template
 
 ```shell
 PATCH /list/v4/lists/{listId}/bulk
 ```
 
-##### Parameters
+#### Parameters
 
 |Name|Type|Description|
 |---|---|---|
@@ -247,9 +384,43 @@ PATCH /list/v4/lists/{listId}/bulk
 * [Bulk List Item Response](#schema-bulk-list-item-response)
 * [Error Message](#schema-error-message)
 
-### Example
+### <a name="patch-list-item-error-messages"></a>Error Messages
+The values for the "message" field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
 
-#### Request
+|Description|Value|
+|---|---|
+`List item not found`|`listItem` not found.|
+`Parent list item is in a different list`|List ID does not match that of parent `listItem`.|
+`List not found`|List not found.|
+`A previously deleted item cannot be updated`|The list item has been deleted.|
+`Duplicate item`|This item code is already used by another item in the same list.|
+`Duplicate item where the duplicate is deleted`|This item code is already used by other item that's been deleted.|
+
+The [Error Message](#schema-error-message) will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:
+
+```shell
+{
+  "timestamp":"2022-12-13T20:30:06.230+00:00",
+  "httpStatus":"400 - Bad Request",
+  "error":{
+    "id":"request.validation.error",
+    "message":"Please check your request parameter"
+  },
+  "validationErrors":[
+    {
+      "source":"requests",
+      "message":"size must be between 1 and 250"
+    }
+  ],
+  "path":"/list/v4/lists/ab2bdee3-71d9-c549-977f-6172a4502f34/bulk"
+}
+```
+
+### Examples
+
+#### Update Single Item with Successful Response
+
+##### Request
 
 ```shell
 PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
@@ -258,8 +429,6 @@ Accept-Language: en
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
-
-Example 1:
 ```json
 {
   "requests": [
@@ -271,41 +440,8 @@ Example 1:
 }
 ```
 
-Example 2:
-```json
-{
-  "requests": [
-    {
-      "code": "ITEM",
-      "deleted": true
-    }
-  ]
-}
-```
+##### Response
 
-Example 3:
-```json
-{
-  "requests": [
-    {
-      "code": "ITEM",
-      "value": "ITEM"
-    },
-    {
-      "code": "ITEM_TWO",
-      "value": "ITEM_TWO UPDATED"
-    },
-    {
-      "code": "ITEM_THREE",
-      "value": "ITEM_THREE UPDATED"
-    }
-  ]
-}
-```
-
-#### Response
-
-Example 1:
 ```shell
 HTTP/1.1 200
 concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
@@ -322,10 +458,40 @@ cache-control: no-cache, private
   "recordsFailed": 0,
   "errors": []
 }
-
 ```
 
-Example 2:
+#### Delete Single Item with Successful Response
+
+##### Request
+
+```shell
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "deleted": true
+    }
+  ]
+}
+```
+
+##### Response
+```shell
+HTTP/1.1 200
+concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
+content-length: 289
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:11:35 GMT
+cache-control: no-cache, private
+```
 ```json
 {
   "status": "SUCCESS",
@@ -333,10 +499,40 @@ Example 2:
   "recordsFailed": 0,
   "errors": []
 }
-
 ```
 
-Example 3:
+#### Update Multiple Items with Partial Success Response
+
+##### Request
+
+```shell
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "value": "ITEM"
+    },
+    {
+      "code": "ITEM_TWO",
+      "deleted": true
+    },
+    {
+      "code": "ITEM_THREE",
+      "value": "ITEM_THREE UPDATED"
+    }
+  ]
+}
+```
+
+##### Response
+
 ```shell
 HTTP/1.1 206
 concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
@@ -438,3 +634,16 @@ cache-control: no-cache, private
 |---|---|---|---|
 |`msg`|`string`|-|The detailed error message.|
 |`id`|`string`|-|The identifier of the error.|
+
+## Migration from List Import
+
+For callers who are migrating from using a flat file list import, be aware of the following differences:
+
+**Transactional vs Incremental Update:** The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental.
+For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged.
+When sending a List Item Bulk API request with 10 list items, if 1 list item modification fails, the 9 list item modifications that were successful are updated, and only the 1 list item modification that failed remains unchanged.
+
+**Modifications permitted in single request:** The list import can support create, update and delete in the same import file. The List Item Bulk API requires separate create (POST) and update/delete (PATCH).
+
+**Managing dependencies within a request:** The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item.
+With the List Item Bulk API, the caller needs to manage the ordering of dependencies to make sure the create parent list item comes before the create child item within the API request.

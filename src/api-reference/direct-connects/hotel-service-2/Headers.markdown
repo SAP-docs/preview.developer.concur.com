@@ -5,6 +5,13 @@ layout: reference
 
 # Hotel v2 - Header
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 10/14/2022</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 SAP Concur will send the user-name and password in both the HTTP header and the SOAP header. If the username and password generates an authentication error, then SAP Concur expects an HTTP 403 response.
 
 ## HTTP Headers <a name="http"></a>
