@@ -149,7 +149,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
      Example: `<https://{partner_redirect_URI}?geolocation={geolocation}&code={code}>`
 
-     ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-email-option.tiff)
+     ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-email-options.png)
 
 6. When your application receives the redirect call with the code and user’s geolocation, strip the `code` value and user’s `geolocation` from the redirect URI to use on a post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [authorization grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth-grant). Refer to authentication grant documentation for the post body description.
 
