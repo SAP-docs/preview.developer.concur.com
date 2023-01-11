@@ -149,13 +149,11 @@ To [revoke](/api-reference/authentication/apidoc.html#revoke-token) a user's ref
 
 ## <a name="being-geo-aware"></a> Being Geo Aware
 
-### SAP Concur Has Multiple Datacenters
+### Datacenters
 
-US = `https://us.api.concursolutions.com`
-
-EMEA = `https://emea.api.concursolutions.com`
-
-China = `https://cn.api.concurcdc.cn`
+* US = `https://us.api.concursolutions.com`
+* EMEA = `https://emea.api.concursolutions.com`
+* China = `https://cn.api.concurcdc.cn`
 
 You will need to be aware of the geolocation where the user exists in and make the call to the APIs correctly. If there is a case where you will not or do not know the users geolocation, then you should make the API call using the default US Base URI `https://us.api.concursolutions.com` and expect a geolocation error which will return the correct geoLocation for the user. For more information see [Base URIs](/platform/base-uris.html).
 
