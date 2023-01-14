@@ -46,13 +46,19 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
 [Password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant) allows the user to establish a connection from App Center. The user needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you would be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. The instructions to connect/authenticate via password grant are:
 
-1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. App Listing Example: ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts/app-listing-sample.png)
+1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. App Listing Example: 
+   
+   ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts/app-listing-sample.png)
 
-2. After the user clicks the "Connect" button, the user will see a prompt with the terms & conditions. User agrees the terms and conditions and clicks the "I Agree" button. ![Screenshot of App Listing Terms and Conditions](/assets/img/api-guides/e-receipts/app-listing-terms-conditions.png)
+2. After the user clicks the "Connect" button, the user will see a prompt with the terms & conditions. User agrees the terms and conditions and clicks the "I Agree" button. 
+   
+   ![Screenshot of App Listing Terms and Conditions](/assets/img/api-guides/e-receipts/app-listing-terms-conditions.png)
 
 3. The authorization service will redirect the user to your app’s [landing page](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#landing-pages). Please follow the [App Center Design Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) to create a web page that listens for an HTTP GET request. The [Guideline Checklist](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html#guideline-checklist) provides a list of required and recommended components of your landing page design. Please make sure all the required options are checked before scheduling the certification walkthrough. You must prepare separate landing pages for the development environment and the production environment. You must send the landing page redirect URIs to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting  development.
 
-4. Your landing page should allow the user to log in with an existing account or create a new account. ![Sample of Partner App Validate User Identity](/assets/img/api-guides/e-receipts/app-center-partner-user-validation.png)
+4. Your landing page should allow the user to log in with an existing account or create a new account. 
+   
+   ![Sample of Partner App Validate User Identity](/assets/img/api-guides/e-receipts/app-center-partner-user-validation.png)
 
 5. The redirect URI will contain `id` and `requestToken` parameters. Example: `https://{partner-redirect-URI}?id=8568a4cd-8ffc-49d6-9417-be2d69aa075f&requestToken=5l85ae5a-426f-4d6f-8af4-08648c4b696b`
 
@@ -71,11 +77,10 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
-   Host: us2.api.concursolutions.com
+   Host: us.api.concursolutions.com
 
-   POST BODY
-   client_id={partner app client_id}
-   &client_secret={partner app client_secret}
+   client_id={client_id}
+   &client_secret={client_secret}
    &grant_type=password
    &username ={‘id’ from the redirect URL}
    &password ={‘requestToken’ from the redirect URL}
@@ -84,9 +89,11 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    **Response**
 
-   ```json
+   ```
    HTTP/1.1 200 OK
    Content-Type: application/json
+   ```
+   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -149,7 +156,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
      Example: `<https://{partner_redirect_URI}?geolocation={geolocation}&code={code}>`
 
-     ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-email-options.png)
+     ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-email.png)
 
 6. When your application receives the redirect call with the code and user’s geolocation, strip the `code` value and user’s `geolocation` from the redirect URI to use on a post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [authorization grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth-grant). Refer to authentication grant documentation for the post body description.
 
@@ -161,7 +168,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
-   POST BODY:
+
    client_id={client_id}
    &client_secret={client_secret}
    &grant_type=authorization_code
@@ -170,9 +177,11 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    **Response**
 
-   ```json
+   ```
    HTTP/1.1 200 OK
    Content-Type: application
+   ```
+   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -202,11 +211,6 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
 The [one-time password grant](/api-reference/authentication/apidoc.html#otp-grant) leverages email to provide per user access tokens to client applications. This grant type requires the following steps:
 
-* The calling application calls the OAuth2 service specifying the otp grant type along with required parameters.
-*	The OAuth2 service generates a one-time token that it sends through the messaging mechanism chosen by the application.
-*	The user retrieves the token and presents it to the application. The method of presenting the token to the application is the responsibility of the application.
-* The application presents this one-time token to the OAuth2 service via the token endpoint.
-
 1. User enters their email address associated with the SAP Concur profile within the partner’s website or mobile app. Partner one-time password (OTP) Connection Example below:
 
    ![Example of what an App Center partner might display on their own site to allow their users to connect their user account at the partner with their SAP Concur account, using the one-time password flow.](/assets/img/api-guides/e-receipts/otp-send-email.png)
@@ -226,7 +230,6 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
 
-   POST BODY:
    client_id={client_id}
    &client_secret={client_secret}
    &channel_type=email
@@ -241,12 +244,16 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    ```json
    HTTP/1.1 200 OK
    Content-Type: application/json
+   ```
+   ```json
    {
        "message": "opt sent"
    }
    ```
 
-4. User will receive the email with ‘Sign in with Concur’ button. ![Sample OTP Email User Received](/assets/img/api-guides/e-receipts/otp-email-sample.png)
+4. User will receive the email with ‘Sign in with Concur’ button. 
+   
+   ![Sample OTP Email User Received](/assets/img/api-guides/e-receipts/otp-email-sample.png)
 
 5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token **`otl`** that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `<https://{partner_redirect_URI}&otl=7add4621f00b47e1aa2d8a61739c97e6>`
 
@@ -259,9 +266,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
-   Host: us2.api.concursolutions.com
+   Host: us.api.concursolutions.com
 
-   POST BODY:
    client_id={client_id}
    &client_secret={client_secret}
    &channel_type=email
@@ -272,9 +278,11 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Response**
 
-   ```json
+   ```http
    HTTP/1.1 200 OK
    Content-Type: application/json
+   ```
+   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -324,13 +332,14 @@ You need to revoke a user’s `access_token` if the user terminates their accoun
 
 A client’s SAP Concur account may reside one of our many data centers. During the client onboarding process, determine in which datacenter the client's instance resides. When your application is created, you will be provided with a `client_id`, `client_secret`, and `geolocation`. When obtaining a token, your application should use the base URI for the geolocation in which your application exists.
 
-You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. If there is a case where you will not or do not know the user's geolocation, then you should make the API call using the **default** US Base URI https://us.api.concursolutions.com and expect a geolocation error that will return the correct geoLocation for the user.
+You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user's geolocation when you request the token for the first time , you should always make the API call using the **default** Base URI. For the user hosted on US data center and EU data center, please use the default base URI https://us.api.concursolutions.com . For the user hosted on China data center, please use the default base URI https://cn.api.concurcdc.cn. 
 
 If you receive the following error while calling the authentication service, for example, /otp Auth API, please retry with the endpoint based on geolocation in the returned message.
 
-```json
+```
 HTTP 400 Bad Request
-
+```
+```json
 {
    "error": "invalid_request",
    "concur-correlationid": "{correlation_id}",
@@ -353,7 +362,7 @@ When making API calls, the appropriate base URI should be used. There are three 
 The base URI for obtaining a token will use your application’s geolocation. The base URI for refreshing tokens and all other API calls will use the token’s geolocation.
 
 * US Production = <https://us.api.concursolutions.com>
-* EU Production = <https://eu.api.concursolutions.com>
+* EU Production = <https://emea.api.concursolutions.com>
 * China Production = <https://cn.api.concurcdc.cn>
 
 The full list of available token geolocations is available on the [Base URIs](https://developer.concur.com/platform/base-uris.html) page.
@@ -381,12 +390,15 @@ The general eReceipt schema includes all receipt core definitions.
 
    **Request**
 
-   ````json
+   ```http
    POST /receipts/v4/users/{UUID} HTTP/1.1
    Host: {HOST}
    Authorization: Bearer {ACCESS_TOKEN}
    Link: <http://schema.concursolutions.com/general-receipt.schema.json>; rel="describedBy"
    Content-Type: application/json
+   ```
+
+   ```json
    {
       "dateTime": "2022-10-22T13:00:00+0800",
       "reference": "91310000",
@@ -413,18 +425,18 @@ The general eReceipt schema includes all receipt core definitions.
       ],
       "currencyCode": "USD"
    }
-
+   ```
    **Response**
 
    ```http
       HTTP/1.1 201 OK
-   ````
+   ```
 
 **Example: Posting a General e-Receipt with Image**
 
 **Request**
 
-```json
+```http
 POST /receipts/v4/users/{UUID} HTTP/1.1
 Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
@@ -433,6 +445,8 @@ Content-Type: multipart/form-data;
 Content-Disposition: form-data; name="image"; filename="receipt_image.pdf"
 Content-Type: application/pdf
 Content-Disposition: form-data; name="receipt"
+```
+```json
 {
       "dateTime": "2022-10-22T13:00:00+0800",
       "reference": "91310000",
@@ -497,54 +511,56 @@ The Quick Expense API can be used to create an expense with basic information su
 5. The [Quick Expense Schema](https://developer.concur.com/api-reference/expense/quick-expense/v4.quick-expense.html#schema-) includes required fields of `expenseTypeId`, `transactionAmount`, and `transactionDate`.
 6. The supported `expenseTypeId` value can be retrieved from [Expense Group Configurations v3.0](https://developer.concur.com/api-reference/expense/expense-report/expense-group-configurations.html). The frequently used `expenseTypeId` values are listed  below:
 
-| expenseTypeId | Description                      |
-| ------------- | -------------------------------- |
-| AIRFR         | Airfare                          |
-| AWRDS         | Gifts - Clients                  |
-| BANKF         | Bank Fees                        |
-| BRKFT         | Breakfast                        |
-| BUSML         | Entertainment - Clients          |
-| CARRT         | Car Rental                       |
-| CELPH         | Mobile/Cellular Phone            |
-| DINNR         | Dinner                           |
-| DUESX         | Professional Subscriptions/Dues  |
-| GASXX         | Fuel                             |
-| GIFTS         | Gifts - Staff                    |
-| LNDRY         | Laundry                          |
-| LOCPH         | Telephone/Fax                    |
-| LODNG         | Hotel                            |
-| LUNCH         | Lunch                            |
-| MILEG         | Personal Car Mileage             |
-| MISCL         | Miscellaneous                    |
-| OFCSP         | Office Equipment/Hardware        |
-| ONLIN         | Internet/Online Fees             |
-| PARKG         | Parking                          |
-| POSTG         | Postage                          |
-| SEMNR         | Seminar/Course fees              |
-| TAXIX         | Taxi                             |
-| TOLLS         | Tolls/Road Charges               |
-| TRAIN         | Public Transport                 |
-| TRDSH         | Marketing/Promotional Costs      |
-| 01004         | Entertainment - Staff            |
-| 01005         | Courier/Shipping/Freight         |
-| 01006         | Printing/Photocopying/Stationery |
-| 01007         | Office Supplies/Software         |
-| 01009         | Tips/Gratuities                  |
-| 01012         | Tuition/Training Reimbursement   |
-| 01025         | Train                            |
-| 01027         | Business Meals (Attendees)       |
-| 01028         | Individual Meals                 |
+   | expenseTypeId | Description                      |
+   | ------------- | -------------------------------- |
+   | AIRFR         | Airfare                          |
+   | AWRDS         | Gifts - Clients                  |
+   | BANKF         | Bank Fees                        |
+   | BRKFT         | Breakfast                        |
+   | BUSML         | Entertainment - Clients          |
+   | CARRT         | Car Rental                       |
+   | CELPH         | Mobile/Cellular Phone            |
+   | DINNR         | Dinner                           |
+   | DUESX         | Professional Subscriptions/Dues  |
+   | GASXX         | Fuel                             |
+   | GIFTS         | Gifts - Staff                    |
+   | LNDRY         | Laundry                          |
+   | LOCPH         | Telephone/Fax                    |
+   | LODNG         | Hotel                            |
+   | LUNCH         | Lunch                            |
+   | MILEG         | Personal Car Mileage             |
+   | MISCL         | Miscellaneous                    |
+   | OFCSP         | Office Equipment/Hardware        |
+   | ONLIN         | Internet/Online Fees             |
+   | PARKG         | Parking                          |
+   | POSTG         | Postage                          |
+   | SEMNR         | Seminar/Course fees              |
+   | TAXIX         | Taxi                             |
+   | TOLLS         | Tolls/Road Charges               |
+   | TRAIN         | Public Transport                 |
+   | TRDSH         | Marketing/Promotional Costs      |
+   | 01004         | Entertainment - Staff            |
+   | 01005         | Courier/Shipping/Freight         |
+   | 01006         | Printing/Photocopying/Stationery |
+   | 01007         | Office Supplies/Software         |
+   | 01009         | Tips/Gratuities                  |
+   | 01012         | Tuition/Training Reimbursement   |
+   | 01025         | Train                            |
+   | 01027         | Business Meals (Attendees)       |
+   | 01028         | Individual Meals                 |
 
 **Example: Posting a Quick Expense**
 
 **Request**
 
-```json
 
+```http
 POST /quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses HTTP/1.1
 Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
 Content-Type: application/json
+```
+```json
 {
    "Comment":"Meal Expenses",
    "expenseTypeId":"MEALS",
@@ -566,13 +582,27 @@ Content-Type: application/json
 
 **Response**
 
-```json
+```
 HTTP/1.1 201 OK
+```
+```json
 {
    "mobileEntryKeyUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/1234157338",
    "quickExpenseIdUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/506CF67C85BA436097F434F39CAE7DD8"
 }
 ```
+
+## Postman Sample Collections
+
+You can download following postman sample collections for your reference. 
+
+**[Authentication API Postman Collection](/api-guides/auth-api-samples-postman-collection.json)**
+
+**[Generall eReceipt Postman Collection](/api-guides/general-ereceipt-samples-postman-collection.json)**
+
+**[Grand Transportation eReceipt Postman Collection](/api-guides/ground-transportation-ereceipt-samples-postman-collection.json)**
+
+**[Quick Expense Postman Collection](/api-guides/quick-expense-samples-postman-collection.json)**
 
 ## Creating and Updating an App Center Listing
 
@@ -609,8 +639,8 @@ You must meet following certification requirements before proceeding to the cert
 
 |Requirement | Description |
 | --- | --- |
-|`Geolocation` | Must securely store last received GeoLocation to use on subsequent calls. |
-|`refresh_token` | Must securely store last received `refresh_token` to use on subsequent calls. |
+|Geolocation | Must securely store last received `geoLocation` to use on subsequent calls. |
+|Refresh Token | Must securely store last received `refresh_token` to use on subsequent calls. |
 |Token Expiration Date | Must securely store `refresh_token` expiry date. |
 
  **API Logging**
@@ -618,8 +648,8 @@ You must meet following certification requirements before proceeding to the cert
 |Requirement | Description |
 | --- | --- |
 |Error Codes |Must log Error Code / Error Description. |
-|`correlation_id` |Must log when provided. Some legacy APIs do not. |
-|`UserID` |Should log `UserID` (User who clicked the Connect button). (Highly Recommended) |
+|Correlation ID|The API call's HTTP Response header contains a field "concur-correlationId" which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
+|User ID |Should log `UserID` (User who clicked the Connect button). (Highly Recommended) |
 |Response Headers |Should log Response Headers. (Highly Recommended) |
 
 **Production Readiness**
@@ -677,3 +707,5 @@ To log a support case, please login and open a partner support case from [partne
 The SAP Concur API monthly updates can be found in the [Developer Platform Release Notes](https://developer.concur.com/tools-support/release-notes/index.html).
 
 The SAP Concur product related update can be found in the [Client Shared Release Notes](http://www.concurtraining.com/customers/tech_pubs/RN_shared_planned/_client_shared_RN_all.htm).
+
+---
