@@ -42,7 +42,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 * [Authorization Grant](/api-reference/authentication/apidoc.html#auth-grant) - Connect from the partner app.
 * [One-Time Password Grant](/api-reference/authentication/apidoc.html#otp-grant) - Connect from the partner app using email.
 
-## App Center Flow  - Connecting from SAP Concur App Center
+## App Center Flow - Connecting from SAP Concur App Center
 
 [Password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant) allows the user to establish a connection from App Center. The user needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you would be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. The instructions to connect/authenticate via password grant are:
 
@@ -112,7 +112,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
 12. You now can use the `access_token` for making API calls.
 
-## Web Flow  - Connecting from the Partner Web or Mobile App
+## Web Flow - Connecting from the Partner Web or Mobile App
 
 [Authorization Grant](/api-reference/authentication/apidoc.html#authorization-grant-) allows the user to connect directly from your website or the mobile app.
 
