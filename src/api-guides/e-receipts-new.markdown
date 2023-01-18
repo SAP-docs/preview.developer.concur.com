@@ -23,19 +23,17 @@ This integration guide helps SAP Concur App Center E-Receipt and Quick Expense u
 
 * You will have a shared sandbox on each of following SAP Concur data centers: US2, EU2, and China (by request).
 * You will have 3 test accounts on each of following SAP Concur data centers: US2, EU2, and China (by request).
-* SAP Concur certification project manager
 
 ### Development App
 
-* A **development** app will be created for you and the app `client_id` and `client_secret` will be provided for development and testing purposes.
-* You need to send the **development** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting the development and testing of the development app. 
-* SAP Concur certification project manager will provide you the deep link (URL) of the **development** app listing in the App Center. You will be able to access the app in the App Center by the deep link for the development and testing purpose only.  
+* A **development** app will be created for you by your assigned certification manager. They will send you a deep link (url) to the **development** app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
+* You need to send the **development** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting the development and testing of the development app.   
 
 ### Production App
 
 * Once you complete the development app certification walkthrough, you will be provided a **production app** `client_id` and `client_secret`.
-* You need to send the **production** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com)  before starting the development and testing of the production app. 
-* SAP Concur certification project manager will provide you the deep link (URL) of the **production** app listing in the App Center. You will be able to access the app listing by the deep link for the development and testing purpose only. After your **production** app meets all the certification requirements and completes the certification, the App Center marketing team will release this app in the App Center And all users in allowed regions/countries can have the access.    
+* You need to send the **production** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com)  before starting the development and testing of the production app.
+* The certification project manager will provide you the deep link (URL) to the **production** app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your **production** app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.    
 
 ## User Connections / Authentication
 
@@ -49,18 +47,18 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
 [Password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant) allows the user to establish a connection from App Center. The user needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you would be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. The instructions to connect/authenticate via password grant are:
 
-1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. App Listing Example: 
-   
+1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. App Listing Example:
+
    ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts/app-listing-sample.png)
 
-2. After the user clicks the "Connect" button, the user will see a prompt with the terms & conditions. User agrees the terms and conditions and clicks the "I Agree" button. 
-   
+2. After the user clicks the "Connect" button, the user will see a prompt with the terms & conditions. User agrees the terms and conditions and clicks the "I Agree" button.
+
    ![Screenshot of App Listing Terms and Conditions](/assets/img/api-guides/e-receipts/app-listing-terms-conditions.png)
 
 3. The authorization service will redirect the user to your app’s [landing page](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#landing-pages). Please follow the [App Center Design Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) to create a web page that listens for an HTTP GET request. The [Guideline Checklist](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html#guideline-checklist) provides a list of required and recommended components of your landing page design. Please make sure all the required options are checked before scheduling the certification walkthrough. You must prepare separate landing pages for the development environment and the production environment. You must send the landing page redirect URIs to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting  development.
 
-4. Your landing page should allow the user to log in with an existing account or create a new account. 
-   
+4. Your landing page should allow the user to log in with an existing account or create a new account.
+
    ![Sample of Partner App Validate User Identity](/assets/img/api-guides/e-receipts/app-center-partner-user-validation.png)
 
 5. The redirect URI will contain `id` and `requestToken` parameters. Example: `https://{partner-redirect-URI}?id=8568a4cd-8ffc-49d6-9417-be2d69aa075f&requestToken=5l85ae5a-426f-4d6f-8af4-08648c4b696b`
@@ -81,7 +79,8 @@ Depending on the connection flow, a grant will be selected for authentication. T
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
-
+   ```
+   ```
    client_id={client_id}
    &client_secret={client_secret}
    &grant_type=password
@@ -95,8 +94,8 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```
    HTTP/1.1 200 OK
    Content-Type: application/json
-   ```
-   ```json
+   
+   json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -114,7 +113,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 10. After the user has successfully completed the login/enrollment process, store the following with the user’s profile in your database.
 
     * `refresh_token`: (36 characters including dashes) valid for six months from the day and time issued.
-    * `refresh_expires_in`: expiration date&time in Epoch time format, please convert to UTC format.
+    * `refresh_expires_in`: expiration date & time in Epoch time format, please convert to UTC format.
     * `geolocation`: to be used as the base URI when making API calls on behalf of the user.
     * `sub`: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.
 
@@ -204,7 +203,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 9. Store the following with the user’s profile in your database.
 
    * `refresh_token`: (36 characters including dashes) valid for six months from the day and time issued.
-   * `refresh_expires_in`: expiration date&time in Epoch time format, please convert to UTC format.
+   * `refresh_expires_in`: expiration date & time in Epoch time format, please convert to UTC format.
    * `geolocation`: to be used as the base URI when making API calls on behalf of the user.
    * `sub`: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.
 
@@ -254,8 +253,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    }
    ```
 
-4. User will receive the email with ‘Sign in with Concur’ button. 
-   
+4. User will receive the email with ‘Sign in with Concur’ button.
+
    ![Sample OTP Email User Received](/assets/img/api-guides/e-receipts/otp-email-sample.png)
 
 5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token **`otl`** that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `<https://{partner_redirect_URI}&otl=7add4621f00b47e1aa2d8a61739c97e6>`
@@ -305,8 +304,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 9. Store the following with the users profile in your database.
 
    * `refresh_token`: (36 characters including dashes) valid for six months from the day and time issued.
-   * `refresh_expires_in`: expiration date&time in Epoch time format, please convert to UTC format.
-   * `geolocation`: o be used as the base URI when making API calls on behalf of the user.
+   * `refresh_expires_in`: expiration date & time in Epoch time format, please convert to UTC format.
+   * `geolocation`: to be used as the base URI when making API calls on behalf of the user.
    * `sub`: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.
 
 10. Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.
@@ -328,8 +327,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 4. If the user does not log in for **six months** the `refresh_token` will expire and the user’s partner account and SAP Concur account will be **de-linked**. To prevent this from happening, build a scheduled job that scans your database for expiration dates and refreshes tokens X days prior to expiration. Refer [Refreshing A Token API](https://developer.concur.com/api-reference/authentication/apidoc.html#refreshing-a-token-) for the post body description and example.
 
 
-* Watch [youtube video](https://youtu.be/ikCU1235QJA?t=300) which explains the difference between fresh token and access token. 
-* Watch [youtube video](https://youtu.be/ikCU1235QJA?t=440) about how to refresh the token.
+* Watch this section of the video [SAP Concur Integration 3 of 5 ; API Tokens](https://youtu.be/ikCU1235QJA?t=300), which explains the difference between refresh and access tokens.
+* Watch [this section](https://youtu.be/ikCU1235QJA?t=440) of the video above to learn how to refresh the token.
 
 ### Revoke Token
 
@@ -339,11 +338,11 @@ You need to revoke a user’s `access_token` if the user terminates their accoun
 
 A client’s SAP Concur account may reside one of our many data centers. During the client onboarding process, determine in which datacenter the client's instance resides. When your application is created, you will be provided with a `client_id`, `client_secret`, and `geolocation`. When obtaining a token, your application should use the base URI for the geolocation in which your application exists.
 
-You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user's geolocation when you request the token for the first time , you should always make the API call using the **default** Base URI. 
+You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user's geolocation when you request the token for the first time, you should always make the API call using the **default** Base URI.
 
-For the user hosted on US data center and EU data center, please use the default base URI https://us.api.concursolutions.com . For the user hosted on China data center, please use the default base URI https://cn.api.concurcdc.cn. 
+For a user hosted on both the US data center and EU data center, please use the default base URI https://us.api.concursolutions.com. For a user hosted on the China data center, please use the default base URI https://cn.api.concurcdc.cn.
 
-If you receive the following error while calling the authentication service, for example, **/otp** Auth API, please retry with the endpoint based on geolocation in the returned message.
+If you receive the following error while calling the authentication service, for example, **/otp** Auth API, please retry with the endpoint based the on geolocation in the returned message.
 
 ```
 HTTP 400 Bad Request
@@ -603,15 +602,12 @@ HTTP/1.1 201 OK
 
 ## Postman Sample Collections
 
-You can download following postman sample collections for your reference. 
+You can download following postman sample collections for your reference.
 
-**[Authentication API Postman Collection](/api-guides/auth-api-samples-postman-collection.json)**
-
-**[Generall eReceipt Postman Collection](/api-guides/general-ereceipt-samples-postman-collection.json)**
-
-**[Grand Transportation eReceipt Postman Collection](/api-guides/ground-transportation-ereceipt-samples-postman-collection.json)**
-
-**[Quick Expense Postman Collection](/api-guides/quick-expense-samples-postman-collection.json)**
+* [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json)**
+* [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json)**
+* [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json)**
+* [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json)**
 
 ## Creating and Updating an App Center Listing
 
@@ -687,32 +683,31 @@ You must meet following certification requirements before proceeding to the cert
 
 Your app should have the retry logic for any API call timeout. For example, retry for every 30 seconds if you get the API call timeout and retry 5 ~ 10 times.
 
-### HTTP Response Code and Error Code
+### HTTP Response Code and Error Codes
 
-HTTP responses with status code of 4xx, 5xx are all treated as error. 
+HTTP responses with status code of 4xx, 5xx are all treated as errors. The HTTP response body contains the details of the error, including error code, error name, error description, etc.  
 
-The HTTP Response body should contains the details of the error, inlcuding error code, error name, error description and etc.  
+For example, 4xx class errors have a JSON response with the following fields.
 
-For example, Error 4xx class errors have a JSON response with the following fields.
-```json
 {
   "code": <number>,
   "error": <error>,
   "error_description": <error_description>,
   "geolocation": <geolocation url where user lives>
 }
-```
-Please refer Authentication API [Response Codes](https://developer.concur.com/api-reference/authentication/apidoc.html#response-codes-) list for more details about  Authentication API errors.  
 
-Please refer Receipts v4 API [Response Codes](https://developer.concur.com/api-reference/receipts/response-codes.html#receipts-v4---response-codes) list for more details about  Receipts API errors.  
+Please refer to the Authentication [Response Codes](https://developer.concur.com/api-reference/authentication/apidoc.html#response-codes-) list for more details about Authentication errors.  
+
+Please refer to the Receipts v4 API [Response Codes](https://developer.concur.com/api-reference/receipts/response-codes.html#receipts-v4---response-codes) list for more details about receipts errors.  
 
 ### Error 401
 
-Error 401 is unauthentication related error. A 401 will be returned when the JWT used for authentication is valid, but doesn’t match the correct user. When using a user JWT, the request must be to a URL for the same user that is represented in the JWT. . 
+Error 401 is an authentication related error. A 401 will be returned when the JWT used for authentication is valid, but doesn’t match the correct user. When using a user JWT, the request must be to a URL for the same user that is represented in the JWT.
 
 ### Error 403
 
-Error 403 is authentication related error. A 403 will be returned if there is no JWT in the authorization header of the request, or if the JWT is invalid or expired. 
+Error 403 is an authentication related error. A 403 will be returned if there is no JWT in the authorization header of the request, or if the JWT is invalid or expired.
+
 **Example:**
 ```json
 {
@@ -723,15 +718,16 @@ Error 403 is authentication related error. A 403 will be returned if there is no
    "geolocation": "https://us2.api.concursolutions.com"
 }
 ```
+
 This response is also for cases where the JWT does not include the scope required to fulfill the request.
 
 ### Error 404
 
-The receipt(s) you requested could not be found. Check that the receipt and/or user ID that you used are correct.
+The receipt(s) you requested could not be found. Check that the receipt and/or user ID are correct.
 
 ### Error 500/503
 
-Error 500 is an internal server error. If you receive an error 500 while posting an eReceipt, you should retry the API for at least 3 time. If you still encounter an error 500 after retrying, please log a support ticket.
+Error 500 is an internal server error. If you receive an error 500 while posting an eReceipt, you should retry the API at least 3 times. If you still encounter an error 500 after retrying, please log a support ticket.
 
 ### Error Logging
 
@@ -739,26 +735,24 @@ If you receive an error while calling an API, please save the error code, error 
 
 ## FAQ
 
-### How can I get the support during the development phase?
+### How can I get support during the development phase?
 
-You should send your questions to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). SAP Concur certification project manangers will review your request and questions and will reply back with a response within 5 business days.
+You should send your questions to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). We will review your request/questions and will reply within 5 business days.
 
-### How should I schedule the certification walkthough with SAP Concur?
+### How do I schedule the certification walkthrough?
 
-You will have one week long certification time windows per month. You should send your certification walkthrough request to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) one month before the certification date you would like schedule. SAP Concur certification project manangers will reply you with the confirmation and meeting invitation within 5 business days.
+There will be a one week certification time window per month. You should send your certification walkthrough request to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) one month before the certification date you would like schedule. We will reply with a meeting invitation within 5 business days.
 
-Please find your certification date time based on the [certification calender](user-app-certification-calender.pdf). 
+Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
 
-### How to Log a Support Case?
+### How do I log a support case?
 
 You should be provide the contact detail to your SAP Concur BD/Alliance manager for creating an account on the partner support portal.
 
-To log a support case, please login and open a partner support case from [partner support portal](https://sapconcur.my.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi). You should provide the [required information](https://developer.concur.com/tools-support/support.html#how-to-log-a-support-case) when logging a support case.
+To log a support case, please login and open a partner support case from [partner support portal](https://sapconcur.my.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi). You will need to provide the [required information](https://developer.concur.com/tools-support/support.html#how-to-log-a-support-case) when logging a support case.
 
-### Where Can I Find the Concur API or Product Update Information?
+### Where can I find API or product update information?
 
 The SAP Concur API monthly updates can be found in the [Developer Platform Release Notes](https://developer.concur.com/tools-support/release-notes/index.html).
 
 The SAP Concur product related update can be found in the [Client Shared Release Notes](http://www.concurtraining.com/customers/tech_pubs/RN_shared_planned/_client_shared_RN_all.htm).
-
----
