@@ -94,6 +94,8 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```
    HTTP/1.1 200 OK
    Content-Type: application/json
+   ```
+   ```JSON
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -156,7 +158,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
      Example: `<https://{partner_redirect_URI}?geolocation={geolocation}&code={code}>`
 
-     ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-email.png)
+     ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-mail.png)
 
 6. When your application receives the redirect call with the code and user’s geolocation, strip the `code` value and user’s `geolocation` from the redirect URI to use on a post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [authorization grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth-grant). Refer to authentication grant documentation for the post body description.
 
@@ -168,8 +170,9 @@ Depending on the connection flow, a grant will be selected for authentication. T
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
-   ```
-   ```
+  ```
+
+  ```
    client_id={client_id}
    &client_secret={client_secret}
    &grant_type=authorization_code
@@ -181,6 +184,8 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```
    HTTP/1.1 200 OK
    Content-Type: application
+   ```
+   ```JSON
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -241,7 +246,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Response**
 
-   ```json
+   ```JSON
    HTTP/1.1 200 OK
    Content-Type: application/json
    {
@@ -280,6 +285,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    ```http
    HTTP/1.1 200 OK
    Content-Type: application/json
+   ```
+   ```JSON
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -339,9 +346,7 @@ For a user hosted on both the US data center and EU data center, please use the 
 
 If you receive the following error while calling the authentication service, for example, **/otp** Auth API, please retry with the endpoint based the on geolocation in the returned message.
 
-```
 HTTP 400 Bad Request
-```
 
 ```json
 {
@@ -402,7 +407,7 @@ The general eReceipt schema includes all receipt core definitions.
    Content-Type: application/json
    ```
 
-   ```json
+   ```JSON
    {
       "dateTime": "2022-10-22T13:00:00+0800",
       "reference": "91310000",
@@ -450,6 +455,7 @@ Content-Disposition: form-data; name="image"; filename="receipt_image.pdf"
 Content-Type: application/pdf
 Content-Disposition: form-data; name="receipt"
 ```
+
 ```json
 {
       "dateTime": "2022-10-22T13:00:00+0800",
@@ -564,7 +570,8 @@ Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
 Content-Type: application/json
 ```
-```json
+
+```JSON
 {
    "Comment":"Meal Expenses",
    "expenseTypeId":"MEALS",
@@ -589,7 +596,8 @@ Content-Type: application/json
 ```
 HTTP/1.1 201 OK
 ```
-```json
+
+```JSON
 {
    "mobileEntryKeyUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/1234157338",
    "quickExpenseIdUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/506CF67C85BA436097F434F39CAE7DD8"
