@@ -94,8 +94,6 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```
    HTTP/1.1 200 OK
    Content-Type: application/json
-   
-   json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -170,7 +168,8 @@ Depending on the connection flow, a grant will be selected for authentication. T
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
-
+   ```
+   ```
    client_id={client_id}
    &client_secret={client_secret}
    &grant_type=authorization_code
@@ -182,8 +181,6 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```
    HTTP/1.1 200 OK
    Content-Type: application
-   ```
-   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -231,7 +228,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    POST /oauth2/v0/otp HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
-
+   ```
+   ```
    client_id={client_id}
    &client_secret={client_secret}
    &channel_type=email
@@ -246,8 +244,6 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    ```json
    HTTP/1.1 200 OK
    Content-Type: application/json
-   ```
-   ```json
    {
        "message": "opt sent"
    }
@@ -269,7 +265,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
-
+   ```
+   ```
    client_id={client_id}
    &client_secret={client_secret}
    &channel_type=email
@@ -283,8 +280,6 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    ```http
    HTTP/1.1 200 OK
    Content-Type: application/json
-   ```
-   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -347,6 +342,7 @@ If you receive the following error while calling the authentication service, for
 ```
 HTTP 400 Bad Request
 ```
+
 ```json
 {
    "error": "invalid_request",
