@@ -75,7 +75,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    **Request**
 
-   ```http
+   ```
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
@@ -166,7 +166,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    **Request**
 
-   ```http
+   ```
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
@@ -229,7 +229,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Request**
 
-   ```http
+   ```
    POST /oauth2/v0/otp HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us2.api.concursolutions.com
@@ -266,7 +266,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Request**
 
-   ```http
+   ```
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
@@ -282,7 +282,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Response**
 
-   ```http
+   ```
    HTTP/1.1 200 OK
    Content-Type: application/json
    ```
@@ -399,7 +399,7 @@ The general eReceipt schema includes all receipt core definitions.
 
    **Request**
 
-   ```http
+   ```
    POST /receipts/v4/users/{UUID} HTTP/1.1
    Host: {HOST}
    Authorization: Bearer {ACCESS_TOKEN}
@@ -437,7 +437,7 @@ The general eReceipt schema includes all receipt core definitions.
    ```
    **Response**
 
-   ```http
+   ```
       HTTP/1.1 201 OK
    ```
 
@@ -445,7 +445,7 @@ The general eReceipt schema includes all receipt core definitions.
 
 **Request**
 
-```http
+```
 POST /receipts/v4/users/{UUID} HTTP/1.1
 Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
@@ -488,7 +488,7 @@ Content-Disposition: form-data; name="receipt"
 
 **Response**
 
-```http
+```
    HTTP/1.1 201 OK
 ```
 
