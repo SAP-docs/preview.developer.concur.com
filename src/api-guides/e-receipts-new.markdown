@@ -95,7 +95,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
    HTTP/1.1 200 OK
    Content-Type: application/json
    ```
-   ```JSON
+   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -169,10 +169,9 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
-   Host: us2.api.concursolutions.com
-  ```
-
-  ```
+   Host: us.api.concursolutions.com
+   ```
+   ```
    client_id={client_id}
    &client_secret={client_secret}
    &grant_type=authorization_code
@@ -185,7 +184,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
    HTTP/1.1 200 OK
    Content-Type: application
    ```
-   ```JSON
+   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -229,10 +228,10 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Request**
 
-   ```
+   ```http
    POST /oauth2/v0/otp HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
-   Host: us2.api.concursolutions.com
+   Host: us.api.concursolutions.com
    ```
    ```
    client_id={client_id}
@@ -246,7 +245,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Response**
 
-   ```JSON
+   ```json
    HTTP/1.1 200 OK
    Content-Type: application/json
    {
@@ -260,7 +259,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
 5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token **`otl`** that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `<https://{partner_redirect_URI}&otl=7add4621f00b47e1aa2d8a61739c97e6>`
 
-6. When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [OTP grant](https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware). The following are reserved words and cannot be used as client application defined parameters for `/token` API: `"client_id","client_secret","channel_type","channel_handle","scope","grant_type","otp"`
+6. When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [OTP grant](https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware). The following are reserved words and cannot be used as client application defined parameters for `/token` API: `client_id`,`client_secret`,`channel_type`,`channel_handle`,`scope`,`grant_type`,`otp`.
 
    **Example:**
 
@@ -286,7 +285,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    HTTP/1.1 200 OK
    Content-Type: application/json
    ```
-   ```JSON
+   ```json
    {
    "expires_in": "3600",
    "scope": "{app-scopes}",
@@ -329,8 +328,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 4. If the user does not log in for **six months** the `refresh_token` will expire and the user’s partner account and SAP Concur account will be **de-linked**. To prevent this from happening, build a scheduled job that scans your database for expiration dates and refreshes tokens X days prior to expiration. Refer [Refreshing A Token API](https://developer.concur.com/api-reference/authentication/apidoc.html#refreshing-a-token-) for the post body description and example.
 
 
-* Watch this section of the video [SAP Concur Integration 3 of 5 ; API Tokens](https://youtu.be/ikCU1235QJA?t=300), which explains the difference between refresh and access tokens.
-* Watch [this section](https://youtu.be/ikCU1235QJA?t=440) of the video above to learn how to refresh the token.
+* Watch this section of the video [SAP Concur Integration 3 of 5 ; API Tokens](https://youtu.be/ikCU1235QJA?t=300), which explains the difference between refresh and access tokens and how to refresh the access token. 
+
 
 ### Revoke Token
 
@@ -382,8 +381,8 @@ For information on getting started with [Receipts v4](https://developer.concur.c
 
 * You should select General eReceipt type or Grand Transportation eReceipt type from the [Supported Receipt type](https://developer.concur.com/api-reference/receipts/supported-receipt-types.html) list and retrieve the list [schemas](https://developer.concur.com/api-reference/receipts/get-started.html) for the selected receipt types.
 * To ensure that you are using the correct endpoint URLs, the safest practice is to check the service index before every request. [Get service Index](https://developer.concur.com/api-reference/receipts/endpoints.html#endpoint-service-index)
-* We generate a standard receipt if you do not provide a receipt image.
-* We will display your app logo in standard generated receipts (size 100x100 px).
+* We generate a standard receipt if you do not provide a receipt image. 
+* We can display your app logo in standard generated receipts (size 100x100 px). Please send your company logo image file (.png) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com).
 * If your app currently generates a receipt image, (.png, .jpg, .tif, .pdf, or other image file), you can include it in your post. Follow the requirement of [supported image formats](https://developer.concur.com/api-reference/receipts/endpoints.html#definitions-of-resources) if you are posting the eReceipts with images.
 
 ### Post a General eReceipt
@@ -392,6 +391,7 @@ For information on getting started with [Receipts v4](https://developer.concur.c
 2. You will need the user **id** previously stored in the user’s profile to post receipts on their behalf.
 3. Post receipt using the [Post Receipt](https://developer.concur.com/api-reference/receipts/endpoints.html#endpoint-post-a-receipt) endpoint.
 4. You should store the `concur-correlationid` and the **Location** link from the response headers even for successful responses, this will facilitate support efforts in case of a missing receipt from a user’s SAP Concur account.
+5. General eReceipt is not mapped to any expense type. When user adds the eReceipt into the expense report, the expense entry's expense type will be "Undefined". User needs to change the expense type accordingly. 
 
 The general eReceipt schema includes all receipt core definitions.
 
@@ -407,39 +407,77 @@ The general eReceipt schema includes all receipt core definitions.
    Content-Type: application/json
    ```
 
-   ```JSON
-   {
-      "dateTime": "2022-10-22T13:00:00+0800",
-      "reference": "91310000",
-      "seller": {
-      "taxId": "MA1FL0TJ7J",
-      "name": "ABC Corporation",
-      "description": ",",
-      "location": {
-         "address": {
-               "streetAddress": "225 32nd Ave",
-               "addressLocality": "Seattle",
-               "addressRegion": "WA",
-               "addressCountry": "US"
-               }
-         }
-      },
-      "total": "180.0",
-      "taxesTotal": "20.0",
-      "subtotal": "160.0",
-      "payments": [
-         {
-               "amount": "180.0"
-         }
-      ],
-      "currencyCode": "USD"
-   }
+   ```json
+    {
+    "reference": "Frosch Booking Fee",
+    "dateTime": "2022-12-12T09:19:02-0500",
+    "total": "333.00",
+    "subtotal": "333.00",
+    "taxesTotal": "0.00",
+    "currencyCode": "USD",
+    "seller": {
+        "name": "Frosch",
+        "location": {
+            "name": "Booking Fee",
+            "internetAddress": "https://frosch.com/",
+            "address": {
+                "streetAddress": "One Greenway Plaza, Suite 800",
+                "addressLocality": "Houston",
+                "addressRegion": "TX",
+                "addressCountry": "USA",
+                "postalCode": "77046"
+            }
+        }
+    },
+    "taxes": [
+        {
+            "amount": "0.00"
+        }
+    ],
+    "payments": [
+        {
+            "amount": "333.00"
+        }
+    ],
+    "lineItems": [
+        {
+            "sequenceNumber": 1,
+            "reference": "Frosch Invoice",
+            "description": "Agency Record Locator: VDVSWW Invoice #6810119",
+            "quantity": 1,
+            "unitCost": "333.00",
+            "subtotal": "333.00",
+            "taxesTotal": "0.00",
+            "total": "333.00",
+            "taxes": [
+                {
+                "amount": "0.00"
+                }
+            ]
+        }
+    ]
+    }
    ```
    **Response**
 
    ```
       HTTP/1.1 201 OK
    ```
+   **Response Header**
+   ```
+   ...
+   Content-Length: 0
+   Concur-correlationid: c559ab367ff8436d1d0c4ffe917664a3
+   Link:<http://schema.concursolutions.com/general-receipt.schema.json>; rel="describedBy", <https://us2.api.concursolutions.com/receipts/v4/status/eed70d8a344e4b8c9d8ad2b7b37c34e2>; rel="processing-status"
+   Location: https://us2.api.concursolutions.com/receipts/v4/eed70d8a344e4b8c9d8ad2b7b37c34e2
+   ...
+   ```
+
+   Receipt is now shown in the Available Expense list and the receipt Expense Type is "Undefined". 
+       ![Receipt In The Available Expenses List](/assets/img/api-guides/e-receipts/ereceipt-in-available-expenses-list.png)
+
+   Generated Receipt Image
+       ![Generated Receipt Image](/assets/img/api-guides/e-receipts/general-ereceipt-sample.png)
 
 **Example: Posting a General e-Receipt with Image**
 
@@ -564,14 +602,14 @@ The Quick Expense API can be used to create an expense with basic information su
 **Request**
 
 
-```http
+```
 POST /quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses HTTP/1.1
 Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
 Content-Type: application/json
 ```
 
-```JSON
+```json
 {
    "Comment":"Meal Expenses",
    "expenseTypeId":"MEALS",
@@ -597,7 +635,7 @@ Content-Type: application/json
 HTTP/1.1 201 OK
 ```
 
-```JSON
+```json
 {
    "mobileEntryKeyUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/1234157338",
    "quickExpenseIdUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/506CF67C85BA436097F434F39CAE7DD8"
@@ -693,12 +731,14 @@ HTTP responses with status code of 4xx, 5xx are all treated as errors. The HTTP 
 
 For example, 4xx class errors have a JSON response with the following fields.
 
+```json 
 {
-  "code": <number>,
-  "error": <error>,
-  "error_description": <error_description>,
-  "geolocation": <geolocation url where user lives>
+  "code": "<number>",
+  "error": "<error>",
+  "error_description": "<error_descriptio>",
+  "geolocation": "<geolocation_url_where_user_lives>"
 }
+```
 
 Please refer to the Authentication [Response Codes](https://developer.concur.com/api-reference/authentication/apidoc.html#response-codes-) list for more details about Authentication errors.  
 
