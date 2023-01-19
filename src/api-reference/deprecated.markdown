@@ -62,6 +62,7 @@ The following application programming interfaces (APIs) and other resources have
   * [Profile Resource](/api-reference/travel-profile/v1.profile-resource.html)
 * [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)
 * [User v1](/api-reference/user/index.html)
+* [Vendor v3](/api-reference/invoice/v3.vendor.html)
 
 * Resources
   * [Videos](/tools-support/videos/index.html)
