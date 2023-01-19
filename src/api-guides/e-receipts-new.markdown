@@ -328,7 +328,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 4. If the user does not log in for **six months** the `refresh_token` will expire and the user’s partner account and SAP Concur account will be **de-linked**. To prevent this from happening, build a scheduled job that scans your database for expiration dates and refreshes tokens X days prior to expiration. Refer [Refreshing A Token API](https://developer.concur.com/api-reference/authentication/apidoc.html#refreshing-a-token-) for the post body description and example.
 
 
-* Watch this section of the video [SAP Concur Integration 3 of 5 ; API Tokens](https://youtu.be/ikCU1235QJA?t=300), which explains the difference between refresh and access tokens and how to refresh the access token. 
+* Watch this section of the video [SAP Concur Integration 3 of 5 ; API Tokens](https://youtu.be/ikCU1235QJA?t=300), which explains the difference between refresh and access tokens and how to refresh the access token.
 
 
 ### Revoke Token
@@ -381,7 +381,7 @@ For information on getting started with [Receipts v4](https://developer.concur.c
 
 * You should select General eReceipt type or Grand Transportation eReceipt type from the [Supported Receipt type](https://developer.concur.com/api-reference/receipts/supported-receipt-types.html) list and retrieve the list [schemas](https://developer.concur.com/api-reference/receipts/get-started.html) for the selected receipt types.
 * To ensure that you are using the correct endpoint URLs, the safest practice is to check the service index before every request. [Get service Index](https://developer.concur.com/api-reference/receipts/endpoints.html#endpoint-service-index)
-* We generate a standard receipt if you do not provide a receipt image. 
+* We generate a standard receipt if you do not provide a receipt image.
 * We can display your app logo in standard generated receipts (size 100x100 px). Please send your company logo image file (.png) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com).
 * If your app currently generates a receipt image, (.png, .jpg, .tif, .pdf, or other image file), you can include it in your post. Follow the requirement of [supported image formats](https://developer.concur.com/api-reference/receipts/endpoints.html#definitions-of-resources) if you are posting the eReceipts with images.
 
@@ -391,7 +391,7 @@ For information on getting started with [Receipts v4](https://developer.concur.c
 2. You will need the user **id** previously stored in the user’s profile to post receipts on their behalf.
 3. Post receipt using the [Post Receipt](https://developer.concur.com/api-reference/receipts/endpoints.html#endpoint-post-a-receipt) endpoint.
 4. You should store the `concur-correlationid` and the **Location** link from the response headers even for successful responses, this will facilitate support efforts in case of a missing receipt from a user’s SAP Concur account.
-5. General eReceipt is not mapped to any expense type. When user adds the eReceipt into the expense report, the expense entry's expense type will be "Undefined". User needs to change the expense type accordingly. 
+5. A general eReceipt is not mapped to any expense type. When a user adds the eReceipt into the expense report, the expense entry's expense type will be "Undefined". The user needs to change the expense type accordingly.
 
 The general eReceipt schema includes all receipt core definitions.
 
@@ -473,11 +473,13 @@ The general eReceipt schema includes all receipt core definitions.
    ...
    ```
 
-   Receipt is now shown in the Available Expense list and the receipt Expense Type is "Undefined". 
-       ![Receipt In The Available Expenses List](/assets/img/api-guides/e-receipts/ereceipt-in-available-expenses-list.png)
+Receipt is now shown in the Available Expense list and the receipt Expense Type is "Undefined".
 
-   Generated Receipt Image
-       ![Generated Receipt Image](/assets/img/api-guides/e-receipts/general-ereceipt-sample.png)
+![Receipt In The Available Expenses List](/assets/img/api-guides/e-receipts/ereceipt-in-available-expenses-list.png)
+
+Generated Receipt Image
+
+![Generated Receipt Image](/assets/img/api-guides/e-receipts/general-ereceipt-sample.png)
 
 **Example: Posting a General e-Receipt with Image**
 
@@ -731,7 +733,7 @@ HTTP responses with status code of 4xx, 5xx are all treated as errors. The HTTP 
 
 For example, 4xx class errors have a JSON response with the following fields.
 
-```json 
+```json
 {
   "code": "<number>",
   "error": "<error>",
