@@ -35,4 +35,4 @@ August 19, 2023|July 22, 2023
 September 16, 2023|August 19, 2023
 October 14, 2023|September 16, 2023
 November 11, 2023|October 14, 2023
-December 9, 2023|November 11, 20223
+December 9, 2023|November 11, 2023
