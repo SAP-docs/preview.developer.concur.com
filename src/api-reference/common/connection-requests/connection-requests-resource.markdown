@@ -105,7 +105,7 @@ The status of the connection as indicated by the partner. Both the successful (`
 Name|Type|Format|Description
 ---|---|---|---
 `CRSUC`|`string`|-|Successful connection.
-`CRSRET`|`string`|-|Retry connection.
+`CRRET`|`string`|-|Retry connection.
 `CREU1`|`string`|-|Loyalty account not found.
 `CREU2`|`string`|-|Loyalty account does not match.
 `CREU3`|`string`|-|Loyalty account needs attention.
