@@ -11,6 +11,7 @@ The Expenses API can be used to read the expenses that belong to a specific expe
 
 * Expense entry v1.1 (Deprecated) documentation is available [here](./v1dot1.expense-entry.html)
 * Expense Entry v3 documentation is available [here](./expense-entry.html)
+* Expense Itemizations v3 documentation is available [here](./api-reference/expense/expense-report/expense-itemization.html)
 
 ## <a name="limitations"></a>Limitations
 
@@ -516,6 +517,229 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
     "taxRateLocation": "HOME",
     "travel": null,
 }
+```
+## Retrieve Itemizations on a Specific Expense ID <a name="specific-expense-itemizations"></a>
+
+Retrieves the itemizations that belong to a specific expense ID.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/itemizations
+```
+
+#### Parameters
+
+| Name|Type|Format|Description|
+|---|---|---|---|
+| `userID` |`string`|-| **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+| `contextType` |`string`|-| **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value: `TRAVELER`            |
+| `reportId`    |`string`|-| **Required** The unique identifier of the report that is being read. |
+| `expenseId`   |`string`|-| **Required** The unique identifier of the expense that is being read.|
+
+
+### Response
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* [Expenses Response](#itemizations-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/itemizations' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: Expense-Report-test' \
+--header 'Content-Type: application/json'
+```
+
+#### <a name="itemizations-response-schema"></a> Response
+
+```shell
+200 OK
+
+[
+    {
+        "expenseId": "95GCBB92AE4E5342B849DAC29FD163A1",
+        "approverAdjustedAmount": {
+            "value": 25.00000000,
+            "currencyCode": "USD"
+        },
+        "allocationState": "NOT_ALLOCATED",
+        "allocationSetId": null,
+        "approvedAmount": {
+            "value": 25.00000000,
+            "currencyCode": "USD"
+        },
+        "businessPurpose": "test",
+        "claimedAmount": {
+            "value": 25.00000000,
+            "currencyCode": "USD"
+        },
+        "ereceiptImageId": null,
+        "exchangeRate": {
+            "value": 1.00000000000000,
+            "operation": "MULTIPLY"
+        },
+        "expenseSourceIdentifiers": null,
+        "expenseType": {
+            "id": "LUNCH",
+            "name": "Lunch",
+            "code": "OTHER",
+            "isDeleted": false
+        },
+        "hasBlockingExceptions": false,
+        "hasExceptions": false,
+        "hasMissingReceiptDeclaration": false,
+        "isAutoCreated": false,
+        "imageCertificationStatus": null,
+        "isImageRequired": true,
+        "isPaperReceiptRequired": false,
+        "isPersonalExpense": false,
+        "location": {
+            "id": "04F3ED00D0884F4681628E3337A5B515",
+            "name": "Bellevue, Washington",
+            "city": "Bellevue",
+            "countrySubDivisionCode": "US-WA",
+            "countryCode": "US"
+        },
+        "paymentType": {
+            "id": "CASH",
+            "name": "Cash",
+            "code": "CASH"
+        },
+        "postedAmount": {
+            "value": 25.00000000,
+            "currencyCode": "USD"
+        },
+        "receiptImageId": null,
+        "ticketNumber": null,
+        "transactionAmount": {
+            "value": 25.00000000,
+            "currencyCode": "USD"
+        },
+        "transactionDate": "2020-03-11",
+        "travelAllowance": {
+            "dailyLimitAmount": null,
+            "dailyTravelAllowanceId": null,
+            "isExpensePartOfTravelAllowance": false
+        },
+        "vendor": null,
+        "attendeeCount": 1,
+        "links": [
+            {
+                "rel": "self",
+                "href": "https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/95GCBB92AE4E5342B849DAC29FD163A1",
+                "method": "GET",
+                "isTemplated": false
+            },
+            {
+                "rel": "comments",
+                "href": "https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/95GCBB92AE4E5342B849DAC29FD163A1/comments",
+                "method": "GET",
+                "isTemplated": false
+            }
+        ]
+    },
+    {
+        "expenseId": "30FF3C62F5D844458828A5C1086072D1",
+        "approverAdjustedAmount": {
+            "value": 500.00000000,
+            "currencyCode": "USD"
+        },
+        "allocationState": "NOT_ALLOCATED",
+        "allocationSetId": null,
+        "approvedAmount": {
+            "value": 500.00000000,
+            "currencyCode": "USD"
+        },
+        "businessPurpose": "Facility supplies",
+        "claimedAmount": {
+            "value": 500.00000000,
+            "currencyCode": "USD"
+        },
+        "ereceiptImageId": null,
+        "exchangeRate": {
+            "value": 1.00000000000000,
+            "operation": "MULTIPLY"
+        },
+        "expenseSourceIdentifiers": null,
+        "expenseType": {
+            "id": "OFCSP",
+            "name": "Office Supplies",
+            "code": "OTHER",
+            "isDeleted": false
+        },
+        "hasBlockingExceptions": false,
+        "hasExceptions": false,
+        "hasMissingReceiptDeclaration": false,
+        "isAutoCreated": false,
+        "imageCertificationStatus": null,
+        "isImageRequired": true,
+        "isPaperReceiptRequired": false,
+        "isPersonalExpense": false,
+        "location": {
+            "id": "0BC6B782B77349898E2CA814F5B57C08",
+            "name": "Seattle, Washington",
+            "city": "Seattle",
+            "countrySubDivisionCode": "US-WA",
+            "countryCode": "US"
+        },
+        "paymentType": {
+            "id": "1022",
+            "name": "Mastercard",
+            "code": "CBCP"
+        },
+        "postedAmount": {
+            "value": 500.00000000,
+            "currencyCode": "USD"
+        },
+        "receiptImageId": null,
+        "ticketNumber": null,
+        "transactionAmount": {
+            "value": 500.00000000,
+            "currencyCode": "USD"
+        },
+        "transactionDate": "2020-03-11",
+        "travelAllowance": {
+            "dailyLimitAmount": null,
+            "dailyTravelAllowanceId": null,
+            "isExpensePartOfTravelAllowance": false
+        },
+        "vendor": {
+            "id": null,
+            "name": null,
+            "description": "Antioch Construction"
+        },
+        "attendeeCount": 0,
+        "links": [
+            {
+                "rel": "self",
+                "href": "https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/30FF3C62F5D844458828A5C1086072D1",
+                "deprecation": null,
+                "method": "GET",
+                "isTemplated": false
+            },
+            {
+                "rel": "comments",
+                "href": "https://us.api.concursolutions.com/expensereports/v4/users/32c2fcc3-b2e8-4907-9672-5b3f49b1c643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/30FF3C62F5D844458828A5C1086072D1/comments",
+                "method": "GET",
+                "isTemplated": false
+            }
+        ]
+    }
+]
 ```
 
 ## Update a Specific Expense Entry in an Unsubmitted Report <a name="update-expense-entry-in-an-unsubmitted-report"></a>
