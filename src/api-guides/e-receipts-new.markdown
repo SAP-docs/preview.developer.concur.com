@@ -341,23 +341,49 @@ A client’s SAP Concur account may reside one of our many data centers. During 
 
 You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user's geolocation when you request the token for the first time, you should always make the API call using the **default** Base URI.
 
-For a user hosted on both the US data center and EU data center, please use the default base URI https://us.api.concursolutions.com. For a user hosted on the China data center, please use the default base URI https://cn.api.concurcdc.cn.
+For a user hosted on both the US data center and EU data center, please use the **default** Base URI `https://us.api.concursolutions.com`. For a user hosted on the China data center, please use the **default** base URI `https://cn.api.concurcdc.cn`.
 
-If you receive the following error while calling the authentication service, for example, **/otp** Auth API, please retry with the endpoint based the on geolocation in the returned message.
+If you receive the error code 16 ("user lives elsewhere") while calling the authentication service, the error message returns a new `geolocation`. Use this new 'geolocation' as the Base URI to call the Auth API again to get the token.
 
+For example, if you make following API call to `https://us2.api.concursolutions.com` by mistake:
+
+```
+POST /oauth2/v0/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: us2.api.concursolutions.com
+.....
+```
+
+You will get a HTTP 400 error with error code 16 like below:
+
+```
 HTTP 400 Bad Request
+```
 
 ```json
 {
-   "error": "invalid_request",
-   "concur-correlationid": "{correlation_id}",
-   "error_description": "user lives elsewhere",
-   "code": 16,
-   "geolocation": "https://us.api.concursolutions.com"
+  "error": "invalid_request",
+  "concur-correlationid": "{correlation_id}",
+  "error_description": "user lives elsewhere",
+  "code": 16,
+  "geolocation": "https://us.api.concursolutions.com"
 }
 ```
 
-> **Note**: When obtaining the `access_token` via an authentication API call, the geolocation data will be included in the response. The geolocation should be stored along with the `access_token`. Your app will then be able to make subsequent calls using the token and the correct end points based on the geolocation.
+You should make another call to `https://us.api.concursolutions.com` which is the `geolocation` value returned in error message.
+
+> **Note**: _This `geolocation` value might NOT be user token's geolocation. It only redirects you to the correct API endpoint_.
+
+```
+POST /oauth2/v0/token HTTP/1.1
+Content-Type: application/x-www-form-urlencoded
+Host: us.api.concursolutions.com
+.....
+```
+
+Then you will get the user access token with the correct user geolocation.
+
+> **Note**: _When obtaining the `access_token` via an authentication API, the geolocation data will be included in the response. The geolocation should be stored along with the `access_token`. Your app will then be able to make subsequent calls using the token and the correct end points based on the geolocation._
 
 ### Base URI
 
@@ -648,10 +674,10 @@ HTTP/1.1 201 OK
 
 You can download following postman sample collections for your reference.
 
-* [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json)**
-* [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json)**
-* [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json)**
-* [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json)**
+* [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json.zip)
+* [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json.zip)
+* [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json.zip)
+* [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json.zip)
 
 ## Creating and Updating an App Center Listing
 
