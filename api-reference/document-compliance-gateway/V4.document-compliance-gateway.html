@@ -1108,9 +1108,9 @@
 
         <h1 id="document-compliance-gateway-v4">Document Compliance Gateway v4</h1>
 
-<p>Document Compliance Gateway serves an important role as a router and abstraction layer between Concur core and compliance provider.</p>
-
-<p>Enables Concur core to have a loose coupling with different compliance providers. Brings extensibility into the architecture which would enable integration of new compliance providers in Document Compliance Gateway layer without any changes in the core services. Makes the architecture homogenous for both pull and push model of receipt/invoice compliance. Can perform necessary mappings from a generic document model to Concur Invoice and Concur Expense specific data model for invoice/receipts</p>
+<p>Document Compliance Gateway v4 APIs on SAP Concur’s AppCenter are designed to manage the transmission of the XML receipt file to the validating vendor. Vendors can implement the APIs to read the XML file sent to Concur system by the end-user from an approved email, validate the XMLs against government records and return the validation result. In addition, the vendor can read and parse the XML file to provide tax relevant data for creating expense entry.
+The APIs supports an improved and efficient process for XML validation. The end-user gets the XML validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The APis also uses the data from XML file to initiate the expense line item, saving user the need to manually type the information.
+Currently, the API supports validating XMLs documents for Mexico called Comprobantes Fiscal Digital por Internet (CFDi).</p>
 
 <h2 id="prior-versions">Prior Versions</h2>
 
@@ -1123,7 +1123,7 @@
 
 <h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
 
-<p><img src="images/DCG_Sequence_Diagram.png" alt="" /></p>
+<p><img src="./DCG_Sequence_Diagram.png" alt="Process Flow for Document Compliance Gateway" /></p>
 
 <h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
@@ -1157,19 +1157,17 @@
 
 <h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
 
-<p>SAP Concur Companies must purchase Concur Invoice in order to use this API. This API may require additional SAP Concur APIs for some use cases:</p>
-
-<ul>
-  <li>[Mexico CFDI API Link]</li>
-</ul>
+<p>SAP Concur clients must purchase Concur Expense in order to use this API.</p>
 
 <h2 id="dcg-endpoints"><a name="endpoint"></a>DCG Endpoints</h2>
 
 <h4 id="get-api-call">GET API CALL</h4>
 
-<p><code class="language-plaintext highlighter-rouge">Get DCG Documents</code></p>
+<p><code class="language-plaintext highlighter-rouge">Get the compliance document</code></p>
 
 <h3 id="scopes">Scopes</h3>
+
+<p>Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <p><code class="language-plaintext highlighter-rouge">receipts.read</code></p>
 
@@ -1179,12 +1177,28 @@
 
 <h5 id="template">Template</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/<span class="o">{</span>uuid<span class="o">}</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/<span class="o">{</span>documentId<span class="o">}</span>
 </code></pre></div></div>
 <h5 id="parameters">Parameters</h5>
 
-<p>Name|Type|Format|Description
-—|—|—|—</p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">documentId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique id assigned to a document</td>
+    </tr>
+  </tbody>
+</table>
 
 <h4 id="headers">Headers</h4>
 
@@ -1207,7 +1221,7 @@
   <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API</li>
   <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to DCG API.</li>
   <li>Once you have the token use the following curl command to POST invoice details
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
   <span class="nt">-H</span> <span class="s1">'concur-correlationid: {LogicalId}'</span>
 </code></pre></div>    </div>
   </li>
@@ -1266,20 +1280,13 @@ concur-correlationid: <span class="s2">"Test-FlOW"</span>
 Content-Type: XML
 </code></pre></div></div>
 
-<pre><code class="language-XML">&lt;note&gt;
-&lt;to&gt;Tove&lt;/to&gt;
-&lt;from&gt;Jani&lt;/from&gt;
-&lt;heading&gt;Reminder&lt;/heading&gt;
-
-&lt;body&gt;Dont forget me this weekend!&lt;/body&gt;
-&lt;/note&gt;
-</code></pre>
-
 <h4 id="put-api-call">PUT API CALL</h4>
 
-<p><code class="language-plaintext highlighter-rouge">Upload Digital Tax Token for DCG Documents</code></p>
+<p><code class="language-plaintext highlighter-rouge">Provide the XML validation result and parsed tax relevant data from the XML file.</code></p>
 
 <h3 id="scopes-1">Scopes</h3>
+
+<p>Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <p><code class="language-plaintext highlighter-rouge">receipts.write</code></p>
 
@@ -1289,7 +1296,7 @@ Content-Type: XML
 
 <h5 id="template-1">Template</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/<span class="o">{</span>uuid<span class="o">}</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/<span class="o">{</span>documentId<span class="o">}</span>
 </code></pre></div></div>
 <h5 id="parameters-1">Parameters</h5>
 
@@ -1304,10 +1311,10 @@ Content-Type: XML
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Receipts</code></td>
-      <td>-</td>
-      <td><code class="language-plaintext highlighter-rouge">body</code></td>
-      <td>The tax information for the receipt that is to be updated.</td>
+      <td><code class="language-plaintext highlighter-rouge">documentId</code></td>
+      <td>string</td>
+      <td> </td>
+      <td>Unique id assigned to a document</td>
     </tr>
   </tbody>
 </table>
@@ -1338,7 +1345,7 @@ Content-Type: XML
   <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API</li>
   <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to DCG API.</li>
   <li>Once you have the token use the following curl command to POST invoice details
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{socumentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
   <span class="nt">-H</span> <span class="s2">"concur-correlationid"</span>: <span class="o">{</span>LogicalId<span class="o">}</span><span class="se">\</span>
   <span class="nt">--form</span> <span class="s2">"digitalTaxDocument"</span><span class="o">=</span>@<span class="s2">"DigitalTaxToken.json"</span>
 </code></pre></div>    </div>
@@ -1393,7 +1400,7 @@ Authorization: Bearer &lt;JWT Token&gt;
 concur-correlationid: <span class="s2">"Test-FlOW"</span>
 digitalTaxDocument:
 <span class="o">{</span>
-  <span class="s2">"Status"</span>: <span class="s2">"VALID"</span>,
+  <span class="s2">"Status"</span>: <span class="s2">"processed"</span>,
   <span class="s2">"DocumentData"</span>: <span class="o">{</span>
     <span class="s2">"FormatVersion"</span>: <span class="s2">"4.0"</span>,
     <span class="s2">"Code"</span>: <span class="s2">"pos"</span>,
@@ -1405,7 +1412,7 @@ digitalTaxDocument:
     <span class="s2">"Discount"</span>: 0.0,
     <span class="s2">"Currency"</span>: <span class="s2">"MXN"</span>,
     <span class="s2">"ExchangeRate"</span>: <span class="s2">"0.0"</span>,
-    <span class="s2">"NetAmount"</span>: 0.0,
+    <span class="s2">"NetAmount"</span>: 560.0,
     <span class="s2">"PaymentMethod"</span>: <span class="s2">"PUE"</span>,
     <span class="s2">"TotalWithholdingTax"</span>: 0.0,
     <span class="s2">"TotalSalesTax"</span>: 0.0,
