@@ -5,20 +5,25 @@ layout: reference
 
 # Document Compliance Gateway v4
 
-Document Compliance Gateway v4 APIs on SAP Concur’s AppCenter are designed to manage the transmission of the XML receipt file to the validating vendor. Vendors can implement the APIs to read the XML file sent to Concur system by the end-user from an approved email, validate the XMLs against government records and return the validation result. In addition, the vendor can read and parse the XML file to provide tax relevant data for creating expense entry.
-The APIs supports an improved and efficient process for XML validation. The end-user gets the XML validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The APis also uses the data from XML file to initiate the expense line item, saving user the need to manually type the information.
-Currently, the API supports validating XMLs documents for Mexico called Comprobantes Fiscal Digital por Internet (CFDi).
+{% include prerelease.html %}
+
+Document Compliance Gateway v4 API is designed to manage the transmission of the XML receipt file to the validating vendor. Vendors can implement the API to read the XML file sent to the SAP Concur system by the end user from an approved email, validate the XML against government records, and return the validation result. In addition, the vendor can read and parse the XML file to provide tax relevant data for creating expense entry.
+
+The API supports an improved and efficient process for XML validation. The end user gets the XML validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The API also uses the data from the XML file to initiate the expense line item, saving the need for the user to manually type the information.
+
+Currently, the API supports validating XML documents for Mexico called Comprobantes Fiscal Digital por Internet (CFDi).
 
 ## Prior Versions
 
-- No prior API version available
+No prior API version available
 
 ##  <a name="limitations"></a>Limitations
-API access is available only to the authenticated companies with granted permission. Access to this documentation does not provide access to the API. The API is planned to be deployed to US2 & EU2 data centers.
+
+API access is available only to the authenticated companies with granted permission. Access to this documentation does not provide access to the API. The API will be deployed to US2 & EU2 data centers.
 
 ## <a name="process-flow"></a>Process Flow
 
-![Process Flow for Document Compliance Gateway](./DCG_Sequence_Diagram.png)
+![Process Flow for Document Compliance Gateway](./dcg-sequence-diagram.png)
 
 ## <a name="products-editions"></a>Products and Editions
 
@@ -27,9 +32,10 @@ API access is available only to the authenticated companies with granted permiss
 
 ## <a name="scope-usage"></a>Scope Usage
 
-Name| Description               |Endpoint
----|---------------------------|---
-`receipts.read receipts.write`| Receipts - Tax Validation |GET, PUT
+Name| Description|Endpoint
+---|----|---
+`receipts.read`| Receipts - Tax Validation |GET
+`receipts.write`| Receipts - Tax Validation |PUT
 
 ## <a name="authentication"></a>Authentication
 
@@ -37,10 +43,9 @@ Authentication is provided through an App for company JWT. This API requires the
 
 ## <a name="dependencies"></a>Dependencies
 
-SAP Concur clients must purchase Concur Expense in order to use this API.
+None.
 
-
-## <a name="endpoint"></a>DCG Endpoints
+## <a name="endpoint"></a>Endpoints
 
 #### GET API CALL
 
@@ -65,21 +70,19 @@ GET https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-
 
 Name|Type|Format|Description
 ---|---|---|---
-`documentId`|`string`|	-	|Unique id assigned to a document 
-
+`documentId`|`string`|-|Unique id assigned to a document.
 
 #### Headers
 
-* Authorization
-    * Authentication would be provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
-* concur-correlationid
-    * concur-correlationid is used to track the workflow for evey steps.
+* Authorization is provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
+* concur-correlationid is used to track the workflow for every step.
 
 #### Notes
 
-1. The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API
-2. To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to DCG API.
-3. Once you have the token use the following curl command to POST invoice details
+* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the API.
+* To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to API.
+* Once you have the token use the following curl command to POST invoice details:
+
 ```sh
 curl --location --request GET 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
   -H 'concur-correlationid: {LogicalId}'
@@ -92,7 +95,7 @@ curl --location --request GET 'https://integration.api.concursolutions.com/docum
 Code|Description
 ---|---
 400|Validation errors in request body.
-401|Unauthorized (invalid JWT or expired etc..,)
+401|Unauthorized (invalid JWT or expired, etc.)
 404|DCG Company Not Found
 500|Internal Server Error
 503|Service Unavailable
@@ -113,8 +116,6 @@ concur-correlationid: "Test-FlOW"
 HTTP/1.1 200 OK
 Content-Type: XML
 ```
-
-
 
 #### PUT API CALL
 
@@ -139,25 +140,25 @@ PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-
 
 | Name       | Type | Format | Description
 |------------|------|--------|------------
-| `documentId` |string| |Unique id assigned to a document
+| `documentId` |string| |Unique id assigned to a document.
 
 #### Headers
 
-* Authorization
-  * Authentication would be provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
-* concur-correlationid
-  * concur-correlationid is used to track the workflow for evey steps.
+* Authorization is provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
+* concur-correlationid is used to track the workflow for every step.
 
 ### Payload
+
 * DigitalTax Token
 
 #### Notes
 
-1. The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API
-2. To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to DCG API.
-3. Once you have the token use the following curl command to POST invoice details
+* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the API.
+* To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to the API.
+* Once you have the token, use the following curl command to POST invoice details:
+   
 ```sh
-curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{socumentId}' -H 'Authorization: Bearer <JWT token>'
+curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
   -H "concur-correlationid": {LogicalId}\
   --form "digitalTaxDocument"=@"DigitalTaxToken.json"
 ```
@@ -169,7 +170,7 @@ curl --location --request PUT 'https://integration.api.concursolutions.com/docum
 Code|Description
 ---|---
 400|Validation errors in request body.
-401|Unauthorized (invalid JWT or expired etc..,)
+401|Unauthorized (invalid JWT or expired, etc.)
 404|DCG Company Not Found
 500|Internal Server Error
 503|Service Unavailable
@@ -221,7 +222,7 @@ digitalTaxDocument:
         "ProductCode": "P1",
         "Quantity": 1,
         "UnitOfMeasure": "KMT",
-        "Description": "Decription",
+        "Description": "Description",
         "UnitPrice": 0.0,
         "Amount": 0.0,
         "Discount": 0.0
