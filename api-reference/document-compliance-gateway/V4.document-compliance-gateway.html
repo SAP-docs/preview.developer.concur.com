@@ -1113,22 +1113,27 @@
 
         <h1 id="document-compliance-gateway-v4">Document Compliance Gateway v4</h1>
 
-<p>Document Compliance Gateway v4 APIs on SAP Concur’s AppCenter are designed to manage the transmission of the XML receipt file to the validating vendor. Vendors can implement the APIs to read the XML file sent to Concur system by the end-user from an approved email, validate the XMLs against government records and return the validation result. In addition, the vendor can read and parse the XML file to provide tax relevant data for creating expense entry.
-The APIs supports an improved and efficient process for XML validation. The end-user gets the XML validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The APis also uses the data from XML file to initiate the expense line item, saving user the need to manually type the information.
-Currently, the API supports validating XMLs documents for Mexico called Comprobantes Fiscal Digital por Internet (CFDi).</p>
+<div id="attn-prerelease">
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<p>Document Compliance Gateway v4 API is designed to manage the transmission of the XML receipt file to the validating vendor. Vendors can implement the API to read the XML file sent to the SAP Concur system by the end user from an approved email, validate the XML against government records, and return the validation result. In addition, the vendor can read and parse the XML file to provide tax relevant data for creating expense entry.</p>
+
+<p>The API supports an improved and efficient process for XML validation. The end user gets the XML validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The API also uses the data from the XML file to initiate the expense line item, saving the need for the user to manually type the information.</p>
+
+<p>Currently, the API supports validating XML documents for Mexico called Comprobantes Fiscal Digital por Internet (CFDi).</p>
 
 <h2 id="prior-versions">Prior Versions</h2>
 
-<ul>
-  <li>No prior API version available</li>
-</ul>
+<p>No prior API version available</p>
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
-<p>API access is available only to the authenticated companies with granted permission. Access to this documentation does not provide access to the API. The API is planned to be deployed to US2 &amp; EU2 data centers.</p>
+
+<p>API access is available only to the authenticated companies with granted permission. Access to this documentation does not provide access to the API. The API will be deployed to US2 &amp; EU2 data centers.</p>
 
 <h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
 
-<p><img src="./DCG_Sequence_Diagram.png" alt="Process Flow for Document Compliance Gateway" /></p>
+<p><img src="./dcg-sequence-diagram.png" alt="Process Flow for Document Compliance Gateway" /></p>
 
 <h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
@@ -1149,9 +1154,14 @@ Currently, the API supports validating XMLs documents for Mexico called Comproba
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">receipts.read receipts.write</code></td>
+      <td><code class="language-plaintext highlighter-rouge">receipts.read</code></td>
       <td>Receipts - Tax Validation</td>
-      <td>GET, PUT</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">receipts.write</code></td>
+      <td>Receipts - Tax Validation</td>
+      <td>PUT</td>
     </tr>
   </tbody>
 </table>
@@ -1162,9 +1172,9 @@ Currently, the API supports validating XMLs documents for Mexico called Comproba
 
 <h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
 
-<p>SAP Concur clients must purchase Concur Expense in order to use this API.</p>
+<p>None.</p>
 
-<h2 id="dcg-endpoints"><a name="endpoint"></a>DCG Endpoints</h2>
+<h2 id="endpoints"><a name="endpoint"></a>Endpoints</h2>
 
 <h4 id="get-api-call">GET API CALL</h4>
 
@@ -1200,7 +1210,7 @@ Currently, the API supports validating XMLs documents for Mexico called Comproba
       <td><code class="language-plaintext highlighter-rouge">documentId</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td>Unique id assigned to a document</td>
+      <td>Unique id assigned to a document.</td>
     </tr>
   </tbody>
 </table>
@@ -1208,29 +1218,21 @@ Currently, the API supports validating XMLs documents for Mexico called Comproba
 <h4 id="headers">Headers</h4>
 
 <ul>
-  <li>Authorization
-    <ul>
-      <li>Authentication would be provided through an App for Business and the company JWT. More details can be found <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a></li>
-    </ul>
-  </li>
-  <li>concur-correlationid
-    <ul>
-      <li>concur-correlationid is used to track the workflow for evey steps.</li>
-    </ul>
-  </li>
+  <li>Authorization is provided through an App for Business and the company JWT. More details can be found <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a></li>
+  <li>concur-correlationid is used to track the workflow for every step.</li>
 </ul>
 
 <h4 id="notes">Notes</h4>
 
-<ol>
-  <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API</li>
-  <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to DCG API.</li>
-  <li>Once you have the token use the following curl command to POST invoice details
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
+<ul>
+  <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the API.</li>
+  <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to API.</li>
+  <li>Once you have the token use the following curl command to POST invoice details:</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
   <span class="nt">-H</span> <span class="s1">'concur-correlationid: {LogicalId}'</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
+</code></pre></div></div>
 
 <h3 id="response">Response</h3>
 
@@ -1250,7 +1252,7 @@ Currently, the API supports validating XMLs documents for Mexico called Comproba
     </tr>
     <tr>
       <td>401</td>
-      <td>Unauthorized (invalid JWT or expired etc..,)</td>
+      <td>Unauthorized (invalid JWT or expired, etc.)</td>
     </tr>
     <tr>
       <td>404</td>
@@ -1319,7 +1321,7 @@ Content-Type: XML
       <td><code class="language-plaintext highlighter-rouge">documentId</code></td>
       <td>string</td>
       <td> </td>
-      <td>Unique id assigned to a document</td>
+      <td>Unique id assigned to a document.</td>
     </tr>
   </tbody>
 </table>
@@ -1327,35 +1329,28 @@ Content-Type: XML
 <h4 id="headers-1">Headers</h4>
 
 <ul>
-  <li>Authorization
-    <ul>
-      <li>Authentication would be provided through an App for Business and the company JWT. More details can be found <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a></li>
-    </ul>
-  </li>
-  <li>concur-correlationid
-    <ul>
-      <li>concur-correlationid is used to track the workflow for evey steps.</li>
-    </ul>
-  </li>
+  <li>Authorization is provided through an App for Business and the company JWT. More details can be found <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a></li>
+  <li>concur-correlationid is used to track the workflow for every step.</li>
 </ul>
 
 <h3 id="payload">Payload</h3>
+
 <ul>
   <li>DigitalTax Token</li>
 </ul>
 
 <h4 id="notes-1">Notes</h4>
 
-<ol>
-  <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the DCG-API</li>
-  <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to DCG API.</li>
-  <li>Once you have the token use the following curl command to POST invoice details
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{socumentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
+<ul>
+  <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. It is recommended that the DRC should store the refresh token and use the geolocation response to make subsequent call to the API.</li>
+  <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to the API.</li>
+  <li>Once you have the token, use the following curl command to POST invoice details:</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
   <span class="nt">-H</span> <span class="s2">"concur-correlationid"</span>: <span class="o">{</span>LogicalId<span class="o">}</span><span class="se">\</span>
   <span class="nt">--form</span> <span class="s2">"digitalTaxDocument"</span><span class="o">=</span>@<span class="s2">"DigitalTaxToken.json"</span>
-</code></pre></div>    </div>
-  </li>
-</ol>
+</code></pre></div></div>
 
 <h3 id="response-2">Response</h3>
 
@@ -1375,7 +1370,7 @@ Content-Type: XML
     </tr>
     <tr>
       <td>401</td>
-      <td>Unauthorized (invalid JWT or expired etc..,)</td>
+      <td>Unauthorized (invalid JWT or expired, etc.)</td>
     </tr>
     <tr>
       <td>404</td>
@@ -1441,7 +1436,7 @@ digitalTaxDocument:
         <span class="s2">"ProductCode"</span>: <span class="s2">"P1"</span>,
         <span class="s2">"Quantity"</span>: 1,
         <span class="s2">"UnitOfMeasure"</span>: <span class="s2">"KMT"</span>,
-        <span class="s2">"Description"</span>: <span class="s2">"Decription"</span>,
+        <span class="s2">"Description"</span>: <span class="s2">"Description"</span>,
         <span class="s2">"UnitPrice"</span>: 0.0,
         <span class="s2">"Amount"</span>: 0.0,
         <span class="s2">"Discount"</span>: 0.0
