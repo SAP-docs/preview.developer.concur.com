@@ -5,10 +5,9 @@ layout: reference
 
 # Document Compliance Gateway v4
 
-Document Compliance Gateway serves an important role as a router and abstraction layer between Concur core and compliance provider.
-
-Enables Concur core to have a loose coupling with different compliance providers. Brings extensibility into the architecture which would enable integration of new compliance providers in Document Compliance Gateway layer without any changes in the core services. Makes the architecture homogenous for both pull and push model of receipt/invoice compliance. Can perform necessary mappings from a generic document model to Concur Invoice and Concur Expense specific data model for invoice/receipts
-
+Document Compliance Gateway v4 APIs on SAP Concur’s AppCenter are designed to manage the transmission of the XML receipt file to the validating vendor. Vendors can implement the APIs to read the XML file sent to Concur system by the end-user from an approved email, validate the XMLs against government records and return the validation result. In addition, the vendor can read and parse the XML file to provide tax relevant data for creating expense entry.
+The APIs supports an improved and efficient process for XML validation. The end-user gets the XML validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The APis also uses the data from XML file to initiate the expense line item, saving user the need to manually type the information.
+Currently, the API supports validating XMLs documents for Mexico called Comprobantes Fiscal Digital por Internet (CFDi).
 
 ## Prior Versions
 
@@ -19,7 +18,7 @@ API access is available only to the authenticated companies with granted permiss
 
 ## <a name="process-flow"></a>Process Flow
 
-![](images/DCG_Sequence_Diagram.png)
+![Process Flow for Document Compliance Gateway](./DCG_Sequence_Diagram.png)
 
 ## <a name="products-editions"></a>Products and Editions
 
@@ -38,17 +37,18 @@ Authentication is provided through an App for company JWT. This API requires the
 
 ## <a name="dependencies"></a>Dependencies
 
-SAP Concur Companies must purchase Concur Invoice in order to use this API. This API may require additional SAP Concur APIs for some use cases:
+SAP Concur clients must purchase Concur Expense in order to use this API.
 
-* [Mexico CFDI API Link]
 
 ## <a name="endpoint"></a>DCG Endpoints
 
 #### GET API CALL
 
-`Get DCG Documents`
+`Get the compliance document`
 
 ### Scopes
+
+Refer to [Scope Usage](#scope-usage) for full details.
 
 `receipts.read`
 
@@ -59,12 +59,13 @@ SAP Concur Companies must purchase Concur Invoice in order to use this API. This
 ##### Template
 
 ```shell
-GET https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}
+GET https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}
 ```
 ##### Parameters
 
 Name|Type|Format|Description
 ---|---|---|---
+`documentId`|`string`|	-	|Unique id assigned to a document 
 
 
 #### Headers
@@ -80,7 +81,7 @@ Name|Type|Format|Description
 2. To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to DCG API.
 3. Once you have the token use the following curl command to POST invoice details
 ```sh
-curl --location --request GET 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}' -H 'Authorization: Bearer <JWT token>'
+curl --location --request GET 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
   -H 'concur-correlationid: {LogicalId}'
 ```
 
@@ -113,21 +114,15 @@ HTTP/1.1 200 OK
 Content-Type: XML
 ```
 
-```XML
-<note>
-<to>Tove</to>
-<from>Jani</from>
-<heading>Reminder</heading>
 
-<body>Dont forget me this weekend!</body>
-</note>
-```
 
 #### PUT API CALL
 
-`Upload Digital Tax Token for DCG Documents`
+`Provide the XML validation result and parsed tax relevant data from the XML file.`
 
 ### Scopes
+
+Refer to [Scope Usage](#scope-usage) for full details.
 
 `receipts.write`
 
@@ -138,14 +133,13 @@ Content-Type: XML
 ##### Template
 
 ```shell
-PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}
+PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}
 ```
 ##### Parameters
 
 | Name       | Type | Format | Description
 |------------|------|--------|------------
-| `Receipts` |-|`body`|The tax information for the receipt that is to be updated.
-
+| `documentId` |string| |Unique id assigned to a document
 
 #### Headers
 
@@ -163,7 +157,7 @@ PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-
 2. To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to DCG API.
 3. Once you have the token use the following curl command to POST invoice details
 ```sh
-curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{uuid}' -H 'Authorization: Bearer <JWT token>'
+curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{socumentId}' -H 'Authorization: Bearer <JWT token>'
   -H "concur-correlationid": {LogicalId}\
   --form "digitalTaxDocument"=@"DigitalTaxToken.json"
 ```
@@ -191,7 +185,7 @@ Authorization: Bearer <JWT Token>
 concur-correlationid: "Test-FlOW"
 digitalTaxDocument:
 {
-  "Status": "VALID",
+  "Status": "processed",
   "DocumentData": {
     "FormatVersion": "4.0",
     "Code": "pos",
@@ -203,7 +197,7 @@ digitalTaxDocument:
     "Discount": 0.0,
     "Currency": "MXN",
     "ExchangeRate": "0.0",
-    "NetAmount": 0.0,
+    "NetAmount": 560.0,
     "PaymentMethod": "PUE",
     "TotalWithholdingTax": 0.0,
     "TotalSalesTax": 0.0,
