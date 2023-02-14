@@ -83,7 +83,7 @@ Use the App token of the correct data center (from Step 2) to perform a [GET cal
 
 **Important Notes**
 
-* Steps 1, 2, and 3 in combination, is a one-time process based on the nature of your  integration or the requirements of the event topic.
+* Steps 1, 2, and 3 in combination, is a one-time process based on the nature of your integration or the requirements of the event topic.
 * The above steps should be performed before moving forward with the steps below.
 * In addition to using the App token (from Step 2) for the PUT ESS API call, this token can also be used for other ESS calls like verifying (GET) the created subscription, deleting (DELETE) the subscription, etc. Details available [here](/event-topics/index.html#verify-your-subscription).
 * If you need to update an existing event subscription, PUT ESS API call should be used with the correct subscription “id”. If the “id” is different, a new subscription will be created.
@@ -93,7 +93,7 @@ Now, to begin receiving Concur Events of a Company/Concur entity, the Company ID
 
 ![Connecting your ESS subscription](/api-guides/images/ess-subscription.png)
 
-Please refer to the section applicable to you in the step below on how to obtain a Company JWT/Token
+Please refer to the section applicable to you in the step below on how to obtain a Company JWT/Token.
 
 ## Step 5 – Obtain Company JWT/Token (Connecting a Company to Your App)
 
@@ -116,13 +116,13 @@ More information on the [Company Refresh Tool](/api-reference/authentication/com
 
 ### App Center Partners
 
-When a Customer/Company Admin clicks on the ‘Connect’ button from the App Center and successfully establishes a connection to your App, this will automatically update the event subscription that you created with the Company UUID.
+When a Customer/Company Admin clicks the **Connect** button from the App Center and successfully establishes a connection to your App, this will automatically update the event subscription that you created with the Company UUID.
 
 Successful connection implies you successfully obtained a Company JWT/token for this Customer.
 
-1. Company Admin navigates to the App Center and clicks on the ‘Connect’ button from your App listing page
-2. The admin is redirected to your landing page
-3. From the url of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password)
+1. Company Admin navigates to the App Center and clicks the **Connect** button from your App listing page.
+2. The admin is redirected to your landing page.
+3. From the URL of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password).
 4. Use these info to obtain a Company JWT/token with the help of our Company Auth API ([Password grant type](/api-reference/authentication/company-auth.html)), after the admin submits required info on the landing page.
 
 ![Screenshot of App Center connection](/api-guides/images/ess-app-center.png)
@@ -138,8 +138,8 @@ Since a Client can have different Travel Agency Offices, it is necessary to ensu
 Within the Event Subscription, there is a ‘Groups’ field that should contain only such Agency UUIDs. This is achieved by performing the following steps, which will then later ensure that the Agency UUID(s) is automatically added to the event subscription once a Company JWT is generated:
 
 1. Within a Client's SAP Concur entity, a Request Admin to navigate to Administration → Request → Travel Agency Offices
-2. Select the required Travel Agency Office (the Agency UUID of which needs to be included within the 'groups' in the Event subscription) from the list. And double-click or click 'Modify'.
-3. In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click 'Done'.
+2. Select the required Travel Agency Office (the Agency UUID of which needs to be included within the 'groups' in the Event subscription) from the list. And double-click or click **Modify**.
+3. In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click **Done**.
 4. Repeat, if there are more Agency UUIDs that need to be included.
 
 ![Screenshot showing adding TMCs](/api-guides/images/ess-tmc.png)
