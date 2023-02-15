@@ -672,12 +672,16 @@ HTTP/1.1 201 OK
 
 ## Postman Sample Collections
 
-Click following links to download the postman sample collection zip file or click the 'Run in Postman' button to import into your Postman environment.
+Click following links to download the postman sample collection zip file or click the 'Run in Postman' button to fork the collection to your workspace or import the collection to Postman.
 
-* [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json.zip)  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553?action=collection%2Ffork&collection-url=entityId%3D2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
-* [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json.zip)  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa?action=collection%2Ffork&collection-url=entityId%3D2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
-* [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json.zip)  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-adc62397-c280-478c-bc35-a00c27b5db91?action=collection%2Ffork&collection-url=entityId%3D2623947-adc62397-c280-478c-bc35-a00c27b5db91%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
-* [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json.zip)  [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1?action=collection%2Ffork&collection-url=entityId%3D2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
+* [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json.zip)   
+[![Run in Postman - Authentication API](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553?action=collection%2Ffork&collection-url=entityId%3D2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
+* [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json.zip)   
+[![Run in Postman - General eReceipt](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa?action=collection%2Ffork&collection-url=entityId%3D2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
+* [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json.zip)   
+[![Run in Postman - Grand Transportaion eReceipt](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-adc62397-c280-478c-bc35-a00c27b5db91?action=collection%2Ffork&collection-url=entityId%3D2623947-adc62397-c280-478c-bc35-a00c27b5db91%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
+* [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json.zip)   
+[![Run in Postman - Quick Expense](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1?action=collection%2Ffork&collection-url=entityId%3D2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 
 ## Creating and Updating an App Center Listing
 
