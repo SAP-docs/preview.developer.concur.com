@@ -13,7 +13,7 @@ Duty of care (DoC) partners are provided access to travel itinerary data. Previo
 
 ## <a name="data-scope"></a>Data Scope
 
-Events will be raised for all trips saved to the itinerary data store. This includes trips booked in Concur Travel, offline with a TMC, or directly with a TripLink supplier. It also includes plans sent by users to TripIt or plans\@concur.com, and travel segments added to Concur Request. Data sources can be differentiated by source, see [References for Enumeration Types](#enumeration-types).
+Events will be raised for all trips saved to the itinerary data store. This includes trips booked in Concur Travel, offline with a TMC, or directly with a TripLink supplier. It also includes plans sent by users to TripIt, and travel segments added to Concur Request. Data sources can be differentiated by source, see [References for Enumeration Types](#enumeration-types).
 
 Because some sources of travel data are indirect (through email parsing, for example) or only signal traveler intent, it is not uncommon for records to be incomplete or populated with suspicious data. Data customers must develop a strategy for incomplete records, as appropriate for their use cases. In the case of duty of care services, a flight from JFK to LHR without a flight number (or a fake flight number), should be interpreted as traveler intent to be in London on that date.
 
