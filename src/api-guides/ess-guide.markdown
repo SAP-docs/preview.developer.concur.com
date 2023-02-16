@@ -35,7 +35,7 @@ You may need to request access from your SAP Concur representative if you do not
     `user.provision.read`	|Identity Change Event
     `user.provision.read`	|Concur User Provisioning Event
 
-  The SAP Concur products that ESS supports are constantly evolving. Please refer to [the main Event Topics page](/event-topics/index.html) for a list of current       available Event Topics.
+  The SAP Concur products that ESS supports are constantly evolving. Please refer to [the main Event Topics page](/event-topics/index.html) for a list of current available Event Topics.
 
 * Ensure your webhook or endpoint meets these [requirements](/api-reference/ess/v4.event-subscription.html#endpoint-requirements-). Endpoint need not be safelisted.
 
@@ -79,7 +79,7 @@ On receiving a success message for the PUT API call, the Event Subscription(s) i
 
 Use the App token of the correct data center (from Step 2) to perform a [GET call](/event-topics/index.html#browse-existing-subscriptions). A new event subscription will look like the following:
 
-![Sample screenshot of ESS PUT request call in US data center](/api-guides/images/Step_4.png)    
+![Sample screenshot of ESS PUT request call in US data center](/api-guides/images/step-4.png)    
 
 **Important Notes**
 
@@ -103,10 +103,10 @@ You need to connect your SAP Concur company/entity to your own app, which will a
 
 This connection is achieved via the Authentication Admin tool within your entity and then making an API request to exchange the Request token for an Access Token that is valid only for your entity (i.e., company-level token/JWT).
 
-* Company Admin to navigate to **Administration > Company > Authentication Admin** page.
-* Select the **Company Request Token** link and on this page, enter your client_id in the App ID field and submit.
-* A dialog box appears displaying the Company UUID and the Company Request Token (Username and Password).
-* Use these info to obtain a Company JWT/token with the help of our Auth API (Password grant type). The API steps to obtain this JWT are detailed on the Company Request Token page.
+1. Company Admin navigates to the **Administration > Company > Authentication Admin** page.
+2. Select the **Company Request Token** link and on this page, enter your `client_id` in the App ID field and submit.
+3. A dialog box appears displaying the Company UUID and the Company Request Token (Username and Password).
+4. Use these info to obtain a Company JWT/token with the help of our Auth API (Password grant type). The API steps to obtain this JWT are detailed on the Company Request Token page.
 
   More information on the [Company Request Tool](/api-reference/authentication/company-refresh-tool.html) page. 
 
@@ -120,10 +120,10 @@ When a Customer/Company Admin clicks the **Connect** button from the App Center 
 
 Successful connection implies you successfully obtained a Company JWT/token for this Customer.
 
-* Company Admin navigates to the App Center and clicks the **Connect** button from your App listing page.
-* The admin is redirected to your landing page.
-* From the URL of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password).
-* Use these info to obtain a Company JWT/token with the help of our Company Auth API ([Password grant type](/api-reference/authentication/company-auth.html)), after the admin submits required info on the landing page.
+1. Company Admin navigates to the App Center and clicks the **Connect** button from your App listing page.
+2. The admin is redirected to your landing page.
+3. From the URL of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password).
+4 Use these info to obtain a Company JWT/token with the help of our Company Auth API ([Password grant type](/api-reference/authentication/company-auth.html)), after the admin submits required info on the landing page.
 
   ![Screenshot of App Center connection](/api-guides/images/ess-app-center.png)
 
@@ -137,10 +137,10 @@ Since a Client can have different Travel Agency Offices, it is necessary to ensu
 
 Within the Event Subscription, there is a ‘Groups’ field that should contain only such Agency UUIDs. This is achieved by performing the following steps, which will then later ensure that the Agency UUID(s) is automatically added to the event subscription once a Company JWT is generated:
 
-* Within a Client's SAP Concur entity, a Request Admin to navigate to **Administration → Request → Travel Agency Offices**
-* Select the required Travel Agency Office (the Agency UUID of which needs to be included within the 'groups' in the Event subscription) from the list. And double-click or click **Modify**.
-* In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click **Done**.
-* Repeat, if there are more Agency UUIDs that need to be included.
+1. Within a Client's SAP Concur entity, a Request Admin to navigate to **Administration → Request → Travel Agency Offices**
+2. Select the required Travel Agency Office (the Agency UUID of which needs to be included within the 'groups' in the Event subscription) from the list. And double-click or click **Modify**.
+3. In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click **Done**.
+4. Repeat, if there are more Agency UUIDs that need to be included.
 
   ![Screenshot showing adding TMCs](/api-guides/images/ess-tmc.png)
 
@@ -159,12 +159,12 @@ Verify that:
 * Company UUID is listed in the **companyIds** array of the subscription.
 * Agency UUID is listed in the **groups** array of the subscription (only for TMCs).
 
-  ![Screenshot of GET call](/api-guides/images/Step_6.png)
+  ![Screenshot of GET call](/api-guides/images/step-6.png)
 
 Based on SAP Concur product activity, you should now begin to see events coming through to your webhook! Sample Event payloads can be found within the respective [Topic](/event-topics/).
 
-Click the button below to download the ESS API collection in Postman
+Click the button below to download the ESS API collection in Postman.
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/1527280-5855f895-e74d-4836-b59d-f3e5c7249b79?action=collection%2Ffork&collection-url=entityId%3D1527280-5855f895-e74d-4836-b59d-f3e5c7249b79%26entityType%3Dcollection%26workspaceId%3Dc798f711-eead-4885-814f-8dcf58e70860)
 
-Or you may download the [JSON collection](/api-guides/postman/ESS%20API%20endpoints.postman_collection.zip)
+Or you may download the [JSON collection](/api-guides/postman/ESS%20API%20endpoints.postman_collection.zip).
