@@ -659,21 +659,21 @@ Content-Type: application/json
 
 ```json
 {
-   "Comment":"Meal Expenses",
-   "expenseTypeId":"MEALS",
-   "location":{
-      "city":"SHANGHAI",
-      "countryCode":"CN",
-      "countrySubDivisionCode":"CN-31",
-      "name":"Shanghai Restaurant"
+   "Comment": "Business Meal",
+   "expenseTypeId": "BUSML",
+   "location": {
+      "city": "Bellevue",
+      "countryCode": "US",
+      "countrySubDivisionCode": "US-WA",
+      "name": "ARIA"
    },
-   "paymentTypeId":"CASHX",
-   "transactionAmount":{
-      "currencyCode":"CNY",
-      "value":160.00
+   "paymentTypeId": "CASHX",
+   "transactionAmount": {
+      "currencyCode": "USD",
+      "value": 120.00
    },
-   "transactionDate":"2022-08-08",
-   "Vendor": "Shanghai Restaurant"
+   "transactionDate": "2022-12-12",
+   "Vendor": "ARIA"
 }
 ```
 
@@ -689,6 +689,10 @@ HTTP/1.1 201 OK
    "quickExpenseIdUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/506CF67C85BA436097F434F39CAE7DD8"
 }
 ```
+
+The sample quick expense item is now shown in the Available Expense list.
+
+![Quick Expense In The Available Expenses List](/assets/img/api-guides/e-receipts/quick-expense-sample.png)
 
 ## Postman Sample Collections
 
