@@ -7,7 +7,7 @@ Handling data with care and delivering a positive experience for our customers i
 
 **NOTE:** This only applies to developers who are building an integration across multiple clients (that is, an app that would appear in the App Center or TMC integrations). SAP Concur clients who are using these APIs for interaction with their own data do not need to go through certification.
 
-#### **Get Started on Your API Review**
+#### **Get Started on Your App Review**
 
 Start with an overview of the whole process: [API documentation]({{ site.baseurl }}/api-reference/). Consider these three integration scenarios:
 
