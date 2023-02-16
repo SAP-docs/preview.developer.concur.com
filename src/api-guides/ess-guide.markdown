@@ -21,21 +21,21 @@ The following diagram gives a high-level overview of the steps involved for the 
 
 You may need to request access from your SAP Concur representative if you do not have the necessary permissions.
 * Ensure your App (`client_id` + `client_secret`) has access to the following grant types:
-  * `client_credentials`
+  * Client Credentials
   * Password
 * Ensure your App has access to the required scopes:
 
-App Scopes|Required For
----|---
-`events.topic.read`	|All Topics
-`travel.itinerary.read`|Concur Itinerary Event
-`travelrequest.write`	|Concur Request Event
-`expense.report.read` |Concur Expense Event
-`expense.report.readwrite` |Concur Expense Event
-`user.provision.read`	|Identity Change Event
-`user.provision.read`	|Concur User Provisioning Event
+    App Scopes|Required For
+    ---|---
+    `events.topic.read`	|All Topics
+    `travel.itinerary.read`|Concur Itinerary Event
+    `travelrequest.write`	|Concur Request Event
+    `expense.report.read` |Concur Expense Event
+    `expense.report.readwrite` |Concur Expense Event
+    `user.provision.read`	|Identity Change Event
+    `user.provision.read`	|Concur User Provisioning Event
 
-The SAP Concur products that ESS supports are constantly evolving. Please refer to [the main Event Topics page](/event-topics/index.html) for a list of current available Event Topics.
+  The SAP Concur products that ESS supports are constantly evolving. Please refer to [the main Event Topics page](/event-topics/index.html) for a list of current       available Event Topics.
 
 * Ensure your webhook or endpoint meets these [requirements](/api-reference/ess/v4.event-subscription.html#endpoint-requirements-). Endpoint need not be safelisted.
 
@@ -47,17 +47,17 @@ For the above checks on your App, you need to ask your SAP Concur representative
 * The token generated in the API response is your App token and will need to be used only for making ESS API calls (details in upcoming steps).
 * This Auth call needs to be made separately for both our US and EMEA data centers. In other words, 2 separate tokens are required for creating event subscriptions in the two data centers.
 
-![Sample screenshot of Auth request call in US data center](/api-guides/images/ess-us-auth.png)
+  ![Sample screenshot of Auth request call in US data center](/api-guides/images/ess-us-auth.png)
 
-![Sample screenshot of Auth request call in EMEA data center](/api-guides/images/ess-emea-auth.png)
+  ![Sample screenshot of Auth request call in EMEA data center](/api-guides/images/ess-emea-auth.png)
 
 ## Step 3 – Create Event Subscription(s)
 
 * Using the App token(s) from Step 2, make the following PUT API call(s) to [create new Event Subscriptions](/event-topics/index.html#create-a-subscription) in both US and EMEA data centers.
 
-![Sample screenshot of ESS PUT request call in US data center](/api-guides/images/ess-us-put.png)
+  ![Sample screenshot of ESS PUT request call in US data center](/api-guides/images/ess-us-put.png)
 
-![Sample screenshot of ESS PUT request call in EMEA data center](/api-guides/images/ess-emea-put.png)
+  ![Sample screenshot of ESS PUT request call in EMEA data center](/api-guides/images/ess-emea-put.png)
 
 **Request body explained**:
 
@@ -84,12 +84,12 @@ Use the App token of the correct data center (from Step 2) to perform a [GET cal
 **Important Notes**
 
 * Steps 1, 2, and 3 in combination, is a one-time process based on the nature of your integration or the requirements of the event topic.
-* The above steps should be performed before moving forward with the steps below.
+* The above steps must be performed before moving forward with the steps below.
 * In addition to using the App token (from Step 2) for the PUT ESS API call, this token can also be used for other ESS calls like verifying (GET) the created subscription, deleting (DELETE) the subscription, etc. Details available [here](/event-topics/index.html#verify-your-subscription).
-* If you need to update an existing event subscription, PUT ESS API call should be used with the correct subscription “id”. If the “id” is different, a new subscription will be created.
+* If you need to update an existing event subscription, PUT ESS API call must be used with the correct subscription “id”. If the “id” is different, a new subscription will be created.
 * The App token is used only for ESS API endpoints.
 
-Now, to begin receiving Concur Events of a Company/Concur entity, the Company ID/UUID of this entity should be related or connected to your App, which will then ensure that this UUID is automatically added to the Event Subscription you just created.
+Now, to begin receiving Concur Events of a Company/Concur entity, the Company ID/UUID of this entity must be related or connected to your App, which will then ensure that this UUID is automatically added to the Event Subscription you just created.
 
 ![Connecting your ESS subscription](/api-guides/images/ess-subscription.png)
 
@@ -103,29 +103,29 @@ You need to connect your SAP Concur company/entity to your own app, which will a
 
 This connection is achieved via the Authentication Admin tool within your entity and then making an API request to exchange the Request token for an Access Token that is valid only for your entity (i.e., company-level token/JWT).
 
-1. Company Admin to navigate to Administration > Company > Authentication Admin page.
-2. Select the Company Request Token link on this page, enter your client_id in the App ID field and submit.
-3. A dialog box appears displaying the Company UUID and the Company Request Token (Username and Password).
-4. Use these info to obtain a Company JWT/token with the help of our Auth API (Password grant type). The API steps to obtain this JWT are detailed on the Company Request Token page.
+* Company Admin to navigate to **Administration > Company > Authentication Admin** page.
+* Select the **Company Request Token** link and on this page, enter your client_id in the App ID field and submit.
+* A dialog box appears displaying the Company UUID and the Company Request Token (Username and Password).
+* Use these info to obtain a Company JWT/token with the help of our Auth API (Password grant type). The API steps to obtain this JWT are detailed on the Company Request Token page.
 
-More information on the [Company Refresh Tool](/api-reference/authentication/company-refresh-tool.html) page. 
+  More information on the [Company Request Tool](/api-reference/authentication/company-refresh-tool.html) page. 
 
-![Screenshot of the Company Request Tokens page](/api-guides/images/ess-company-request-token.png)
+  ![Screenshot of the Company Request Tokens page](/api-guides/images/ess-company-request-token.png)
 
 * After you have obtained a Company JWT successfully, proceed to Step 6.
 
 ### App Center Partners
 
-When a Customer/Company Admin clicks the **Connect** button from the App Center and successfully establishes a connection to your App, this will automatically update the event subscription that you created with the Company UUID.
+When a Customer/Company Admin clicks the **Connect** button from the App Center and successfully establishes a connection to your App, this will automatically update the event subscription, that you created, with the Company UUID.
 
 Successful connection implies you successfully obtained a Company JWT/token for this Customer.
 
-1. Company Admin navigates to the App Center and clicks the **Connect** button from your App listing page.
-2. The admin is redirected to your landing page.
-3. From the URL of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password).
-4. Use these info to obtain a Company JWT/token with the help of our Company Auth API ([Password grant type](/api-reference/authentication/company-auth.html)), after the admin submits required info on the landing page.
+* Company Admin navigates to the App Center and clicks the **Connect** button from your App listing page.
+* The admin is redirected to your landing page.
+* From the URL of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password).
+* Use these info to obtain a Company JWT/token with the help of our Company Auth API ([Password grant type](/api-reference/authentication/company-auth.html)), after the admin submits required info on the landing page.
 
-![Screenshot of App Center connection](/api-guides/images/ess-app-center.png)
+  ![Screenshot of App Center connection](/api-guides/images/ess-app-center.png)
 
 * After you have obtained a Company JWT successfully, proceed to Step 6.
 
@@ -137,14 +137,14 @@ Since a Client can have different Travel Agency Offices, it is necessary to ensu
 
 Within the Event Subscription, there is a ‘Groups’ field that should contain only such Agency UUIDs. This is achieved by performing the following steps, which will then later ensure that the Agency UUID(s) is automatically added to the event subscription once a Company JWT is generated:
 
-1. Within a Client's SAP Concur entity, a Request Admin to navigate to Administration → Request → Travel Agency Offices
-2. Select the required Travel Agency Office (the Agency UUID of which needs to be included within the 'groups' in the Event subscription) from the list. And double-click or click **Modify**.
-3. In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click **Done**.
-4. Repeat, if there are more Agency UUIDs that need to be included.
+* Within a Client's SAP Concur entity, a Request Admin to navigate to **Administration → Request → Travel Agency Offices**
+* Select the required Travel Agency Office (the Agency UUID of which needs to be included within the 'groups' in the Event subscription) from the list. And double-click or click **Modify**.
+* In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click **Done**.
+* Repeat, if there are more Agency UUIDs that need to be included.
 
-![Screenshot showing adding TMCs](/api-guides/images/ess-tmc.png)
+  ![Screenshot showing adding TMCs](/api-guides/images/ess-tmc.png)
 
-* After the above steps, Admin may navigate to Administration > Company > Authentication Admin page and select the Company Request Token link on this page in order to generate a Request Token. Or can request the SAP Concur representative to help generate one on your behalf.
+* After the above steps, Admin may navigate to **Administration > Company > Authentication Admin** page and select the Company Request Token link on this page in order to generate a Request Token. Or can request the SAP Concur representative to help generate a Request Token on your behalf.
 * Detailed steps on how to use the Request token and Company UUID to obtain a [Company JWT/token](/api-reference/authentication/company-refresh-tool.html).
 * After you have obtained a Company JWT successfully, proceed to Step 6.
 
@@ -152,14 +152,14 @@ Within the Event Subscription, there is a ‘Groups’ field that should contain
 
 If a Company JWT has been successfully obtained, this implies that the Company UUID (and Agency UUID for TMCs) have been automatically added to the Event Subscription. And only if these UUIDs exist in the Event Subscription, will we begin delivering events to your endpoint.
 
-Hence, this last step can be used to verify the existence of these UUIDs in the Subscription. The [GET ESS API](/event-topics/index.html#browse-existing-subscriptions) call should be used with the App Token (from Step 2). Perform this separately for US and EMEA data centers.
+Hence, this last step can be used to verify the existence of these UUIDs in the Subscription. The [GET ESS API](/event-topics/index.html#browse-existing-subscriptions) call must be used with the App Token (from Step 2). Perform this separately for US and EMEA data centers.
 
 Verify that:
 
-* Company UUID is listed in the companyIds array of the subscription.
-* Agency UUID is listed in the groups array of the subscription (only for TMCs).
+* Company UUID is listed in the **companyIds** array of the subscription.
+* Agency UUID is listed in the **groups** array of the subscription (only for TMCs).
 
-![Screenshot of GET call](/api-guides/images/ess-us-get.png)
+  ![Screenshot of GET call](/api-guides/images/ess-us-get.png)
 
 Based on SAP Concur product activity, you should now begin to see events coming through to your webhook! Sample Event payloads can be found within the respective [Topic](/event-topics/).
 
