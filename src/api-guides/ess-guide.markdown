@@ -79,7 +79,7 @@ On receiving a success message for the PUT API call, the Event Subscription(s) i
 
 Use the App token of the correct data center (from Step 2) to perform a [GET call](/event-topics/index.html#browse-existing-subscriptions). A new event subscription will look like the following:
 
-![Sample screenshot of ESS PUT request call in US data center](/api-guides/images/ess-us-put.png)    
+![Sample screenshot of ESS PUT request call in US data center](/api-guides/images/Step_4.png)    
 
 **Important Notes**
 
@@ -159,7 +159,7 @@ Verify that:
 * Company UUID is listed in the **companyIds** array of the subscription.
 * Agency UUID is listed in the **groups** array of the subscription (only for TMCs).
 
-  ![Screenshot of GET call](/api-guides/images/ess-us-get.png)
+  ![Screenshot of GET call](/api-guides/images/Step_6.png)
 
 Based on SAP Concur product activity, you should now begin to see events coming through to your webhook! Sample Event payloads can be found within the respective [Topic](/event-topics/).
 
