@@ -108,9 +108,9 @@ This connection is achieved via the Authentication Admin tool within your entity
 3. A dialog box appears displaying the Company UUID and the Company Request Token (Username and Password).
 4. Use these info to obtain a Company JWT/token with the help of our Auth API (Password grant type). The API steps to obtain this JWT are detailed on the Company Request Token page.
 
-  More information on the [Company Request Tool](/api-reference/authentication/company-refresh-tool.html) page. 
+   More information on the [Company Request Tool](/api-reference/authentication/company-refresh-tool.html) page. 
 
-  ![Screenshot of the Company Request Tokens page](/api-guides/images/ess-company-request-token.png)
+   ![Screenshot of the Company Request Tokens page](/api-guides/images/ess-company-request-token.png)
 
 5. After you have obtained a Company JWT successfully, proceed to Step 6.
 
@@ -125,7 +125,7 @@ Successful connection implies you successfully obtained a Company JWT/token for 
 3. From the URL of the landing page, you are able to get the the Company UUID and the Company Request Token (Username and Password).
 4. Use these info to obtain a Company JWT/token with the help of our Company Auth API ([Password grant type](/api-reference/authentication/company-auth.html)), after the admin submits required info on the landing page.
 
-  ![Screenshot of App Center connection](/api-guides/images/ess-app-center.png)
+    ![Screenshot of App Center connection](/api-guides/images/ess-app-center.png)
 
 5. After you have obtained a Company JWT successfully, proceed to Step 6.
 
@@ -142,7 +142,7 @@ Within the Event Subscription, there is a ‘Groups’ field that should contain
 3. In the `appId` field, enter the TMC's App ID/UUID (`client_id`) and click **Done**.
 4. Repeat, if there are more Agency UUIDs that need to be included.
 
-  ![Screenshot showing adding TMCs](/api-guides/images/ess-tmc.png)
+   ![Screenshot showing adding TMCs](/api-guides/images/ess-tmc.png)
 
 5. After the above steps, Admin may navigate to **Administration > Company > Authentication Admin** page and select the Company Request Token link on this page in order to generate a Request Token. Or can request the SAP Concur representative to help generate a Request Token on your behalf.
 6. Detailed steps on how to use the Request token and Company UUID to obtain a [Company JWT/token](/api-reference/authentication/company-refresh-tool.html).
