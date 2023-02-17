@@ -11,30 +11,24 @@ Merchants can also use the **Quick Expense** API to create an expense with basic
 
 This integration guide helps SAP Concur App Center E-Receipt and Quick Expense user app integration partners to develop and list their apps for the App Center.
 
-## Getting Started
-
-**New App Center Partners:** Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
-
-**Existing App Center Partners:** The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access. You can make that request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?subject=Receipts%20v4%20Migration%20Request).
-
 ## Certification Process Flow
 
 Once partner signs the partnership agreement with SAP Concur BD manager, parnter needs to follow the steps below to complete the User App certifiation.
 
-1. **Partner** receives the **Welcome Letter** from SAP Concur BD manager.
-2. Once **Partner** technical team is ready to start the development project, **Partner** submits **Readiness Form** using the link provided in the **Welcome Letter**.
-3. SAP Concur **CPM** (Certification Project Manager) on duty prepares the development environment and **Development App** for **Partner**.
-4. **CPM** on duty sends the development environment details and certification requirements to **Partner** technical lead via email [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
-5. **Partner** develops and tests the **Development App** in their development environment.
-6. **Partner** sends Email to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) to schedule the **Development App** certification one month before the certificaton week. **CPM** on duty will send the meeting invitation to **Partner** technical contact. Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
-7. **CPM** on duty conducts the **Development App** certification walkthrough on the scheduled date. If parnter fails in the **Development App** certification walkthrough, **Partner** needs to fix the issues and goes back to step 6 to schedule next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
-8. **CPM** on duty prepares the **Production App** and sends App credentials to **Partner** via email [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
-9. **Partner** deployes and tests the **Production App** in their production environment. 
-10. **Partner** marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](#creating-and-updating-an-app-center-listing) for more information.
-11. App Center marketing team reviews and approves the listing documents and sends the confirmation to partner marketing team via email [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com), and alsp copy **CPM** on duty ([PlatformCertification@sap.com](mailto:platformcertification@sap.com)). **Partner** needs to get the App Center marketing team's approval before step 12. 
-12. **Partner** sends email to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) to schedule the **Production App** certification one month before the certificaton week. **CPM** will send the meeting invitation to **Partner** technical contact. Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
-13. **CPM** on duty conducts the **Production App** certification walkthrough on the scheduled date. If parnter fails in the **Production App** certification walkthrough, **Partner** needs to fix the issues and goes back to step 12 to schedule next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
-14. Once the certification project is complete, **CPM** on duty sends the Certification Notification to **Partner** via email [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
+1. Partner receives the Welcome Letter from SAP Concur BD manager.
+2. Once Partner technical team is ready to start the development project, Partner submits Readiness Form using the link provided in the Welcome Letter.
+3. SAP Concur CPM (Certification Project Manager) on duty prepares the development environment and Development App for Partner.
+4. CPM on duty sends the development environment details and certification requirements to Partner technical lead via email [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
+5. Partner develops and tests the Development App in their development environment.
+6. Partner sends Email to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) to schedule the Development App certification one month before the certificaton week. CPM on duty will send the meeting invitation to Partner technical contact. Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
+7. CPM on duty conducts the Development App certification walkthrough on the scheduled date. If parnter fails in the Development App certification walkthrough, Partner needs to fix the issues and goes back to step 6 to schedule next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
+8. CPM on duty prepares the Production App and sends App credentials to Partner via email [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
+9. Partner deployes and tests the Production App in their production environment. 
+10. Partner marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](#creating-and-updating-an-app-center-listing) for more information.
+11. App Center marketing team reviews and approves the listing documents and sends the confirmation to partner marketing team via email [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com), and alsp copy CPM on duty ([PlatformCertification@sap.com](mailto:platformcertification@sap.com)). Partner needs to get the App Center marketing team's approval before step 12. 
+12. Partner sends email to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) to schedule the Production App certification one month before the certificaton week. CPM will send the meeting invitation to Partner technical contact. Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
+13. CPM on duty conducts the Production App certification walkthrough on the scheduled date. If parnter fails in the Production App certification walkthrough, Partner needs to fix the issues and goes back to step 12 to schedule next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
+14. Once the certification project is complete, CPM on duty sends the Certification Notification to Partner via email [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
 
 
 ## Development Environment
@@ -46,14 +40,14 @@ Once partner signs the partnership agreement with SAP Concur BD manager, parnter
 
 ### Development App
 
-* A **development** app will be created for you by your assigned certification manager. They will send you a deep link (url) to the **development** app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
-* You need to send the **development** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting the development and testing of the development app.   
+* A development app will be created for you by your assigned certification manager. They will send you a deep link (url) to the development app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
+* You need to send the development app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting the development and testing of the development app.   
 
 ### Production App
 
-* Once you complete the development app certification walkthrough, you will be provided a **production app** `client_id` and `client_secret`.
-* You need to send the **production** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com)  before starting the development and testing of the production app.
-* The certification project manager will provide you the deep link (URL) to the **production** app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your **production** app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.    
+* Once you complete the development app certification walkthrough, you will be provided a production app `client_id` and `client_secret`.
+* You need to send the production app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com)  before starting the development and testing of the production app.
+* The certification project manager will provide you the deep link (URL) to the production app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your production app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.    
 
 ## User Connections / Authentication
 
