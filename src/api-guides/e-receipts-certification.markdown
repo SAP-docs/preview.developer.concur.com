@@ -68,9 +68,9 @@ You must meet following certification requirements before proceeding to the cert
 |Requirement | Description |
 | --- | --- |
 |Error Codes |Must log Error Code / Error Description. |
-|Correlation ID|The API call's HTTP Response header contains a field "concur-correlationid" which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
+|Correlation ID|The API call's HTTP Response header contains a field `concur-correlationid` which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
 |User ID |Should log `UserID` (User who clicked the Connect button).|
-|Response Header |For the eReceipt App, should log the 'concur-correlationid','link' and 'location' data. |
+|Response Header |For the eReceipt App, should log the `concur-correlationid`,`link` and `location` data. |
 |Response Body |For the Quick Expense App, should log response body. |
 
 **Production Readiness**
