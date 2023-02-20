@@ -15,12 +15,13 @@ This integration guide helps SAP Concur App Center E-Receipt and Quick Expense u
 
 New App Center Partners:  Your Company must have entered into a commercial agreement with SAP Concur. If you have not yet entered into a said agreement with SAP Concur, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
 
-Existing App Center Partners: The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access.  You can make that App expansion request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?
-subject=App%20Exapansion%20Request).
+Existing App Center Partners: The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access.  You can make that App expansion request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?subject=App%20Exapansion%20Request).
 
 The E-Receipts and Quick Expense User App need to be certified before the App is listed in the SAP Concur App Center. Please follow the steps of [User App Certification Flow](e-receipts-certifiation.html/#certification-process-flow) to complete your App certification. Please make sure your App must achieve all the criteria in [Certification Checklist](e-receipts-certifiation.html/#certification-check-list) before you schedule the certification demo with the Certification Project Manager.   
 
 ## Development Environment
+
+SAP Concur Certification Project Manager will prepare the development environment for you and send the development environment details to you by email. The development environment includes:
 
 ### Sandboxes and Accounts
 
@@ -505,10 +506,6 @@ The general eReceipt schema includes all receipt core definitions.
 Receipt is now shown in the Available Expense list and the receipt Expense Type is "Undefined".
 
 ![Receipt In The Available Expenses List](/assets/img/api-guides/e-receipts/ereceipt-in-available-expenses-list.png)
-
-Generated Receipt Image
-
-![Generated Receipt Image](/assets/img/api-guides/e-receipts/general-ereceipt-sample.png)
 
 **Example: Posting a General e-Receipt with Image**
 
