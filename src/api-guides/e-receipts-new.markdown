@@ -13,7 +13,7 @@ This integration guide helps SAP Concur App Center E-Receipt and Quick Expense u
 
 ## Getting Started
 
-New App Center Partners:  Your Company must have entered into a commercial agreement with SAP Concur. If you have not yet entered into a said agreement with SAP Concur, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
+New App Center Partners:  Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
 
 Existing App Center Partners: The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access.  You can make that App expansion request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?subject=App%20Exapansion%20Request).
 
