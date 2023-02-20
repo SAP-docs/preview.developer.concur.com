@@ -68,15 +68,15 @@ You must meet following certification requirements before proceeding to the cert
 |Requirement | Description |
 | --- | --- |
 |Error Codes |Must log Error Code / Error Description. |
-|Correlation ID|The API call's HTTP Response header contains a field "concur-correlationId" which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
-|User ID |Should log `UserID` (User who clicked the Connect button). (Highly Recommended) |
-|Response Headers |Should log Response Headers. (Highly Recommended) |
+|Correlation ID|The API call's HTTP Response header contains a field "concur-correlationid" which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
+|User ID |Should log `UserID` (User who clicked the Connect button).|
+|Response Header |For the eReceipt App, should log the 'concur-correlationid','link' and 'location' data. |
+|Response Body |For the Quick Expense App, should log response body. |
 
 **Production Readiness**
 
 |Requirement | Description |
 | --- | --- |
-|Business Informational Review Meeting |This mandatory meeting can be attended at any time after the analysis and design phase. Suggested attendees include Finance, Alliance Manager, and Business Development team members. Agenda includes post-certification marketing, LOA and DNF procedures, Invoicing, and how to contact Support. Navigate to Business Information Review for meeting details. |
 |Documentation |You will produce a Technical Guide that includes: Solution’s architecture, functions, and schema. Detailed token management (obtaining, refreshing, and storing tokens). API scopes with corresponding parameters used.​ API Logging. |
 |Register Authorized Support Contacts |You must have registered Authorized Support Contacts​. |
 |Submit Support Case |You must submit at least one Support Case at Partner Support Portal. |
