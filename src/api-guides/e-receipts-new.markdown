@@ -13,11 +13,15 @@ This integration guide helps SAP Concur App Center E-Receipt and Quick Expense u
 
 ## Getting Started
 
-**New App Center Partners:** Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
+New App Center Partners:  Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
 
-**Existing App Center Partners:** The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access. You can make that request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?subject=Receipts%20v4%20Migration%20Request).
+Existing App Center Partners: The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access.  You can make that App expansion request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?subject=App%20Exapansion%20Request).
+
+The E-Receipts and Quick Expense User App need to be certified before the App is listed in the SAP Concur App Center. Please follow the steps of [User App Certification Flow](e-receipts-certifiation.html/#certification-process-flow) to complete your App certification. Please make sure your App must achieve all the criteria in [Certification Checklist](e-receipts-certifiation.html/#certification-check-list) before you schedule the certification demo with the Certification Project Manager.   
 
 ## Development Environment
+
+SAP Concur Certification Project Manager will prepare the development environment for you and send the development environment details to you by email. The development environment includes:
 
 ### Sandboxes and Accounts
 
@@ -26,14 +30,14 @@ This integration guide helps SAP Concur App Center E-Receipt and Quick Expense u
 
 ### Development App
 
-* A **development** app will be created for you by your assigned certification manager. They will send you a deep link (url) to the **development** app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
-* You need to send the **development** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting the development and testing of the development app.   
+* A development app will be created for you by your assigned certification manager. They will send you a deep link (url) to the development app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
+* You need to send the development app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) before starting the development and testing of the development app.   
 
 ### Production App
 
-* Once you complete the development app certification walkthrough, you will be provided a **production app** `client_id` and `client_secret`.
-* You need to send the **production** app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com)  before starting the development and testing of the production app.
-* The certification project manager will provide you the deep link (URL) to the **production** app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your **production** app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.    
+* Once you complete the development app certification walkthrough, you will be provided a production app `client_id` and `client_secret`.
+* You need to send the production app’s connect URL (redirect URL) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com)  before starting the development and testing of the production app.
+* The certification project manager will provide you the deep link (URL) to the production app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your production app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.    
 
 ## User Connections / Authentication
 
@@ -503,10 +507,6 @@ Receipt is now shown in the Available Expense list and the receipt Expense Type 
 
 ![Receipt In The Available Expenses List](/assets/img/api-guides/e-receipts/ereceipt-in-available-expenses-list.png)
 
-Generated Receipt Image
-
-![Generated Receipt Image](/assets/img/api-guides/e-receipts/general-ereceipt-sample.png)
-
 **Example: Posting a General e-Receipt with Image**
 
 **Request**
@@ -639,21 +639,21 @@ Content-Type: application/json
 
 ```json
 {
-   "Comment":"Meal Expenses",
-   "expenseTypeId":"MEALS",
-   "location":{
-      "city":"SHANGHAI",
-      "countryCode":"CN",
-      "countrySubDivisionCode":"CN-31",
-      "name":"Shanghai Restaurant"
+   "Comment": "Business Meal",
+   "expenseTypeId": "BUSML",
+   "location": {
+      "city": "Bellevue",
+      "countryCode": "US",
+      "countrySubDivisionCode": "US-WA",
+      "name": "ARIA"
    },
-   "paymentTypeId":"CASHX",
-   "transactionAmount":{
-      "currencyCode":"CNY",
-      "value":160.00
+   "paymentTypeId": "CASHX",
+   "transactionAmount": {
+      "currencyCode": "USD",
+      "value": 120.00
    },
-   "transactionDate":"2022-08-08",
-   "Vendor": "Shanghai Restaurant"
+   "transactionDate": "2022-12-12",
+   "Vendor": "ARIA"
 }
 ```
 
@@ -669,6 +669,10 @@ HTTP/1.1 201 OK
    "quickExpenseIdUri": "https://us2.api.concursolutions.com/quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses/506CF67C85BA436097F434F39CAE7DD8"
 }
 ```
+
+The sample quick expense item is now shown in the Available Expense list.
+
+![Quick Expense In The Available Expenses List](/assets/img/api-guides/e-receipts/quick-expense-sample.png)
 
 ## Postman Sample Collections
 
@@ -696,60 +700,6 @@ Once your content is finalized, your listing will be queued for launch on an agr
 
 User Connection apps are launched on the following [release dates](https://developer.concur.com/manage-apps/go-market-docs/apps-for-me-release-schedule.html).
 
-## Certification Check List
-
-You must meet following certification requirements before proceeding to the certification walkthrough demo.
-
- **App Center Connection Flow**
-
-|Requirement | Description |
-| --- | --- |
-|Landing Page - All Pages |Should include support and help options clearly throughout the process. |
-|Landing Page - All Pages |Must include your company branding and specific application brand, if applicable​. |
-|Landing Page - First Pages |Must clearly indicate this is an integration with the SAP Concur platform. |
-|Landing Page - First Pages |Must include links to your terms and conditions and privacy policy. |
-|Landing Page - First Pages |Must use one of the following calls to action: 1) Sign-In or Sign-Up (a prompt to login or create new account) 2) Verification (a prompt to enter a verification/access code)​ |
-|Landing Page - Account Creation Pages |If your account creation process requires multiple steps, provide a progress indicator so the user knows what is required. |
-|Landing Page - Confirmation Pages |Must have an indication that the connection was successful. |
-|Landing Page - Confirmation Pages |Must provide next steps​: 1) Provide customer information on what will occur next such as expect email, etc. 2) User should be directed to close the window as the connection is complete. |
-|Landing Page - Confirmation Pages |Partner should not obtain `access_token` until customer has completed all actions on the Landing Page.​ |
-
- **Token Management**
-
-|Requirement | Description |
-| --- | --- |
-|Geolocation | Must securely store last received `geoLocation` to use on subsequent calls. |
-|Refresh Token | Must securely store last received `refresh_token` to use on subsequent calls. |
-|Token Expiration Date | Must securely store `refresh_token` expiry date. |
-
- **API Logging**
-
-|Requirement | Description |
-| --- | --- |
-|Error Codes |Must log Error Code / Error Description. |
-|Correlation ID|The API call's HTTP Response header contains a field "concur-correlationId" which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
-|User ID |Should log `UserID` (User who clicked the Connect button). (Highly Recommended) |
-|Response Headers |Should log Response Headers. (Highly Recommended) |
-
-**Production Readiness**
-
-|Requirement | Description |
-| --- | --- |
-|Business Informational Review Meeting |This mandatory meeting can be attended at any time after the analysis and design phase. Suggested attendees include Finance, Alliance Manager, and Business Development team members. Agenda includes post-certification marketing, LOA and DNF procedures, Invoicing, and how to contact Support. Navigate to Business Information Review for meeting details. |
-|Documentation |You will produce a Technical Guide that includes: Solution’s architecture, functions, and schema. Detailed token management (obtaining, refreshing, and storing tokens). API scopes with corresponding parameters used.​ API Logging. |
-|Register Authorized Support Contacts |You must have registered Authorized Support Contacts​. |
-|Submit Support Case |You must submit at least one Support Case at Partner Support Portal. |
-
-**Certified APIs**
-
-|Requirement | Description |
-| --- | --- |
-|OAuth2 - US DC Client |You must demonstrate ability to authenticate clients in the US Data Center (default geolocation). |
-|OAuth2 - EU DC Client |You must demonstrate ability to authenticate client in the EU Data Center (token geolocation). |
-|OAuth2 - CN DC Client |You must demonstrate ability to authenticate client in China Data Center (default geolocation). |
-|eReceipt or Quick Expense API - US DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in US Data Center. |
-|eReceipt or Quick Expense API - EU DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in EU Data Center. |
-|eReceipt or Quick Expense API - CN DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in China Data Center. |
 
 ## Error Handling
 
