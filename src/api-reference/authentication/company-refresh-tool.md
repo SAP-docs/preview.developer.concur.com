@@ -20,6 +20,7 @@ The Company Request Tokens page can be used to generate only a Company Request t
 * Access/Refresh Token: This token is created after creating the Company Request token. This token can be used with the Concur API platform, and is sometimes necessary for integrations. If you are creating an Access/Refresh token, you need to obtain a Client ID and Client Secret via the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html) or receive your Client ID and Client Secret directly from your SAP Concur contact.
 
 ## Prerequisites
+
 The SAP Concur administrator must have the correct user role to access the Company Request Tokens page:
 
 * Professional Edition: Web Services Administrator
@@ -36,7 +37,7 @@ The SAP Concur administrator must have the correct user role to access the Compa
     ![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
 
 3. In the **App ID** field, type the **App ID or Client ID**.
-**NOTE**: Clients can obtain a **App ID or Client ID** through one of the following methods:
+    >**NOTE**: Clients can obtain a **App ID or Client ID** through one of the following methods:
 
 * Clients with Client Web Services who have requested access to the self-service tool for application management can generate a Client ID using the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html).
 * Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm).
@@ -56,7 +57,7 @@ The admin can use the Company Request Token to generate an Access/Refresh Token 
 
 To obtain an Access/Refresh Token, follow the steps on the **Company Request Tokens** page:
 
-*  To exchange the Request Token for a Refresh Token and an Access Token, replace the following values and run the Password Grant CURL command to obtain an Access Token and Refresh Token.
+Replace the following values and run the Password Grant CURL command to obtain an Access Token and Refresh Token.
 
    * `client_id`
    * `client_secret`
@@ -76,7 +77,7 @@ To obtain an Access/Refresh Token, follow the steps on the **Company Request Tok
 
 For more information, refer to the [Password Grants](https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant).
 
-* A successful response will be in the following form:
+A successful response will be in the following form:
 
   ```
   CURL response
