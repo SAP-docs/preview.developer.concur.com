@@ -1,9 +1,9 @@
 ---
-title: E-Receipts and Quick Expense User App Certification Guide
+title: User App Certification Flow
 layout: reference
 ---
 
-# E-Receipts and Quick Expense User App Certification Guide
+# User App Certification Flow
 
 ## Certification Process Flow
 

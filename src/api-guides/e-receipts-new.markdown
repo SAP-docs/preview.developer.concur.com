@@ -13,11 +13,11 @@ This integration guide helps SAP Concur App Center E-Receipt and Quick Expense u
 
 ## Getting Started
 
-New App Center Partners:  Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
+New App Center Partners: Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement, review the information on the [Build App Center Solutions](https://developer.concur.com/solutions/app-center.html) page.
 
 Existing App Center Partners: The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access.  You can make that App expansion request by contacting your [Alliance Manager](mailto:concur_AppCenterAlliance@sap.com?subject=App%20Exapansion%20Request).
 
-The E-Receipts and Quick Expense User App need to be certified before the App is listed in the SAP Concur App Center. Please follow the steps of [User App Certification Flow](e-receipts-certifiation.html/#certification-process-flow) to complete your App certification. Please make sure your App must achieve all the criteria in [Certification Checklist](e-receipts-certifiation.html/#certification-check-list) before you schedule the certification demo with the Certification Project Manager.   
+The E-Receipts and Quick Expense User App needs to be certified before the App is listed in the SAP Concur App Center. Please follow the [User App Certification Flow](/api-guides/e-receipts-certification.html) steps to complete your App certification. Please make sure your App achieves all the criteria in [Certification Checklist](/e-receipts-certification.html#certification-check-list) before you schedule the certification demo with the Certification Project Manager.   
 
 ## Development Environment
 
