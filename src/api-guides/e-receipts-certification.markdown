@@ -7,37 +7,35 @@ layout: reference
 
 ## Certification Process Flow
 
-Once partner signs the partnership agreement with SAP Concur BD manager, partner needs to follow the steps below to complete the User App certifiation.
+Once you sign the partnership agreement with the SAP Concur Business Development manager, you will receive a welcome letter. When you are ready to start the development project you'll need to follow the steps below to complete the User App certification.
 
-1. Partner receives the Welcome Letter from SAP Concur BD manager.
+1. You submit the Readiness Form using the link in the Welcome Letter.
 
-2. Once Partner technical team is ready to start the development project, Partner submits Readiness Form using the link  in the Welcome Letter.
+2. SAP Concur Certification Project Manager (CPM) on duty prepares the development environment and Development App for you.
+   
+3. The CPM sends the development environment details and certification requirements to your technical lead via [PlatformCertification@sap.com](mailto:platformcertification@sap.com). **Note**: You'll use this email for all correspondence with the CPM.
 
-3. SAP Concur CPM (Certification Project Manager) on duty prepares the development environment and Development App for Partner.
+4. You develop and test the Development App in your development environment.
 
-4. CPM on duty sends the development environment details and certification requirements to Partner technical lead via [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
+5. You send an email to the CPM to schedule the Development App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](user-app-certification-calender.pdf).
 
-5. Partner develops and tests the Development App in their development environment.
+6. The CPM conducts the Development App certification walkthrough on the scheduled date. If your app fails in the Development App certification walkthrough, you'll need to fix the issues and goes back to step 6 to reschedule the certification walkthrough. Please refer to the [Certification Check List](#certification-check-list) for the certification requirements. 
 
-6. Partner sends Email to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) to schedule the Development App certification one month before the certificaton week. CPM on duty will send the meeting invitation to Partner technical contact. Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
+7. The CPM prepares the Production App and sends App credentials to you.
 
-7. CPM on duty conducts the Development App certification walkthrough on the scheduled date. If parnter fails in the Development App certification walkthrough, Partner needs to fix the issues and goes back to step 6 to reschedule the certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
+8. You deploy and test the Production App in your production environment. 
 
-8. CPM on duty prepares the Production App and sends App credentials to Partner via [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
+9.  Your marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](#creating-and-updating-an-app-center-listing) for more information.
 
-9. Partner deployes and tests the Production App in their production environment. 
+10. The App Center marketing team reviews and approves the listing documents and sends the confirmation to your marketing team, and also copies the CPM. You need the App Center marketing team's approval before moving to step 12. 
 
-10. Partner marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](#creating-and-updating-an-app-center-listing) for more information.
+11. You email the CPM to schedule the Production App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](user-app-certification-calender.pdf).
 
-11. App Center marketing team reviews and approves the listing documents and sends the confirmation to partner marketing team via email [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com), and alsp copy CPM on duty ([PlatformCertification@sap.com](mailto:platformcertification@sap.com)). Partner needs the App Center marketing team's approval before moving to step 12. 
+12. The CPM conducts the Production App certification walkthrough on the scheduled date. If your app fails in the Production App certification walkthrough, you'll need to fix the issues and goes back to step 12 to schedule the next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
 
-12. Partner emails [PlatformCertification@sap.com](mailto:platformcertification@sap.com) to schedule the Production App certification one month before the certificaton week. CPM will send the meeting invitation to Partner technical contact. Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
+13. Once the certification project is complete, the CPM sends you the Certification Notification.
 
-13. CPM on duty conducts the Production App certification walkthrough on the scheduled date. If parnter fails in the Production App certification walkthrough, Partner needs to fix the issues and goes back to step 12 to schedule next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
-
-14. Once the certification project is complete, CPM on duty sends the Certification Notification to Partner via [PlatformCertification@sap.com](mailto:platformcertification@sap.com). 
-
-## Certification Check List
+## <a name="certification-check-list"></a>Certification Check List
 
 You must meet following certification requirements before proceeding to the certification walkthrough demo.
 
@@ -53,7 +51,7 @@ You must meet following certification requirements before proceeding to the cert
 |Landing Page - Account Creation Pages |If your account creation process requires multiple steps, provide a progress indicator so the user knows what is required. |
 |Landing Page - Confirmation Pages |Must have an indication that the connection was successful. |
 |Landing Page - Confirmation Pages |Must provide next steps​: 1) Provide customer information on what will occur next such as expect email, etc. 2) User should be directed to close the window as the connection is complete. |
-|Landing Page - Confirmation Pages |Partner should not obtain `access_token` until customer has completed all actions on the Landing Page.​ |
+|Landing Page - Confirmation Pages |You should not obtain an `access_token` until customer has completed all actions on the Landing Page.​ |
 
  **Token Management**
 
@@ -70,7 +68,7 @@ You must meet following certification requirements before proceeding to the cert
 |Error Codes |Must log Error Code / Error Description. |
 |Correlation ID|The API call's HTTP Response header contains a field `concur-correlationid` which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
 |User ID |Should log `UserID` (User who clicked the Connect button).|
-|Response Header |For the eReceipt App, should log the `concur-correlationid`,`link` and `location` data. |
+|Response Header |For the eReceipt App, should log the `concur-correlationid`,`link`, and `location` data. |
 |Response Body |For the Quick Expense App, should log response body. |
 
 **Production Readiness**
@@ -87,7 +85,7 @@ You must meet following certification requirements before proceeding to the cert
 | --- | --- |
 |OAuth2 - US DC Client |You must demonstrate ability to authenticate clients in the US Data Center (default geolocation). |
 |OAuth2 - EU DC Client |You must demonstrate ability to authenticate client in the EU Data Center (token geolocation). |
-|OAuth2 - CN DC Client |(Optional) If your App supports the users hosted on China Data Cetner, you must demonstrate ability to authenticate client in China Data Center (default geolocation). |
+|OAuth2 - CN DC Client |(Optional) If your App supports the users hosted on China Data Center, you must demonstrate ability to authenticate client in China Data Center (default geolocation). |
 |eReceipt or Quick Expense API - US DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in US Data Center. |
 |eReceipt or Quick Expense API - EU DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in EU Data Center. |
 |eReceipt or Quick Expense API - CN DC Client |(Optional) If your App supports the users hosted on China Data Cetner, you must demonstrate ability to post eReceipt or Quick Expense data in China Data Center. |
