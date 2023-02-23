@@ -15,15 +15,15 @@ This tool is currently only available in the US (North America) and EMEA data ce
 
 The Company Request Tokens page can be used to generate only a Company Request token, or may be used to additionally generate an Access/Refresh token for the company. The different tokens are:
 
-* Request Token: This token can be generated to use with integrations, using the integration's App ID. Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm). Once generated, the Request Token is used in the admin interface for the SAP product. This authentication flow does not require the customer's Client Id or Client Secret.
+*Request Token: This token can be generated to use with integrations, using the integration's App ID. Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm). Once generated, the Request Token is used in the admin interface for the SAP product. This authentication flow does not require the customer's Client Id or Client Secret.
 
-* Access/Refresh Token: This token is created after creating the Company Request token. This token can be used with the Concur API platform, and is sometimes necessary for integrations. If you are creating an Access/Refresh token, you need to obtain a Client ID and Client Secret via the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html) or receive your Client ID and Client Secret directly from your SAP Concur contact.
+*Access/Refresh Token: This token is created after creating the Company Request token. This token can be used with the Concur API platform, and is sometimes necessary for integrations. If you are creating an Access/Refresh token, you need to obtain a Client ID and Client Secret via the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html) or receive your Client ID and Client Secret directly from your SAP Concur contact.
 
 ## Prerequisites
 The SAP Concur administrator must have the correct user role to access the Company Request Tokens page:
 
-* Professional Edition: Web Services Administrator
-* Standard Edition: Can Administer
+*Professional Edition: Web Services Administrator
+*Standard Edition: Can Administer
 
 **NOTE**: If a company administrator needs to use this feature and does not have the proper permissions, they should contact the company's SAP Concur administrator.
 
