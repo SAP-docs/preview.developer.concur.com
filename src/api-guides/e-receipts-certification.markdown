@@ -25,7 +25,7 @@ Once you sign the partnership agreement with the SAP Concur Business Development
 
 8. You deploy and test the Production App in your production environment. 
 
-9.  Your marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](#creating-and-updating-an-app-center-listing) for more information.
+9.  Your marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](/api-guides/e-receipts-new.html#creating-and-updating-an-app-center-listing) for more information.
 
 10. The App Center marketing team reviews and approves the listing documents and sends the confirmation to your marketing team, and also copies the CPM. You need the App Center marketing team's approval before moving to step 12. 
 
