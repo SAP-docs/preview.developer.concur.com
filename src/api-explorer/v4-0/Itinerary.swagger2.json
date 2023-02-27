@@ -23,74 +23,138 @@
     "application/json"
   ],
   "paths": {
-      "/trips/{tripID}": {
-          "get": {
-              "description": "Gets the trip record",              
-              "tags": [
-                  "trip"
-              ],
-              "summary": "v4 - Get Trip record",
-              "parameters": [
-                  {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "trip id",
-                      "name": "tripID",
-                      "in": "path",
-                      "required": true
-                  },
-                  {
+    "/v4/trips": {
+        "get": {
+            "description": "Gets the upcoming trips for the given company. Company JWT is required as part of the authorization.",
+            "produces": [
+                "application/json"
+            ],
+            "tags": [
+                "trip"
+            ],
+            "summary": "v4 - Get Trip Ids by Company",
+            "parameters": [
+                {
                     "type": "string",
-                    "description": "Accepts gzip",
-                    "name": "Accept-Encoding",                    
-                    "in": "header",
-                    "required": true
-                  },
-                  {
-                    "type": "string",                    
-                    "description": "Supports application/xml and application/json",
-                    "name": "Accept",
-                    "in": "header",
-                    "required": false
+                    "description": "Output schema type. Supported value is id",
+                    "name": "schema",
+                    "in": "query"
+                },
+                {
+                    "type": "string",
+                    "description": "start date for the query list | format - `2023-01-02`. Date cannot be older than 6 months from now",
+                    "name": "endDateFrom",
+                    "in": "query"
+                },
+                {
+                    "type": "string",
+                    "description": "end date for the query list, results include this date | format - `2023-01-02`",
+                    "name": "endDateTo",
+                    "in": "query"
+                },
+                {
+                    "type": "string",
+                    "description": "Get results after a specific start Id",
+                    "name": "startAfter",
+                    "in": "query"
                 }
-              ],
-              "responses": {
-                  "200": {
-                      "description": "OK",
-                      "schema": {
-                          "$ref": "#/definitions/Itinerary"
-                      }
-                  },
-                  "400": {
-                      "description": "Bad Request",
-                      "schema": {
-                          "$ref": "#/definitions/model.ErrorAPIResponse"
-                      }
-                  },
-                  "401": {
-                      "description": "Unauthorized",
-                      "schema": {
-                          "$ref": "#/definitions/model.ErrorAPIResponse"
-                      }
-                  },
-                  "403": {
-                    "description": "Forbidden"
-                  },
-                  "404": {
-                    "description": "ID Not Found",
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/model.ItineraryIdListResponse"
+                    }
+                },
+                "400": {
+                    "description": "Bad Request",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
-                  },
-                  "500": {
-                      "description": "Internal Server Error",
-                      "schema": {
-                          "$ref": "#/definitions/model.ErrorAPIResponse"
-                      }
-                  }
+                },
+                "401": {
+                    "description": "Unauthorized",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "500": {
+                    "description": "Internal Server Error",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                }
+            }
+        }
+    },
+    "/trips/{tripID}": {
+        "get": {
+            "description": "Gets the trip record",              
+            "tags": [
+                "trip"
+            ],
+            "summary": "v4 - Get Trip record",
+            "parameters": [
+                {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "trip id",
+                    "name": "tripID",
+                    "in": "path",
+                    "required": true
+                },
+                {
+                  "type": "string",
+                  "description": "Accepts gzip",
+                  "name": "Accept-Encoding",                    
+                  "in": "header",
+                  "required": true
+                },
+                {
+                  "type": "string",                    
+                  "description": "Supports application/xml and application/json",
+                  "name": "Accept",
+                  "in": "header",
+                  "required": false
               }
-          }
-      }
+            ],
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "schema": {
+                        "$ref": "#/definitions/Itinerary"
+                    }
+                },
+                "400": {
+                    "description": "Bad Request",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "401": {
+                    "description": "Unauthorized",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "403": {
+                  "description": "Forbidden"
+                },
+                "404": {
+                  "description": "ID Not Found",
+                  "schema": {
+                      "$ref": "#/definitions/model.ErrorAPIResponse"
+                  }
+                },
+                "500": {
+                    "description": "Internal Server Error",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                }
+            }
+        }
+    }
   },
   "definitions": {
       "AccountingLine": {
@@ -3011,6 +3075,45 @@
                   }
               }
           }
+      },
+      "model.ItineraryIdListResponse": {
+        "type": "object",
+        "properties": {
+            "data": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/model.ItineraryIdObject"
+                }
+            },
+            "operations": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/model.ItineraryListOperationObject"
+                }
+            }
+        }
+      },
+      "model.ItineraryIdObject": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "href": {
+                "type": "string"
+            }
+        }
+      },
+      "model.ItineraryListOperationObject": {
+        "type": "object",
+        "properties": {
+            "rel": {
+                "type": "string"
+            },
+            "href": {
+                "type": "string"
+            }
+        }
       }
   }
 }
