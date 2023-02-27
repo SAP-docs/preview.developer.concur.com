@@ -1119,7 +1119,9 @@
 
 <ul>
   <li>This API is only available to clients and partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API. This API is only available in US and EMEA data centers.</li>
-  <li>This API doesn’t provide access to historical data.  Events are only raised on a go-forward basis.  If you need access to historical data, please contact SAP Concur.</li>
+  <li>Events are only raised on a go-forward basis. If you need access to historical data, see the <a href="#retrieve-trips">retrieve trips endpoint</a></li>
+  <li>Retrieve trips lets you access data for the last <em>6 months</em>. It is meant to allow authorized clients and partners to pull the initial data they may need to get setup.</li>
+  <li>Retrieve trips (historical data only) has an aggressive rate limit of <em>10 requests per minute</em>. This should not be used to poll for updates, only for an initial data fetch. Events are fired for all changes going forward.</li>
 </ul>
 
 <h2 id="prior-versions"><a name="prior-versions"></a>Prior Versions</h2>
@@ -7787,6 +7789,178 @@ Content-Type: application/json
     </tr>
   </tbody>
 </table>
+
+<h2 id="retrieve-trips-">Retrieve trips <a name="get-trips"></a></h2>
+
+<p>Retrieve a list of trips booked within the last 6 months.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">travel.itinerary.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-1">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/travel/v4/trips
+</code></pre></div></div>
+
+<h3 id="parameters-1">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Required</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>schema</td>
+      <td>No</td>
+      <td>string</td>
+      <td>Supported values - id</td>
+    </tr>
+    <tr>
+      <td>endDateFrom</td>
+      <td>No</td>
+      <td>string</td>
+      <td>Start date of <code class="language-plaintext highlighter-rouge">endDate</code> for the query list, Dateformat - <code class="language-plaintext highlighter-rouge">yyyy-mm-dd</code>, e.g.<code class="language-plaintext highlighter-rouge">2006-01-02</code>.  Date cannot be older than 1 year from now. Default value is NOW.</td>
+    </tr>
+    <tr>
+      <td>endDateTo</td>
+      <td>No</td>
+      <td>string</td>
+      <td>End date of <code class="language-plaintext highlighter-rouge">endDate</code> for the query list, Dateformat - <code class="language-plaintext highlighter-rouge">yyyy-mm-dd</code>, e.g.<code class="language-plaintext highlighter-rouge">2006-01-02</code>. Date cannot be older than <code class="language-plaintext highlighter-rouge">endDateFrom</code>. Results include trips with this date.</td>
+    </tr>
+    <tr>
+      <td>startAfter</td>
+      <td>No</td>
+      <td>string</td>
+      <td>A specific Id supporting pagination of results. Get results after this Id if provided. Response include NEXT and PREV page URI with this Id.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="response-1">Response</h4>
+
+<p>Response includes 10 trips at most and NEXT or PREV operations in JSON format for each request</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000051ec-b6cd-45f2-a2e5-e9b16ec08904"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/000051ec-b6cd-45f2-a2e5-e9b16ec08904"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0000af58-498d-4c78-9b92-a97e19c04054"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/0000af58-498d-4c78-9b92-a97e19c04054"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000201bd-84b2-4af2-a197-3358dd52dfe5"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/000201bd-84b2-4af2-a197-3358dd52dfe5"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0002381e-4f8f-475c-8c8c-af74327daac0"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/0002381e-4f8f-475c-8c8c-af74327daac0"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00095570-c28c-42a8-9415-9f70c4601c3d"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/00095570-c28c-42a8-9415-9f70c4601c3d"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0009f1d1-cb25-4f11-b43d-f120e79dff3b"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/0009f1d1-cb25-4f11-b43d-f120e79dff3b"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000d874a-1c6d-4e92-9775-58a78e8333df"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/000d874a-1c6d-4e92-9775-58a78e8333df"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0010641c-2725-43d2-a467-297db061dbfe"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/0010641c-2725-43d2-a467-297db061dbfe"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00147c95-7f53-474f-9d6d-6704693fc562"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/00147c95-7f53-474f-9d6d-6704693fc562"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0014a986-dd7b-4a86-9f54-57663e4e6e9f"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips/0014a986-dd7b-4a86-9f54-57663e4e6e9f"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"next"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/travel/v4/trips?schema=id&amp;endDateFrom=2020-07-02&amp;endDateTo=2021-06-29&amp;startAfter=1596931342-0014a986dd7b4a869f5457663e4e6e9f"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="schema-">Schema <a name="schema"></a></h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data</th>
+      <th>Operations</th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">data</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-itin"><code class="language-plaintext highlighter-rouge">Itinerary Element</code></a></td>
+      <td>A parent element that contains all Itinerary elements.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">operations</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-operations">`Operations</a></td>
+      <td>A parent element that contains all pagination operations.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="itinerary-element"><a name="schema-itin">Itinerary Element</a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Href</th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique id for an itinerary</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Direct Link to itinerary</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="operation-element"><a name="schema-operations"></a>Operation Element</h3>
+<p>rel|Href
+—|—
+<code class="language-plaintext highlighter-rouge">rel</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">next</code>/<code class="language-plaintext highlighter-rouge">prev</code>|-|Operation type
+<code class="language-plaintext highlighter-rouge">href</code>|<code class="language-plaintext highlighter-rouge">string</code>|-|Operation URL</p>
 
       </div>
       <!--/col-md-8-->
