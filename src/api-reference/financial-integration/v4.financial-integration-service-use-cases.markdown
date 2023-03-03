@@ -667,40 +667,134 @@ Credit Card Vendor|-|USD 284
 
 [**JSON Example**](json/FI-API-ReportID-7F00502973D84DEFA49E-Example-6.2.4.json)
 
-### The use case examples below illustrate Funds and Grants Integration (FGI) scenarios and the related records of Funds Reservation and Funds Check. The use case documentation is not meant to be a comprehensive list of all use cases and FGI scenarios. However, the JSON from the Financial Integration Service will provide all the required data to support all potential financial use cases.
-
-#### Simple Funds Reservation 
-#### Funds Reservation on Request 
-
-
-##### Description
-   When the Request is created and FGI is enabled for a Group that an employee belongs to, during the workflow, when the Funds Reservation step is reached, the workflow is paused, an event ___ is published and a Request Obligation document is made available to financial system.
-
-##### Example:
-•	The Request with one or more Funds Reservation in the Request workflow, linked to one or more Reports. 
-Travel Request with one expense item: Air Fare – USD 1200
-
+The use case examples below illustrate Funds and Grants Integration (FGI) scenarios and the related records of Funds Reservation and Funds Check. The use case documentation is not meant to be a comprehensive list of all use cases and FGI scenarios. However, the JSON from the Financial Integration Service will provide all the required data to support all potential financial use cases.
+ 
+# Simple Funds Reservation/Obligation
+## Funds Reservation on Request
+### Description
+When the Request is created , the employee group configuration is evaluated to determine if FGI is enabled, during the workflow when the Funds Reservation step is reached, the workflow is paused, and a Request Obligation document is made available to financial system via FIS API.
+### Example:
+The Request with one or more Funds Reservation in the Request workflow, linked to one or more Reports.
+ 
+### Sample Set Up:
+1.	Funds Reservation Step right after Submit
+2.	Funds Reservation Step after Manager approval
+ 
+Travel Request with one expense item: Laundry – USD 1200
+ 
 **Request Record in Concur**
-Request ID|Expense Entry|Amount
----|---|---|
-FGI1|Air Fare|$1200
-
-[**Request Obligation JSON Payload**](json/FI-FundsReservation-RequestID-5175B347418EEB489B900D2D8E065E10-Example-1.0.json)
-
-#### Funds Reservation in the Financial System:
-Once the Request Obligation Payload is received, the financial system sends acknowledgement back to Concur.
-
-[**Sample Acknowledgement Payload**](json/FI-FundsReservation-Ack-46900c4966b14bad9b968a84c0388124-Example-1.0.json)
-
+ 
+Request ID|	Expense Entry|Amount
+---|---|---
+FGI1|	Laundry|	$1200
+ 
+After Request has been submitted, during the Funds Reservation Step in the workflow, an Obligation Payload with instruction " obligate" is made available to financial system via FIS API.
+[**Request Obligation JSON Payload**](json/FI-API-FundsReservation-RequestID-D5448EFC253CD04C955F277013E8AA11-Example-1.0.0.json)
+ 
+**Funds Reservation in the Financial System:**
+Once the Request Obligation Payload with instruction "obligate" is received, the financial system sends acknowledgement back to Concur.
+[Sample Acknowledgement Payload](json/FI-API-FundsReservation-ACK-0ba77eb2cf6240beb7dac99632fd6d8a-Example-1.0.0.json)
+ 
 The Financial system attempts to create a commitment against the details in the Request Obligation.
 If Successful/unsuccessful,  the financial system responds with a message.
-
-[**Sample Confirmation Payload**](json/FI-FundsReservation-Cnf-57e4d6c30f2c4d5bbd4ac7adc8bc8233-Example-1.0.json)
-
-#### Release Request Commitment:
-##### When a Request is closed,  FGI evaluates the status of all linked Reports.
+ 
+[**Sample Confirmation Payload**](json/FI-API-FundsReservation-CNF-0463835510d740de873752c00347b3d1-Example-1.0.0.json)
+ 
+Request Obligation Payload with instruction "obligate" is made available to the financial system via FIS API during the second Funds Reservation workflow Step.
+[**Request Obligation JSON Payload**](json/FI-API-FundsReservation-RequestID-D5448EFC253CD04C955F277013E8AA11-Example-1.0.1.json)
+ 
+Funds Reservation in the Financial System:
+Once the Request Obligation Payload with instruction "obligate" is received, the financial system sends acknowledgement back to Concur.
+[**Sample Acknowledgement Payload**](json/FI-API-FundsReservation-ACK-60f0d6afda754eb8b18b73847fee55f0-Example-1.0.1.json)
+ 
+The Financial system attempts to update a commitment against the details in the Request Obligation.
+If Successful/unsuccessful, the financial system responds with a message.
+ 
+[**Sample Confirmation Payload**](json/FI-API-FundsReservation-CNF-fa55b544ff334268ac4b288dec10deb7-Example-1.0.1.json)
+ 
+**Release Request Commitment:**
+When a Request is closed, FGI evaluates the status of all linked Reports. 
 •	When all the linked Reports are paid, release of Request commitment is initiated.
-•	A Request Release Payload is made available to the financial system and the event ___ is published
+•	A Request Obligation Payload with instruction "release" is made available to the financial system via the FIS API.
+ 
+[**Release JSON Payload**](json/FI-API-FundsReservation-release-D5448EFC253CD04C955F277013E8AA11-Example-1.0.1.json)
+ 
+## Funds Check on Request
+### Description
+When the Request is created, the employee group configuration is evaluated to determine if FGI is enabled, during the workflow when the Funds Check step is reached, the workflow is paused, and a Request Obligation document with instruction "fundsCheck" is made available to financial system via FIS API.
+ 
+### Example:
+1.	Request with a Funds Check in the Request workflow, without a prior Funds Reservation
+2.	Request with a Funds Check in the Request workflow, with a prior Funds Reservation
+ 
+### Example 1: Request with a Funds Check in the Request workflow, without a prior Funds Reservation
+Sample Set Up:
+1.	Funds Check Step at any point in the Request Workflow
+ 
+Travel Request with one expense item: Laundry – USD 1200
+ 
+**Request Record in Concur**
+Request ID|Expense Entry|Amount
+---|---|---
+FGI1|Laundry|$1200
+ 
+After Request has been submitted, during the Funds Check Step in the workflow, an Obligation Payload with instruction " fundsCheck" is made available to financial system via FIS API.
 
-[**JSON Payload**](json/FI-FundsReservation-ReleaseID-5DDF93D4CB036144B7918B12187AEB42-Example-1.0.json)
+[**Request Funds Check JSON Payload**](json/FI-API-FundsReservation-fundsCheck-76C110739F662844897A282B5482F8CC-Example-1.0.0.json)
+ 
+Funds Check in the Financial System:
+Once the Request Obligation Payload with instruction "fundsCheck" is received, the financial system sends acknowledgement back to Concur.
+[**Sample Acknowledgement Payload**](json/FI-API-FundsReservation-ACK-f06252c32aa44a338f7cd181433c4414-Example-1.0.0.json)
+ 
+The Financial System determines if there are sufficient funds using the information in the Request Payload. 
+If Successful/unsuccessful, the financial system responds with a message.
+ 
+[**Sample Confirmation Payload**](json/FI-API-FundsReservation-CNF-c2f8058fbe23461a978151471ddbe147-Example-1.0.0.json)
+ 
+### Example 2: Request with a Funds Check in the Request workflow, with a prior Funds Reservation
+ 
+Sample Set Up:
+1.	Funds Reservation Step right after Submit
+2.	Funds Check after the Manager Approval 
+ 
+Travel Request with one expense item: Laundry – USD 1200
+
+**Request Record in Concur**
+---|---|--- 
+Request ID|	Expense Entry	|Amount
+FGI1|	Taxi|	$1200
+ 
+After Request has been submitted, during the Funds Reservation Step in the workflow, an Obligation Payload with instruction " obligate" is made available to financial system via FIS API.
+[**Request Obligation JSON Payload**](json/FI-API-FundsReservation-requestID-BD101AAD08A97B4B80B137DE2657F1CF-Example-1.0.0.json)
+ 
+Funds Reservation in the Financial System:
+Once the Request Obligation Payload with instruction "obligate" is received, the financial system sends acknowledgement back to Concur.
+[**Sample Acknowledgement Payload**](json/FI-API-FundsReservation-ACK-52291b93e91f4063a62d017591c977d2-Example-1.0.0.json)
+ 
+The Financial system attempts to create a commitment against the details in the Request Obligation.
+If Successful/unsuccessful,  the financial system responds with a message.
+ 
+[**Sample Confirmation Payload**](json/FI-API-FundsReservation-CNF-70d239cd99974436a72ab548c50e8160"-Example-1.0.0.json)
+ 
+Request Funds Obligation Payload with instruction "FundsCheck" is made available to the financial system via FIS API during the Funds Check workflow Step.
+[**Request Obligation JSON Payload**](json/FI-API-FundsReservation-fundsCheck-BD101AAD08A97B4B80B137DE2657F1CF-Example-1.0.0.json)
+ 
+### Funds Reservation in the Financial System:
+Once the Request Obligation Payload with instruction "FundsCheck" is received, the financial system sends acknowledgement back to Concur.
+[**Sample Acknowledgement Payload**](json/FI-API-FundsReservation-ACK-4f17d67393b248018d1782556ae1ec96-Example-1.0.1.json)
+ 
+The Financial System determines if there are sufficient funds using the information in the Request Payload. 
+If Successful/unsuccessful,  the financial system responds with a message.
+ 
+[**Sample Confirmation Payload**](json/FI-API-FundsReservation-CNF-1b282fc171294029a5d5082c1074de81-Example-1.0.1.json)
+ 
+ 
+### Release Request Commitment:
+When a Request is closed,  FGI evaluates the status of all linked Reports. 
+•	When all the linked Reports are paid, release of Request commitment is initiated.
+•	A Request Obligation Payload with instruction "release" is made available to the financial system via the FIS API.
+ 
+[**Release JSON Payload**](json/FI-API-FundsReservation-release-BD101AAD08A97B4B80B137DE2657F1CF-Example-1.0.1.json)
+
+
 
