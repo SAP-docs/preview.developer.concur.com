@@ -186,52 +186,48 @@ Authorization: Bearer <JWT Token>
 concur-correlationid: "Test-FlOW"
 digitalTaxDocument:
 {
-  "Status": "processed",
-  "DocumentData": {
-    "FormatVersion": "4.0",
-    "Code": "pos",
-    "Number": "1234",
-    "IssueDateTime": "2021-12-07T23:59:59",
-    "UUID": "ED1752FE-E865-4FF2-BFE1-0F552E770DC9",
-    "PaymentType": "Credit Card",
-    "GrossAmount": 0.0,
-    "Discount": 0.0,
-    "Currency": "MXN",
-    "ExchangeRate": "0.0",
-    "NetAmount": 560.0,
-    "PaymentMethod": "PUE",
-    "TotalWithholdingTax": 0.0,
-    "TotalSalesTax": 0.0,
-    "Vendor": {
-      "CertificateNumber": "0000",
-      "TaxNumber": "TXN-No-1000",
-      "Name": "Vendor 1",
-	  "city": "Bellevue",
-      "state": "WA",
-      "country": "US",
-	  "phone": "888-867-5309",
-	  "addressLine": "123 Main St"
-    },
-    "Buyer": {
-      "TaxNumber": "TXN-No-10001",
-      "Name": "Buyer 1",
-      "PostalCode": "MX-000001"
-    },
-    "LineItems": [
-      {
-        "ProductCode": "P1",
-        "Quantity": 1,
-        "UnitOfMeasure": "KMT",
-        "Description": "Description",
-        "UnitPrice": 0.0,
-        "Amount": 0.0,
-        "Discount": 0.0
-      }
-    ],
-    "DocumentPostalCode": "MX-000002"
-  },
-  "Description": "Document is valid",
-  "Code": "200"
+   "Status":"processed",
+   "DocumentData":{
+      "FormatVersion":"4.0",
+      "Code":"pos",
+      "Number":"1234",
+      "IssueDateTime":"2021-12-07T23:59:59",
+      "UUID":"ED1752FE-E865-4FF2-BFE1-0F552E770DC9",
+      "PaymentType":"Cash",
+      "GrossAmount":0.0,
+      "Discount":0.0,
+      "Currency":"MXN",
+      "ExchangeRate":"0.0",
+      "NetAmount":0.0,
+      "PaymentMethod":"PUE",
+      "TotalWithholdingTax":0.0,
+      "TotalSalesTax":0.0,
+      "Vendor":{
+         "CertificateNumber":"0000",
+         "TaxNumber":"TXN-No-1000",
+         "Name":"Vendor 1",
+         "city":"Bellevue",
+         "state":"WA",
+         "country":"US",
+         "phone":"888-867-5309",
+         "addressLine":"123 Main St"
+      },
+      "Buyer":{
+         "TaxNumber":"TXN-No-10001",
+         "Name":"Buyer 1",
+         "PostalCode":"MX-000001"
+      },
+      "LineItems":[
+         {
+            "ProductCode":"P1",
+            "Description":"Decription",
+            "Amount":0.0
+         }
+      ],
+      "DocumentPostalCode":"MX-000002"
+   },
+   "Description":"Document is valid",
+   "Code":"200"
 }
 ```
 #### Response
@@ -246,3 +242,49 @@ Content-Type: application/json
   "Description": "Tokens have been received."
 }
 ```
+### Schema <a name="schema"></a>
+
+### <a name="schema-paymentRequest"></a>DigitalTax Token
+
+Name|Type|Format|Description
+---|---|---|---
+`Status`|`string`|-|Status of the CFDI document.
+`DocumentData`|`object`|-|Document data and tax tokens info.
+`FormatVersion`|`string`|-|The version of the document format.
+`Code`|`string`|-|Prefix of receipt (an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.).
+`Number`|`string`|-|Number of the receipt.
+`IssueDateTime`|`string`|-|Date and time when the document was created in the local timezone where it was issued.
+`UUID`|`string`|-|Document UUID - field present in CFDI.
+`PaymentType` |`enum`|-|Means of payment (Cash, Credit Card, Digital Wallet).
+`GrossAmount`|`number`|-| Sum of amounts before discounts and taxes.
+`Discount`|`string`|-|Total amount of applicable discounts before taxes.
+`Currency`|`string`|-|Currency used to express amounts (According to the ISO 4217 codes) (MXN).
+`ExchangeRate`|`number`|-|Exchange Rate according to currency used. Mandatory id currency <> MXN.
+`NetAmount`|`number`|-|Sub Total–Discounts+VAT Taxes–Withholding Taxes.
+`PaymentMethod`|`string`|-|Specify the code of payment method: PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.
+`TotalWithholdingTax`|`number`|-|Sum of all withheld tax amounts of line items.
+`TotalSalesTax`|`number`|-| Sum of all sales tax amounts of line items.
+`DocumentPostalCode`|`string`|-|Postal code of place of receipt issue.
+`VerificationCode`|`string`|-|Company's certificate used to generate digital signature.
+`Comments`|`string`|-|Comments.
+`Vendor`|`object`|-|Details of the vendor.
+`CertificateNumber`|`string`|-|Company's certificate used to generate digital signature.
+`TaxNumber`|`string`|-|Taxpayer ID of the vendor.
+`Name`|`string`|-|Name of receipt issuer.
+`City`|`string`|-|City of receipt issuer.
+`State`|`string`|-|State of receipt issuer.
+`Country`|`boolean`|-|Country of receipt issuer.
+`Phone`|`string`|-|Phone number of receipt issuer.
+`AddressLine`|`string`|Address of receipt issuer.
+`Buyer`|`object`|-|Details of the buyer.
+`TaxNumber`|`string`|-|Buyer Tax Number.
+`Name`|`string`|-|Buyer Name.
+`PostalCode`|`string`|-|Postal code of recipient's tax domicile.
+`LineItems`|`array`|-|Line items present in the CFDI.
+`LineItem`|`object`|-|Line item present in the CFDI.
+`ProductCode`|`string`|-|Key of product or service covered For example, 10101502 (Dogs), 10101506 (Horses).
+`Description`|`string`|-|Product Description.
+`Amount`|`number`|-|Total amount of good or service.
+`Description`|`string`|-|Comment/description provided by partner.
+`Code`|`string`|-|Response code provided by partner.
+
