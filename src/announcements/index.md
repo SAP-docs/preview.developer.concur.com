@@ -11,3 +11,7 @@ The January 2023 release notes have been published. More details can be found on
 ### 2023-02-03 :: February 2023 Release Notes Published
 
 The February 2023 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
+
+### 2023-03-10 :: March 2023 Release Notes Published
+
+The March 2023 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
