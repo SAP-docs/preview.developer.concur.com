@@ -1,0 +1,100 @@
+---
+title: Cards v4 - Credit Card Account
+layout: reference
+---
+
+# Cards v4 - Credit Card Account
+
+## <a name="account-resource-create"></a>Create Card Accounts (Bulk)
+
+Endpoint to create credit card accounts as bulk operation. Assuming that the request is properly authorized and the schema validation passes, the API immediately returns `202 (Request Accepted)` and performs the actual processing asynchronously.
+
+### Scopes
+
+`cards.account.writeonly` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+POST https://{datacenterURI}/cards/v4/companies/{companyId}/accounts/bulk
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|-|**Required** The unique identifier of the SAP Concur company.
+
+### Payloads
+
+* Request: [Account](./v4.endpoints.schemas.html#schema-account)
+* Response: [Bulk Response](./v4.endpoints.schemas.html#schema-bulk-response)
+
+###  Headers
+
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
+###  HTTP Status Codes
+
+In case of success, HTTP status code `202 (Request Accepted)` is returned.
+
+To learn more about response HTTP status codes for this API see [Cards v4 - HTTP Status Codes](./v4.response-codes.html).
+
+### Examples
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/accounts/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 99239c14-678a-41ef-80ab-462454cde49f
+```
+
+```json
+{
+  "accounts": [
+    {
+      "accountType": "I",
+      "billedCurrency": "USD",
+      "cardBrand": "AX",
+      "cardProductDescription": "Platinum Rewards",
+      "cardProductType": "CORP",
+      "cardholder": {
+        "email": "john.doe@mycorp.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "userId": "e48fda91-15c8-4670-afe5-6c76501813c9"
+      },
+      "externalId": "59edf00e-6e0a-46c4-bf59-c233000c5b98",
+      "lastSegment": "1853",
+      "liabilityType": "IBIP",
+      "nameOnCard": "JOHN DOE",
+      "provider": {
+        "countryCode": "US"
+      },
+      "status": "A"
+    }
+  ]
+}
+```
+
+#### Response
+
+```shell
+202 Accepted
+Content-Type: application/json
+```
+
+```json
+{
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/bulkrequests/f328a518-be22-4207-aa53-87ac147eb416",
+      "rel": "self"
+    }
+  ],
+  "requestId": "f328a518-be22-4207-aa53-87ac147eb416"
+}
+```
