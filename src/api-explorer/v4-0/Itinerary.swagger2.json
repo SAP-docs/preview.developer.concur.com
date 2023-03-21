@@ -1,4 +1,5 @@
 {
+  "x-sap-shortText": "View itineraries for a specific company, or retrieve a single itinerary",
   "schemes": [
       "https"
   ],
@@ -15,6 +16,19 @@
   },
   "host": "us.api.concursolutions.com",
   "basePath": "/travel/v4",
+  "x-servers": [
+    {
+        "url": "https://us.api.concursolutions.com",
+        "description": "Concur API Endpoint"
+    }
+  ],
+  "securityDefinitions": {
+    "JWT": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+    }
+  },
   "produces": [
     "application/json",
     "application/xml"
@@ -23,7 +37,7 @@
     "application/json"
   ],
   "paths": {
-    "/v4/trips": {
+    "/trips": {
         "get": {
             "description": "Gets the upcoming trips for the given company. Company JWT is required as part of the authorization.",
             "produces": [
@@ -61,28 +75,33 @@
             ],
             "responses": {
                 "200": {
-                    "description": "OK",
+                    "description": "Successful response of trip ids by company.",
                     "schema": {
                         "$ref": "#/definitions/model.ItineraryIdListResponse"
                     }
                 },
                 "400": {
-                    "description": "Bad Request",
+                    "description": "Wrong format or structure of the provided request.",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
                 },
                 "401": {
-                    "description": "Unauthorized",
+                    "description": "Access denied, authentication is required.",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
                 },
+                "403": {
+                  "description": "Access denied. You do not have the required permissions to access this resource."
+                },
                 "500": {
-                    "description": "Internal Server Error",
-                    "schema": {
+                    "description": "Internal Server Error. The operation you requested led to an error during execution.",                    "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
+                },
+                "503": {
+                    "description": "Service is unavailable or a rate limit is in effect."
                 }
             }
         }
@@ -120,37 +139,40 @@
             ],
             "responses": {
                 "200": {
-                    "description": "OK",
+                    "description": "Successful response of trip data.",
                     "schema": {
                         "$ref": "#/definitions/Itinerary"
                     }
                 },
                 "400": {
-                    "description": "Bad Request",
+                    "description": "Wrong format or structure of the provided request.",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
                 },
                 "401": {
-                    "description": "Unauthorized",
+                    "description": "Access denied, authentication is required.",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
                 },
                 "403": {
-                  "description": "Forbidden"
+                  "description": "Access denied. You do not have the required permissions to access this resource."
                 },
                 "404": {
-                  "description": "ID Not Found",
+                  "description": "Trip ID Not Found",
                   "schema": {
                       "$ref": "#/definitions/model.ErrorAPIResponse"
                   }
                 },
                 "500": {
-                    "description": "Internal Server Error",
+                    "description": "Internal Server Error. The operation you requested led to an error during execution.",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
+                },
+                "503": {
+                    "description": "Service is unavailable or a rate limit is in effect."
                 }
             }
         }
