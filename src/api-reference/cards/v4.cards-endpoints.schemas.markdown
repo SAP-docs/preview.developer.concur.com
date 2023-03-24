@@ -5,7 +5,13 @@ layout: reference
 
 # Cards v4 - Endpoint Schemas
 
-## <a name="schema-account"></a>Account
+## <a name="schema-create-account-list"></a>Create Account List
+
+Name|Type|Format|Description
+---|---|---|---
+`accounts`|`array`|[`Create Account`](#schema-create-account)|An array of Accounts to be created
+
+## <a name="schema-create-account"></a>Create Account
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -15,14 +21,14 @@ Name|Type|Format|Description
 `cardBrand`|`string`|-|Brand of the card. Supported values: `AX - American Express`, `CA - MasterCard`, `CB - Carte Blance`, `DC - Diners Club`, `DS - Discover`, `EC - EuroCard`, `ER - ENROUTE`, `JC - JCB International`, `OT - Other`, `TP - UATP Card`, `UP - China Union Pay`, `VI - VISA`
 `cardProductDescription`|`string`|-|**Required** Branded name of the credit card; might be used for display purposes
 `cardProductType`|`string`|-|**Required** Card product type. Supported values: `CORP - Corporate Card`, `BUSN - Business Card`, `PERS - Personal Card`
-`cardholder`|`object`|[`Cardholder`](#schema-cardholder)|Cardholder information
+`cardholder`|`object`|[`Cardholder`](#schema-cardholder)|Cardholder owning this card account
 `externalId`|`string`|-|**Required** Unique identifier (token) for a card account as defined by an external system (outside SAP Concur). Must not contain primary account number (PAN).
 `lastSegment`|`string`|-|**Required** Last four digits of the credit card number
 `liabilityType`|`string`|-|**Required** Liability type (payment method). Supported values: `IBIP - Individually Billed, Individually Paid`, `IBCP - Individually Billed, Company Paid`, `CBCP - Company Billed Company Paid`
 `nameOnCard`|`string`|-|**Required** Embossed name on the card
 `provider`|`object`|[`Provider`](#schema-provider)|**Required** Credit Card Provider
 `status`|`string`|-|Lifecycle status (default: Active). Supported values: `A - Active`, `C - Canceled`
-`travelRequest`|`object`|[`Travel Request Reference`](#schema-travelrequestreference)|Travel Request reference
+`travelRequest`|`object`|[`Travel Request Reference`](#schema-travelrequestreference)|Reference to an SAP Concur Travel Request which is related to this card account
 
 ## <a name="schema-billingaccountreference"></a>Billing Account Reference
 
@@ -46,20 +52,38 @@ Name|Type|Format|Description
 ---|---|---|---
 `countryCode`|`string`|**Required** ISO 3166-1 Alpha-2 code|Provider country code
 
-## <a name="schema-travelrequestreference"></a>TravelRequestReference
+## <a name="schema-travelrequestreference"></a>Travel Request Reference
 
 Name|Type|Format|Description
 ---|---|---|---
 `id`|`string`|-|**Required** Unique identifier for an SAP Concur travel request (refer to [Travel Request v4 API](https://developer.concur.com/api-reference/request/v4.endpoints.request-resources.html))
 
-## <a name="schema-bulkapiresponse"></a>Bulk API Response
-TODO
+## <a name="schema-bulkapi-response"></a>Bulk API Response
+Name|Type|Format|Description
+---|---|---|---
+`requestId`|`string`|-|**Required** Unique identifier of the bulk API request
+`links`|`array`|[`Link`](#schema-link)|An array of links
 
-## <a name="schema-error"></a>Error Response
+## <a name="schema-link"></a>Link
+
+Name|Type|Format|Description
+---|---|---|---
+`href`|`string`|-|**Required** Hyperlink to the resource
+`rel`|`string`|-|**Required** Relation type as defined by the server
+
+## <a name="schema-error-response"></a>Error Response
 
 Name|Type|Format|Description
 ---|---|---|---
 `errorCode`|`string`|-|**Required** Machine readable code associated with the error which is static and never localized. Possible error codes: `invalidRequest - The request contains errors (usually contains a detailed error list)`, `invalidJson - The request body is not a valid JSON`
-`errorMessage`|`string`|-|**Required** Message associated with the error.
-`dataPath`|`string`|-|Relative data path.
-`errors`|`array`|[`Error`](#schema-error)|An array of detailed/nested errors. Note: this points to this schema as errors can nest.
+`errorMessage`|`string`|-|**Required** Message associated with the error
+`dataPath`|`string`|-|Relative data path
+`errors`|`array`|[`Error`](#schema-error)|An array of detailed/nested errors
+
+## <a name="schema-error"></a>Error
+
+Name|Type|Format|Description
+---|---|---|---
+`errorCode`|`string`|-|**Required** Machine readable code associated with the error which is static and never localized. Possible error codes see [Cards v4 - Error Codes](./v4.cards-error-codes.html)
+`errorMessage`|`string`|-|**Required** Message associated with the error
+`dataPath`|`string`|-|Relative data path
