@@ -1177,21 +1177,48 @@
 
 <h2 id="create-list-items"><a name="post-list-item-bulk"></a>Create List Items</h2>
 
-<p>Create list items for a specific list with the provided request body.</p>
+<p>Create list items for a specific list with the provided request body. Each API request contains up to 250 <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a>. Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> represents one item to be created.</p>
 
-<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a>.</p>
-
-<p>Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> represents one item to be created.</p>
-
-<p>The <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> are executed in order.</p>
-
-<p>The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> within the request
-to ensure dependencies are met, such as when creating list items in a connected list, make sure the create parent list item comes before the create child list item within the API request.</p>
+<p>The <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> are executed in order. The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Parts</a> within the request
+to ensure dependencies are met, such as when creating list items in a connected list, make sure the ‘create parent list item’ comes before the ‘create child list item’ within the API request.</p>
 
 <p>Each <a href="#schema-bulk-list-item-create-request-part">Bulk List Item Create Request Part</a> executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the <a href="#post-list-item-error-messages">Error Messages</a> for the execution failure error messages.</p>
 
 <h4 id="list-item-code-naming-restrictions">List Item Code Naming Restrictions</h4>
 <p>Hyphens are not supported and should not be used in item names or item codes. When an item name or item code with a hyphen is created or saved, the hyphen might be interpreted as a delimiter (separator) which can have unpredictable results on the saved data including possible corruption of the item list.</p>
+
+<h4 id="list-item-codes-explanation"><a name="list-item-codes"></a>List Item Codes Explanation</h4>
+<p>Refer to the <a href="https://developer.concur.com/api-reference/common/list-item/v4.list-item.html">List Items v4 documentation</a> for the full List Item object.</p>
+
+<p>Each list item has a <code class="language-plaintext highlighter-rouge">shortCode</code> which is the individual item’s code. Each list item has a <code class="language-plaintext highlighter-rouge">code</code>, also referred to as “long code”. The long code uniquely identifies an item in a list. 
+The long code is constructed by concatenating the parent list item’s <code class="language-plaintext highlighter-rouge">code</code> (“long code”) and the current item’s <code class="language-plaintext highlighter-rouge">shortCode</code> with a hyphen delimiter. A first-level list item will have the same value for <code class="language-plaintext highlighter-rouge">shortCode</code> and <code class="language-plaintext highlighter-rouge">code</code>, because it has no parent item.</p>
+
+<p>The result is a list item’s long code contains the <code class="language-plaintext highlighter-rouge">shortCode</code> values of all ancestors concatenated by hyphens.</p>
+
+<p><strong>Examples</strong>:</p>
+
+<p>First level list item:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"shortCode": "first"
+"code": "first"
+</code></pre></div></div>
+
+<p>Second level list item (child of the first level list item):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"shortCode": "second"
+"code": "first-second"
+"parentCode": "first"
+</code></pre></div></div>
+
+<p>Third level list item (child of the second level list item):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"shortCode": "third"
+"code": "first-second-third"
+"parentCode": "first-second"
+</code></pre></div></div>
+
+<p>Fourth level list item (child of the third level list item):</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"shortCode": "fourth"
+"code": "first-second-third-fourth"
+"parentCode": "first-second-third"
+</code></pre></div></div>
 
 <h3 id="scopes">Scopes</h3>
 
@@ -1251,59 +1278,54 @@ to ensure dependencies are met, such as when creating list items in a connected 
 
 <h3 id="error-messages"><a name="post-list-item-error-messages"></a>Error Messages</h3>
 
+<p><strong>API Error Response</strong></p>
+
 <p>The values for the <code class="language-plaintext highlighter-rouge">id</code> and <code class="language-plaintext highlighter-rouge">message</code> field of the <a href="#schema-bulk-list-item-error">Bulk List Item Error</a> in the <a href="#schema-bulk-list-item-response">Bulk List Item Response</a>:</p>
 
 <table>
   <thead>
     <tr>
-      <th>Description</th>
       <th>Error Id</th>
-      <th>Value</th>
+      <th>Error Message</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">List not found</code></td>
-      <td>list.not.found</td>
+      <td><code class="language-plaintext highlighter-rouge">list.not.found</code></td>
       <td>List not found.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Deleted list</code></td>
-      <td>list.deleted</td>
+      <td><code class="language-plaintext highlighter-rouge">list.deleted</code></td>
       <td>The list is currently deleted.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Duplicate item</code></td>
-      <td>item.duplicate.code</td>
+      <td><code class="language-plaintext highlighter-rouge">item.duplicate.code</code></td>
       <td>This item code is already used by another item in the same list.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item doesn't exist</code></td>
-      <td>item.parent.not.found</td>
+      <td><code class="language-plaintext highlighter-rouge">item.parent.not.found</code></td>
       <td>Parent <code class="language-plaintext highlighter-rouge">listItem</code> not found.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item is deleted</code></td>
-      <td>item.parent.deleted</td>
+      <td><code class="language-plaintext highlighter-rouge">item.parent.deleted</code></td>
       <td>Parent <code class="language-plaintext highlighter-rouge">listItem</code> has been deleted.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item is in a different list</code></td>
-      <td>item.list.id.not.match.parent</td>
+      <td><code class="language-plaintext highlighter-rouge">item.list.id.not.match.parent</code></td>
       <td>List ID does not match that of parent <code class="language-plaintext highlighter-rouge">listItem</code>.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">The child list item cannot be added because it would exceed the maximum allowed list levels (10)</code></td>
-      <td>item.max.level.exceeded</td>
+      <td><code class="language-plaintext highlighter-rouge">item.max.level.exceeded</code></td>
       <td>Parent at max level. List items cannot be added to this parent.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">There exists a list item in the same list category with this list item code. List item code must be unique within a category. If categories are enabled, this list item can be shared between lists.</code></td>
-      <td>item.duplicate.item.shared</td>
+      <td><code class="language-plaintext highlighter-rouge">item.duplicate.item.shared</code></td>
       <td>The list item already exists in another list with the same list category. This list item already exists in another linked list.</td>
     </tr>
   </tbody>
 </table>
+
+<p><strong>Validation Error</strong></p>
 
 <p>The <a href="#schema-error-message">Error Message</a> will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:</p>
 
@@ -1324,13 +1346,35 @@ to ensure dependencies are met, such as when creating list items in a connected 
 <span class="o">}</span>
 </code></pre></div></div>
 
+<p><strong>Rate Limit Error</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 429
+retry-after: 0
+concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
+content-length: 146
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Fri,26 Aug 2022 16:13:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="s2">"2022-08-26T16:13:17.230+00:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"httpStatus"</span><span class="p">:</span><span class="s2">"429 - Too Many Requests"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">"security.rate.limit.reached"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="s2">"Too many requests"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="s2">"/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="examples">Examples</h3>
 
-<h4 id="create-single-item-with-successful-response-example">Create Single Item with Successful Response Example</h4>
+<h4 id="create-single-first-level-list-item-with-successful-response-example">Create Single First-level List Item with Successful Response Example</h4>
 
 <h5 id="request-1">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1353,7 +1397,7 @@ concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
 content-length: 71
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
 <span class="nb">date</span>: Fri,26 Aug 2022 16:13:17 GMT
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 cache-control: no-cache, private
 </code></pre></div></div>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
@@ -1364,11 +1408,11 @@ cache-control: no-cache, private
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="create-parent-and-child-items-with-successful-response-example">Create Parent and Child Items with Successful Response Example</h4>
+<h4 id="create-first-level-list-item-and-children-items-with-successful-response-example">Create First-level list item and Children Items with Successful Response Example</h4>
 
 <h5 id="request-2">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1377,13 +1421,18 @@ Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM"</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST_LEVEL_PARENT_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST_LEVEL_PARENT_ITEM"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND_LEVEL_CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SECOND_LEVEL_CHILD_ITEM"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"shortCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"THIRD_LEVEL_CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"THIRD_LEVEL_CHILD_ITEM"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"parentCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARENT_ITEM-SECOND_LEVEL_CHILD_ITEM"</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1396,12 +1445,12 @@ concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
 content-length: 227
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
 <span class="nb">date</span>: Fri,26 Aug 2022 16:15:17 GMT
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 cache-control: no-cache, private
 </code></pre></div></div>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SUCCESS"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"recordsSucceeded"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"recordsSucceeded"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
   </span><span class="nl">"recordsFailed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
   </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -1411,7 +1460,7 @@ cache-control: no-cache, private
 
 <h5 id="request-3">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1435,7 +1484,7 @@ concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
 content-length: 227
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
 <span class="nb">date</span>: Fri,26 Aug 2022 16:15:17 GMT
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 cache-control: no-cache, private
 </code></pre></div></div>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
@@ -1460,7 +1509,7 @@ cache-control: no-cache, private
 
 <h5 id="request-4">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1493,7 +1542,7 @@ concur-correlationid: 97a8db78-9f87-427c-928a-c92c9ff2349a
 content-length: 233
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
 <span class="nb">date</span>: Fri,26 Aug 2022 16:17:17 GMT
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 cache-control: no-cache, private
 </code></pre></div></div>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
@@ -1516,11 +1565,7 @@ cache-control: no-cache, private
 
 <h2 id="update-list-items"><a name="patch-list-item-bulk"></a>Update List Items</h2>
 
-<p>Update and delete list items by long code for a specific list with provided request body.</p>
-
-<p>Each API request contains up to 250 <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a>.</p>
-
-<p>Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> represents one item to be updated or deleted.</p>
+<p>Update and delete list items by long code for a specific list with provided request body. Each API request contains up to 250 <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a>. Each <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Part</a> represents one item to be updated or deleted.</p>
 
 <p>The <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> are executed in order. The caller will need to manage the ordering of the <a href="#schema-bulk-list-item-update-request-part">Bulk List Item Update Request Parts</a> within the request to ensure dependencies are met.</p>
 
@@ -1589,49 +1634,47 @@ cache-control: no-cache, private
 </ul>
 
 <h3 id="error-messages-1"><a name="patch-list-item-error-messages"></a>Error Messages</h3>
+
+<p><strong>API Error Response</strong></p>
+
 <p>The values for the <code class="language-plaintext highlighter-rouge">id</code> and <code class="language-plaintext highlighter-rouge">message</code> field of the <a href="#schema-bulk-list-item-error">Bulk List Item Error</a> in the <a href="#schema-bulk-list-item-response">Bulk List Item Response</a>:</p>
 
 <table>
   <thead>
     <tr>
-      <th>Description</th>
       <th>Error Id</th>
-      <th>Value</th>
+      <th>Error Message</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">List item not found</code></td>
-      <td>item.not.found</td>
-      <td><code class="language-plaintext highlighter-rouge">listItem</code> not found.</td>
+      <td><code class="language-plaintext highlighter-rouge">item.not.found</code></td>
+      <td>listItem not found.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Parent list item is in a different list</code></td>
-      <td>item.list.id.not.match.parent</td>
-      <td>List ID does not match that of parent <code class="language-plaintext highlighter-rouge">listItem</code>.</td>
+      <td><code class="language-plaintext highlighter-rouge">item.list.id.not.match.parent</code></td>
+      <td>List ID does not match that of parent listItem.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">List not found</code></td>
-      <td>list.not.found</td>
+      <td><code class="language-plaintext highlighter-rouge">list.not.found</code></td>
       <td>List not found.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">A previously deleted item cannot be updated</code></td>
-      <td>item.deleted</td>
+      <td><code class="language-plaintext highlighter-rouge">item.deleted</code></td>
       <td>The list item has been deleted.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Duplicate item</code></td>
-      <td>item.duplicate.code</td>
+      <td><code class="language-plaintext highlighter-rouge">item.duplicate.code</code></td>
       <td>This item code is already used by another item in the same list.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Duplicate item where the duplicate is deleted</code></td>
-      <td>item.duplicate.code.deleted</td>
+      <td><code class="language-plaintext highlighter-rouge">item.duplicate.code.deleted</code></td>
       <td>This item code is already used by other item that’s been deleted.</td>
     </tr>
   </tbody>
 </table>
+
+<p><strong>Validation Error</strong></p>
 
 <p>The <a href="#schema-error-message">Error Message</a> will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:</p>
 
@@ -1652,13 +1695,35 @@ cache-control: no-cache, private
 <span class="o">}</span>
 </code></pre></div></div>
 
+<p><strong>Rate Limit Error</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 429
+retry-after: 0
+concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
+content-length: 146
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Fri,26 Aug 2022 16:13:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="s2">"2022-08-26T16:13:17.230+00:00"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"httpStatus"</span><span class="p">:</span><span class="s2">"429 - Too Many Requests"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="s2">"security.rate.limit.reached"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="s2">"Too many requests"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="s2">"/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h3 id="examples-1">Examples</h3>
 
-<h4 id="update-single-item-with-successful-response">Update Single Item with Successful Response</h4>
+<h4 id="update-single-first-level-item-with-successful-response">Update Single First-level Item with Successful Response</h4>
 
 <h5 id="request-6">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1680,7 +1745,7 @@ Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
 content-length: 289
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 <span class="nb">date</span>: Fri,26 Aug 2022 17:11:35 GMT
 cache-control: no-cache, private
 </code></pre></div></div>
@@ -1692,11 +1757,11 @@ cache-control: no-cache, private
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="delete-single-item-with-successful-response">Delete Single Item with Successful Response</h4>
+<h4 id="delete-single-first-level-item-with-successful-response">Delete Single First-level Item with Successful Response</h4>
 
 <h5 id="request-7">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1717,7 +1782,7 @@ Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
 content-length: 289
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 <span class="nb">date</span>: Fri,26 Aug 2022 17:11:35 GMT
 cache-control: no-cache, private
 </code></pre></div></div>
@@ -1733,7 +1798,7 @@ cache-control: no-cache, private
 
 <h5 id="request-8">Request</h5>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 Accept: application/json
 Accept-Language: en
 Content-Type: application/json
@@ -1763,7 +1828,7 @@ Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
 concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
 content-length: 165
 content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
-location: https://us2.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
 <span class="nb">date</span>: Fri,26 Aug 2022 17:14:35 GMT
 cache-control: no-cache, private
 </code></pre></div></div>
@@ -1781,6 +1846,52 @@ cache-control: no-cache, private
       </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="update-items-in-different-levels">Update Items in different levels</h4>
+
+<h5 id="request-9">Request</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST_LEVEL"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"firstLevelItem"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST_LEVEL-SECOND_LEVEL"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"secondLevelItem"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST_LEVEL-SECOND_LEVEL-THIRD_LEVEL"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"deleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="response-9">Response</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
+content-length: 165
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+<span class="nb">date</span>: Fri,26 Aug 2022 17:14:35 GMT
+cache-control: no-cache, private
+</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SUCCESS"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"recordsSucceeded"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"recordsFailed"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1823,7 +1934,7 @@ cache-control: no-cache, private
       <td><code class="language-plaintext highlighter-rouge">shortCode</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong> List item short code.</td>
+      <td><strong>Required</strong> List item short code. See <a href="#list-item-codes">List Item Codes</a> for further details.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">value</code></td>
@@ -1835,7 +1946,7 @@ cache-control: no-cache, private
       <td><code class="language-plaintext highlighter-rouge">parentCode</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td>The long code of parent list item.</td>
+      <td>The long code of parent list item. See <a href="#list-item-codes">List Item Codes</a> for further details.</td>
     </tr>
   </tbody>
 </table>
@@ -1877,7 +1988,7 @@ cache-control: no-cache, private
       <td><code class="language-plaintext highlighter-rouge">code</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong> List item long code.</td>
+      <td><strong>Required</strong> List item long code. See <a href="#list-item-codes">List Item Codes</a> for further details.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">value</code></td>
