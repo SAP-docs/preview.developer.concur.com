@@ -109,7 +109,7 @@ File Type|File Name|Mapping
 
 API|Mapping
 ---|---
-Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/v1-mapping.html)
+Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/V1-mapping.html)
 Bulk 3.0 or 3.1|[Bulk](https://developer.concur.com/api-reference/user-provisioning/mapping/3.0_3.1_mapping.html)
 
 ## <a name="supported-extensions"></a> Supported Extensions
