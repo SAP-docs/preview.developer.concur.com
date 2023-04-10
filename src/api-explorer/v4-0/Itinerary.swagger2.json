@@ -1,4 +1,5 @@
 {
+  "x-sap-shortText": "View itineraries for a specific company, or retrieve a single itinerary",
   "schemes": [
       "https"
   ],
@@ -6,15 +7,33 @@
   "info": {
       "description": "This is the api specification for the Itinerary API.\n\nIntroduction\nThe Itinerary API provides clients and authorized partners access to travel itinerary data. They can now subscribe to events and fetch trips by ID.\n",
       "title": "Itinerary API",
-      "termsOfService": "http://us.api.concursolutions.com/terms",
-      "license": {
-          "name": "Concur",
-          "url": "https://developer.concur.com/Terms-of-Use.html"
-      },
+      "termsOfService": "https://developer.concur.com/Terms-of-Use.html",
       "version": "v4"
   },
-  "host": "us.api.concursolutions.com",
+  "host": "us2.api.concursolutions.com",
   "basePath": "/travel/v4",
+  "x-servers": [
+    {
+        "url": "https://us2.api.concursolutions.com",
+        "description": "Concur US API Endpoint"
+    },
+    {
+        "url": "https://eu2.api.concursolutions.com",
+        "description": "Concur EU API Endpoint"
+    }
+  ],
+  "externalDocs": {
+    "description": "Refer SAP Concur Reference page for details on Travel Itinerary-v4 API",
+    "url": "https://developer.concur.com/api-reference/travel/itinerary-v4/v4.itinerary.html"
+  },
+  "securityDefinitions": {
+    "OAuth2": {
+        "type": "oauth2",
+        "description": "To use this API, you need to get OAuth client credentials (client ID, secret, and geolocation) from SAP Concur, and be authorized to use the relevant scope. Refer to the <a href=\"https://developer.concur.com/api-reference/authentication/getting-started.html\">full authentication information</a> for more information.",
+        "tokenUrl": "https://us.api.concursolutions.com/oauth2/v0",
+        "flow": "application"
+    }
+  },
   "produces": [
     "application/json",
     "application/xml"
@@ -23,74 +42,146 @@
     "application/json"
   ],
   "paths": {
-      "/trips/{tripID}": {
-          "get": {
-              "description": "Gets the trip record",              
-              "tags": [
-                  "trip"
-              ],
-              "summary": "v4 - Get Trip record",
-              "parameters": [
-                  {
-                      "type": "string",
-                      "format": "uuid",
-                      "description": "trip id",
-                      "name": "tripID",
-                      "in": "path",
-                      "required": true
-                  },
-                  {
+    "/trips": {
+        "get": {
+            "description": "Gets the upcoming trips for the given company. Company JWT is required as part of the authorization.",
+            "produces": [
+                "application/json"
+            ],
+            "tags": [
+                "trip"
+            ],
+            "summary": "v4 - Get Trip Ids by Company",
+            "parameters": [
+                {
                     "type": "string",
-                    "description": "Accepts gzip",
-                    "name": "Accept-Encoding",                    
-                    "in": "header",
-                    "required": true
-                  },
-                  {
-                    "type": "string",                    
-                    "description": "Supports application/xml and application/json",
-                    "name": "Accept",
-                    "in": "header",
-                    "required": false
+                    "description": "Output schema type. Supported value is id",
+                    "name": "schema",
+                    "in": "query"
+                },
+                {
+                    "type": "string",
+                    "description": "start date for the query list | format - `2023-01-02`. Date cannot be older than 6 months from now",
+                    "name": "endDateFrom",
+                    "in": "query"
+                },
+                {
+                    "type": "string",
+                    "description": "end date for the query list, results include this date | format - `2023-01-02`",
+                    "name": "endDateTo",
+                    "in": "query"
+                },
+                {
+                    "type": "string",
+                    "description": "Get results after a specific start Id",
+                    "name": "startAfter",
+                    "in": "query"
                 }
-              ],
-              "responses": {
-                  "200": {
-                      "description": "OK",
-                      "schema": {
-                          "$ref": "#/definitions/Itinerary"
-                      }
-                  },
-                  "400": {
-                      "description": "Bad Request",
-                      "schema": {
-                          "$ref": "#/definitions/model.ErrorAPIResponse"
-                      }
-                  },
-                  "401": {
-                      "description": "Unauthorized",
-                      "schema": {
-                          "$ref": "#/definitions/model.ErrorAPIResponse"
-                      }
-                  },
-                  "403": {
-                    "description": "Forbidden"
-                  },
-                  "404": {
-                    "description": "ID Not Found",
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful response of trip ids by company.",
+                    "schema": {
+                        "$ref": "#/definitions/model.ItineraryIdListResponse"
+                    }
+                },
+                "400": {
+                    "description": "Wrong format or structure of the provided request.",
                     "schema": {
                         "$ref": "#/definitions/model.ErrorAPIResponse"
                     }
-                  },
-                  "500": {
-                      "description": "Internal Server Error",
-                      "schema": {
-                          "$ref": "#/definitions/model.ErrorAPIResponse"
-                      }
-                  }
+                },
+                "401": {
+                    "description": "Access denied, authentication is required.",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "403": {
+                  "description": "Access denied. You do not have the required permissions to access this resource."
+                },
+                "500": {
+                    "description": "Internal Server Error. The operation you requested led to an error during execution.",                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "503": {
+                    "description": "Service is unavailable or a rate limit is in effect."
+                }
+            }
+        }
+    },
+    "/trips/{tripID}": {
+        "get": {
+            "description": "Gets the trip record",              
+            "tags": [
+                "trip"
+            ],
+            "summary": "v4 - Get Trip record",
+            "parameters": [
+                {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "trip id",
+                    "name": "tripID",
+                    "in": "path",
+                    "required": true
+                },
+                {
+                  "type": "string",
+                  "description": "Accepts gzip",
+                  "name": "Accept-Encoding",                    
+                  "in": "header",
+                  "required": true
+                },
+                {
+                  "type": "string",                    
+                  "description": "Supports application/xml and application/json",
+                  "name": "Accept",
+                  "in": "header",
+                  "required": false
               }
-          }
-      }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Successful response of trip data.",
+                    "schema": {
+                        "$ref": "#/definitions/Itinerary"
+                    }
+                },
+                "400": {
+                    "description": "Wrong format or structure of the provided request.",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "401": {
+                    "description": "Access denied, authentication is required.",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "403": {
+                  "description": "Access denied. You do not have the required permissions to access this resource."
+                },
+                "404": {
+                  "description": "Trip ID Not Found",
+                  "schema": {
+                      "$ref": "#/definitions/model.ErrorAPIResponse"
+                  }
+                },
+                "500": {
+                    "description": "Internal Server Error. The operation you requested led to an error during execution.",
+                    "schema": {
+                        "$ref": "#/definitions/model.ErrorAPIResponse"
+                    }
+                },
+                "503": {
+                    "description": "Service is unavailable or a rate limit is in effect."
+                }
+            }
+        }
+    }
   },
   "definitions": {
       "AccountingLine": {
@@ -3011,6 +3102,45 @@
                   }
               }
           }
+      },
+      "model.ItineraryIdListResponse": {
+        "type": "object",
+        "properties": {
+            "data": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/model.ItineraryIdObject"
+                }
+            },
+            "operations": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/definitions/model.ItineraryListOperationObject"
+                }
+            }
+        }
+      },
+      "model.ItineraryIdObject": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "href": {
+                "type": "string"
+            }
+        }
+      },
+      "model.ItineraryListOperationObject": {
+        "type": "object",
+        "properties": {
+            "rel": {
+                "type": "string"
+            },
+            "href": {
+                "type": "string"
+            }
+        }
       }
   }
 }

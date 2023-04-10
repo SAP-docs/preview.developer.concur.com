@@ -4,6 +4,12 @@ layout: reference
 ---
 # Event Notification Callout
 
+<div class="alert alert-danger">
+  <p><strong>Part of this API has been deprecated.</strong></p>
+  <p>Travel Request Deprecation Date: 03/01/2020</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+</div>
+
 The Event Notification callout allows clients to choose to be notified through web services when certain actions take place in their SAP Concur company. If the client uses Concur Expense, the supported events are the Expense report entering the Post-Submit or Pre-Extract workflow steps. If the client uses Concur Travel Request, the supported events are the Travel Request entering the Post-Submit or Pre-Extract workflow steps. When the event happens, SAP Concur generates a notification and places it into the notification system queue. When the notification reaches the front of the queue, we send a request to the configured endpoint with event information.
 
 This callout differs from the standard SAP Concur web services in the following ways:
@@ -24,7 +30,7 @@ Access to this documentation does not provide access to the API. 
 ## Products and Editions <a name="products-editions"></a>
 
 * Concur Expense Professional Edition
-* Concur Request Professional Edition
+* ~~Concur Request Professional Edition~~ (**Deprecated:** 03/01/2020)
 * The SAP Concur Mobile App
 
 ## Example Use Case <a name="example-use-case"></a>
