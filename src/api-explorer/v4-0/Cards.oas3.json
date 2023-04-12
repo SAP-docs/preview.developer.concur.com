@@ -23,14 +23,6 @@
         "operationId": "postAccountsBulk",
         "parameters": [
           {
-            "description": "Test request (API request validation only, no data will be changed)",
-            "in": "query",
-            "name": "test",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
             "description": "UUID identifying the company",
             "in": "path",
             "name": "companyId",
@@ -86,7 +78,61 @@
         },
         "summary": "Create new credit card accounts as bulk operation",
         "tags": [
-          "Cards v4"
+          "Accounts"
+        ]
+      }
+    },
+    "/v4/companies/{companyId}/bulkrequests/{bulkrequestId}": {
+      "get": {
+        "description": "Authentication is done via company JWT with required scope cards.bulkrequest.read. \nThe appId of the JWT needs to match the appId which created the bulk request.",
+        "operationId": "getBulkRequestByCompanyAndRequestId",
+        "parameters": [
+          {
+            "description": "UUID identifying the company",
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Bulk Request ID",
+            "in": "path",
+            "name": "bulkrequestId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkRequestModelV4"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "The request is not authenticated. Missing or invalid authorization header."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested bulk request does not exist"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Retrieve a bulk request by ID",
+        "tags": [
+          "Bulk Requests"
         ]
       }
     },
@@ -95,14 +141,6 @@
         "description": "This API creates multiple credit card transactions in an asynchronous manner. \n\rAssuming the request is properly authorized and the request body is valid, the API returns 202 (Request Accepted) and processes the request asynchronously. \n\rEach transaction is identified by externalId which needs to be unique. If at least one item of the bulk request fails the validation (e.g. invalid enum or missing required field) the complete request will be rejected with response code 400.\n\rA maximum of 1000 transactions are allowed to be sent in one request.\n\rPossible error codes:<li>invalidRequest: The request contains errors (usually contains a detailed error list)</li><li>invalidJson: The request body is not a valid JSON</li>",
         "operationId": "postTransactionsBulk",
         "parameters": [
-          {
-            "description": "Test request (API request validation only, no data will be changed)",
-            "in": "query",
-            "name": "test",
-            "schema": {
-              "type": "boolean"
-            }
-          },
           {
             "description": "UUID identifying the company",
             "in": "path",
@@ -159,7 +197,7 @@
         },
         "summary": "Create new credit card transactions as bulk operation",
         "tags": [
-          "Cards v4"
+          "Transactions"
         ]
       }
     }
@@ -397,6 +435,63 @@
           }
         },
         "description": "Amount"
+      },
+      "BulkRequestModelV4": {
+        "required": [
+          "receivedAt",
+          "requestId",
+          "status",
+          "totalElements",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "completedAt": {
+            "type": "string",
+            "description": "Timestamp when processing of the bulk request was completed (RFC 3339 \"YYYY-MM-DDThh:mm:ss.nnnZ\")",
+            "format": "date-time",
+            "example": "2020-09-18T20:56:43Z"
+          },
+          "receivedAt": {
+            "type": "string",
+            "description": "Timestamp when the bulk request was received (RFC 3339 \"YYYY-MM-DDThh:mm:ss.nnnZ\")",
+            "format": "date-time",
+            "example": "2020-09-18T20:54:21Z"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Unique identifier of the API request",
+            "example": "f328a518-be22-4207-aa53-87ac147eb416"
+          },
+          "status": {
+            "type": "string",
+            "description": "The processing status<li>IN_PROGRESS - In progress</li><li>COMPLETED_SUCCESSFULLY - Completed successfully</li><li>COMPLETED_WITH_WARNINGS - Completed with warnings</li><li>COMPLETED_WITH_ERRORS - Completed with errors</li>",
+            "example": "COMPLETED_SUCCESSFULLY",
+            "enum": [
+              "IN_PROGRESS",
+              "COMPLETED_SUCCESSFULLY",
+              "COMPLETED_WITH_WARNINGS",
+              "COMPLETED_WITH_ERRORS"
+            ]
+          },
+          "totalElements": {
+            "type": "integer",
+            "description": "Number of elements in this bulk request",
+            "format": "int32",
+            "example": 16
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the API request<li>POST_ACCOUNT - Account creation</li><li>POST_TRANSACTION - Transaction creation</li><li>PATCH_ACCOUNT - Account update</li><li>PATCH_TRANSACTION - Transaction update</li>",
+            "example": "POST_ACCOUNT",
+            "enum": [
+              "POST_ACCOUNT",
+              "POST_TRANSACTION",
+              "PATCH_ACCOUNT",
+              "PATCH_TRANSACTION"
+            ]
+          }
+        }
       },
       "BulkResponseModel": {
         "required": [
@@ -892,7 +987,7 @@
           "href": {
             "type": "string",
             "description": "Hyperlink to the resource",
-            "example": "https://api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/accounts/requests/f328a518-be22-4207-aa53-87ac147eb416"
+            "example": "https://api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/bulkrequests/f328a518-be22-4207-aa53-87ac147eb416"
           },
           "rel": {
             "type": "string",
