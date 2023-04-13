@@ -1,3 +1,4 @@
+
 ---
 title: Cards v4 - Endpoint Schemas
 layout: reference
@@ -17,19 +18,19 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 ---|---|---|---
-`accountType`|`string`|-|**Required** Type of the credit card account. Supported values: `I - Individual`, `M - Managing (the master account of virtual cards)`, `V - Virtual card`
+`accountType`|`enum`|-|**Required** Type of the credit card account. Supported values: `I - Individual`, `M - Managing (the master account of virtual cards)`, `V - Virtual card`
 `billedCurrency`|`string`|3-letter ISO 4217 currency code|Billed currency of the card account
 `billingAccount`|`object`|[`Billing Account Reference`](#schema-billingaccountreference)|Reference to the billing account, e.g. in case of virual card this references the managing/master account
-`cardBrand`|`string`|-|Brand of the card. Supported values: `AX - American Express`, `CA - MasterCard`, `CB - Carte Blance`, `DC - Diners Club`, `DS - Discover`, `EC - EuroCard`, `ER - ENROUTE`, `JC - JCB International`, `OT - Other`, `TP - UATP Card`, `UP - China Union Pay`, `VI - VISA`
+`cardBrand`|`enum`|-|Brand of the card. Supported values: `AX - American Express`, `CA - MasterCard`, `CB - Carte Blance`, `DC - Diners Club`, `DS - Discover`, `EC - EuroCard`, `ER - ENROUTE`, `JC - JCB International`, `OT - Other`, `TP - UATP Card`, `UP - China Union Pay`, `VI - VISA`
 `cardProductDescription`|`string`|-|**Required** Branded name of the credit card; might be used for display purposes
-`cardProductType`|`string`|-|**Required** Card product type. Supported values: `CORP - Corporate Card`, `BUSN - Business Card`, `PERS - Personal Card`
+`cardProductType`|`enum`|-|**Required** Card product type. Supported values: `CORP - Corporate Card`, `BUSN - Business Card`, `PERS - Personal Card`
 `cardholder`|`object`|[`Cardholder`](#schema-cardholder)|Cardholder owning this card account
 `externalId`|`string`|-|**Required** Unique identifier (token) for a card account as defined by an external system (outside SAP Concur). Must not contain primary account number (PAN).
 `lastSegment`|`string`|-|**Required** Last four digits of the credit card number
-`liabilityType`|`string`|-|**Required** Liability type (payment method). Supported values: `IBIP - Individually Billed, Individually Paid`, `IBCP - Individually Billed, Company Paid`, `CBCP - Company Billed Company Paid`
+`liabilityType`|`enum`|-|**Required** Liability type (payment method). Supported values: `IBIP - Individually Billed, Individually Paid`, `IBCP - Individually Billed, Company Paid`, `CBCP - Company Billed Company Paid`
 `nameOnCard`|`string`|-|**Required** Embossed name on the card
 `provider`|`object`|[`Provider`](#schema-provider)|**Required** Credit Card Provider
-`status`|`string`|-|Lifecycle status (default: Active). Supported values: `A - Active`, `C - Canceled`
+`status`|`enum`|-|Lifecycle status (default: Active). Supported values: `A - Active`, `C - Canceled`
 `travelRequest`|`object`|[`Travel Request Reference`](#schema-travelrequestreference)|Reference to an SAP Concur Travel Request which is related to this card account
 
 ## <a name="schema-billingaccountreference"></a>Billing Account Reference
@@ -52,7 +53,7 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 ---|---|---|---
-`countryCode`|`string`|**Required** ISO 3166-1 Alpha-2 code|Provider country code
+`countryCode`|`string`|ISO 3166-1 Alpha-2 code|**Required** Provider country code
 
 ## <a name="schema-travelrequestreference"></a>Travel Request Reference
 
@@ -62,14 +63,22 @@ Name|Type|Format|Description
 
 # <a name="schemas-transaction"></a>Cards v4 - Transaction Schemas
 
+## <a name="schema-create-transaction-list"></a>Create Transaction List
+
 Name|Type|Format|Description
 ---|---|---|---
-`account`|`object`|Transaction Account Reference|**Required** Reference to the card account to which this transaction belongs to
+`transactions`|`array`|[`Create Transaction`](#schema-create-transaction)|**Required** An array of transactions to be created
+
+## <a name="schema-create-transaction"></a>Create Transaction
+
+Name|Type|Format|Description
+---|---|---|---
+`account`|`object`|[`Transaction Account Reference`](schema-transaction-accountreference)|**Required** Reference to the card account to which this transaction belongs to
 `acquirerReferenceNumber`|`string`|-|Acquirer reference number
 `authorizationExternalId`|`string`|-|External ID of the referenced (pre-)authorization
-`billedAmount`|`object`|Amount|Billed amount
-`carRental`|`object`|Car Rental|Car rental addendum data
-`customData`|`array`|Custom Data|Custom data
+`billedAmount`|`object`|[`Amount`](#schema-amount)|Billed amount
+`carRental`|`object`|[`Car Rental`](#schema-carrental)|Car rental addendum data
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data
 `customerVatNumber`|`string`|-|Customer VAT number
 `description`|`string`|-|Description of the transaction
 `description2`|`string`|-|Description2 of the transaction
@@ -81,19 +90,71 @@ Name|Type|Format|Description
 `lodging`|`object`|Lodging Addendum|Lodging addendum data
 `merchant`|`object`|Merchant|**Required** Merchant details
 `merchantReferenceNumber`|`string`|-|Merchant reference number
-`postedAmount`|`object`|Amount|**Required** Posted amount
+`postedAmount`|`object`|[`Amount`](#schema-amount)|**Required** Posted amount
 `postedDate`|`string`|-|**Required** Posted date
 `processorReferenceNumber`|`string`|-|Processor reference number
 `purchase`|`object`|Purchase Addendum|Purchase addendum data
 `referenceNumber`|`string`|-|Transaction reference number for display purposes
 `statement`|`object`|Transaction Statement|Statement details
 `taxes`|`array`|Transaction Tax|Taxes incurred for the transaction
-`totalTaxAmount`|`object`|Amount|Total tax amount
-`transactionAmount`|`object`|Amount|**Required** Transaction amount
-`transactionDate`|`string`|-|**Required** Transaction date
-`transactionDateTime`|`string`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnn`|Timestamp when the transaction happened
+`totalTaxAmount`|`object`|[`Amount`](#schema-amount)|Total tax amount
+`transactionAmount`|`object`|[`Amount`](#schema-amount)|**Required** Transaction amount
+`transactionDate`|`date`|ISO 8601 `YYYY-MM-DD` TODO: other dates and timestamps|**Required** Transaction date
+`transactionDateTime`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnn`|Timestamp when the transaction happened
 `travel`|`object`|Travel Addendum|Travel addendum data
-`type`|`string`|-|**Required** Type of the transaction. Supported values: `ANF - Annual Fees`, `CAV - Cash Advance`, `CCF - Cash and Check Fees`, `RPE - Regular Transaction`, `FNC - Finance Charges`, `NSF - Insufficient Funds Check Fees`, `LAF - Late Fees`, `CHG - Other Bank Charges and Fees`, `PAY - Payment`
+`type`|`enum`|-|**Required** Type of the transaction. Supported values: `ANF - Annual Fees`, `CAV - Cash Advance`, `CCF - Cash and Check Fees`, `RPE - Regular Transaction`, `FNC - Finance Charges`, `NSF - Insufficient Funds Check Fees`, `LAF - Late Fees`, `CHG - Other Bank Charges and Fees`, `PAY - Payment`
+
+## <a name="schema-transaction-accountreference"></a>Transaction Account Reference
+
+Name|Type|Format|Description
+---|---|---|---
+`externalId`|`string`|-|**Required** Unique identifier (token) of the referenced billing account as defined by an external system (outside SAP Concur). Must not contain primary account number (PAN).
+
+## <a name="schema-carrental"></a>Car Rental
+
+Name|Type|Format|Description
+---|---|---|---
+`adjustmentAmount`|`object`|[`Amount`](#schema-amount)|Adjustment amount
+`charges`|`array`|Car Rental Charges|Car rental charges
+`classificationCode`|`string`|-|Classification of the rented vehicle
+`commodityCode`|`string`|-|Commodity code
+`customData`|`array`|Custom Data|Custom data
+`dailyRate`|`object`|[`Amount`](#schema-amount)|Daily rental fee
+`extraChargeAmount`|`object`|[`Amount`](#schema-amount)|Total amount of extra charges applied
+`extraChargeCode`|`string`|-|Code describing the cause of extra charges applied
+`extraDistanceRate`|`object`|[`Amount`](#schema-amount)|Additional rate per distance unit applied to the vehicle
+`maximumFreeDistance`|`object`|Distance|Maximum travel distance allowed to the customer before additional charges apply
+`mileageRate`|`object`|[`Amount`](#schema-amount)|Rate applied per unit of distance traveled in vehicle
+`numberOfVehicles`|`integer`|-|Number of vehicles rented
+`pickupAddress`|`object`|Address|Address where the vehicle was rented
+`pickupDate`|`string`|string|Date on which the vehicle was rented
+`pickupPropertyId`|`string`|-|Property ID where the vehicle was rented
+`rentalAgreementNumber`|`string`|-|Number entered at the point of sale
+`rentalDays`|`integer`|-|Number of days the vehicle was rented
+`renterName`|`string`|-|Name of the individual that made the rental agreement
+`renterNotShown`|`boolean`||Renter not shown flag
+`returnAddress`|`object`|Address|True if renter did not pick up vehicle; no show charges may apply
+`returnDate`|`string`|-|Date on which the customer returned the vehicle
+`returnPropertyId`|`string`|-|Property ID where the vehicle was returned
+`totalDistance`|`object`|Distance|Total distance traveled during the rental period
+`weeklyRate`|`object`|[`Amount`](#schema-amount)|Weekly rental fee
+
+## <a name="schema-Fleet"></a>Fleet
+
+Name|Type|Format|Description
+---|---|---|---
+`discountAmount`|`object`|[`Amount`](#schema-amount)|Discount Amount
+`driverId`|`string`||Driver ID
+`fuelType`|`enum`||**Required** Fuel type. Supported values: `ALCOHOL - Alcohol-based Fuel`, `AUTOGAS - Autogas (LPG)`, `AVIATION - Aviation/Jet Fuel`, `BIOBLEND - Biodiesel-blended Fuel`, `BIOFUEL - Biodiesel Fuel`, `CLNDIESEL - Clean Diesel`, `DIESEL - Diesel Fuel`, `GASOLINE - Gasoline`, `MARINE - Marine Fuel`, `NATURAL - Natural Gas`, `OTHER - Other Fuel`, `UNDEF - Undefined Fuel Type`
+`items`|`array`|Fleet Item|Fleet items
+`odometer`|`string`||Odometer reading
+`productType`|`enum`||**Required** Product type. Supported values: `CARACC - Automotive Accessories`, `GLASS - Automotive Glass`, `AVIACC - Aviation Accessories`, `AVIFOOD - Aviation Food/Beverage`, `AVIMAINT - Aviation Maintenance`, `BATTERIES - Batteries`, `BEVERAGE - Beverage`, `BRAKE - Brakes and Brake Services`, `WASH - Car Wash`, `SMOKE - Cigarettes/Tobacco`, `FEE - Fees`, `FOOD - Food`, `AVIATION - General Aviation`, `HEALTH - Health/Beauty`, `LABOR - Labor`, `MISC - Miscellaneous Product`, `OIL - Motor Oil`, `PARTS - Parts`, `REPAIR - Repair`, `SERVICE - Services`, `TIRES - Tires`, `TBA - Tires Batteries Accessories`, `TOW - Towing`, `UNDEF - Undefined Product Type`
+`quantity`|`object`|Fleet Quantity|Quantity
+`serviceType`|`enum`||**Required** Service type. Supported values: `FULL - Full-service`, `NFUEL - Only non-fuel products purchased`, `SELF - Self-service`, `UNDEF - Undefined Service Type`
+`totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount
+`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measuer
+`vehicleNumber`|`string`||Vehicle Number
+
 
 # <a name="schemas-common"></a>Cards v4 - Common Schemas
 
@@ -126,6 +187,20 @@ Name|Type|Format|Description
 `errorCode`|`string`|-|**Required** Machine readable code associated with the error which is static and never localized. Possible error codes see [Detailed Error Codes](#detailed-error-codes)
 `errorMessage`|`string`|-|**Required** Message associated with the error
 `dataPath`|`string`|-|Relative data path
+
+## <a name="schema-amount"></a>Amount
+
+Name|Type|Format|Description
+---|---|---|---
+`currencyCode`|`string`|3-letter ISO 4217 currency code|**Required** Currency of the amount
+`value`|`number`|-|**Required** Amount value
+
+## <a name="schema-customdata"></a>Custom Data
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|-|**Required** Id of the custom field
+`value`|`string`|-|Value of the custom field
 
 # <a name="http-status-codes"></a>Cards v4 - HTTP Status Codes
 
