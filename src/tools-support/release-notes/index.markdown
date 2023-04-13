@@ -38,7 +38,15 @@ layout: reference
 
 ## App Center Release Notes
 
-To view App Center release notes, please visit [ConcurTraining](http://www.concurtraining.com/customers/tech_pubs/Docs/AppCenter/ReleaseNotesAppCenter_Client.htm).
+[2022 Release Notes](./app-center/AppCenter_RN_Client_2022.pdf)
+[2021 Release Notes](./app-center/AppCenter_RN_Client_2021.pdf)
+[2020 Release Notes](./app-center/AppCenter_RN_Client_2020.pdf)
+[2019 Release Notes](./app-center/AppCenter_RN_Client_2019.pdf)
+[2018 Release Notes](./app-center/AppCenter_RN_Client_2018.pdf)
+[2017 Release Notes](./app-center/AppCenter_RN_Client_2017.pdf)
+[2016 Release Notes](./app-center/AppCenter_RN_Client_2016.pdf)
+[2015 Release Notes](./app-center/AppCenter_RN_Client_2015.pdf)
+[2014 Release Notes](./app-center/AppCenter_RN_Client_2014.pdf)
 
 ## Combined App Center and Developer Platform Release Notes
 
