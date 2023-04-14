@@ -91,7 +91,7 @@ Name|Type|Format|Description
 `merchant`|`object`|Merchant|**Required** Merchant details
 `merchantReferenceNumber`|`string`|-|Merchant reference number
 `postedAmount`|`object`|[`Amount`](#schema-amount)|**Required** Posted amount
-`postedDate`|`string`|-|**Required** Posted date
+`postedDate`|`date`|ISO 8601 `YYYY-MM-DD`|**Required** Posted date
 `processorReferenceNumber`|`string`|-|Processor reference number
 `purchase`|`object`|Purchase Addendum|Purchase addendum data
 `referenceNumber`|`string`|-|Transaction reference number for display purposes
@@ -99,7 +99,7 @@ Name|Type|Format|Description
 `taxes`|`array`|Transaction Tax|Taxes incurred for the transaction
 `totalTaxAmount`|`object`|[`Amount`](#schema-amount)|Total tax amount
 `transactionAmount`|`object`|[`Amount`](#schema-amount)|**Required** Transaction amount
-`transactionDate`|`date`|ISO 8601 `YYYY-MM-DD` TODO: other dates and timestamps|**Required** Transaction date
+`transactionDate`|`date`|ISO 8601 `YYYY-MM-DD`|**Required** Transaction date
 `transactionDateTime`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnn`|Timestamp when the transaction happened
 `travel`|`object`|Travel Addendum|Travel addendum data
 `type`|`enum`|-|**Required** Type of the transaction. Supported values: `ANF - Annual Fees`, `CAV - Cash Advance`, `CCF - Cash and Check Fees`, `RPE - Regular Transaction`, `FNC - Finance Charges`, `NSF - Insufficient Funds Check Fees`, `LAF - Late Fees`, `CHG - Other Bank Charges and Fees`, `PAY - Payment`
@@ -115,46 +115,74 @@ Name|Type|Format|Description
 Name|Type|Format|Description
 ---|---|---|---
 `adjustmentAmount`|`object`|[`Amount`](#schema-amount)|Adjustment amount
-`charges`|`array`|Car Rental Charges|Car rental charges
+`charges`|`array`|[`Car Rental Charge`](#schema-carrental-charge)|Car rental charges
 `classificationCode`|`string`|-|Classification of the rented vehicle
 `commodityCode`|`string`|-|Commodity code
-`customData`|`array`|Custom Data|Custom data
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data
 `dailyRate`|`object`|[`Amount`](#schema-amount)|Daily rental fee
 `extraChargeAmount`|`object`|[`Amount`](#schema-amount)|Total amount of extra charges applied
 `extraChargeCode`|`string`|-|Code describing the cause of extra charges applied
 `extraDistanceRate`|`object`|[`Amount`](#schema-amount)|Additional rate per distance unit applied to the vehicle
-`maximumFreeDistance`|`object`|Distance|Maximum travel distance allowed to the customer before additional charges apply
+`maximumFreeDistance`|`object`|[`Distance`](#schema-distance)|Maximum travel distance allowed to the customer before additional charges apply
 `mileageRate`|`object`|[`Amount`](#schema-amount)|Rate applied per unit of distance traveled in vehicle
 `numberOfVehicles`|`integer`|-|Number of vehicles rented
-`pickupAddress`|`object`|Address|Address where the vehicle was rented
-`pickupDate`|`string`|string|Date on which the vehicle was rented
+`pickupAddress`|`object`|[`Address`](#schema-address)|Address where the vehicle was rented
+`pickupDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date on which the vehicle was rented
 `pickupPropertyId`|`string`|-|Property ID where the vehicle was rented
 `rentalAgreementNumber`|`string`|-|Number entered at the point of sale
 `rentalDays`|`integer`|-|Number of days the vehicle was rented
 `renterName`|`string`|-|Name of the individual that made the rental agreement
-`renterNotShown`|`boolean`||Renter not shown flag
-`returnAddress`|`object`|Address|True if renter did not pick up vehicle; no show charges may apply
-`returnDate`|`string`|-|Date on which the customer returned the vehicle
+`renterNotShown`|`boolean`|-|Renter not shown flag
+`returnAddress`|`object`|[`Address`](#schema-address)|True if renter did not pick up vehicle; no show charges may apply
+`returnDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date on which the customer returned the vehicle
 `returnPropertyId`|`string`|-|Property ID where the vehicle was returned
-`totalDistance`|`object`|Distance|Total distance traveled during the rental period
+`totalDistance`|`object`|[`Distance`](#schema-distance)|Total distance traveled during the rental period
 `weeklyRate`|`object`|[`Amount`](#schema-amount)|Weekly rental fee
+
+## <a name="schema-carrental-charge"></a>Car Rental Charge
+
+Name|Type|Format|Description
+---|---|---|---
+`amount`|`object`|[`Amount`](#schema-amount)|Amount
+`name`|`enum`|-|Name/type of the charge. Supported values: `REGULAR - Regular charges`, `ONEWAY - One-way drop charges`, `LATE - Late charges`, `FUEL - Fuel charges`, `INSURANCE - Insurance charges`, `EXTRA - Extra charges`, `OTHER - Other charges`
 
 ## <a name="schema-Fleet"></a>Fleet
 
 Name|Type|Format|Description
 ---|---|---|---
 `discountAmount`|`object`|[`Amount`](#schema-amount)|Discount Amount
-`driverId`|`string`||Driver ID
-`fuelType`|`enum`||**Required** Fuel type. Supported values: `ALCOHOL - Alcohol-based Fuel`, `AUTOGAS - Autogas (LPG)`, `AVIATION - Aviation/Jet Fuel`, `BIOBLEND - Biodiesel-blended Fuel`, `BIOFUEL - Biodiesel Fuel`, `CLNDIESEL - Clean Diesel`, `DIESEL - Diesel Fuel`, `GASOLINE - Gasoline`, `MARINE - Marine Fuel`, `NATURAL - Natural Gas`, `OTHER - Other Fuel`, `UNDEF - Undefined Fuel Type`
-`items`|`array`|Fleet Item|Fleet items
-`odometer`|`string`||Odometer reading
-`productType`|`enum`||**Required** Product type. Supported values: `CARACC - Automotive Accessories`, `GLASS - Automotive Glass`, `AVIACC - Aviation Accessories`, `AVIFOOD - Aviation Food/Beverage`, `AVIMAINT - Aviation Maintenance`, `BATTERIES - Batteries`, `BEVERAGE - Beverage`, `BRAKE - Brakes and Brake Services`, `WASH - Car Wash`, `SMOKE - Cigarettes/Tobacco`, `FEE - Fees`, `FOOD - Food`, `AVIATION - General Aviation`, `HEALTH - Health/Beauty`, `LABOR - Labor`, `MISC - Miscellaneous Product`, `OIL - Motor Oil`, `PARTS - Parts`, `REPAIR - Repair`, `SERVICE - Services`, `TIRES - Tires`, `TBA - Tires Batteries Accessories`, `TOW - Towing`, `UNDEF - Undefined Product Type`
-`quantity`|`object`|Fleet Quantity|Quantity
-`serviceType`|`enum`||**Required** Service type. Supported values: `FULL - Full-service`, `NFUEL - Only non-fuel products purchased`, `SELF - Self-service`, `UNDEF - Undefined Service Type`
+`driverId`|`string`|-|Driver ID
+`fuelType`|`enum`|-|**Required** Fuel type. Supported values: `ALCOHOL - Alcohol-based Fuel`, `AUTOGAS - Autogas (LPG)`, `AVIATION - Aviation/Jet Fuel`, `BIOBLEND - Biodiesel-blended Fuel`, `BIOFUEL - Biodiesel Fuel`, `CLNDIESEL - Clean Diesel`, `DIESEL - Diesel Fuel`, `GASOLINE - Gasoline`, `MARINE - Marine Fuel`, `NATURAL - Natural Gas`, `OTHER - Other Fuel`, `UNDEF - Undefined Fuel Type`
+`items`|`array`|[`Fleet Item`](#schema-fleet-item)|Fleet items
+`odometer`|`string`|-|Odometer reading
+`productType`|`enum`|-|**Required** Product type. Supported values: `CARACC - Automotive Accessories`, `GLASS - Automotive Glass`, `AVIACC - Aviation Accessories`, `AVIFOOD - Aviation Food/Beverage`, `AVIMAINT - Aviation Maintenance`, `BATTERIES - Batteries`, `BEVERAGE - Beverage`, `BRAKE - Brakes and Brake Services`, `WASH - Car Wash`, `SMOKE - Cigarettes/Tobacco`, `FEE - Fees`, `FOOD - Food`, `AVIATION - General Aviation`, `HEALTH - Health/Beauty`, `LABOR - Labor`, `MISC - Miscellaneous Product`, `OIL - Motor Oil`, `PARTS - Parts`, `REPAIR - Repair`, `SERVICE - Services`, `TIRES - Tires`, `TBA - Tires Batteries Accessories`, `TOW - Towing`, `UNDEF - Undefined Product Type`
+`quantity`|`object`|[`Fleet Quantity`](#schema-fleet-quantity)|Quantity
+`serviceType`|`enum`|-|**Required** Service type. Supported values: `FULL - Full-service`, `NFUEL - Only non-fuel products purchased`, `SELF - Self-service`, `UNDEF - Undefined Service Type`
 `totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount
-`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measuer
-`vehicleNumber`|`string`||Vehicle Number
+`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measure
+`vehicleNumber`|`string`|-|Vehicle Number
 
+## <a name="schema-fleet-item"></a>Fleet Item
+
+Name|Type|Format|Description
+---|---|---|---
+`commodityCode`|`string`|-|Standard coding structure for the description of goods and services
+`description`|`string`|-|Description
+`discountAmount`|`object`|[`Amount`](#schema-amount)|Discount amount
+`discountApplied`|`boolean`|-|Indicating whether a discount is granted
+`extendedAmount`|`object`|[`Amount`](#schema-amount)|Extended amount
+`quantity`|`object`|[`Fleet Quantity`](#schema-fleet-quantity)|Quantity
+`sequenceNumber`|`integer`|-|Sequence Number
+`totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount
+`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measure
+
+
+## <a name="schema-fleet-quantity"></a>Fleet Quantity
+
+Name|Type|Format|Description
+---|---|---|---
+`unit`|`string`|-|Fuel unit of measure. Preferred values: `LTR - liter`, `GLI - gallon (UK)`, `GLL - gallon (US)`, `KGM - kilogram`, `LBR - pound`, `KWH - kilowatt hour`
+`value`|`number`|-|**Required** Quantity value
 
 # <a name="schemas-common"></a>Cards v4 - Common Schemas
 
@@ -188,6 +216,17 @@ Name|Type|Format|Description
 `errorMessage`|`string`|-|**Required** Message associated with the error
 `dataPath`|`string`|-|Relative data path
 
+## <a name="schema-address"></a>Address
+
+Name|Type|Format|Description
+---|---|---|---
+`city`|`string`|-|City
+`countryCode`|`string`|ISO 3166-1 Alpha-2 code|Country code
+`state`|`string`|-|State / province / region
+`streetAddress`|`string`|-|Street address lines
+`zip`|`string`|-|Zip / postal code
+
+
 ## <a name="schema-amount"></a>Amount
 
 Name|Type|Format|Description
@@ -201,6 +240,13 @@ Name|Type|Format|Description
 ---|---|---|---
 `id`|`string`|-|**Required** Id of the custom field
 `value`|`string`|-|Value of the custom field
+
+## <a name="schema-distance"></a>Distance
+
+Name|Type|Format|Description
+---|---|---|---
+`unit`|`enum`|-|Distance unit. Supported values: `KM - Kilometer`, `MILE - Mile`
+`value`|`integer`|-|**Required** Distance value (without decimal places)
 
 # <a name="http-status-codes"></a>Cards v4 - HTTP Status Codes
 
