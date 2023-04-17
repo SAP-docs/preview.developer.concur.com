@@ -1,0 +1,229 @@
+---
+title: Cards v4 - Credit Card Transaction
+layout: reference
+---
+
+# Cards v4 - Credit Card Transaction
+
+{% include prerelease.html %}
+
+## <a name="transaction-bulk-create"></a>Create Card Transactions (Bulk)
+
+Endpoint to create credit card transactions as bulk operation. Assuming that the request is properly authorized and the schema validation passes, the API immediately returns `202 (Request Accepted)` and performs the actual processing asynchronously.
+
+### Scopes
+
+`cards.transaction.writeonly` - Refer to [Scope Usage](./v4.cards-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+POST https://{datacenterURI}/cards/v4/companies/{companyId}/transactions/bulk
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|-|**Required** The unique identifier of the SAP Concur company.
+
+### Payloads
+
+* Request: [Create Transaction List](./v4.cards-endpoints.schemas.html#schema-create-transaction-list)
+* Response: [Bulk API Response](./v4.cards-endpoints.schemas.html#schema-bulkapi-response)
+
+Notes:
+* This API can only be used for creating new transactions. If the same `externalId` is sent a second time, it will be ignored with an error during processing.
+* The `externalId` is a unique identifier for a card transaction as defined by an external system (outside SAP Concur). It must not contain the primary account number (PAN). It may contain the same value as `referenceNumber` as long as it is unique.
+* The `authorizationExternalId` can be used to reference a posted transaction to a preceding authorization. In this case the authorization will be overwritten by the posted tranaction in SAP Concur.
+* A transaction can only contain one type of addendum data (car rental, fleet, lodging, purchase, or travel) at the same time
+
+###  Headers
+
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
+###  HTTP Status Codes
+
+In case of success, HTTP status code `202 (Request Accepted)` is returned.
+In case of a bad request, HTTP status code `400 (Bad Request)` is returned along with an error code describing the cause. Possible error codes are: `invalidRequest`, `invalidJson`. For `invalidRequest` the error response usually contains a detailed error list.
+
+To learn more about response HTTP status codes for this API see [HTTP Status Codes](./v4.cards-endpoints.schemas.html#http-status-codes).
+
+### Examples
+
+#### Valid Request
+
+```shell
+POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/transactions/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+```
+
+```json
+{
+  "transactions": [{
+      "account": {
+        "externalId": "59edf00e-6e0a-46c4-bf59-c233000c5b98"
+      },
+      "billedAmount": {
+        "currencyCode": "USD",
+        "value": 405.10
+      },
+      "description": "ACME Hotels,123-456-7890,Seattle",
+      "externalId": "1047ecc3-bc47-4b2f-bcf5-6c8e13291338",
+      "lodging": {
+        "charges": [{
+            "amount": {
+              "currencyCode": "USD",
+              "value": 19.90
+            },
+            "name": "INTNT"
+          }
+        ],
+        "checkInDate": "2022-08-14",
+        "checkOutDate": "2022-08-17",
+        "dailyRoomRate": {
+          "currencyCode": "USD",
+          "value": 120
+        },
+        "folioNumber": "F344145-51VD",
+        "guestName": "DOE,JOHN",
+        "lodgingAddress": {
+          "city": "Vancouver",
+          "countryCode": "CA",
+          "state": "BC",
+          "streetAddress": "433 Hotel Street",
+          "zip": "v6b 6l9"
+        },
+        "numberOfRoomNights": 3,
+        "numberOfRooms": 1,
+        "totalLodgingAmount": {
+          "currencyCode": "USD",
+          "value": 360
+        },
+        "totalNonRoomChargeAmount": {
+          "currencyCode": "USD",
+          "value": 19.90
+        },
+        "totalTaxAmount": {
+          "currencyCode": "USD",
+          "value": 25.2
+        }
+      },
+      "merchant": {
+        "address": {
+          "city": "Seattle",
+          "countryCode": "US",
+          "state": "WA",
+          "streetAddress": "1 Hotel Way",
+          "zip": "90001"
+        },
+        "categoryCode": "7011",
+        "doingBusinessAs": "ACME Hotels",
+        "id": "ACME34393",
+        "name": "ACME Corporation"
+      },
+      "postedAmount": {
+        "currencyCode": "USD",
+        "value": 405.10
+      },
+      "postedDate": "2018-08-19",
+      "referenceNumber": "gWp859SqAX97DsIVt5aoZmSNh4y8iH6qc",
+      "transactionAmount": {
+        "currencyCode": "USD",
+        "value": 405.10
+      },
+      "transactionDate": "2018-08-17",
+      "transactionDateTime": "2018-08-17T09:15:23.000",
+      "type": "RPE"
+    }
+  ]
+}
+```
+
+#### Success Response
+
+```shell
+202 Accepted
+Content-Type: application/json
+```
+
+```json
+{
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/bulkrequests/55e45023-813f-46a2-b83c-1a0b0b7bdda6",
+      "rel": "self"
+    }
+  ],
+  "requestId": "55e45023-813f-46a2-b83c-1a0b0b7bdda6"
+}
+```
+
+#### Invalid Request
+
+```shell
+POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/transactions/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+```
+
+```json
+{
+  "transactions": [{
+      "account": {
+        "externalId": "59edf00e-6e0a-46c4-bf59-c233000c5b98"
+      },
+      "externalId": "1047ecc3-bc47-4b2f-bcf5-6c8e13291338-this-is-too-long-must-only-be-50-chars-max",
+      "merchant": {
+        "name": "ACME Corporation"
+      },
+      "postedDate": "2018-08-19",
+      "transactionAmount": {
+        "currencyCode": "USD",
+        "value": 405.10
+      },
+      "transactionDate": "2018-08-17",
+      "type": "XXX"
+    }
+  ]
+}
+```
+
+#### Error Response
+
+```shell
+400 Bad Request
+Content-Type: application/json
+```
+
+```json
+[
+  {
+    "errorCode": "invalidRequest",
+    "errorMessage": "The request contains errors",
+    "dataPath": "/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/transactions/bulk",
+    "errors": [
+      {
+        "errorCode": "invalidEnum",
+        "errorMessage": "Value is not one of the allowed values",
+        "dataPath": "transactions[0].type"
+      },
+      {
+        "errorCode": "missingRequiredField",
+        "errorMessage": "Missing required field",
+        "dataPath": "transactions[0].postedAmount"
+      },
+      {
+        "errorCode": "invalidFieldSize",
+        "errorMessage": "size must be between 1 and 50",
+        "dataPath": "transactions[0].externalId"
+      }
+    ]
+  }
+]
+```
