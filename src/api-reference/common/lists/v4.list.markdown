@@ -65,10 +65,15 @@ GET /list/v4/lists
 
 |Name|Type|Description|
 |---|---|---|
-|`Accept-Language`|`string`|Language code. Default: Company defined default language |
-|`page`|`integer($int32)`|Page number starting from 1. Default: `1` |
-|`sortBy`|`string`|Field to order by {name, levelcount, listcategory}. Sort by `name` is ordered by `value`. Sort by `levelcount` is ordered by `levelCount`. Sort by `listcategory` is ordered by `category.type`. Default: `name` |
-|`sortDirection`|`string`|Sort direction {asc, desc}. Default: `asc` |
+|`Accept-Language`|`string`| Language code. Default: Company defined default language |
+|`category.type`|`string`| [`Filter capabilities`](#filtering) for `category` `type`. |
+|`isDeleted`|`string`| [`Filter capabilities`](#filtering) for `isDeleted`. |
+|`levelCount`|`string`| [`Filter capabilities`](#filtering) for `levelCount`. |
+|`page`|`integer($int32)`| Page number starting from 1. Default: `1` |
+|`sortBy`|`string`| Field to order by {name, levelcount, listcategory}. Sort by `name` is ordered by `value`. Sort by `levelcount` is ordered by `levelCount`. Sort by `listcategory` is ordered by `category.type`. Default: `name` |
+|`sortDirection`|`string`| Sort direction {asc, desc}. Default: `asc` |
+|`value`|`string`| [`Filter capabilities`](#filtering) for `value`. |
+
 
 #### Headers
 
@@ -162,6 +167,138 @@ cache-control: no-cache, private
     }
 }
 ```
+
+### Filtering <a name="filtering"></a>
+
+The Get All Lists API supports filtering. The filter may be applied to the `value`, `category.type`, `isDeleted` and `levelCount` query parameters.
+
+### <a name="query-syntax"></a>Query Syntax
+
+The general format of a query syntax parameter is as follows:
+
+```shell
+/list/v4/lists?field_name=<op>:<value>
+```
+
+* `field_name` - The name of the field that will be compared against.
+
+* `op` - (Optional) The [comparison operator](#comparison-operators) to use when comparing the specified value to the field. Defaults to `eq`.
+
+* `value` - The value being checked for.
+
+Ensure the url generated is properly **`URL encoded`**. For example, if you have a `field_name` or `value` with a `&`, please convert it to `%26`.
+
+Examples:
+
+```shell
+/list/v4/lists?value=PSO
+```
+
+```shell
+/list/v4/lists?value=sw:Vendor
+```
+
+```shell
+/list/v4/lists?value=not:Invoice+Group
+```
+
+```shell
+/list/v4/lists?value=sw:Question%3FMark
+```
+
+### Get All Lists API Supported Operators
+
+The Get All Lists API supports filtering the `value` field of the [`ListResponse`](#schema-list-response) on the following operators: equals, starts with, ends with, not equals, and contains pattern. Filtering is case-sensitive.
+
+```shell
+GET /list/v4/lists?value=Invoice%20Group
+GET /list/v4/lists?value=eq:Invoice+Group
+GET /list/v4/lists?value=sw:Vendors
+GET /list/v4/lists?value=ew:Airlines
+GET /list/v4/lists?value=not:test
+GET /list/v4/lists?value=cp:Group
+```
+
+The Get All Lists API supports filtering the `category type` field of the [`ListResponse`](#schema-list-response) on the following operators: equals, and not equals.
+
+```shell
+GET /list/v4/lists?category.type=Configuration
+GET /list/v4/lists?category.type=eq:Vendor
+GET /list/v4/lists?category.type=not:Configuration
+```
+
+The Get All Lists API supports filtering the `isDeleted` field of the [`ListResponse`](#schema-list-response) on the following operator: equals.
+
+```shell
+GET /list/v4/lists?isDeleted=true
+```
+
+The Get All Lists API supports filtering the `levelCount` field of the [`ListResponse`](#schema-list-response) on the following operators: equals, less than, greater than, less than or equal to, greater than or equal to.
+```shell
+GET /list/v4/lists?levelCount=1
+GET /list/v4/lists?levelCount=eq:1
+GET /list/v4/lists?levelCount=lt:10
+GET /list/v4/lists?levelCount=gt:2
+GET /list/v4/lists?levelCount=lte:9
+GET /list/v4/lists?levelCount=gte:3
+```
+
+### <a name="comparison-operators"></a>Comparison Operators
+
+#### <a name="comparison-operators-equals"></a>Equals
+
+`eq` returns results where a field is *equal to* the supplied value. This is the default if no operator is specified.
+
+```shell
+/list/v4/lists?value=test
+```
+
+```shell
+/list/v4/lists?value=eq:test
+```
+
+#### <a name="comparison-operators-contains-pattern"></a>Contains Pattern
+
+`cp` returns results where the provided pattern exists in the specified field.
+
+```shell
+/list/v4/lists?value=cp:test
+```
+
+#### <a name="comparison-operators-not-equal"></a>Not Equal To
+
+`not` returns results where a field is *not equal to* the supplied value.
+
+```shell
+/list/v4/lists?value=not:test
+```
+
+#### <a name="comparison-operators-starts-with"></a>Starts With
+
+`sw` returns results where a field *startsWith* the supplied value.
+
+```shell
+/list/v4/lists?value=sw:test
+```
+
+#### <a name="comparison-operators-ends-with"></a>Ends With
+
+`ew` returns results where a field *endsWith* the supplied value.
+
+```shell
+/list/v4/lists?value=ew:test
+```
+
+### <a name="conjunction-operators"></a>Conjunction Operators
+
+Basic "and" conjuction is supported.
+The following is an example of a supported "and" conjunction: search for lists with level count greater than one and isDeleted is true and the value contains the pattern "Configuration".
+```shell
+GET /list/v4/lists?levelCount=gt:1&isDeleted=true&value=cp:Configuration
+```
+
+However, complex queries using parentheses are not supported.
+
 
 ##  Create a New List <a name="create-a-new-list"></a>
 
