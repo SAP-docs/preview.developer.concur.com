@@ -172,7 +172,7 @@ cache-control: no-cache, private
 
 ### Filtering <a name="filtering"></a>
 
-The Get All Lists API supports filtering. The filter may be applied to the `value`, `category.type`, `isDeleted` and `levelCount` query parameters.
+The Get All Lists API supports filtering. The filter may be applied to the `value`, `category.type`, `isDeleted` and `levelCount` parameters.
 
 ### <a name="query-syntax"></a>Query Syntax
 
@@ -208,43 +208,6 @@ Examples:
 /list/v4/lists?value=sw:Question%3FMark
 ```
 
-### Get All Lists API Supported Operators
-
-The Get All Lists API supports filtering the `value` field of the [`ListResponse`](#schema-list-response) on the following operators: equals, starts with, ends with, not equals, and contains pattern. Filtering is case-sensitive.
-
-```shell
-GET /list/v4/lists?value=Invoice%20Group
-GET /list/v4/lists?value=eq:Invoice+Group
-GET /list/v4/lists?value=sw:Vendors
-GET /list/v4/lists?value=ew:Airlines
-GET /list/v4/lists?value=not:test
-GET /list/v4/lists?value=cp:Group
-```
-
-The Get All Lists API supports filtering the `category type` field of the [`ListResponse`](#schema-list-response) on the following operators: equals, and not equals.
-
-```shell
-GET /list/v4/lists?category.type=Configuration
-GET /list/v4/lists?category.type=eq:Vendor
-GET /list/v4/lists?category.type=not:Configuration
-```
-
-The Get All Lists API supports filtering the `isDeleted` field of the [`ListResponse`](#schema-list-response) on the following operator: equals.
-
-```shell
-GET /list/v4/lists?isDeleted=true
-```
-
-The Get All Lists API supports filtering the `levelCount` field of the [`ListResponse`](#schema-list-response) on the following operators: equals, less than, greater than, less than or equal to, greater than or equal to.
-```shell
-GET /list/v4/lists?levelCount=1
-GET /list/v4/lists?levelCount=eq:1
-GET /list/v4/lists?levelCount=lt:10
-GET /list/v4/lists?levelCount=gt:2
-GET /list/v4/lists?levelCount=lte:9
-GET /list/v4/lists?levelCount=gte:3
-```
-
 ### <a name="comparison-operators"></a>Comparison Operators
 
 #### <a name="comparison-operators-equals"></a>Equals
@@ -257,14 +220,6 @@ GET /list/v4/lists?levelCount=gte:3
 
 ```shell
 /list/v4/lists?value=eq:test
-```
-
-#### <a name="comparison-operators-contains-pattern"></a>Contains Pattern
-
-`cp` returns results where the provided pattern exists in the specified field.
-
-```shell
-/list/v4/lists?value=cp:test
 ```
 
 #### <a name="comparison-operators-not-equal"></a>Not Equal To
@@ -291,16 +246,106 @@ GET /list/v4/lists?levelCount=gte:3
 /list/v4/lists?value=ew:test
 ```
 
+#### <a name="comparison-operators-contains-pattern"></a>Contains Pattern
+
+`cp` returns results where the provided pattern exists in the specified field.
+
+```shell
+/list/v4/lists?value=cp:test
+```
+
+#### <a name="comparison-operators-greater-than"></a>Greater Than
+
+`gt` returns results where a field is *greater than* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=gt:2
+```
+
+#### <a name="comparison-operators-greater-than-equal"></a>Greater Than or Equal To
+
+`gte` returns results where a field is *greater than or equal to* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=gte:2
+```
+
+#### <a name="comparison-operators-less-than"></a>Less Than
+
+`lt` returns results where a field is *less than* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=lt:5
+```
+
+#### <a name="comparison-operators-less-than-equal"></a>Less Than or Equal To
+
+`lte` returns results where a field is *less than or equal to* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=lte:5
+```
+
+### Get All Lists API Supported Operators
+
+The Get All Lists API supports filtering the `value` field of the [`ListResponse`](#schema-list-response) on the following operators: 
+* [Equals](#comparison-operators-equals)
+* [Not Equal To](#comparison-operators-not-equal)
+* [Starts With](#comparison-operators-starts-with)
+* [Ends With](#comparison-operators-ends-with)
+* [Contains Pattern](#comparison-operators-contains-pattern)
+
+Examples:
+```shell
+GET /list/v4/lists?value=Invoice%20Group
+GET /list/v4/lists?value=eq:Invoice+Group
+GET /list/v4/lists?value=sw:Vendors
+GET /list/v4/lists?value=ew:Airlines
+GET /list/v4/lists?value=not:test
+GET /list/v4/lists?value=cp:Group
+```
+
+The Get All Lists API supports filtering the `category type` field of the [`ListResponse`](#schema-list-response) on the following operators:
+* [Equals](#comparison-operators-equals)
+* [Not Equal To](#comparison-operators-not-equal)
+
+Examples:
+```shell
+GET /list/v4/lists?category.type=Configuration
+GET /list/v4/lists?category.type=eq:Vendor
+GET /list/v4/lists?category.type=not:Configuration
+```
+
+The Get All Lists API supports filtering the `isDeleted` field of the [`ListResponse`](#schema-list-response) on the following operator:
+* [Equals](#comparison-operators-equals)
+
+Example:
+```shell
+GET /list/v4/lists?isDeleted=true
+```
+
+The Get All Lists API supports filtering the `levelCount` field of the [`ListResponse`](#schema-list-response) on the following operators:
+* [Equals](#comparison-operators-equals)
+* [Greater Than](#comparison-operators-greater-than)
+* [Greater Than or Equal To](#comparison-operators-greater-than-equal)
+* [Less Than](#comparison-operators-less-than)
+* [Less Than or Equal To](#comparison-operators-less-than-equal)
+
+```shell
+GET /list/v4/lists?levelCount=1
+GET /list/v4/lists?levelCount=eq:1
+GET /list/v4/lists?levelCount=gt:2
+GET /list/v4/lists?levelCount=gte:3
+GET /list/v4/lists?levelCount=lt:10
+GET /list/v4/lists?levelCount=lte:9
+```
+
 ### <a name="conjunction-operators"></a>Conjunction Operators
 
-Basic "and" conjuction is supported.
-The following is an example of a supported "and" conjunction: search for lists with level count greater than one and isDeleted is true and the value contains the pattern "Configuration".
+Basic "and" conjuction of filter queries is supported. The following is an example of a supported "and" conjunction with a search for lists with level count greater than one and isDeleted is true and the value contains the pattern "Configuration".
 ```shell
 GET /list/v4/lists?levelCount=gt:1&isDeleted=true&value=cp:Configuration
 ```
-
-However, complex queries using parentheses are not supported.
-
 
 ##  Create a New List <a name="create-a-new-list"></a>
 
@@ -894,7 +939,7 @@ cache-control: no-cache, private
 |`value`|`string`|-|**Required** Name of the list.|
 |`categoryId`|`string`|`uuid`|The unique identifier of the category that the list belongs to.|
 |`displayFormat`|`string`|-|Whether we display code or value first.  Supported values: `(CODE) TEXT`, `TEXT (CODE)`|
-|`isManaged`|`boolean`|`true`/`false`|Optional field. If not included in the payload will default to `false`. If `true` the list will be set to managed by the app id in the Authorization header. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
+|`isManaged`|`boolean`|`true`/`false`|Optional field. If not included in the payload will default to `false`. If `true` the list will be set to managed by the app ID in the Authorization header. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
 
 ### <a name="schema-list-update"></a>List Update
 
@@ -903,7 +948,7 @@ cache-control: no-cache, private
 |`value`|`string`|-|**Required** Name of the list.|
 |`searchCriteria`|`string`|-|What attribute to search by. Supported values: `TEXT`, `CODE`|
 |`displayFormat`|`string`|-|Whether we display code or value first. Supported values: `(CODE) TEXT`, `TEXT (CODE)`|
-|`isManaged`|`boolean`|`true`/`false`|Optional field. If `true` the list will be set to managed by the app id in the Authorization header. If `false` the list will be set to be not managed. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
+|`isManaged`|`boolean`|`true`/`false`|Optional field. If `true` the list will be set to managed by the app ID in the Authorization header. If `false` the list will be set to be not managed. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
 
 ### <a name="schema-message"></a>Message
 
@@ -1074,7 +1119,7 @@ cache-control: no-cache, private
 To update an existing list to be managed, call the Update List API will with the managing app.
 Pass the `isManaged` flag in the payload set to `true`.
 
-The API response will include the `managedBy` field set to the managing app id. 
+The API response will include the `managedBy` field set to the managing app ID. 
 
 #### Request
 
