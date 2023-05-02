@@ -66,13 +66,13 @@ GET /list/v4/lists
 |Name|Type|Description|
 |---|---|---|
 |`Accept-Language`|`string`| Language code. Default: Company defined default language |
-|`category.type`|`string`| [`Filter capabilities`](#filtering) for `category` `type`. |
-|`isDeleted`|`string`| [`Filter capabilities`](#filtering) for `isDeleted`. |
-|`levelCount`|`string`| [`Filter capabilities`](#filtering) for `levelCount`. |
+|`category.type`|`string`| [Filter capabilities](#filtering) for `category` `type` |
+|`isDeleted`|`string`| [Filter capabilities](#filtering) for `isDeleted` |
+|`levelCount`|`string`| [Filter capabilities](#filtering) for `levelCount` |
 |`page`|`integer($int32)`| Page number starting from 1. Default: `1` |
 |`sortBy`|`string`| Field to order by {name, levelcount, listcategory}. Sort by `name` is ordered by `value`. Sort by `levelcount` is ordered by `levelCount`. Sort by `listcategory` is ordered by `category.type`. Default: `name` |
 |`sortDirection`|`string`| Sort direction {asc, desc}. Default: `asc` |
-|`value`|`string`| [`Filter capabilities`](#filtering) for `value`. |
+|`value`|`string`| [Filter capabilities](#filtering) for `value` |
 
 
 #### Headers
@@ -143,7 +143,8 @@ cache-control: no-cache, private
                 "type": "Vendor"
             },
             "isReadOnly": false,
-            "isDeleted": false
+            "isDeleted": false,
+            "managedBy": null
         },
         {
             "id": "8652cdf9-c12b-4051-b8d1-80e20840ce9b",
@@ -156,7 +157,8 @@ cache-control: no-cache, private
                 "type": "Configuration"
             },
             "isReadOnly": false,
-            "isDeleted": false
+            "isDeleted": false,
+            "managedBy": "appId:030bb845-765a-4e96-b223-735d72a4526b"
         }
     ],
     "page": {
@@ -361,9 +363,11 @@ POST /list/v4/lists
 * [List Response](#schema-list-response)
 * [Error Message](#schema-error-message)
 
-### Example
+### Examples
 
-#### Request
+#### Create a list
+
+##### Request
 
 ```shell
 POST https://us.api.concursolutions.com/list/v4/lists
@@ -371,8 +375,6 @@ Accept: application/json
 Content-Type: application/json
 Authorization: Bearer {token}
 ```
-##### Example 1:
-
 ```json
 {
   "searchCriteria": "TEXT",
@@ -381,18 +383,7 @@ Authorization: Bearer {token}
 }
 ```
 
-##### Example 2:
-
-```json
-{
-  "searchCriteria": "TEXT",
-  "value": "Custom Vendor List",
-  "categoryId": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
-  "displayFormat": "(CODE) TEXT"
-}
-```
-
-#### Response
+##### Response
 
 ```shell
 HTTP/1.1 201
@@ -412,13 +403,64 @@ cache-control: no-cache, private
     "searchCriteria": "TEXT",
     "displayFormat": "(CODE) TEXT",
     "category": {
-        "id": "77b85a76-8157-0c4e-b5e3-7785d8de1a6b",
+        "id": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
         "type": "Normal"
     },
     "isReadOnly": false,
-    "isDeleted": false
+    "isDeleted": false,
+    "managedBy": null
 }
 ```
+
+#### Create a list in a specific category
+
+##### Request
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "searchCriteria": "TEXT",
+  "value": "Custom Vendor List",
+  "categoryId": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
+  "displayFormat": "(CODE) TEXT"
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 269
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+location: http://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
+cache-control: no-cache, private
+```
+
+```json
+{
+    "id": "80edb3fa-c15e-a34a-b97f-f2ec291ab44f",
+    "value": "Custom Vendor List",
+    "levelCount": 1,
+    "searchCriteria": "TEXT",
+    "displayFormat": "(CODE) TEXT",
+    "category": {
+        "id": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
+        "type": "Normal"
+    },
+    "isReadOnly": false,
+    "isDeleted": false,
+    "managedBy": null
+}
+```
+
+#### Create a managed list
+See [Managed Lists](#managed-lists) for additional details on the managed list features.
 
 ##  Update a List <a name="update-a-list"></a>
 
@@ -484,7 +526,9 @@ PUT /list/v4/lists/{listId}
 
 ### Example
 
-#### Request
+#### Update a List
+
+##### Request
 
 ```shell
 PUT https://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
@@ -502,7 +546,7 @@ Authorization: Bearer {token}
 }
 ```
 
-#### Response
+##### Response
 
 ```shell
 HTTP/1.1 200
@@ -525,9 +569,16 @@ cache-control: no-cache, private
     "type": "Normal"
   },
   "isReadOnly": false,
-  "isDeleted": false
+  "isDeleted": false,
+  "managedBy": null
 }
 ```
+
+#### Update a list to be managed
+See [Managed Lists](#managed-lists) for additional details on the managed list features.
+
+#### Update a managed list to not be managed
+See [Managed Lists](#managed-lists) for additional details on the managed list features.
 
 ##  Get a List by List ID <a name="get-a-list-by-list-id"></a>
 
@@ -620,7 +671,8 @@ cache-control: no-cache, private
     "type": "Normal"
   },
   "isReadOnly": false,
-  "isDeleted": false
+  "isDeleted": false,
+  "managedBy": null
 }
 ```
 
@@ -722,7 +774,8 @@ cache-control: no-cache, private
         "type": "Normal"
       },
       "isReadOnly": false,
-      "isDeleted": false
+      "isDeleted": false,
+      "managedBy": null
     }
   ],
   "page": {
@@ -824,6 +877,7 @@ cache-control: no-cache, private
 |`category`|[`ListCategory`](#schema-list-category)|-|The category of the list.|
 |`isReadOnly`|`boolean`|`true`/`false`|If `true`, the list is read-only.|
 |`isDeleted`|`boolean`|`true`/`false`|If `true`, the list has been deleted.|
+|`managedBy`|`string`|appId:`uuid`|The app ID permitted to make modification API calls to this list. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
 
 ### <a name="schema-category"></a>List Category
 
@@ -840,6 +894,7 @@ cache-control: no-cache, private
 |`value`|`string`|-|**Required** Name of the list.|
 |`categoryId`|`string`|`uuid`|The unique identifier of the category that the list belongs to.|
 |`displayFormat`|`string`|-|Whether we display code or value first.  Supported values: `(CODE) TEXT`, `TEXT (CODE)`|
+|`isManaged`|`boolean`|`true`/`false`|Optional field. If not included in the payload will default to `false`. If `true` the list will be set to managed by the app id in the Authorization header. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
 
 ### <a name="schema-list-update"></a>List Update
 
@@ -848,6 +903,7 @@ cache-control: no-cache, private
 |`value`|`string`|-|**Required** Name of the list.|
 |`searchCriteria`|`string`|-|What attribute to search by. Supported values: `TEXT`, `CODE`|
 |`displayFormat`|`string`|-|Whether we display code or value first. Supported values: `(CODE) TEXT`, `TEXT (CODE)`|
+|`isManaged`|`boolean`|`true`/`false`|Optional field. If `true` the list will be set to managed by the app id in the Authorization header. If `false` the list will be set to be not managed. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
 
 ### <a name="schema-message"></a>Message
 
@@ -888,3 +944,243 @@ cache-control: no-cache, private
 |---|---|---|---|
 |`message`|`string`|-|The detailed message of the validation error.|
 |`source`|`string`|-|The type of validation that failed.|
+
+## Managed Lists <a name="managed-lists"></a>
+
+A Managed List is a list in which all modifications to the list are restricted to a single app ID.
+The use case for this feature is if a partner is responsible for maintaining the items in a list and wants to restrict modifications by the UI or other API callers.
+
+When a list is managed, only API calls from that managing app ID are authorized to make updates to the list items in the list.
+The UI will be grayed out so no modification options are possible. The list is locked so a customer on the UI can't add, delete, or update list items.
+Additionally, no list imports will not be permitted on the managed list. The list import on the list will result in error.
+
+To set a list to be managed, it can be done with a Create List API call. See the example in [Create Managed List](#create-managed-list).
+
+To update an existing list to be managed, use the Update List API. See the example in [Update list to be managed](#update-list-managed).
+
+To set a list to not be managed, use the Update List API. See the example in [Update managed list to not be managed](#update-managed-list-not-managed). When a list is no longer managed, the UI modifications will be permitted, the list import will be permitted, and updates via API calls by 
+all app IDs will be permitted.
+
+### Create Managed List <a name="create-managed-list"></a>
+
+To create a managed list, call the Create List API setting the `isManaged` field to true. The API will extract the app ID from the Authorization JWT token. This app ID will be the only app ID 
+permitted to perform modifications to this list. Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list. 
+
+The Create List API response will contain the `managedBy` field populated with the app ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "searchCriteria": "TEXT",
+  "value": "Custom Managed List",
+  "displayFormat": "(CODE) TEXT",
+  "isManaged": true
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7b
+content-length: 269
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+location: http://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-9615-1d3dcdfbffc7
+cache-control: no-cache, private
+```
+
+```json
+{
+    "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+    "value": "Custom Managed List",
+    "levelCount": 1,
+    "searchCriteria": "TEXT",
+    "displayFormat": "(CODE) TEXT",
+    "category": {
+        "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+        "type": "Normal"
+    },
+    "isReadOnly": false,
+    "isDeleted": false,
+    "managedBy": "appId:898e830b-254a-4167-9499-a33de423e950"
+}
+```
+
+
+### Update Managed List to not be managed <a name="update-managed-list-not-managed"></a>
+
+To update a managed list to no longer be managed, call the Update List API with the managing app ID. 
+Pass the `isManaged` flag in the payload and set to false.
+
+The API response will include the `managedBy` field set to null. 
+After this successful API call, will allow modifications via the UI, list import, and API calls by all app IDs. 
+
+#### Request
+
+```shell
+PUT https://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-9615-1d3dcdfbffc7
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "value": "Custom Managed List",
+  "isManaged": false
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: e3a4d4cf-e1b2-4f22-a95c-b5bb8a2cb0eb
+content-length: 275
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:24:16 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+  "value": "Custom Managed List",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": null
+}
+```
+
+### Update List to be managed <a name="update-list-managed"></a>
+
+To update an existing list to be managed, call the Update List API will with the managing app.
+Pass the `isManaged` flag in the payload set to `true`.
+
+The API response will include the `managedBy` field set to the managing app id. 
+
+#### Request
+
+```shell
+PUT https://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-9615-1d3dcdfbffc7
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "value": "Custom Managed List",
+  "isManaged": true
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: e3a4d4cf-e1b2-4f22-a95c-b5bb8a2cb0eb
+content-length: 275
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:24:16 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+  "value": "Custom Managed List",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": "appId:898e830b-254a-4167-9499-a33de423e950"
+}
+```
+
+#### Update Managed List
+
+When updating a managed list and not changing the managed state, do not include the `isManaged` flag in the payload.
+For example, to only change the name of a managed list, see the example below where only the updated list name is included in the request payload.
+The `managedBy` value in the response payload does not change.
+
+##### Request
+
+```shell
+{
+"value": "New Managed List Updated"
+}
+```
+
+##### Response
+
+```shell
+{
+"id": "9705ce8e-7957-3f4e-a6cf-19ef2b437099",
+"value": "New Managed List Updated",
+"levelCount": 1,
+"searchCriteria": "TEXT",
+"displayFormat": "(CODE) TEXT",
+"category": {
+"id": "4bdcc9da-9c9d-fe47-a39f-cb1e82380d54",
+"type": "Normal"
+},
+"isReadOnly": false,
+"isDeleted": false,
+"managedBy": "appId:c2dd1948-bc84-4449-920d-3ff92c69d9af"
+}
+```
+
+
+### Modification API calls on a managed list
+
+Operations to modify a managed list will validate the Authorization JWT app ID. The API requests that include the managing app ID in the Authorization JWT will be permitted and execute.
+
+Those operations include: 
+* [Update a List API](#update-a-list)
+* [Remove a List API](#remove-a-list)
+* [Create a List Item API](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#create-a-list-item)
+* [Update a List Item](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#update-a-list-item)
+* [Delete a List Item API](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#delete-a-list-item)
+* [Delete a List Item from a List](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#delete-a-list-item-from-a-list)
+* Bulk Create List Items
+* Bulk Delete List Items
+
+#### Validation Error for Modifying a Managed List 
+
+In the case that the API requests are made to modify a managed list and the Authorization includes an app ID that is not the managing app ID, the following error response will be returned:
+
+```shell
+{
+  "timestamp": "2023-05-02T16:18:47.340+00:00",
+  "httpStatus": "400 - Bad Request",
+  "error": {
+    "id": "list.is.managed",
+    "message": "Modify operation not permitted on this managed list"
+  },
+  "path": "/list/v4/lists/9705ce8e-7957-3f4e-a6cf-19ef2b437099"
+}
+```
