@@ -5,10 +5,6 @@ layout: reference
 
 # Authentication
 
-If you are an existing partner with an existing app, please read both the [Migration to Oauth2 Tokens](/api-reference/authentication/migrationguide.html) and [Getting Started](/api-reference/authentication/getting-started.html) documentation first. If you have any questions, please contact your Partner Enablement team representative before proceeding.
-
-**Note:** The Pre-2017 Authorization (Deprecated) documentation be found [here](/deprecated.html#pre-2017-authorization-deprecated)
-
 ## Access Tokens <a name="access_token"></a>
 
 The Oauth2 service generates access tokens for authenticated users, applications or companies. The token returned in the Oauth2 response can be used to access protected resources on SAP Concur services.
