@@ -37,7 +37,7 @@ Access to this documentation does not provide access to the API. 
 
 ## Overview of Version 4.0 <a name="version"></a>
 
-Version 4.0 of the Receipts API offers features like more receipt types, automatic e-receipt generation in end user’s preferred language and ability for partners to provide detailed tax information. Unlike version 3.0, we are discontinuing the use of matching facts; instead the partner will have to create a receipt for a specific end user. Receipts 4.0 works only with the new [Authentication API](https://developer.concur.com/api-reference/authentication/apidoc.html).
+Version 4.0 of the Receipts API offers features like more receipt types, automatic e-receipt generation in end user’s preferred language and ability for partners to provide detailed tax information. 
 
 ## Explore the API <a name="explore-the-api"></a>
 

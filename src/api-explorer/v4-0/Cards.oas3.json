@@ -1,0 +1,2039 @@
+{
+  "openapi": "3.0.1",
+  "x-sap-shortText": "Read and write credit card related data within SAP Concur Expense",
+  "info": {
+    "description": "Provides APIs to read and write credit card related data (such as accounts and transactions) within SAP Concur Expense",
+    "title": "Cards API Service",
+    "version": "v4"
+  },
+  "servers": [
+    {
+      "description": "Example production endpoint (US)",
+      "url": "https://us.api.concursolutions.com/cards"
+    },
+    {
+      "description": "Example production endpoint (EU)",
+      "url": "https://eu.api.concursolutions.com/cards"
+    }
+  ],
+  "paths": {
+    "/v4/companies/{companyId}/accounts/bulk": {
+      "post": {
+        "description": "This API creates multiple credit card accounts in an asynchronous manner. \n\rAssuming the request is properly authorized and the request body is valid, the API returns 202 (Request Accepted) and processes the request asynchronously. \n\rEach account is identified by externalId which needs to be unique. If at least one account of the bulk request fails the validation (e.g. invalid enum or missing required field) the complete request will be rejected with response code 400.\n\rA maximum of 1000 accounts are allowed to be sent in one request.\n\rPossible error codes:<li>invalidRequest: The request contains errors (usually contains a detailed error list)</li><li>invalidJson: The request body is not a valid JSON</li>",
+        "operationId": "postAccountsBulk",
+        "parameters": [
+          {
+            "description": "UUID identifying the company",
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountListModelV4Post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResponseModel"
+                }
+              }
+            },
+            "description": "Request Accepted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorResponseV4"
+                  }
+                }
+              }
+            },
+            "description": "The request is invalid"
+          },
+          "401": {
+            "description": "The request is not authenticated. Missing or invalid authorization header."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Create new credit card accounts as bulk operation",
+        "tags": [
+          "Accounts"
+        ]
+      }
+    },
+    "/v4/companies/{companyId}/bulkrequests/{bulkrequestId}": {
+      "get": {
+        "description": "Authentication is done via company JWT with required scope cards.bulkrequest.read. \nThe appId of the JWT needs to match the appId which created the bulk request.",
+        "operationId": "getBulkRequestByCompanyAndRequestId",
+        "parameters": [
+          {
+            "description": "UUID identifying the company",
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Bulk Request ID",
+            "in": "path",
+            "name": "bulkrequestId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkRequestModelV4"
+                }
+              }
+            },
+            "description": "OK"
+          },
+          "401": {
+            "description": "The request is not authenticated. Missing or invalid authorization header."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "The requested bulk request does not exist"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Retrieve a bulk request by ID",
+        "tags": [
+          "Bulk Requests"
+        ]
+      }
+    },
+    "/v4/companies/{companyId}/transactions/bulk": {
+      "post": {
+        "description": "This API creates multiple credit card transactions in an asynchronous manner. \n\rAssuming the request is properly authorized and the request body is valid, the API returns 202 (Request Accepted) and processes the request asynchronously. \n\rEach transaction is identified by externalId which needs to be unique. If at least one item of the bulk request fails the validation (e.g. invalid enum or missing required field) the complete request will be rejected with response code 400.\n\rA maximum of 1000 transactions are allowed to be sent in one request.\n\rPossible error codes:<li>invalidRequest: The request contains errors (usually contains a detailed error list)</li><li>invalidJson: The request body is not a valid JSON</li>",
+        "operationId": "postTransactionsBulk",
+        "parameters": [
+          {
+            "description": "UUID identifying the company",
+            "in": "path",
+            "name": "companyId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionListModelV4Post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkResponseModel"
+                }
+              }
+            },
+            "description": "Request Accepted"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ErrorResponseV4"
+                  }
+                }
+              }
+            },
+            "description": "The request is invalid"
+          },
+          "401": {
+            "description": "The request is not authenticated. Missing or invalid authorization header."
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "summary": "Create new credit card transactions as bulk operation",
+        "tags": [
+          "Transactions"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountBillingAccountReferenceModelV4": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "pattern": "[a-zA-Z0-9-_]+",
+            "type": "string",
+            "description": "External ID",
+            "example": "65b0734c-b20b-48be-b614-f20b4fdd4535"
+          }
+        },
+        "description": "Reference to the billing account, e.g. in case of virual card this references the managing/master account"
+      },
+      "AccountListModelV4Post": {
+        "required": [
+          "accounts"
+        ],
+        "type": "object",
+        "properties": {
+          "accounts": {
+            "maxItems": 1000,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountModelV4Post"
+            }
+          }
+        },
+        "description": "List of credit card accounts"
+      },
+      "AccountModelV4Post": {
+        "required": [
+          "accountType",
+          "cardProductDescription",
+          "cardProductType",
+          "externalId",
+          "lastSegment",
+          "liabilityType",
+          "nameOnCard",
+          "provider"
+        ],
+        "type": "object",
+        "properties": {
+          "accountType": {
+            "type": "string",
+            "description": "Type of the credit card account<li>I - Individual</li><li>M - Managing (the master account of virtual cards)</li><li>V - Virtual card</li>",
+            "example": "I",
+            "enum": [
+              "I",
+              "M",
+              "V"
+            ]
+          },
+          "billedCurrency": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "Billed currency of the card account (3-letter ISO 4217 currency code)",
+            "example": "USD"
+          },
+          "billingAccount": {
+            "$ref": "#/components/schemas/AccountBillingAccountReferenceModelV4"
+          },
+          "cardBrand": {
+            "type": "string",
+            "description": "Indicates the card brand, e.g. MasterCard, Visa etc. List of card Brands:<li>AX - American Express</li><li>CA - MasterCard</li><li>CB - Carte Blance</li><li>DC - Diners Club</li><li>DS - Discover</li><li>EC - EuroCard</li><li>ER - ENROUTE</li><li>JC - JCB International</li><li>OT - Other</li><li>TP - UATP Card</li><li>UP - China Union Pay</li><li>VI - VISA</li>",
+            "example": "AX",
+            "enum": [
+              "AX",
+              "CA",
+              "CB",
+              "DC",
+              "DS",
+              "EC",
+              "ER",
+              "JC",
+              "OT",
+              "TP",
+              "UP",
+              "VI"
+            ]
+          },
+          "cardProductDescription": {
+            "maxLength": 210,
+            "minLength": 1,
+            "type": "string",
+            "description": "Branded name of the credit card; might be used for display purposes",
+            "example": "Platinum Rewards"
+          },
+          "cardProductType": {
+            "type": "string",
+            "description": "Card product type<li>CORP - Corporate Card</li><li>BUSN - Business Card</li><li>PERS - Personal Card</li>",
+            "example": "CORP",
+            "enum": [
+              "CORP",
+              "BUSN",
+              "PERS"
+            ]
+          },
+          "cardholder": {
+            "$ref": "#/components/schemas/CardHolderModelV4Ext"
+          },
+          "externalId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "pattern": "[a-zA-Z0-9-_]+",
+            "type": "string",
+            "description": "Unique identifier (token) for a card account as defined by an external system (outside SAP Concur)",
+            "example": "59edf00e-6e0a-46c4-bf59-c233000c5b98"
+          },
+          "lastSegment": {
+            "maxLength": 4,
+            "minLength": 4,
+            "type": "string",
+            "description": "Last four digits of the credit card number",
+            "example": "1853"
+          },
+          "liabilityType": {
+            "type": "string",
+            "description": "Liability type (payment method)<li>IBIP - Individually Billed, Individually Paid</li><li>IBCP - Individually Billed, Company Paid</li><li>CBCP - Company Billed, Company Paid</li>",
+            "example": "IBIP",
+            "enum": [
+              "IBIP",
+              "IBCP",
+              "CBCP"
+            ]
+          },
+          "nameOnCard": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string",
+            "description": "Embossed name on the card",
+            "example": "JOHN DOE"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/AccountProviderModelV4Post"
+          },
+          "status": {
+            "type": "string",
+            "description": "Lifecycle status (default: Active)<li>A - Active</li><li>C - Canceled</li>",
+            "example": "A",
+            "enum": [
+              "A",
+              "C"
+            ]
+          },
+          "travelRequest": {
+            "$ref": "#/components/schemas/TravelRequestV4"
+          }
+        },
+        "description": "Credit card account"
+      },
+      "AccountProviderModelV4Post": {
+        "required": [
+          "countryCode"
+        ],
+        "type": "object",
+        "properties": {
+          "countryCode": {
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "string",
+            "description": "Country code (ISO 3166-1 Alpha-2 code)",
+            "example": "US"
+          }
+        },
+        "description": "Credit Card Provider"
+      },
+      "AddressModelV4": {
+        "type": "object",
+        "properties": {
+          "city": {
+            "maxLength": 40,
+            "minLength": 0,
+            "type": "string",
+            "description": "City",
+            "example": "Frankfurt"
+          },
+          "countryCode": {
+            "maxLength": 2,
+            "minLength": 2,
+            "type": "string",
+            "description": "Country code (ISO 3166-1 Alpha-2 code)",
+            "example": "DE"
+          },
+          "state": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "State / province / region",
+            "example": "WA"
+          },
+          "streetAddress": {
+            "maxLength": 256,
+            "minLength": 0,
+            "type": "string",
+            "description": "Street address lines",
+            "example": "Venloer Strasse 151"
+          },
+          "zip": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Zip / postal code",
+            "example": "20500"
+          }
+        },
+        "description": "Address"
+      },
+      "AmountModelV4": {
+        "required": [
+          "currencyCode",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "Currency of the amount (3-letter ISO 4217 currency code)",
+            "example": "USD"
+          },
+          "value": {
+            "type": "number",
+            "description": "Amount value",
+            "example": 420
+          }
+        },
+        "description": "Amount"
+      },
+      "BulkRequestModelV4": {
+        "required": [
+          "receivedAt",
+          "requestId",
+          "status",
+          "totalElements",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "completedAt": {
+            "type": "string",
+            "description": "Timestamp when processing of the bulk request was completed (RFC 3339 \"YYYY-MM-DDThh:mm:ss.nnnZ\")",
+            "format": "date-time",
+            "example": "2020-09-18T20:56:43Z"
+          },
+          "receivedAt": {
+            "type": "string",
+            "description": "Timestamp when the bulk request was received (RFC 3339 \"YYYY-MM-DDThh:mm:ss.nnnZ\")",
+            "format": "date-time",
+            "example": "2020-09-18T20:54:21Z"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Unique identifier of the API request",
+            "example": "f328a518-be22-4207-aa53-87ac147eb416"
+          },
+          "status": {
+            "type": "string",
+            "description": "The processing status<li>IN_PROGRESS - In progress</li><li>COMPLETED_SUCCESSFULLY - Completed successfully</li><li>COMPLETED_WITH_WARNINGS - Completed with warnings</li><li>COMPLETED_WITH_ERRORS - Completed with errors</li>",
+            "example": "COMPLETED_SUCCESSFULLY",
+            "enum": [
+              "IN_PROGRESS",
+              "COMPLETED_SUCCESSFULLY",
+              "COMPLETED_WITH_WARNINGS",
+              "COMPLETED_WITH_ERRORS"
+            ]
+          },
+          "totalElements": {
+            "type": "integer",
+            "description": "Number of elements in this bulk request",
+            "format": "int32",
+            "example": 16
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the API request<li>POST_ACCOUNT - Account creation</li><li>POST_TRANSACTION - Transaction creation</li><li>PATCH_ACCOUNT - Account update</li><li>PATCH_TRANSACTION - Transaction update</li>",
+            "example": "POST_ACCOUNT",
+            "enum": [
+              "POST_ACCOUNT",
+              "POST_TRANSACTION",
+              "PATCH_ACCOUNT",
+              "PATCH_TRANSACTION"
+            ]
+          }
+        }
+      },
+      "BulkResponseModel": {
+        "required": [
+          "requestId"
+        ],
+        "type": "object",
+        "properties": {
+          "links": {
+            "type": "array",
+            "description": "List of hrefs to get the processing status or logs",
+            "items": {
+              "$ref": "#/components/schemas/LinkModel"
+            }
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Unique identifier of the API request",
+            "example": "f328a518-be22-4207-aa53-87ac147eb416"
+          }
+        }
+      },
+      "CarRentalChargeModelV4": {
+        "required": [
+          "amount",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "name": {
+            "type": "string",
+            "description": "Charge name / type\nREGULAR - Regular charges\nONEWAY - One-way drop charges\nLATE - Late charges\nFUEL - Fuel charges\nINSURANCE - Insurance charges\nEXTRA - Extra charges\nOTHER - Other charges\n",
+            "example": "LATE",
+            "enum": [
+              "REGULAR",
+              "ONEWAY",
+              "LATE",
+              "FUEL",
+              "INSURANCE",
+              "EXTRA",
+              "OTHER"
+            ]
+          }
+        },
+        "description": "Charges"
+      },
+      "CarRentalModelV4": {
+        "type": "object",
+        "properties": {
+          "adjustmentAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "charges": {
+            "type": "array",
+            "description": "Charges",
+            "items": {
+              "$ref": "#/components/schemas/CarRentalChargeModelV4"
+            }
+          },
+          "classificationCode": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Classification of the rented vehicle",
+            "example": "Compact"
+          },
+          "commodityCode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Commodity Code"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom Data of the car rental",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "dailyRate": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "extraChargeAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "extraChargeCode": {
+            "maxLength": 6,
+            "minLength": 0,
+            "type": "string",
+            "description": "Extra Charge Code"
+          },
+          "extraDistanceRate": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "maximumFreeDistance": {
+            "$ref": "#/components/schemas/DistanceModelV4"
+          },
+          "mileageRate": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "numberOfVehicles": {
+            "type": "integer",
+            "description": "Number of vehicles rented",
+            "format": "int32",
+            "example": 1
+          },
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "pickupDate": {
+            "type": "string",
+            "description": "Date on which the customer rented the vehicle",
+            "example": "2018-08-16"
+          },
+          "pickupPropertyId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Pickup Property ID"
+          },
+          "rentalAgreementNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Number entered at the point of sale",
+            "example": "F344145-51VD"
+          },
+          "rentalDays": {
+            "type": "integer",
+            "description": "Number of days the vehicle was rented",
+            "format": "int32",
+            "example": 6
+          },
+          "renterName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Name of the individual that made the rental agreement",
+            "example": "DOE,JOHN"
+          },
+          "renterNotShown": {
+            "type": "boolean",
+            "description": "Renter Not Shown"
+          },
+          "returnAddress": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "returnDate": {
+            "type": "string",
+            "description": "Date on which the customer returned the vehicle",
+            "example": "2018-08-17"
+          },
+          "returnPropertyId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Return Property ID"
+          },
+          "totalDistance": {
+            "$ref": "#/components/schemas/DistanceModelV4"
+          },
+          "weeklyRate": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          }
+        },
+        "description": "Car Rental Addendum Data of the transaction - addendumType = CAR"
+      },
+      "CardHolderModelV4Ext": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "description": "Email address of the card holder",
+            "example": "john.doe@mycorp.com"
+          },
+          "employeeId": {
+            "maxLength": 128,
+            "minLength": 0,
+            "type": "string",
+            "description": "Concur specific employeeId. This is an alternative way for identifying a Concur user. The employeeId is a client facing ID.",
+            "example": "E10034"
+          },
+          "firstName": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "First name of the card holder",
+            "example": "John"
+          },
+          "lastName": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Last name of the card holder",
+            "example": "Doe"
+          },
+          "userId": {
+            "type": "string",
+            "description": "Concur specific userId. This is the preferred way for identifying a Concur user. The userId is a technical non-client facing ID.",
+            "example": "e48fda91-15c8-4670-afe5-6c76501813c9"
+          }
+        },
+        "description": "Cardholder information"
+      },
+      "CustomDataModelV4Post": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "maxLength": 80,
+            "minLength": 0,
+            "type": "string",
+            "description": "Id of the custom field",
+            "example": "custom1"
+          },
+          "value": {
+            "maxLength": 80,
+            "minLength": 0,
+            "type": "string",
+            "description": "Value of the custom field",
+            "example": "123456"
+          }
+        },
+        "description": "Custom Data"
+      },
+      "DistanceModelV4": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "unit": {
+            "type": "string",
+            "description": "Distance unit:<li>KM - Kilometer</li><li>MILE - Mile</li>",
+            "example": "KM",
+            "enum": [
+              "KM",
+              "MILE"
+            ]
+          },
+          "value": {
+            "type": "integer",
+            "description": "Distance value",
+            "format": "int32",
+            "example": 380
+          }
+        },
+        "description": "Distance"
+      },
+      "Error": {
+        "required": [
+          "errorCode",
+          "errorMessage"
+        ],
+        "type": "object",
+        "properties": {
+          "dataPath": {
+            "type": "string",
+            "description": "Relative data path"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "Machine readable code associated with the error which is static and never localized"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Message associated with the error"
+          }
+        },
+        "description": "Detailed/nested errors"
+      },
+      "ErrorResponseV4": {
+        "required": [
+          "errorCode",
+          "errorMessage"
+        ],
+        "type": "object",
+        "properties": {
+          "dataPath": {
+            "type": "string",
+            "description": "Relative data path"
+          },
+          "errorCode": {
+            "type": "string",
+            "description": "Machine readable code associated with the error which is static and never localized"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "Message associated with the error"
+          },
+          "errors": {
+            "type": "array",
+            "description": "Detailed/nested errors",
+            "items": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "FleetDetailModelV4": {
+        "type": "object",
+        "properties": {
+          "commodityCode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Standard coding structure for the description of goods and services",
+            "example": "120-00"
+          },
+          "description": {
+            "maxLength": 80,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description",
+            "example": "Super Unleaded (92 octane)"
+          },
+          "discountAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "discountApplied": {
+            "type": "boolean",
+            "description": "Indicating whether a discount is granted"
+          },
+          "extendedAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/FleetQuantityModelV4"
+          },
+          "sequenceNumber": {
+            "type": "integer",
+            "description": "Sequence Number",
+            "format": "int32"
+          },
+          "totalAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "unitAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          }
+        },
+        "description": "Fleet item"
+      },
+      "FleetModelV4Post": {
+        "required": [
+          "fuelType",
+          "productType",
+          "serviceType"
+        ],
+        "type": "object",
+        "properties": {
+          "discountAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "driverId": {
+            "maxLength": 17,
+            "minLength": 0,
+            "type": "string",
+            "description": "Driver ID",
+            "example": "1597845"
+          },
+          "fuelType": {
+            "type": "string",
+            "description": "Fuel type\nALCOHOL - Alchohol-based Fuel\nAUTOGAS - Autogas (LPG)\nAVIATION - iation/Jet Fuel\r\nBIOBLEND - Biodiesel-blended Fuel\nBIOFUEL - Biodiesel Fuel\nCLNDIESEL - Clean Diesel\nDIESEL - Diesel Fuel\nGASOLINE - Gasoline\nMARINE - Marine Fuel\nNATURAL - Natural Gas\nOTHER - Other Fuel\nUNDEF - Undefined Fuel Type",
+            "example": "DIESEL",
+            "enum": [
+              "ALCOHOL",
+              "AUTOGAS",
+              "AVIATION",
+              "BIOBLEND",
+              "BIOFUEL",
+              "CLNDIESEL",
+              "DIESEL",
+              "GASOLINE",
+              "MARINE",
+              "NATURAL",
+              "OTHER",
+              "UNDEF"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "description": "Fleet items",
+            "items": {
+              "$ref": "#/components/schemas/FleetDetailModelV4"
+            }
+          },
+          "odometer": {
+            "maxLength": 8,
+            "minLength": 0,
+            "type": "string",
+            "description": "Odometer reading",
+            "example": "127586"
+          },
+          "productType": {
+            "type": "string",
+            "description": "Product type\nCARACC - Automotive Accessories\nGLASS - Automotive Glass\nAVIACC - Aviation Accessories\nAVIFOOD - Aviation Food/Beverage\nAVIMAINT - Aviation Maintenance\nBATTERIES - Batteries\nBEVERAGE - Beverage\nBRAKE - Brakes and Brake Services\nWASH - Car Wash\nSMOKE - Cigarettes/Tobacco\nFEE - Fees\nFOOD - Food\r\nAVIATION - General Aviation\nHEALTH - Health/Beauty\nLABOR - Labor\nMISC - Miscellaneous Product\nOIL - Motor Oil\nPARTS - Parts\nREPAIR - Repair\nSERVICE - Services\nTIRES - Tires\nTBA - Tires Batteries Accessories\nTOW - Towing\nUNDEF - Undefined Product Type",
+            "example": "AVIATION",
+            "enum": [
+              "CARACC",
+              "GLASS",
+              "AVIACC",
+              "AVIFOOD",
+              "AVIMAINT",
+              "BATTERIES",
+              "BEVERAGE",
+              "BRAKE",
+              "WASH",
+              "SMOKE",
+              "FEE",
+              "FOOD",
+              "AVIATION",
+              "HEALTH",
+              "LABOR",
+              "MISC",
+              "OIL",
+              "PARTS",
+              "REPAIR",
+              "SERVICE",
+              "TIRES",
+              "TBA",
+              "TOW",
+              "UNDEF"
+            ]
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/FleetQuantityModelV4"
+          },
+          "serviceType": {
+            "type": "string",
+            "description": "Service type\nFULL - Full-service\r\nNFUEL - Only non-fuel products purchased\r\nSELF - Self-service\r\nUNDEF - Undefined Service Type",
+            "example": "NFUEL",
+            "enum": [
+              "FULL",
+              "NFUEL",
+              "SELF",
+              "UNDEF"
+            ]
+          },
+          "totalAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "unitAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "vehicleNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Vehicle Number",
+            "example": "HD-AB 1234"
+          }
+        },
+        "description": "Fleet addendum data"
+      },
+      "FleetQuantityModelV4": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "unit": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Fuel unit of measure (preferred values: LTR, GLI, GLL, KGM, LBR, KWH",
+            "example": "KGM"
+          },
+          "value": {
+            "type": "number",
+            "description": "Quantity value",
+            "example": 11.08
+          }
+        },
+        "description": "Quantity"
+      },
+      "LinkModel": {
+        "required": [
+          "href",
+          "rel"
+        ],
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string",
+            "description": "Hyperlink to the resource",
+            "example": "https://api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/bulkrequests/f328a518-be22-4207-aa53-87ac147eb416"
+          },
+          "rel": {
+            "type": "string",
+            "description": "Relation type as defined by the server",
+            "example": "self",
+            "enum": [
+              "self"
+            ]
+          }
+        },
+        "description": "Link"
+      },
+      "LodgingChargeModelV4": {
+        "required": [
+          "amount",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "name": {
+            "type": "string",
+            "description": "Charge name / type\nBZCNT - Business center charges (copies, faxes, etc.)\nCAADV - Cash advances charged against the folio\nCONFR - Conference charges\nFOODX - Food charges (excludes mini-bar)\nGIFTX - Gift shop charges\nHELTH - Health club, pool, court, golf charges\nINTNT - Internet charges, online fees\nLNDRY - Laundry charges\nMNBAR - In room mini-bar charges\nMOVIE - Movie/in room entertainment\nOTHER - Other miscellaneous charges\nPRKNG - Parking/Valet charges\nTIPSX - Charges for Gratuities and Tips\nTLPHN - Telephone charges",
+            "example": "INTNT",
+            "enum": [
+              "BZCNT",
+              "CAADV",
+              "CONFR",
+              "FOODX",
+              "GIFTX",
+              "HELTH",
+              "INTNT",
+              "LNDRY",
+              "MNBAR",
+              "MOVIE",
+              "OTHER",
+              "PRKNG",
+              "TIPSX",
+              "TLPHN"
+            ]
+          }
+        },
+        "description": "Charges incurred for the lodging transaction aggregated per charge type. Note that each charge type can only be listed once."
+      },
+      "LodgingDetailModelV4": {
+        "required": [
+          "folioLineItemType"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description"
+          },
+          "folioLineItemType": {
+            "type": "string",
+            "description": "Line item type\nBZCNT - Business center charges (copies, faxes, etc.)\nCAADV - Cash advances charged against the folio\nCONFR - Conference charges\nCTTAX - County Room Tax\nFDTAX - Federal Room Tax\nFOODX - Food charges (excludes mini-bar)\nGIFTX - Gift shop charges\nGNTAX - General Taxes\nHELTH - Health club, pool, court, golf charges\nINTNT - Internet charges, online fees\nLNDRY - Laundry charges\nMNBAR - In room mini-bar charges\nMNTAX - Municipal Room Tax\nMOVIE - Movie/in room entertainment\nOTHER - Other miscellaneous charges\nPRKNG - Parking/Valet charges\nPSTAX - Provincial Room Tax\nPYMNT - Payments/Discounts received\nRMRAT - Room Rate\nRMTAX - Room Tax\nTIPSX - Charges for Gratuities and Tips\nTLPHN - Telephone charges",
+            "example": "RMRAT",
+            "enum": [
+              "BZCNT",
+              "CAADV",
+              "CONFR",
+              "CTTAX",
+              "FDTAX",
+              "FOODX",
+              "GIFTX",
+              "GNTAX",
+              "HELTH",
+              "INTNT",
+              "LNDRY",
+              "MNBAR",
+              "MNTAX",
+              "MOVIE",
+              "OTHER",
+              "PRKNG",
+              "PSTAX",
+              "PYMNT",
+              "RMRAT",
+              "RMTAX",
+              "TIPSX",
+              "TLPHN"
+            ]
+          },
+          "sequenceNumber": {
+            "type": "integer",
+            "description": "Sequence Number",
+            "format": "int32"
+          },
+          "transactionAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "transactionDate": {
+            "type": "string",
+            "description": "Transaction date of the line item",
+            "example": "2018-08-15"
+          }
+        },
+        "description": "Folio line item"
+      },
+      "LodgingModelV4": {
+        "type": "object",
+        "properties": {
+          "adjustmentAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "charges": {
+            "type": "array",
+            "description": "Charges incurred for the lodging transaction aggregated per charge type. Note that each charge type can only be listed once.",
+            "items": {
+              "$ref": "#/components/schemas/LodgingChargeModelV4"
+            }
+          },
+          "chargesDescription": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Charges description"
+          },
+          "checkInDate": {
+            "type": "string",
+            "description": "Date that the customer checked in to the lodging location",
+            "example": "2018-08-16"
+          },
+          "checkOutDate": {
+            "type": "string",
+            "description": "Date that the customer checked out of the lodging location",
+            "example": "2018-08-15"
+          },
+          "commodityCode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Standard coding structure for the description of goods and services",
+            "example": "120-00"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom Data",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "dailyRoomRate": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "dailyRoomTax": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "folioLineItems": {
+            "type": "array",
+            "description": "Folio line items",
+            "items": {
+              "$ref": "#/components/schemas/LodgingDetailModelV4"
+            }
+          },
+          "folioNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Folio Number",
+            "example": "F344145-51VD"
+          },
+          "guestName": {
+            "maxLength": 65,
+            "minLength": 0,
+            "type": "string",
+            "description": "Name of registered guest",
+            "example": "DOE,JOHN"
+          },
+          "lodgingAddress": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "merchantOrderNumber": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Merchant Order Number"
+          },
+          "numberInParty": {
+            "type": "integer",
+            "description": "Number of guests staying in the room",
+            "format": "int32",
+            "example": 1
+          },
+          "numberOfRoomNights": {
+            "type": "integer",
+            "description": "Total number of rooms times number of nights",
+            "format": "int32",
+            "example": 3
+          },
+          "numberOfRooms": {
+            "type": "integer",
+            "description": "Number of rooms reserved",
+            "format": "int32",
+            "example": 1
+          },
+          "otherServicesCode": {
+            "maxLength": 6,
+            "minLength": 0,
+            "type": "string",
+            "description": "A code to explain other miscellaneous charges"
+          },
+          "prepaidAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "programCode": {
+            "maxLength": 2,
+            "minLength": 0,
+            "type": "string",
+            "description": "Code used to identify special circumstances",
+            "example": "BS"
+          },
+          "propertyId": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Property Id"
+          },
+          "propertyPhoneNumber": {
+            "maxLength": 16,
+            "minLength": 0,
+            "type": "string",
+            "description": "Phone number of the property"
+          },
+          "roomType": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "description": "Room Type",
+            "example": "Business"
+          },
+          "taxes": {
+            "type": "array",
+            "description": "Taxes incurred for the lodging transaction",
+            "items": {
+              "$ref": "#/components/schemas/LodgingTaxModelV4"
+            }
+          },
+          "totalLodgingAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "totalNonRoomChargeAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "totalTaxAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          }
+        },
+        "description": "Lodging addendum data"
+      },
+      "LodgingTaxModelV4": {
+        "required": [
+          "amount",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tax type\nROOMTAX - Room tax",
+            "example": "ROOMTAX",
+            "enum": [
+              "ROOMTAX"
+            ]
+          }
+        },
+        "description": "Taxes incurred for the lodging transaction"
+      },
+      "MerchantModelV4Post": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "categoryCode": {
+            "maxLength": 4,
+            "minLength": 4,
+            "type": "string",
+            "description": "Merchant category code (VISA MERCHANT CATEGORY CLASSIFICATION)",
+            "example": "3008"
+          },
+          "doingBusinessAs": {
+            "maxLength": 128,
+            "minLength": 0,
+            "type": "string",
+            "description": "Name of the business the merchant is doing (preferred for display purposes over merchant name)",
+            "example": "Flight Carrier"
+          },
+          "id": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Merchant identifier",
+            "example": "158326704"
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string",
+            "description": "Merchant Name",
+            "example": "Lufthansa"
+          },
+          "vatNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Merchant's VAT number",
+            "example": "5187495268"
+          }
+        },
+        "description": "Merchant Information"
+      },
+      "PurchaseDetailModelV4": {
+        "type": "object",
+        "properties": {
+          "commodityCode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Commodity Code",
+            "example": "120-00"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom data of the purchase item",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "description": {
+            "maxLength": 80,
+            "minLength": 0,
+            "type": "string",
+            "description": "Item description",
+            "example": "Staples"
+          },
+          "discountAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "discountApplied": {
+            "type": "boolean",
+            "description": "Indicating whether a discount is granted"
+          },
+          "extendedAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "itemId": {
+            "maxLength": 52,
+            "minLength": 0,
+            "type": "string",
+            "description": "Identifier of the item"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/PurchaseQuantityModelV4"
+          },
+          "sequenceNumber": {
+            "type": "integer",
+            "description": "Sequence Number",
+            "format": "int32"
+          },
+          "taxIncluded": {
+            "type": "boolean",
+            "description": "Indicating whether tax is included in the amount"
+          },
+          "totalAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "unitAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          }
+        },
+        "description": "Purchase item"
+      },
+      "PurchaseModelV4": {
+        "type": "object",
+        "properties": {
+          "commodityCode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Commodity Code",
+            "example": "120-00"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom Data of the purchase",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "description": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Purchase description",
+            "example": "Office Supplies"
+          },
+          "discountAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "dutyAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "invoiceNumber": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Invoice Number",
+            "example": "1452269412"
+          },
+          "items": {
+            "type": "array",
+            "description": "Purchase items",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseDetailModelV4"
+            }
+          },
+          "merchantOrderNumber": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Order number assigned by the merchant",
+            "example": "M-12428-083479B"
+          },
+          "numberOfLineItems": {
+            "type": "integer",
+            "description": "Number of line items that belong to the purchase",
+            "format": "int32",
+            "example": 3
+          },
+          "orderDate": {
+            "type": "string",
+            "description": "Date the order was placed",
+            "example": "2018-08-16"
+          },
+          "purchaseDate": {
+            "type": "string",
+            "description": "Effective/transaction date of the order",
+            "example": "2018-08-15"
+          },
+          "shipFromAddress": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "shipToAddress": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "shippingAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "supplierAddress": {
+            "$ref": "#/components/schemas/AddressModelV4"
+          },
+          "taxes": {
+            "type": "array",
+            "description": "Taxes incurred for the purchase",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseTaxModelV4"
+            }
+          }
+        },
+        "description": "Purchase addendum data"
+      },
+      "PurchaseQuantityModelV4": {
+        "required": [
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "unit": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Unit of measure (preferably use codes from https://www.unece.org/cefact/codesfortrade/codes_index.html, for example 'EA', 'KGM', 'LTR'),",
+            "example": "EA"
+          },
+          "value": {
+            "type": "number",
+            "description": "Quantity value",
+            "example": 10
+          }
+        },
+        "description": "Item quantity"
+      },
+      "PurchaseTaxModelV4": {
+        "required": [
+          "amount",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tax type\nSHIPPINGVAT - Shipping Value-added Tax (VAT)",
+            "example": "SHIPPINGVAT",
+            "enum": [
+              "SHIPPINGVAT"
+            ]
+          }
+        },
+        "description": "Taxes incurred for the purchase"
+      },
+      "TransactionAccountReferenceModelV4Post": {
+        "required": [
+          "externalId"
+        ],
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "pattern": "[a-zA-Z0-9-_]+",
+            "type": "string",
+            "description": "Unique identifier (token) for a card account as defined by an external system (outside SAP Concur)",
+            "example": "59edf00e-6e0a-46c4-bf59-c233000c5b98"
+          }
+        },
+        "description": "Reference to the credit card account to which this transaction belongs"
+      },
+      "TransactionListModelV4Post": {
+        "required": [
+          "transactions"
+        ],
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "maxItems": 1000,
+            "minItems": 0,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionModelV4Post"
+            }
+          }
+        },
+        "description": "List of credit card transactions"
+      },
+      "TransactionModelV4Post": {
+        "required": [
+          "account",
+          "externalId",
+          "merchant",
+          "postedAmount",
+          "postedDate",
+          "transactionAmount",
+          "transactionDate",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "account": {
+            "$ref": "#/components/schemas/TransactionAccountReferenceModelV4Post"
+          },
+          "acquirerReferenceNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Acquirer Reference Number",
+            "example": "76210210071907666"
+          },
+          "authorizationExternalId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "pattern": "[a-zA-Z0-9-_]+",
+            "type": "string",
+            "description": "External ID of the referenced (pre-)authorization",
+            "example": "00826799521457"
+          },
+          "billedAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "carRental": {
+            "$ref": "#/components/schemas/CarRentalModelV4"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom Data of the transaction",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "customerVatNumber": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Customer VAT number",
+            "example": "CVN2947"
+          },
+          "description": {
+            "maxLength": 42,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description of the transaction",
+            "example": "UBER,800-592-8996,PAYS-BAS"
+          },
+          "description2": {
+            "maxLength": 42,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description2 of the transaction",
+            "example": "UBER,800-592-8996,PAYS-BAS"
+          },
+          "description3": {
+            "maxLength": 42,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description3 of the transaction",
+            "example": "UBER,800-592-8996,PAYS-BAS"
+          },
+          "description4": {
+            "maxLength": 42,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description4 of the transaction",
+            "example": "UBER,800-592-8996,PAYS-BAS"
+          },
+          "description5": {
+            "maxLength": 42,
+            "minLength": 0,
+            "type": "string",
+            "description": "Description5 of the transaction",
+            "example": "UBER,800-592-8996,PAYS-BAS"
+          },
+          "externalId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "pattern": "[a-zA-Z0-9-_]+",
+            "type": "string",
+            "description": "Unique identifier for a card transaction as defined by an external system (outside SAP Concur)",
+            "example": "8080e7dec98d"
+          },
+          "fleet": {
+            "$ref": "#/components/schemas/FleetModelV4Post"
+          },
+          "lodging": {
+            "$ref": "#/components/schemas/LodgingModelV4"
+          },
+          "merchant": {
+            "$ref": "#/components/schemas/MerchantModelV4Post"
+          },
+          "merchantReferenceNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Merchant Reference Number",
+            "example": "987488700123"
+          },
+          "postedAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "postedDate": {
+            "type": "string",
+            "description": "Posted Date",
+            "example": "2018-08-16"
+          },
+          "processorReferenceNumber": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "description": "Processor Reference Number",
+            "example": "747855328780006765981"
+          },
+          "purchase": {
+            "$ref": "#/components/schemas/PurchaseModelV4"
+          },
+          "referenceNumber": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "description": "Transaction reference number for display purposes",
+            "example": "gWp859SqAX97DsIVt5aoZmSNh4y8iH6qc"
+          },
+          "statement": {
+            "$ref": "#/components/schemas/TransactionStatementModelV4"
+          },
+          "taxes": {
+            "type": "array",
+            "description": "Taxes incurred for the transaction",
+            "items": {
+              "$ref": "#/components/schemas/TransactionTaxModelV4"
+            }
+          },
+          "totalTaxAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "transactionAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "transactionDate": {
+            "type": "string",
+            "description": "Transaction Date",
+            "example": "2018-08-15"
+          },
+          "transactionDateTime": {
+            "type": "string",
+            "description": "Timestamp when the transaction happened (RFC 3339 \"YYYY-MM-DDThh:mm:ss.nnn\")",
+            "example": "2018-08-15T07:15:23.000"
+          },
+          "travel": {
+            "$ref": "#/components/schemas/TravelModelV4"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of the transaction:<li>ANF - Annual Fees</li><li>CAV - Cash Advance</li><li>CCF - Cash and Check Fees</li><li>RPE - Regular Transaction</li><li>FNC - Finance Charges</li><li>NSF - Insufficient Funds Check Fees</li><li>LAF - Late Fees</li><li>CHG - Other Bank Charges and Fees</li><li>PAY - Payment</li>",
+            "example": "RPE",
+            "enum": [
+              "ANF",
+              "CAV",
+              "CCF",
+              "PAY",
+              "NSF",
+              "CHG",
+              "FNC",
+              "LAF",
+              "RPE"
+            ]
+          }
+        }
+      },
+      "TransactionStatementModelV4": {
+        "type": "object",
+        "properties": {
+          "billingDate": {
+            "type": "string",
+            "description": "Billing (end) date of the statement to which the transaction belongs",
+            "example": "2018-08-17"
+          },
+          "referenceNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Reference number of the statement to which this transaction belongs",
+            "example": "927265431"
+          }
+        },
+        "description": "Contains details of the billing statement to which the transaction belongs to"
+      },
+      "TransactionTaxModelV4": {
+        "required": [
+          "amount",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "type": {
+            "type": "string",
+            "description": "Tax type\nLOCAL - Local tax\nVAT_OR_GST - Value-added Tax (VAT) or Goods and Services Tax (GST)\nSALES - Sales Tax\nPST_OR_QST - Provincial Sales Tax (PST) or Quebec Sales Tax (QST)\nOTHER - Other taxes",
+            "example": "VAT_OR_GST",
+            "enum": [
+              "LOCAL",
+              "VAT_OR_GST",
+              "SALES",
+              "PST_OR_QST",
+              "OTHER"
+            ]
+          }
+        },
+        "description": "Taxes incurred for the transaction"
+      },
+      "TravelDetailModelV4": {
+        "type": "object",
+        "properties": {
+          "arrivalCountry": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "description": "Arrival Country"
+          },
+          "arrivalDate": {
+            "type": "string",
+            "description": "Date of arrival",
+            "example": "2018-08-15"
+          },
+          "arrivalLocation": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "description": "Arrival location/code",
+            "example": "FRA"
+          },
+          "carrierCode": {
+            "maxLength": 4,
+            "minLength": 0,
+            "type": "string",
+            "description": "Air or Rail carrier name abbreviation"
+          },
+          "conjunctionTicketNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Ticket that contains additional coupons on an itinerary that is more than four segments"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom Data for travel",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "departureCountry": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "description": "Departure Country"
+          },
+          "departureDate": {
+            "type": "string",
+            "description": "Date of departure",
+            "example": "2018-08-15"
+          },
+          "departureLocation": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string",
+            "description": "Departure location/code",
+            "example": "LAX"
+          },
+          "endorsements": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Describes the fare issued by the airline"
+          },
+          "exchangeTicketNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Exchange ticket number"
+          },
+          "fare": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "fee": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "flightNumber": {
+            "maxLength": 8,
+            "minLength": 0,
+            "type": "string",
+            "description": "Flight number assigned by the airline carrier",
+            "example": "LH457"
+          },
+          "foreignArrival": {
+            "type": "boolean",
+            "description": "Indicates if the travel is from a foreign country"
+          },
+          "foreignDeparture": {
+            "type": "boolean",
+            "description": "Indicates if the travel is to a foreign country"
+          },
+          "isDestination": {
+            "type": "boolean",
+            "description": "Indicates if this is the final leg of travel on the ticket"
+          },
+          "isOrigin": {
+            "type": "boolean",
+            "description": "Indicates if this is the first leg of travel on the ticket"
+          },
+          "serviceClass": {
+            "maxLength": 8,
+            "minLength": 0,
+            "type": "string",
+            "description": "Class of Service Code. Expected values (not enforced):\nA = First Discount\nB = Coach Discount\nC = Business Class\nD = Bus Discounted\nE = Shuttle\nF = First Class\nH = Coach Discount\nJ = Bus Premium\nK = Thrift\nL = Thrift Discount\nM = Coach Discount\nP = First Premium\nQ = Coach Discount\nR = Supersonic\nS = Standard Class\nT = Coach Discount\nU = Shuttle\nV = Thrift Discount\nW = Coach Premium\nY = Coach",
+            "example": "E"
+          },
+          "travelLegNumber": {
+            "type": "integer",
+            "description": "Order in which the leg is to be traveled",
+            "format": "int32",
+            "example": 1
+          }
+        },
+        "description": "Travel segment"
+      },
+      "TravelModelV4": {
+        "type": "object",
+        "properties": {
+          "baseFare": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "commodityCode": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "description": "Commodity code"
+          },
+          "conjunctionId": {
+            "maxLength": 7,
+            "minLength": 0,
+            "type": "string",
+            "description": "Conjunction ID - ID for a ticket that contains an itinerary that is more than four segments"
+          },
+          "customData": {
+            "type": "array",
+            "description": "Custom Data for travel",
+            "items": {
+              "$ref": "#/components/schemas/CustomDataModelV4Post"
+            }
+          },
+          "customerData": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Customer data"
+          },
+          "departureDate": {
+            "type": "string",
+            "description": "Date of departure for the first leg of travel",
+            "example": "2018-08-16"
+          },
+          "domestic": {
+            "type": "boolean",
+            "description": "Indicates whether the the travel is domestic"
+          },
+          "electronicTicket": {
+            "type": "boolean",
+            "description": "Indicates whether the ticket is an e-ticket"
+          },
+          "endorsements": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Describes the fare issued by the airline"
+          },
+          "exchangedTicketAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "exchangedTicketNumber": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Number of the new ticket which replaces the original ticket"
+          },
+          "issueDate": {
+            "type": "string",
+            "description": "Date when the ticket was issued to the ticket holder",
+            "example": "2018-08-16"
+          },
+          "issuingCarrier": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Airline or railway carrier"
+          },
+          "numberOfLegs": {
+            "type": "integer",
+            "description": "Number of city pairs included on the ticket",
+            "format": "int32",
+            "example": 3
+          },
+          "passengerName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Name of the person to whom the ticked was issued",
+            "example": "DOE/JOHN"
+          },
+          "refundTicketNumber": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "description": "Refund ticket number"
+          },
+          "restrictionsApply": {
+            "type": "boolean",
+            "description": "Identifier noting ticket purchased has some restriction associated with its use"
+          },
+          "segments": {
+            "type": "array",
+            "description": "Travel segments",
+            "items": {
+              "$ref": "#/components/schemas/TravelDetailModelV4"
+            }
+          },
+          "ticketNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Ticket Number",
+            "example": "0183693651174"
+          },
+          "totalFare": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "totalFee": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "totalTaxAmount": {
+            "$ref": "#/components/schemas/AmountModelV4"
+          },
+          "travelAgencyCode": {
+            "maxLength": 8,
+            "minLength": 0,
+            "type": "string",
+            "description": "Code assigned to the travel agency that booked the ticket"
+          },
+          "travelAgencyInvoiceNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Invoice number assigned by the travel agency that booked the ticket"
+          },
+          "travelAgencyName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Name of the travel agency that booked the ticket",
+            "example": "SOUTHWEST AIRLINES CO."
+          }
+        },
+        "description": "Travel addendum data"
+      },
+      "TravelRequestV4": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "maxLength": 32,
+            "minLength": 32,
+            "type": "string",
+            "description": "Unique identifier for an SAP Concur travel request",
+            "example": "CED5E9CD8FC1424488F9331ACF956E73"
+          }
+        },
+        "description": "Travel request"
+      }
+    },
+    "securitySchemes": {
+      "Authorization": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
