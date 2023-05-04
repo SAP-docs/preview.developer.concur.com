@@ -4,9 +4,9 @@ layout: reference
 ---
 # Announcements
 
-### 2023-05-04 :: May 2023 Release Notes Published
+### 2023-05-05 :: May 2023 Release Notes Published
 
-The May 2023 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page. May the fourth be with you.
+The May 2023 release notes have been published. More details can be found on the [Release Notes](https://developer.concur.com/tools-support/release-notes/index.html) page.
 
 ### 2023-04-07 :: April 2023 Release Notes Published
 
