@@ -405,6 +405,155 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 204 No Content
 ```
 
+## Get Reports To Approve
+
+This endpoint retrieves all reports that a user can approve as either an approver or delegate.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userId}/context/{contextType}/reportsToApprove
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userId`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+|`contextType`|`string`|-|**Required** The access level of the Concur user, which determines the form fields they can view/modify.|
+|`sort`|`string`|-| The name of the report field on which to sort.|
+|`order`|`string`|-| The order to sort the field by.|
+|`includeDelegateApprovals`|`boolean`|-| The access level of the Concur user, which determines the form fields they can view/modify.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
+* `Concur-CorrelationId` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Request
+
+```shell
+curl --location --request GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/context/MANAGER/reportsToApprove?sort=reportDate&order=desc&includeDelegateApprovals=true
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: abcd-efgh-xyzw' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+```json
+[
+  {
+    "name": "string",
+    "reportDate": "2023-05-09",
+    "reportId": "string",
+    "reportNumber": "string",
+    "submitDate": "2023-05-09",
+    "approver": {
+      "firstName": "string",
+      "lastName": "string",
+      "middleInitial": "string",
+      "employeeId": "string",
+      "employeeUuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "employee": {
+      "firstName": "string",
+      "lastName": "string",
+      "middleInitial": "string",
+      "employeeId": "string",
+      "employeeUuid": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+    },
+    "amountDueEmployee": {
+      "value": 0,
+      "currencyCode": "string"
+    },
+    "claimedAmount": {
+      "value": 0,
+      "currencyCode": "string"
+    },
+    "totalApprovedAmount": {
+      "value": 0,
+      "currencyCode": "string"
+    },
+    "hasExceptions": true,
+    "reportType": "'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'",
+    "link": {
+      "rel": "string",
+      "href": "string",
+      "hreflang": "string",
+      "media": "string",
+      "title": "string",
+      "type": "string",
+      "deprecation": "string",
+      "profile": "string",
+      "name": "string",
+      "template": {
+        "variables": [
+          {
+            "name": "string",
+            "type": "SIMPLE",
+            "description": "string",
+            "composite": true,
+            "singular": true
+          }
+        ],
+        "variableNames": [
+          "string"
+        ]
+      },
+      "method": "string",
+      "isTemplated": true
+    }
+  }
+]
+```
+
+#### Exception Response
+
+```json
+{
+  "timestamp": "2023-05-09T15:14:35.296Z",
+  "httpStatus": "string",
+  "errorMessage": "string",
+  "errorId": "string",
+  "validationErrors": [
+    {
+      "source": "string",
+      "message": "string",
+      "id": "string"
+    }
+  ],
+  "customResponseData": {
+    "additionalProp1": "string",
+    "additionalProp2": "string",
+    "additionalProp3": "string"
+  },
+  "path": "string"
+}
+```
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
 ## Schema <a name="schema"></a>
 
 ### <a name="report-details-schema"></a>ReportDetails
