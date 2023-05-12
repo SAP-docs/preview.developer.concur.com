@@ -8,7 +8,7 @@
             "name": "SAP Concur",
             "url": ""
         },
-        "version": "4.14.0"
+        "version": "4.15.5"
     },
     "externalDocs": {
         "description": "SAP Concur API Reference",
@@ -52,16 +52,13 @@
         {
             "name": "Allocations",
             "description": "Gets the allocations that belong to a specific expense on an expense report and updates an allocation on an existing expense in an expense report"
-        },
-      {
-        "name": "Cost Object Workflows",
-        "description": "Manages cost object workflow transitions for a report"
-      }
+        }
     ],
     "paths": {
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/comments": {
             "get": {
                 "tags": [
+                    "external",
                     "Comments"
                 ],
                 "summary": "Gets comments for the specified expense",
@@ -115,6 +112,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -128,8 +134,28 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "reportId not found,\nexpenseId not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
                     "403": {
                         "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -160,26 +186,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "reportId not found,\nexpenseId not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -187,6 +193,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/comments": {
             "get": {
                 "tags": [
+                    "external",
                     "Comments"
                 ],
                 "summary": "Gets comments for the specified report",
@@ -241,6 +248,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -264,15 +280,12 @@
                             }
                         }
                     },
-                    "200": {
-                        "description": "Comments successfully retrieved",
+                    "401": {
+                        "description": "Missing or invalid authorization header",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/CommentDetails"
-                                    }
+                                    "$ref": "#/components/schemas/ErrorMessage"
                                 }
                             }
                         }
@@ -287,18 +300,21 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
+                    "200": {
+                        "description": "Comments successfully retrieved",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CommentDetails"
+                                    }
                                 }
                             }
                         }
                     },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -313,6 +329,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses": {
             "get": {
                 "tags": [
+                    "external",
                     "Expenses"
                 ],
                 "summary": "Gets all expense summaries for the specified report",
@@ -372,11 +389,53 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "400": {
                         "description": "Specified context not supported",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Expense summaries successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReportEntrySummary"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -404,39 +463,6 @@
                                 }
                             }
                         }
-                    },
-                    "403": {
-                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report ",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "Expense summaries successfully retrieved",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ReportEntrySummary"
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -444,6 +470,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/allocations": {
             "get": {
                 "tags": [
+                    "external",
                     "Allocations"
                 ],
                 "summary": "Gets all allocations for the specified expense",
@@ -498,11 +525,53 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
+                    "200": {
+                        "description": "Allocations successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Allocation"
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "403": {
                         "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid expenseId",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -530,39 +599,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "Allocations successfully retrieved",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/Allocation"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid expenseId",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -570,6 +606,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}": {
             "get": {
                 "tags": [
+                    "external",
                     "Reports"
                 ],
                 "summary": "Gets report details for the specified report.",
@@ -615,19 +652,18 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
-                    "403": {
-                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not allowed to access this report ",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
                     "400": {
                         "description": "Specified context not supported",
                         "content": {
@@ -648,6 +684,16 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "reportId not found",
                         "content": {
@@ -658,8 +704,8 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
+                    "403": {
+                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not allowed to access this report ",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -668,8 +714,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -727,6 +773,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -740,6 +795,16 @@
                     "required": true
                 },
                 "responses": {
+                    "400": {
+                        "description": "Specified context not supported,\nInvalid field value specified,\nUser does not have proper role",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
                     "403": {
                         "description": "Specified context type is invalid for this API. Review the documentation for supported context type",
                         "content": {
@@ -753,6 +818,16 @@
                     "204": {
                         "description": "Report successfully updated"
                     },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "reportId not found",
                         "content": {
@@ -765,26 +840,6 @@
                     },
                     "500": {
                         "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Specified context not supported,\nInvalid field value specified,\nUser does not have proper role",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -843,6 +898,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -856,8 +920,21 @@
                     "required": true
                 },
                 "responses": {
-                    "400": {
-                        "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
+                    "204": {
+                        "description": "Report sent back successfully"
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report \n\nCaller does not have permission to submit the report",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -876,31 +953,18 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
                     "500": {
                         "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "204": {
-                        "description": "Report sent back successfully"
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report \n\nCaller does not have permission to submit the report",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -960,6 +1024,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -974,26 +1047,6 @@
                 "responses": {
                     "400": {
                         "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.no_clearingcode: Either the credit card account or the payment type is missing a clearing account code. Contact your Expense administrator\n\nerror.workflow.invalid_action: The action cannot be executed because it is not valid for the report workflow\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.recall.cannotRecall: Expense report cannot be recalled\n\n",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "reportId not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1024,6 +1077,26 @@
                                 }
                             }
                         }
+                    },
+                    "404": {
+                        "description": "reportId not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1031,6 +1104,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}": {
             "get": {
                 "tags": [
+                    "external",
                     "Expenses"
                 ],
                 "summary": "Gets expense details for the specified expense",
@@ -1085,31 +1159,20 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Expense details successfully retrieved",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ReportEntryDetail"
-                                }
-                            }
-                        }
-                    },
                     "400": {
                         "description": "Specified context not supported",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1128,6 +1191,26 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "reportId not found\n\nexpenseId not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Expense details successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReportEntryDetail"
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Missing or invalid authorization header",
                         "content": {
@@ -1138,8 +1221,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "reportId not found\n\nexpenseId not found",
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1198,6 +1281,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -1214,28 +1306,8 @@
                     "204": {
                         "description": "Report successfully approved"
                     },
-                    "404": {
-                        "description": "reportId not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to modify this report ",
+                    "401": {
+                        "description": "Missing or invalid authorization header",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1254,8 +1326,28 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
+                    "404": {
+                        "description": "reportId not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to modify this report ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1270,6 +1362,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/allocations/{allocationId}": {
             "get": {
                 "tags": [
+                    "external",
                     "Allocations"
                 ],
                 "summary": "Gets specified allocation for the specified report.",
@@ -1324,41 +1417,20 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "403": {
                         "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "200": {
-                        "description": "Allocation successfully retrieved",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ReportAllocationResponse"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1379,6 +1451,36 @@
                     },
                     "404": {
                         "description": "reportId not found\n\nallocationId not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Allocation successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReportAllocationResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1445,6 +1547,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "requestBody": {
@@ -1460,6 +1571,36 @@
                 "responses": {
                     "204": {
                         "description": "Successfully updated the allocation"
+                    },
+                    "404": {
+                        "description": "reportId not found\n\nallocationId not found\n\nexpenseId not found\n\nThe policy of the specified report does not have an allocation form defined. Contact your Concur Administrator",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid field value specified\n\nInvalid expenseId\n\nInvalid allocationId\n\nUser does not have proper role",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal server error. Retry your request again",
@@ -1480,36 +1621,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid field value specified\n\nInvalid expenseId\n\nInvalid allocationId\n\nUser does not have proper role",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "reportId not found\n\nallocationId not found\n\nexpenseId not found\n\nThe policy of the specified report does not have an allocation form defined. Contact your Concur Administrator",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -1517,6 +1628,7 @@
         "/expensereports/v4/reports/{reportId}/sendBack": {
             "patch": {
                 "tags": [
+                    "external",
                     "Workflows"
                 ],
                 "summary": "Sends back the specified report",
@@ -1528,6 +1640,15 @@
                         "in": "path",
                         "description": "The unique identifier of the report",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1553,36 +1674,6 @@
                     "required": true
                 },
                 "responses": {
-                    "400": {
-                        "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "reportId not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
                     "403": {
                         "description": "Caller cannot modify System workflow step",
                         "content": {
@@ -1603,8 +1694,38 @@
                             }
                         }
                     },
+                    "404": {
+                        "description": "reportId not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
                     "204": {
                         "description": "Report successfully sent back"
+                    },
+                    "400": {
+                        "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1612,6 +1733,7 @@
         "/expensereports/v4/reports/{reportId}/expenses/{expenseId}": {
             "patch": {
                 "tags": [
+                    "external",
                     "Expenses"
                 ],
                 "summary": "Updates (limited fields) the specified expense in an un-submitted or submitted report",
@@ -1632,6 +1754,15 @@
                         "in": "path",
                         "description": "The unique identifier of the expense",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1667,8 +1798,28 @@
                             }
                         }
                     },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
+                    "409": {
+                        "description": "Your request cannot be processed as the specified resource is locked for another process.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "User is not allowed to modify the reopened report",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "reportId not found\n\nexpenseId not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1690,28 +1841,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "reportId not found\n\nexpenseId not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "403": {
-                        "description": "User is not allowed to modify the reopened report",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "409": {
-                        "description": "Your request cannot be processed as the specified resource is locked for another process.",
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1726,6 +1857,7 @@
         "/expensereports/v4/reports/{reportId}/approve": {
             "patch": {
                 "tags": [
+                    "external",
                     "Workflows"
                 ],
                 "summary": "Approves the specified report to the next step if it is in a system step",
@@ -1737,6 +1869,15 @@
                         "in": "path",
                         "description": "The unique identifier of the report",
                         "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1765,28 +1906,28 @@
                     "204": {
                         "description": "Report successfully approved"
                     },
-                    "404": {
-                        "description": "reportId not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
                     "403": {
                         "description": "Caller cannot modify System workflow step",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "reportId not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1805,8 +1946,8 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Missing or invalid authorization header",
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1821,7 +1962,7 @@
         "/expensereports/v4/users/{userId}/reports/{reportId}/costObjectsForApprover": {
             "get": {
                 "tags": [
-                    "Cost Object Workflows"
+                    "Workflows"
                 ],
                 "summary": "Gets the cost object details for the specified report.",
                 "description": "Returns the cost object details for the specified report.",
@@ -1853,6 +1994,15 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -1865,6 +2015,16 @@
                                     "items": {
                                         "$ref": "#/components/schemas/CostObjectForApprover"
                                     }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or invalid authorization header",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
                                 }
                             }
                         }
@@ -1898,6 +2058,121 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/expensereports/v4/users/{userId}/context/{contextType}/reportsToApprove": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Gets the reports to approve for the specified approver",
+                "description": "Returns the reports to approve for the specified approver.",
+                "operationId": "getReportsToApprove",
+                "parameters": [
+                    {
+                        "name": "sort",
+                        "in": "query",
+                        "description": "The name of the column on which to sort",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "reportDate",
+                            "enum": [
+                                "amountDueEmployee",
+                                "claimedAmount",
+                                "employeeFirstName",
+                                "employeeLastName",
+                                "name",
+                                "reportDate",
+                                "submitDate"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "description": "Sort order",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "desc",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "includeDelegateApprovals",
+                        "in": "query",
+                        "description": "If true, reports pending approvals of employees you delegate for are returned as well.",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The unique identifier of the Concur user",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "contextType",
+                        "in": "path",
+                        "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                
+                            ]
+                        }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "403": {
+                        "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser does not have proper role",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Specified context not supported,\nInvalid date filter provided",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Missing or invalid authorization header",
@@ -1908,6 +2183,29 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Reports to approve successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReportToApprove"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1915,6 +2213,7 @@
         "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/itemizations": {
             "get": {
                 "tags": [
+                    "external",
                     "Expenses"
                 ],
                 "summary": "Gets a list of itemization summaries for the specified expense",
@@ -1969,25 +2268,27 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "name": "accept-language",
+                        "in": "header",
+                        "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
-                    "400": {
-                        "description": "Specified context not supported\n\nInvalid reportId\n\nInvalid expenseId",
+                    "200": {
+                        "description": "Itemization summaries successfully retrieved",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error. Retry your request again",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ErrorMessage"
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReportEntryItemizationSummary"
+                                    }
                                 }
                             }
                         }
@@ -2002,15 +2303,12 @@
                             }
                         }
                     },
-                    "200": {
-                        "description": "Itemization summaries successfully retrieved",
+                    "404": {
+                        "description": "reportId not found\n\nexpenseId not found",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ReportEntryItemizationSummary"
-                                    }
+                                    "$ref": "#/components/schemas/ErrorMessage"
                                 }
                             }
                         }
@@ -2025,8 +2323,18 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "reportId not found\n\nexpenseId not found",
+                    "400": {
+                        "description": "Specified context not supported\n\nInvalid reportId\n\nInvalid expenseId",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error. Retry your request again",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2122,11 +2430,13 @@
                     },
                     "isValid": {
                         "type": "boolean",
-                        "description": "Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default value: true"
+                        "description": "Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default value: true",
+                        "readOnly": true
                     },
                     "listItemUrl": {
                         "type": "string",
-                        "description": "href (string): The URL of the related HATEOAS link that you can use for subsequent calls"
+                        "description": "href (string): The URL of the related HATEOAS link that you can use for subsequent calls",
+                        "readOnly": true
                     }
                 },
                 "description": "The unique id of Fuel Type"
@@ -3056,7 +3366,8 @@
                     },
                     "country": {
                         "type": "string",
-                        "description": "The country name associated with the report (localized as per accept-language header)"
+                        "description": "The country name associated with the report (localized as per accept-language header)",
+                        "readOnly": true
                     },
                     "countryCode": {
                         "type": "string",
@@ -3081,7 +3392,8 @@
                     },
                     "policy": {
                         "type": "string",
-                        "description": "The policy name to which the report adheres to"
+                        "description": "The policy name to which the report adheres to",
+                        "readOnly": true
                     },
                     "policyId": {
                         "type": "string",
@@ -3098,6 +3410,7 @@
                     "reportSource": {
                         "type": "string",
                         "description": "The source of the report. Possible values: EA - Expense Assistant, MOB - Mobile, OTHER - Unknown, SE - Smart Expense, TR - Travel Request, UI - Web UI",
+                        "default": "Other",
                         "enum": [
                             "EA",
                             "MOB",
@@ -3608,6 +3921,95 @@
                     }
                 }
             },
+            "ReportToApprove": {
+                "required": [
+                    "amountDueEmployee",
+                    "approver",
+                    "claimedAmount",
+                    "employee",
+                    "hasExceptions",
+                    "link",
+                    "name",
+                    "reportDate",
+                    "reportId",
+                    "reportNumber",
+                    "reportType",
+                    "submitDate",
+                    "totalApprovedAmount"
+                ],
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The expense report name input by the user"
+                    },
+                    "reportDate": {
+                        "type": "string",
+                        "description": "The date (ISO-8601) assigned to the report by the user (https://en.wikipedia.org/wiki/ISO_8601). Format: YYYY-MM-DD",
+                        "format": "date"
+                    },
+                    "reportId": {
+                        "type": "string",
+                        "description": "The unique identifier for the report resource"
+                    },
+                    "reportNumber": {
+                        "type": "string",
+                        "description": "The 6 character unique identifier for the report resource"
+                    },
+                    "submitDate": {
+                        "type": "string",
+                        "description": "The date (ISO-8601) the report was submitted by the user (https://en.wikipedia.org/wiki/ISO_8601). Format: YYYY-MM-DD",
+                        "format": "date"
+                    },
+                    "approver": {
+                        "$ref": "#/components/schemas/Employee"
+                    },
+                    "employee": {
+                        "$ref": "#/components/schemas/Employee"
+                    },
+                    "amountDueEmployee": {
+                        "$ref": "#/components/schemas/Amount"
+                    },
+                    "claimedAmount": {
+                        "$ref": "#/components/schemas/Amount"
+                    },
+                    "totalApprovedAmount": {
+                        "$ref": "#/components/schemas/Amount"
+                    },
+                    "hasExceptions": {
+                        "type": "boolean",
+                        "description": "Whether the Report has any exceptions"
+                    },
+                    "reportType": {
+                        "type": "string",
+                        "description": "This value identifies the method used to create the report. Statement refers to company billed statement reports and Auto-created refers to reports created by Expense Assistant.",
+                        "example": "'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'",
+                        "enum": [
+                            "'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'"
+                        ]
+                    },
+                    "link": {
+                        "$ref": "#/components/schemas/Link"
+                    },
+                    "employeeFirstName": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "employeeLastName": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "employeeMiddleInitial": {
+                        "type": "string",
+                        "writeOnly": true
+                    },
+                    "crnCode": {
+                        "type": "string",
+                        "writeOnly": true
+                    }
+                },
+                "description": "ReportToApprove"
+            },
             "ReportForm": {
                 "required": [
                     "amountCompanyPaid",
@@ -3855,10 +4257,10 @@
                         "description": "This value identifies the method used to create the report. Statement refers to company billed statement reports and Auto-created refers to reports created by Expense Assistant.",
                         "example": "'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'",
                         "enum": [
-                            "",
-                            "CR",
-                            "SR",
-                            "RR",
+                            "Regular",
+                            "Reconciliation",
+                            "Statement",
+                            "AutoCreated",
                             "'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'"
                         ]
                     },
