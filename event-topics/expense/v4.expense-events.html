@@ -352,7 +352,8 @@
 
 <ul>
   <li>Subscribers only interested in the report submitted event should filter by <code class="language-plaintext highlighter-rouge">previousApprovalStatus</code> attribute in the payload and should specifically filter for values <code class="language-plaintext highlighter-rouge">A_NOTF</code> and <code class="language-plaintext highlighter-rouge">A_RESU</code>.</li>
-  <li>Subscribers interested in the report recalled or sent back events should filter by the <code class="language-plaintext highlighter-rouge">stepCode</code> attribute in the payload with a value of <code class="language-plaintext highlighter-rouge">SENDBACK</code>.</li>
+  <li>Subscribers interested in the report sent back events should filter by the <code class="language-plaintext highlighter-rouge">stepCode</code> attribute in the payload with a value of <code class="language-plaintext highlighter-rouge">SENDBACK</code>.</li>
+  <li>Subscribers interested in the report recalled events should filter by the <code class="language-plaintext highlighter-rouge">stepCode</code> attribute in the payload with a value of <code class="language-plaintext highlighter-rouge">RECALL</code>.</li>
   <li>Subscribers interested in the reports that are pending processing in the legacy external validation step events should filter by the <code class="language-plaintext highlighter-rouge">stepCode</code> attribute in the payload with a value of <code class="language-plaintext highlighter-rouge">EXTVAL</code>.</li>
   <li>Subscribers interested in the paid report events should filter by the <code class="language-plaintext highlighter-rouge">currentPaymentStatus</code> attribute in the payload with a value of <code class="language-plaintext highlighter-rouge">P_PAID</code>.</li>
   <li>Subscribers interested in all other events can filter by the <code class="language-plaintext highlighter-rouge">stepCode</code> attribute with the values entered by the administrator in the workflows Admin UI screens.</li>
@@ -360,7 +361,7 @@
 
 <h2 id="schema"><a name="schema"></a>Schema</h2>
 
-<h3 id="statuschangd-event-payload-schema"><a name="status-changed-event-payload-schema"></a>statusChangd Event Payload Schema</h3>
+<h3 id="statuschanged-event-payload-schema"><a name="status-changed-event-payload-schema"></a>statusChanged Event Payload Schema</h3>
 
 <table>
   <thead>
@@ -385,22 +386,22 @@
       <td><strong>Required</strong> Unique identifier used for logging/traceability.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">statusChanged</code> - Identifies the event type on the topic.</td>
-    </tr>
-    <tr>
       <td><code class="language-plaintext highlighter-rouge">topic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
       <td><strong>Required</strong> Identifies the topic that the event belongs to <code class="language-plaintext highlighter-rouge">public.concur.expense.report</code>.</td>
     </tr>
     <tr>
+      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">statusChanged</code> - Identifies the event type on the topic.</td>
+    </tr>
+    <tr>
       <td><code class="language-plaintext highlighter-rouge">subtopic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td><strong>Required</strong> Subtopic is assigned the company ID, which is also populated as <code class="language-plaintext highlighter-rouge">companyId</code>.</td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
+      <td><strong>Required</strong> Unique identifier of the expense report whose status has changed. Maximum characters: 20, which is also populated as <code class="language-plaintext highlighter-rouge">reportId</code>.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
@@ -410,19 +411,19 @@
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">Facts</code></td>
-      <td><code class="language-plaintext highlighter-rouge">map</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Map</code></td>
       <td><a href="#status-changed-event-payload-facts-schema">Facts Schema</a></td>
       <td><strong>Required</strong> Key-value pairs providing the content of the event.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">transactionTimestamp</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><a href="#definition-dateTime"><code class="language-plaintext highlighter-rouge">dateTime</code></a></td>
       <td>A key linking to a definition for the format.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">arrayOfThings</code></td>
-      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Array</code></td>
       <td><a href="#schema-two"><code class="language-plaintext highlighter-rouge">Schema Two</code></a></td>
       <td>A key linking to another schema for the format.</td>
     </tr>
@@ -462,44 +463,86 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">alphanumeric</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
       <td><strong>Required</strong> Unique identifier of the expense report whose status has changed. Maximum characters: 20</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">previousApprovalStatus</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
       <td><strong>Required</strong> Unique identifier of the previous approval status of the expense report whose status has changed. Supported values: <br />Not Submitted - <code class="language-plaintext highlighter-rouge">A_NOTF</code>, <br />Sent Back to Employee - <code class="language-plaintext highlighter-rouge">A_RESU</code>, <br />Recalled by Employee - <code class="language-plaintext highlighter-rouge">A_RESU</code>, <br />Submitted &amp; Pending Approval - <code class="language-plaintext highlighter-rouge">A_PEND</code>, <br />Approved - <code class="language-plaintext highlighter-rouge">A_APPR</code>, <br />Pending External Validation - <code class="language-plaintext highlighter-rouge">A_EXTV</code>, <br />Pending Budget Approval - <code class="language-plaintext highlighter-rouge">A_PBDG</code>, <br />Pending Cost Object Approval - <code class="language-plaintext highlighter-rouge">A_PECO</code>, <br />Approved &amp; In Accounting Review - <code class="language-plaintext highlighter-rouge">A_ACCO</code></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">currentApprovalStatus</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
       <td><strong>Required</strong> Unique identifier of the current approval status of the expense report whose status has changed. Supported values: <br />Sent Back to Employee - <code class="language-plaintext highlighter-rouge">A_RESU</code>, <br />Recalled by Employee: <code class="language-plaintext highlighter-rouge">A_RESU</code>, <br />Submitted &amp; Pending Approval: <code class="language-plaintext highlighter-rouge">A_PEND</code>, <br />Approved: <code class="language-plaintext highlighter-rouge">A_APPR</code>, <br />Pending External Validation: <code class="language-plaintext highlighter-rouge">A_EXTV</code>, <br />Pending Budget Approval: <code class="language-plaintext highlighter-rouge">A_PBDG</code>, <br />Pending Cost Object Approval: <code class="language-plaintext highlighter-rouge">A_PECO</code>, <br />Approved &amp; In Accounting Review: <code class="language-plaintext highlighter-rouge">A_ACCO</code></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">previousPaymentStatus</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
       <td><strong>Required</strong> Unique identifier of the previous payment status of the expense report whose status has changed. Supported values: <br />Not Paid - <code class="language-plaintext highlighter-rouge">P_NOTP</code>, <br />Processing Payment - <code class="language-plaintext highlighter-rouge">P_PROC</code>, <br />Payment Confirmed - <code class="language-plaintext highlighter-rouge">P_PAYC</code> (may depend on configuration)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">currentPaymentStatus</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
       <td><strong>Required</strong> Unique identifier of the current payment status of the expense report whose status has changed. Supported values: <br />Not Paid - <code class="language-plaintext highlighter-rouge">P_NOTP</code>, <br />Processing Payment -<code class="language-plaintext highlighter-rouge">P_PROC</code>, <br />Paid - <code class="language-plaintext highlighter-rouge">P_PAID</code>, <br />Payment Confirmed - <code class="language-plaintext highlighter-rouge">P_PAYC</code>(may depend on configuration)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">stepCode</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
-      <td>Code provided by the admin that the client can use to differentiate between the steps. <br />Report Submit  - If the target step (the next workflow step that the report stops at) is not configured for notifications, then step code will be <code class="language-plaintext highlighter-rouge">NULL</code>. <br />Report Send Back or Report Recall - <code class="language-plaintext highlighter-rouge">SENDBACK</code> <br />Legacy External validation post submit - <code class="language-plaintext highlighter-rouge">EXTVAL</code> <br />Legacy External validation pre-extract - <code class="language-plaintext highlighter-rouge">EXTVAL</code> <br />Report Paid  - If the target step (the next workflow step that the report stops at) is not configured for notifications, then step code will be <code class="language-plaintext highlighter-rouge">PAIDREPORT</code>. <br />All other cases code step code as configured by admin in workflow configuration will be populated.</td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
+      <td>Code provided by the admin that the client can use to differentiate between the steps. <br />Report Submit  - If the target step (the next workflow step that the report stops at) is not configured for notifications, then step code will be <code class="language-plaintext highlighter-rouge">NULL</code>. <br />Report Send Back - <code class="language-plaintext highlighter-rouge">SENDBACK</code> <br />Report Recall - <code class="language-plaintext highlighter-rouge">RECALL</code> <br />Legacy External validation post submit - <code class="language-plaintext highlighter-rouge">EXTVAL</code> <br />Legacy External validation pre-extract - <code class="language-plaintext highlighter-rouge">EXTVAL</code> <br />Report Paid  - If the target step (the next workflow step that the report stops at) is not configured for notifications, then step code will be <code class="language-plaintext highlighter-rouge">PAIDREPORT</code>. <br />All other cases code step code as configured by admin in workflow configuration will be populated.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">href</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>RFC 3986</td>
       <td>URI of the report resource that can be called via the Expense v4 API.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
+      <td>RFC 3339</td>
+      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">processId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Unique identifier of the workflow process that this workflow is an instance of.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startingStep</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Object</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Object containing the information of the step(s) the expense report is entering into.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startingStep.roleCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><strong>Required</strong> Approver’s role code for the step which the expense report is entering into.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startingStep.stepInstances</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Array</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> List of step instances which the expense report is entering into.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stepInstances.id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Unique identifier of the workflow process step instance which report is entering into.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stepInstances.assignedUserId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td><strong>Required</strong> Unique identifier of the User assigned to approve the report.</td>
     </tr>
   </tbody>
 </table>
@@ -512,59 +555,96 @@
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"685fa226-b72d-47f9-b9ad-e621de12d094"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"facts"</span><span class="p">:{</span><span class="w">
     </span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_PEND"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"685fa226-b72d-47f9-b9ad-e621de12d094"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"57EE1FDA348046E8A08B"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"stepCode"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"stepCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MANAGER"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-04-07T22:10:57.817Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f2d07d5f-7a6f-44fa-98c7-c4b405bd6ca3"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"previousPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12fc85ee-6f43-4d85-ba0d-94e844849dc1"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"processId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0211A2F15CD6354C8552FB9D7D83B331"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"currentPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_NOTF"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"startingStep"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"roleCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MANAGER"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stepInstances"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CE70C1563F9B63448B6EF338077622CE"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"assignedUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"45afdc31-0593-4e95-ba75-b094e9326b6d"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_RESU"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/08a39ab2-9998-465d-b2f7-588dbe636ce2/context/TRAVELER/reports/57EE1FDA348046E8A08B"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"08a39ab2-9998-465d-b2f7-588dbe636ce2"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"previousPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="w">
+    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/f2d07d5f-7a6f-44fa-98c7-c4b405bd6ca3/context/TRAVELER/reports/CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="err">,</span><span class="w">
 </span><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3eabdcbf-07df-4acd-99de-7f5aef0f673d"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Viswa-test"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-19T00:37:39.550Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0ffa9ce0-f00b-408a-8344-8eaad502b0d7"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_APPR"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0ffa9ce0-f00b-408a-8344-8eaad502b0d7"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1B5A6194DFB047DAB0BD"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"stepCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EXRTREADY"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"currentPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_PROC"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_ACCO"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/22f91cc6-581c-488c-8573-d2c208136d8b/context/TRAVELER/reports/1B5A6194DFB047DAB0BD"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"13fa626b-9563-4013-886c-9fd730545277"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"previousPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3eabdcbf-07df-4acd-99de-7f5aef0f673d"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Viswa-test"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-19T00:37:39.550Z"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_PECO"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"stepCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CO_STEP"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-04-10T15:55:17.962Z"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"45afdc31-0593-4e95-ba75-b094e9326b6d"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"previousPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12fc85ee-6f43-4d85-ba0d-94e844849dc1"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"processId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0211A2F15CD6354C8552FB9D7D83B331"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"currentPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"startingStep"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="nl">"roleCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CO_APPROVER"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"stepInstances"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"6D22160A844E4E4EBF8D0B4CD1CF4E5F"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"assignedUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"42d248f3-cc43-464b-8685-09e584835f25"</span><span class="w">
+</span><span class="p">},</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3DE6845BA15ACC41A7DE3F90D94291AD"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"assignedUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aa024d31-95eb-4270-b9f8-cb6b5f558a7c"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span><span class="p">},</span><span class="w">
+</span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_PEND"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+</span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/f2d07d5f-7a6f-44fa-98c7-c4b405bd6ca3/context/TRAVELER/reports/CB899F7D9F73420A8D8B"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="err">,</span><span class="w">
 </span><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be3a6976-00e7-4b06-9c95-b4f2c3330ea6"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Viswa-test"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-19T01:11:57.169Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0ffa9ce0-f00b-408a-8344-8eaad502b0d7"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_RESU"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0ffa9ce0-f00b-408a-8344-8eaad502b0d7"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1B5A6194DFB047DAB0BD"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"stepCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SENDBACK"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"currentPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_ACCO"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/22f91cc6-581c-488c-8573-d2c208136d8b/context/TRAVELER/reports/1B5A6194DFB047DAB0BD"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22f91cc6-581c-488c-8573-d2c208136d8b"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"previousPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be3a6976-00e7-4b06-9c95-b4f2c3330ea6"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Viswa-test"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-19T01:11:57.169Z"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_ACCO"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"stepCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACCTCLERK"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-04-10T21:54:16.661Z"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4cecc318-ba1e-4a7d-871e-7cba3cc8e433"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"previousPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12fc85ee-6f43-4d85-ba0d-94e844849dc1"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"processId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0211A2F15CD6354C8552FB9D7D83B331"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"currentPaymentStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P_NOTP"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"startingStep"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span><span class="nl">"roleCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACCT_CLERK"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"stepInstances"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C855E3CC889C0C4EA011A1A7F0984135"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"assignedUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span><span class="p">},</span><span class="w">
+</span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_PEND"</span><span class="p">,</span><span class="w">
+</span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+</span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/f2d07d5f-7a6f-44fa-98c7-c4b405bd6ca3/context/TRAVELER/reports/CB899F7D9F73420A8D8B"</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
