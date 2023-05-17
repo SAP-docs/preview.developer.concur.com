@@ -1126,7 +1126,7 @@
   <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
 </div>
 
-<p>The Workflows v4 API is used to Approve or Send Back an expense report that is in the workflow. This API is used only for normal approval steps and not for Cost Object Approval steps.</p>
+<p>The Workflows v4 APIs are used to Approve or Send Back or Recall an expense report that is in the workflow. These APIs are used only for normal approval steps and not for Cost Object Approval steps.</p>
 
 <h2 id="prior-versions-">Prior Versions <a name="Prior-versions"></a></h2>
 
@@ -1136,7 +1136,7 @@
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
-<p>This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+<p>These APIs are only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the APIs.</p>
 
 <h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
@@ -1159,67 +1159,32 @@
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">expense.report.workflowstatus.write</code></td>
-      <td>Approve or Send Back the Report in the workflow</td>
-      <td>PATCH</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>Optional Scope:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Endpoint</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">expense.report.read</code></td>
-      <td>Get information about expense reports.</td>
-      <td>GET</td>
-    </tr>
-    <tr>
       <td><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code></td>
-      <td>Read and write expense report headers.</td>
+      <td>Approve or Send Back or Recall the Report in the workflow</td>
       <td>PATCH</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">spend.listitem.read</code></td>
-      <td>Read only access to spend list items <code class="language-plaintext highlighter-rouge">listItemId</code>.</td>
-      <td>GET</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">spend.list.read</code></td>
-      <td>Read only access to spend list and category details.</td>
-      <td>GET</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">user.read</code></td>
-      <td>Get User Information, necessary for <code class="language-plaintext highlighter-rouge">userID</code>.</td>
-      <td>GET</td>
     </tr>
   </tbody>
 </table>
 
 <h2 id="dependencies-">Dependencies <a name="dependencies"></a></h2>
 
-<p>SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.</p>
+<p>SAP Concur clients must purchase Concur Expense in order to use this API. These APIs requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.</p>
 
 <h2 id="access-token-usage-">Access Token Usage <a name="access-token-usage"></a></h2>
 
-<p>This API supports both company level and user level access tokens.</p>
+<p>Approve and Send Back short URL (i.e. with no userId and contextType) APIs supports company level access token. Approve, Send Back and Recall long URL (i.e. with userId and contextType) APIs supports user level access token.</p>
 
-<h2 id="approve-or-send-back-a-report-">Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a></h2>
+<h2 id="approve-or-send-back-or-recall-a-report-">Approve or Send Back or Recall a Report <a name="approve-or-send-back-or-recall-a-report"></a></h2>
 
-<p>The Approve function advances the specified report to the next step if it is in a system step. The Send Back function sends back the specified report to report owner.</p>
+<ul>
+  <li>The Approve function advances the specified report to the next step (use short URL Approve API if it is in a system step).</li>
+  <li>The Send Back function sends back the specified report to report owner.</li>
+  <li>The Recall function moves the specified report to an unsubmitted state.</li>
+</ul>
 
 <h3 id="scopes">Scopes</h3>
 
-<p><code class="language-plaintext highlighter-rouge">expense.report.workflowstatus.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+<p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <h3 id="request">Request</h3>
 
@@ -1227,6 +1192,9 @@
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/approve
 https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/sendBack
+https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/approve
+https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/sendBack
+https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/recall
 </code></pre></div></div>
 
 <h4 id="parameters">Parameters</h4>
@@ -1242,10 +1210,22 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
-      <td>string</td>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong> The unique identifier of the report that is being approved or sent back.</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userId</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value for Recall API: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">PROXY</code>. Supported value for Approve and Send Back API: <code class="language-plaintext highlighter-rouge">MANAGER</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report that is being approved or sent back or recalled.</td>
     </tr>
   </tbody>
 </table>
@@ -1260,7 +1240,6 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
   <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
-  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
 </ul>
 
 <h4 id="rest-design-specification">REST Design Specification</h4>
@@ -1274,7 +1253,7 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
 <h4 id="payload">Payload</h4>
 
 <ul>
-  <li><a href="#patch-approve-sendback-report-request-schema">Approve/Sendback Report Request</a></li>
+  <li><a href="#patch-approve-sendback-recall-report-request-schema">Approve/Sendback/Recall Report Request</a></li>
 </ul>
 
 <h3 id="response">Response</h3>
@@ -1290,32 +1269,33 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
 </ul>
 
-<h4 id="headers-1">Headers</h4>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
-</ul>
-
 <h4 id="payload-1">Payload</h4>
 
 <ul>
-  <li><a href="#patch-approve-sendback-report-response-schema">Approve/Reject Report Response</a></li>
+  <li><a href="#patch-approve-sendback-recall-report-response-schema">Approve/SendBack/Recall Report Response</a></li>
 </ul>
 
 <h3 id="example">Example</h3>
 
-<h4 id="request-1"><a name="patch-approve-sendback-report-request-schema"></a>Request</h4>
+<h4 id="sample-requests-short-and-long-url"><a name="patch-approve-sendback-recall-report-request-schema"></a>Sample Requests (short and long URL)</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/Approve'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Viswa test'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/approve'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> 
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> 
 <span class="nt">--data-raw</span> <span class="s1">'{
-    "reportSource":"OTHER"
+"comment":"Approved"
+}'</span>
+
+curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/approve'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> 
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+<span class="nt">--data-raw</span> <span class="s1">'{
+"comment":"Approved",
+"expenseRejectedComment":"Expense rejected"
 }'</span>
 </code></pre></div></div>
 
-<h4 id="response-1"><a name="patch-approve-sendback-report-response-schema"></a>Response</h4>
+<h4 id="response-1"><a name="patch-approve-sendback-recall-report-response-schema"></a>Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
 </code></pre></div></div>
@@ -1340,24 +1320,6 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
       <td>-</td>
       <td><strong>Required</strong> Comments for sending back the report.</td>
     </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">expectedWorkflowStepInstanceId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>The ID of the workflow step in which this report is expected to be in. This parameter can be used to verify that the report is still in the expected workflow step.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">reasonCodeId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>The unique identifier of the Reason Code only by processor.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">reportSource</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>The source of the report. Supported values: <code class="language-plaintext highlighter-rouge">EA</code> - Expense Assistant, <code class="language-plaintext highlighter-rouge">MOB</code> - Mobile, <code class="language-plaintext highlighter-rouge">OTHER</code> - Unknown, <code class="language-plaintext highlighter-rouge">SE</code> - Smart Expense, <code class="language-plaintext highlighter-rouge">TR</code> - Travel Request, <code class="language-plaintext highlighter-rouge">UI</code> - Web UI</td>
-    </tr>
   </tbody>
 </table>
 
@@ -1380,31 +1342,18 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
       <td>Approver comments.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">expectedWorkflowStepInstanceId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>The ID of the workflow step in which this report is expected to be in. This parameter can be used to verify that the report is still in the expected workflow step.</td>
-    </tr>
-    <tr>
       <td><code class="language-plaintext highlighter-rouge">expenseRejectedComment</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td>This comment identifies why some of the expense is rejected on this report.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">reportSource</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>The source of the report. Supported values: <code class="language-plaintext highlighter-rouge">EA</code> - Expense Assistant, <code class="language-plaintext highlighter-rouge">MOB</code> - Mobile, <code class="language-plaintext highlighter-rouge">OTHER</code> - Unknown, <code class="language-plaintext highlighter-rouge">SE</code> - Smart Expense, <code class="language-plaintext highlighter-rouge">TR</code> - Travel Request, <code class="language-plaintext highlighter-rouge">UI</code> - Web UI</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">statusId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Status that will be assigned to the report by this workflow transition.</td>
+      <td>This comment identifies why some of the expense is rejected on this report. <strong>Required</strong> if the report has rejected expense(s)</td>
     </tr>
   </tbody>
 </table>
+
+<h3 id="reportrecallrequest"><a name="report-recall-request-schema"></a>ReportRecallRequest</h3>
+
+<p>|Name|Type|Format|Description|
+|—|—|—|—|</p>
 
 <h3 id="error"><a name="schema-error"></a>Error</h3>
 
