@@ -75,7 +75,7 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `spend.list.write` <a name="spend-list-write"></a> |Read and write access to spend lists|[List v4](/api-reference/common/lists/v4.list.html)
 `spend.listitem.delete` <a name="spend-listitem-delete"></a> |Delete capabilities for spend list items|[List Item v4](/api-reference/common/list-item/v4.list-item.html)
 `spend.listitem.read` <a name="spend-listitem-read"></a> |Read only access to spend list items listItemId|[Reports v4](/api-reference/expense/expense-report/v4.reports.html), [Allocations v4](/api-reference/expense/expense-report/v4.allocations.html), [Expenses v4](/api-reference/expense/expense-report/v4.expenses.html), [List Item v4](/api-reference/common/list-item/v4.list-item.html)
-`spend.listitem.write` <a name="spend-listitem-write"></a> |Read and write access to spend list items|[List Item v4](/api-reference/common/list-item/v4.list-item.html)
+`spend.listitem.write` <a name="spend-listitem-write"></a> |Read and write access to spend list items|[List Item Bulk v4](/api-reference/common/list-item/v4.list-item-bulk.html), [List Item v4](/api-reference/common/list-item/v4.list-item.html)
 `spend.user.general.read` <a name="spend-user-general-read"></a> |View spend user information|[User Provisioning Service v4](/api-reference/user-provisioning/v4.user-provisioning.html)
 `spend.user.general.writeonly` <a name="spend-user-general-writeonly"></a> |Change spend user information|[User Provisioning Service](/api-reference/user-provisioning/v4.user-provisioning.html)
 `SUPSVC` <a name="supsvc"></a> |Get supplier data|[Suppliers v3](/api-reference/common/suppliers/suppliers-resource.html)
