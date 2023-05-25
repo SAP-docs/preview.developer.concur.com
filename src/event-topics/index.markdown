@@ -52,7 +52,7 @@ PUT /events/v4/subscriptions/webhook
   "filter": ".*",
   "topic": "public.test",
   "webHookConfig": {
-    "endpoint": "https://www.concuress.com/sub/my-valid-endpoint"
+    "endpoint": "https://my-valid-endpoint"
   }
 }
 ```
@@ -90,7 +90,7 @@ GET /events/v4/subscriptions/my-unique-subscription-id
         "topic": "public.test",
         "filter": ".*",
         "webHookConfig": {
-            "endpoint": "https://www.concuress.com/sub/my-valid-endpoint"
+            "endpoint": "https://my-valid-endpoint"
         },
         "applicationId": "dabd27f0-23e7-415d-b5e5-19a7dbe4fb4d",
         "scope": "",
@@ -128,7 +128,7 @@ GET /events/v4/subscriptions
         "topic": "public.test",
         "filter": ".*",
         "webHookConfig": {
-            "endpoint": "https://www.concuress.com/sub/my-second-valid-endpoint"
+            "endpoint": "https://my-second-valid-endpoint"
         },
         "applicationId": "dabd27f0-23e7-415d-b5e5-19a7dbe4fb4d",
         "scope": "",
@@ -140,7 +140,7 @@ GET /events/v4/subscriptions
         "topic": "public.test",
         "filter": ".*",
         "webHookConfig": {
-            "endpoint": "https://www.concuress.com/sub/my-valid-endpoint"
+            "endpoint": "https://my-valid-endpoint"
         },
         "applicationId": "dabd27f0-23e7-415d-b5e5-19a7dbe4fb4d",
         "scope": "",
@@ -183,7 +183,7 @@ Connection: keep-alive
   "id": "my-unique-subscription-example",
   "filter": ".*",
   "topic": "public.test",
-  "webHookConfig": {"endpoint": "https://www.concuress.com/sub/my-unique-endpoint" }
+  "webHookConfig": {"endpoint": "https://my-unique-endpoint" }
 }
 ```
 
@@ -205,7 +205,7 @@ curl -X PUT \
   "filter": ".*",
   "topic": "public.test",
   "webHookConfig": {
-    "endpoint": "https://www.concuress.com/sub/my-unique-endpoint"
+    "endpoint": "https://my-unique-endpoint"
   }
 }'
 ```
