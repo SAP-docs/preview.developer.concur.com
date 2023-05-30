@@ -1,0 +1,211 @@
+title: Travel Request v4 - Request Cost Objects Resources
+layout: reference
+---
+# Travel Request v4 - Request Cost Objects Resources
+
+## Get the list of Cost Objects of an existing Request <a name="get-cost-objects-request-resource"></a>
+
+### Scopes
+
+`travelrequest.write` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+### HTTP Request
+
+##### URI Template
+
+```
+GET {datacenterURI}/travelrequest/v4/requests/{requestUuid}/costobjects
+```
+
+#### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`requestUuid`|`string`|-|The unique identifier of the Request.
+
+
+#### Headers
+
+`concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique Identifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
+#### Payload
+
+None.
+
+### HTTP Response
+
+#### HTTP Status Codes
+
+To learn more about response HTTP status codes for this API see [Travel Request v4 - HTTP Status Codes](./v4.response-codes.html).
+
+#### Payload
+
+[List of Request Cost Objects](#schema-request-costobjects)
+
+### Example
+
+#### HTTP Request
+
+```shell
+GET https://us2.api.concursolutions.com/travelrequest/v4/requests/224F3CDCC2Q5244A37C72FA5770C6F2/costobjects
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+```
+
+#### HTTP Response
+
+```shell
+200 OK
+```
+
+```json
+[
+  {
+    "approvedAmount": {
+      "value": 150,
+      "currency": "USD"
+    },
+    "postedAmount": {
+      "value": 150,
+      "currency": "USD"
+    },
+    "approver": {
+      "id": "8a965fe6-5553-48c7-8243-cbf07674ea32",
+      "firstName": "CO Approver1",
+      "lastName": "Never2"
+    },
+    "isApprovableAsDelegate": false,
+    "isApprovableAsUser": true,
+    "isOwnedByCaller": false,
+    "isFullyApproved": false,
+    "name": "Cost Object 1",
+    "expenses": [
+      {
+        "id": "9F1C6361F77EA24B8FE27B951292F87B",
+        "approvedAmount": {
+          "value": 100,
+          "currency": "USD"
+        },
+        "postedAmount": {
+          "value": 100,
+          "currency": "USD"
+        },
+        "percentage": 50
+      },
+      {
+        "id": "2367714EAEFD6D45996C3D8BCA15BE96",
+        "approvedAmount": {
+          "value": 200,
+          "currency": "USD"
+        },
+        "postedAmount": {
+          "value": 200,
+          "currency": "USD"
+        },
+        "percentage": 50
+      }
+    ]
+  },
+  {
+    "approvedAmount": {
+      "value": 650,
+      "currency": "USD"
+    },
+    "postedAmount": {
+      "value": 650,
+      "currency": "USD"
+    },
+    "approver": {
+      "id": "79eb2feb-453f-49e4-b1fd-676f72e250e3",
+      "firstName": "CO Approver2",
+      "lastName": "Never2"
+    },
+    "isApprovableAsDelegate": true,
+    "isApprovableAsUser": false,
+    "isOwnedByCaller": false,
+    "isFullyApproved": false,
+    "name": "Cost Object 2",
+    "expenses": [
+      {
+        "id": "9F1C6361F77EA24B8FE27B951292F87B",
+        "approvedAmount": {
+          "value": 100,
+          "currency": "USD"
+        },
+        "postedAmount": {
+          "value": 100,
+          "currency": "USD"
+        },
+        "percentage": 50
+      },
+      {
+        "id": "2367714EAEFD6D45996C3D8BCA15BE96",
+        "approvedAmount": {
+          "value": 200,
+          "currency": "USD"
+        },
+        "postedAmount": {
+          "value": 200,
+          "currency": "USD"
+        },
+        "percentage": 50
+      },
+      {
+        "id": "344A09B83FC64E0781B1F6274648A773",
+        "approvedAmount": {
+          "value": 500,
+          "currency": "USD"
+        },
+        "postedAmount": {
+          "value": 500,
+          "currency": "USD"
+        },
+        "percentage": 100
+      }      
+    ]
+  }
+]
+```
+
+## <a name="schema"></a>Schema
+
+### <a name="schema-request-costobjects"></a>List of Request Cost Objects
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`name`|`string`|-|**Required** The name of the cost object.
+|`approvedAmount`|[`Amount`](#schema-amount)|-|**Required** The approved amount of the cost object expense(s), in the transaction currency of the Request.|
+|`postedAmount`|[`Amount`](#schema-amount)|-|**Required** The posted amount of the cost object expense(s), in the transaction currency of the Request.|
+|`approverId``object`|[`Employee`](#schema-employee)|**Required** The cost object approver.|
+|`expenses`|[`CostObjectExpense`](#schema-cost-object-expense)|-|**Required** TA list of expenses associated with the cost object.|
+|`isOwnedByCaller`|`Boolean`|-|**Required** Whether the caller is one of the cost object owners.|
+|`isFullyApproved`|`Boolean`|-|**Required** Whether the cost object flow is fully completed.|
+|`isApprovableAsUser`|`Boolean`|-|**Required** Whether the cost object is pending approval by the calling approver.|
+|`isApprovableAsDelegate`|`Boolean`|-|**Required** Whether the cost object flow is pending approval by the calling delegate.|
+
+### <a name="schema-amount"></a>Amount
+
+Name|Type|Format|Description
+---|---|---|---
+`value`|`number`|-|**Required** The amount in the defined currency.
+`currency`|`string`|[ISO 4217:2015]|**Required** The 3-letter ISO 4217 code for the currency in which the amount is expressed. Max length 3 characters.
+
+### <a name="schema-cost-object-expense"></a>Cost Object Expense
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`approvedAmount`|`Amount`|-|**Required** The approved amount of the expected expense, in the transaction currency of the Request.|
+|`postedAmount`|`Amount`|-|**Required** The approved amount of the expected expense, in the transaction currency of the Request..|
+|`id`|`String`|-|**Required** The unique identifier for the expected expense.|
+
+### <a name="schema-employee"></a>Employee
+
+Name|Type|Format|Description
+---|---|---|---
+`firstName`|`string`|-|The first name of the employee.
+`href`|`string`|[RFC 3986]|Hyperlink to the resource.
+`id`|`string`|[RFC 4122]|Unique identifier of the related object.
+`lastName`|`string`|-|The last name of the employee.
+`middleInitial`|`string`|-|The middle initial of the employee.
+`template`|`string`|-|Hyperlink template to the resource.
