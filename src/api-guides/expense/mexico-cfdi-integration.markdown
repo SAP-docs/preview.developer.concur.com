@@ -33,7 +33,7 @@ SAP Concur Certification Project Manager will prepare the development environmen
 
 ### Development App
 
-A development app will be created for you by your assigned Certification Project Manager. They will send you a deep link (url) to the development app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
+A development app will be created for you by your assigned Certification Project Manager. They will send you a deep link (URL) to the development app along with the app `client_id` and `client_secret`. These are provided for development and testing purposes only.
 
 ## SAP Concur Expense Setup Guide
 
@@ -43,11 +43,11 @@ A development app will be created for you by your assigned Certification Project
 
 * Once you complete the development app certification walkthrough, you will be provided a production app `client_id` and `client_secret`.
 * You need to send the production app’s connect URL (redirect URL) to your Certification Project Manager before starting the development and testing of the production app.
-* The certification project manager will provide you the deep link (URL) to the production app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your production app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.
+* The Certification Project Manager will provide you the deep link (URL) to the production app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your production app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in allowed regions/countries will have the access.
 
 ### App Center Flow - Connecting from SAP Concur App Center
 
-A [company level authentication using password grant](./api-reference/authentication/company-auth.html) allows a company administrator to establish a connection from App Center. The user administrator needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you would be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. 
+A [company level authentication using password grant](./api-reference/authentication/company-auth.html) allows a company administrator to establish a connection from App Center. The user administrator needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you will be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. 
 
 **Quick Connect** describes the process customers use to connect their SAP Concur site with an App Center Partner’s Enterprise application. See the [Quick Connect](./manage-apps/go-market-docs/guide-to-enabling-app-center-solutions-basic.html) scope document for details to guide you through the development of this required piece of your certified application.
 
