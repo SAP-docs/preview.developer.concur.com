@@ -7,7 +7,7 @@ layout: reference
 
 ## Getting Started
 
-**New App Center Partners**: Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement, review the information on the [Build App Center Solutions](./solutions/app-center.html) page.
+**New App Center Partners**: Your company must have entered into a commercial agreement with us. If you have not yet entered into an agreement, review the information on the [Build App Center Solutions](/solutions/app-center.html) page.
 
 **Existing App Center Partners**: The SAP Concur Platform team will need to configure your existing sandbox, among other things to enable access. You can make that App expansion request by contacting your Alliance Manager.
 
@@ -17,10 +17,10 @@ Concur Expense Professional Edition
 
 ### Scope Usage
 
-* [events.topic.read](./api-reference/ess/v4.event-subscription.html)
-* [receipts.read](./api-reference/ess/v4.event-subscription.html)
-* [receipts.write](./api-reference/ess/v4.event-subscription.html)
-* [document.tax.compliance.read](./event-topics/expense/v4.document-compliance-events.html)
+* [events.topic.read](/api-reference/ess/v4.event-subscription.html)
+* [receipts.read](/api-reference/ess/v4.event-subscription.html)
+* [receipts.write](/api-reference/ess/v4.event-subscription.html)
+* [document.tax.compliance.read](/event-topics/expense/v4.document-compliance-events.html)
 
 ## Development Environment
 
@@ -47,9 +47,9 @@ A development app will be created for you by your assigned Certification Project
 
 ### App Center Flow - Connecting from SAP Concur App Center
 
-A [company level authentication using password grant](./api-reference/authentication/company-auth.html) allows a company administrator to establish a connection from App Center. The user administrator needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you will be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. 
+A [company level authentication using password grant](/api-reference/authentication/company-auth.html) allows a company administrator to establish a connection from App Center. The user administrator needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you will be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. 
 
-**Quick Connect** describes the process customers use to connect their SAP Concur site with an App Center Partner’s Enterprise application. See the [Quick Connect](./manage-apps/go-market-docs/guide-to-enabling-app-center-solutions-basic.html) scope document for details to guide you through the development of this required piece of your certified application.
+**Quick Connect** describes the process customers use to connect their SAP Concur site with an App Center Partner’s Enterprise application. See the [Quick Connect](/manage-apps/go-market-docs/guide-to-enabling-app-center-solutions-basic.html) scope document for details to guide you through the development of this required piece of your certified application.
 
 ## Integration Flow
 
@@ -57,8 +57,8 @@ Prior to connecting customers with the integration, you must create a subscripti
 
 For more information:
 
-* [Event Subscription Service](./api-reference/ess/v4.event-subscription.html)
-* [Document Compliance Gateway V4](./api-reference/document-compliance-gateway/V4.document-compliance-gateway.html)
+* [Event Subscription Service](/api-reference/ess/v4.event-subscription.html)
+* [Document Compliance Gateway V4](/api-reference/document-compliance-gateway/V4.document-compliance-gateway.html)
 
 ### Prerequisite
 
@@ -95,7 +95,7 @@ client_id={your-app-client-id}
  
 **Step 2**: GET a list of event topics.
 
-[Verify that you have sufficient access to the topic](./event-topics/index.html#browse-available-topics).
+[Verify that you have sufficient access to the topic](/event-topics/index.html#browse-available-topics).
 
 **Request**
 
