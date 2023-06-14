@@ -1655,6 +1655,156 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
 </code></pre></div></div>
 
+<h2 id="get-reports-to-approve">Get Reports To Approve</h2>
+
+<p>This endpoint retrieves all reports that a user can approve of as either an approver or delegate for an approver.</p>
+
+<h3 id="scopes-3">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-template-2">URI Template</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userId<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reportsToApprove
+</code></pre></div></div>
+
+<h4 id="parameters-3">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the Concur user, which determines the form fields they can view/modify.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sort</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The name of the report field on which to sort.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">order</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The order to sort the field by.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">includeDelegateApprovals</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td>-</td>
+      <td>Boolean field indicating whether or not include reports you could approve as a delegate.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-6">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">Concur-CorrelationId</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="request-6">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/context/MANAGER/reportsToApprove?sort<span class="o">=</span>reportDate&amp;order<span class="o">=</span>desc&amp;includeDelegateApprovals<span class="o">=</span><span class="nb">true</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: abcd-efgh-xyzw'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="response-6">Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-05-09"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"submitDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-05-09"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"approver"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"employeeUuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3fa85f64-5717-4562-b3fc-2c963f66afa6"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"employee"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"employeeId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"employeeUuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3fa85f64-5717-4562-b3fc-2c963f66afa6"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"amountDueEmployee"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"claimedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"totalApprovedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"hasExceptions"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="exception-response">Exception Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-05-09T15:14:35.296Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"httpStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"validationErrors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"customResponseData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"additionalProp1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"additionalProp2"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"additionalProp3"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
 <h2 id="schema-">Schema <a name="schema"></a></h2>
 
 <h3 id="reportdetails"><a name="report-details-schema"></a>ReportDetails</h3>
