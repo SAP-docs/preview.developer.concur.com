@@ -7,7 +7,7 @@ layout: reference
 
 {% include prerelease.html %}
 
-The Workflows v4 API is used to Approve or Send Back an expense report that is in the workflow. This API is used only for normal approval steps and not for Cost Object Approval steps.
+The Workflows v4 APIs are used to Approve or Send Back or Recall an expense report that is in the workflow. These APIs are used only for normal approval steps and not for Cost Object Approval steps.
 
 ## Prior Versions <a name="Prior-versions"></a>
 
@@ -15,7 +15,7 @@ The Workflows v4 API is used to Approve or Send Back an expense report that is i
 
 ## <a name="limitations"></a>Limitations
 
-This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+These APIs are only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the APIs.
 
 ## <a name="products-editions"></a>Products and Editions
 
@@ -26,35 +26,27 @@ This API is only available to partners who have been granted access by SAP Concu
 
 Required Scope:
 
-| Name|Description|Endpoint|
-| ---|---|---|
-|`expense.report.workflowstatus.write`|Approve or Send Back the Report in the workflow|PATCH|
-
-Optional Scope:
-
-|Name|Description|Endpoint|
-|---|---|---|
-|`expense.report.read`| Get information about expense reports.|GET|
-|`expense.report.readwrite`|Read and write expense report headers.|PATCH|
-|`spend.listitem.read`|Read only access to spend list items `listItemId`.|GET|
-|`spend.list.read`|Read only access to spend list and category details.|GET|
-|`user.read`|Get User Information, necessary for `userID`.|GET|
+| Name| Description                                               |Endpoint|
+| ---|-----------------------------------------------------------|---|
+|`expense.report.readwrite`| Approve or Send Back or Recall the Report in the workflow |PATCH|
 
 ## Dependencies <a name="dependencies"></a>
 
-SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
+SAP Concur clients must purchase Concur Expense in order to use this API. These APIs requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
 
 ## Access Token Usage <a name="access-token-usage"></a>
 
-This API supports both company level and user level access tokens.
+Approve and Send Back short URL (i.e. with no userId and contextType) APIs supports company level access token. Approve, Send Back and Recall long URL (i.e. with userId and contextType) APIs supports user level access token.
 
-## Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a>
+## Approve or Send Back or Recall a Report <a name="approve-or-send-back-or-recall-a-report"></a>
 
-The Approve function advances the specified report to the next step if it is in a system step. The Send Back function sends back the specified report to report owner.
+* The Approve function advances the specified report to the next step (use short URL Approve API if it is in a system step). 
+* The Send Back function sends back the specified report to report owner. 
+* The Recall function moves the specified report to an unsubmitted state.
 
 ### Scopes
 
-`expense.report.workflowstatus.write` - Refer to [Scope Usage](#scope-usage) for full details.
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
@@ -63,13 +55,18 @@ The Approve function advances the specified report to the next step if it is in 
 ```shell
 https://{datacenterURI}/expensereports/v4/reports/{reportId}/approve
 https://{datacenterURI}/expensereports/v4/reports/{reportId}/sendBack
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/approve
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/sendBack
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/recall
 ```
 
 #### Parameters
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`reportId`|string|-|**Required** The unique identifier of the report that is being approved or sent back.|
+| Name          |Type|Format| Description                                                                                                                                                                                                                |
+|---------------|---|---|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userId`      |`string`|-| **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.                                                                        |
+| `contextType` |`string`|-| **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value for Recall API: `TRAVELER`, `PROXY`. Supported value for Approve and Send Back API: `MANAGER` |
+| `reportId`    |`string`|-| **Required** The unique identifier of the report that is being approved or sent back or recalled.                                                                                                                          |
 
 #### Headers
 
@@ -80,7 +77,6 @@ https://{datacenterURI}/expensereports/v4/reports/{reportId}/sendBack
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 #### REST Design Specification
 
@@ -90,7 +86,7 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 
 #### Payload
 
-* [Approve/Sendback Report Request](#patch-approve-sendback-report-request-schema)
+* [Approve/Sendback/Recall Report Request](#patch-approve-sendback-recall-report-request-schema)
 
 ### Response
 
@@ -103,29 +99,32 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
 #### Payload
 
-* [Approve/Reject Report Response](#patch-approve-sendback-report-response-schema)
+* [Approve/SendBack/Recall Report Response](#patch-approve-sendback-recall-report-response-schema)
 
 ### Example
 
-#### <a name="patch-approve-sendback-report-request-schema"></a>Request
+#### <a name="patch-approve-sendback-recall-report-request-schema"></a>Sample Requests (short and long URL)
 
 ```shell
-curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/Approve' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Viswa test' \
---header 'Content-Type: application/json' \
+curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/approve' \
+--header 'Authorization: Bearer {access_token}' 
+--header 'Content-Type: application/json' 
 --data-raw '{
-    "reportSource":"OTHER"
+"comment":"Approved"
+}'
+
+curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/approve' \
+--header 'Authorization: Bearer {access_token}' 
+--header 'Content-Type: application/json'
+--data-raw '{
+"comment":"Approved",
+"expenseRejectedComment":"Expense rejected"
 }'
 ```
 
-#### <a name="patch-approve-sendback-report-response-schema"></a>Response
+#### <a name="patch-approve-sendback-recall-report-response-schema"></a>Response
 
 ```shell
 204 No Content
@@ -138,19 +137,18 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 |Name|Type|Format|Description|
 |---|---|---|---|
 |`comment`|`string`|-|**Required** Comments for sending back the report.|
-|`expectedWorkflowStepInstanceId`|`string`|-|The ID of the workflow step in which this report is expected to be in. This parameter can be used to verify that the report is still in the expected workflow step.|
-|`reasonCodeId`|`string`|-|The unique identifier of the Reason Code only by processor.|
-|`reportSource`|`string`|-|The source of the report. Supported values: `EA` - Expense Assistant, `MOB` - Mobile, `OTHER` - Unknown, `SE` - Smart Expense, `TR` - Travel Request, `UI` - Web UI|
 
 ### <a name="report-approve-request-schema"></a>ReportApproveRequest
 
+|Name|Type|Format| Description                                                                                                                    |
+|---|---|---|--------------------------------------------------------------------------------------------------------------------------------|
+|`comment`|`string`|-| Approver comments.                                                                                                             |
+|`expenseRejectedComment`|`string`|-| This comment identifies why some of the expense is rejected on this report. **Required** if the report has rejected expense(s) |
+
+### <a name="report-recall-request-schema"></a>ReportRecallRequest
+
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`comment`|`string`|-|Approver comments.|
-|`expectedWorkflowStepInstanceId`|`string`|-|The ID of the workflow step in which this report is expected to be in. This parameter can be used to verify that the report is still in the expected workflow step.|
-|`expenseRejectedComment`|`string`|-|This comment identifies why some of the expense is rejected on this report.|
-|`reportSource`|`string`|-|The source of the report. Supported values: `EA` - Expense Assistant, `MOB` - Mobile, `OTHER` - Unknown, `SE` - Smart Expense, `TR` - Travel Request, `UI` - Web UI|
-|`statusId`|`string`|-|Status that will be assigned to the report by this workflow transition.|
 
 ### <a name="schema-error"></a>Error
 

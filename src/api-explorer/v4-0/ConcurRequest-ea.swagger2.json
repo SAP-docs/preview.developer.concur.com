@@ -33,6 +33,10 @@
       "description": "Retrieve cash advance for Concur Request"
     },
     {
+      "name": "Cost Object Resource",
+      "description": "Retrieve cost objects for Concur Request"
+    },
+    {
       "name": "Agency Proposal Resource",
       "description": "Manage the agency proposals for a Request"
     }
@@ -157,6 +161,14 @@
             "required": false,
             "type": "string",
             "format": "date-time"
+          },
+          {
+            "name": "includeDelegateApprovals",
+            "in": "query",
+            "description": "If true the list of requests returned for the view TOAPPROVE will include the requests possible to approve as a delegate approver",
+            "required": false,
+            "type": "boolean",
+            "default": false
           }
         ],
         "responses": {
@@ -1114,6 +1126,13 @@
             ]
           },
           {
+            "description": "The unique identifier of the delegator",
+            "in": "query",
+            "name": "delegatorUserId",
+            "required": false,
+            "type": "string"
+          },
+          {
             "in": "body",
             "name": "comment",
             "description": "Only usable when the workflow action is set to ‘sendback’.",
@@ -1441,6 +1460,126 @@
           },
           "404": {
             "description": "Not found - You tried to get a non-existing request.",
+            "examples": {
+              "application/json": {
+                "errors": [
+                  {
+                    "errorCode": "notFound",
+                    "errorMessage": "Resource not found"
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "examples": {
+              "application/json": {
+                "errors": [
+                  {
+                    "errorCode": "internalServerError",
+                    "errorMessage": "An unexpected error has prevented the operation"
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable",
+            "examples": {
+              "application/json": {
+                "errors": [
+                  {
+                    "errorCode": "entityOffline",
+                    "errorMessage": "Entity is offline, please try again later."
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/requests/{requestUuid}/costobjects": {
+      "get": {
+        "tags": [
+          "Cost Object Resource"
+        ],
+        "summary": "Get the list of cost objects attached to a Request",
+        "description": "Provides the list of Cost Objects attached to a Request",
+        "operationId": "listCostObjectsUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user viewing the cost objects attached to a Request",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CostObject"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad param(s):the request is invalid",
+            "examples": {
+              "application/json": {
+                "errors": [
+                  {
+                    "errorCode": "userNotFound",
+                    "errorMessage": "User is not found."
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "examples": {
+              "application/json": {
+                "errors": [
+                  {
+                    "errorCode": "permissionDenied",
+                    "errorMessage": "Permission denied"
+                  }
+                ]
+              }
+            },
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found - The request id provided does not exist.",
             "examples": {
               "application/json": {
                 "errors": [
@@ -3123,6 +3262,72 @@
           "description": "Comment value"
         }
       }
+    },
+    "CostObject": {
+      "properties": {
+        "approvedAmount": {
+          "description": "The approved amount of the cost object expense(s), in the transaction currency of the Request",
+          "$ref": "#/definitions/Amount"
+        },
+        "approver": {
+          "description": "The current approver of the cost object",
+          "$ref": "#/definitions/Employee"
+        },
+        "expenses": {
+          "description": "Expenses allocated to the Cost Object",
+          "items": {
+            "$ref": "#/definitions/CostObjectExpense"
+          },
+          "type": "array"
+        },
+        "isApprovableAsDelegate": {
+          "description": "Whether the cost object is pending approval by the calling delegate",
+          "type": "boolean"
+        },
+        "isApprovableAsUser": {
+          "description": "Whether the cost object is pending approval by the calling approver",
+          "type": "boolean"
+        },
+        "isFullyApproved": {
+          "description": "Whether the cost object flow is fully completed",
+          "type": "boolean"
+        },
+        "isOwnedByCaller": {
+          "description": "Whether the caller is one of the cost object owners",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "The name of the Cost Object",
+          "type": "string"
+        },
+        "postedAmount": {
+          "description": "The posted amount of the cost object expense(s), in the transaction currency of the Request",
+          "$ref": "#/definitions/Amount"
+        }
+      },
+      "type": "object"
+    },
+    "CostObjectExpense": {
+      "description": "Expense assigned to the Cost Object",
+      "properties": {
+        "approvedAmount": {
+          "description": "The approved amount of the expected expense, in the transaction currency of the Request",
+          "$ref": "#/definitions/Amount"
+        },
+        "id": {
+          "description": "The unique identifier of the Expected Expense",
+          "type": "string"
+        },
+        "percentage": {
+          "description": "Percentage of the Expected Expense assigned to the Cost Object",
+          "type": "number"
+        },
+        "postedAmount": {
+          "description": "The posted amount of the expected expense, in the transaction currency of the Request",
+          "$ref": "#/definitions/Amount"
+        }
+      },
+      "type": "object"
     },
     "CustomField": {
       "type": "object",

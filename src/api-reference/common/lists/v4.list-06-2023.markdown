@@ -1,0 +1,1246 @@
+---
+title: List v4
+layout: reference
+---
+
+# List v4
+
+The Lists APIs allow you to view your configured lists within SAP Concur products and create new lists. The lists are shared between multiple SAP Concur products.
+
+## Prior Versions
+
+List v3 documentation is available [here](https://developer.concur.com/api-reference/common/lists/v3.lists.html#create-response).
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to partners who have been granted access by us. Access to this documentation does not provide access to the API.
+
+## <a name="process-flow"></a>Process Flow
+
+![A process flow diagram of the List API](./v4-list-process-flow.png)
+
+## Products and Editions <a name="products-editions"></a>
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+* Concur Request Professional Edition
+* Concur Request Standard Edition
+
+## Scope Usage <a name="scope-usage"></a>
+
+|Name|Description|Endpoints|
+|---|---|---|
+|`spend.list.read`|Read-only access to spend lists.|GET|
+|`spend.list.write`|Read and write access to spend lists.|GET, POST, PUT|
+|`spend.list.delete`|Delete capabilities for spend lists.|DELETE|
+
+## Dependencies <a name="dependencies"></a>
+Users must be an Expense, Invoice, Shared or Request Configuration Administrator in order to perform POST, PUT, and DELETE actions.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports both company level and user level access tokens.
+
+## Get All Lists <a name="get-all-lists"></a>
+
+Returns all lists for a company.
+
+### Scopes
+
+`spend.list.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET /list/v4/lists
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`| Language code. Default: Company defined default language |
+|`category.type`|`string`| [Filter capabilities](#filtering) for `category` `type` |
+|`isDeleted`|`string`| [Filter capabilities](#filtering) for `isDeleted` |
+|`levelCount`|`string`| [Filter capabilities](#filtering) for `levelCount` |
+|`page`|`integer($int32)`| Page number starting from 1. Default: `1` |
+|`sortBy`|`string`| Field to order by {name, levelcount, listcategory}. Sort by `name` is ordered by `value`. Sort by `levelcount` is ordered by `levelCount`. Sort by `listcategory` is ordered by `category.type`. Default: `name` |
+|`sortDirection`|`string`| Sort direction {asc, desc}. Default: `asc` |
+|`value`|`string`| [Filter capabilities](#filtering) for `value` |
+
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7232 If-None-Match](https://tools.ietf.org/html/rfc7232#section-3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Company does not exist
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - Access Denied
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7232 ETag](https://tools.ietf.org/html/rfc7232#section-2.3)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Paged Resources List Response](#schema-paged-resources-list-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/list/v4/lists?page=1
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer {token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 746696dc-8782-4642-815d-3080640786c7
+content-length: 5632
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 02:45:48 GMT
+etag: "02ebe9fc5c950a031f85c57ac91a0babb"
+cache-control: no-cache, private
+```
+
+```json
+{
+    "links": [],
+    "content": [
+        {
+            "id": "a80a5070-3951-4316-886a-a60ab790f06b",
+            "value": "Airlines",
+            "levelCount": 1,
+            "searchCriteria": "TEXT",
+            "displayFormat": "(CODE) TEXT",
+            "category": {
+                "id": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
+                "type": "Vendor"
+            },
+            "isReadOnly": false,
+            "isDeleted": false,
+            "managedBy": null
+        },
+        {
+            "id": "8652cdf9-c12b-4051-b8d1-80e20840ce9b",
+            "value": "Employee Groups",
+            "levelCount": 1,
+            "searchCriteria": "TEXT",
+            "displayFormat": "(CODE) TEXT",
+            "category": {
+                "id": "d232b1e3-43da-4a2d-adaf-eb948045e8cf",
+                "type": "Configuration"
+            },
+            "isReadOnly": false,
+            "isDeleted": false,
+            "managedBy": "appId:030bb845-765a-4e96-b223-735d72a4526b"
+        }
+    ],
+    "page": {
+        "size": 100,
+        "totalElements": 2,
+        "totalPages": 1,
+        "number": 1
+    }
+}
+```
+
+### Filtering <a name="filtering"></a>
+
+The Get All Lists API supports filtering. The filter may be applied to the `value`, `category.type`, `isDeleted` and `levelCount` parameters.
+
+### <a name="query-syntax"></a>Query Syntax
+
+The general format of a query syntax parameter is as follows:
+
+```shell
+/list/v4/lists?field_name=<op>:<value>
+```
+
+* `field_name` - The name of the field that will be compared against.
+
+* `op` - (Optional) The [comparison operator](#comparison-operators) to use when comparing the specified value to the field. Defaults to `eq`.
+
+* `value` - The value being checked for.
+
+Ensure the url generated is properly `URL encoded`. For example, if you have a `field_name` or `value` with a `&`, please convert it to `%26`.
+
+Examples:
+
+```shell
+/list/v4/lists?value=PSO
+```
+
+```shell
+/list/v4/lists?value=sw:Vendor
+```
+
+```shell
+/list/v4/lists?value=not:Invoice+Group
+```
+
+```shell
+/list/v4/lists?value=sw:Question%3FMark
+```
+
+### <a name="comparison-operators"></a>Comparison Operators
+
+#### <a name="comparison-operators-equals"></a>Equals
+
+`eq` returns results where a field is *equal to* the supplied value. This is the default if no operator is specified.
+
+```shell
+/list/v4/lists?value=test
+```
+
+```shell
+/list/v4/lists?value=eq:test
+```
+
+#### <a name="comparison-operators-not-equal"></a>Not Equal To
+
+`not` returns results where a field is *not equal to* the supplied value.
+
+```shell
+/list/v4/lists?value=not:test
+```
+
+#### <a name="comparison-operators-starts-with"></a>Starts With
+
+`sw` returns results where a field *startsWith* the supplied value.
+
+```shell
+/list/v4/lists?value=sw:test
+```
+
+#### <a name="comparison-operators-ends-with"></a>Ends With
+
+`ew` returns results where a field *endsWith* the supplied value.
+
+```shell
+/list/v4/lists?value=ew:test
+```
+
+#### <a name="comparison-operators-contains-pattern"></a>Contains Pattern
+
+`cp` returns results where the provided pattern exists in the specified field.
+
+```shell
+/list/v4/lists?value=cp:test
+```
+
+#### <a name="comparison-operators-greater-than"></a>Greater Than
+
+`gt` returns results where a field is *greater than* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=gt:2
+```
+
+#### <a name="comparison-operators-greater-than-equal"></a>Greater Than or Equal To
+
+`gte` returns results where a field is *greater than or equal to* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=gte:2
+```
+
+#### <a name="comparison-operators-less-than"></a>Less Than
+
+`lt` returns results where a field is *less than* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=lt:5
+```
+
+#### <a name="comparison-operators-less-than-equal"></a>Less Than or Equal To
+
+`lte` returns results where a field is *less than or equal to* the supplied value.
+
+```shell
+/list/v4/lists?levelCode=lte:5
+```
+
+### Get All Lists API Supported Operators
+
+#### Value Filter Operators
+
+The Get All Lists API supports filtering the `value` field of the [`ListResponse`](#schema-list-response) on the following operators: 
+* [Equals](#comparison-operators-equals)
+* [Not Equal To](#comparison-operators-not-equal)
+* [Starts With](#comparison-operators-starts-with)
+* [Ends With](#comparison-operators-ends-with)
+* [Contains Pattern](#comparison-operators-contains-pattern)
+
+Examples:
+```shell
+GET /list/v4/lists?value=Invoice%20Group
+GET /list/v4/lists?value=eq:Invoice+Group
+GET /list/v4/lists?value=sw:Vendors
+GET /list/v4/lists?value=ew:Airlines
+GET /list/v4/lists?value=not:test
+GET /list/v4/lists?value=cp:Group
+```
+
+#### Deleted Filter Operators
+
+The Get All Lists API supports filtering the `isDeleted` field of the [`ListResponse`](#schema-list-response) on the following operator:
+* [Equals](#comparison-operators-equals)
+
+Example:
+```shell
+GET /list/v4/lists?isDeleted=true
+```
+
+#### Level Count Filter Operators
+
+The Get All Lists API supports filtering the `levelCount` field of the [`ListResponse`](#schema-list-response) on the following operators:
+* [Equals](#comparison-operators-equals)
+* [Greater Than](#comparison-operators-greater-than)
+* [Greater Than or Equal To](#comparison-operators-greater-than-equal)
+* [Less Than](#comparison-operators-less-than)
+* [Less Than or Equal To](#comparison-operators-less-than-equal)
+
+```shell
+GET /list/v4/lists?levelCount=1
+GET /list/v4/lists?levelCount=eq:1
+GET /list/v4/lists?levelCount=gt:2
+GET /list/v4/lists?levelCount=gte:3
+GET /list/v4/lists?levelCount=lt:10
+GET /list/v4/lists?levelCount=lte:9
+```
+
+#### Category Type Filter Operators
+
+The Get All Lists API supports filtering the `category type` field of the [`ListResponse`](#schema-list-response) on the following operators:
+* [Equals](#comparison-operators-equals)
+* [Not Equal To](#comparison-operators-not-equal)
+
+Examples:
+```shell
+GET /list/v4/lists?category.type=Configuration
+GET /list/v4/lists?category.type=eq:Vendor
+GET /list/v4/lists?category.type=not:Configuration
+```
+
+### <a name="conjunction-operators"></a>Conjunction Operators
+
+Basic "and" conjuction of filter queries is supported. The following is an example of a supported "and" conjunction with a search for lists with level count greater than one and isDeleted is true and the value contains the pattern "Configuration".
+```shell
+GET /list/v4/lists?levelCount=gt:1&isDeleted=true&value=cp:Configuration
+```
+
+##  Create a New List <a name="create-a-new-list"></a>
+
+Creates a new list.
+
+### Scopes
+
+`spend.list.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+POST /list/v4/lists
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`|Language code. Default: Company defined default language |
+|`listRequest`|-|**Required** List object that is created for the company.|
+
+#### Headers
+
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [List Request](#schema-list-request)
+
+### Response
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Company does not exist
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7231 Location](https://tools.ietf.org/html/rfc7231#section-7.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [List Response](#schema-list-response)
+* [Error Message](#schema-error-message)
+
+### Examples
+
+#### Create a list
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "searchCriteria": "TEXT",
+  "value": "Custom List",
+  "displayFormat": "(CODE) TEXT"
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 269
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+location: http://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
+cache-control: no-cache, private
+```
+
+```json
+{
+    "id": "80edb3fa-c15e-a34a-b97f-f2ec291ab44f",
+    "value": "Custom List",
+    "levelCount": 1,
+    "searchCriteria": "TEXT",
+    "displayFormat": "(CODE) TEXT",
+    "category": {
+        "id": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
+        "type": "Normal"
+    },
+    "isReadOnly": false,
+    "isDeleted": false,
+    "managedBy": null
+}
+```
+
+#### Create a list in a specific category
+
+##### Request
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "searchCriteria": "TEXT",
+  "value": "Custom Vendor List",
+  "categoryId": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
+  "displayFormat": "(CODE) TEXT"
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 269
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+location: http://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
+cache-control: no-cache, private
+```
+
+```json
+{
+    "id": "80edb3fa-c15e-a34a-b97f-f2ec291ab44f",
+    "value": "Custom Vendor List",
+    "levelCount": 1,
+    "searchCriteria": "TEXT",
+    "displayFormat": "(CODE) TEXT",
+    "category": {
+        "id": "a2dfc451-8f3c-410e-a5f2-20d79c8fc3dc",
+        "type": "Normal"
+    },
+    "isReadOnly": false,
+    "isDeleted": false,
+    "managedBy": null
+}
+```
+
+#### Create a managed list
+See [Managed Lists](#managed-lists) for additional details on the managed list features.
+
+##  Update a List <a name="update-a-list"></a>
+
+Update an existing list.
+
+### Scopes
+
+`spend.list.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+PUT /list/v4/lists/{listId}
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`|Language code. Default: Company defined default language |
+|`listId`|`string($uuid)`|**Required** The unique identifier of the list.|
+|`listUpdate`|-|**Required** List object that is updated for the company.|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [List Update](#schema-list-update)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Company does not exist
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4) - List not found
+* [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [List Response](#schema-list-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Update a List
+
+##### Request
+
+```shell
+PUT https://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "value": "Custom List Renamed",
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT"
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: e3a4d4cf-e1b2-4f22-a95c-b5bb8a2cb0e1
+content-length: 275
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:24:16 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "id": "80edb3fa-c15e-a34a-b97f-f2ec291ab44f",
+  "value": "Custom List Renamed",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "77b85a76-8157-0c4e-b5e3-7785d8de1a6b",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": null
+}
+```
+
+#### Update a list to be managed
+See [Managed Lists](#managed-lists) for additional details on the managed list features.
+
+#### Update a managed list to not be managed
+See [Managed Lists](#managed-lists) for additional details on the managed list features.
+
+##  Get a List by List ID <a name="get-a-list-by-list-id"></a>
+
+Returns a list by a List ID.
+
+### Scopes
+
+`spend.list.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET /list/v4/lists/{listId}
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`|Language code. Default: Company defined default language |
+|`listId`|`string($uuid)`|**Required** The unique identifier of the list.|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7232 If-None-Match](https://tools.ietf.org/html/rfc7232#section-3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Company does not exist
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7232 ETag](https://tools.ietf.org/html/rfc7232#section-2.3)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [List Response](#schema-list-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer {token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 6a5803f6-b63b-49d8-88b3-872f456206c2
+content-length: 275
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 02:45:48 GMT
+etag: "08514b0fce90d634c211aba29d1cc94c2"
+cache-control: no-cache, private
+```
+
+```json
+{
+  "id": "80edb3fa-c15e-a34a-b97f-f2ec291ab44f",
+  "value": "Custom List Renamed",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "77b85a76-8157-0c4e-b5e3-7785d8de1a6b",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": null
+}
+```
+
+##  Get a List by Category ID <a name="get-a-list-by-category-id"></a>
+
+Returns a list by a category ID.
+
+### Scopes
+
+`spend.list.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET /list/v4/categories/{categoryId}/lists
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`|Language code. Default: Company defined default language |
+|`categoryId`|`string($uuid)`|**Required** The unique identifier of the category.|
+|`page`|`integer($int32)`|Page number starting from 1. Default: `1`|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7232 If-None-Match](https://tools.ietf.org/html/rfc7232#section-3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Company does not exist
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4) - List category not found
+* [415 Unsupported Media Type](https://tools.ietf.org/html/rfc7231#section-6.5.13)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7232 ETag](https://tools.ietf.org/html/rfc7232#section-2.3)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Paged Resources List Response](#schema-paged-resources-list-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/list/v4/categories/77b85a76-8157-0c4e-b5e3-7785d8de1a6b/lists?page=1
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer {token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 0e80dff7-93b7-4b43-a1b6-a91ebe5c55f0
+content-length: 364
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 02:45:48 GMT
+etag: "02e60234cf6ae61aadd7f066e839b07fb"
+cache-control: no-cache, private
+```
+
+```json
+{
+  "links": [],
+  "content": [
+    {
+      "id": "80edb3fa-c15e-a34a-b97f-f2ec291ab44f",
+      "value": "Custom List Renamed",
+      "levelCount": 1,
+      "searchCriteria": "TEXT",
+      "displayFormat": "(CODE) TEXT",
+      "category": {
+        "id": "77b85a76-8157-0c4e-b5e3-7785d8de1a6b",
+        "type": "Normal"
+      },
+      "isReadOnly": false,
+      "isDeleted": false,
+      "managedBy": null
+    }
+  ],
+  "page": {
+    "size": 100,
+    "totalElements": 1,
+    "totalPages": 1,
+    "number": 1
+  }
+}
+```
+
+##  Remove a List <a name="remove-a-list"></a>
+
+Delete a list.
+
+### Scopes
+
+`spend.list.delete` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+DELETE /list/v4/lists/{listId}
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`listId`|`string($uuid)`|**Required** The unique identifier of the list.|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5) - List resource no longer in system
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - List could not be deleted
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+DELETE https://us.api.concursolutions.com/list/v4/lists/80edb3fa-c15e-a34a-b97f-f2ec291ab44f
+Accept: application/json
+Authorization: Bearer {token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 204
+concur-correlationid: d92ab0c7-510b-4730-99a8-14a79ad99b7c
+date: Wed, 08 Jul 2020 02:45:48 GMT
+cache-control: no-cache, private
+```
+
+## Schema <a name="schema"></a>
+
+### <a name="schema-paged-resources-list-response"></a>Paged Resources List Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`content`|`array`|[`ListResponse`](#schema-list-response)|-|
+|`page`|[`PageMetadata`](#schema-page-metadata)|-|Metadata for the page of data returned.|
+|`links`|`array`|[`Link`](#schema-link)|Href links to the next, previous, first, and/or last pages of data.|
+
+### <a name="schema-list-response"></a>List Response
+
+|Name|Type|Format| Description                                                                                                                                                        |
+|---|---|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`id`|`string`|`uuid`| Unique identifier of a list.                                                                                                                                       |
+|`value`|`string`|-| Name of the list.                                                                                                                                                  |
+|`levelCount`|`integer`|`int32`| Number of levels in the list.                                                                                                                                      |
+|`searchCriteria`|`string`|-| What attribute to search by {`TEXT`, `CODE`}.                                                                                                                      |
+|`displayFormat`|`string`|-| Whether the code or value is displayed first {`(CODE) TEXT`, `TEXT (CODE)`}.                                                                                       |
+|`category`|[`ListCategory`](#schema-list-category)|-| The category of the list.                                                                                                                                          |
+|`isReadOnly`|`boolean`|`true`/`false`| If `true`, the list is read-only.                                                                                                                                  |
+|`isDeleted`|`boolean`|`true`/`false`| If `true`, the list has been deleted.                                                                                                                              |
+|`managedBy`|`string`|appId:`uuid`| The application ID permitted to make modification API calls to this list. See [Managed Lists](#managed-lists) for additional details on the managed list features. |
+
+### <a name="schema-category"></a>List Category
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`id`|`string`|`uuid`|Unique identifier of a category.|
+|`type`|`string`|-|Category type.|
+
+### <a name="schema-list-request"></a>List Request
+
+|Name|Type|Format| Description                                                                                                                                                                                                                                                   |
+|---|---|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`searchCriteria`|`string`|-| What attribute to search by. Supported values: `TEXT`, `CODE`                                                                                                                                                                                                 |
+|`value`|`string`|-| **Required** Name of the list.                                                                                                                                                                                                                                |
+|`categoryId`|`string`|`uuid`| The unique identifier of the category that the list belongs to.                                                                                                                                                                                               |
+|`displayFormat`|`string`|-| Whether we display code or value first.  Supported values: `(CODE) TEXT`, `TEXT (CODE)`                                                                                                                                                                       |
+|`isManaged`|`boolean`|`true`/`false`| Optional field. If not included in the payload will default to `false`. If `true` the list will be set to managed by the application ID in the Authorization header. See [Managed Lists](#managed-lists) for additional details on the managed list features. |
+
+### <a name="schema-list-update"></a>List Update
+
+|Name|Type|Format| Description                                                                                                                                                                                                                                              |
+|---|---|---|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`value`|`string`|-| **Required** Name of the list.                                                                                                                                                                                                                           |
+|`searchCriteria`|`string`|-| What attribute to search by. Supported values: `TEXT`, `CODE`                                                                                                                                                                                            |
+|`displayFormat`|`string`|-| Whether we display code or value first. Supported values: `(CODE) TEXT`, `TEXT (CODE)`                                                                                                                                                                   |
+|`isManaged`|`boolean`|`true`/`false`| Optional field. If `true` the list will be set to managed by the application ID in the Authorization header. If `false` the list will be set to be not managed. See [Managed Lists](#managed-lists) for additional details on the managed list features. |
+
+### <a name="schema-message"></a>Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`message`|`string`|-|The detailed error message.|
+|`id`|`string`|-|The identifier of the error.|
+
+### <a name="schema-page-metadata"></a>Page Metadata
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`number`|`integer`|`int32`|The page number.|
+|`size`|`integer`|`int32`|The number of lists per page, which is fixed at 100.|
+|`totalElements`|`integer`|`int32`|The number of total elements.|
+|`totalPages`|`integer`|`int32`|The number of total pages.|
+
+### <a name="schema-link"></a>Link
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`rel`|`string`|-|The link relation.|
+|`href`|`string`|-|The link href.|
+
+### <a name="schema-error-message"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`error`|[`Message`](#schema-message)|-|**Required** The detailed error message.|
+|`httpStatus`|`string`|-|**Required** The http response code and phrase for the response.|
+|`path`|`string`|-|**Required** The URI of the attempted request.|
+|`timestamp`|`string`|`date-time`|**Required** The time when the error was captured.|
+|`validationErrors`|`array`|[`ValidationError`](#schema-validation-error)|The validation error messages.|
+
+### <a name="schema-validation-error"></a>Validation Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`message`|`string`|-|The detailed message of the validation error.|
+|`source`|`string`|-|The type of validation that failed.|
+
+## Managed Lists <a name="managed-lists"></a>
+
+A managed list is a list in which all modifications to the list are restricted to a single application ID. 
+When a list is managed, only API calls from that managing application ID are authorized to make updates to the list items in the list. 
+Modifications to the managed list in the UI are disabled.
+
+Additionally, list imports are not permitted on the managed list. Running a list import on a managed list will result in error.
+
+The managed list feature is useful if a partner application is responsible for maintaining the items in a list and needs to restrict modifications 
+of the list by the UI users or other API callers.
+
+To set a list to be managed, use the Create List API call. See the example in [Create Managed List](#create-managed-list).
+
+To update an existing list to be managed, use the Update List API. See the example in [Update list to be managed](#update-list-managed).
+
+To update a list to not be managed, use the Update List API. See the example in [Update managed list to not be managed](#update-managed-list-not-managed).
+When a list is no longer managed, the UI modifications will be permitted, the list import will be permitted, and updates via API calls by 
+all application IDs will be permitted. The application ID that set the list to managed status is the only application permitted to mark the list as not managed.
+
+### Create Managed List <a name="create-managed-list"></a>
+
+To create a managed list, call the Create List API setting the `isManaged` field to `true`. The API will extract the application ID from the Authorization JWT token. 
+This application ID will be the only application ID permitted to perform modifications to this list. 
+Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list. 
+
+The Create List API response will contain the `managedBy` field populated with the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "searchCriteria": "TEXT",
+  "value": "Custom Managed List",
+  "displayFormat": "(CODE) TEXT",
+  "isManaged": true
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7b
+content-length: 269
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+location: http://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-9615-1d3dcdfbffc7
+cache-control: no-cache, private
+```
+
+```json
+{
+    "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+    "value": "Custom Managed List",
+    "levelCount": 1,
+    "searchCriteria": "TEXT",
+    "displayFormat": "(CODE) TEXT",
+    "category": {
+        "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+        "type": "Normal"
+    },
+    "isReadOnly": false,
+    "isDeleted": false,
+    "managedBy": "appId:898e830b-254a-4167-9499-a33de423e950"
+}
+```
+
+
+### Update Managed List to Not be Managed <a name="update-managed-list-not-managed"></a>
+
+To update a managed list to no longer be managed, call the Update List API setting the `isManaged` field to `false`.
+The API will extract the application ID from the Authorization JWT token and validate that it matches the managing application ID. 
+
+The API response will include the `managedBy` field set to null. 
+After this successful API call, the list is no longer managed, the UI modifications will be permitted, the list import will be permitted, and updates via API calls by
+all application IDs will be permitted.
+
+#### Request
+
+```shell
+PUT https://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-9615-1d3dcdfbffc7
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "value": "Custom Managed List",
+  "isManaged": false
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: e3a4d4cf-e1b2-4f22-a95c-b5bb8a2cb0eb
+content-length: 275
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:24:16 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+  "value": "Custom Managed List",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": null
+}
+```
+
+### Update List to be Managed <a name="update-list-managed"></a>
+
+To update an existing list to be managed, call the Update List API setting the `isManaged` field to `true`.
+The API will extract the application ID from the Authorization JWT token. 
+
+The API response will include the `managedBy` field populated with the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+
+After this successful API call, this application ID will be the only application ID permitted to perform modifications to this list.
+
+#### Request
+
+```shell
+PUT https://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-9615-1d3dcdfbffc7
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "value": "Custom Managed List",
+  "isManaged": true
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: e3a4d4cf-e1b2-4f22-a95c-b5bb8a2cb0eb
+content-length: 275
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:24:16 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+  "value": "Custom Managed List",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": "appId:898e830b-254a-4167-9499-a33de423e950"
+}
+```
+
+#### Update Managed List
+
+When updating a managed list and not changing the managed state, do not include the `isManaged` flag in the payload.
+For example, to only change the name of a managed list, see the example below where only the updated list name is included in the request payload.
+The `managedBy` value in the response payload does not change.
+
+##### Request
+
+```shell
+{
+"value": "New Managed List Updated"
+}
+```
+
+##### Response
+
+```shell
+{
+"id": "9705ce8e-7957-3f4e-a6cf-19ef2b437099",
+"value": "New Managed List Updated",
+"levelCount": 1,
+"searchCriteria": "TEXT",
+"displayFormat": "(CODE) TEXT",
+"category": {
+"id": "4bdcc9da-9c9d-fe47-a39f-cb1e82380d54",
+"type": "Normal"
+},
+"isReadOnly": false,
+"isDeleted": false,
+"managedBy": "appId:c2dd1948-bc84-4449-920d-3ff92c69d9af"
+}
+```
+
+
+### Modification API Calls on a Managed List
+
+Operations to modify a managed list will validate the Authorization JWT application ID. The API requests that include the managing application ID in the Authorization JWT will be permitted and execute.
+
+Those operations include: 
+* [Update a List API](#update-a-list)
+* [Remove a List API](#remove-a-list)
+* [Create a List Item API](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#create-a-list-item)
+* [Update a List Item API](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#update-a-list-item)
+* [Delete a List Item API](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#delete-a-list-item)
+* [Delete a List Item from a List API](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html#delete-a-list-item-from-a-list)
+* [Create List Items Bulk API](https://developer.concur.com/api-reference/common/list-item/v4.list-item-bulk.html#create-list-items)
+* [Update/Delete List Items Bulk API](https://developer.concur.com/api-reference/common/list-item/v4.list-item-bulk.html#update-list-items)
+
+#### Validation Error for Modifying a Managed List 
+
+In the case that the API requests are made to modify a managed list and the Authorization includes an application ID that is not the managing application ID, the following error response will be returned:
+
+```shell
+{
+  "timestamp": "2023-05-02T16:18:47.340+00:00",
+  "httpStatus": "400 - Bad Request",
+  "error": {
+    "id": "list.is.managed",
+    "message": "Modify operation not permitted on this managed list"
+  },
+  "path": "/list/v4/lists/9705ce8e-7957-3f4e-a6cf-19ef2b437099"
+}
+```

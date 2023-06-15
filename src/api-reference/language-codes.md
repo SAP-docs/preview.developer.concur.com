@@ -1,9 +1,9 @@
 ---
-title: Supported Language codes
+title: Supported Language Codes
 layout: reference
 ---
 
-### Supported Language codes
+# Supported Language Codes
 
 |Country|Code|
 |---|---|
