@@ -11,27 +11,34 @@ Return to [Accounting Integration v4 - Getting Started](/api-reference/accountin
 
 ## <a name="patch-lists"></a>Add, Update, or Delete List Names
 
-This endpoint allows users to add, update, or delete ERP list names. Upon receiving the data, the server will process the request asynchronously and return immediately with a response payload containing the status and the link of the progressing status.
+This endpoint allows users to add, update, or delete ERP List Names data that is cached in the SAP Concur system. Upon
+receiving the data, the server will return immediately with a response payload containing the request current status and
+a link to check the request status progress, then process the request asynchronously.
 
-For the deletion of ERP list names, the endpoint's behavior for the following inbound data requests are:
+In addition, events will be published to notify the API consumers of important updates. For more information, please
+see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
 
-| Request                                     | Behavior                                       |
-|---------------------------------------------|------------------------------------------------|
-| Delete single list name (`isDeleted: true`) | Both the list name and mapping will be removed |
-| Delete all lists (`deleteAll: true`)        | Only the list name will be removed             |
-| Reset the accounting object                 | Only the list name will be removed             |
+A mapping can be created between the ERP list and a SAP Concur list in the SAP Concur UI. This mapping
+is stored in the SAP Concur system and can be retrieved using
+the [Configuration Settings and Mappings API](/v4.accountingintegration-mappings.html).
+When a list is deleted in the ERP and the update is sent to the Accounting Integration API its mapping to any SAP Concur
+list will also be removed. To achieve this set the `isDeleted: true` flag on the record:
 
-In addition, events will be published to notify API users of important updates. For more information, please see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+| Request                                                                                               | Behavior                                                                                 |
+|-------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------|
+| Delete single ERP List Name (has `isDeleted: true` flag on the record)                                | Both the list name and the mapping to a SAP Concur list will be removed                  |
+| Delete all ERP List Names cached in the SAP Concur system (has `deleteAll: true` flag on the request) | Only the list names will be removed. **Mappings to SAP Concur lists will be preserved.** |
 
-Please note that the [List v4 API](https://developer.concur.com/api-reference/common/lists/v4.list.html) should be used to import List data into Concur.
+Note: after a SAP Concur list is mapped to the ERP list
+the [List Item v4 API](/api-reference/common/list-item/v4.list-item.html) should be used to import the ERP list data
+into Concur.
 
 ### Limitations
 
 * Access to this documentation does not provide access to the API. 
 * The total request payload size should not exceed 4 MB.
 * Any given ERP record size should not exceed 200 KB.
-* The ERP data will be cached in SAP Concur data center for no more than 150 days.
-This endpoint can be called once per second.
+* This endpoint can be called once per second.
 
 ### Scopes
 
@@ -52,12 +59,12 @@ PATCH /accountingintegration/v4/companies/{companyId}/erps/{erpId}/lists
 
 ### Payloads
 
-* Request: [List of ERP List](./v4.accountingintegration-schema.html#list-of-list)
+* Request: [Update ERP List Names Request](./v4.accountingintegration-schema.html#list-of-list)
 * Response: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
-#### Request: delete all, then add new data
+#### Request: delete all the cached list names data in the SAP Concur system, then add new data
 
 ```shell
 PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/lists
@@ -131,7 +138,7 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
 
 ## <a name="get-lists"></a>Retrieve List Names
 
-This endpoint retrieves the ERP list name that is cached in SAP Concur systems.
+This endpoint retrieves the ERP List Names that are cached in the SAP Concur system.
 
 ### Limitation
 
@@ -157,7 +164,7 @@ GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}/lists
 ### Payloads
 
 * Request: None
-* Response: [List of ERP List](./v4.accountingintegration-schema.html#list-of-list), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
+* Response: [List of ERP List Names](./v4.accountingintegration-schema.html#list-of-list), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
