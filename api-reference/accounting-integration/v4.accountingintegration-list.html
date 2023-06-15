@@ -1130,9 +1130,18 @@
 
 <h2 id="add-update-or-delete-list-names"><a name="patch-lists"></a>Add, Update, or Delete List Names</h2>
 
-<p>This endpoint allows users to add, update, or delete ERP list names. Upon receiving the data, the server will process the request asynchronously and return immediately with a response payload containing the status and the link of the progressing status.</p>
+<p>This endpoint allows users to add, update, or delete ERP List Names data that is cached in the SAP Concur system. Upon
+receiving the data, the server will return immediately with a response payload containing the request current status and
+a link to check the request status progress, then process the request asynchronously.</p>
 
-<p>For the deletion of ERP list names, the endpoint’s behavior for the following inbound data requests are:</p>
+<p>In addition, events will be published to notify the API consumers of important updates. For more information, please
+see <a href="/event-topics/event-subscription-topic-accountingintegration.html">Accounting Integration Events</a>.</p>
+
+<p>A mapping can be created between the ERP list and a SAP Concur list in the SAP Concur UI. This mapping
+is stored in the SAP Concur system and can be retrieved using
+the <a href="/v4.accountingintegration-mappings.html">Configuration Settings and Mappings API</a>.
+When a list is deleted in the ERP and the update is sent to the Accounting Integration API its mapping to any SAP Concur
+list will also be removed. To achieve this set the <code class="language-plaintext highlighter-rouge">isDeleted: true</code> flag on the record:</p>
 
 <table>
   <thead>
@@ -1143,23 +1152,19 @@
   </thead>
   <tbody>
     <tr>
-      <td>Delete single list name (<code class="language-plaintext highlighter-rouge">isDeleted: true</code>)</td>
-      <td>Both the list name and mapping will be removed</td>
+      <td>Delete single ERP List Name (has <code class="language-plaintext highlighter-rouge">isDeleted: true</code> flag on the record)</td>
+      <td>Both the list name and the mapping to a SAP Concur list will be removed</td>
     </tr>
     <tr>
-      <td>Delete all lists (<code class="language-plaintext highlighter-rouge">deleteAll: true</code>)</td>
-      <td>Only the list name will be removed</td>
-    </tr>
-    <tr>
-      <td>Reset the accounting object</td>
-      <td>Only the list name will be removed</td>
+      <td>Delete all ERP List Names cached in the SAP Concur system (has <code class="language-plaintext highlighter-rouge">deleteAll: true</code> flag on the request)</td>
+      <td>Only the list names will be removed. <strong>Mappings to SAP Concur lists will be preserved.</strong></td>
     </tr>
   </tbody>
 </table>
 
-<p>In addition, events will be published to notify API users of important updates. For more information, please see <a href="/event-topics/event-subscription-topic-accountingintegration.html">Accounting Integration Events</a>.</p>
-
-<p>Please note that the <a href="https://developer.concur.com/api-reference/common/lists/v4.list.html">List v4 API</a> should be used to import List data into Concur.</p>
+<p>Note: after a SAP Concur list is mapped to the ERP list
+the <a href="/api-reference/common/list-item/v4.list-item.html">List Item v4 API</a> should be used to import the ERP list data
+into Concur.</p>
 
 <h3 id="limitations">Limitations</h3>
 
@@ -1167,8 +1172,7 @@
   <li>Access to this documentation does not provide access to the API.</li>
   <li>The total request payload size should not exceed 4 MB.</li>
   <li>Any given ERP record size should not exceed 200 KB.</li>
-  <li>The ERP data will be cached in SAP Concur data center for no more than 150 days.
-This endpoint can be called once per second.</li>
+  <li>This endpoint can be called once per second.</li>
 </ul>
 
 <h3 id="scopes">Scopes</h3>
@@ -1210,13 +1214,13 @@ This endpoint can be called once per second.</li>
 <h3 id="payloads">Payloads</h3>
 
 <ul>
-  <li>Request: <a href="./v4.accountingintegration-schema.html#list-of-list">List of ERP List</a></li>
+  <li>Request: <a href="./v4.accountingintegration-schema.html#list-of-list">Update ERP List Names Request</a></li>
   <li>Response: <a href="./v4.accountingintegration-schema.html#request-status">RequestStatus</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
 </ul>
 
 <h3 id="examples">Examples</h3>
 
-<h4 id="request-delete-all-then-add-new-data">Request: delete all, then add new data</h4>
+<h4 id="request-delete-all-the-cached-list-names-data-in-the-sap-concur-system-then-add-new-data">Request: delete all the cached list names data in the SAP Concur system, then add new data</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/lists
 </code></pre></div></div>
@@ -1284,7 +1288,7 @@ This endpoint can be called once per second.</li>
 
 <h2 id="retrieve-list-names"><a name="get-lists"></a>Retrieve List Names</h2>
 
-<p>This endpoint retrieves the ERP list name that is cached in SAP Concur systems.</p>
+<p>This endpoint retrieves the ERP List Names that are cached in the SAP Concur system.</p>
 
 <h3 id="limitation">Limitation</h3>
 
@@ -1332,7 +1336,7 @@ This endpoint can be called once per second.</li>
 
 <ul>
   <li>Request: None</li>
-  <li>Response: <a href="./v4.accountingintegration-schema.html#list-of-list">List of ERP List</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
+  <li>Response: <a href="./v4.accountingintegration-schema.html#list-of-list">List of ERP List Names</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
 </ul>
 
 <h3 id="examples-1">Examples</h3>

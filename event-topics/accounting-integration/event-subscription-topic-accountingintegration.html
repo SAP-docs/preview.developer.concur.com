@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Concur Accounting Integration Events</title>
+  <title> SAP Concur Developer Center | SAP Concur Accounting Integration Events</title>
 
 
 <!-- Meta -->
@@ -28,7 +28,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/event-topics/event-subscription-topic-accountingintegration.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/event-topics/accounting-integration/event-subscription-topic-accountingintegration.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -305,7 +305,10 @@
 
 <h2 id="overview"><a name="overview"></a>Overview</h2>
 
-<p>The Accounting Integration API provides clients and authorized partners access to the configuration settings and the mappings between SAP Concur systems and ERP data through the events on the topic <code class="language-plaintext highlighter-rouge">public.concur.spend.accountingintegration</code>. To subscribe to these events follow the steps described on the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Event Subscription Service v4</a> page.</p>
+<p>The Accounting Integration API provides clients and authorized partners access to the configuration settings and the
+mappings between SAP Concur data and ERP data through the events on the
+topic <code class="language-plaintext highlighter-rouge">public.concur.spend.accountingintegration</code>. To subscribe to these events follow the steps described on
+the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Event Subscription Service v4</a> page.</p>
 
 <blockquote>
   <p><strong>Limitation</strong>: This event subscription is only available to partners who have been granted access to Accounting Integration API.</p>
@@ -334,40 +337,61 @@
   <thead>
     <tr>
       <th>Event Type</th>
-      <th>Condition that triggers event</th>
+      <th>Event Purpose</th>
       <th>Recommended Partner Action</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">listMapping.created</code></td>
-      <td>This event will be published after the customer administrator has mapped the SAP Concur data (custom field) with the ERP data (list name). (Professional Edition Note: When a list is imported from ERP and created in the SAP Concur system, this event will be triggered)</td>
-      <td>This is a trigger telling the Partner that it’s time for the ERP data to be synchronized (Via the List Items API) with SAP Concur data.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">listMapping.deleted</code></td>
-      <td>This event will be published after the customer administrator has removed the mapping between the SAP Concur data (custom field) and the ERP data (list name). (Professional Edition Note: When the list is unmapped in the SAP Concur system, this event will be triggered)</td>
-      <td>The indicated list is no longer mapped and allows the Partner to do it’s own data cleanup. This should also stop the indicated list data from being synchronized.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">data.resetRequested</code></td>
-      <td>This event will be published when the customer administrator has requested to reset the ERP data cached in SAP Concur data-center.</td>
-      <td>Data should be resynchronized to SAP Concur systems.</td>
-    </tr>
-    <tr>
       <td><code class="language-plaintext highlighter-rouge">data.statusUpdated</code></td>
-      <td>This event will be sent to notify the partner that the data they sent to SAP Concur systems via the PATCH action with the <code class="language-plaintext highlighter-rouge">Accounts</code>, <code class="language-plaintext highlighter-rouge">Lists</code> and <code class="language-plaintext highlighter-rouge">Vendors</code> APIs has been processed on our side. One notification is sent for each PATCH request that the partner performs.</td>
-      <td>The status may be interesting for the Partner to perform actions such as notification, logging, cleanup, etc.</td>
+      <td>Notify the subscribers that the processing of the data they sent via the PATCH action of the <a href="/api-reference/accounting-integration/v4.accountingintegration-account.html">Accounts</a>, <a href="/api-reference/accounting-integration/v4.accountingintegration-list.html">List Names</a> and <a href="/api-reference/accounting-integration/v4.accountingintegration-vendor.html">Vendors</a> APIs has been completed. Separate notification is sent for each PATCH request that the partner performs.</td>
+      <td>The <code class="language-plaintext highlighter-rouge">data.statusUpdated</code> event provides the final request status for each request. If the status is not Success the <a href="/api-reference/accounting-integration/v4.accountingintegration-request.html#get-request-errors">Request Errors API</a> is used to check for errors.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">mapping.updated</code></td>
-      <td>This event will be published to notify the partner that the data in the Configuration Settings and Mappings API has been updated. Such updates are: Payment Types Configuration updates, List Mappings updates, Is Billable field updates,  Expense and Invoice ERP Ledger updates, Invoice Liability Account Code mapping updates, Feature Settings updates. <strong>Note that changes in Invoice Policies will not trigger this event</strong></td>
-      <td>The event may be used by the Partner to call the Get Configuration Settings and Mappings API to obtain the most recent mappings data.</td>
+      <td>Notify the subscribers that there are updates to the <a href="/api-reference/accounting-integration/v4.accountingintegration-mappings.html">Configuration Settings and Mappings API</a> data (these updates are performed in the SAP Concur UI by the customer administrator). Such updates are: Payment Types Configuration updates, List Mappings updates, Is Billable field updates, Expense and Invoice ERP Ledger updates, Invoice Liability Account Code mapping updates, Feature Settings preferences updates. <strong>Note that changes in Invoice Policies will not trigger this event</strong></td>
+      <td>Call the <a href="/api-reference/accounting-integration/v4.accountingintegration-mappings.html">Configuration Settings and Mappings API</a> to obtain the most recent mappings data. We also recommend caching the Configuration and Mappings data and updating the cache when this event is received.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listMapping.created</code></td>
+      <td>Notify the subscribers that a SAP Concur list or field is <strong>mapped</strong> to an ERP list. <br /> Standard Edition: this event is published after the customer administrator maps a SAP Concur Custom Field to an ERP List. <br /> Professional edition: this event is published after the customer administrator imports an ERP List in SAP Concur via the Administrator UI.</td>
+      <td>Start sending the list items of the mapped ERP List using the <a href="/api-reference/common/list-item/v4.list-item.html">List Item v4 API</a>. Note: you would need to periodically send any updates to the ERP list items of the mapped lists.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">listMapping.deleted</code></td>
+      <td>Notify the subscribers that a SAP Concur list or field mapping to an ERP list is <strong>removed</strong>. <br /> Standard Edition: this event is published after the customer administrator removes the mapping between a SAP Concur Custom Field and an ERP List. <br /> Professional edition: this event is published after the customer administrator removes the mapping between a SAP Concur List and an ERP List.</td>
+      <td>Stop sending the list items of the ERP List which mapping was removed.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">data.resetRequested</code></td>
+      <td>Notify the subscribers that a reset is requested for the ERP data that has been sent to the SAP Concur system via the <a href="/api-reference/accounting-integration/v4.accountingintegration-account.html">Accounts</a>, <a href="/api-reference/accounting-integration/v4.accountingintegration-list.html">List Names</a> and <a href="/api-reference/accounting-integration/v4.accountingintegration-vendor.html">Vendors</a> APIs. A reset might be requested for one or more of the data types (this is indicated in the event, see the <a href="/event-subscription-topic-accountingintegration.html#dataResetRequestedExample">example</a>) and should be performed only for the requested type. Data reset means that the existing data that is cached in the SAP Concur system needs to be cleared out and resent. This event is published after an administrator has requested a reset (this request is performed in the SAP Concur UI).</td>
+      <td>Delete all the data stored in SAP Concur for the requested type(s) - Accounts, Vendors or List Names, and send all the ERP data again. <strong>Note: to delete all of the cached data in the SAP Concur system send <code class="language-plaintext highlighter-rouge">deleteAll: true</code> flag in the PATCH endpoints. See the API documentation.</strong></td>
     </tr>
   </tbody>
 </table>
 
 <h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="schema-for-event-datastatusupdated"><a name="statusUpdated"></a>Schema for Event <code class="language-plaintext highlighter-rouge">data.statusUpdated</code></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">data</code></td>
+      <td><a href="/api-reference/accounting-integration/v4.accountingintegration-schema.html#request-status"><code class="language-plaintext highlighter-rouge">RequestStatus</code></a></td>
+      <td>-</td>
+      <td>Details of the request status</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 id="schema-for-event-listmappingcreated-and-listmappingdeleted"><a name="listMappingCreated"></a>Schema for Event <code class="language-plaintext highlighter-rouge">listMapping.created</code> and <code class="language-plaintext highlighter-rouge">listMapping.deleted</code></h3>
 
@@ -385,7 +409,7 @@
       <td><code class="language-plaintext highlighter-rouge">data</code></td>
       <td><code class="language-plaintext highlighter-rouge">array</code></td>
       <td><a href="/api-reference/accounting-integration/v4.accountingintegration-schema.html#list-mapping"><code class="language-plaintext highlighter-rouge">ListMapping</code></a></td>
-      <td>Array of list-mappings between ERP and SAP Concur data (See examples below)</td>
+      <td>Array of list mappings between the ERP lists and SAP Concur lists (See examples below)</td>
     </tr>
   </tbody>
 </table>
@@ -411,35 +435,81 @@
   </tbody>
 </table>
 
-<h3 id="schema-for-event-datastatusupdated"><a name="statusUpdated"></a>Schema for Event <code class="language-plaintext highlighter-rouge">data.statusUpdated</code></h3>
+<h2 id="flow-diagrams">Flow Diagrams</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">data</code></td>
-      <td><a href="/api-reference/accounting-integration/v4.accountingintegration-schema.html#request-status"><code class="language-plaintext highlighter-rouge">RequestStatus</code></a></td>
-      <td>-</td>
-      <td>Details of the request status</td>
-    </tr>
-  </tbody>
-</table>
+<h3 id="process-flow-for-datastatusupdated"><a name="process-flow-data.statusUpdated"></a>Process Flow for data.statusUpdated</h3>
+
+<p><img src="./v4.accountingintegration-data.statusUpdated-flow.png" alt="Process Flow for data.statusUpdated" /></p>
+
+<h3 id="process-flow-for-mappingupdated"><a name="process-flow-mapping.updated"></a>Process Flow for mapping.updated</h3>
+
+<p><img src="./v4.accountingintegration-mapping.updated-flow.png" alt="Process Flow for mapping.updated" /></p>
+
+<h3 id="process-flow-for-listmappingcreated"><a name="process-flow-listMapping.created"></a>Process Flow for listMapping.created</h3>
+
+<p><img src="./v4.accountingintegration-listMapping.created-flow.png" alt="Process Flow for listMapping.created" /></p>
+
+<h3 id="process-flow-for-listmappingdeleted"><a name="process-flow-listMapping.deleted"></a>Process Flow for listMapping.deleted</h3>
+
+<p><img src="./v4.accountingintegration-listMapping.deleted-flow.png" alt="Process Flow for listMapping.deleted" /></p>
+
+<h3 id="process-flow-for-dataresetrequested"><a name="process-flow-data.resetRequested"></a>Process Flow for data.resetRequested</h3>
+
+<p><img src="./v4.accountingintegration-data.resetRequested-flow.png" alt="Process Flow for data.resetRequested" /></p>
 
 <h2 id="sample-events"><a name="samples"></a>Sample Events</h2>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[{</span><span class="w">
+
+<h3 id="example-for-event-datastatusupdated"><a name="statusUpdatedExample"></a>Example for Event <code class="language-plaintext highlighter-rouge">data.statusUpdated</code></h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fece38ea-f06e-4dbc-98ae-5aca3a2016d6"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b406d1ab-a41c-461c-9404-0bd958e86ae2"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data.statusUpdated"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"261a88ef-44f2-4102-b303-db4ac2a4a8ba"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fde670e0-4aa2-451e-8431-7bcdc574cc6b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"_links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/49d30324-7f69-4f9c-b3fa-ca7639e1fc35/requests/fde670e0-4aa2-451e-8431-7bcdc574cc6b/errors"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="example-for-event-mappingupdated"><a name="mappingUpdatedExample"></a>Example for Event <code class="language-plaintext highlighter-rouge">mapping.updated</code></h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de32e71c-f797-4841-8578-c3d870c28629"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ce33f8e586e9c30dd10f81a5dfe83fae"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mapping.updated"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-10-03T21:25:28.913Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfa738a-1ae7-471d-8286-3984c54223a7"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f1f9852c-860a-496b-b38b-eb29fff67b81"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8b820d40-8e47-40a0-8c8e-f92eb8f5a0a7"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="example-for-event-listmappingcreated"><a name="listMappingCreatedExample"></a>Example for Event <code class="language-plaintext highlighter-rouge">listMapping.created</code></h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"correlationId"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"685fa226-b72d-47f9-b9ad-e621de12d094"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"listMapping.created"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
@@ -505,14 +575,18 @@
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span><span class="p">},</span><span class="w">
-</span><span class="p">{</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="example-for-event-listmappingdeleted"><a name="listMappingDeletedExample"></a>Example for Event <code class="language-plaintext highlighter-rouge">listMapping.deleted</code></h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
   </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"041eebf8-d1de-43d4-9303-c84d303f69e4"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d60faf21-aeed-48fd-9a0d-8232f4bad0ad"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"listMapping.deleted"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
@@ -524,8 +598,12 @@
       </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span><span class="p">},</span><span class="w">
-</span><span class="p">{</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="example-for-event-dataresetrequested"><a name="dataResetRequestedExample"></a>Example for Event <code class="language-plaintext highlighter-rouge">data.resetRequested</code></h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w">  </span><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"91d301b9-29df-425a-99cc-7b2f5e995187"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e27f2040-6280-4550-b9dc-ae41dfd58b62"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data.resetRequested"</span><span class="p">,</span><span class="w">
@@ -535,44 +613,10 @@
   </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4045cab7-532d-45ba-801d-937688a89ddf"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{</span><span class="se">\"</span><span class="s2">accountingObjects</span><span class="se">\"</span><span class="s2">:[</span><span class="se">\"</span><span class="s2">ACCOUNT</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">VENDOR</span><span class="se">\"</span><span class="s2">,</span><span class="se">\"</span><span class="s2">LIST</span><span class="se">\"</span><span class="s2">]}"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a4542f54-a27a-4178-96a4-e9bbda79c48d"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"646a2339-1632-4692-8be6-84534f5b41fc"</span><span class="w">
+      </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a4542f54-a27a-4178-96a4-e9bbda79c48d"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"646a2339-1632-4692-8be6-84534f5b41fc"</span><span class="w">
   </span><span class="p">}</span><span class="w">
-</span><span class="p">},</span><span class="w">
-</span><span class="p">{</span><span class="w">
-  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fece38ea-f06e-4dbc-98ae-5aca3a2016d6"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b406d1ab-a41c-461c-9404-0bd958e86ae2"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data.statusUpdated"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w"> 
-  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"49d30324-7f69-4f9c-b3fa-ca7639e1fc35"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"261a88ef-44f2-4102-b303-db4ac2a4a8ba"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4f434150-5a74-4d43-8050-f7b57d0c8840"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fde670e0-4aa2-451e-8431-7bcdc574cc6b"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ERROR"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"_links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/49d30324-7f69-4f9c-b3fa-ca7639e1fc35/requests/fde670e0-4aa2-451e-8431-7bcdc574cc6b/errors"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">},</span><span class="w">
-</span><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"de32e71c-f797-4841-8578-c3d870c28629"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ce33f8e586e9c30dd10f81a5dfe83fae"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mapping.updated"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.spend.accountingintegration"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-10-03T21:25:28.913Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5bfa738a-1ae7-471d-8286-3984c54223a7"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f1f9852c-860a-496b-b38b-eb29fff67b81"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"partnerId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8b820d40-8e47-40a0-8c8e-f92eb8f5a0a7"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}]</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
       </div>
@@ -625,7 +669,7 @@
       <a href="https://www.concur.com/en-us/privacy-policy">Privacy Policy</a> |
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/event-topics/event-subscription-topic-accountingintegration.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/event-topics/accounting-integration/event-subscription-topic-accountingintegration.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
