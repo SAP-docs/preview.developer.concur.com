@@ -188,7 +188,7 @@ The general format of a query syntax parameter is as follows:
 
 * `value` - The value being checked for.
 
-Ensure the url generated is properly **`URL encoded`**. For example, if you have a `field_name` or `value` with a `&`, please convert it to `%26`.
+Ensure the url generated is properly `URL encoded`. For example, if you have a `field_name` or `value` with a `&`, please convert it to `%26`.
 
 Examples:
 
@@ -288,6 +288,8 @@ Examples:
 
 ### Get All Lists API Supported Operators
 
+#### Value Filter Operators
+
 The Get All Lists API supports filtering the `value` field of the [`ListResponse`](#schema-list-response) on the following operators: 
 * [Equals](#comparison-operators-equals)
 * [Not Equal To](#comparison-operators-not-equal)
@@ -305,16 +307,7 @@ GET /list/v4/lists?value=not:test
 GET /list/v4/lists?value=cp:Group
 ```
 
-The Get All Lists API supports filtering the `category type` field of the [`ListResponse`](#schema-list-response) on the following operators:
-* [Equals](#comparison-operators-equals)
-* [Not Equal To](#comparison-operators-not-equal)
-
-Examples:
-```shell
-GET /list/v4/lists?category.type=Configuration
-GET /list/v4/lists?category.type=eq:Vendor
-GET /list/v4/lists?category.type=not:Configuration
-```
+#### Deleted Filter Operators
 
 The Get All Lists API supports filtering the `isDeleted` field of the [`ListResponse`](#schema-list-response) on the following operator:
 * [Equals](#comparison-operators-equals)
@@ -323,6 +316,8 @@ Example:
 ```shell
 GET /list/v4/lists?isDeleted=true
 ```
+
+#### Level Count Filter Operators
 
 The Get All Lists API supports filtering the `levelCount` field of the [`ListResponse`](#schema-list-response) on the following operators:
 * [Equals](#comparison-operators-equals)
@@ -338,6 +333,19 @@ GET /list/v4/lists?levelCount=gt:2
 GET /list/v4/lists?levelCount=gte:3
 GET /list/v4/lists?levelCount=lt:10
 GET /list/v4/lists?levelCount=lte:9
+```
+
+#### Category Type Filter Operators
+
+The Get All Lists API supports filtering the `category type` field of the [`ListResponse`](#schema-list-response) on the following operators:
+* [Equals](#comparison-operators-equals)
+* [Not Equal To](#comparison-operators-not-equal)
+
+Examples:
+```shell
+GET /list/v4/lists?category.type=Configuration
+GET /list/v4/lists?category.type=eq:Vendor
+GET /list/v4/lists?category.type=not:Configuration
 ```
 
 ### <a name="conjunction-operators"></a>Conjunction Operators
@@ -912,17 +920,17 @@ cache-control: no-cache, private
 
 ### <a name="schema-list-response"></a>List Response
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`id`|`string`|`uuid`|Unique identifier of a list.|
-|`value`|`string`|-|Name of the list.|
-|`levelCount`|`integer`|`int32`|Number of levels in the list.|
-|`searchCriteria`|`string`|-|What attribute to search by {`TEXT`, `CODE`}.|
-|`displayFormat`|`string`|-|Whether the code or value is displayed first {`(CODE) TEXT`, `TEXT (CODE)`}.|
-|`category`|[`ListCategory`](#schema-list-category)|-|The category of the list.|
-|`isReadOnly`|`boolean`|`true`/`false`|If `true`, the list is read-only.|
-|`isDeleted`|`boolean`|`true`/`false`|If `true`, the list has been deleted.|
-|`managedBy`|`string`|appId:`uuid`|The app ID permitted to make modification API calls to this list. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
+|Name|Type|Format| Description                                                                                                                                                        |
+|---|---|---|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`id`|`string`|`uuid`| Unique identifier of a list.                                                                                                                                       |
+|`value`|`string`|-| Name of the list.                                                                                                                                                  |
+|`levelCount`|`integer`|`int32`| Number of levels in the list.                                                                                                                                      |
+|`searchCriteria`|`string`|-| What attribute to search by {`TEXT`, `CODE`}.                                                                                                                      |
+|`displayFormat`|`string`|-| Whether the code or value is displayed first {`(CODE) TEXT`, `TEXT (CODE)`}.                                                                                       |
+|`category`|[`ListCategory`](#schema-list-category)|-| The category of the list.                                                                                                                                          |
+|`isReadOnly`|`boolean`|`true`/`false`| If `true`, the list is read-only.                                                                                                                                  |
+|`isDeleted`|`boolean`|`true`/`false`| If `true`, the list has been deleted.                                                                                                                              |
+|`managedBy`|`string`|appId:`uuid`| The application ID permitted to make modification API calls to this list. See [Managed Lists](#managed-lists) for additional details on the managed list features. |
 
 ### <a name="schema-category"></a>List Category
 
@@ -933,22 +941,22 @@ cache-control: no-cache, private
 
 ### <a name="schema-list-request"></a>List Request
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`searchCriteria`|`string`|-|What attribute to search by. Supported values: `TEXT`, `CODE`|
-|`value`|`string`|-|**Required** Name of the list.|
-|`categoryId`|`string`|`uuid`|The unique identifier of the category that the list belongs to.|
-|`displayFormat`|`string`|-|Whether we display code or value first.  Supported values: `(CODE) TEXT`, `TEXT (CODE)`|
-|`isManaged`|`boolean`|`true`/`false`|Optional field. If not included in the payload will default to `false`. If `true` the list will be set to managed by the app ID in the Authorization header. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
+|Name|Type|Format| Description                                                                                                                                                                                                                                                   |
+|---|---|---|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`searchCriteria`|`string`|-| What attribute to search by. Supported values: `TEXT`, `CODE`                                                                                                                                                                                                 |
+|`value`|`string`|-| **Required** Name of the list.                                                                                                                                                                                                                                |
+|`categoryId`|`string`|`uuid`| The unique identifier of the category that the list belongs to.                                                                                                                                                                                               |
+|`displayFormat`|`string`|-| Whether we display code or value first.  Supported values: `(CODE) TEXT`, `TEXT (CODE)`                                                                                                                                                                       |
+|`isManaged`|`boolean`|`true`/`false`| Optional field. If not included in the payload will default to `false`. If `true` the list will be set to managed by the application ID in the Authorization header. See [Managed Lists](#managed-lists) for additional details on the managed list features. |
 
 ### <a name="schema-list-update"></a>List Update
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`value`|`string`|-|**Required** Name of the list.|
-|`searchCriteria`|`string`|-|What attribute to search by. Supported values: `TEXT`, `CODE`|
-|`displayFormat`|`string`|-|Whether we display code or value first. Supported values: `(CODE) TEXT`, `TEXT (CODE)`|
-|`isManaged`|`boolean`|`true`/`false`|Optional field. If `true` the list will be set to managed by the app ID in the Authorization header. If `false` the list will be set to be not managed. See [Managed Lists](#managed-lists) for additional details on the managed list features.|
+|Name|Type|Format| Description                                                                                                                                                                                                                                              |
+|---|---|---|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`value`|`string`|-| **Required** Name of the list.                                                                                                                                                                                                                           |
+|`searchCriteria`|`string`|-| What attribute to search by. Supported values: `TEXT`, `CODE`                                                                                                                                                                                            |
+|`displayFormat`|`string`|-| Whether we display code or value first. Supported values: `(CODE) TEXT`, `TEXT (CODE)`                                                                                                                                                                   |
+|`isManaged`|`boolean`|`true`/`false`| Optional field. If `true` the list will be set to managed by the application ID in the Authorization header. If `false` the list will be set to be not managed. See [Managed Lists](#managed-lists) for additional details on the managed list features. |
 
 ### <a name="schema-message"></a>Message
 
@@ -992,26 +1000,30 @@ cache-control: no-cache, private
 
 ## Managed Lists <a name="managed-lists"></a>
 
-A Managed List is a list in which all modifications to the list are restricted to a single app ID.
-The use case for this feature is if a partner is responsible for maintaining the items in a list and wants to restrict modifications by the UI or other API callers.
+A managed list is a list in which all modifications to the list are restricted to a single application ID. 
+When a list is managed, only API calls from that managing application ID are authorized to make updates to the list items in the list. 
+Modifications to the managed list in the UI are disabled.
 
-When a list is managed, only API calls from that managing app ID are authorized to make updates to the list items in the list.
-The UI will be grayed out so no modification options are possible. The list is locked so a customer on the UI can't add, delete, or update list items.
-Additionally, no list imports will not be permitted on the managed list. The list import on the list will result in error.
+Additionally, list imports are not permitted on the managed list. Running a list import on a managed list will result in error.
 
-To set a list to be managed, it can be done with a Create List API call. See the example in [Create Managed List](#create-managed-list).
+The managed list feature is useful if a partner application is responsible for maintaining the items in a list and needs to restrict modifications 
+of the list by the UI users or other API callers.
+
+To set a list to be managed, use the Create List API call. See the example in [Create Managed List](#create-managed-list).
 
 To update an existing list to be managed, use the Update List API. See the example in [Update list to be managed](#update-list-managed).
 
-To set a list to not be managed, use the Update List API. See the example in [Update managed list to not be managed](#update-managed-list-not-managed). When a list is no longer managed, the UI modifications will be permitted, the list import will be permitted, and updates via API calls by 
-all app IDs will be permitted.
+To update a list to not be managed, use the Update List API. See the example in [Update managed list to not be managed](#update-managed-list-not-managed).
+When a list is no longer managed, the UI modifications will be permitted, the list import will be permitted, and updates via API calls by 
+all application IDs will be permitted. The application ID that set the list to managed status is the only application permitted to mark the list as not managed.
 
 ### Create Managed List <a name="create-managed-list"></a>
 
-To create a managed list, call the Create List API setting the `isManaged` field to true. The API will extract the app ID from the Authorization JWT token. This app ID will be the only app ID 
-permitted to perform modifications to this list. Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list. 
+To create a managed list, call the Create List API setting the `isManaged` field to `true`. The API will extract the application ID from the Authorization JWT token. 
+This application ID will be the only application ID permitted to perform modifications to this list. 
+Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list. 
 
-The Create List API response will contain the `managedBy` field populated with the app ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+The Create List API response will contain the `managedBy` field populated with the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
 
 #### Request
 
@@ -1061,13 +1073,14 @@ cache-control: no-cache, private
 ```
 
 
-### Update Managed List to not be managed <a name="update-managed-list-not-managed"></a>
+### Update Managed List to Not be Managed <a name="update-managed-list-not-managed"></a>
 
-To update a managed list to no longer be managed, call the Update List API with the managing app ID. 
-Pass the `isManaged` flag in the payload and set to false.
+To update a managed list to no longer be managed, call the Update List API setting the `isManaged` field to `false`.
+The API will extract the application ID from the Authorization JWT token and validate that it matches the managing application ID. 
 
 The API response will include the `managedBy` field set to null. 
-After this successful API call, will allow modifications via the UI, list import, and API calls by all app IDs. 
+After this successful API call, the list is no longer managed, the UI modifications will be permitted, the list import will be permitted, and updates via API calls by
+all application IDs will be permitted.
 
 #### Request
 
@@ -1114,12 +1127,14 @@ cache-control: no-cache, private
 }
 ```
 
-### Update List to be managed <a name="update-list-managed"></a>
+### Update List to be Managed <a name="update-list-managed"></a>
 
-To update an existing list to be managed, call the Update List API will with the managing app.
-Pass the `isManaged` flag in the payload set to `true`.
+To update an existing list to be managed, call the Update List API setting the `isManaged` field to `true`.
+The API will extract the application ID from the Authorization JWT token. 
 
-The API response will include the `managedBy` field set to the managing app ID. 
+The API response will include the `managedBy` field populated with the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+
+After this successful API call, this application ID will be the only application ID permitted to perform modifications to this list.
 
 #### Request
 
@@ -1200,9 +1215,9 @@ The `managedBy` value in the response payload does not change.
 ```
 
 
-### Modification API calls on a managed list
+### Modification API Calls on a Managed List
 
-Operations to modify a managed list will validate the Authorization JWT app ID. The API requests that include the managing app ID in the Authorization JWT will be permitted and execute.
+Operations to modify a managed list will validate the Authorization JWT application ID. The API requests that include the managing application ID in the Authorization JWT will be permitted and execute.
 
 Those operations include: 
 * [Update a List API](#update-a-list)
@@ -1216,7 +1231,7 @@ Those operations include:
 
 #### Validation Error for Modifying a Managed List 
 
-In the case that the API requests are made to modify a managed list and the Authorization includes an app ID that is not the managing app ID, the following error response will be returned:
+In the case that the API requests are made to modify a managed list and the Authorization includes an application ID that is not the managing application ID, the following error response will be returned:
 
 ```shell
 {

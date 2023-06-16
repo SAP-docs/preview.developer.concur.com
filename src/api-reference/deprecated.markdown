@@ -33,16 +33,15 @@ The following application programming interfaces (APIs) and other resources have
   * [XSD Schema](/api-reference/direct-connects/hotel-service-2/xsd-schema.html)
 * Expense Entry v1.1
   * [Expense Entry Itemization](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)
-  * [Expense Entry](/api-reference/expense/expense-report/v1dot1.expense-entry.html)
 * [Expense Entry Attendee v2](/api-reference/expense/expense-report/v2.expense-entry-attendee.html)
 * [Expense Group Configuration v1.1](/api-reference/expense/expense-report/v1dot1.expense-group-configurations.html)
 * Expense Report v1.1
   * [Expense Report Header](/api-reference/expense/expense-report/v1dot1.reports.html)
   * [Expense Reports List](/api-reference/expense/expense-report/v1dot1.reports-list.html)
   * [Expense Report Full Details](/api-reference/expense/expense-report/v1dot1.report-full-details.html)
-  * [Locations](/api-reference/common/locations/v1dot1.locations.html)
 * [Report Details](/api-reference/expense/expense-report/expense-report-get.html)
 * [Expense Report v2](/api-reference/expense/expense-report/v2.reports.html)
+* [Launch an External URL v1](/api-reference/callouts/launch-external-url.html)
 * List Item Web Service v1
   * [List Item Web Service](/api-reference/common/list-item/v1.list-item.html)
   * [List Resource](/api-reference/common/list-item/v1.list-resource.html)
