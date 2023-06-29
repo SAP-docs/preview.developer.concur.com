@@ -34,7 +34,7 @@ Here are some of the features that make Carmel so unique:
 A word of advice.
 Compare before you buy, then book Carmel
 
-Carmel Limos works with Expense for Concur Standard and Expense for Concur Professional. It will be available soon in the SAP Concur App Center under User Connections at concur.com/appcenter. For more information about the Carmel Limo integration, visit https://www.carmellimo.com.  
+Carmel Limos works with Expense for Concur Standard and Expense for Concur Professional. It will be available soon in the SAP Concur App Center under User Connections at [concur.com/appcenter](concur.com/appcenter). For more information about the Carmel Limo integration, visit [https://www.carmellimo.com](https://www.carmellimo.com).  
 
 ## User Connection Apps Now Available
 
