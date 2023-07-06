@@ -1,23 +1,18 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Financial Integration Service APIs",
-    "description": "Financial Integration APIs help Concur clients move extract data from Concur into their systems of record.",
-    "contact": {
-      "name": "Team Real Genius",
-      "url": "https://wiki.concur.com/confluence/display/EENG/Real+Genius",
-      "email": "Team_RealGenius@sap.com"
-    },
-    "version": "b83f422"
+    "title": "Financial Integration Service",
+    "description": "Allows an external system to interact with financial documents generated from SAP Concur, for financial posting into an ERP.  Provides an automated solution to request available data objects such as approved expense reports, cash advances, and invoices to import to the client internal system, with an opportunity to send posting confirmation back into SAP Concur before the object is locked down and cannot be altered in SAP Concur.",
+    "version": "4.0"
   },
   "externalDocs": {
-    "description": "Financial Integration Service Wiki",
-    "url": "https://wiki.concur.com/confluence/display/EENG/Financial+Integration+Service"
+    "description": "Financial Integration Service v4 - Getting Started",
+    "url": "https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html"
   },
   "servers": [
     {
-      "url": "https://financial-integration.service.cnqr.tech",
-      "description": "Generated server url"
+      "url": "https://us2.api.concursolutions.com/api/v4.0",
+      "description": "Production endpoint (US)"
     }
   ],
   "tags": [
@@ -4434,7 +4429,7 @@
           "Financial Transactions"
         ],
         "summary": "Retrieves a list of financial transactions.",
-        "description": "If docId is not present, the results are paged, page size is 100 by default if limit is not specified. Only one type of transactions can be retrieved at a time - specified by the docType. <br>If paging is occurring, each response contains a URI to retrieve the next page of transactions (if more exist). <br>If systemId is specified, the returned list of queued documents is filtered by systemId, paging applies. <br>If docId is specified, a single document which matches docId is returned. Paging doesn't apply. <br>If docId and systemId are specified, a single document whose docId AND systemId match the values is returned. Paging doesn't apply. <br>If docId is specified and ignoreDocumentStatus is no, a document which has not been retrieved by an ERP system is returned only, i.e document status is READY. If ignoreDocumentStatus is yes, a document is returned regardless of status.",
+        "description": "If docId is not present, the results are paged, page size is 100 by default if limit is not specified. Only one type of transaction can be retrieved at a time - specified by the docType. <br>If paging is occurring, each response contains a URI to retrieve the next page of transactions (if more exist). <br>If systemId is specified, the returned list of queued documents is filtered by systemId. Paging applies. <br>If docId is specified, a single document which matches docId is returned. Paging does not apply. <br>If docId and systemId are specified, a single document whose docId AND systemId match the values is returned. Paging does not apply. <br>If docId is specified and ignoreDocumentStatus is no, a document which has not been retrieved by an ERP system is returned only, i.e document status is READY. If ignoreDocumentStatus is yes, a document is returned regardless of status.",
         "operationId": "getTransactionDocs",
         "parameters": [
           {
@@ -4582,118 +4577,6 @@
           },
           "500": {
             "description": "Internal error"
-          }
-        },
-        "security": [
-          {
-            "Authorization": []
-          }
-        ]
-      }
-    },
-    "/fi/v4/companies/transactiontypes/{docType}/transactions/{id}": {
-      "delete": {
-        "tags": [
-          "Financial Transactions"
-        ],
-        "summary": "(Internal only) - Deletes a record from the list of transactions that can be processed.",
-        "description": "This is used by internal systems when changes need to be made to a transaction before an external financial system processes it. Returns an error if the document cannot be removed because a financial system has already begun processing it.",
-        "operationId": "recallDocument",
-        "parameters": [
-          {
-            "name": "concur-route",
-            "in": "header",
-            "description": "Concur Route",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "docType",
-            "in": "path",
-            "description": "Doc Type",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "expense",
-                "invoice",
-                "cashadvance",
-                "payroll",
-                "obligation",
-                "requestobligation",
-                "reportobligation"
-              ]
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isSoftCheck",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Accepted",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExceptionJsonInfo"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExceptionJsonInfo"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExceptionJsonInfo"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Document not found"
-          },
-          "405": {
-            "description": "Document cannot be recalled because it's already been retrieved by ERP."
-          },
-          "500": {
-            "description": "Document has not been retrieved by ERP but in the wrong state."
           }
         },
         "security": [
