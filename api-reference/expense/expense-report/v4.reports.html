@@ -1204,7 +1204,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code></td>
       <td>Read and write expense report headers.</td>
-      <td>PATCH</td>
+      <td>PATCH, POST</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">expense.report.workflowstatus.write</code></td>
@@ -1471,22 +1471,133 @@
 <span class="o">}</span>
 </code></pre></div></div>
 
-<h2 id="update-a-specific-report-">Update a Specific Report <a name="update-report-header"></a></h2>
+<h2 id="create-a-new-report">Create a New Report</h2>
 
-<p>Updates the attributes of a specific report.</p>
+<p>Creates a new report</p>
 
 <h3 id="scopes-1">Scopes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
-<h3 id="request-2">Request</h3>
-
 <h4 id="uri-template">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contextType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">PROXY</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-2">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="payload-1">Payload</h4>
+
+<ul>
+  <li><a href="#create-report-schema">Post Report Request</a></li>
+</ul>
+
+<h3 id="response-2">Response</h3>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">201 Created</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.8">409 Conflict</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h3 id="example-1">Example</h3>
+
+<h4 id="request-2"><a name="#patch-report-request-schema"></a>Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> POST <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--data-raw</span> <span class="s1">'{
+	"customData": [
+        {
+            "id": "custom15",
+            "value": "E31CB42509F9FF408BA7DD6713AB49BD"
+        }
+    ],
+    "businessPurpose":"Office Facility Supplies",
+    "comment": "Monthly recurring supplies",
+    "countryCode": "US",
+    "countrySubDivisionCode": "US-WA",
+    "name": "July Office Facility Supplies",
+    "policyId": "0a3f90a7-2feb-47fa-972c-7ddf7f1eb1f7"
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response-3"><a name="patch-report-response-schema"></a>Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>201 Created
+<span class="o">{</span>
+	<span class="s2">"uri"</span>: <span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/826FB0A052BD41E48CE6"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<h2 id="approve-or-send-back-a-report-">Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a></h2>
+
+<h2 id="update-a-specific-report-">Update a Specific Report <a name="update-report-header"></a></h2>
+
+<p>Updates the attributes of a specific report.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-3">Request</h3>
+
+<h4 id="uri-template-1">URI Template</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userID<span class="o">}</span>/context/<span class="o">{</span>contextType<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>
 </code></pre></div></div>
 
-<h4 id="parameters-1">Parameters</h4>
+<h4 id="parameters-2">Parameters</h4>
 
 <table>
   <thead>
@@ -1519,7 +1630,7 @@
   </tbody>
 </table>
 
-<h4 id="headers-2">Headers</h4>
+<h4 id="headers-4">Headers</h4>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
@@ -1540,119 +1651,10 @@
   <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
 </ul>
 
-<h4 id="payload-1">Payload</h4>
-
-<ul>
-  <li><a href="#update-report-schema">Patch Report Request</a></li>
-</ul>
-
-<h3 id="response-2">Response</h3>
-
-<h4 id="status-codes-1">Status Codes</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
-</ul>
-
-<h4 id="headers-3">Headers</h4>
-
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
-</ul>
-
-<h3 id="example-1">Example</h3>
-
-<h4 id="request-3"><a name="#patch-report-request-schema"></a>Request</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Viswa test'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-<span class="nt">--data-raw</span> <span class="s1">'{
-	"customData": [
-        {
-            "id": "custom15",
-            "value": "E31CB42509F9FF408BA7DD6713AB49BD",
-            "isValid": true
-        }
-    ],
-    "businessPurpose":"Office Facility Supplies",
-    "reportSource":"OTHER"
-}'</span>
-</code></pre></div></div>
-
-<h4 id="response-3"><a name="patch-report-response-schema"></a>Response</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
-</code></pre></div></div>
-<h2 id="approve-or-send-back-a-report-">Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a></h2>
-
-<p>The Approve function advances the specified report to the next step if it is in a system step. The Send Back function sends back the specified report to report owner .</p>
-
-<h3 id="scopes-2">Scopes</h3>
-
-<p><code class="language-plaintext highlighter-rouge">expense.report.workflowstatus.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
-
-<h3 id="request-4">Request</h3>
-
-<h4 id="uri-template-1">URI Template</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/approve
-https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/sendBack
-</code></pre></div></div>
-
-<h4 id="parameters-2">Parameters</h4>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
-      <td>string</td>
-      <td>-</td>
-      <td><strong>Required</strong> The unique identifier of the report that is being approved or sent back.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h4 id="headers-4">Headers</h4>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
-  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
-</ul>
-
-<h4 id="rest-design-specification-1">REST Design Specification</h4>
-
-<p>PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:</p>
-
-<ul>
-  <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
-</ul>
-
 <h4 id="payload-2">Payload</h4>
 
 <ul>
-  <li><a href="#report-approve-request-schema">Approve Report Request</a></li>
-  <li><a href="#report-send-back-request-schema">Sendback Report Request</a></li>
+  <li><a href="#update-report-schema">Patch Report Request</a></li>
 </ul>
 
 <h3 id="response-4">Response</h3>
@@ -1676,7 +1678,115 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
 
 <h3 id="example-2">Example</h3>
 
-<h4 id="request-5"><a name="patch-approve-sendback-report-request-schema"></a>Request</h4>
+<h4 id="request-4"><a name="#patch-report-request-schema"></a>Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: Viswa test'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--data-raw</span> <span class="s1">'{
+	"customData": [
+        {
+            "id": "custom15",
+            "value": "E31CB42509F9FF408BA7DD6713AB49BD"
+        }
+    ],
+    "businessPurpose":"Office Facility Supplies",
+    "reportSource":"OTHER"
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response-5"><a name="patch-report-response-schema"></a>Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
+</code></pre></div></div>
+<h2 id="approve-or-send-back-a-report--1">Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a></h2>
+
+<p>The Approve function advances the specified report to the next step if it is in a system step. The Send Back function sends back the specified report to report owner .</p>
+
+<h3 id="scopes-3">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.workflowstatus.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-5">Request</h3>
+
+<h4 id="uri-template-2">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/approve
+https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/sendBack
+</code></pre></div></div>
+
+<h4 id="parameters-3">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report that is being approved or sent back.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-6">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h4 id="rest-design-specification-1">REST Design Specification</h4>
+
+<p>PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:</p>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<ul>
+  <li><a href="#report-approve-request-schema">Approve Report Request</a></li>
+  <li><a href="#report-send-back-request-schema">Sendback Report Request</a></li>
+</ul>
+
+<h3 id="response-6">Response</h3>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-7">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a SAP Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
+
+<h3 id="example-3">Example</h3>
+
+<h4 id="request-6"><a name="patch-approve-sendback-report-request-schema"></a>Request</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/Approve'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
@@ -1687,7 +1797,7 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
 }'</span>
 </code></pre></div></div>
 
-<h4 id="response-5"><a name="patch-approve-sendback-report-response-schema"></a>Response</h4>
+<h4 id="response-7"><a name="patch-approve-sendback-report-response-schema"></a>Response</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
 </code></pre></div></div>
@@ -2023,6 +2133,81 @@ https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenserep
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
       <td><strong>Required</strong> The unique identifier of the Concur user who is the report owner.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="newreport"><a name="create-report-schema"></a>NewReport</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">businessPurpose</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The text input for the business purpose by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">comment</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The expense report comment added by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country ISO 3166-1 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countrySubDivisionCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The location country sub division ISO 3166-2 code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customData</code></td>
+      <td><a href="#custom-data-schema"><code class="language-plaintext highlighter-rouge">CustomData</code></a></td>
+      <td>-</td>
+      <td>The details from the <code class="language-plaintext highlighter-rouge">customData</code> fields. These fields may not have data, depending on the configuration.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The end date of the report as used for trip-based reporting.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The expense report name input by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">policyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of the policy that applies to this report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The date assigned to the report by the user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>The start date of the report as used for trip-based reporting.</td>
     </tr>
   </tbody>
 </table>
