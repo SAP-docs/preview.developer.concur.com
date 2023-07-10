@@ -25,12 +25,12 @@ This API is only available to partners who have been granted access by SAP Concu
 
 Required Scopes:
 
-| Name|Description|Endpoint|
-| ---|---|---|
-|`expense.report.read`| Get information about expense reports.|GET|
-|`expense.report.readwrite`|Read and write expense report headers.|PATCH|
-|`expense.report.workflowstatus.write`|Approve or Send Back the Report in the workflow|PATCH|
-|`user.read`|Get User Information, necessary for `userID`.|GET|
+| Name|Description| Endpoint    |
+| ---|---|-------------|
+|`expense.report.read`| Get information about expense reports.| GET         |
+|`expense.report.readwrite`|Read and write expense report headers.| PATCH, POST |
+|`expense.report.workflowstatus.write`|Approve or Send Back the Report in the workflow| PATCH       |
+|`user.read`|Get User Information, necessary for `userID`.| GET         |
 
 Optional Scope:
 
@@ -237,6 +237,93 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
 }
 ```
 
+## Create a New Report
+
+Creates a new report 
+
+### Scopes
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* [Post Report Request](#create-report-schema)
+
+### Response
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [409 Conflict](https://tools.ietf.org/html/rfc7231#section-6.5.8)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+### Example
+
+#### <a name="#patch-report-request-schema"></a>Request
+
+```shell
+curl --location --request POST 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"customData": [
+        {
+            "id": "custom15",
+            "value": "E31CB42509F9FF408BA7DD6713AB49BD"
+        }
+    ],
+    "businessPurpose":"Office Facility Supplies",
+    "comment": "Monthly recurring supplies",
+    "countryCode": "US",
+    "countrySubDivisionCode": "US-WA",
+    "name": "July Office Facility Supplies",
+    "policyId": "0a3f90a7-2feb-47fa-972c-7ddf7f1eb1f7"
+}'
+```
+
+#### <a name="patch-report-response-schema"></a>Response
+
+```shell
+201 Created
+{
+	"uri": "https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/826FB0A052BD41E48CE6"
+}
+```
+## Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a>
+
+
 ## Update a Specific Report <a name="update-report-header"></a>
 
 Updates the attributes of a specific report.
@@ -311,8 +398,7 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 	"customData": [
         {
             "id": "custom15",
-            "value": "E31CB42509F9FF408BA7DD6713AB49BD",
-            "isValid": true
+            "value": "E31CB42509F9FF408BA7DD6713AB49BD"
         }
     ],
     "businessPurpose":"Office Facility Supplies",
@@ -464,6 +550,21 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 |`submitterId`|`string`|-|The unique identifier of the employee who submitted the report.|
 |`taxConfigId`|`string`|-|The The tax config ID of the report.|
 |`userId`|`string`|-|**Required** The unique identifier of the Concur user who is the report owner.|
+
+### <a name="create-report-schema"></a>NewReport
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`businessPurpose`|`string`|-|The text input for the business purpose by the user.|
+|`comment`|`string`|-|The expense report comment added by the user.|
+|`countryCode`|`string`|-|The location country ISO 3166-1 code.|
+|`countrySubDivisionCode`|`string`|-|The location country sub division ISO 3166-2 code.|
+|`customData`|[`CustomData`](#custom-data-schema)|-|The details from the `customData` fields. These fields may not have data, depending on the configuration.|
+|`endDate`|`string`|`YYYY-MM-DD`|The end date of the report as used for trip-based reporting.|
+|`name`|`string`|-|The expense report name input by the user.|
+|`policyId`|`string`|-|The unique identifier of the policy that applies to this report.|
+|`reportDate`|`string`|`YYYY-MM-DD`|The date assigned to the report by the user.|
+|`startDate`|`string`|`YYYY-MM-DD`|The start date of the report as used for trip-based reporting.|
 
 ### <a name="update-report-schema"></a>UpdateReport
 
