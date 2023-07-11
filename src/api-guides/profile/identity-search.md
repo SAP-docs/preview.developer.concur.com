@@ -7,21 +7,21 @@ We define a schema, as an outline of how the caller may interact with the API.
 
 The `schemas` parameter is required for all POST requests.
 
-| Name                            | Path                                                       |
-| ------------------------------- | ---------------------------------------------------------- |
-| [SearchRequest](#schema-search-request) | urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest |
+|Name|Path|
+| --- | --- |
+|[SearchRequest](#schema-search-request)|urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest|
 
 ### Search Request <a name="schema-search-request"></a>
 Retrieves users of a given company. The filter operations can be used to fetch a unique user or users identity information.
 
-| Parameter            | Description                                      | Required | Value
-| -------------------- | ------------------------------------------------ | -------- | ----------------------------------------------------
-| `schemas`            | Validate request against schema object.          | Yes      | List of Strings <br> [Schemas](#schemas)
-| `filter`             | Narrow returned users matching expression.       | No       | Query String <br> [Filtering](#filtering)
-| `count`              | Number of users to return.                       | No       | 1 - 1000 <br> [Pagination](#pagination)
-| `attributes`         | Return only specified fields.                    | No       | List of Strings <br> [Example](#param-example-attributes) 
-| `excludedAttributes` | Return all other fields than specified.          | No       | List of Strings <br> [Example](#param-example-excluded-attributes) 
-| `cursor`             | Enable user to continue to the next page.        | No       | Encoded String <br> [Pagination](#pagination)
+| Parameter| Description| Required | Value
+| --- | --- | --- | ---
+| `schemas`| Validate request against schema object.| Yes | List of Strings <br> [Schemas](#schemas)
+| `filter` | Narrow returned users matching expression.| No | Query String <br> [Filtering](#filtering)
+| `count`| Number of users to return.| No | 1 - 1000 <br> [Pagination](#pagination)
+| `attributes`| Return only specified fields.| No | List of Strings <br> [Example](#param-example-attributes) 
+| `excludedAttributes` | Return all other fields than specified. | No | List of Strings <br> [Example](#param-example-excluded-attributes) 
+| `cursor` | Enable user to continue to the next page. | No | Encoded String <br> [Pagination](#pagination)
 
 ## Attributes / ExcludedAttributes <a name="param-attributes-exclude"></a>
 Adding `attributes` and/or `excludedAttributes` to a query remove attributes from each user-object in the response. The `attributes` parameter returns *only what is requested* while the `excludedAttributes` parameter returns *everything except what is requested*.
@@ -249,61 +249,61 @@ When the caller reaches the last page, there will be no `nextCursor` in the resp
 
 A filter is an expression to return a subset of records matching the predicate. Filters are comprised of Attribute Operators, Logical Operators, and Grouping Operators. [Examples](#example-filtering) are listed below.
 
-| Parameter                                 | Description                                                                                            |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| [Allowed Attributes](#allowed-attributes) | Term, the subject, eligible for filtering.                                                             |
-| [Attribute Operators](#op-attributes)     | Action, a verb, on comparator, a value.                                                                |
-| [Logical Operators](#op-logical)          | Multiple expressions are conjoined by logical operators. |
-| [Grouping Operators](#op-grouping)        | Filtering for sub-attributes. May be used with single-valued or multi-valued attributes.                |
+| Parameter | Description|
+| --- | --- |
+| [Allowed Attributes](#allowed-attributes) | Term, the subject, eligible for filtering. |
+| [Attribute Operators](#op-attributes) | Action, a verb, on comparator, a value.|
+| [Logical Operators](#op-logical)| Multiple expressions are conjoined by logical operators. |
+| [Grouping Operators](#op-grouping)| Filtering for sub-attributes. May be used with single-valued or multi-valued attributes.|
 
 ### Allowed Attributes <a name="allowed-attributes"></a>
 
-| Attribute                                                                  | Sub-Attributes    | Data Type |
-| -------------------------------------------------------------------------- | ----------------- | --------- |
-| `active`                                                                   | -                 | `boolean` |
-| `addresses`                                                                | `country`         | `string`  |
-|                                                                            | `locality`        | `string`  |
-|                                                                            | `region`          | `string`  |
-|                                                                            | `type`            | `string`  |
-| `emails`                                                                   | `value`           | `string`  |
-|                                                                            | `type`            | `string`  |
-|                                                                            | `verified`        | `boolean` |
-| `entitlements`                                                             | -                 | `string`  |
-| `externalId`                                                               | -                 | `string`  |
-| `id`                                                                       | -                 | `string`  |
-| `meta`                                                                     | `created`         | `data`    |
-|                                                                            | `lastModified`    | `date`    |
-| `name`                                                                     | `familyName`      | `string`  |
-|                                                                            | `givenName`       | `string`  |
-| `nickName`                                                                 | -                 | `string`  |
-| `userName`                                                                 | -                 | `string`  |
-| urn:ietf:params:scim:schemas:extension: <br> `enterprise:2.0:User`         | `companyId`       | `string`  |
-|                                                                            | `costCenter`      | `string`  |
-|                                                                            | `department`      | `string`  |
-|                                                                            | `division`        | `string`  |
-|                                                                            | `employeeNumber`  | `string`  |
-|                                                                            | `startDate`       | `date`    |
-|                                                                            | `terminationDate` | `date`    |
-| urn:ietf:params:scim:schemas:extension: <br> `enterprise:2.0:User:manager` | `employeeNumber`  | `string`  |
-|                                                                            | `value`           | `string`  |
-| urn:ietf:params:scim:schemas:extension: <br> `sap:2.0:User`                | `userUuid`        | `string`  |
+| Attribute| Sub-Attributes| Data Type |
+| --- | --- | --- |
+| `active` | - | `boolean` |
+| `addresses`| `country` | `string`|
+|| `locality`| `string`|
+|| `region`| `string`|
+|| `type`| `string`|
+| `emails` | `value` | `string`|
+|| `type`| `string`|
+|| `verified`| `boolean` |
+| `entitlements` | - | `string`|
+| `externalId` | - | `string`|
+| `id` | - | `string`|
+| `meta` | `created` | `data`|
+|| `lastModified`| `date`|
+| `name` | `familyName`| `string`|
+|| `givenName` | `string`|
+| `nickName` | - | `string`|
+| `userName` | - | `string`|
+| urn:ietf:params:scim:schemas:extension: <br> `enterprise:2.0:User` | `companyId` | `string`|
+|| `costCenter`| `string`|
+|| `department`| `string`|
+|| `division`| `string`|
+|| `employeeNumber`| `string`|
+|| `startDate` | `date`|
+|| `terminationDate` | `date`|
+| urn:ietf:params:scim:schemas:extension: <br> `enterprise:2.0:User:manager` | `employeeNumber`| `string`|
+|| `value` | `string`|
+| urn:ietf:params:scim:schemas:extension: <br> `sap:2.0:User`| `userUuid`| `string`|
 
 ### Attribute Operators <a name="op-attributes"></a>
 
 Conditional relationship between attribute and value stored in database. Multiple operators can be used with zero or more logical operators.
 
-| Operator | Description              | Example                                       |
-| -------- | ------------------------ | --------------------------------------------- |
-| eq       | equal                    | `active eq true`                              |
-| ne       | not equal                | `name.familyName ne "Smith"`                  |
-| co       | contains                 | `name.givenName co "John"`                    |
-| sw       | starts with              | `name.givenName sw "J"`                       |
-| ew       | ends with                | `name.givenName ew "n"`                       |
-| pr       | present (has value)      | `name.givenName pr`                           |
-| gt       | greater than             | `meta.lastModified gt "2011-05-13T04:42:34Z"` |
-| ge       | greater than or equal to | `meta.lastModified ge "2011-05-13T04:42:34Z"` |
-| lt       | less than                | `meta.lastModified lt "2011-05-13T04:42:34Z"` |
-| le       | less than or equal to    | `meta.lastModified le "2011-05-13T04:42:34Z"` |
+| Operator | Description| Example |
+| --- | --- | --- |
+| eq | equal| `active eq true`|
+| ne | not equal| `name.familyName ne "Smith"`|
+| co | contains | `name.givenName co "John"`|
+| sw | starts with| `name.givenName sw "J"` |
+| ew | ends with| `name.givenName ew "n"` |
+| pr | present (has value)| `name.givenName pr` |
+| gt | greater than | `meta.lastModified gt "2011-05-13T04:42:34Z"` |
+| ge | greater than or equal to | `meta.lastModified ge "2011-05-13T04:42:34Z"` |
+| lt | less than| `meta.lastModified lt "2011-05-13T04:42:34Z"` |
+| le | less than or equal to| `meta.lastModified le "2011-05-13T04:42:34Z"` |
 
 ### Logical Operators <a name="op-logical"></a>
 
@@ -311,20 +311,20 @@ Separate attribute expressions. Filters can include zero or more logical operato
 
 This definition may be overwritten by grouping operators.
 
-| Operator | Description                                      | Example                                                   |
-| -------- | ------------------------------------------------ | --------------------------------------------------------- |
-| not      | Match, if expression evaluates to `false`.       | `not(name.givenName eq "John")`                           |
-| and      | Match, if both expressions evaluate to `true`.   | `name.givenName eq "John" and name.familyName eq "Smith"` |
-| or       | Match, if either expression evaluates to `true`. | `name.givenName eq "John" or name.givenName eq "James"`   |
+| Operator | Description| Example |
+| --- | --- | --- |
+| not| Match, if expression evaluates to `false`. | `not(name.givenName eq "John")` |
+| and| Match, if both expressions evaluate to `true`. | `name.givenName eq "John" and name.familyName eq "Smith"` |
+| or | Match, if either expression evaluates to `true`. | `name.givenName eq "John" or name.givenName eq "James"` |
 
 ### Grouping Operators <a name="op-grouping"></a>
 
 Evaluate an expression in explicit order.
 
-| Operator | Description                                                     | Example                                                                                  |
-| -------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| ()       | [Precedence](#example-precedence) grouping, (evaluate first) and overrides precedence. | `(name.givenName eq "John" or name.givenName eq "James") and name.familyName eq "Smith"` |
-| []       | Complex attribute filtering, used with multi-valued attributes. | `emails[type eq "work" and value co "@example.com"]`                                     |
+| Operator | Description | Example |
+| --- | --- | --- |
+| () | [Precedence](#example-precedence) grouping, (evaluate first) and overrides precedence. | `(name.givenName eq "John" or name.givenName eq "James") and name.familyName eq "Smith"` |
+| [] | Complex attribute filtering, used with multi-valued attributes. | `emails[type eq "work" and value co "@example.com"`|
 
 ### Precedence Examples <a name="example-precedence"></a>
 
@@ -332,13 +332,13 @@ The definition provided states: `NOT > AND > OR`
 
 For the examples below, capital letters (A, B, C) represent different attribute expressions.
 
-| Expression           | Default Evaluation       |
-| -------------------- | ------------------------ |
-| `A or B and C`       | `A or (B and C)`         |
-| `A and B or C`       | `(A and B) or C`         |
+| Expression | Default Evaluation |
+| --- | --- |
+| `A or B and C` | `A or (B and C)` |
+| `A and B or C` | `(A and B) or C` |
 | `A and B or C and D` | `(A and B) or (C and D)` |
-| `A or B and C or D`  | `A or (B and C) or D`    |
-| `not A or B and C`   | `(not A) or (B and C)`   |
+| `A or B and C or D`| `A or (B and C) or D`|
+| `not A or B and C` | `(not A) or (B and C)` |
 
 ## Request/Response Examples <a name="example-filtering"></a>
 
