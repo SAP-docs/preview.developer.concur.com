@@ -60,9 +60,7 @@ user.read|Get user information, necessary for `userID`.|GET
    * When the report is moving within a cost object sub-branch it will generate a single event with one step instances.
    * ESS Expense Event would include a new `assignedUserId` field in the Status Changed Facts Schema.
    * Portal can also optionally listen to subsequent status change events (`eventType=statusChanged`) to further notify users after item has entered cost object approval workflow. For example, in case an item has been recalled (`A_RESU`), could post an additional notification to those users.
-
-Reference: [See Concur Expense: Workflow – Cost Object Approval Setup Guide](https://www.concurtraining.com/customers/tech_pubs/Docs/_Current/SG_Exp/Exp_SG_Workflow_COA.pdf) and [Concur Request: Cost Object Approval Setup Guide](https://www.concurtraining.com/customers/tech_pubs/Docs/_Current/SG_Req/Req_SG_Workflow-COA.pdf) for detail on cost object approval workflow steps. 
-In the examples in Section 4 of both guides, Dave/Cindy/Finn would each receive a notification event when the Report/Request first enters cost object approval workflow.
+   * Reference: [See Concur Expense: Workflow – Cost Object Approval Setup Guide](https://www.concurtraining.com/customers/tech_pubs/Docs/_Current/SG_Exp/Exp_SG_Workflow_COA.pdf) and [Concur Request: Cost Object Approval Setup Guide](https://www.concurtraining.com/customers/tech_pubs/Docs/_Current/SG_Req/Req_SG_Workflow-COA.pdf) for detail on cost object approval workflow steps. In the examples in Section 4 of both guides, Dave/Cindy/Finn would each receive a notification event when the Report/Request first enters cost object approval workflow.
 
 2. **Portal system retrieves all delegates' user IDs from the [Identify v4 API](/api-reference/profile/v4.identity.html)** for each approver that just received an event notification, and then portal sends a notification to each approver and delegate.
    * Portal uses `recipientId` obtained in ESS Expense Event to call Identity v4.
