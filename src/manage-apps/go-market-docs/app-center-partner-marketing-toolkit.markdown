@@ -12,26 +12,6 @@ Through our App Center marketplace, our events, and direct marketing campaigns, 
 
 The toolkit and best practices found here will help us maximize your opportunity with both. We look forward to working with you!
 
-* [Partner Resources](#partner-resources)
-	* [Marketing Office Hours](#marketing-office-hours)
-* [Logo and Brand Guidelines](#logo-and-brand-guidelines)
-	* [Communicating Your Partnership](#communicating-your-partnership)
-	* [Font Treatment](#font-treatment)
-	* [SAP Concur Logos](#sap-concur-logos)
-* [Marketing Content Best Practices](#marketing-content-best-practices)
-	* [Recommended Marketing Content](#recommended-marketing-content)
-	* [Messaging Framework](#messaging-framework)
-	* [Content Best Practices](#content-best-practices)
-	* [Landing Pages](#landing-pages)
-	* [Partner Success Stories](#success-stories)
-* [Public Relations and Social Media Guidelines](#public-relations-and-social-media-guidelines)
-* [Search Guidelines](#search-guidelines)
-* [Working with SAP Concur](#working-with-sap-concur)
-	* [App Center Listing Creation and Update Process](#listing-process)
-	* [Approval Process](#approval-process)
-	* [Partner Insights Newsletter](#partner-insights)
-	* [SAP Concur Contacts](#contacts)
-
 ## <a name="partner-resources"></a>Partner Resources
 
 The [Go to Market page](./go-to-market.html), accessible from the Resources tab of your Partner Place site or via direct link, is the home for documents and links to help partners with:​
@@ -129,9 +109,9 @@ After signing the partner agreement, you can use the “SAP Concur Partner” fo
 
 #### <a name="font-treatment-download-links"></a>Download Links
 
-* Download the ”SAP Concur Partner” font treatment [here](https://partnerportal.concur.com/ResourceFiles/a9829671-fc33-49fc-9533-d76eea817e65.zip).
-* Download the ”SAP Concur Partner App Center” font treatment [here](https://partnerportal.concur.com/ResourceFiles/4b304699-930f-4831-a733-a000fd97f34f.zip).
-* Queen’s English “App Centre” spelling available [here](https://partnerportal.concur.com/ResourceFiles/89923fd9-ffc6-4912-877d-6185ee5fe3b2.zip).
+* Download the ”SAP Concur Partner” font treatment [here](/manage-apps/go-market-docs/sap-concur-partner.zip).
+* Download the ”SAP Concur Partner App Center” font treatment [here](/manage-apps/go-market-docs/sap-concur-partner-app-center.zip).
+* Queen’s English “App Centre” spelling available [here](/manage-apps/go-market-docs/sap-concur-partner-app-centre.zip).
 
 Please read the full font treatment guidelines provided in the downloaded folders or available [here](https://partnerportal.concur.com/ResourceFiles/a9829671-fc33-49fc-9533-d76eea817e65.zip).
 
@@ -216,9 +196,9 @@ Acceptable|Branding
 ### <a name="recommended-marketing-content"></a>Recommended Marketing Content​
 The most effective way to promote a partner integration is to make **concise**, **current**, and **compelling** marketing content available to the SAP Concur Sales teams, customers, and prospects.​
 
-| Recommended Partner Content                                                                                                                                                                                                                                                                  | Where Content is Surfaced                                                                                                                                |
+|Recommended Partner Content|Where Content is Surfaced|
 |----|----|
-| Brochures (required for Enterprise applications)<br>Landing page covering the integration (required for Enterprise Applications)<br>Brief demo & video overviews<br>Customer testimonials and case studies ([submit via this form](https://app.smartsheet.com/b/form/bf7c655708514611a55f01cee8452737?mkt_tok=eyJpIjoiT1dFek5qTmtOVGt6T1dFeiIsInQiOiJHek9TXC9GTVlsQVZhOWZQV3cyY1VPKytTK0RJQllVS0lGQkl0U3F4TEVHZXllYlVJZEpXWk94TUZLQnFuQ1wvNUxrOU1WK2RMVnZPVTlJRUxibFp2dlNnPT0ifQ==))<br>Slides to integrate into sales presentations ([template](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-slide-template.pptx)) | Highspot (SAP employees only)<br>App Center Jam group (SAP employees only)<br>SAP Concur App Center listings<br>Concur.com<br>Your own website<br>Google |
+|Brochures (required for Enterprise applications)<br>Landing page covering the integration (required for Enterprise Applications)<br>Brief demo & video overviews<br>Customer testimonials and case studies ([submit via this form](https://app.smartsheet.com/b/form/bf7c655708514611a55f01cee8452737?mkt_tok=eyJpIjoiT1dFek5qTmtOVGt6T1dFeiIsInQiOiJHek9TXC9GTVlsQVZhOWZQV3cyY1VPKytTK0RJQllVS0lGQkl0U3F4TEVHZXllYlVJZEpXWk94TUZLQnFuQ1wvNUxrOU1WK2RMVnZPVTlJRUxibFp2dlNnPT0ifQ==))<br>Slides to integrate into sales presentations ([template](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-slide-template.pptx)) |Highspot (SAP employees only)<br>App Center Jam group (SAP employees only)<br>SAP Concur App Center listings<br>Concur.com<br>Your own website<br>Google |
 
 During onboarding, the App Center marketing team works with partners to ensure you have essential, correctly-branded marketing pieces. ​
 
@@ -352,7 +332,7 @@ SAP expects to review and approve all partner press releases that reference SAP 
 
 Please send your release to [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarketing@sap.com) for review prior to submission to the SAP PR Team.
 
-[**Download the Press Release Template**](https://partnerportal.concur.com/ResourceFiles/b517bc83-f0e0-4aab-b61d-af313f6d22b7.pdf)
+[**Download the Press Release Template**](/manage-apps/go-market-docs/sap-concur-build-partner-pr-template-final.pdf)
 
 
 ### <a name="social-media-overview"></a>Social Media Overview
