@@ -113,7 +113,7 @@ After signing the partner agreement, you can use the “SAP Concur Partner” fo
 * Download the ”SAP Concur Partner App Center” font treatment [here](/manage-apps/go-market-docs/sap-concur-partner-app-center.zip).
 * Queen’s English “App Centre” spelling available [here](/manage-apps/go-market-docs/sap-concur-partner-app-centre.zip).
 
-Please read the full font treatment guidelines provided in the downloaded folders or available [here](https://partnerportal.concur.com/ResourceFiles/a9829671-fc33-49fc-9533-d76eea817e65.zip).
+Please read the full font treatment guidelines provided in the downloaded folders or available [here](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf).
 
 #### <a name="font-treatment-minimum-size"></a>Minimum Size
 
