@@ -2,7 +2,6 @@
 title: SAP Concur App Center - Partner Marketing Toolkit
 layout: reference
 ---
-[View the PDF version of the Marketing Toolkit here](https://developer.concur.com/manage-apps/go-market-docs/app-center-marketing-toolkit.pdf).
 
 ## Welcome!
 
@@ -37,13 +36,13 @@ Or email us at [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarket
 
 * Always use your company’s logo and proprietary design when creating your own communication and marketing materials.
 * In general, partners are not permitted to use the SAP corporate logo.​
-* Please review the [full brand guidelines](https://partnerportal.concur.com/ResourceFiles/1c50981f-64d1-4b87-be79-a8e9994ba16b.zip).
+* Please review the [full brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf).
 
 Acceptable|Branding|Notes
 :---:|---|---
 &#9989;|We are an SAP Concur partner.|-
 &#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner.png)|-
-&#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner-app-center.png)|Download the font treatment [here](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#font-treatment-download-links). Make sure to follow the [Font Treatment brand guidelines](https://partnerportal.concur.com/ResourceFiles/a9829671-fc33-49fc-9533-d76eea817e65.zip) for use. ​
+&#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner-app-center.png)|Download the font treatment [here](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#font-treatment-download-links). Make sure to follow the [Font Treatment brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf) for use. ​
 Specific cases only|![](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-logo.png)|Partners may use the SAP Concur logo only in specific situations, such as your integration or connection landing page UI or in a list of all of your partnerships. You must follow brand guidelines and submit content for review.
 &#10060;|![Do Not Use SAP Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-logo.png)|Partners are **not** permitted to use the SAP corporate logo.
 &#10060;|![Do Not Use Concur Logo](./app-center-partner-marketing-toolkit-logo-brand-concur-logo.png)|Do **not** use the outdated “Concur” logo when creating materials.
@@ -160,7 +159,7 @@ In general, SAP Concur logo usage is not permitted. However, App Center partners
 
 #### <a name="sap-concur-logos-using"></a>Using the Logo
 
-* Only original SAP Concur logo or c-dot icon artwork may be used. The content must be clear that you are a partner of SAP Concur Logo placement must adhere to [brand guidelines](https://partnerportal.concur.com/ResourceFiles/1c50981f-64d1-4b87-be79-a8e9994ba16b.zip) for clear space and sizing.
+* Only original SAP Concur logo or c-dot icon artwork may be used. The content must be clear that you are a partner of SAP Concur Logo placement must adhere to [brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf) for clear space and sizing.
 * Email [concur_AppCenterMarketing@SAP.com](mailto:concur_AppCenterMarketing@SAP.com) for logo files and to submit collateral and pages using the logo prior to approval.
 
 #### <a name="sap-concur-logos-clear-space-and-size"></a>Clear Space and Size Requirements
@@ -308,7 +307,7 @@ Amplify your company’s voice to your prospects, clients, and colleagues. By su
 ### <a name="partner-hosted-webinars-best-practices"></a>Partner-Hosted Webinars Best Practices​
 1.  Make sure that you have thoroughly reviewed your distribution list to ensure that no inappropriate contacts receive your invitations and email campaigns.​
 2.  Send invitations at least one week in advance; we find that sending a series of emails works best.​
-3.  If referring to the SAP Concur partnership, be sure to follow the [partner brand guidelines](https://partnerportal.concur.com/ResourceFiles/ce0de379-1db9-46c8-9560-f24049b00cee.zip).​
+3.  If referring to the SAP Concur partnership, be sure to follow the [partner brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf).​
 4.  If your webinar is focused on the integration, email [App](mailto:concur_AppCenterMarketing@sap.com) [Center Marketing](mailto:concur_AppCenterMarketing@sap.com) to let us know. Someone from the App Center team may want to review your content or help participate to explain the App Center and answer questions.​
 
 ## <a name="public-relations-and-social-media-guidelines"></a>Public Relations and Social Media Guidelines
@@ -363,7 +362,7 @@ You are welcome to promote your integration with SAP Concur solutions via your c
 
 ### <a name="search-seo"></a>Search Engine Optimization (SEO)
 
-> **New to Search Engine Optimization? Check out our [SEO best practices guide](https://partnerportal.concur.com/ResourceFiles/a08592ca-3972-46fa-b323-ae8392741fd2.pdf) for partners.**
+> **New to Search Engine Optimization? Check out our [SEO best practices guide](/manage-apps/go-market-docs/seo-best-practice-guidance-for-partners.pdf) for partners.**
 
 * All Meta Tags within the website must state the company’s relationship with SAP Concur solutions without any ambiguity.
 * The term “Concur” or “SAP Concur” (or another SAP Concur product name) cannot be the first word in the title tag.
@@ -417,7 +416,7 @@ concur.com/zh-hans-cn
 concur.co.jp
 etc.
 ```
-[Download the full guidelines](https://partnerportal.concur.com/ResourceFiles/bc98dd52-190c-4594-b526-6851e59e46c6.pdf)
+[Download the full guidelines](/manage-apps/go-market-docs/sap-concur-search-ad-guidelines-for-partners.pdf)
 
 ## <a name="working-with-sap-concur"></a>Working with the App Center Team 
 
