@@ -7,6 +7,253 @@ layout: reference
 
 The Identity .search API is built to enable clients to filter based on User Identity attributes. Filters allow logical and grouping operators to refine search results.
 
+## Popular Use Cases
+
+This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT.
+
+### Authentication (Required)
+
+To use Identity v4.1 APIs, the appropriate [scopes](https://developer.concur.com/api-reference/profile/v4.1.identity.html#filter-for-users-) must be assigned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT scopes to access the identity endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.
+
+### Search for user by email address
+
+Retrieve the UUID of a User Identity Profile based on email address.
+
+```
+POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+```json
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
+  "filter": "emails.value eq \"John.Doe@sap.com\"",
+  "attributes": [ "emails" ]
+}
+```
+
+#### Response
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 1,
+  "startIndex": 1,
+  "itemsPerPage": 1,
+  "Resources": [
+    {
+      "emails": [
+        {
+          "verified": false,
+          "type": "work",
+          "value": "john.doe@sap.com",
+          "notifications": false
+        }
+      ],
+      "id": "f3a49682-5d15-4ed0-9fa1-d834f87ea16e"
+    }
+  ]
+}
+```
+
+### Search for active user(s) who have an email address that ends with company domain
+
+Retrieve one or more users who are active and have an @sap email address.
+
+```
+POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+```json
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
+  "filter": "active eq true and emails.value ew \"sap.com\"",
+  "attributes": [ "active", "emails" ]
+}
+```
+
+#### Response
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 2,
+  "startIndex": 1,
+  "itemsPerPage": 2,
+  "Resources": [
+    {
+      "active": true,
+      "emails": [
+        {
+          "verified": false,
+          "type": "work",
+          "value": "john.doe@sap.com",
+          "notifications": false
+        }
+      ],
+      "id": "f3a49682-5d15-4ed0-9fa1-d834f87ea16e"
+    },
+    {
+      "active": true,
+      "emails": [
+        {
+          "verified": true,
+          "type": "work",
+          "value": "johnny.appleseed@sap.com",
+          "notifications": false
+        }
+      ],
+      "id": "58d72127-d0af-44ab-957d-ca7b87499f27"
+    }
+  ]
+}
+```
+
+### Search for active users(s) who have access to an entitlement
+
+Retrieve one or more users who are active and contain an "Invoice" entitlement.
+
+```
+POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+```json
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
+  "filter": "active eq true and entitlements eq \"invoice\"",
+  "attributes": [ "active", "entitlements" ]
+}
+```
+
+#### Response
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 2,
+  "startIndex": 1,
+  "itemsPerPage": 2,
+  "Resources": [
+    {
+      "active": true,
+      "entitlements": [
+        "Travel",
+        "Invoice"
+      ],
+      "id": "f3a49682-5d15-4ed0-9fa1-d834f87ea16e"
+    },
+    {
+      "active": true,
+      "entitlements": [
+        "Invoice"
+      ],
+      "id": "58d72127-d0af-44ab-957d-ca7b87499f27"
+    }
+  ]
+}
+```
+
+### Search for user(s) who work in Bellevue
+
+Retrieve the UUIDs of users who work in Bellevue.
+
+```
+POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+```json
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
+  "filter": "addresses[type eq \"work\" and locality eq \"Bellevue\"]",
+  "attributes": [ "id" ]
+}
+```
+
+#### Response
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 5,
+  "startIndex": 1,
+  "itemsPerPage": 5,
+  "Resources": [
+    {
+      "id": "f3a49682-5d15-4ed0-9fa1-d834f87ea16e"
+    },
+    {
+      "id": "58d72127-d0af-44ab-957d-ca7b87499f27"
+    },
+    {
+      "id": "2a09b1ba-125f-4e4c-a8ef-f48a018583cc"
+    },
+    {
+      "id": "b49497ca-9152-475b-8acf-f57b8e2a796d"
+    },
+    {
+      "id": "1077e0e4-a883-4bd1-9dbb-0a54a58ab344"
+    }
+  ]
+}
+```
+
+### Search for active user(s) and have been with the company for at least 10 years
+
+Retrieve user(s) who are currently active and have a start date before 2013.
+
+```
+POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+```
+
+```json
+{
+  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
+  "filter": "active eq true and urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:startDate le 2013-12-31",
+  "attributes": [ "active", "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:startDate" ]
+}
+```
+
+#### Response
+```json
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "totalResults": 2,
+  "startIndex": 1,
+  "itemsPerPage": 2,
+  "Resources": [
+    {
+      "id": "f3a49682-5d15-4ed0-9fa1-d834f87ea16e",
+      "active": true,
+      "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+        "startDate": "2012-08-01"
+      }
+    },
+    {
+      "id": "58d72127-d0af-44ab-957d-ca7b87499f27",
+      "active": true,
+      "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+        "startDate": "2013-01-01"
+      }
+    },
+  ]
+}
+```
+
 ## Schemas <a name="schemas"></a>
 We define a schema, as an outline of how the caller may interact with the API.
 
@@ -17,7 +264,7 @@ The `schemas` parameter is required for all POST requests.
 |[SearchRequest](#schema-search-request)|urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest|
 
 ### Search Request <a name="schema-search-request"></a>
-Retrieves users of a given company. The filter operations can be used to fetch a unique user or users identity information.
+This API implements some of the functionality defined in [RFC 7644 § 3.4.3](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3). The SearchRequest schema outlines the supported parameters that may be used when calling .search endpoint.
 
 | Parameter| Description| Required | Value
 | --- | --- | --- | ---
@@ -282,8 +529,7 @@ A filter is an expression to return a subset of records matching the predicate. 
 || `givenName` | `string`|
 | `nickName` | - | `string`|
 | `userName` | - | `string`|
-| urn:ietf:params:scim:schemas:extension: <br> `enterprise:2.0:User` | `companyId` | `string`|
-|| `costCenter`| `string`|
+| urn:ietf:params:scim:schemas:extension: <br> `enterprise:2.0:User` | `costCenter`| `string`|
 || `department`| `string`|
 || `division`| `string`|
 || `employeeNumber`| `string`|
