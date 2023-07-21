@@ -1,3 +1,8 @@
+---
+title: Identity .search Implementation Guide
+layout: reference
+---
+
 # Identity .search Implementation Guide
 
 The Identity .search API is built to enable clients to filter based on User Identity attributes. Filters allow logical and grouping operators to refine search results.
