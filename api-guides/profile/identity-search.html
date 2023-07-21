@@ -498,6 +498,238 @@
 
 <p>The Identity .search API is built to enable clients to filter based on User Identity attributes. Filters allow logical and grouping operators to refine search results.</p>
 
+<h2 id="popular-use-cases">Popular Use Cases</h2>
+
+<p>This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT.</p>
+
+<h3 id="authentication-required">Authentication (Required)</h3>
+
+<p>To use Identity v4.1 APIs, the appropriate <a href="https://developer.concur.com/api-reference/profile/v4.1.identity.html#filter-for-users-">scopes</a> must be assigned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT scopes to access the identity endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.</p>
+
+<h3 id="search-for-user-by-email-address">Search for user by email address</h3>
+
+<p>Retrieve the UUID of a User Identity Profile based on email address.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails.value eq </span><span class="se">\"</span><span class="s2">John.Doe@sap.com</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"emails"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response">Response</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@sap.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f3a49682-5d15-4ed0-9fa1-d834f87ea16e"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="search-for-active-users-who-have-an-email-address-that-ends-with-company-domain">Search for active user(s) who have an email address that ends with company domain</h3>
+
+<p>Retrieve one or more users who are active and have an @sap email address.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active eq true and emails.value ew </span><span class="se">\"</span><span class="s2">sap.com</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="s2">"emails"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"john.doe@sap.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f3a49682-5d15-4ed0-9fa1-d834f87ea16e"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"emails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"work"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johnny.appleseed@sap.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"notifications"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58d72127-d0af-44ab-957d-ca7b87499f27"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="search-for-active-userss-who-have-access-to-an-entitlement">Search for active users(s) who have access to an entitlement</h3>
+
+<p>Retrieve one or more users who are active and contain an “Invoice” entitlement.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active eq true and entitlements eq </span><span class="se">\"</span><span class="s2">invoice</span><span class="se">\"</span><span class="s2">"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="s2">"entitlements"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"entitlements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Travel"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Invoice"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f3a49682-5d15-4ed0-9fa1-d834f87ea16e"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"entitlements"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"Invoice"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58d72127-d0af-44ab-957d-ca7b87499f27"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="search-for-users-who-work-in-bellevue">Search for user(s) who work in Bellevue</h3>
+
+<p>Retrieve the UUIDs of users who work in Bellevue.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2"> and locality eq </span><span class="se">\"</span><span class="s2">Bellevue</span><span class="se">\"</span><span class="s2">]"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"id"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-3">Response</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f3a49682-5d15-4ed0-9fa1-d834f87ea16e"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58d72127-d0af-44ab-957d-ca7b87499f27"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2a09b1ba-125f-4e4c-a8ef-f48a018583cc"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"b49497ca-9152-475b-8acf-f57b8e2a796d"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1077e0e4-a883-4bd1-9dbb-0a54a58ab344"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="search-for-active-users-and-have-been-with-the-company-for-at-least-10-years">Search for active user(s) and have been with the company for at least 10 years</h3>
+
+<p>Retrieve user(s) who are currently active and have a start date before 2013.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
+Accept: application/json
+Authorization: BEARER {token}
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active eq true and urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:startDate le 2013-12-31"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"attributes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:startDate"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-4">Response</h4>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"f3a49682-5d15-4ed0-9fa1-d834f87ea16e"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-08-01"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"58d72127-d0af-44ab-957d-ca7b87499f27"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-01-01"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="schemas-">Schemas <a name="schemas"></a></h2>
 <p>We define a schema, as an outline of how the caller may interact with the API.</p>
 
@@ -519,7 +751,7 @@
 </table>
 
 <h3 id="search-request-">Search Request <a name="schema-search-request"></a></h3>
-<p>Retrieves users of a given company. The filter operations can be used to fetch a unique user or users identity information.</p>
+<p>This API implements some of the functionality defined in <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3">RFC 7644 § 3.4.3</a>. The SearchRequest schema outlines the supported parameters that may be used when calling .search endpoint.</p>
 
 <table>
   <thead>
@@ -615,7 +847,7 @@ Authorization: BEARER {token}
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="response">Response</h4>
+<h4 id="response-5">Response</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
@@ -661,7 +893,7 @@ Authorization: BEARER {token}
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="response-1">Response</h4>
+<h4 id="response-6">Response</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
@@ -915,11 +1147,6 @@ Authorization: BEARER {token}
     </tr>
     <tr>
       <td>urn:ietf:params:scim:schemas:extension: <br /> <code class="language-plaintext highlighter-rouge">enterprise:2.0:User</code></td>
-      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-    </tr>
-    <tr>
-      <td> </td>
       <td><code class="language-plaintext highlighter-rouge">costCenter</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
     </tr>
@@ -1086,7 +1313,7 @@ Authorization: BEARER {token}
     <tr>
       <td>[]</td>
       <td>Complex attribute filtering, used with multi-valued attributes.</td>
-      <td><code class="language-plaintext highlighter-rouge">emails[type eq "work" and value co "@example.com"]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">emails[type eq "work" and value co "@example.com"</code></td>
     </tr>
   </tbody>
 </table>
@@ -1147,7 +1374,7 @@ Authorization: BEARER {token}
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="response-2">Response</h4>
+<h4 id="response-7">Response</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
 </code></pre></div></div>
@@ -1204,7 +1431,7 @@ Authorization: BEARER {token}
 </span></code></pre></div></div>
 <p>Both of these payloads are valid and will return the same user profile.</p>
 
-<h4 id="response-3">Response</h4>
+<h4 id="response-8">Response</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
@@ -1240,7 +1467,7 @@ Authorization: BEARER {token}
 </span><span class="p">}</span><span class="w"> 
 </span></code></pre></div></div>
 
-<h4 id="response-4">Response</h4>
+<h4 id="response-9">Response</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
 Content-Type: application/json
