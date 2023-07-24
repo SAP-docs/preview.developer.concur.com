@@ -262,9 +262,9 @@ This API implements the functionality defined in [RFC 7644 § 3.4.3](https://dat
 
 | Parameter| Description| Required | Value
 | --- | --- | --- | --- 
-| `schemas`| Validate request against schema object.| Yes | List of Strings [Schemas](#schemas)
+| `schemas`| Validate request against schema object.| Yes | List of Strings <br> [Schemas](#schemas)
 | `filter` | Narrow returned users matching expression.| No | Query String <br> [Filtering](#filtering)
-| `count`| Number of users to return.| No | 1 - 1000 <br> [Pagination](#pagination) | [SearchRequest](#schema-search-request)
+| `count`| Number of users to return.| No | 1 - 1000 <br> [Pagination](#pagination)
 | `attributes`| Return only specified fields.| No | List of Strings <br> [Example](#param-example-attributes)
 | `excludedAttributes` | Return all other fields than specified. | No | List of Strings <br> [Example](#param-example-excluded-attributes)
 | `cursor` | Enable user to continue to the next page. | No | Encoded String <br> [Pagination](#pagination)
