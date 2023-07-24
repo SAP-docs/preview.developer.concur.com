@@ -1,21 +1,24 @@
 ---
-title: Identity .search Implementation Guide
+title: Identity v4.1 Search Guide
 layout: reference
 ---
 
-# Identity .search Implementation Guide
+# Identity v4.1 Search Guide
 
-The Identity .search API is built to enable clients to filter based on User Identity attributes. Filters allow logical and grouping operators to refine search results.
+The Identity v4.1 Search API is built to enable clients to filter based on User Identity attributes.
+This guide presents a set of detailed examples, advanced functionalities, and limitations of v4.1 Search.
+Search is an endpoint that enables callers to retrieve a subset of users matching conditions as [parameters](#schema-search-parameters).
 
-## Popular Use Cases
+## Popular Searches
 
 This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT.
+The following examples use all available parameters to demonstrate the functionality of this API.
 
 ### Authentication (Required)
 
 To use Identity v4.1 APIs, the appropriate [scopes](https://developer.concur.com/api-reference/profile/v4.1.identity.html#filter-for-users-) must be assigned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT scopes to access the identity endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.
 
-### Search for user by email address
+### Search for a user by email address
 
 Retrieve the UUID of a User Identity Profile based on email address.
 
@@ -249,31 +252,29 @@ Authorization: BEARER {token}
       "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
         "startDate": "2013-01-01"
       }
-    },
+    }
   ]
 }
 ```
 
-## Schemas <a name="schemas"></a>
-We define a schema, as an outline of how the caller may interact with the API.
-
-The `schemas` parameter is required for all POST requests.
-
-|Name|Path|
-| --- | --- |
-|[SearchRequest](#schema-search-request)|urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest|
-
-### Search Request <a name="schema-search-request"></a>
-This API implements some of the functionality defined in [RFC 7644 § 3.4.3](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3). The SearchRequest schema outlines the supported parameters that may be used when calling .search endpoint.
+## Search Parameters <a name="schema-search-parameters"></a>
+This API implements the functionality defined in [RFC 7644 § 3.4.3](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3). 
 
 | Parameter| Description| Required | Value
-| --- | --- | --- | ---
-| `schemas`| Validate request against schema object.| Yes | List of Strings <br> [Schemas](#schemas)
+| --- | --- | --- | --- 
+| `schemas`| Validate request against schema object.| Yes | List of Strings [Schemas](#schemas)
 | `filter` | Narrow returned users matching expression.| No | Query String <br> [Filtering](#filtering)
-| `count`| Number of users to return.| No | 1 - 1000 <br> [Pagination](#pagination)
-| `attributes`| Return only specified fields.| No | List of Strings <br> [Example](#param-example-attributes) 
-| `excludedAttributes` | Return all other fields than specified. | No | List of Strings <br> [Example](#param-example-excluded-attributes) 
+| `count`| Number of users to return.| No | 1 - 1000 <br> [Pagination](#pagination) | [SearchRequest](#schema-search-request)
+| `attributes`| Return only specified fields.| No | List of Strings <br> [Example](#param-example-attributes)
+| `excludedAttributes` | Return all other fields than specified. | No | List of Strings <br> [Example](#param-example-excluded-attributes)
 | `cursor` | Enable user to continue to the next page. | No | Encoded String <br> [Pagination](#pagination)
+
+## Schemas <a name="schemas"></a>
+The `schemas` parameter is required and may not be empty. The required format:
+
+```json
+"schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ]
+```
 
 ## Attributes / ExcludedAttributes <a name="param-attributes-exclude"></a>
 Adding `attributes` and/or `excludedAttributes` to a query remove attributes from each user-object in the response. The `attributes` parameter returns *only what is requested* while the `excludedAttributes` parameter returns *everything except what is requested*.
@@ -564,9 +565,9 @@ This definition may be overwritten by grouping operators.
 
 | Operator | Description| Example |
 | --- | --- | --- |
-| not| Match, if expression evaluates to `false`. | `not(name.givenName eq "John")` |
-| and| Match, if both expressions evaluate to `true`. | `name.givenName eq "John" and name.familyName eq "Smith"` |
-| or | Match, if either expression evaluates to `true`. | `name.givenName eq "John" or name.givenName eq "James"` |
+| not | Match, if expression evaluates to `false`. | `not(name.givenName eq "John")` |
+| and | Match, if both expressions evaluate to `true`. | `name.givenName eq "John" and name.familyName eq "Smith"` |
+| or  | Match, if either expression evaluates to `true`. | `name.givenName eq "John" or name.givenName eq "James"` |
 
 ### Grouping Operators <a name="op-grouping"></a>
 
@@ -591,9 +592,10 @@ For the examples below, capital letters (A, B, C) represent different attribute 
 | `A or B and C or D`| `A or (B and C) or D`|
 | `not A or B and C` | `(not A) or (B and C)` |
 
-## Request/Response Examples <a name="example-filtering"></a>
+## Filtering Examples <a name="example-filtering"></a>
 
-Retrieves a unique users based on search criteria.
+The `filter` parameter implemented all the functionality described in [Filtering](#filtering) as a string.
+This section contributes a set of more detailed examples, limitations, and variations of expressions.
 
 ### Filter is Optional
 Company JWT contains companyId, and used to retrieve all users within Company.
@@ -697,56 +699,6 @@ Content-Type: application/json
 }
 ```
 
-### Filter By Active Field
-Return the first `1000` users who have `active` (field) set to `true` (value)
-
-#### Request
-```
-POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
-Accept: application/json
-Authorization: BEARER {token}
-```
-```json
-{
-  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
-  "filter": "active eq true",
-  "count": 1000
-} 
-```
-
-#### Response
-
-```
-200 OK
-Content-Type: application/json
-```
-
-```json
-{
-  "schemas": [
-    "urn:ietf:params:scim:api:messages:2.0:ListResponse" 
-  ],
-  "totalResults": 1234,
-  "startIndex": 1,
-  "itemsPerPage": 100,
-  "Resources": [
-    {
-      "id": "uuid-v4-user-1",
-      "active": "true"
-    },
-    {
-      "id": "uuid-v4-user-2",
-      "active": "false"
-    },
-    ...
-    {
-      "id": "uuid-v4-user-100",
-      "active": "true"
-    }
-  ]
-}
-```
-
 ### Filter By Multi-Valued Attributes
 
 `emails` and `addresses` are multi-valued attributes. 
@@ -810,7 +762,7 @@ Content-Type: application/json
 
 #### Limitations
 
-1. `not` and `ne` are restricted within Complex Groupings. 
+Filters may not contain `not` and `ne` within Complex Groupings. 
 ```json
 "filter": "emails[not(type eq \"work\")]"
 ```
@@ -818,13 +770,13 @@ Content-Type: application/json
 "filter": "addresses[type ne \"work\"]"
 ```
 
-2. `or` may not be nested within Complex Groupings.
+Filters may not nest `or` inside parentheses within Complex Groupings.
 
 ```json
 "filter": "emails[value ew \"@sap.com\" and (type eq \"home\" or type eq \"work\")]"
 ```
 
-3. Duplicate attributes may not be conjoined with `and` inside of Complex Grouping.
+Duplicate attributes may not be conjoined with `and` inside of Complex Grouping.
 
 ```json
 "filter": "emails[value ew \"@concur.com\" and value ew \"@sap.com\"]"
