@@ -261,12 +261,12 @@ Authorization: BEARER {token}
 This API implements the functionality defined in [RFC 7644 § 3.4.3](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3). 
 
 | Parameter| Description| Required | Value
-| --- | --- | --- | --- 
+| --- | --- | --- | ---
 | `schemas`| Validate request against schema object.| Yes | List of Strings <br> [Schemas](#schemas)
 | `filter` | Narrow returned users matching expression.| No | Query String <br> [Filtering](#filtering)
 | `count`| Number of users to return.| No | 1 - 1000 <br> [Pagination](#pagination)
-| `attributes`| Return only specified fields.| No | List of Strings <br> [Example](#param-example-attributes)
-| `excludedAttributes` | Return all other fields than specified. | No | List of Strings <br> [Example](#param-example-excluded-attributes)
+| `attributes`| Return only specified fields.| No | List of Strings <br> [Example](#param-example-attributes) 
+| `excludedAttributes` | Return all other fields than specified. | No | List of Strings <br> [Example](#param-example-excluded-attributes) 
 | `cursor` | Enable user to continue to the next page. | No | Encoded String <br> [Pagination](#pagination)
 
 ## Schemas <a name="schemas"></a>
@@ -565,9 +565,9 @@ This definition may be overwritten by grouping operators.
 
 | Operator | Description| Example |
 | --- | --- | --- |
-| not | Match, if expression evaluates to `false`. | `not(name.givenName eq "John")` |
-| and | Match, if both expressions evaluate to `true`. | `name.givenName eq "John" and name.familyName eq "Smith"` |
-| or  | Match, if either expression evaluates to `true`. | `name.givenName eq "John" or name.givenName eq "James"` |
+| not| Match, if expression evaluates to `false`. | `not(name.givenName eq "John")` |
+| and| Match, if both expressions evaluate to `true`. | `name.givenName eq "John" and name.familyName eq "Smith"` |
+| or | Match, if either expression evaluates to `true`. | `name.givenName eq "John" or name.givenName eq "James"` |
 
 ### Grouping Operators <a name="op-grouping"></a>
 
