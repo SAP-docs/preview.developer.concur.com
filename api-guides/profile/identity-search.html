@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Identity .search Implementation Guide</title>
+  <title> SAP Concur Developer Center | Identity v4.1 Search Guide</title>
 
 
 <!-- Meta -->
@@ -494,19 +494,22 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="identity-search-implementation-guide">Identity .search Implementation Guide</h1>
+        <h1 id="identity-v41-search-guide">Identity v4.1 Search Guide</h1>
 
-<p>The Identity .search API is built to enable clients to filter based on User Identity attributes. Filters allow logical and grouping operators to refine search results.</p>
+<p>The Identity v4.1 Search API is built to enable clients to filter based on User Identity attributes.
+This guide presents a set of detailed examples, advanced functionalities, and limitations of v4.1 Search.
+Search is an endpoint that enables callers to retrieve a subset of users matching conditions as <a href="#schema-search-parameters">parameters</a>.</p>
 
-<h2 id="popular-use-cases">Popular Use Cases</h2>
+<h2 id="popular-searches">Popular Searches</h2>
 
-<p>This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT.</p>
+<p>This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT.
+The following examples use all available parameters to demonstrate the functionality of this API.</p>
 
 <h3 id="authentication-required">Authentication (Required)</h3>
 
 <p>To use Identity v4.1 APIs, the appropriate <a href="https://developer.concur.com/api-reference/profile/v4.1.identity.html#filter-for-users-">scopes</a> must be assigned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT scopes to access the identity endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.</p>
 
-<h3 id="search-for-user-by-email-address">Search for user by email address</h3>
+<h3 id="search-for-a-user-by-email-address">Search for a user by email address</h3>
 
 <p>Retrieve the UUID of a User Identity Profile based on email address.</p>
 
@@ -725,33 +728,13 @@ Authorization: BEARER {token}
       </span><span class="nl">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-01-01"</span><span class="w">
       </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
+    </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="schemas-">Schemas <a name="schemas"></a></h2>
-<p>We define a schema, as an outline of how the caller may interact with the API.</p>
-
-<p>The <code class="language-plaintext highlighter-rouge">schemas</code> parameter is required for all POST requests.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Path</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="#schema-search-request">SearchRequest</a></td>
-      <td>urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="search-request-">Search Request <a name="schema-search-request"></a></h3>
-<p>This API implements some of the functionality defined in <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3">RFC 7644 § 3.4.3</a>. The SearchRequest schema outlines the supported parameters that may be used when calling .search endpoint.</p>
+<h2 id="search-parameters-">Search Parameters <a name="schema-search-parameters"></a></h2>
+<p>This API implements the functionality defined in <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3">RFC 7644 § 3.4.3</a>.</p>
 
 <table>
   <thead>
@@ -801,6 +784,12 @@ Authorization: BEARER {token}
     </tr>
   </tbody>
 </table>
+
+<h2 id="schemas-">Schemas <a name="schemas"></a></h2>
+<p>The <code class="language-plaintext highlighter-rouge">schemas</code> parameter is required and may not be empty. The required format:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
 
 <h2 id="attributes--excludedattributes-">Attributes / ExcludedAttributes <a name="param-attributes-exclude"></a></h2>
 <p>Adding <code class="language-plaintext highlighter-rouge">attributes</code> and/or <code class="language-plaintext highlighter-rouge">excludedAttributes</code> to a query remove attributes from each user-object in the response. The <code class="language-plaintext highlighter-rouge">attributes</code> parameter returns <em>only what is requested</em> while the <code class="language-plaintext highlighter-rouge">excludedAttributes</code> parameter returns <em>everything except what is requested</em>.</p>
@@ -1355,9 +1344,10 @@ Authorization: BEARER {token}
   </tbody>
 </table>
 
-<h2 id="requestresponse-examples-">Request/Response Examples <a name="example-filtering"></a></h2>
+<h2 id="filtering-examples-">Filtering Examples <a name="example-filtering"></a></h2>
 
-<p>Retrieves a unique users based on search criteria.</p>
+<p>The <code class="language-plaintext highlighter-rouge">filter</code> parameter implemented all the functionality described in <a href="#filtering">Filtering</a> as a string.
+This section contributes a set of more detailed examples, limitations, and variations of expressions.</p>
 
 <h3 id="filter-is-optional">Filter is Optional</h3>
 <p>Company JWT contains companyId, and used to retrieve all users within Company.</p>
@@ -1452,52 +1442,6 @@ Content-Type: application/json
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="filter-by-active-field">Filter By Active Field</h3>
-<p>Return the first <code class="language-plaintext highlighter-rouge">1000</code> users who have <code class="language-plaintext highlighter-rouge">active</code> (field) set to <code class="language-plaintext highlighter-rouge">true</code> (value)</p>
-
-<h4 id="request-2">Request</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
-Accept: application/json
-Authorization: BEARER {token}
-</code></pre></div></div>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest"</span><span class="w"> </span><span class="p">],</span><span class="w">
-  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active eq true"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="w">
-</span><span class="p">}</span><span class="w"> 
-</span></code></pre></div></div>
-
-<h4 id="response-9">Response</h4>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
-Content-Type: application/json
-</code></pre></div></div>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:ListResponse"</span><span class="w"> 
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nl">"totalResults"</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"startIndex"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"itemsPerPage"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"Resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uuid-v4-user-1"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uuid-v4-user-2"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="err">...</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uuid-v4-user-100"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"active"</span><span class="p">:</span><span class="w"> </span><span class="s2">"true"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
 <h3 id="filter-by-multi-valued-attributes">Filter By Multi-Valued Attributes</h3>
 
 <p><code class="language-plaintext highlighter-rouge">emails</code> and <code class="language-plaintext highlighter-rouge">addresses</code> are multi-valued attributes.</p>
@@ -1556,22 +1500,18 @@ Content-Type: application/json
 
 <h4 id="limitations">Limitations</h4>
 
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">not</code> and <code class="language-plaintext highlighter-rouge">ne</code> are restricted within Complex Groupings.
-    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[not(type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">)]"</span><span class="w">
-</span></code></pre></div>    </div>
-    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[type ne </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
-</span></code></pre></div>    </div>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">or</code> may not be nested within Complex Groupings.</li>
-</ol>
+<p>Filters may not contain <code class="language-plaintext highlighter-rouge">not</code> and <code class="language-plaintext highlighter-rouge">ne</code> within Complex Groupings.</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[not(type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">)]"</span><span class="w">
+</span></code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"addresses[type ne </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Filters may not nest <code class="language-plaintext highlighter-rouge">or</code> inside parentheses within Complex Groupings.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[value ew </span><span class="se">\"</span><span class="s2">@sap.com</span><span class="se">\"</span><span class="s2"> and (type eq </span><span class="se">\"</span><span class="s2">home</span><span class="se">\"</span><span class="s2"> or type eq </span><span class="se">\"</span><span class="s2">work</span><span class="se">\"</span><span class="s2">)]"</span><span class="w">
 </span></code></pre></div></div>
 
-<ol>
-  <li>Duplicate attributes may not be conjoined with <code class="language-plaintext highlighter-rouge">and</code> inside of Complex Grouping.</li>
-</ol>
+<p>Duplicate attributes may not be conjoined with <code class="language-plaintext highlighter-rouge">and</code> inside of Complex Grouping.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emails[value ew </span><span class="se">\"</span><span class="s2">@concur.com</span><span class="se">\"</span><span class="s2"> and value ew </span><span class="se">\"</span><span class="s2">@sap.com</span><span class="se">\"</span><span class="s2">]"</span><span class="w">
 </span></code></pre></div></div>
