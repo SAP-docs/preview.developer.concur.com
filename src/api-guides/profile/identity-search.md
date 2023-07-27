@@ -5,20 +5,20 @@ layout: reference
 
 # Identity v4.1 Search Guide
 
-The Identity v4.1 Search API is built to enable clients to filter based on User Identity attributes.
-This guide presents a set of detailed examples, advanced functionalities, and limitations of v4.1 Search.
+The Identity v4.1 Search API is built to enable clients to filter based on user identity attributes.
+This guide presents a set of detailed examples, advanced functionalities, and limitations of Identity v4.1 Search.
+
 Search is an endpoint that enables callers to retrieve a subset of users matching conditions as [parameters](#schema-search-parameters).
 
 ## Popular Searches
 
-This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT.
-The following examples use all available parameters to demonstrate the functionality of this API.
+This section outlines popular use cases and assumes the caller has been authenticated within a company resource via Company JWT. The following examples use all available parameters to demonstrate the functionality of this API.
 
 ### Authentication (Required)
 
 To use Identity v4.1 APIs, the appropriate [scopes](https://developer.concur.com/api-reference/profile/v4.1.identity.html#filter-for-users-) must be assigned to the requesting authentication application. Contact your SAP Concur account representative to update your Company JWT scopes to access the identity endpoints. After scopes have been granted to your authentication application, please verify the scopes. If you have questions regarding granting scopes, please contact your SAP Concur account representative.
 
-### Search for a user by email address
+### Search for a User by Email Address
 
 Retrieve the UUID of a User Identity Profile based on email address.
 
@@ -61,7 +61,7 @@ Authorization: BEARER {token}
 }
 ```
 
-### Search for active user(s) who have an email address that ends with company domain
+### Search for Active User(s) Who Have an Email Address that Ends with Company Domain
 
 Retrieve one or more users who are active and have an @sap email address.
 
@@ -117,7 +117,7 @@ Authorization: BEARER {token}
 }
 ```
 
-### Search for active users(s) who have access to an entitlement
+### Search for Active Users(s) Who Have Access to an Entitlement
 
 Retrieve one or more users who are active and contain an "Invoice" entitlement.
 
@@ -164,7 +164,7 @@ Authorization: BEARER {token}
 }
 ```
 
-### Search for user(s) who work in Bellevue
+### Search for User(s) Who Work in Bellevue
 
 Retrieve the UUIDs of users who work in Bellevue.
 
@@ -211,7 +211,7 @@ Authorization: BEARER {token}
 }
 ```
 
-### Search for active user(s) and have been with the company for at least 10 years
+### Search for Active User(s) that Have Been with the Company for at Least 10 Years
 
 Retrieve user(s) who are currently active and have a start date before 2013.
 
@@ -258,6 +258,7 @@ Authorization: BEARER {token}
 ```
 
 ## Search Parameters <a name="schema-search-parameters"></a>
+
 This API implements the functionality defined in [RFC 7644 § 3.4.3](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.3). 
 
 | Parameter| Description| Required | Value
@@ -270,6 +271,7 @@ This API implements the functionality defined in [RFC 7644 § 3.4.3](https://dat
 | `cursor` | Enable user to continue to the next page. | No | Encoded String <br> [Pagination](#pagination)
 
 ## Schemas <a name="schemas"></a>
+
 The `schemas` parameter is required and may not be empty. The required format:
 
 ```json
@@ -277,11 +279,13 @@ The `schemas` parameter is required and may not be empty. The required format:
 ```
 
 ## Attributes / ExcludedAttributes <a name="param-attributes-exclude"></a>
+
 Adding `attributes` and/or `excludedAttributes` to a query remove attributes from each user-object in the response. The `attributes` parameter returns *only what is requested* while the `excludedAttributes` parameter returns *everything except what is requested*.
 
 ### Attribute Notation <a name="attribute-notation"></a>
 
-Standard Attribute Notation, [RFC-7644](https://datatracker.ietf.org/doc/html/rfc7644#section-3.10), dictates schema extensions and attributes are delimited by colons, and attributes to sub-attributes delimited by periods. All other attributes remain unchanged.
+Standard attribute notation, [RFC-7644](https://datatracker.ietf.org/doc/html/rfc7644#section-3.10), dictates schema extensions and attributes are delimited by colons, and attributes to sub-attributes delimited by periods. All other attributes remain unchanged.
+
 > {urn:schema:extension}:{Attribute}.{Sub-Attribute}
 
 > {Attribute}.{Sub-Attribute}
@@ -429,13 +433,13 @@ Content-Type: application/json
 
 By default, a single query will return `100` users. To retrieve more than `100` users for a single query, SCIM defines the [count](https://datatracker.ietf.org/doc/html/rfc7644#section-3.4.2.4) query parameter.
 
-**NOTE:** The `startIndex` query parameter is **not supported** due to the behavior of Deep Pagination.
+>**NOTE:** The `startIndex` query parameter is **not supported** due to the behavior of Deep Pagination.
 
-The upper limit of `count` is `1,000` users for a single query. To go *beyond* the first `1,000` users, v4.1 Search returns a `nextCursor`. When passed on the next query, the `cursor` may be used to return the next page of matching records for a single, unique query. The token will *not* be returned on the last-page.
+The upper limit of `count` is `1,000` users for a single query. To go *beyond* the first `1,000` users, Identity v4.1 Search returns a `nextCursor`. When passed on the next query, the `cursor` may be used to return the next page of matching records for a single, unique query. The token will *not* be returned on the last-page.
 
 ### Cursor
 
-The cursor/nextCursor SCIM-Based pagination defines a model used to fetch the subsequent 'pages' of resources. `cursor` is a request query-parameter or within the JSON payload, while `nextCursor` is expected to be in the response.
+The `cursor`/`nextCursor` SCIM-Based pagination defines a model used to fetch the subsequent 'pages' of resources. `cursor` is a request query-parameter or within the JSON payload, while `nextCursor` is expected to be in the response.
 
 #### Usage
 
@@ -451,7 +455,7 @@ Authorization: BEARER {token}
   "cursor": "eyJjcmVhdGVkLWlkIjoiMTYxMzc2MTkxNF9hYTA0NzQ1MS04MTBkLTQ5MDMtYWE0OS1lYzhjODZlZjUwNTMiLCJzdGFydEluZGV4IjoxMDF9"
 }
 ```
-Response:
+#### Response
 ```json
 {
   "schemas": [
@@ -468,7 +472,7 @@ Response:
 }
 ```
 
-#### May not be always be returned
+#### May Not Always Be Returned
 
 When `totalResults` is equal to `itemsPerPage`, there will not be a `nextCursor` in the response. 
 
@@ -598,7 +602,8 @@ The `filter` parameter implemented all the functionality described in [Filtering
 This section contributes a set of more detailed examples, limitations, and variations of expressions.
 
 ### Filter is Optional
-Company JWT contains companyId, and used to retrieve all users within Company.
+
+Company JWT contains `companyId`, and used to retrieve all users within Company.
 
 #### Request
 ```
@@ -706,7 +711,8 @@ Content-Type: application/json
 Applying a [Complex Grouping](#grouping-operators) within a filter will match one and only one record to the condition. Filters that use multi-valued, complex groupings support the following comparison operators: `eq` / `sw` / `ew` / `co` / `pr`
 
 
-**Request**
+#### Request
+
 ```
 POST https://us.api.concursolutions.com/v4.1/Users/.search
 Accept: application/json
@@ -719,7 +725,8 @@ Authorization: BEARER {token}
 }
 ```
 
-**Response**
+#### Response
+
 ```
 200 OK
 Content-Type: application/json
@@ -763,6 +770,7 @@ Content-Type: application/json
 #### Limitations
 
 Filters may not contain `not` and `ne` within Complex Groupings. 
+
 ```json
 "filter": "emails[not(type eq \"work\")]"
 ```
@@ -789,12 +797,14 @@ Duplicate attributes may not be conjoined with `and` inside of Complex Grouping.
 
 Multi-valued, complex grouping with logical 'and' operators cannot conjoin duplicate attributes, or fields, as the intention of this query is to return one and only one match across many users.
 
-Returns users who have a `work` emails equal to `admin@SAP.com`
+Returns users who have a `work` emails equal to `admin@SAP.com`.
+
 ```json
 "filter": "emails[type eq \"work\" and value eq \"admin@SAP.com\"]"
 ```
 
-Returns users who work at `Concur`, as an entry in address
+Returns users who work at `Concur`, as an entry in address.
+
 ```json
 "filter": "addresses[type eq \"work\" and locality eq \"Bellevue\" and region eq \"WA\"]"
 ```
@@ -803,21 +813,24 @@ Returns users who work at `Concur`, as an entry in address
 
 Multi-valued, complex grouping with logical 'or' operators can only be present at the root-level and cannot be nested within parentheses. The intention of this query is to return one or more matches within a set of records, within a single user, across many users.
 
-Note: Results may include users with all three attributes in a single entry
+>**Note:** Results may include users with all three attributes in a single entry.
 
-Return users with `work` emails, have `admin` in their email, or have not `verified` their email
+Return users with `work` emails, have `admin` in their email, or have not `verified` their email.
+
 ```json
 "filter": "emails[type eq \"work\" or value sw \"admin\" or verified eq false]"
 ```
 
-Return users with `work` or `home` addresses in user object
+Return users with `work` or `home` addresses in user object.
+
 ```json
 "filter": "addresses[type eq \"work\" or type eq \"home\"]"
 ```
 
-#### Combined Logical queries
+#### Combined Logical Queries
 
-Returns user's that either have `work` emails that end with `@SAP.com` or have `home` emails that end with `.com`
+Returns users that either have `work` emails that end with `@SAP.com` or have `home` emails that end with `.com`.
+
 ```json
 "filter": "emails[type eq \"work\" and value ew \"@SAP.com\" or type eq \"home\" and value ew \".com\"]"
 ```
@@ -826,12 +839,14 @@ Returns user's that either have `work` emails that end with `@SAP.com` or have `
 
 Multi-valued attributes may also be queried like single-valued attributes. The key difference is that for every and condition, every entry in the list must satisfy the condition.
 
-Return users who have multiple emails that must either end with `@concur.com` and `@sap.com`
+Return users who have multiple emails that must either end with `@concur.com` and `@sap.com`.
+
 ```json
 "filter": "emails.value ew \"@concur.com\" and emails.value ew \"@sap.com\""
 ```
 
-Return users who have a `home` and `work` address in their user profile
+Return users who have a `home` and `work` address in their user profile.
+
 ```json
 "filter": "addresses.type eq \"home\" and addresses.type eq \"work\""
 ```
@@ -854,35 +869,39 @@ Authorization: BEARER {token}
 }
 ```
 
-#### Logical AND queries
+#### Logical AND Queries
 
-Return users by Full Name (combination of given and family)
+Return users by Full Name (combination of given and family).
+
 ```json
 "filter": "name.givenName eq \"John\" and name.familyName eq \"Smith\"",
 "filter": "name[givenName eq \"John\" and familyName eq \"Smith\"]"
 ```
 
-Return users who have the first name John and do not have last name Bob
+Return users who have the first name John and do not have last name Bob.
 
-Note: When using `ne`, results can include `null` values
+>**Note:** When using `ne`, results can include `null` values.
+
 ```json
 "filter": "name.givenName ne \"John\" and not(name.givenName eq \"Bob\")",
 "filter": "name[givenName ne \"John\" and not(givenName eq \"Bob\")]"
 ```
 
-Return users who must start with and ending with characters. Case insensitive
+Return users who must start with and ending with characters, case insensitive.
+
 ```json
 "filter": "name.givenName sw \"J\" and name.givenName ew \"n\"",
 "filter": "name[givenName sw \"J\" and givenName ew \"n\"]"
 ```
 
-Return users by "contains" query and check if field, `name.givenName` has a value
+Return users by "contains" query and check if field, `name.givenName` has a value.
+
 ```json
 "filter": "not(name.givenName co \"admin\") and name.givenName pr",
 "filter": "name[not(givenName co \"admin\") and givenName pr]"
 ```
 
-#### Combined Logical queries
+#### Combined Logical Queries
 
 ```json
 "filter": "name.givenName eq \"John\" and name.familyName eq \"Smith\" or name.givenName eq \"Bob\" and name.familyName eq \"Joe\"",
