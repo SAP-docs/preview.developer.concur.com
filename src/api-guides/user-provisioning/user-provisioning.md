@@ -91,7 +91,8 @@ SAP Concur products use an asynchronous provisioning design for all extensions o
     * processing - No action necessary. The system is processing the provisioning request.  
     * error - Action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your SAP Concur support representative for assistance.  
 
-## <a name="flatfile_mapping_guides"></a>Mapping guides between flat file types and API's
+## <a name="flatfile_mapping_guides"></a>Mapping guides between flat file types and APIs
+
 Below are mapping guides between flat file import types and V4 api attributes. These mappings can be used to help speed the 
 
 File Type|File Name|Mapping
@@ -106,7 +107,7 @@ File Type|File Name|Mapping
 500|Delegate Import|[500 Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/500.html)
 550|Enhanced Delegate Import|[550 Enhanced Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/550.html)
 
-## <a name="API_mapping_guides"></a>Mapping guides between User V1 and V4 API's 
+## <a name="API_mapping_guides"></a>Mapping guides between User V1 and V4 APIs 
 
 API|Mapping
 ---|---
