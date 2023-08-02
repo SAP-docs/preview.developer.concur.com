@@ -1,0 +1,188 @@
+---
+title: Attendees v4
+layout: reference
+
+---
+# Attendees v4
+
+The Attendees API can be used to retrieve the attendees associated with a specific expense.
+## Prior Versions
+
+* Attendees v1 documentation is available [here](./v1.attendees.html)
+* Attendees v1.1 documentation is available [here](./v1dot1.attendees.html)
+* Attendees v2 documentation is available [here](./v2.attendees.html)
+* Attendees v3 documentation is available [here](./v3.attendees.html)
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+## Scope Usage <a name="scope-usage"></a>
+
+Required Scopes:
+
+|Name| Description                              |Endpoint|
+|---|------------------------------------------|---|
+|`expense.report.read`| Get information about expense attendees. |GET|
+
+Optional Scope:
+
+|Name|Description|Endpoint|
+|---|---|---|
+|`expense.report.readwrite`|Read and write expense report headers.|PATCH|
+
+## Dependencies <a name="dependencies"></a>
+
+SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports both company level and user level access tokens.
+
+## Retrieve Attendees on a Specific Expense ID <a name="specific-report-expenses"></a>
+
+Retrieves the attendees that are associated with a specific expense ID.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+#### URI Template
+
+```shell
+/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/attendees
+```
+
+#### Parameters
+
+| Name          |Type|Format| Description                                                                                                                                         |
+|---------------|---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userID`      |`string`|-| **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+| `contextType` |`string`|-| **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value: `TRAVELER`,`PROXY`     |
+| `reportId`    |`string`|-| **Required** The unique identifier of the report that is being read.                                                                                |
+| `expenseId`   |`string`|-| **Required** The unique identifier of the expense that is being read.                                                                               |
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* [Attendees Response](#attendees-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl -X 'GET' \
+  'https://us.api.concursolutions.com/expensereports/v4/users/33cdbba7-062c-42bb-92c4-a82c06b07eae/context/TRAVELER/reports/24E51595E17E4627B2AF/expenses/51ADA86C8EB164488FE67180CCE16EDB/attendees' \
+  --header 'Authorization: Bearer {access_token}' \
+  --header 'Concur-CorrelationId: Expense-Report-test' \
+  --header 'Content-Type: application/json'
+```
+
+#### <a name="attendees-response-schema"></a> Response
+
+```shell
+{
+  "noShowAttendeeCount": 0,
+  "expenseAttendeeList": [
+    {
+      "attendeeId": "695E66E2A472074D8895057311C6A158",
+      "customData": null,
+      "isAmountUserEdited": false,
+      "isTraveling": null,
+      "associatedAttendeeCount": 1,
+      "versionNumber": 1,
+      "transactionAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      },
+      "approvedAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      }
+    }
+  ]
+}
+```
+
+
+## <a name="schema"></a>Schema
+
+### <a name="expense-attendees-response-schema"></a> Expense Attendees
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `noShowAttendeeCount` | integer                                     | - |**Required** The number of attendees that were planned but did not show up. Default value:0|
+| `expenseAttendeeList` | [`ExpenseAttendee`](#expense-attendee-schema) | - |**Required** The list of attendees associated with the expense.|
+
+### <a name="expense-attendee-schema"></a> Expense Attendee
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `attendeeId`             | `string`                                            | - |**Required** The unique identifier of the associated expense attendee within Concur|
+| `customData`             | [`customData`](#expense-attendees-custom-data-schema) | - |**Required** The set of data the custom fields contain for the attendee based on the configuration. This set might be empty if no custom fields are configured|
+| `isAmountUserEdited`     | `boolean`                                           | - |**Required** This field indicates if the amount value for the attendee on this expense was ever manually edited by the end user. Default value: false|
+| `isTraveling`            | `boolean`                                           | - |**Required** Whether the attendee was traveling when the expense was incurred, used for FBT tax calculations|
+| `associatedAttendeeCount` | `integer`                                           | - |**Required** The count of total attendees. A count greater than 1 means there are unnamed attendees associated with this expense-attendee record. Default value: 1|
+| `versionNumber`          | `integer`                                           | - |**Required** The version number of the attendee. This field value may always be 1, depending on the configuration. Default value: 1|
+|  `transactionAmount`     | `number`                                            | - |**Required** The portion of the expense transaction amount assigned to this attendee for both individual expense tracking and attendee totals across time periods|
+
+#### <a name="expense-attendees-custom-data-schema"></a>customData
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `id`         |`string`|-|**Required** The unique identifier of the custom field. Examples: `custom1`, `orgUnit1`|
+| `isValid`    |`boolean`|`true`/`false`|Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: `true`|
+| `value`      |`string`|-|The value of the custom field. This field can have values for all the supported data types such as `text`, `integer`, `boolean` and `listItemId`. Maximum length: 48 characters|
+| `listItemUrl` |`string`|-|href (string): The URL of the related HATEOAS link that you can use for subsequent calls|
+
+
+### <a name="error-message-schema"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`customResponseData`|`object`|-|The custom parameters related to error.|
+|`errorId`|`string`|-|The unique identifier of the error associated with the response.|
+|`errorMessage`|`string`|-|**Required** The detailed error message.|
+|`httpStatus`|`string`|-|**Required** The http response code and phrase for the response.|
+|`path`|`string`|-|**Required** The URI of the attempted request.|
+|`timestamp`|`string`|`date-time`|**Required** The time when the error was captured.|
+|`validationErrors`|[`ValidationError`](#validation-error-schema)|-|The validation error messages.|
+
+### <a name="validation-errors-schema"></a>Validation Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`id`|`string`|-|The ID of the validation error.|
+|`message`|`string`|-|The detailed message of the validation error.|
+|`source`|`string`|-|The type of validation which failed.|
