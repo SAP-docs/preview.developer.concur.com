@@ -1,3 +1,10 @@
+---
+title: Preferred Name Locale 
+layout: reference
+---
+
+# Preferred Name Locale
+
 Default language|Locale Code|Language|Display
 --|--|--|--
 Bulgarian|bg_BG|bg-BG|Preferred Name + Family Name
@@ -30,5 +37,3 @@ Spanish|es_ES|es-ES|Preferred Name + Family Name
 Ukrainian|uk_UA|uk-UA|Preferred Name + Family Name
 Thai|th_TH|th-TH|Given Name + Family Name
 Turkish|tr_TR|tr-TR|Preferred Name
-
-
