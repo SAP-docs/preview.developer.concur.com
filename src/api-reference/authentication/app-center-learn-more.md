@@ -84,7 +84,7 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `SUPSVC` <a name="supsvc"></a> |Get supplier data|[Suppliers v3](/api-reference/common/suppliers/suppliers-resource.html)
 `TAXINV` <a name="taxinv"></a> |Get or validate digital tax invoices|[Sales Tax Validation v3](/api-reference/invoice/v3.sales-tax-validation.html)
 `TMCSP` <a name="tmcsp"></a> |TMC specific information|[Travel Profile v2 TMC](/api-reference/travel-profile/v2.profile-resource.html#General)
-`travelallowance.allowancedays.read` <a name="travelallowance-allowancedays-read"></a> |View the allowance days in an expense report|[Travel Allowance API](/api-reference/expense/travelallowance/travelallowance-days.html)
+`travelallowance.allowancedays.read` <a name="travelallowance-allowancedays-read"></a> |View the allowance days in an expense report|[Travel Allowance v4](/api-reference/expense/travelallowance/v4.travel-allowance-days-endpoints.html)
 `travel.itinerary.read` <a name="travel-itinerary-read"></a> |Read travel itinerary data|[Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html)
 `travel.receipts.read` <a name="travel-receipts-read"></a>|Read travel receipt requests|[Travel Receipts](/api-reference/travel-receipts/getting-started.html), [Travel Receipts Sample](/api-reference/travel-receipts/sample.html)
 `travel.receipts.write` <a name="travel-receipts-write"></a> |Post travel receipts|[Travel Receipts](/api-reference/travel-receipts/getting-started.html), [Travel Receipts Sample](/api-reference/travel-receipts/sample.html)

@@ -132,6 +132,9 @@ schemas:extension:spend:2.0:Role|Supporting information for spend role provision
 schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|-
 schemas:extension:travel:2.0:User|Supporting information for travel users.|-
 
+## Sample Postman Collection
+A [sample postman collection](/api-guides/postman/concur-user-provisioning-postman-collection.zip) that has examples of use creation, updating identity, spend and travel profile information. 
+
 ## Helpful Hints
 
 ### Travel Extension Roles
