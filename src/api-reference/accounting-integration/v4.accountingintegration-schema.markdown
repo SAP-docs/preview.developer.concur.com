@@ -24,6 +24,7 @@ Return to [Accounting Integration v4 - Getting Started](/api-reference/accountin
 `erpName`|`string`|-| **Required** The ERP name.|
 `externalErpId`|`string`|-| **Required** A unique identifier of the company in the ERP.|
 `features`|`array`|[`ErpFeatureFlag`](#erp-feature-flag)|Feature capabilities of the ERP integration.|
+`postingOptions` | `array`  | [`PostingOption`](#erp-posting-option)| List of posting options that the ERP supports for posting expense reports.|
 `erpId`|`string`|`UUID`| **Response only** Universally unique identifier of the ERP integration.|
 
 ### <a name="erp-feature-flag"></a>ErpFeatureFlag
@@ -40,6 +41,36 @@ Return to [Accounting Integration v4 - Getting Started](/api-reference/accountin
 `id`|`string`|-|Feature ID.|
 `value`|`string`|-|Feature value.|
 `description`|`string`|-|Feature description.|
+
+### <a name="erp-posting-option"></a>PostingOption
+Posting options are ERP features that determine how expense reports should be recorded in the ERP. The customer administrator will choose from the list of Posting Options,
+when configuring Payment Types and Employee Reimbursements in the SAP Concur UI. The configuration will then be available in the Configuration Settings and Mappings API - Payment Types list.
+
+| Name          | Type     | Format | Description                                                                                                                                                                                                                     |
+|---------------|----------|--------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `postingCode` | `string` | - | Code for the posting option. Must be unique. Will be used in the Configuration Settings and Mappings API.                                                                                                                       |
+| `postingName` | `string` | - | Name (label) for the posting option. Must be unique. Will be used in the SAP Concur UI.                                                                                                                                         |
+| `availableForOutOfPocketExpenses` | `boolean` | `true`/`false` | Flag that indicates if this posting option should be available for Out-of-pocket expenses. Default value is false.                                                                                                              |
+| `configurationFields` | `array` | [`ConfigurationField`](#configuration-field) | A set of pre-defined fields that will be displayed in the SAP Concur UI for configuring the options for the posting. Partners must determine what configuration is needed for posting and send the corresponding set of fields. |
+
+### <a name="configuration-field"></a>ConfigurationField
+Configuration fields are displayed in the SAP Concur UI when configuring the posting options. The values that were selected in the UI will then be available in the Configuration Settings and Mappings API - Payment Types list, for each Payment Type.
+Please note that if no additional configuration is needed the list of configuration fields can be omitted.
+
+| Name                     | Type     | Format | Description                                                          |
+|--------------------------|----------|--------|----------------------------------------------------------------------|
+| `configurationFieldType` | `array` | [`ConfigurationFieldType`](#configuration-field-type) | Type of the field.  |                                                 |
+| `required`               | `boolean` | `true`/`false`| Flag that indicates if this should be a required configuration field. |
+
+### <a name="configuration-field-type"></a>ConfigurationFieldType
+
+| Name                         | Type     | Format | Description                                                                                       |
+|------------------------------|----------|--------|---------------------------------------------------------------------------------------------------|
+| `ERP_LIABILITY_ACCOUNT`   | `string` | -      | Posting Option Configuration in SAP Concur UI, will show a list of liability accounts.            |
+| `ERP_CREDIT_CARD_ACCOUNT`   | `string` | -      | Posting Option Configuration in SAP Concur UI, will show a list of credit card and bank accounts. |
+| `ERP_CLEARING_ACCOUNT`   | `string` | -      | Posting Option Configuration in SAP Concur UI, will show a list of clearing accounts.             |
+| `CREDIT_CARD_VENDOR_NAME`   | `string` | -      | Posting Option Configuration in SAP Concur UI, will show a list of accounting vendors.            |
+| `POSTING_DATE`   | `string` | -      | Posting Option Configuration in SAP Concur UI, will show posting dates to choose from.            |
 
 ### <a name="list-of-account"></a>Update ERP Accounts Request
 
