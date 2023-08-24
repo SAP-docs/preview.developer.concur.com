@@ -20,7 +20,7 @@ After retrieving Connection Requests as part of a polling process, the partner i
 
 ## Retrieve Connection Requests
 
-This method returns a page of connection requests to the partner app, limited by the `limit` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 24 hours - see the [Connection Request Lifecycle](#connection-request-lifecycle).
+This method returns a page of connection requests to the partner app, limited by the `limit` request parameter and the beginning of the page defined by the `offset` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 24 hours - see the [Connection Request Lifecycle](#connection-request-lifecycle).
 
 ### Request
 
@@ -34,10 +34,13 @@ GET /api/v3.2/common/connectionrequests/
 Name|Type|Format|Description
 ---|---|---|---
 `limit`|`query`|`integer`|The number of records to return. The default is 5 and the maximum is 10.
+`offset`|`query`|`integer`|The starting point of the next set of results, after the limit specified in the limit field has been reached. The default is the beginning of the page, which is equivalent to the value 0.
 
 ### Response
 
 The response format is controlled by the request Accept header. Available formats are XML and JSON. If no Accept header is supplied, XML is returned for backward compatibility. We recommend working with JSON if possible.
+
+The `NextPage` attribute returns the URI of the next page results, if any. In case there are no next results, the value of this attribute will be `NULL`. Using this URI to make a new request, the return will be the next page results. In this URI, the limit parameter will be the same of the previous request and the offset parameter will define the start point of the next page.
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -51,15 +54,15 @@ curl \
   -H "Authorization: Bearer $JWT" \
   "https://us.api.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2"
 
-<ConnectionRequests xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Items><ConnectionRequest><ID>444f5142-2e5a-4ab9-9aad-da916af6fcd7</ID><URI>https://us.concursolutions.com/api/v3.2/common/connectionrequests/44f5142-2e5a-4ab9-9aad-da916af6fcd7</URI><firstName>First</firstName><middleName xsi:nil="true" /><lastName>Last</lastName><loyaltyNumber>1234</loyaltyNumber><status>Pending</status><requestToken>token-string</requestToken><lastModified>2022-11-02T09:39:21</lastModified><emailAddresses><email1>example1@example.com</email1><email2>example2@example.com</email2><email3>example3@example.com</email3><email4 xsi:nil="true" /><email5 xsi:nil="true" /></emailAddresses><userId>b244a439-a082-4405-b0d7-2e61ebf9e29c</userId></ConnectionRequest><ConnectionRequest><ID>5d2804fb-111b-44a8-98bb-56e387875aed</ID><URI>https://us.concursolutions.com/api/v3.2/common/connectionrequests/5d2804fb-111b-44a8-98bb-56e387875aed</URI><firstName>First2</firstName><middleName xsi:nil="true" /><lastName>Last2</lastName><loyaltyNumber>4321</loyaltyNumber><status>Pending</status><requestToken>token-string</requestToken><lastModified>2022-11-09T05:57:29</lastModified><emailAddresses><email1>example@example.com</email1><email2 xsi:nil="true" /><email3 xsi:nil="true" /><email4 xsi:nil="true" /><email5 xsi:nil="true" /></emailAddresses><userId>eb3f9170-0fb8-47b4-9c4c-8fd19dfddb8f</userId></ConnectionRequest></Items><NextPage>https://us.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=5d2804fb-111b-44a8-98bb-56e387875aed</NextPage></ConnectionRequests>
+<ConnectionRequests xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><Items><ConnectionRequest><ID>444f5142-2e5a-4ab9-9aad-da916af6fcd7</ID><URI>https://us.concursolutions.com/api/v3.2/common/connectionrequests/44f5142-2e5a-4ab9-9aad-da916af6fcd7</URI><firstName>First</firstName><middleName xsi:nil="true" /><lastName>Last</lastName><loyaltyNumber>1234</loyaltyNumber><status>Pending</status><requestToken>token-string</requestToken><lastModified>2022-11-02T09:39:21</lastModified><emailAddresses><email1>example1@example.com</email1><email2>example2@example.com</email2><email3>example3@example.com</email3><email4 xsi:nil="true" /><email5 xsi:nil="true" /></emailAddresses><userId>b244a439-a082-4405-b0d7-2e61ebf9e29c</userId></ConnectionRequest><ConnectionRequest><ID>5d2804fb-111b-44a8-98bb-56e387875aed</ID><URI>https://us.concursolutions.com/api/v3.2/common/connectionrequests/5d2804fb-111b-44a8-98bb-56e387875aed</URI><firstName>First2</firstName><middleName xsi:nil="true" /><lastName>Last2</lastName><loyaltyNumber>4321</loyaltyNumber><status>Pending</status><requestToken>token-string</requestToken><lastModified>2022-11-09T05:57:29</lastModified><emailAddresses><email1>example@example.com</email1><email2 xsi:nil="true" /><email3 xsi:nil="true" /><email4 xsi:nil="true" /><email5 xsi:nil="true" /></emailAddresses><userId>eb3f9170-0fb8-47b4-9c4c-8fd19dfddb8f</userId></ConnectionRequest></Items><NextPage>https://us.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=2</NextPage></ConnectionRequests>
 
 curl \
   -X GET \
   -H "Authorization: Bearer $JWT" \
   -H 'Accept: application/json' \
-  "https://us.api.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2"
+  "https://us.api.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=1"
 
-{"Items":[{"firstName":"FirstName","middleName":null,"lastName":"LastName","loyaltyNumber":"0123","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"71ff9cf8-0593-4620-ba6c-145509164ba0","ID":"e8a3c057-bb9b-421e-85fb-06777bce54d3","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/5c708334-fcea-4be6-baa5-3e4929e95f50"},{"firstName":"Example","middleName":null,"lastName":"Example","loyaltyNumber":"54321","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"7dcd5a6e-1f26-49b3-a7a6-7374618ac519","ID":"3357c50d-2cac-4123-9f7e-9ad41166484e","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/3357c50d-2cac-4123-9f7e-9ad41166484e"}],"NextPage":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=3357c50d-2cac-4123-9f7e-9ad41166484e"}
+{"Items":[{"firstName":"FirstName","middleName":null,"lastName":"LastName","loyaltyNumber":"0123","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"71ff9cf8-0593-4620-ba6c-145509164ba0","ID":"e8a3c057-bb9b-421e-85fb-06777bce54d3","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/5c708334-fcea-4be6-baa5-3e4929e95f50"},{"firstName":"Example","middleName":null,"lastName":"Example","loyaltyNumber":"54321","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"7dcd5a6e-1f26-49b3-a7a6-7374618ac519","ID":"3357c50d-2cac-4123-9f7e-9ad41166484e","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/3357c50d-2cac-4123-9f7e-9ad41166484e"}],"NextPage":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=3"}
 ```
 
 ## Update a Connection Request
