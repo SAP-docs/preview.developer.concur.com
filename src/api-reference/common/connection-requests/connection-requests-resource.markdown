@@ -14,13 +14,15 @@ Access to this documentation does not provide access to the API.
 
 ## <a name="connection-request-lifecycle"></a>Connection Request Lifecycle
 
-After retrieving Connection Requests as part of a polling process, the partner is expected to match the user information with that of their own database. Upon a successful match, the partner is expected to exchange each request token contained in each Connection Request for an access token. The partner is also expected to put back a status indicating if the connection could be established, for each Connection Request, at most 24 hours after retrieving them. In case of failure, the Connection Request will be returned in future polls for retrial (see the diagram below for details).
+After retrieving Connection Requests as part of a polling process, the partner is expected to match the user information with that of their own database. Upon a successful match, the partner is expected to exchange each request token contained in each Connection Request for an access token. The partner is also expected to put back a status indicating if the connection could be established, for each Connection Request. In case a failure state is put back, the Connection Request will be returned in future polls for retrial (see the diagram below for details).
 
 ![Supplier flow](./supplier-flow.png)
 
 ## Retrieve Connection Requests
 
-This method returns a page of connection requests to the partner app, limited by the `limit` request parameter and the beginning of the page defined by the `offset` request parameter. **Each call will return a new page of results**. If you do not process these results (put back a status), they will only be returned in future requests after 24 hours - see the [Connection Request Lifecycle](#connection-request-lifecycle).
+This method returns a page of Connection Requests to the partner app, limited by the `limit` request parameter and the beginning of the page defined by the `offset` request parameter. The response also includes an URL containing the `offset` to the next page of Connection Requests.
+
+The polling process can be viewed as peeking `limit` elements from the queue of available CRs, starting at position `offset` from the queue, while the subsequent processing of these elements (the PUT request) can be viewed as popping them from the queue. Notice that because of the paginated nature of the request, if GET and PUT requests are interleaved, then subsequent GET requests should account for the fact that the Connection Requests that have been PUT back are no longer part of the set of available Connection Requests, affecting the `offset` value. In other words, PUT can be seen as popping from the left of the queue. See examples, below, for more detail.
 
 ### Request
 
@@ -34,13 +36,13 @@ GET /api/v3.2/common/connectionrequests/
 Name|Type|Format|Description
 ---|---|---|---
 `limit`|`query`|`integer`|The number of records to return. The default is 5 and the maximum is 10.
-`offset`|`query`|`integer`|The starting point of the next set of results, after the limit specified in the limit field has been reached. The default is the beginning of the page, which is equivalent to the value 0.
+`offset`|`query`|`integer`|The starting point of the set of results. The default is the first page, which is equivalent to the value 0.
 
 ### Response
 
 The response format is controlled by the request Accept header. Available formats are XML and JSON. If no Accept header is supplied, XML is returned for backward compatibility. We recommend working with JSON if possible.
 
-The `NextPage` attribute returns the URI of the next page results, if any. In case there are no next results, the value of this attribute will be `NULL`. Using this URI to make a new request, the return will be the next page results. In this URI, the limit parameter will be the same of the previous request and the offset parameter will define the start point of the next page.
+The `NextPage` attribute returns the URI of the next page results, if any. In case there are no more Connection Requests available at the moment, the value of this attribute will be `NULL`. Using this URI to make a new request, the return value will be the next page results. In this URI, the `limit` parameter will be the same of the previous request and the `offset` parameter will define the starting point of the next page.
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -60,10 +62,41 @@ curl \
   -X GET \
   -H "Authorization: Bearer $JWT" \
   -H 'Accept: application/json' \
-  "https://us.api.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=1"
+  "https://us.api.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=2"
 
-{"Items":[{"firstName":"FirstName","middleName":null,"lastName":"LastName","loyaltyNumber":"0123","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"71ff9cf8-0593-4620-ba6c-145509164ba0","ID":"e8a3c057-bb9b-421e-85fb-06777bce54d3","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/5c708334-fcea-4be6-baa5-3e4929e95f50"},{"firstName":"Example","middleName":null,"lastName":"Example","loyaltyNumber":"54321","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"7dcd5a6e-1f26-49b3-a7a6-7374618ac519","ID":"3357c50d-2cac-4123-9f7e-9ad41166484e","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/3357c50d-2cac-4123-9f7e-9ad41166484e"}],"NextPage":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=3"}
+{"Items":[{"firstName":"FirstName","middleName":null,"lastName":"LastName","loyaltyNumber":"0123","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"71ff9cf8-0593-4620-ba6c-145509164ba0","ID":"e8a3c057-bb9b-421e-85fb-06777bce54d3","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/e8a3c057-bb9b-421e-85fb-06777bce54d3"},{"firstName":"Example","middleName":null,"lastName":"Example","loyaltyNumber":"54321","status":"Pending","requestToken":"token-string","lastModified":"2022-11-09T05:57:29","emailAddresses":{"email1":null,"email2":null,"email3":null,"email4":null,"email5":null},"userId":"7dcd5a6e-1f26-49b3-a7a6-7374618ac519","ID":"3357c50d-2cac-4123-9f7e-9ad41166484e","URI":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/3357c50d-2cac-4123-9f7e-9ad41166484e"}],"NextPage":"https://integration.concursolutions.com/api/v3.2/common/connectionrequests/?limit=2&offset=4"}
 ```
+
+Below some example scenarios are provided.
+
+#### Scenario 1: GET everything then PUT
+
+Given 35 Connection Requests initially available:
+
+1. GET with `limit=10` returns 10 elements and `NextPage` containing `offset=10`
+1. GET with `limit=10&offset=10` returns 10 elements and `NextPage` containing `offset=20`
+1. GET with `limit=10&offset=20` returns 10 elements and `NextPage` containing `offset=30`
+1. GET with `limit=10&offset=30` returns 5 elements and null `NextPage`
+1. PUT is issued for all 35 elements that have been retrieved
+1. Subsequent GETs return no Connection Requests until a new one becomes available.
+
+Notice that in this scenario the initial GET request does not include an `offset` paramter (which is equivalent to including `offset=0`), while subsequent GET requests use the `NextPage` URL which includes the `offset` to the next page. Finally, all returned elements receive a PUT.
+
+#### Scenario 2: Interleaving GET and PUT
+
+Given 35 Connection Requests initially available:
+
+1. GET with `limit=10` returns 10 elements and `NextPage` containing `offset=10`
+1. PUT is issued for all 10 elements
+1. GET with `limit=10` returns 10 elements and `NextPage` containing `offset=10`
+1. PUT is issued for all 10 elements
+1. GET with `limit=10` returns 10 elements and `NextPage` containing `offset=10`
+1. PUT is issued for all 10 elements
+1. GET with `limit=10` returns 5 elements and null `NextPage`
+1. PUT is issued for all 5 elements
+1. Subsequent GETs return no Connection Requests until a new one becomes available.
+
+Notice that in this scenario `offset` is never supplied as a parameter for the GET request becausse the previous PUT already popped the returned elements from the left of the queue (supplying an offset of 10 as returned in `NextPage` would skip the new 10 elements that were shifted left by the PUT).
 
 ## Update a Connection Request
 
@@ -102,7 +135,7 @@ curl \
 
 ### <a name="connection-status"></a>Connection Status
 
-The status of the connection as indicated by the partner. Both the successful (`CRSUC`) and error statuses (`CREU1`, `CREU2`, `CREU3`) generate email notifications to the user when PUT back by the partner. This lets the user know they can already book with the partner in case of success, or, in case of error, that they need to check the loyalty account information they supplied. In case of error, the Connection Request is requeued (returned in future GETs) after 24 hours. This can be done 4 times, after that the Connection Request is set with an error status and is not returned in future GETs. Finally, the `CRRET` status does not generate an email notification to the user, it's intended purpose is to requeue a Connection Request (after 1 hour) for another processing attempt by the supplier to retry the connection. This can be done at most 48 times, after that the Connection Request is set with an error status and is not returned in future GETs. As previously mentioned, if the supplier does not PUT back any status, the Connection Request is automatically requeued after 24 hours (again, at most 48 times). 
+The status of the connection as indicated by the partner. Both the successful (`CRSUC`) and error statuses (`CREU1`, `CREU2`, `CREU3`) generate email notifications to the user when PUT back by the partner. This lets the user know they can already book with the partner in case of success, or, in case of error, that they need to check the loyalty account information they supplied. In case of error, the Connection Request is requeued (returned in future GETs) after 24 hours. This can be done 4 times, after that the Connection Request is set with an error status and is not returned in future GETs. Finally, the `CRRET` status does not generate an email notification to the user, it's intended purpose is to requeue a Connection Request (after 1 hour) for another processing attempt by the supplier to retry the connection. This can be done at most 48 times, after that the Connection Request is set with an error status and is not returned in future GETs.
 
 
 Name|Type|Format|Description
