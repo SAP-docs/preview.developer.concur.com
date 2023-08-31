@@ -76,7 +76,7 @@ Retrieves the attendees that are associated with a specific expense ID.
 * [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the User access token.
 * `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 ### Response
@@ -84,6 +84,7 @@ Retrieves the attendees that are associated with a specific expense ID.
 #### Status Codes
 
 * [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
 * [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
 * [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
@@ -135,6 +136,95 @@ curl -X 'GET' \
 }
 ```
 
+
+## Retrieve Attendees on a Specific Expense ID Using System User <a name="specific-report-expenses-using-system-user"></a>
+
+Retrieves the attendees that are associated with a specific expense ID using a system user.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+#### URI Template
+
+```shell
+/expensereports/v4/reports/{reportId}/expenses/{expenseId}/attendees
+```
+
+#### Parameters
+
+| Name          |Type|Format| Description                                                                                                                                         |
+|---------------|---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `reportId`    |`string`|-| **Required** The unique identifier of the report that is being read.                                                                                |
+| `expenseId`   |`string`|-| **Required** The unique identifier of the expense that is being read.                                                                               |
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company access token.
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* [Attendees Response](#attendees-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl -X 'GET' \
+  'https://us.api.concursolutions.com/expensereports/v4/reports/24E51595E17E4627B2AF/expenses/51ADA86C8EB164488FE67180CCE16EDB/attendees' \
+  --header 'Authorization: Bearer {access_token}' \
+  --header 'Concur-CorrelationId: Expense-Report-test' \
+  --header 'Content-Type: application/json'
+```
+
+#### <a name="attendees-response-schema"></a> Response
+
+```shell
+{
+  "noShowAttendeeCount": 0,
+  "expenseAttendeeList": [
+    {
+      "attendeeId": "695E66E2A472074D8895057311C6A158",
+      "customData": null,
+      "isAmountUserEdited": false,
+      "isTraveling": null,
+      "associatedAttendeeCount": 1,
+      "versionNumber": 1,
+      "transactionAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      },
+      "approvedAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      }
+    }
+  ]
+}
+```
 
 ## <a name="schema"></a>Schema
 
