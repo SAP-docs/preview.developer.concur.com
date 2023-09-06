@@ -151,7 +151,7 @@ Name|Type|Format|Description
 Name|Type|Format|Description
 ---|---|---|---
 `Items`|`array`|[Connection Request](#connection-request)|The result collection.
-`NextPage`|`string`|-|The URI of the next page of results, if any. (deprecated in v3.2)
+`NextPage`|`string`|-|The URI of the next page of results, if any.
 
 ### <a name="connection-request"></a>Connection Request
 
