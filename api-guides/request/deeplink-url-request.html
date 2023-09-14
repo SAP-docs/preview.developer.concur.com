@@ -519,42 +519,125 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="deeplink-url-integration">Deeplink URL Integration</h1>
+        <h1 id="deeplink-url-integration-concur-request">Deeplink URL Integration Concur Request</h1>
+
+<div id="attn-prerelease">
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
 <p>The Deeplink URL integration provides the ability for a user on a third-party website or portal to access the resource in Concur Request. This is useful when the user needs to navigate to the SAP Concur solutions website or the SAP Concur Mobile app to complete their operation on the resource, or requires more insights on the resource than that provided in the third-party website or portal.</p>
+
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
+
 <p>Users must purchase Concur Request in order to use this integration capability. This integration is only available to partners who have been granted access and to customers who either use username/password or SSO SAML2 implementation for authenticating. Access to this documentation does not provide access to the integration.</p>
+
 <h2 id="prerequisites"><a name="pre-req"></a>Prerequisites</h2>
+
 <ul>
   <li>The user must already exist as an active user in the SAP Concur solution with a Concur Request role such as Request User, Request Manager, or Request Administrator.</li>
-  <li>If multiple identity providers (IdPs) are in use, the user may be required to select the correct IdP or provide the login credentials prior to the SSO process.
+  <li>If multiple identity providers (IdPs) are in use, the user may be required to select the correct IdP or provide the login credentials prior to the SSO process.</li>
+  <li>
     <h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
-    <p><img src="./Deeplink-url-request.png" alt="Process Flow for Deeplink URL for a Request" /></p>
-    <h2 id="integration-details"><a name="integration-details"></a>Integration Details</h2>
-    <h3 id="uri-template">URI Template</h3>
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/travel-request/<span class="o">{</span>requestUuid<span class="o">}</span>?companyUUID<span class="o">={</span>companyUUID<span class="o">}</span>&amp;context<span class="o">={</span>CONTEXT<span class="o">}</span>
-</code></pre></div>    </div>
-    <h3 id="parameters">Parameters</h3>
-    <p>|Name|Type|Format|Description|
-|—|—|—|—|
-|<code class="language-plaintext highlighter-rouge">requestUuid</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">path</code>|<strong>Required</strong> The 20-character unique identifier of the request that is being read.|
-|<code class="language-plaintext highlighter-rouge">companyUUID</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">query</code>|The unique identifier of the company, in UUID format, to which the request belongs to.|
-|<code class="language-plaintext highlighter-rouge">context</code>|<code class="language-plaintext highlighter-rouge">string</code>|<code class="language-plaintext highlighter-rouge">query</code>|The access level of the user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">MANAGER</code>, or <code class="language-plaintext highlighter-rouge">PROCESSOR</code>|</p>
-    <h3 id="order-of-precedence">Order of Precedence</h3>
-    <p>The following order of precedence will be applied to determine the appropriate role to use in opening the report if the context is not defined in the URL, based on the applicable roles assigned to the user. Provision of context can narrow the roles considered in this evaluation to more accurately direct the UI to the appropriate role.
-||Role|Context|
-|—|—|—|
-|1|Request User (Request owner)|TRAVELER|
-|2|Delegate for Request owner|TRAVELER|
-|3|Request Approver|MANAGER|
-|4|Delegate for Request approver|MANAGER|
-|5|Request Proxy for the Request owner’s group|TRAVELER|
-|6|Request Administrator for the Request owner’s group|PROCESSOR|
-When the deep link URL is generated without the company UUID, the user will be prompted with a sign in page to provide login ID in order to discover the company UUID. The user will be prompted with the identity provider (IdP) sign in page to provide the appropriate login ID, which is used for authentication purposes.</p>
-    <h4 id="example">Example:</h4>
-    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/travel-request/224AF3CDCC2A5244A37C72FA5770C6F2?companyUUID<span class="o">=</span>ae4a796a-68da-4b80-b508-36022e2bacef
-</code></pre></div>    </div>
-    <p>This deep link URL will support the feature to access SAP Concur solutions via SSO or username/password authentication when launched from third party applications. When clicked, this link will:</p>
   </li>
+</ul>
+
+<p><img src="./Deeplink-url-request.png" alt="Process Flow for Deeplink URL for a Request" /></p>
+
+<h2 id="integration-details"><a name="integration-details"></a>Integration Details</h2>
+
+<h3 id="uri-template">URI Template</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/travel-request/<span class="o">{</span>requestUuid<span class="o">}</span>?companyUUID<span class="o">={</span>companyUUID<span class="o">}</span>&amp;context<span class="o">={</span>CONTEXT<span class="o">}</span>
+</code></pre></div></div>
+<h3 id="parameters">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">requestUuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><strong>Required</strong> The 20-character unique identifier of the request that is being read.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyUUID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">query</code></td>
+      <td>The unique identifier of the company, in UUID format, to which the request belongs to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">context</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">query</code></td>
+      <td>The access level of the user, which determines the form fields they can view/modify. Supported values: <code class="language-plaintext highlighter-rouge">TRAVELER</code>, <code class="language-plaintext highlighter-rouge">MANAGER</code>, or <code class="language-plaintext highlighter-rouge">PROCESSOR</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="order-of-precedence">Order of Precedence</h3>
+
+<p>The following order of precedence will be applied to determine the appropriate role to use in opening the report if the context is not defined in the URL, based on the applicable roles assigned to the user. Provision of context can narrow the roles considered in this evaluation to more accurately direct the UI to the appropriate role.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Role</th>
+      <th>Context</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Request User (Request owner)</td>
+      <td>TRAVELER</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>Delegate for Request owner</td>
+      <td>TRAVELER</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>Request Approver</td>
+      <td>MANAGER</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>Delegate for Request approver</td>
+      <td>MANAGER</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>Request Proxy for the Request owner’s group</td>
+      <td>TRAVELER</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>Request Administrator for the Request owner’s group</td>
+      <td>PROCESSOR</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When the deep link URL is generated without the company UUID, the user will be prompted with a sign in page to provide login ID in order to discover the company UUID. The user will be prompted with the identity provider (IdP) sign in page to provide the appropriate login ID, which is used for authentication purposes.</p>
+
+<h4 id="example">Example:</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/travel-request/224AF3CDCC2A5244A37C72FA5770C6F2?companyUUID<span class="o">=</span>ae4a796a-68da-4b80-b508-36022e2bacef
+</code></pre></div></div>
+
+<p>This deep link URL will support the feature to access SAP Concur solutions via SSO or username/password authentication when launched from third party applications. When clicked, this link will:</p>
+
+<ul>
   <li><strong>Web UI:</strong> Enable the user to access the specific Request whose summary or link they were viewing in the third-party application.</li>
   <li><strong>Mobile UI:</strong> Enable the user to access the specific Request whose summary they were viewing in the third-party application’s mobile app.</li>
 </ul>
