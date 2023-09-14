@@ -454,7 +454,7 @@ https://{datacenterURI}/financialintegration/fi/v4/companies/transactiontypes/{d
 
 Name|Type|Format|Description
 ---|---|---|---
-`docType`|`string`|`path`|**Required** The financial document type to return. Only one type of transaction can be retrieved at a time. Currently supported: `expense`, supported in a future release: `invoice`, `cashadvance`, `payroll`, `requestobligation`
+`docType`|`string`|`path`|**Required** The financial document type to return. Only one type of transaction can be retrieved at a time. Currently supported: `expense`,`invoice` Future release:           `cashadvance`, `payroll`, `requestobligation`
 `confirmationRequest`||[body](#confirmationrequest)|**Required** The JSON request to be posted.
 
 #### Headers
@@ -463,8 +463,10 @@ Name|Type|Format|Description
 * [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
 
 #### Payload
+##### Please refer payload format for relevant docType from below:
 
-[Payment Confirmation Request](#schema-paymentrequest)
+[Payment Confirmation Request (expense docType)](#schema-paymentrequest-expense)  
+[Payment Confirmation Request (invoice docType)](#schema-paymentrequest-invoice)
 
 ### Response
 
@@ -776,33 +778,33 @@ Name|Type|Format|Description
 `errorMessage`|`string`|-|The error message, if any.
 `systemId`|`string`|-|The external system ID that acknowledged the document. Maximum 50 characters.
 
-### <a name="schema-paymentrequest"></a>Payment Confirmation Request
+### <a name="schema-paymentrequest-expense"></a>Payment Confirmation Request (Expense)
 
 Name|Type|Format|Description
 ---|---|---|---
 `systemId`|`string`|-|**Required** The external system ID that acknowledged the documents, it can be an empty string. Maximum 50 characters.
-`processingConfirmation`|`Array`|[Payment Confirmation Request Item](#schema-paymentconfirmationrequest)|Payment confirmations JSON request.
+`processingConfirmation`|`Array`|[Payment Confirmation Request Item](#schema-paymentconfirmationrequest-expense)|Payment confirmations JSON request.
 
-### <a name="schema-paymentconfirmationrequest"></a>Payment Confirmation Request Item
+### <a name="schema-paymentconfirmationrequest-expense"></a>Payment Confirmation Request Item (Expense)
 
 Name|Type|Format|Description
 ---|---|---|---
 `docId`|`string`|-|The financial document ID to confirm. Maximum 32 characters.
 `processingStatusCode`|`string`|-|Payment status. Supported values: `CP`, `PP`, `RE`, `OB` (Completely Paid, Partially paid, Reversal, Obsolete). Maximum 3 characters.
 `additionalMessage`|`string`|-|Reversal message or obsolete message, if any.
-`clearingDetails`|`array`|[Payment Documents Details](#schema-paymentdocs)|Payment documents details, if any.
+`clearingDetails`|`array`|[Payment Documents Details](#schema-paymentdocs-expense)|Payment documents details, if any.
 
-### <a name="schema-paymentdocs"></a>Payment Documents Details
+### <a name="schema-paymentdocs-expense"></a>Payment Documents Details (Expense)
 
 Name|Type|Format|Description
 ---|---|---|---
 `clearingDate`|`string`|-|Date the payment cleared.
 `clearingAmount`|`double`|-|Amount cleared.
 `clearingCurrency`|`string`|-|Currency value.
-`receiver`|`array`|[Receiver Details](#schema-receiver)|Receiver details.
-`clearingReference`|`array`|[Clearing Reference Details](#schema-clearing-reference)|Clearing reference details.
+`receiver`|`array`|[Receiver Details](#schema-receiver-expense)|Receiver details.
+`clearingReference`|`array`|[Clearing Reference Details](#schema-clearing-reference-expense)|Clearing reference details.
 
-### <a name="schema-receiver"></a>Receiver Details
+### <a name="schema-receiver-expense"></a>Receiver Details (Expense)
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -810,7 +812,7 @@ Name|Type|Format|Description
 `receiverName`|`double`|-|Name of receiver.
 `receiverType`|`string`|-|Type of receiver.
 
-### <a name="schema-clearing-reference"></a>Clearing Reference Details
+### <a name="schema-clearing-reference-expense"></a>Clearing Reference Details (Expense)
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -819,6 +821,29 @@ Name|Type|Format|Description
 `fiscalYear`|`string`|-|Fiscal year.
 `paymentRef`|`string`|-|Payment reference ID. Must be unique for each confirmation.
 `paymentMethod`|`string`|-|Payment method Where `E` = Electronic Fund Transfer or `C` = Check.
+
+
+### <a name="schema-paymentrequest-invoice"></a>Payment Confirmation Request (Invoice)
+
+Name|Type|Format|Description
+---|---|---|---
+`systemId`|`string`|-|**Required** The external system ID that acknowledged the documents, it can be an empty string. Maximum 50 characters.
+`processingConfirmation`|`Array`|[Payment Confirmation Request Item](#schema-paymentconfirmationrequest-invoice)|Payment confirmations JSON request.
+
+### <a name="schema-paymentconfirmationrequest-invoice"></a>Payment Confirmation Request Item (Invoice)
+
+Name|Type|Format|Description
+---|---|---|---
+`docId`|`string`|-|The financial document ID to confirm. Maximum 32 characters.  
+`invoiceAmount`|`double`|-|Invoice amount.  
+`paymentStatus`|`string`|-|Payment status. Supported values: PAID, VOID, CANCEL  
+`paymentStatusDate`|`string`|`YYYY-MM-DD`|Payment date.  
+`checkNumbers`|`array`|-|Check numbers.  
+`paymentMethodType`|`string`|-|Pay method type.  
+`paymentAmount`|`double`|-|Payment amount.  
+`notesToSupplier`|`string`|-|Notes to supplier, if any.  
+`paymentAdjNotes`|`string`|-|Payment adjustment notes, if any.  
+
 
 ### <a name="schema-paymentconfirmationresponse"></a>Payment Confirmation Response
 
