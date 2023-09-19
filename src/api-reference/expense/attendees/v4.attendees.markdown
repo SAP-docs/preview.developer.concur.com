@@ -565,8 +565,8 @@ Name|Type|Format|Description
 `attendeeTypeCode`        |`string` |-                                     |A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
 `company`                 |`string` |-                                     |The name of the attendee's company. Maximum length: 150 characters
 `currencyCode`            |`string` |-                                     |The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
-`custom1 through custom25`|`object` |[`Custom Field`](#custom-field-schema)|A custom field associated with the attendee. This field may or may not have data, depending on how Expense form fields are configured. If the field is not supported for an upserted attendee, that value is not honored in the upsert. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
-`externalId`              |`string` |-                                     |A unique identifier for the attendee, assigned outside of Concur. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
+`custom1 through custom25`|`object` |[`Custom Field`](#custom-field-schema)|A custom field associated with the attendee. This field may or may not have data, depending on how Expense form fields are configured. If this field is not configured for the attendee type in question, the response excludes this field. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
+`externalId`              |`string` |-                                     |An identifier for the attendee with varying degrees of uniqueness due to attendee type and related configurations. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
 `firstName`               |`string` |-                                     |The attendee's first name. Maximum length: 50 characters
 `hasExceptionsPrevYear`   |`boolean`|`true / false`                        |Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees. Format: true or false
 `hasExceptionsYtd`        |`boolean`|`true / false`                        |Determines whether the attendee has exceptions in the current year, based on yearly total limits for attendees. Format: true or false
@@ -587,18 +587,17 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 |---|---|---|---|
-`attendeeTypeCode`        |`string`|-       |A code that indicates the type of attendee. This field is noneditable for PUT calls. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
+`attendeeTypeCode`        |`string`|-       |A code that indicates the type of attendee. This field is noneditable for PUT requests. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
 `company`                 |`string`|-       |The name of the attendee's company. Maximum length: 150 characters
-`currencyCode`            |`string`|-       |The 3-letter ISO 4217 currency code for monetary amounts related to an attendee. 
-`custom1 through custom25`|`string`|-       |A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
-`externalId`              |`string`|-       |A unique identifier for the attendee, assigned outside of Concur. This field is noneditable for PUT calls. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
+`currencyCode`            |`string`|-       |The 3-letter ISO 4217 currency code for monetary amounts related to an attendee. This field is only required if the `totalAmountYtd` value is populated. 
+`custom1 through custom25`|`string`|-       |A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
+`externalId`              |`string`|-       |An identifier for the attendee with varying degrees of uniqueness due to attendee type and related configurations. This field is noneditable for PUT requests. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
 `firstName`               |`string`|-       |The attendee's first name. Maximum length: 50 characters
-`id`                      |`string`|-       |The unique identifier of the resource.
-`lastName`                |`string`|-       |The attendee's last name. Maximum length: 132 characters
+`lastName`                |`string`|-       |**Required** The attendee's last name. Maximum length: 132 characters
 `middleInitial`           |`string`|-       |The attendee's middle initial. Maximum length: 1 character
 `suffix`                  |`string`|-       |The attendee's name suffix. Maximum length: 32 characters
 `title`                   |`string`|-       |The attendee's title. Maximum length: 32 characters
-`totalAmountYtd`          |`number`|`double`|The total amount spent on the attendee in the current calendar year.
+`totalAmountYtd`          |`number`|`double`|The total amount spent on the attendee in the current calendar year. If this field is populated, `currencyCode` is required.
 
 ### <a name="create-attendee-response-schema"></a>Create Attendee Response
 
