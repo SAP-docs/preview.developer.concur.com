@@ -1,9 +1,9 @@
 ---
-title: Launch External URL Concur Request v4
+title: Launch External URL - Concur Request v4
 layout: reference
 ---
 
-# Launch External URL Concur Request v4
+# Launch External URL - Concur Request v4
 
 The Launch External URL callout gives clients and third-party developers the ability to extend the functionality of the SAP Concur platform providing a means to deliver custom user interactions, or access functionality found in an external system. The client can add a Request Header, Request Entry, or Allocation form field that is configured to use the Launch External URL callout. Concur Request will display this field with an attached button that launches a separate browser window when clicked. The window is controlled by an application connector, created by a third-party developer or the client. The application connector is a web server that presents information in the window.
 
@@ -24,7 +24,7 @@ Access to this documentation does not provide access to the API.
 
 ## Process Flow <a name="process-flow"></a>
 
-![Process Flow for Launch External Service](./launch-external-url-v4.png)
+![Process Flow for Launch External Service](./v4.launch-external-url-concur-request.png)
 
 ## Products and Editions <a name="products-editions"></a>
 
@@ -43,8 +43,8 @@ If the Launch External URL callout is used as part of a process with other Reque
 
 The system requires certain named fields (not custom fields) to be completed before a user can open the Launch External URL configured field. The system will perform an abbreviated save to make the request record available to external APIs. These are the fields required to be completed by the end user before the Launch External URL callout can be opened (if these fields are included and configured as site required on the form):
 
-* At the Request Header level: Request Name, Request Date, Policy, and Start/End Date.
-* At the Request Entry level: Expense Type, Amount, Transaction Date, Payment Type, and Currency.
+* At the Request Header level: Request Name, Request Date, Policy, and Start/End Date
+* At the Request Entry level: Expense Type, Amount, Transaction Date, Payment Type, and Currency
 
 Any audit rules configured as Save actions will not be visible to the end user until the user returns to the Concur Request application from the pop-up window.
 
@@ -86,22 +86,21 @@ Once the configuration is complete, the callout uses the following process:
 
 Concur Request will make calls to the application connector’s endpoint using SSL. During configuration, Concur Request will connect to the application connector to validate that its hostname and access credentials are valid.
 
-Concur Request provides for a sample application connector, credentials are stored in a web configuration file that varies by platform, such as web.xml or web.config. However, if you are hosting the connector, you can customize where and how the credentials are stored by customizing HTTPBasicAuth.java or Authentication.cs.
+Concur Request provides for a sample application connector, credentials are stored in a web configuration file that varies by platform, such as `web.xml` or `web.config`. However, if you are hosting the connector, you can customize where and how the credentials are stored by customizing `HTTPBasicAuth.java` or `Authentication.cs`.
 
 Concur Request will not be able to connect to the application connector until a certificate signed by a Certificate Authority (CA) is installed in the application connector. You will need to install the signed certificate before access.
 
 ## Authorization <a name="auth"></a>
 
-Launch External URL V4 uses the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) process. When Launch External URL V4 calls are made, and the end-user is already logged into Concur, the customer or third party application will receive a temporary token in the query parameter, "client_auth_code".  Since the Launch External URL callout completes the first leg of this 3-legged Oauth2 grant, your application must then exchange the temporary token for a refresh token and access token. For this, please refer to the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) page for the POST /oauth2/v0/token details.
+Launch External URL V4 uses the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) process. When Launch External URL v4 calls are made, and the end-user is already logged into Concur, the customer or third party application will receive a temporary token in the query parameter, `client_auth_code`.  Since the Launch External URL callout completes the first leg of this 3-legged OAuth2 grant, your application must then exchange the temporary token for a refresh token and access token. For this, please refer to the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) page for the `POST /oauth2/v0/token` details.
 
->**Note**: users must be logged into their Concur account for this process to work correctly.
+>**Note**: Users must be logged into their SAP Concur account for this process to work correctly.
 
-Information on the Launch External URL setup is provided in the [Configure Launch External URL - V4 Service](#config-leu) section below.
-
+Information on the Launch External URL setup is provided in the [Configure Launch External URL v4 Service](#config-leu) section below.
 
 ## Functions <a name="functions"></a>
 
-Details of the URI used for the Launch External URL request can be found on the [V4 Launch External URL Request](\api-reference\callouts\v4.launch-external-url-concur-request-request.html) page.
+Details of the URI used for the Launch External URL request can be found on the [v4 Launch External URL Request](\api-reference\callouts\v4.launch-external-url-concur-request-request.html) page.
 
 ## Concur Request Configuration <a name="config"></a>
 
@@ -110,7 +109,6 @@ A custom field in Request with text data type for the Request Header, Entry, or 
 >**Note**:
 >* The Launch External URL currently only works with Professional Edition.
 >* The Launch External URL is available to be configured at the Request Header, Entry, or Allocations-level fields.
->* This Callout cannot be used with Standard Edition clients or from a Travel or Invoice field.
 
 ## Responses and Errors <a name="responses-errors"></a>
 
@@ -122,15 +120,15 @@ SAP Concur administrators use the Manage Application Connectors link on the web 
 
 Information on how to create, install, and configure the application connector is included in [Callouts and Application Connectors](\api-reference\callouts\callouts-application-connectors.html).
 
-Note: The application connector must use the same username and password pair to generate its validation signature hash. Both the username and password must be at least 10 characters for increased security and the maximum allowed length is 50 characters.
+**Note:** The application connector must use the same username and password pair to generate its validation signature hash. Both the username and password must be at least 10 characters for increased security and the maximum allowed length is 50 characters.
 
-## Configure Launch External URL - V4 Service <a name="config-leu"></a>
+## Configure Launch External URL v4 Service <a name="config-leu"></a>
 
 Your client ID must first be registered. Details on registering your client ID can be found on the [Authentication Grant](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant) page. The client ID used for the callout must have the redirect URL registered and the following grants assigned.
 
-**Required Grants**: refresh_token, password, client_credentials, and authorization_code
+**Required Grants**: `refresh_token`, `password`, `client_credentials`, and `authorization_code`
 
-No scopes are required to use the Launch External URL callout. However, if the Launch External URL callout is used as part of a process with other Concur APIs, scopes for those other APIs will be needed.
+No scopes are required to use the Launch External URL callout. However, if the Launch External URL callout is used as part of a process with other SAP Concur APIs, scopes for those other APIs will be needed.
 
 The following steps explain **how to register an application connector**.
 
@@ -149,7 +147,7 @@ The following steps explain **how to register an application connector**.
 
 6. Select the **Active** check box if the endpoint is ready for use. Usually you will do this after you have implemented and tested the endpoint in your application connector.
 
-7.	Ensure the Service Version is set to **V4** (only required if moving from V1 to V4).
+7.	Ensure the Service Version is set to **v4** (only required if moving from v1 to v4).
 
 8.	Enter the Client ID (used to identify your application).
 
