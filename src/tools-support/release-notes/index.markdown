@@ -6,7 +6,13 @@ layout: reference
 
 ## Developer Platform Release Notes
 
-* [March 2023](api/2023-03-10.html)
+* [September 2023](./api/2023-09-07.html)
+* [August 2023](./api/2023-08-10.html)
+* [July 2023](./api/2023-07-12.html)
+* [June 2023](./api/2023-06-02.html)
+* [May 2023](./api/2023-05-04.html)
+* [April 2023](./api/2023-04-07.html)
+* [March 2023](./api/2023-03-10.html)
 * [February 2023](./api/2023-02-03.html)
 * [January 2023](./api/2023-01-05.html)
 * [December 2022](./api/2022-12-02.html)
@@ -37,7 +43,16 @@ layout: reference
 
 ## App Center Release Notes
 
-To view App Center release notes, please visit [ConcurTraining](http://www.concurtraining.com/customers/tech_pubs/Docs/AppCenter/ReleaseNotesAppCenter_Client.htm).
+* [2023 Release Notes](./app-center/2023-app-center.html)
+* [2022 Release Notes](./app-center/AppCenter_RN_Client_2022.pdf)
+* [2021 Release Notes](./app-center/AppCenter_RN_Client_2021.pdf)
+* [2020 Release Notes](./app-center/AppCenter_RN_Client_2020.pdf)
+* [2019 Release Notes](./app-center/AppCenter_RN_Client_2019.pdf)
+* [2018 Release Notes](./app-center/AppCenter_RN_Client_2018.pdf)
+* [2017 Release Notes](./app-center/AppCenter_RN_Client_2017.pdf)
+* [2016 Release Notes](./app-center/AppCenter_RN_Client_2016.pdf)
+* [2015 Release Notes](./app-center/AppCenter_RN_Client_2015.pdf)
+* [2014 Release Notes](./app-center/AppCenter_RN_Client_2014.pdf)
 
 ## Combined App Center and Developer Platform Release Notes
 

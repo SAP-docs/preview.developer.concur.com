@@ -17,7 +17,7 @@ The System for Cross-Domain Identity Management (SCIM) user management API enabl
 
 ![Process flow diagram of the User Provisioning API](/api-reference/user-provisioning/v4-user-provisioning-process-flow-v3.png)
 
-UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (name, address, username, etc.) is centralized and attributes are shared between spend and travel services. UPS supports [spend and travel](#supported-extensions) extensions for product specific information.
+UPS supports the SCIM core and enterprise user extensions for identity support. Identity information (name, address, username, etc.) is centralized and attributes are shared between spend and travel services. UPS supports [spend and travel](#supported-extensions) extensions for product-specific information.
 
 When provisioning users, the provisioning of the identity creates a UUID that spend and travel use for reference. The identity must be created prior to or at the same time as provisioning spend and travel profile information.
 
@@ -29,11 +29,11 @@ Following the SCIM standard, we have grouped the identity attributes of a user i
 
 Clients must provision the core and enterprise extensions prior to, or with spend and/or Travel extensions. The UUID of the user will be created and shared within the response body of the new user request.
 
-## Recommended Steps for Adoption
+## <a name="recommended_steps"></a>Recommended Steps for Adoption
 
 ### Map Existing Profile Data to UPS API Attributes
 
-Clients and partners migrating from flat file import or Users V1 API must complete the steps in this section.
+Clients and partners migrating from [flat file import](#flatfile_mapping_guides) or [Users V1 API](#API_mapping_guides) must complete the steps in this section.
 
 > **Note**: New clients and partners skip this step and move to the following section on Authentication.
 
@@ -91,7 +91,9 @@ SAP Concur products use an asynchronous provisioning design for all extensions o
     * processing - No action necessary. The system is processing the provisioning request.  
     * error - Action necessary. Review the error message and take appropriate steps to resolve. If there are questions, please reach out to your SAP Concur support representative for assistance.  
 
-### <a name="import-formats"></a> Import File Formats
+## <a name="flatfile_mapping_guides"></a>Mapping guides between flat file types and APIs
+
+Below are mapping guides between flat file import types and V4 api attributes. These mappings can be used to help speed the 
 
 File Type|File Name|Mapping
 ---|---|---
@@ -105,11 +107,11 @@ File Type|File Name|Mapping
 500|Delegate Import|[500 Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/500.html)
 550|Enhanced Delegate Import|[550 Enhanced Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/550.html)
 
-### <a name="legacy-api"></a> Legacy API Mapping
+## <a name="API_mapping_guides"></a>Mapping guides between User V1 and V4 APIs 
 
 API|Mapping
 ---|---
-Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/v1-mapping.html)
+Users V1|[Users V1](https://developer.concur.com/api-reference/user-provisioning/mapping/V1-mapping.html)
 Bulk 3.0 or 3.1|[Bulk](https://developer.concur.com/api-reference/user-provisioning/mapping/3.0_3.1_mapping.html)
 
 ## <a name="supported-extensions"></a> Supported Extensions
@@ -129,6 +131,9 @@ schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend 
 schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.|-
 schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|-
 schemas:extension:travel:2.0:User|Supporting information for travel users.|-
+
+## Sample Postman Collection
+A [sample postman collection](/api-guides/postman/concur-user-provisioning-postman-collection.zip) that has examples of use creation, updating identity, spend and travel profile information. 
 
 ## Helpful Hints
 

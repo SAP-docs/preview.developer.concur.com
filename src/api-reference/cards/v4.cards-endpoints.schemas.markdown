@@ -1,0 +1,487 @@
+---
+title: Cards v4 - Schemas
+layout: reference
+---
+
+# Cards v4 Schemas
+
+# <a name="schemas-account"></a>Account Schemas
+
+## <a name="schema-create-account-list"></a>Create Account List
+
+Name|Type|Format|Description
+---|---|---|---
+`accounts`|`array`|[`Create Account`](#schema-create-account)|An array of Accounts to be created.
+
+## <a name="schema-create-account"></a>Create Account
+
+Name|Type|Format|Description
+---|---|---|---
+`accountType`|`enum`|-|**Required** Type of the credit card account. Supported values: `I - Individual`, `M - Managing (the master account of virtual cards)`, `V - Virtual card`
+`billedCurrency`|`string`|3-letter ISO 4217 currency code|Billed currency of the card account.
+`billingAccount`|`object`|[`Billing Account Reference`](#schema-billingaccountreference)|Reference to the billing account, e.g. in case of virtual card this references the managing/master account.
+`cardBrand`|`enum`|-|Brand of the card. Supported values: `AX - American Express`, `CA - MasterCard`, `CB - Carte Blanche`, `DC - Diners Club`, `DS - Discover`, `EC - EuroCard`, `ER - ENROUTE`, `JC - JCB International`, `OT - Other`, `TP - UATP Card`, `UP - China Union Pay`, `VI - VISA`
+`cardProductDescription`|`string`|-|**Required** Branded name of the credit card; might be used for display purposes.
+`cardProductType`|`enum`|-|**Required** Card product type. Supported values: `CORP - Corporate Card`, `BUSN - Business Card`
+`cardholder`|`object`|[`Cardholder`](#schema-cardholder)|Cardholder owning this card account.
+`externalId`|`string`|-|**Required** Unique identifier (token) for a card account as defined by an external system (outside SAP Concur). Must not contain primary account number (PAN).
+`lastSegment`|`string`|-|**Required** Last four digits of the credit card number.
+`liabilityType`|`enum`|-|**Required** Liability type (payment method). Supported values: `IBIP - Individually Billed, Individually Paid`, `IBCP - Individually Billed, Company Paid`, `CBCP - Company Billed Company Paid`
+`nameOnCard`|`string`|-|**Required** Embossed name on the card.
+`provider`|`object`|[`Provider`](#schema-provider)|**Required** Credit card provider/issuer.
+`status`|`enum`|-|Lifecycle status (default: Active). Supported values: `A - Active`, `C - Canceled`
+`travelRequest`|`object`|[`Travel Request Reference`](#schema-travelrequestreference)|Reference to an SAP Concur Travel Request which is related to this card account.
+
+## <a name="schema-billingaccountreference"></a>Billing Account Reference
+
+Name|Type|Format|Description
+---|---|---|---
+`externalId`|`string`|-|**Required** Unique identifier (token) of the referenced billing account as defined by an external system (outside the SAP Concur platform). Must not contain primary account number (PAN).
+
+## <a name="schema-cardholder"></a>Cardholder
+
+Name|Type|Format|Description
+---|---|---|---
+`email`|`string`|-|Email address of the card holder. This is an alternative way for identifying a user.
+`employeeId`|`string`|-|Concur specific employeeId. This is an alternative way for identifying a user. The employeeId is a client facing ID.
+`firstName`|`string`|-|First name of the card holder.
+`lastName`|`string`|-|Last name of the card holder.
+`userId`|`string`|-|The unique identifier of the user (refer to [Identity v4 API](/api-reference/profile/v4.identity.html)). This is the preferred way for identifying a  user. The `userId` is a technical non-client facing ID.
+
+## <a name="schema-provider"></a>Provider
+
+Name|Type|Format|Description
+---|---|---|---
+`countryCode`|`string`|ISO 3166-1 Alpha-2 code|**Required** Country where card is issued.
+
+## <a name="schema-travelrequestreference"></a>Travel Request Reference
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|-|**Required** Unique identifier for an SAP Concur travel request (refer to [Travel Request v4 API](/api-reference/request/v4.endpoints.request-resources.html)).
+
+# <a name="schemas-transaction"></a>Transaction Schemas
+
+## <a name="schema-create-transaction-list"></a>Create Transaction List
+
+Name|Type|Format|Description
+---|---|---|---
+`transactions`|`array`|[`Create Transaction`](#schema-create-transaction)|**Required** An array of transactions to be created.
+
+## <a name="schema-create-transaction"></a>Create Transaction
+
+Name|Type|Format|Description
+---|---|---|---
+`account`|`object`|[`Transaction Account Reference`](#schema-transaction-accountreference)|**Required** Reference to the card account this transaction belongs to.
+`acquirerReferenceNumber`|`string`|-|Acquirer reference number.
+`authorizationExternalId`|`string`|-|External ID of the referenced (pre-)authorization.
+`billedAmount`|`object`|[`Amount`](#schema-amount)|Billed amount.
+`carRental`|`object`|[`Car Rental`](#schema-carrental)|Car rental addendum data.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`customerVatNumber`|`string`|-|Customer VAT number.
+`description`|`string`|-|Description of the transaction.
+`description2`|`string`|-|Description2 of the transaction.
+`description3`|`string`|-|Description3 of the transaction.
+`description4`|`string`|-|Description4 of the transaction.
+`description5`|`string`|-|Description5 of the transaction.
+`externalId`|`string`|-|**Required** Unique identifier for a card transaction as defined by an external system (outside the SAP Concur platform).
+`fleet`|`object`|[`Fleet`](#schema-fleet)|Fleet addendum data.
+`lodging`|`object`|[`Lodging`](#schema-lodging)|Lodging addendum data.
+`merchant`|`object`|[`Merchant`](#schema-merchant)|**Required** Merchant details.
+`merchantReferenceNumber`|`string`|-|Merchant reference number.
+`postedAmount`|`object`|[`Amount`](#schema-amount)|**Required** Posted amount.
+`postedDate`|`date`|ISO 8601 `YYYY-MM-DD`|**Required** Posted date.
+`processorReferenceNumber`|`string`|-|Processor reference number.
+`purchase`|`object`|[`Purchase`](#schema-purchase)|Purchase addendum data.
+`referenceNumber`|`string`|-|Transaction reference number for display purposes.
+`statement`|`object`|[`Statement`](#schema-statement)|Statement this transactions belongs to.
+`taxes`|`array`|[`Transaction Tax`](#schema-transaction-tax)|Taxes incurred for the transaction.
+`totalTaxAmount`|`object`|[`Amount`](#schema-amount)|Total tax amount.
+`transactionAmount`|`object`|[`Amount`](#schema-amount)|**Required** Transaction amount.
+`transactionDate`|`date`|ISO 8601 `YYYY-MM-DD`|**Required** Transaction date.
+`transactionDateTime`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnn`|Timestamp when the transaction happened.
+`travel`|`object`|[`Travel`](#schema-travel)|Travel addendum data.
+`type`|`enum`|-|**Required** Type of the transaction. Supported values: `ANF - Annual Fees`, `CAV - Cash Advance`, `CCF - Cash and Check Fees`, `RPE - Regular Transaction`, `FNC - Finance Charges`, `NSF - Insufficient Funds Check Fees`, `LAF - Late Fees`, `CHG - Other Bank Charges and Fees`, `PAY - Payment`
+
+## <a name="schema-transaction-accountreference"></a>Transaction Account Reference
+
+Name|Type|Format|Description
+---|---|---|---
+`externalId`|`string`|-|**Required** Unique identifier (token) of the referenced billing account as defined by an external system (outside the SAP Concur platform). Must not contain primary account number (PAN).
+
+## <a name="schema-carrental"></a>Car Rental
+
+Name|Type|Format|Description
+---|---|---|---
+`adjustmentAmount`|`object`|[`Amount`](#schema-amount)|Adjustment amount.
+`charges`|`array`|[`Car Rental Charge`](#schema-carrental-charge)|Car rental charges.
+`classificationCode`|`string`|-|Classification of the rented vehicle.
+`commodityCode`|`string`|-|Commodity code.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`dailyRate`|`object`|[`Amount`](#schema-amount)|Daily rental fee.
+`extraChargeAmount`|`object`|[`Amount`](#schema-amount)|Total amount of extra charges applied.
+`extraChargeCode`|`string`|-|Code describing the cause of extra charges applied.
+`extraDistanceRate`|`object`|[`Amount`](#schema-amount)|Additional rate per distance unit applied to the vehicle.
+`maximumFreeDistance`|`object`|[`Distance`](#schema-distance)|Maximum travel distance allowed to the customer before additional charges apply.
+`mileageRate`|`object`|[`Amount`](#schema-amount)|Rate applied per unit of distance traveled in vehicle.
+`numberOfVehicles`|`integer`|-|Number of vehicles rented.
+`pickupAddress`|`object`|[`Address`](#schema-address)|Address where the vehicle was rented.
+`pickupDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date on which the vehicle was rented.
+`pickupPropertyId`|`string`|-|Property ID where the vehicle was rented.
+`rentalAgreementNumber`|`string`|-|Number entered at the point of sale.
+`rentalDays`|`integer`|-|Number of days the vehicle was rented.
+`renterName`|`string`|-|Name of the individual that made the rental agreement.
+`renterNotShown`|`boolean`|-|Renter not shown flag.
+`returnAddress`|`object`|[`Address`](#schema-address)|True if renter did not pick up vehicle; no show charges may apply.
+`returnDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date the customer returned the vehicle.
+`returnPropertyId`|`string`|-|Property ID where the vehicle was returned.
+`totalDistance`|`object`|[`Distance`](#schema-distance)|Total distance traveled during the rental period.
+`weeklyRate`|`object`|[`Amount`](#schema-amount)|Weekly rental fee.
+
+## <a name="schema-carrental-charge"></a>Car Rental Charge
+
+Name|Type|Format|Description
+---|---|---|---
+`amount`|`object`|[`Amount`](#schema-amount)|Amount.
+`name`|`enum`|-|Name/type of the charge. Supported values: `REGULAR - Regular charges`, `ONEWAY - One-way drop charges`, `LATE - Late charges`, `FUEL - Fuel charges`, `INSURANCE - Insurance charges`, `EXTRA - Extra charges`, `OTHER - Other charges`
+
+## <a name="schema-Fleet"></a>Fleet
+
+Name|Type|Format|Description
+---|---|---|---
+`discountAmount`|`object`|[`Amount`](#schema-amount)|Discount Amount.
+`driverId`|`string`|-|Driver ID.
+`fuelType`|`enum`|-|**Required** Fuel type. Supported values: `ALCOHOL - Alcohol-based Fuel`, `AUTOGAS - Autogas (LPG)`, `AVIATION - Aviation/Jet Fuel`, `BIOBLEND - Biodiesel-blended Fuel`, `BIOFUEL - Biodiesel Fuel`, `CLNDIESEL - Clean Diesel`, `DIESEL - Diesel Fuel`, `GASOLINE - Gasoline`, `MARINE - Marine Fuel`, `NATURAL - Natural Gas`, `OTHER - Other Fuel`, `UNDEF - Undefined Fuel Type`
+`items`|`array`|[`Fleet Detail`](#schema-fleet-detail)|Fleet items.
+`odometer`|`string`|-|Odometer reading.
+`productType`|`enum`|-|**Required** Product type. Supported values: `CARACC - Automotive Accessories`, `GLASS - Automotive Glass`, `AVIACC - Aviation Accessories`, `AVIFOOD - Aviation Food/Beverage`, `AVIMAINT - Aviation Maintenance`, `BATTERIES - Batteries`, `BEVERAGE - Beverage`, `BRAKE - Brakes and Brake Services`, `WASH - Car Wash`, `SMOKE - Cigarettes/Tobacco`, `FEE - Fees`, `FOOD - Food`, `AVIATION - General Aviation`, `HEALTH - Health/Beauty`, `LABOR - Labor`, `MISC - Miscellaneous Product`, `OIL - Motor Oil`, `PARTS - Parts`, `REPAIR - Repair`, `SERVICE - Services`, `TIRES - Tires`, `TBA - Tires Batteries Accessories`, `TOW - Towing`, `UNDEF - Undefined Product Type`
+`quantity`|`object`|[`Fleet Quantity`](#schema-fleet-quantity)|Quantity.
+`serviceType`|`enum`|-|**Required** Service type. Supported values: `FULL - Full-service`, `NFUEL - Only non-fuel products purchased`, `SELF - Self-service`, `UNDEF - Undefined Service Type`
+`totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount.
+`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measure.
+`vehicleNumber`|`string`|-|Vehicle Number.
+
+## <a name="schema-fleet-detail"></a>Fleet Detail
+
+Name|Type|Format|Description
+---|---|---|---
+`commodityCode`|`string`|-|Standard coding structure for the description of goods and services.
+`description`|`string`|-|Description.
+`discountAmount`|`object`|[`Amount`](#schema-amount)|Discount amount.
+`discountApplied`|`boolean`|-|Indicating whether a discount is granted.
+`extendedAmount`|`object`|[`Amount`](#schema-amount)|Extended amount.
+`quantity`|`object`|[`Fleet Quantity`](#schema-fleet-quantity)|Quantity.
+`sequenceNumber`|`integer`|-|Sequence Number.
+`totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount.
+`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measure.
+
+
+## <a name="schema-fleet-quantity"></a>Fleet Quantity
+
+Name|Type|Format|Description
+---|---|---|---
+`unit`|`string`|-|Fuel unit of measure. Preferred values: `LTR - liter`, `GLI - gallon (UK)`, `GLL - gallon (US)`, `KGM - kilogram`, `LBR - pound`, `KWH - kilowatt hour`
+`value`|`number`|-|**Required** Quantity value.
+
+## <a name="schema-lodging"></a>Lodging
+
+Name|Type|Format|Description
+---|---|---|---
+`adjustmentAmount`|`object`|[`Amount`](#schema-amount)|Adjustment amount.
+`charges`|`array`|[`Lodging Charge`](#schema-lodging-charge)|Charges incurred for the lodging transaction aggregated per charge type. Note that each charge type can only be listed once.
+`chargesDescription`|`string`|-|Charges description.
+`checkInDate`|`date`|-|Date the customer checked in to the lodging location.
+`checkOutDate`|`date`|-|Date the customer checked out of the lodging location.
+`commodityCode`|`string`|-|Standard coding structure for the description of goods and services.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`dailyRoomRate`|`object`|[`Amount`](#schema-amount)|Daily room rate.
+`dailyRoomTax`|`object`|[`Amount`](#schema-amount)|Daily room tax amount.
+`folioLineItems`|`array`|[`Lodging Detail`](schema-lodging-detail)|Folio line items.
+`folioNumber`|`string`|-|Folio number.
+`guestName`|`string`|-|Name of registered guest.
+`lodgingAddress`|`object`|[`Address`](#schema-address)|Lodging address.
+`merchantOrderNumber`|`string`|-|Merchant order number.
+`numberInParty`|`integer`|-|Number of guests staying in the room.
+`numberOfRoomNights`|`integer`|-|Total number of rooms times number of nights.
+`numberOfRooms`|`integer`|-|Number of rooms reserved.
+`otherServicesCode`|`string`|-|A code to explain other miscellaneous charges.
+`prepaidAmount`|`object`|[`Amount`](#schema-amount)|Prepaid amount.
+`programCode`|`string`|-|Code used to identify special circumstances.
+`propertyId`|`string`|-|Property Id.
+`propertyPhoneNumber`|`string`|-|Phone number of the property.
+`roomType`|`string`|-|Room Type.
+`taxes`|`array`|[`Lodging Tax`](#schema-lodging-tax)|Taxes incurred for the lodging transaction.
+`totalLodgingAmount`|`object`|[`Amount`](#schema-amount)|Total lodging amount.
+`totalNonRoomChargeAmount`|`object`|[`Amount`](#schema-amount)|Total non-room charge amount.
+`totalTaxAmount`|`object`|[`Amount`](#schema-amount)|Total tax amount.
+
+## <a name="schema-lodging-charge"></a>Lodging Charge
+
+Name|Type|Format|Description
+---|---|---|---
+`amount`|`object`|[`Amount`](#schema-amount)|Amount.
+`name`|`enum`|-|Name/type of the charge. Supported values: `BZCNT - Business center charges (copies, faxes, etc.)`, `CAADV - Cash advances charged against the folio`, `CONFR - Conference charges`, `FOODX - Food charges (excludes mini-bar)`, `GIFTX - Gift shop charges`, `HELTH - Health club, pool, court, golf charges`, `INTNT - Internet charges, online fees`, `LNDRY - Laundry charges`, `MNBAR - In room mini-bar charges`, `MOVIE - Movie/in room entertainment`, `OTHER - Other miscellaneous charges`, `PRKNG - Parking/Valet charges`, `TIPSX - Charges for Gratuities and Tips`, `TLPHN - Telephone charges`
+
+## <a name="schema-lodging-detail"></a>Lodging Detail
+
+Name|Type|Format|Description
+---|---|---|---
+`description`|`string`|-|Line item description.
+`folioLineItemType`|`enum`|-|**Required** Name/type of the line item. Supported values: `BZCNT - Business center charges (copies, faxes, etc.)`, `CAADV - Cash advances charged against the `, `CONFR - Conference charges`, `CTTAX - County Room Tax`, `FDTAX - Federal Room Tax`, `FOODX - Food charges (excludes mini-bar)`, `GIFTX - Gift shop charges`, `GNTAX - General Taxes`, `HELTH - Health club, pool, court, golf charges`, `INTNT - Internet charges, online fees`, `LNDRY - Laundry charges`, `MNBAR - In room mini-bar charges`, `MNTAX - Municipal Room Tax`, `MOVIE - Movie/in room entertainment`, `OTHER - Other miscellaneous charges`, `PRKNG - Parking/Valet charges`, `PSTAX - Provincial Room Tax`, `PYMNT - Payments/Discounts received`, `RMRAT - Room Rate`, `RMTAX - Room Tax`, `TIPSX - Charges for Gratuities and Tips`, `TLPHN - Telephone charges`
+`sequenceNumber`|`integer`|-|Sequence number.
+`transactionAmount`|`object`|[`Amount`](#schema-amount)|Line item amount.
+`transactionDate`|`date`|ISO 8601 `YYYY-MM-DD`|Transaction date of the line item.
+
+## <a name="schema-lodging-tax"></a>Lodging Tax
+
+Name|Type|Format|Description
+---|---|---|---
+`amount`|`object`|[`Amount`](#schema-amount)|Tax amount.
+`type`|`enum`|-|Tax type. Supported values: `ROOMTAX - Room tax`
+
+## <a name="schema-merchant"></a>Merchant
+
+Name|Type|Format|Description
+---|---|---|---
+`address`|`object`|[`Address`](#schema-address)|Merchant address.
+`categoryCode`|`string`|-|Merchant category code (VISA merchant category classification).
+`doingBusinessAs`|`string`|-|Name of the business the merchant is doing (preferred for display purposes over merchant name).
+`id`|`string`|-|Merchant identifier.
+`name`|`string`|-|**Required** Merchant name.
+`vatNumber`|`string`|-|Merchant's VAT number.
+
+## <a name="schema-purchase"></a>Purchase
+
+Name|Type|Format|Description
+---|---|---|---
+`commodityCode`|`string`|-|Commodity code.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`description`|`string`|-|Purchase description.
+`discountAmount`|`object`|[`Amount`](#schema-amount)|Discount amount.
+`dutyAmount`|`object`|[`Amount`](#schema-amount)|Duty amount.
+`invoiceNumber`|`string`|-|Invoice Number.
+`items`|`array`|[`Purchase Detail`](#schema-purchase-detail)|Purchase items.
+`merchantOrderNumber`|`string`|-|Order number assigned by the merchant.
+`numberOfLineItems`|`integer`|-|Number of line items that belong to the purchase.
+`orderDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date the order was placed.
+`purchaseDate`|`date`|ISO 8601 `YYYY-MM-DD`|Effective/transaction date of the order.
+`shipFromAddress`|`object`|[`Address`](#schema-address)|Ship from address.
+`shipToAddress`|`object`|[`Address`](#schema-address)|Ship to address.
+`shippingAmount`|`object`|[`Amount`](#schema-amount)|Shipping amount.
+`supplierAddress`|`object`|[`Address`](#schema-address)|Supplier address.
+`taxes`|`array`|[`Purchase Tax`](#schema-purchase-tax)|Taxes incurred for the purchase.
+
+## <a name="schema-purchase-detail"></a>Purchase Detail
+
+Name|Type|Format|Description
+---|---|---|---
+`commodityCode`|`string`|-|Commodity code.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`description`|`string`|-|Purchase item description.
+`discountAmount`|`object`|[`Amount`](#schema-amount)|Discount amount.
+`discountApplied`|`boolean`||Indicating whether a discount is granted.
+`extendedAmount`|`object`|[`Amount`](#schema-amount)|Extended amount.
+`itemId`|`string`|-|Identifier of the item.
+`quantity`|`object`|[`Purchase Quantity`](#schema-purchase-quantity)|Quantity.
+`sequenceNumber`|`integer`|-|Sequence Number.
+`taxIncluded`|`boolean`|-|Indicating whether tax is included in the amount.
+`totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount.
+`unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measure.
+
+## <a name="schema-purchase-tax"></a>Purchase Tax
+
+Name|Type|Format|Description
+---|---|---|---
+`amount`|`object`|[`Amount`](#schema-amount)|Tax amount.
+`type`|`enum`|-|Tax type. Supported values: `SHIPPINGVAT - Shipping Value-added Tax (VAT)`
+
+## <a name="schema-purchase-quantity"></a>Purchase Quantity
+
+Name|Type|Format|Description
+---|---|---|---
+`unit`|`string`|-|Unit of measure (preferably use codes from [https://www.unece.org/cefact/codesfortrade/codes_index.html](https://www.unece.org/cefact/codesfortrade/codes_index.html), for example `EA - each`, `KGM - kilogram`, `LTR - liter`).
+`value`|`number`|-|Quantity value.
+
+## <a name="schema-statement"></a>Statement
+
+Name|Type|Format|Description
+---|---|---|---
+`billingDate`|`date`|ISO 8601 `YYYY-MM-DD`|Billing (end) date of the statement.
+`referenceNumber`|`string`|-|Reference number of the statement.
+
+## <a name="schema-transaction-tax"></a>Transaction Tax
+
+Name|Type|Format|Description
+---|---|---|---
+`amount`|`object`|[`Amount`](#schema-amount)|Tax amount.
+`type`|`enum`|-|Tax type. Supported values: `LOCAL - Local tax`, `VAT_OR_GST - Value-added Tax (VAT) or Goods and Services Tax (GST)`, `SALES - Sales Tax`, `PST_OR_QST - Provincial Sales Tax (PST) or Quebec Sales Tax (QST)`, `OTHER - Other taxes`
+
+## <a name="schema-travel"></a>Travel
+
+Name|Type|Format|Description
+---|---|---|---
+`baseFare`|`object`|[`Amount`](#schema-amount)|Amount of the ticket, excluding fees and taxes.
+`commodityCode`|`string`|-|National standard coding Structure for the description of goods and services.
+`conjunctionId`|`string`|-|ID for a ticket that contains an itinerary that is more than four segments.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`customerData`|`string`|-|Customer defined data entered at the point of sale.
+`departureDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date of departure for the first leg of travel.
+`domestic`|`boolean`|-|Indicates whether the the travel is domestic.
+`electronicTicket`|`boolean`|-|Indicates whether the ticket is an e-ticket.
+`endorsements`|`string`|-|Describes the fare issued by the airline.
+`exchangedTicketAmount`|`object`|[`Amount`](#schema-amount)|Total amount of the ticket for which the original was exchanged.
+`exchangedTicketNumber`|`string`|-|Number of the new ticket which replaces the original ticket.
+`issueDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date when the ticket was issued to the ticket holder.
+`issuingCarrier`|`string`|-|Airline or railway carrier.
+`numberOfLegs`|`integer`|-|Number of city pairs included on the ticket
+`passengerName`|`string`|-|Name of the person to whom the ticked was issued.
+`refundTicketNumber`|`string`|-|Refund ticket number.
+`restrictionsApply`|`boolean`|-|Identifier noting ticket purchased has some restriction associated with its use.
+`segments`|`array`|[`Travel Detail`](#schema-travel-detail)|Travel segments.
+`ticketNumber`|`string`|-|Ticket Number.
+`totalFare`|`object`|[`Amount`](#schema-amount)|Total amount of the ticket.
+`totalFee`|`object`|[`Amount`](#schema-amount)|Total amount of fees associated with the ticket.
+`totalTaxAmount`|`object`|[`Amount`](#schema-amount)|Total amount of taxes associated with the ticket.
+`travelAgencyCode`|`string`|-|Code assigned to the travel agency that booked the ticket.
+`travelAgencyInvoiceNumber`|`string`|-|Invoice number assigned by the travel agency that booked the ticket.
+`travelAgencyName`|`string`|-|Name of the travel agency that booked the ticket.
+
+## <a name="schema-travel-detail"></a>Travel Detail
+
+Name|Type|Format|Description
+---|---|---|---
+`arrivalCountry`|`string`|-|Arrival Country.
+`arrivalDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date of arrival.
+`arrivalLocation`|`string`|-|Arrival location/code.
+`carrierCode`|`string`|-|Air or Rail carrier name abbreviation.
+`conjunctionTicketNumber`|`string`|-|ID for a ticket that contains an itinerary that is more than four segments.
+`customData`|`array`|[`Custom Data`](#schema-customdata)|Custom data.
+`departureCountry`|`string`|-|Departure Country.
+`departureDate`|`date`|ISO 8601 `YYYY-MM-DD`|Date of departure.
+`departureLocation`|`string`|-|Departure location/code.
+`endorsements`|`string`|-|Describes the fare issued by the airline.
+`exchangeTicketNumber`|`string`|-|Exchange ticket number.
+`fare`|`object`|[`Amount`](#schema-amount)|Amount of the ticket for this leg of travel.
+`fee`|`object`|[`Amount`](#schema-amount)|Amount of fees associated with this leg of travel.
+`flightNumber`|`string`|-|Flight number assigned by the airline carrier.
+`foreignArrival`|`boolean`|-|Indicates if the travel is from a foreign country.
+`foreignDeparture`|`boolean`|-|Indicates if the travel is to a foreign country.
+`isDestination`|`boolean`|-|Indicates if this is the final leg of travel on the ticket.
+`isOrigin`|`boolean`|-|Indicates if this is the first leg of travel on the ticket.
+`serviceClass`|`string`|-|Class of Service Code. Preferred values: `A = First Discount`, `B = Coach Discount`, `C = Business Class`, `D = Bus Discounted`, `E = Shuttle`, `F = First Class`, `H = Coach Discount`, `J = Bus Premium`, `K = Thrift`, `L = Thrift Discount`, `M = Coach Discount`, `P = First Premium`, `Q = Coach Discount`, `R = Supersonic`, `S = Standard Class`, `T = Coach Discount`, `U = Shuttle`, `V = Thrift Discount`, `W = Coach Premium`, `Y = Coach`
+`travelLegNumber`|`integer`|-|Order in which the leg is to be traveled.
+
+# <a name="schemas-bulkrequest"></a>Bulk Request Schemas
+
+## <a name="schema-bulkrequest"></a>Bulk Request
+
+Name|Type|Format|Description
+---|---|---|---
+`completedAt`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnnZ`|Timestamp when processing of the bulk request was completed.
+`receivedAt`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnnZ`|**Required** Timestamp when the bulk request was received.
+`requestId`|`string`|-|**Required** Unique identifier of the API request.
+`status`|`enum`|-|**Required** The processing status. Supported values: `IN_PROGRESS - In progress`, `COMPLETED_SUCCESSFULLY - Completed successfully`, `COMPLETED_WITH_WARNINGS - Completed with warnings`, `COMPLETED_WITH_ERRORS - Completed with errors`, `PROCESSED_PARTIALLY_PENDING_RETRY - Processed partially, pending retry`
+`totalElements`|`integer`|-|**Required** Number of elements in this bulk request.
+`type`|`string`|-|**Required** Type of the API request. Supported values: `POST_ACCOUNT - Account creation`, `POST_TRANSACTION - Transaction creation`, `PATCH_ACCOUNT - Account update`, `PATCH_TRANSACTION - Transaction update`
+
+# <a name="schemas-common"></a>Common Schemas
+
+## <a name="schema-bulkapi-response"></a>Bulk API Response
+
+Name|Type|Format|Description
+---|---|---|---
+`requestId`|`string`|-|**Required** Unique identifier of the bulk API request.
+`links`|`array`|[`Link`](#schema-link)|An array of links.
+
+## <a name="schema-link"></a>Link
+
+Name|Type|Format|Description
+---|---|---|---
+`href`|`string`|-|**Required** Hyperlink to the resource.
+`rel`|`string`|-|**Required** Relation type as defined by the server.
+
+## <a name="schema-error-response"></a>Error Response
+
+Name|Type|Format|Description
+---|---|---|---
+`errorCode`|`string`|-|**Required** Machine readable code associated with the error which is static and never localized. Possible error codes: `invalidRequest - The request contains errors (usually contains a detailed error list)`, `invalidJson - The request body is not a valid JSON`
+`errorMessage`|`string`|-|**Required** Message associated with the error.
+`dataPath`|`string`|-|Relative data path.
+`errors`|`array`|[`Error`](#schema-error)|An array of detailed/nested errors.
+
+## <a name="schema-error"></a>Error
+
+Name|Type|Format|Description
+---|---|---|---
+`errorCode`|`string`|-|**Required** Machine readable code associated with the error which is static and never localized. Possible error codes see [Detailed Error Codes](#detailed-error-codes)
+`errorMessage`|`string`|-|**Required** Message associated with the error.
+`dataPath`|`string`|-|Relative data path.
+
+## <a name="schema-address"></a>Address
+
+Name|Type|Format|Description
+---|---|---|---
+`city`|`string`|-|City.
+`countryCode`|`string`|ISO 3166-1 Alpha-2 code|Country code.
+`state`|`string`|-|State / province / region.
+`streetAddress`|`string`|-|Street address lines.
+`zip`|`string`|-|Zip / postal code.
+
+
+## <a name="schema-amount"></a>Amount
+
+Name|Type|Format|Description
+---|---|---|---
+`currencyCode`|`string`|3-letter ISO 4217 currency code|**Required** Currency of the amount.
+`value`|`number`|-|**Required** Amount value.
+
+## <a name="schema-customdata"></a>Custom Data
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|-|**Required** Id of the custom field.
+`value`|`string`|-|Value of the custom field.
+
+## <a name="schema-distance"></a>Distance
+
+Name|Type|Format|Description
+---|---|---|---
+`unit`|`enum`|-|Distance unit. Supported values: `KM - Kilometer`, `MILE - Mile`
+`value`|`integer`|-|**Required** Distance value (without decimal places).
+
+## <a name="http-status-codes"></a>HTTP Status Codes
+
+HTTP Status Code|Description
+---|---
+200 OK|The request succeeded.
+202 Accepted|The request has been accepted and will be processed asynchronously.
+400 Bad Request|The request was rejected due to client-side errors. Possible error codes: `invalidRequest`, `invalidJson`. In case of `invalidRequest` the error response usually contains a detailed error list, refer to Detailed Error Codes.
+401 Unauthorized|The request is not authenticated. Missing or invalid authorization header.
+403 Forbidden|The request is not authorized to access this resource.
+404 Not Found|The requested resource does not exist.
+500 Internal Server Error|Unexpected error on server side.
+503 Service Unavailable|The server is temporarily unavailable.
+
+## <a name="detailed-error-codes"></a>Detailed Error Codes
+
+Error Code|Description
+---|---
+`tooManyItems`|The collection contains more than the allowed number of items.
+`missingRequiredField`|Missing required field.
+`illegalCardNumberValue`|The value contains a credit card number which is not allowed due to PCI.
+`invalidFieldSize`|Size must be between {min} and {max}.
+`invalidEnum`|Value is not one of the allowed values.
+`invalidCountryCode`|Value is not a valid ISO 3166-1 Alpha-2 country code.
+`invalidCurrencyCode`|Value is not a valid 3-letter ISO 4217 currency code.
+`invalidUUID`|Value is not a valid UUID.
+`invalidEmailAddress`|Value is not a valid email address.
+`invalidCharsExternalId`|Only alphanumeric characters, hyphen -, and underscores _ are allowed.
+`invalidAppId`|The appId of the access token is unknown to the system.
+`duplicateExternalId`|The externalId in this request must be unique.
+`duplicateTaxType`|The tax type must be unique within each taxes list.
+`duplicateChargeName`|The charge name must be unique within each charges list.
+`duplicateCustomDataID`|The custom data id must be unique within each `customData` list.
+`ambiguousAddendumType`|The transaction contains data for multiple addendum types at the same time.
+`currencyInconsistency`|The transaction contains inconsistencies between the transaction currency and other currency fields.
+`illegalBillingAccount`|Billing account reference must not be present for the given account type.
+`missingBillingAccount`|Billing account reference must be present for the given account type.

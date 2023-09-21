@@ -4,13 +4,17 @@ layout: reference
 ---
 # User Experience Guidelines for User Connections
 
-In this guide, we will help you implement the connection between an SAP Concur user's account and your application. You will find best practices for user-centered design, examples of dos-and-don’ts, and suggested steps to guide the user through the connection process.
+This guide, will help you implement the connection between an SAP Concur user's account and your application. You will find best practices for user-centered design, examples of dos-and-don’ts, and suggested steps to guide the user through the connection process.
 
-It is not our intention to tell you what colors and fonts to use. Maintaining your brand integrity is important, and these guidelines do not interfere with that. Rather, our goal is for user to have a pleasant and consistent experience across all of our partner applications. Observing these guidelines will help ensure that our shared users have positive experiences with both of our companies as a result of our partnership.
+Observing these guidelines will help provide consistency across all our partner applications and help ensure that our shared users have positive experiences.
+
+## <a name="branding"></a>Branding
+
+Please follow your own brand colors, font, and style. For mentions of your partnership with SAP Concur, please refer to our [SAP Concur brand guidelines](./app-center-partner-marketing-toolkit.html#logo-and-brand-guidelines).
 
 ## <a name="word-on-accessibility"></a>A word on accessibility
 
-This guide also includes some suggestions on how to ensure your site is [Section 508 compliant](https://www.section508.gov/content/learn). At SAP Concur, we work hard to make sure our critical services are available and usable by every employee at the companies who use our products. From private companies to government agencies, we have a wide range of users with varying levels of abilities. Observing accessibility best practices in your product helps us meet our commitment to provide quality software to our entire user base.
+This guide also includes some suggestions on how to ensure your site is [Section 508 compliant](https://www.section508.gov/content/learn). At SAP Concur, we work hard to make sure our critical services are available and usable by every employee at the companies who use our products.
 
 ## <a name="design-guidelines-account-linking-example"></a>Account linking example
 
@@ -30,13 +34,9 @@ The connection flow begins from the SAP Concur App Center. Once the user has acc
 
 ![Step 3 Landing Page](./app-center-ux-guidelines-consumer-landing-page.png)
 
-**Step 4 Account Creation**
+**Step 4 Confirmation**
 
-![Step 4 Account Creation](./app-center-ux-guidelines-consumer-account-creation.png)
-
-**Step 5 Confirmation**
-
-![Step 5 Confirmation](./app-center-ux-guidelines-consumer-confirmation.png)
+![Step 4 Confirmation](./app-center-ux-guidelines-consumer-confirmation.png)
 
 ## <a name="design-guidelines"></a>Design guidelines
 
@@ -74,9 +74,9 @@ The first page should give the user the option to sign in with an existing accou
 
 This page should:
 
-* Clearly indicate the integration with SAP Concur solutions in text
-* Include links to your terms and conditions and privacy policy
-* Include links to your “support” and “help” options
+* Clearly indicate the integration with SAP Concur solutions in text.
+* Include links to your terms and conditions and privacy policy.
+* Include links to your “support” and “help” options.
 
 ![Landing Page](./app-center-ux-guidelines-consumer-landing-page-small.png)
 
@@ -85,8 +85,7 @@ This page should:
 To encourage users to complete registration, it is recommended that this page only include necessary information to create the account.
 Account details can be pre-populated in this form leveraging SAP Concur API’s. For more information, please refer to documentation on the Developer Portal. Once the user submits the form, your application will begin the authentication process. Your Partner Enablement representative will provide the technical details for implementation based on your SAP Concur integration type.
 
-If your account creation process requires multiple steps, provide a progress indicator so the user knows what is required. If the form requires information the user may not have, allow the user to come back and complete the form at a later time and proceed with account creation.
-
+If your account creation process requires multiple steps, provide a progress indicator so the user knows what is required. If the form requires information the user may not have, allow the user to come back and complete the form later and proceed with account creation.
 
 ### <a name="design-guidelines-confirmation"></a>Confirmation
 
@@ -99,28 +98,27 @@ Users should be directed to close the window as the connection is complete and m
 
 ## <a name="guideline-checklist"></a>Guideline Checklist
 
-This section provides a summarized checklist of the required and recommended components of your account linking flow. For more detail, please refer to Design Guidelines section above.
+This section provides a summarized checklist of the required and recommended components of your account linking flow. For more details, please refer to Design Guidelines section above.
 
 “Must” indicates required. Recommendations are provided for an optimal user experience.
 
 ### <a name="guideline-checklist-landing-page"></a>Landing Page(s)
 
-* All pages
-  * Must support a form factor of 800x600 (required)
+* All pages:
+  * Must support a form factor of 800x600. (required)
   * Must provide back/forward navigation, where applicable. (required)
   * Should be [Section 508 Compliance](https://www.section508.gov) (strongly recommended)
   * Should include support and help options clearly throughout the process.
-  * Must support major browsers and versions. The full list of SAP Concur-supported browsers is available [here](https://www.concurtraining.com/customers/tech_pubs/Docs/Z_SuppConfig/Supported_Configurations_for_Concur_Travel_and_Expense_Client-Facing.pdf). (required)
-  * Should adhere to your company’s brand and marketing guidelines
-  * Must include your company branding and specific application brand, if applicable (required)
-* On the first page (at a minimum),
-  * Must clearly indicate this is an integration with SAP Concur solutions (required)
-  * Must include links to your terms and conditions and privacy policy (required)
-
-
+  * Should adhere to your company’s brand and marketing guidelines.
+  * Must include your company branding and specific application brand, if applicable. (required)
+* The first page (at a minimum):
+  * Must clearly indicate this is an integration with SAP Concur solutions. (required)
+  * Should include links to your terms and conditions and privacy policy. (strongly recommended)
+  * Should include links to your support and help options. (strongly recommended)
+  
 ### <a name="guideline-checklist-account-creation"></a>Account Creation
 
-* Should include a progress indicator (recommended)
+* Should include a progress indicator. (recommended)
 
 ### <a name="guideline-checklist-confirmation"></a>Confirmation Page
 
@@ -135,11 +133,11 @@ This section provides a summarized checklist of the required and recommended com
 
 ### <a name="accesibility-best-practices-text-alternatives"></a>Provide text alternatives
 
-Providing text alternatives for non-text content ensures that individuals with visual impairment are still able to understand your site or application. SAP Concur recommends providing short text alternatives for images, which makes your image content nearly as accessible as your text-based content. This allows special technology such as screen readers (which assist the blind) to read your content aloud to a user with visual disabilities.
+Providing text alternatives for non-text content ensures that individuals with visual impairment are still able to understand your site or application. SAP Concur recommends providing short text alternatives for images, which makes your image content nearly as accessible as your text-based content. This allows special technology such as screen readers to read your content aloud to a user with visual disabilities.
 
 ### <a name="accesibility-best-practices-distinguishable-content"></a>Distinguishable content
 
-SAP Concur’s design focuses on making it easy for users to see and/or hear content. SAP Concur manages this challenge by:
+Make it easy for users to see and/or hear content by:
 
 * Clearly separating foreground from background.
 * Making sure color is not used as the only visual means of conveying information, indicating an action, prompting a response or distinguishing a visual element.
@@ -149,25 +147,26 @@ SAP Concur’s design focuses on making it easy for users to see and/or hear con
 These design elements help make the user experience better for all users, but especially those who are visually impaired or color-blind.
 
 ### <a name="accesibility-best-practices-keyboard-control"></a>Keyboard control
+
 All functionality of your site or application should be operable through a keyboard interface without requiring specific timings for individual keystrokes. Providing keyboard input mechanisms helps users with visual impairments or mobility issues to use your site without having to point-and-click on objects they cannot see. The keyboard interface can be combined with mouse input or other input methods, to support all users.
 
 ### <a name="accesibility-best-practices-predictable-structure"></a>Predictable structure
 
-SAP Concur’s design attempts to make all pages appear and operate in predictable ways. SAP Concur manages this challenge by:
+Make all pages appear and operate in predictable ways by:
 
-* Positioning labels clearly and in close proximity to inputs
-* Using consistent navigation patterns across a set of webpages
+* Positioning labels clearly and near inputs.
+* Using consistent navigation patterns across a set of webpages.
 
 ### <a name="accesibility-best-practices-input-assistance"></a>Input assistance
 
-SAP Concur aims to help users avoid and correct mistakes by:
+Help users avoid and correct mistakes by:
 
-* Hiding optional form fields
-* Validating form submissions on the server
-* Re-displaying a form with a summary of errors, if necessary
+* Hiding optional form fields.
+* Validating form submissions on the server.
+* Re-displaying a form with a summary of errors, if necessary.
 * Providing error notifications as the user enters information, including error notification
-information in the page title
-* Highlighting or visually emphasizing errors where they occur
+information in the page title.
+* Highlighting or visually emphasizing errors where they occur.
 
 For further information on accessibility for you and your team, we recommend:
 
