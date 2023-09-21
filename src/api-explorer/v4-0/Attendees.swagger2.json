@@ -1,0 +1,880 @@
+{
+  "x-sap-shortText": "Get or manage attendees in Concur Expense.",
+  "schemes": [
+    "https"
+  ],
+  "swagger": "2.0",
+  "host": "us2.api.concursolutions.com",
+  "basePath": "/v4",
+  "x-servers": [
+    {
+      "url": "https://us2.api.concursolutions.com",
+      "description": "Concur US API Endpoint"
+    },
+    {
+      "url": "https://eu2.api.concursolutions.com",
+      "description": "Concur EU API Endpoint"
+    },
+    {
+      "url": "https://cn.api.concurcdc.cn",
+      "description": "Concur China API Endpoint"
+    },
+    {
+      "url": "https://usg.api.concursolutions.com",
+      "description": "Concur PSCC API Endpoint"
+    }
+  ],
+  "externalDocs": {
+    "description": "SAP Concur Attendee V4 API Reference",
+    "url": "https://developer.concur.com/api-reference/expense/attendees/v4.attendees.html"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "info": {
+    "title": "Attendees",
+    "description": "Get the configured attendees for a user. You can also update attendees by providing some or all of the attendee fields, or create new attendees.",
+    "version": "4.0"
+  },
+  "securityDefinitions": {
+    "OAuth2": {
+      "type": "oauth2",
+      "description": "To use this API, you need to get OAuth client credentials (client ID, secret, and geolocation) from SAP Concur, and be authorized to use the relevant scope. Refer to the <a href=\"https://developer.concur.com/api-reference/authentication/getting-started.html\">full authentication information</a> for more information.",
+      "tokenUrl": "https://us2.api.concursolutions.com/oauth2/v0",
+      "flow": "application"
+    }
+  },
+  "security": [
+    {
+      "OAuth2": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Resources",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/attendees": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Retrieve attendees",
+        "description": "Gets all attendees owned by the specified user, or the user associated with the access token.",
+        "parameters": [
+          {
+            "name": "attendeeTypeCode",
+            "in": "query",
+            "description": "A code that indicates the type of attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified type.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "externalId",
+            "in": "query",
+            "description": "The external ID of an attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified external ID. Up to 10 comma-separated external ID's may be specified.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of records to return. Default value: 25",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The starting point of the next set of results, after the limit specified in the limit field has been reached.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the SAP Concur user updating the attendee. If the attendee type is private, the attendee owner user's `userId` is required. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved all attendees.",
+            "schema": {
+              "$ref": "#/definitions/AttendeeCollection"
+            }
+          },
+          "206": {
+            "description": "Successfully retrieved some of the attendees.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "401": {
+            "description": "Access denied, authentication is required.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "403": {
+            "description": "Access denied. You do not have the required permissions to access this resource.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "404": {
+            "description": "Attendee not found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. The operation you requested led to an error during execution.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Create attendee",
+        "description": "Creates a new attendee.",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "body",
+            "description": "The Attendee object to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AttendeePost"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the SAP Concur user adding the attendee. If the attendee type is private, the user specified is made the owner, otherwise the owner is “ConcurSystem” (shared). Use Identity v4 API to retrieve the userId.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No error, the operation was successful.",
+            "schema": {
+              "$ref": "#/definitions/CreateResponse"
+            }
+          },
+          "400": {
+            "description": "Wrong format or structure of the provided request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "401": {
+            "description": "Access denied, authentication is required.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "403": {
+            "description": "Access denied. You do not have the required permissions to access this resource.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "404": {
+            "description": "A resource with the specified ID could not be found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. The operation you requested led to an error during execution.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    },
+    "/attendees/{id}": {
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Retrieve attendee by ID",
+        "description": "Retrieve attendee by attendee ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Required A list of comma-separated attendee IDs.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the SAP Concur user that owns the attendee. Use Identity v4 API to retrieve the userId. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "versionNumber",
+            "in": "query",
+            "description": "The attendee's version number. Default value: latest attendee version",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved attendee.",
+            "schema": {
+              "$ref": "#/definitions/AttendeeCollection"
+            }
+          },
+          "400": {
+            "description": "Wrong format or structure of the provided request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "401": {
+            "description": "A resource with the specified ID could not be found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "403": {
+            "description": "Access denied. You do not have the required permissions to access this resource.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "404": {
+            "description": "A resource with the specified ID could not be found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. The operation you requested led to an error during execution.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Resources"
+        ],
+        "summary": "Update attendee",
+        "description": "Updates the specified attendee. Only the fields provided in the supplied object are updated. Missing fields are not altered.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The attendee ID.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the SAP Concur user updating the attendee. If the attendee type is private, the attendee owner user's `userId` is required. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "in": "body",
+            "description": "The partial or complete Attendee object to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AttendeePut"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully updated attendee."
+          },
+          "400": {
+            "description": "Wrong format or structure of the provided request."
+          },
+          "401": {
+            "description": "Access denied, authentication is required.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "403": {
+            "description": "Access denied. You do not have the required permissions to access this resource.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "404": {
+            "description": "A resource with the specified ID could not be found.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error. The operation you requested led to an error during execution.",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AttendeeCollection": {
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AttendeeGet"
+          }
+        },
+        "nextPage": {
+          "type": "string",
+          "description": "The URI of the next page of results, if any."
+        }
+      }
+    },
+    "AttendeeGet": {
+      "properties": {
+        "attendeeTypeCode": {
+          "type": "string",
+          "description": "A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 40 characters"
+        },
+        "company": {
+          "type": "string",
+          "description": "The name of the attendee's company. Maximum length: 150 characters"
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "The 3-letter ISO 4217 currency code for monetary amounts related to an attendee."
+        },
+        "custom1": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom10": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom11": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom12": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom13": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom14": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom15": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom16": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom17": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom18": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom19": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom2": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom20": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "Custom21": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom22": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom23": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom24": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom25": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom3": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom4": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom5": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom6": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom7": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom8": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "custom9": {
+          "$ref": "#/definitions/CustomField"
+        },
+        "externalId": {
+          "type": "string",
+          "description": "An identifier for the attendee with varying degrees of uniqueness due to attendee type and related configurations. Maximum length: 48 characters NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The attendee's first name. Maximum length: 50 characters"
+        },
+        "HasExceptionsPrevYear": {
+          "type": "boolean",
+          "description": "Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees. Format: true or false"
+        },
+        "hasExceptionsYtd": {
+          "type": "boolean",
+          "description": "Determines whether the attendee has exceptions in the current year, based on yearly total limits for attendees. Format: true or false"
+        },
+        "id": {
+          "type": "string",
+          "description": "The unique identifier of the resource."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The attendee's last name. Maximum length: 132 characters"
+        },
+        "middleInitial": {
+          "type": "string",
+          "description": "The attendee's middle initial. Maximum length: 1 character"
+        },
+        "ownerName": {
+          "type": "string",
+          "description": "The name of the user who owns the attendee record."
+        },
+        "ownerUserId": {
+          "type": "string",
+          "description": "The user UUID of the user who owns the attendee record."
+        },
+        "suffix": {
+          "type": "string",
+          "description": "The attendee's name suffix. Maximum length: 32 characters"
+        },
+        "title": {
+          "type": "string",
+          "description": "The attendee's title. Maximum length: 32 characters"
+        },
+        "totalAmountPrevYear": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount spent on the attendee in the previous calendar year."
+        },
+        "totalAmountYtd": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount spent on the attendee in the current calendar year."
+        },
+        "uri": {
+          "type": "string",
+          "description": "The URI to the resource."
+        },
+        "versionNumber": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The attendee's version number."
+        }
+      }
+    },
+    "AttendeePost": {
+      "properties": {
+        "attendeeTypeCode": {
+          "type": "string",
+          "description": "**Required** A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters"
+        },
+        "company": {
+          "type": "string",
+          "description": "The name of the attendee's company. Maximum length: 150 characters"
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "The 3-letter ISO 4217 currency code for monetary amounts related to an attendee."
+        },
+        "custom1": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom10": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom11": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom12": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom13": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom14": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom15": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom16": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom17": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom18": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom19": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom2": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom20": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom21": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom22": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom23": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom24": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom25": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom3": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom4": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom5": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom6": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom7": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom8": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom9": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "externalId": {
+          "type": "string",
+          "description": "An identifier for the attendee with varying degrees of uniqueness due to attendee type and related attendee configurations. Maximum length: 48 characters. **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The attendee's first name. Maximum length: 50 characters"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The attendee's last name. Maximum length: 132 characters"
+        },
+        "middleInitial": {
+          "type": "string",
+          "description": "The attendee's middle initial. Maximum length: 1 character"
+        },
+        "suffix": {
+          "type": "string",
+          "description": "The attendee's name suffix. Maximum length: 32 characters"
+        },
+        "title": {
+          "type": "string",
+          "description": "The attendee's title. Maximum length: 32 characters"
+        },
+        "totalAmountYtd": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount spent on the attendee in the current calendar year."
+        }
+      }
+    },
+    "AttendeePut": {
+      "properties": {
+        "company": {
+          "type": "string",
+          "description": "The name of the attendee's company. Maximum length: 150 characters"
+        },
+        "currencyCode": {
+          "type": "string",
+          "description": "The 3-letter ISO 4217 currency code for monetary amounts related to an attendee."
+        },
+        "custom1": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom10": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom11": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom12": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom13": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom14": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom15": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom16": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom17": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom18": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom19": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom2": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom20": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom21": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom22": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom23": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom24": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom25": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom3": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom4": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom5": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom6": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom7": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom8": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "custom9": {
+          "type": "string",
+          "description": "A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters"
+        },
+        "externalId": {
+          "type": "string",
+          "description": "An identifier for the attendee with varying degrees of uniqueness due to attendee type and related attendee configurations. Maximum length: 48 characters. **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The attendee's first name. Maximum length: 50 characters"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The attendee's last name. Maximum length: 132 characters"
+        },
+        "middleInitial": {
+          "type": "string",
+          "description": "The attendee's middle initial. Maximum length: 1 character"
+        },
+        "suffix": {
+          "type": "string",
+          "description": "The attendee's name suffix. Maximum length: 32 characters"
+        },
+        "title": {
+          "type": "string",
+          "description": "The attendee's title. Maximum length: 32 characters"
+        },
+        "totalAmountYtd": {
+          "type": "number",
+          "format": "double",
+          "description": "The total amount spent on the attendee in the current calendar year."
+        }
+      }
+    },
+    "CreateResponse": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The attendee's title. Maximum length: 32 characters"
+        },
+        "uri": {
+          "type": "string",
+          "description": "The attendee's title. Maximum length: 32 characters"
+        }
+      }
+    },
+    "CustomField": {
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "For list fields, this is the list item code."
+        },
+        "listItemId": {
+          "type": "string",
+          "description": "For list fields, this is the list item ID."
+        },
+        "type": {
+          "type": "string",
+          "description": "The custom field type. Possible values: Amount, Boolean, ConnectedList, Date, Integer, List, Number, Text"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value in the Org Unit or Custom field. For list fields, this is the name of the list item.  Maximum length: 48 characters"
+        }
+      }
+    },
+    "ErrorMessage": {
+      "properties": {
+        "errorId": {
+          "type": "string",
+          "description": "The unique identifier of the error associated with the response."
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "The detailed error message."
+        },
+        "httpStatus": {
+          "type": "string",
+          "description": "The http response code and phrase for the response."
+        },
+        "path": {
+          "type": "string",
+          "description": "The URI of the attempted request."
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time when the error was captured."
+        },
+        "validationErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationError"
+          }
+        }
+      }
+    },
+    "ValidationError": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the validation error."
+        },
+        "message": {
+          "type": "string",
+          "description": "The detailed message of the validation error."
+        },
+        "source": {
+          "type": "string",
+          "description": "The type of validation which failed."
+        }
+      }
+    }
+  }
+}
