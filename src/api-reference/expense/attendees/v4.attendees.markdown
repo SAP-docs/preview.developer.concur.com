@@ -46,7 +46,7 @@ Retrieve attendees
 
 ### Scopes
 
-`attendee.read` - Refer to [Scope Usage](#scope-usage) for full details.
+`attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
@@ -104,7 +104,7 @@ https://{datacenterUri}/v4/attendees
 ```shell
 curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: get-attendee-v4-test' \
+--header 'Concur-CorrelationId: ac725d74-e65e-402e-a993-512b75e04044' \
 --header 'Content-Type: application/json'
 ```
 
@@ -150,7 +150,7 @@ Retrieve attendee by attendee ID.
 
 ### Scopes
 
-`attendee.read` - Refer to [Scope Usage](#scope-usage) for full details.
+`attendee.read`  or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
@@ -164,7 +164,7 @@ https://{datacenterUri}/v4/attendees/{id}
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`id`           |`string`|-       |**Required** The attendee ID.|
+|`id`           |`string`|`uuid`  |**Required** The attendee ID.|
 |`userId`       |`string`|`uuid`  |The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.|
 |`versionNumber`|`number`|`int32` | The attendee's version number. Default value: latest attendee version|
 
@@ -206,7 +206,7 @@ https://{datacenterUri}/v4/attendees/{id}
 ```shell
 curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: get-attendee-by-id-v4-test' \
+--header 'Concur-CorrelationId: 3ed24e8b-7fbc-4536-897a-62450e3d5ded \
 --header 'Content-Type: application/json'
 ```
 
@@ -252,7 +252,7 @@ Retrieve multiple attendees by multiple corresponding attendee ID's.
 
 ### Scopes
 
-`attendee.read` - Refer to [Scope Usage](#scope-usage) for full details.
+`attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
@@ -308,7 +308,7 @@ https://{datacenterUri}/v4/attendees
 ```shell
 curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees?idList=fed46bff-8131-4d8b-977a-e81bc14268a4,9647f11d-43f8-4469-ba7c-f7a24efae5b0' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: get-attendee-by-ids-v4-test' \
+--header 'Concur-CorrelationId: e673b813-9fa1-4007-aa3f-e58821acf61c' \
 --header 'Content-Type: application/json'
 ```
 
@@ -383,8 +383,7 @@ Create a new attendee.
 
 ### Scopes
 
-`attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
-`attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
+`attendee.write` or `attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
@@ -463,7 +462,7 @@ curl --location --request POST 'https://us2.api.concursolutions.com/v4/attendees
 200 OK
 
 {
-    "id": "a962da7b-eb83-4ebe-b26e-cd44327afc7d",
+    "id": "2dcd04e8-f17e-48f2-a16b-b96c4679c723",
     "uri": "https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d"
 }
 
@@ -471,12 +470,11 @@ curl --location --request POST 'https://us2.api.concursolutions.com/v4/attendees
 
 ## Update attendee<a name="update-attendee"></a>
 
-Updates the an existing attendee. Only the fields provided in the supplied object are updated. Missing fields are not altered.
+Updates an existing attendee. 
 
 ### Scopes
 
-`attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
-`attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
+`attendee.write` or `attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
 
 ### Request
 
@@ -490,7 +488,7 @@ https://{datacenterUri}/v4/attendees/{id}
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`id`     |`string`|-     |**Required** The attendee ID.|
+|`id`     |`string`|`uuid`|**Required** The attendee ID.|
 |`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user updating the attendee. If the attendee type is private, the attendee owner user's `userId` is required. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`. |
 
 #### Headers
@@ -507,6 +505,11 @@ https://{datacenterUri}/v4/attendees/{id}
 #### Payload
 
 * [Update Attendee Request](#update-attendee-request-schema)
+
+#### Note
+
+* Attendee Updates of SYSEMP type are not permitted
+* Only the fields provided in the supplied object are updated. Missing fields are not altered.
 
 ### Response
 
@@ -530,7 +533,7 @@ https://{datacenterUri}/v4/attendees/{id}
 ```shell
 curl --location --request PUT 'https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: put-attendee-v4-test' \
+--header 'Concur-CorrelationId: d283d3d9-0bfe-4ebc-b515-a4d33e8dbde2' \
 --header 'Content-Type: application/json',
 --data-raw '{
     "attendeeTypeCode": "BUSGUEST",
@@ -570,12 +573,12 @@ Name|Type|Format|Description
 `custom1 through custom25`|`object` |[`Custom Field`](#custom-field-schema)|A custom field associated with the attendee. This field may or may not have data, depending on how Expense form fields are configured. If this field is not configured for the attendee type in question, the response excludes this field. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
 `externalId`              |`string` |-                                     |An identifier for the attendee with varying degrees of uniqueness due to attendee type and related configurations. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
 `firstName`               |`string` |-                                     |The attendee's first name. Maximum length: 50 characters
-`hasExceptionsPrevYear`   |`boolean`|`true / false`                        |Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees. Format: true or false
-`hasExceptionsYtd`        |`boolean`|`true / false`                        |Determines whether the attendee has exceptions in the current year, based on yearly total limits for attendees. Format: true or false
+`hasExceptionsPrevYear`   |`boolean`|`true / false`                        |Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees.
+`hasExceptionsYtd`        |`boolean`|`true / false`                        |Determines whether the attendee has exceptions in the current year, based on yearly total limits for attendees.
 `id`                      |`string` |`uuid`                                |The unique identifier of the resource.
 `lastName`                |`string` |-                                     |The attendee's last name. Maximum length: 132 characters
 `middleInitial`           |`string` |-                                     |The attendee's middle initial. Maximum length: 1 character
-`ownerName`               |`string` |-                                     |The name of the user who owns the attendee record.
+`ownerName`               |`string` |`lastName, firstName`                 |The name of the user who owns the attendee record.
 `ownerUserId`             |`string` |`uuid`                                |The user UUID of the user that owns the attendee record.
 `preferredName`           |`string` |-                                     |The preferred name of the attendee. **Note: This field is reserved for future support of the preferred name feature and currently inactive.**
 `suffix`                  |`string` |-                                     |The attendee's name suffix. Maximum length: 32 characters
@@ -589,7 +592,7 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 |---|---|---|---|
-`attendeeTypeCode`        |`string`|-       |**Required** A code that indicates the type of attendee. This field is noneditable for PUT requests. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
+`attendeeTypeCode`        |`string`|-       |**Required** A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
 `company`                 |`string`|-       |The name of the attendee's company. Maximum length: 150 characters
 `currencyCode`            |`string`|-       |The 3-letter ISO 4217 currency code for monetary amounts related to an attendee. This field is only required if the `totalAmountYtd` value is populated. 
 `custom1 through custom25`|`string`|-       |A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
@@ -636,7 +639,7 @@ Name|Type|Format|Description
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`errorId`         |`string`|`uuid`                                            |The unique identifier of the error associated with the response.|
+|`errorId`         |`string`|`uuid`                                        |The unique identifier of the error associated with the response.|
 |`errorMessage`    |`string`|-                                             |**Required** The detailed error message.|
 |`httpStatus`      |`string`|-                                             |**Required** The http response code and phrase for the response.|
 |`path`            |`string`|-                                             |**Required** The URI of the attempted request.|
