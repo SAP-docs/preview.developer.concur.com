@@ -1,11 +1,15 @@
 ---
 title: Attendees v4
 layout: reference
-redirect_from:
-  - /api-reference/expense/attendees/index.html
 ---
 
-# Attendees v4
+{% include prerelease.html %}
+
+The Attendee API provides clients with the capability to retrieve and manage attendee detail information.
+
+Primarily, this API's most common use case involves two major GET workflows: <br>
+1. The retrieval of attendee information for potential attendees to add to an expense. <br>
+2. The retrieval of attendee detail information for attendees previously associated with an expense entry.
 
 ## Related
 
@@ -13,8 +17,7 @@ redirect_from:
 
 ## Limitations
 
-This API is only available to partners who have been granted access by SAP Concur. Access 
-to this documentation does not provide access to the API.
+This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
 
 ## <a name="products-editions"></a>Products and Editions
 
@@ -33,86 +36,59 @@ Required Scopes:
 
 ## Dependencies <a name="dependencies"></a>
 
-SAP Concur clients must purchase Concur Expense in order to use this API. Please contact 
-your SAP Concur representative for more information.
+This API requires the Identity v4 API in order to generate access tokens.
 
 ## Access Token Usage <a name="access-token-usage"></a>
 
-This API supports both company level and user level access tokens.
+This API supports both company and user access tokens.
 
 ## Retrieve attendees <a name="get-attendees"></a>
 
-Retrieve attendees
+Retrieves attendees
 
 ### Scopes
 
 `attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
 https://{datacenterUri}/v4/attendees
 ```
 
-#### Parameters
+### Parameters
 
 |Name|Type|Format|Description|
 |---|---|---|---|
 |`attendeeTypeCode`|`string`|-|A code that indicates the type of attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified type.|
 |`externalId`    |`string`|-|The external ID of an attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified external ID. Up to 10 comma-separated external IDs may be specified. |
 |`offset`        |`string`|-|The starting point of the next set of results, after the limit specified in the limit field has been reached.|
-|`limit`         |`number`|`int32`|The number of records to return. Default Value: 25, Max Value: 100|
-|`userId`        |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.|
+|`limit`         |`number`|`int32`|The number of records to return. Default value: 25, Max value: 100|
+|`userId`        |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
 
-#### Headers
+### Payloads
 
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* Request: None
+* Response: [Attendees](#attendees-schema)
 
-### Response
-
-#### Status Codes
-
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
-* [206 Partial Content](https://datatracker.ietf.org/doc/html/rfc7233#section-4.1)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### Payload
-
-* [Attendees](#attendees-schema)
-
-### Example
+### Examples
 
 #### Request
 
 ```shell
-curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: ac725d74-e65e-402e-a993-512b75e04044' \
---header 'Content-Type: application/json'
+GET https://us2.api.concursolutions.com/v4/attendees
+Accept: application/json
+Authorization: Bearer ${access_token}
 ```
 
 #### Response
 
 ```shell
-200 OK
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
 
+```json
 {
   "Items": [
     {
@@ -141,80 +117,53 @@ curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees'
     }
   ]
 }
-
 ```
 
 ## Retrieve attendee by ID<a name="get-attendee-by-id"></a>
 
-Retrieve attendee by attendee ID.
+Retrieves an attendee by attendee ID.
 
 ### Scopes
 
-`attendee.read`  or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
+`attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
 https://{datacenterUri}/v4/attendees/{id}
 ```
 
-#### Parameters
+### Parameters
 
 |Name|Type|Format|Description|
 |---|---|---|---|
 |`id`           |`string`|`uuid`  |**Required** The attendee ID.|
-|`userId`       |`string`|`uuid`  |The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.|
-|`versionNumber`|`number`|`int32` | The attendee's version number. Default value: latest attendee version|
+|`userId`       |`string`|`uuid`  |The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
+|`versionNumber`|`number`|`int32` | The attendee's version number. Otherwise, this defaults to the latest attendee version.|
 
+### Payloads
 
-#### Headers
+ * Request: None
+ * Response: [Attendees](#attendees-schema)
 
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-### Response
-
-#### Status Codes
-
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### Payload
-
-* [Attendees](#attendees-schema)
-
-### Example
+### Examples
 
 #### Request
 
 ```shell
-curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: 3ed24e8b-7fbc-4536-897a-62450e3d5ded \
---header 'Content-Type: application/json'
+GET https://us2.api.concursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4
+Accept: application/json
+Authorization: Bearer ${access_token}
 ```
 
 #### Response
 
 ```shell
-200 OK
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
 
+```json
 {
   "Items": [
     {
@@ -246,77 +195,50 @@ curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees/
 
 ```
 
-## Retrieve attendees by ID's<a name="get-attendees-by-ids"></a>
+## Retrieve attendees by IDs<a name="get-attendees-by-ids"></a>
 
-Retrieve multiple attendees by multiple corresponding attendee ID's.
+Retrieves attendees by corresponding attendee IDs.
 
 ### Scopes
 
 `attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
 https://{datacenterUri}/v4/attendees
 ```
 
-#### Parameters
+### Parameters
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`id`     |`string`|-     |**Required** The attendee ID(s). This may be a list of up to 10 comma-separated attendee ID's.|
-|`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.|
+|`id`     |`string`|-     |**Required** The attendee ID. Up to 10 comma-separated attendee IDs may be specified.|
+|`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
 
+### Payloads
 
-#### Headers
+* Request: None
+* Response: [Attendees](#attendees-schema)
 
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-### Response
-
-#### Status Codes
-
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
-* [206 Partial Content](https://datatracker.ietf.org/doc/html/rfc7233#section-4.1)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### Payload
-
-* [Attendees](#attendees-schema)
-
-### Example
+### Examples
 
 #### Request
 
 ```shell
-curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees?idList=fed46bff-8131-4d8b-977a-e81bc14268a4,9647f11d-43f8-4469-ba7c-f7a24efae5b0' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: e673b813-9fa1-4007-aa3f-e58821acf61c' \
---header 'Content-Type: application/json'
+GET https://us2.api.concursolutions.com/v4/attendees?id=fed46bff-8131-4d8b-977a-e81bc14268a4,9647f11d-43f8-4469-ba7c-f7a24efae5b0 
+Accept: application/json
+Authorization: Bearer ${access_token}
 ```
 
 #### Response
 
 ```shell
-200 OK
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
 
+```json
 {
   "Items": [
     {
@@ -374,80 +296,46 @@ curl --location --request GET 'https://us2.api.concursolutions.com/v4/attendees?
     }
   ]
 }
-
 ```
 
 ## Create attendee<a name="create-attendee"></a>
 
-Create a new attendee. 
+Creates a new attendee. 
 
 ### Scopes
 
 `attendee.write` or `attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
 https://{datacenterUri}/v4/attendees
 ```
 
-#### Parameters
+### Parameters
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user adding the attendee. If the attendee type is private, the user specified is made the owner, otherwise the owner is “ConcurSystem” (shared).  Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`. |
+|`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
 
-#### Headers
+### Payloads
 
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* Request: [Create Attendee Request](#create-attendee-request-schema)
+* Response: [Create Attendee Response](#create-attendee-response-schema)
 
-#### Payload
-
-* [Create Attendee Request](#create-attendee-request-schema)
-
-#### Note
-
-* Creation of attendees configured as type `NOSHOWS` are not allowed.
-* Creation of employee attendees configured as type `SYSEMP` are not allowed.
-
-### Response
-
-#### Status Codes
-
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### Payload
-
-* [Create Attendee Response](#create-attendee-response-schema)
-
-### Example
+### Examples
 
 #### Request
 
 ```shell
-curl --location --request POST 'https://us2.api.concursolutions.com/v4/attendees' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: post-attendee-v4-test' \
---header 'Content-Type: application/json',
---data-raw '{
+POST https://us2.api.concursolutions.com/v4/attendees
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer ${access_token}
+```
+
+```json
+{
     "attendeeTypeCode": "BUSGUEST",
     "firstName": "Olive",
     "lastName": "Tree",
@@ -460,20 +348,27 @@ curl --location --request POST 'https://us2.api.concursolutions.com/v4/attendees
     "currencyCode": "USD",
     "custom6": "false",
     "custom8": "NYC"
-}'
+}
 ```
 
 #### Response
 
 ```shell
-200 OK
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
 
+```json
 {
     "id": "2dcd04e8-f17e-48f2-a16b-b96c4679c723",
     "uri": "https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d"
 }
-
 ```
+
+### Note
+
+* Creation of attendees configured as type `NOSHOWS` are not allowed.
+* Creation of employee attendees configured as type `SYSEMP` are not allowed.
 
 ## Update attendee<a name="update-attendee"></a>
 
@@ -483,67 +378,37 @@ Updates an existing attendee.
 
 `attendee.write` or `attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
 https://{datacenterUri}/v4/attendees/{id}
 ```
 
-#### Parameters
+### Parameters
 
 |Name|Type|Format|Description|
 |---|---|---|---|
 |`id`     |`string`|`uuid`|**Required** The attendee ID.|
-|`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user updating the attendee. If the attendee type is private, the attendee owner user's `userId` is required. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`. |
+|`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.
 
-#### Headers
+### Payloads
 
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* Request: [Update Attendee Request](#update-attendee-request-schema)
+* Response: None
 
-#### Payload
-
-* [Update Attendee Request](#update-attendee-request-schema)
-
-#### Note
-
-* Updates to attendees configured as type `NOSHOWS` are not allowed.
-* Updates to employee attendees configured as type `SYSEMP` are not allowed.
-* Only the fields provided in the supplied object are updated. Missing fields are not altered.
-
-### Response
-
-#### Status Codes
-
-* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-### Example
+### Examples
 
 #### Request
 
 ```shell
-curl --location --request PUT 'https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: d283d3d9-0bfe-4ebc-b515-a4d33e8dbde2' \
---header 'Content-Type: application/json',
---data-raw '{
+PUT https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer ${access_token}
+```
+
+```json
+{
     "attendeeTypeCode": "BUSGUEST",
     "firstName": "Olive",
     "lastName": "Timber",
@@ -554,13 +419,20 @@ curl --location --request PUT 'https://us2.api.concursolutions.com/v4/attendees/
     "externalId": "53457343",
     "totalAmountYtd": 0.00000000,
     "currencyCode": "USD"
-}'
+}
 ```
+
 #### Response
 
 ```shell
-204 No Content
+HTTP/1.1 204 NO CONTENT
 ```
+
+### Note
+
+* Updates to attendees configured as type `NOSHOWS` are not allowed.
+* Updates to employee attendees configured as type `SYSEMP` are not allowed.
+* Only the fields provided in the supplied object are updated. Missing fields are not altered.
 
 ## Schema <a name="schema"></a>
 
@@ -575,26 +447,26 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 |---|---|---|---|
-`attendeeTypeCode`        |`string` |-                                     |A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
-`company`                 |`string` |-                                     |The name of the attendee's company. Maximum length: 150 characters
-`currencyCode`            |`string` |-                                     |The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
+`attendeeTypeCode`        |`string` |-                                     |**Required** A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters
+`company`                 |`string` |-                                     |**Required** The name of the attendee's company. Maximum length: 150 characters
+`currencyCode`            |`string` |-                                     |**Required** The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
 `custom1 through custom25`|`object` |[`Custom Field`](#custom-field-schema)|A custom field associated with the attendee. This field may or may not have data, depending on how Expense form fields are configured. If this field is not configured for the attendee type in question, the response excludes this field. For custom1-20, maximum length: 100 characters. For custom21-25, maximum length: 48 characters
-`externalId`              |`string` |-                                     |An identifier for the attendee with varying degrees of uniqueness due to attendee type and related configurations. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
-`firstName`               |`string` |-                                     |The attendee's first name. Maximum length: 50 characters
-`hasExceptionsPrevYear`   |`boolean`|`true / false`                        |Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees.
-`hasExceptionsYtd`        |`boolean`|`true / false`                        |Determines whether the attendee has exceptions in the current year, based on yearly total limits for attendees.
-`id`                      |`string` |`uuid`                                |The unique identifier of the resource. **Note: This ID is unique to v4 API and not cross-compatible with v3**
-`lastName`                |`string` |-                                     |The attendee's last name. Maximum length: 132 characters
-`middleInitial`           |`string` |-                                     |The attendee's middle initial. Maximum length: 1 character
-`ownerName`               |`string` |`lastName, firstName`                 |The name of the user who owns the attendee record.
-`ownerUserId`             |`string` |`uuid`                                |The user UUID of the user that owns the attendee record.
-`preferredName`           |`string` |-                                     |The preferred name of the attendee. **Note: This field is reserved for future support of the preferred name feature and currently inactive.**
-`suffix`                  |`string` |-                                     |The attendee's name suffix. Maximum length: 32 characters
-`title`                   |`string` |-                                     |The attendee's title. Maximum length: 32 characters
-`totalAmountPrevYear`     |`number` |`double`                              |The total amount spent on the attendee in the previous calendar year.
-`totalAmountYtd`          |`number` |`double`                              |The total amount spent on the attendee in the current calendar year.
-`uri`                     |`string` |-                                     |The URI to the resource.
-`versionNumber`           |`number` |`int32`                               |The attendee's version number.
+`externalId`              |`string` |-                                     |**Required** An identifier for the attendee with varying degrees of uniqueness due to attendee type and related configurations. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
+`firstName`               |`string` |-                                     |**Required** The attendee's first name. Maximum length: 50 characters
+`hasExceptionsPrevYear`   |`boolean`|`true / false`                        |**Required** Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees.
+`hasExceptionsYtd`        |`boolean`|`true / false`                        |**Required** Determines whether the attendee has exceptions in the current year, based on yearly total limits for attendees.
+`id`                      |`string` |`uuid`                                |**Required** The unique identifier of the resource. **Note: This ID is unique to v4 API and not cross-compatible with v3**
+`lastName`                |`string` |-                                     |**Required** The attendee's last name. Maximum length: 132 characters
+`middleInitial`           |`string` |-                                     |**Required** The attendee's middle initial. Maximum length: 1 character
+`ownerName`               |`string` |`lastName, firstName`                 |**Required** The name of the user who owns the attendee record.
+`ownerUserId`             |`string` |`uuid`                                |**Required** The user UUID of the user that owns the attendee record.
+`preferredName`           |`string` |-                                     |The preferred name of the attendee. Only employee attendees configured as type `SYSEMP` may have preferred names. **Note: This field is reserved for future support of the preferred name feature and is currently inactive.**
+`suffix`                  |`string` |-                                     |**Required** The attendee's name suffix. Maximum length: 32 characters
+`title`                   |`string` |-                                     |**Required** The attendee's title. Maximum length: 32 characters
+`totalAmountPrevYear`     |`number` |`double`                              |**Required** The total amount spent on the attendee in the previous calendar year.
+`totalAmountYtd`          |`number` |`double`                              |**Required** The total amount spent on the attendee in the current calendar year.
+`uri`                     |`string` |-                                     |**Required** The URI to the resource.
+`versionNumber`           |`number` |`int32`                               |**Required** The attendee's version number.
 
 ### <a name="create-attendee-request-schema"></a>Create Attendee Request
 
@@ -616,8 +488,8 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 |---|---|---|---|
-`id` |`string` |`uuid`|The unique identifier of the resource. **Note: This ID is unique to v4 API and not cross-compatible with v3**
-`uri`|`string` |-|The URI to the resource.
+`id` |`string` |`uuid`|**Required** The unique identifier of the resource. **Note: This ID is unique to v4 API and not cross-compatible with v3**
+`uri`|`string` |-|**Required** The URI to the resource.
 
 ### <a name="update-attendee-request-schema"></a>Update Attendee Request
 
@@ -640,8 +512,8 @@ Name|Type|Format|Description
 |---|---|---|---|
 `code`      |`string`|-|For list fields, this is the list item code.
 `listItemId`|`string`|-|For list fields, this is the list item ID.
-`type`      |`string`|-|The custom field type. Possible values: Amount, Boolean, ConnectedList, Date, Integer, List, Number, Text
-`value`     |`string`|-|The value in the Org Unit or Custom field. For list fields, this is the name of the list item. Maximum length: 48 characters
+`type`      |`string`|-|**Required** The custom field type. Possible values: Amount, Boolean, ConnectedList, Date, Integer, List, Number, Text
+`value`     |`string`|-|**Required** The value in the Org Unit or custom field. For list fields, this is the name of the list item. Maximum length: 48 characters
 
 ### <a name="error-message-schema"></a>Error Message
 
