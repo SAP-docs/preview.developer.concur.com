@@ -26,7 +26,7 @@
   ],
   "externalDocs": {
     "description": "SAP Concur Attendee V4 API Reference",
-    "url": "https://developer.concur.com/api-reference/expense/attendees/v4.attendees.html"
+    "url": "https://developer.concur.com/api-reference/attendees/v4.attendees.html"
   },
   "produces": [
     "application/json"
@@ -41,10 +41,10 @@
   },
   "securityDefinitions": {
     "OAuth2": {
-      "type": "oauth2",
-      "description": "To use this API, you need to get OAuth client credentials (client ID, secret, and geolocation) from SAP Concur, and be authorized to use the relevant scope. Refer to the <a href=\"https://developer.concur.com/api-reference/authentication/getting-started.html\">full authentication information</a> for more information.",
-      "tokenUrl": "https://us2.api.concursolutions.com/oauth2/v0",
-      "flow": "application"
+      "type": "apiKey",
+      "name": "Authorization: Bearer",
+      "description": "To use this API retrieve a company or user access token and be authorized to use the relevant scope. Refer to the <a href=\"https://developer.concur.com/api-reference/authentication/getting-started.html\">full authentication information</a> for more information.",
+      "in": "header"
     }
   },
   "security": [
@@ -70,21 +70,21 @@
           {
             "name": "attendeeTypeCode",
             "in": "query",
-            "description": "A code that indicates the type of attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified type. This parameter cannot be coupled with the `id` query parameter.",
+            "description": "A code that indicates the type of attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified type. This parameter cannot be used in conjunction with the `id` query parameter.",
             "required": false,
             "type": "string"
           },
           {
             "name": "externalId",
             "in": "query",
-            "description": "The external ID of an attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified external ID. Up to 10 comma-separated external ID's may be specified. This parameter cannot be coupled with the `id` query parameter.",
+            "description": "The external ID of an attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified external ID. Up to 10 comma-separated external ID's may be specified. This parameter cannot be used in conjunction with the `id` query parameter.",
             "required": false,
             "type": "string"
           },
           {
             "name": "limit",
             "in": "query",
-            "description": "The number of records to return. This parameter cannot be coupled with the `id` query parameter. Default value: 25, Max value: 100",
+            "description": "The number of records to return. This parameter cannot be used in conjunction with the `id` query parameter. Default value: 25, Max value: 100",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -92,14 +92,14 @@
           {
             "name": "offset",
             "in": "query",
-            "description": "The starting point of the next set of results, after the limit specified in the limit field has been reached. This parameter cannot be coupled with the `id` query parameter.",
+            "description": "The starting point of the next set of results, after the limit specified in the limit field has been reached. This parameter cannot be used in conjunction with the `id` query parameter.",
             "required": false,
             "type": "string"
           },
           {
             "name": "userId",
             "in": "query",
-            "description": "The unique identifier of the SAP Concur user updating the attendee. If the attendee type is private, the attendee owner user's `userId` is required. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.",
+            "description": "The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.",
             "format": "uuid",
             "required": false,
             "type": "string"
@@ -107,7 +107,7 @@
           {
             "name": "id",
             "in": "query",
-            "description": "The attendee ID(s). This may be a list of up to 10 comma-separated attendee ID's. When this parameter is supplied, only the `userId` parameter is honored if supplied and all others are ignored.",
+            "description": "The attendee ID(s). The attendee ID. Up to 10 comma-separated attendee IDs may be specified. When this parameter is supplied, only the `userId` parameter is honored if supplied and all others are ignored.",
             "required": false,
             "type": "string"
           }
@@ -170,7 +170,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "The unique identifier of the SAP Concur user adding the attendee. If the attendee type is private, the user specified is made the owner, otherwise the owner is “ConcurSystem” (shared). Use Identity v4 API to retrieve the userId.",
+            "description": "The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.",
             "format": "uuid",
             "required": false,
             "type": "string"
@@ -222,7 +222,7 @@
           "Resources"
         ],
         "summary": "Retrieve attendee by ID",
-        "description": "Retrieves attendee by attendee ID",
+        "description": "Retrieves an attendee by attendee ID",
         "parameters": [
           {
             "name": "id",
@@ -235,7 +235,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "The unique identifier of the SAP Concur user that owns the attendee. Use Identity v4 API to retrieve the userId. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter.",
+            "description": "The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.",
             "required": false,
             "type": "string"
           },
@@ -292,7 +292,7 @@
           "Resources"
         ],
         "summary": "Update attendee",
-        "description": "Updates the specified attendee. Only the fields provided in the supplied object are updated. Missing fields are not altered.",
+        "description": "Updates the specified attendee.",
         "parameters": [
           {
             "name": "id",
@@ -305,7 +305,7 @@
           {
             "name": "userId",
             "in": "query",
-            "description": "The unique identifier of the SAP Concur user updating the attendee. If the attendee type is private, the attendee owner user's `userId` is required. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.",
+            "description": "The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4 API](https://developer.concur.com/api-reference/profile/v4.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.",
             "format": "uuid",
             "required": false,
             "type": "string"
@@ -499,6 +499,10 @@
           "type": "string",
           "format": "uuid",
           "description": "The user UUID of the user who owns the attendee record."
+        },
+        "preferredName": {
+          "type": "string",
+          "description": "The preferred name of the attendee. Only employee attendees configured as type `SYSEMP` may have preferred names. Note: This field is reserved for future support of the preferred name feature and is currently inactive."
         },
         "suffix": {
           "type": "string",
