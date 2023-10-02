@@ -15,7 +15,6 @@ Users must purchase Concur Request in order to use this integration capability. 
 
 * The user must already exist as an active user in the SAP Concur solution with a Concur Request role such as Request User, Request Manager, or Request Administrator.
 * If multiple identity providers (IdPs) are in use, the user may be required to select the correct IdP or provide the login credentials prior to the SSO process.
-*
 
 ## <a name="integration-details"></a>Integration Details
 
@@ -28,9 +27,9 @@ https://www.concursolutions.com/goto/travel-request/{requestUuid}?companyUUID={c
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`requestUuid`|`string`|`path`|**Required** The 20-character unique identifier of the request that is being read.|
-`companyUUID`|`string`|`query`|The unique identifier of the company, in UUID format, to which the request belongs to.|
-`context`|`string`|`query`|The access level of the user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `MANAGER`, or `PROCESSOR`|
+|`requestUuid`|`string`|`path`|**Required** The 32-character unique identifier of the request that is being read.|
+|`companyUUID`|`string`|`query`|The unique identifier of the company, in UUID format, to which the request belongs to.|
+|`context`|`string`|`query`|The access level of the user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `MANAGER`, or `PROCESSOR`|
 
 ### Order of Precedence
 
