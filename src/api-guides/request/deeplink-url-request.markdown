@@ -27,7 +27,7 @@ https://www.concursolutions.com/goto/travel-request/{requestUuid}?companyUUID={c
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`requestUuid`|`string`|`path`|**Required** The 32-character unique identifier of the request that is being read.|
+|`requestUUID`|`string`|`path`|**Required** The 32-character unique identifier of the request that is being read.|
 |`companyUUID`|`string`|`query`|The unique identifier of the company, in UUID format, to which the request belongs to.|
 |`context`|`string`|`query`|The access level of the user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `MANAGER`, or `PROCESSOR`|
 
