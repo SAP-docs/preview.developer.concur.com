@@ -4,7 +4,7 @@ layout: reference
 ---
 # Mapping of User V1 API to V4 UPS API
 
-V1 API Field Name|Attritube Name|Extension
+V1 API Field Name|Attribute Name|Extension
 ---|---|---
 loginID|userName|core:2.0:User
 Active|active|core:2.0:User
