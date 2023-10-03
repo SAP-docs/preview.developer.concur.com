@@ -36,7 +36,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the expense document is ready to be imported.|
-`facts`|`Object`|[`Facts`](/api-reference/financial-integration/external-readyforIntegration-event.html#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -51,7 +51,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the invoice document is ready to be imported.|
-`facts`|`Object`|[`Facts`](/api-reference/financial-integration/external-readyforIntegration-event.html#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -65,7 +65,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the payroll document is ready to be imported.|
-`facts`|`Object`|[`Facts`](/api-reference/financial-integration/external-readyforIntegration-event.html#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -79,7 +79,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the cashadvance document is ready to be imported.|
-`facts`|`Object`|[`Facts`](/api-reference/financial-integration/external-readyforIntegration-event.html#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -93,7 +93,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the requestObligation document is ready to be imported.|
-`facts`|`Object`|[`Facts`](/api-reference/financial-integration/external-readyforIntegration-event.html#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -107,7 +107,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the reportObligation document is ready to be imported.|
-`facts`|`Object`|[`Facts`](/api-reference/financial-integration/external-readyforIntegration-event.html#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -115,7 +115,7 @@ The Financial Integration API provides clients and authorized partners access to
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`companyId`|`String`|-|This will be the company uuid of the company for which the document that is ready to be imported.|
+`companyId`|`String`|-|The company uuid of the company for which the document is ready to be imported.|
 `documentId`|`String`|-|The document id of the document that is ready to be imported.|
 `href`|`String`|-|The v4 callback GET url for the document to be imported.|
 `entityId`|`String`|-|The entityId of the company for which the document is ready to be imported.|
