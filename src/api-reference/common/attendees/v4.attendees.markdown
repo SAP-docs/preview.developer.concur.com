@@ -1,0 +1,536 @@
+---
+title: Attendees v4
+layout: reference
+---
+
+This API provides users with the capability to retrieve and manage attendee detail information.
+
+Most common use cases for this API involve two major workflows:
+
+* The retrieval of attendee information for potential attendees to add to an expense.
+* The retrieval of attendee detail information for attendees previously associated with an expense entry.
+
+## Prior Versions
+
+* Attendees v3 documentation is available [here](./expense/attendees/v3.attendees.html).
+
+## Limitations
+
+This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+* Concur Request Professional Edition
+* Concur Request Standard Edition
+
+## Scope Usage <a name="scope-usage"></a>
+
+|Name|Description|Endpoint|
+|---|---|---|
+`attendee.read`     |Read only access to attendees.      |GET|
+`attendee.write`    |Read and write access to attendees. |GET, POST, PUT|
+`attendee.writeonly`|Write only access to attendees.     |POST, PUT|
+
+## Dependencies <a name="dependencies"></a>
+
+This API requires the use of the [Identity v4.1](/api-reference/profile/v4.1.identity.html) API to generate access tokens.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports both company and user access tokens.
+
+## Retrieve Attendees <a name="get-attendees"></a>
+
+Retrieves a single attendee or multiple attendees.
+
+### Scopes
+
+`attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterUri}/v4/attendees
+```
+
+### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`attendeeTypeCode`|`string`|-|A code that indicates the type of attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified type.|
+`externalId`|`string`|-|The external ID of an attendee. By entering a value for this parameter, you can limit the results to the attendees who match the specified external ID. Up to 10 comma-separated external IDs may be specified. |
+`offset`|`string`|-|The starting point of the next set of results, after the limit specified in the limit field has been reached.|
+`limit`|`number`|`int32`|The number of records to return. Default value: `25`, Max value: `100`|
+`userId`|`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html) to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
+
+### Payloads
+
+* Request: None
+* Response: [Attendees](#attendees-schema)
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us2.api.concursolutions.com/v4/attendees
+Accept: application/json
+Authorization: Bearer ${access_token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "items": [
+    {
+      "attendeeTypeCode": "BUSGUEST",
+      "firstName": "John",
+      "lastName": "Schmidt",
+      "middleInitial": "J",
+      "suffix": "Jr.",
+      "company": "Concur",
+      "title": "Doctor",
+      "externalId": "13234255",
+      "hasExceptionsPrevYear": false,
+      "hasExceptionsYtd": false,
+      "totalAmountPrevYear": 0,
+      "totalAmountYtd": 0,
+      "versionNumber": 1,
+      "ownerName": "Lola, Van",
+      "ownerUserId": "15e224fe-8eee-40b3-bef1-c4b4c05155be",
+      "currencyCode": "USD",
+      "custom8": {
+          "type": "Text",
+          "value": "NYC"
+      },
+      "id": "fed46bff-8131-4d8b-977a-e81bc14268a4",
+      "uri": "https://www.us2.apiconcursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4"
+    }
+  ]
+}
+```
+
+## Retrieve Attendee by ID<a name="get-attendee-by-id"></a>
+
+Retrieves a specific attendee by attendee ID.
+
+### Scopes
+
+`attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterUri}/v4/attendees/{id}
+```
+
+### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`id`|`string`|`uuid`| **Required** The attendee ID.|
+`userId`|`string`|`uuid`  |The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
+`versionNumber`|`number`|`int32` | The attendee's version number. Otherwise, this defaults to the latest attendee version. This must be a positive integer.|
+
+### Payloads
+
+ * Request: None
+ * Response: [Attendees](#attendees-schema)
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us2.api.concursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4
+Accept: application/json
+Authorization: Bearer ${access_token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "items": [
+    {
+      "attendeeTypeCode": "BUSGUEST",
+      "firstName": "John",
+      "lastName": "Jingleheimer",
+      "middleInitial": "J",
+      "suffix": "Jr.",
+      "company": "Concur",
+      "title": "Doctor",
+      "externalId": "13234255",
+      "hasExceptionsPrevYear": false,
+      "hasExceptionsYtd": false,
+      "totalAmountPrevYear": 0,
+      "totalAmountYtd": 0,
+      "versionNumber": 1,
+      "ownerName": "Lola, Van",
+      "ownerUserId": "15e224fe-8eee-40b3-bef1-c4b4c05155be",
+      "currencyCode": "USD",
+      "custom8": {
+          "type": "Text",
+          "value": "NYC"
+      },
+      "id": "fed46bff-8131-4d8b-977a-e81bc14268a4",
+      "uri": "https://www.us2.apiconcursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4"
+    }
+  ]
+}
+
+```
+
+## Retrieve Attendees by IDs<a name="get-attendees-by-ids"></a>
+
+Retrieves attendees by corresponding attendee IDs.
+
+### Scopes
+
+`attendee.read` or `attendee.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterUri}/v4/attendees?id={id}
+```
+
+### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`id`|`string`|-| **Required** The attendee ID. Up to 10 comma-separated attendee IDs may be specified.|
+`userId` |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html) to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
+
+### Payloads
+
+* Request: None
+* Response: [Attendees](#attendees-schema)
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us2.api.concursolutions.com/v4/attendees?id=fed46bff-8131-4d8b-977a-e81bc14268a4,9647f11d-43f8-4469-ba7c-f7a24efae5b0
+Accept: application/json
+Authorization: Bearer ${access_token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "Items": [
+    {
+      "attendeeTypeCode": "BUSGUEST",
+      "firstName": "John",
+      "lastName": "Jingleheimer",
+      "middleInitial": "J",
+      "suffix": "Jr.",
+      "company": "Concur",
+      "title": "Doctor",
+      "externalId": "13234255",
+      "hasExceptionsPrevYear": false,
+      "hasExceptionsYtd": false,
+      "totalAmountPrevYear": 0,
+      "totalAmountYtd": 0,
+      "versionNumber": 1,
+      "ownerName": "Lola, Van",
+      "ownerUserId": "15e224fe-8eee-40b3-bef1-c4b4c05155be",
+      "currencyCode": "USD",
+      "custom8": {
+          "type": "Text",
+          "value": "NYC"
+      },
+      "id": "fed46bff-8131-4d8b-977a-e81bc14268a4",
+      "uri": "https://www.us2.apiconcursolutions.com/v4/attendees/fed46bff-8131-4d8b-977a-e81bc14268a4"
+    },
+    {
+      "attendeeTypeCode": "SPOUSE",
+      "firstName": "Robin",
+      "lastName": "Hood",
+      "middleInitial": "I",
+      "preferredName": null,
+      "suffix": null,
+      "company": "Burgers Inc.",
+      "title": "Assistant",
+      "externalId": "00000087",
+      "hasExceptionsPrevYear": false,
+      "hasExceptionsYtd": false,
+      "totalAmountPrevYear": 0.00000000,
+      "totalAmountYtd": 0.00000000,
+      "versionNumber": 1,
+      "ownerName": "Robert, Hoedt",
+      "ownerUserId": "6334dc06-aee9-4a6a-aa0a-5a173457332a",
+      "currencyCode": "USD",
+      "custom6": {
+          "type": "Boolean",
+          "value": "N"
+      },
+      "custom8": {
+          "type": "Text",
+          "value": "V5E6W"
+      },
+      "id": "9647f11d-43f8-4469-ba7c-f7a24efae5b0",
+      "uri": "https://us2.api.concursolutions.com/v4/attendees/9647f11d-43f8-4469-ba7c-f7a24efae5b0"
+    }
+  ]
+}
+```
+
+## Create Attendee<a name="create-attendee"></a>
+
+Creates a new attendee.
+
+### Scopes
+
+`attendee.write` or `attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterUri}/v4/attendees
+```
+
+### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`userId` |`string`|`uuid`|The unique identifier of the desired SAP Concur user that will own the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html) to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
+
+### Payloads
+
+* Request: [Create Attendee Request](#create-attendee-request-schema)
+* Response: [Create Attendee Response](#create-attendee-response-schema)
+
+### Examples
+
+#### Request
+
+```shell
+POST https://us2.api.concursolutions.com/v4/attendees
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer ${access_token}
+```
+
+```json
+{
+    "attendeeTypeCode": "BUSGUEST",
+    "firstName": "Olive",
+    "lastName": "Tree",
+    "middleInitial": "E",
+    "suffix": "2nd",
+    "company": "The Lumbermill Company",
+    "title": "",
+    "externalId": "53457343",
+    "totalAmountYtd": 0.00000000,
+    "currencyCode": "USD",
+    "custom6": "false",
+    "custom8": "NYC"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+    "id": "2dcd04e8-f17e-48f2-a16b-b96c4679c723",
+    "uri": "https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d"
+}
+```
+
+### Note
+
+* Creation of attendees configured as type `NOSHOWS` are not allowed.
+* Creation of employee attendees configured as type `SYSEMP` are not allowed.
+
+## Update Attendee<a name="update-attendee"></a>
+
+Updates an existing attendee.
+
+### Scopes
+
+`attendee.write` or `attendee.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterUri}/v4/attendees/{id}
+```
+
+### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`id`|`string`|`uuid`| **Required** The attendee ID.|
+`userId`|`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html) to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.
+
+### Payloads
+
+* Request: [Update Attendee Request](#update-attendee-request-schema)
+* Response: None
+
+### Examples
+
+#### Request
+
+```shell
+PUT https://us2.api.concursolutions.com/v4/attendees/a962da7b-eb83-4ebe-b26e-cd44327afc7d
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer ${access_token}
+```
+
+```json
+{
+    "attendeeTypeCode": "BUSGUEST",
+    "firstName": "Olive",
+    "lastName": "Timber",
+    "middleInitial": "E",
+    "suffix": "2nd",
+    "company": "The Lumbermill Company",
+    "title": "",
+    "externalId": "53457343",
+    "totalAmountYtd": 0.00000000,
+    "currencyCode": "USD"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 204 NO CONTENT
+```
+
+### Note
+
+* Updates to attendees configured as type `NOSHOWS` are not allowed.
+* Updates to employee attendees configured as type `SYSEMP` are not allowed.
+* Only the fields provided in the supplied object are updated. Missing fields are not altered.
+
+## Schema <a name="schema"></a>
+
+### <a name="attendees-schema"></a>Attendees
+
+Name|Type|Format|Description
+|---|---|---|---|
+`items`|`array`|[`Get Attendee Response`](#get-attendee-response-schema)|The result collection.
+`nextPage`|`string`|-|The URI of the next page of results, if any.
+
+### <a name="get-attendee-response-schema"></a>Get Attendee Response
+
+Name|Type|Format|Description
+|---|---|---|---|
+`attendeeTypeCode`|`string` |-| **Required** A code that indicates the type of attendee. Examples: `EMPLOYEE`, `SPOUSE`, `BUSGUEST`. Maximum length: `8 characters`
+`company`|`string` |-| **Required** The name of the attendee's company. Maximum length: `150`
+`currencyCode`|`string` |-| **Required** The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
+`custom1 through custom25`|`object` |[`Custom Field`](#custom-field-schema)|A custom field associated with the attendee. This field may or may not have data, depending on how Expense form fields are configured. If this field is not configured for the attendee type in question, the response excludes this field. For `custom1-20`, maximum length: `100 characters`. For `custom21-25`, maximum length: `48 characters`
+`externalId`|`string` |-| **Required** An identifier for the attendee, usually assigned outside of the SAP Concur systems. Maximum length: `48 characters` **NOTE:** For HCP connectors where information returned to the SAP Concur systems represent one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.
+`firstName`|`string` |-| **Required** The attendee's first name. Maximum length: `50 characters`
+`hasExceptionsPrevYear`|`boolean`|`true / false`| **Required** If `true`, the attendee had exceptions in the previous year, based on yearly total limits for attendees.
+`hasExceptionsYtd`|`boolean`|`true / false`| **Required** If `true`, the attendee has exceptions in the current year, based on yearly total limits for attendees.
+`id`|`string` |`uuid`| **Required** The unique identifier of the attendee. **Note:** This ID is unique to the v4 API and not cross-compatible with v3.
+`lastName`|`string` |-| **Required** The attendee's last name. Maximum length: `132 characters`
+`middleInitial`|`string` |-| **Required** The attendee's middle initial. Maximum length: `1 character`
+`ownerName`|`string` |`lastName, firstName`| **Required** The name of the user who owns the attendee record.
+`ownerUserId`|`string` |`uuid`| **Required** The user UUID of the user that owns the attendee record.
+`preferredName`|`string`|-|The preferred name of the attendee. Only employee attendees configured as type `SYSEMP` may have preferred names. **Note:** This field is reserved for future support of the preferred name feature and is currently inactive.
+`suffix`|`string` |-| **Required** The attendee's name suffix. Maximum length: `32 characters`
+`title`|`string` |-| **Required** The attendee's title. Maximum length: `32 characters`
+`totalAmountPrevYear`|`number` |`double`| **Required** The total amount spent on the attendee in the previous calendar year.
+`totalAmountYtd`|`number` |`double`| **Required** The total amount spent on the attendee in the current calendar year.
+`uri`|`string` |-| **Required** The URI of the resource.
+`versionNumber`|`number` |`int32`| **Required** The attendee's version number.
+
+### <a name="create-attendee-request-schema"></a>Create Attendee Request
+
+Name|Type|Format|Description
+|---|---|---|---|
+`attendeeTypeCode`|`string` |-| **Required** A code that indicates the type of attendee. Examples: `EMPLOYEE`, `SPOUSE`, `BUSGUEST`. Maximum length: `8 characters`
+`company`|`string` |-| **Required** The name of the attendee's company. Maximum length: `150`
+`currencyCode`|`string`|-| **Required if `totalAmountYtd` value is populated** The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
+`custom1 through custom25`|`string`|-|A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For `custom1-20`, maximum length: `100 characters`. For `custom21-25`, maximum length: `48 characters`
+`externalId`|`string` |-| **Required** An identifier for the attendee, usually assigned outside of the SAP Concur systems. Maximum length: `48 characters` **NOTE:** For HCP connectors where information returned to the SAP Concur systems represent one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.
+`firstName`|`string` |-| **Required** The attendee's first name. Maximum length: `50 characters`
+`lastName`|`string` |-| **Required** The attendee's last name. Maximum length: `132 characters`
+`middleInitial`|`string` |-| **Required** The attendee's middle initial. Maximum length: `1 character`
+`suffix`|`string` |-| **Required** The attendee's name suffix. Maximum length: `32 characters`
+`title`|`string` |-| **Required** The attendee's title. Maximum length: `32 characters`
+`totalAmountYtd`|`number`|`double`| **Required if `currencyCode` is populated** The total amount spent on the attendee in the current calendar year.
+
+### <a name="create-attendee-response-schema"></a>Create Attendee Response
+
+Name|Type|Format|Description
+|---|---|---|---|
+`id` |`string` |`uuid`| **Required** The unique identifier of the attendee. **Note:** This ID is unique to the v4 API and not cross-compatible with v3.
+`uri`|`string` |-| **Required** The URI of the resource.
+
+### <a name="update-attendee-request-schema"></a>Update Attendee Request
+
+Name|Type|Format|Description
+|---|---|---|---|
+`company`|`string` |-| **Required** The name of the attendee's company. Maximum length: `150`
+`currencyCode`|`string`|-| **Required if `totalAmountYtd` value is populated** The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
+`custom1 through custom25`|`string`|-|A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. If a specific custom field is not configured for the attendee type in question and the request contains a value, inserts or updates of that value are not honored. For `custom1-20`, maximum length: `100 characters`. For `custom21-25`, maximum length: `48 characters`
+`externalId`|`string` |-| **Required** An identifier for the attendee, usually assigned outside of the SAP Concur systems. Maximum length: `48 characters` **NOTE:** For HCP connectors where information returned to the SAP Concur systems represent one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.
+`firstName`|`string` |-| **Required** The attendee's first name. Maximum length: `50 characters`
+`lastName`|`string` |-| **Required** The attendee's last name. Maximum length: `132 characters`
+`middleInitial`|`string` |-| **Required** The attendee's middle initial. Maximum length: `1 character`
+`suffix`|`string` |-| **Required** The attendee's name suffix. Maximum length: `32 characters`
+`title`|`string` |-| **Required** The attendee's title. Maximum length: `32 characters`
+`totalAmountYtd`|`number`|`double`| **Required if `currencyCode` is populated** The total amount spent on the attendee in the current calendar year.
+
+### <a name="custom-field-schema"></a>Custom Field
+
+Name|Type|Format|Description
+|---|---|---|---|
+`code`|`string`|-|For list fields, this is the list item code.
+`listItemId`|`string`|-|For list fields, this is the list item ID.
+`type`|`string`|-| **Required** The custom field type. Possible values: `Amount`, `Boolean`, `ConnectedList`, `Date`, `Integer`, `List`, `Number`, `Text`
+`value`|`string`|-| **Required** The value in the Org Unit or custom field. For list fields, this is the name of the list item. For `custom1-20`, maximum length: `100` characters. For `custom21-25`, maximum length: `48 characters`
+
+### <a name="error-message-schema"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`errorId`|`string`|`uuid`|The unique identifier of the error associated with the response.|
+`errorMessage`|`string`|-| **Required** The detailed error message.|
+`httpStatus`|`string`|-| **Required** The http response code and phrase for the response.|
+`path`|`string`|-| **Required** The URI of the attempted request.|
+`timestamp`|`string`|`date-time`| **Required** The time when the error was captured.|
+`validationErrors`|`array`|[`Validation Error`](#validation-error-schema)|The validation error messages.|
+
+### <a name="validation-error-schema"></a>Validation Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`id`     |`string`|-|The ID of the validation error.|
+`message`|`string`|-|The detailed message of the validation error.|
+`source` |`string`|-|The type of validation which failed.|
