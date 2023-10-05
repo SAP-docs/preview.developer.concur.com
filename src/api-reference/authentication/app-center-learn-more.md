@@ -18,9 +18,9 @@ The table below lists all the possible scopes that an SAP Concur Partner Applica
 Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|APIs
 ---|---|---
 `ATTEND` <a name="attend"></a> |Add, update, or deactivate attendees|[Attendee V2](/api-reference/expense/attendees/v2.attendees.html), [Attendee V3](/api-reference/expense/attendees/v3.attendees.html)
-`attendee.read` <a name="attendread"></a> |Read attendee data|[Attendee V4](/api-reference/expense/attendees/v4.attendees.html)
-`attendee.write` <a name="attendwrite"></a> |Read and write attendee data|[Attendee V4](/api-reference/expense/attendees/v4.attendees.html)
-`attendee.writeonly` <a name="attendwriteonly"></a> |Write attendee data|[Attendee V4](/api-reference/expense/attendees/v4.attendees.html)
+`attendee.read` <a name="attendread"></a> |Read attendee data|[Attendee V4](/api-reference/common/attendees/v4.attendees.html)
+`attendee.write` <a name="attendwrite"></a> |Read and write attendee data|[Attendee V4](/api-reference/common/attendees/v4.attendees.html)
+`attendee.writeonly` <a name="attendwriteonly"></a> |Write attendee data|[Attendee V4](/api-reference/common/attendees/v4.attendees.html)
 `BANK` <a name="bank"></a> |Employee Banking|[Report Details-Employee Banking](/api-reference/expense/expense-report/expense-report-get.html#employeebankaccount-elements)
 `budgetitem.read` <a name="budgetitem-read"></a> |Grants read access to the budget resources|[Budget v4](/api-reference/budget/getting-started.html)
 `budgetitem.write` <a name="budgetitem-write"></a> |Grants read and write access to the budget resources|[Budget v4](/api-reference/budget/getting-started.html)
