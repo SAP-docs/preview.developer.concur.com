@@ -19,9 +19,11 @@ Access to this documentation does not provide access to the API. 
 
 ## Get a New Expense Entry <a name="Get"></a>
 
- GET  /api/v3.0/expense/entries
+```
+GET  /api/v3.0/expense/entries
+```
 
- ### Parameters
+### Parameters
 
 Name | Type | Format | Description
 -----|------|--------|------------
@@ -30,7 +32,7 @@ Name | Type | Format | Description
 `batchID`|````query````|`string`|	The batch ID for the entries to be retrieved. The batch ID identifies the batch that contains the report payee associated with the entries.
 `isBillable`|````query````|`boolean`|Determines whether the operation retrieves entries that are billable. Format: true or false
 `attendeeTypeCode`|````query````|`string`|The ID of the attendee type for the entries to be retrieved.
-`hasAttendees`|````query````|`boolean`|Determines whether the operation retrieves entries that have attendees. Format: true or false.
+`hasAttendees`|````query````|`boolean`|Determines whether the operation retrieves entries that have attendees. Format: true or false
 `hasVAT`|````query````|`boolean`|Determines whether the operation retrieves entries that have VAT details. Format: true or false
 `expenseTypeCode`|````query````|`string`|The code for the expense type for the entries to be retrieved.
 `attendeeID`|````query````|`string`|The attendee associated with the entries to be retrieved.
@@ -38,9 +40,11 @@ Name | Type | Format | Description
 `limit`|````query````|`integer`|The number of records to return. Default value: 25
 `user`|````query````|`string`|The login ID of the user who owns the entries. The user must have the Web Services Admin role to use this parameter.
 
-```## Create a New Expense Entry <a name="post"></a>
+## Create a New Expense Entry <a name="post"></a>
 
-    POST  /api/v3.0/expense/entries
+```
+POST  /api/v3.0/expense/entries
+```
 
 ### Parameters
 
