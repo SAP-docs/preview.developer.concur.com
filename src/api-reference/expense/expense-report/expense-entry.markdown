@@ -17,7 +17,28 @@ Access to this documentation does not provide access to the API. 
 
 [Version 2.0](/api-reference/expense/expense-report/expense-report-get.html), covers a wider range of partner scenarios and is recommended as the first step. However, depending on  the entries you need to retrieve, using a combination of version 2.0 and version 3.0 should be considered. To see examples, review the [VAT Reclaim](/api-guides/vat-reclaim/vat-reclaim-guide.html) integration guide.
 
-## Create a New Expense Entry <a name="post"></a>
+## Get a New Expense Entry <a name="Get"></a>
+
+ GET  /api/v3.0/expense/entries
+
+ ### Parameters
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`reportID`|````query````|`string`|The report ID of the entries to be retrieved. Format: An alpha-numeric GUID string.
+`paymentTypeID`|````query````|`string`|The ID of the payment type of the entries to be retrieved.
+`batchID`|````query````|`string`|	The batch ID for the entries to be retrieved. The batch ID identifies the batch that contains the report payee associated with the entries.
+`isBillable`|````query````|`boolean`|Determines whether the operation retrieves entries that are billable. Format: true or false
+`attendeeTypeCode`|````query````|`string`|The ID of the attendee type for the entries to be retrieved.
+`hasAttendees`|````query````|`boolean`|Determines whether the operation retrieves entries that have attendees. Format: true or false.
+`hasVAT`|````query````|`boolean`|Determines whether the operation retrieves entries that have VAT details. Format: true or false
+`expenseTypeCode`|````query````|`string`|The code for the expense type for the entries to be retrieved.
+`attendeeID`|````query````|`string`|The attendee associated with the entries to be retrieved.
+`offset`|````query````|`string`|The starting point of the next set of results, after the limit specified in the limit field has been reached.
+`limit`|````query````|`integer`|The number of records to return. Default value: 25
+`user`|````query````|`string`|The login ID of the user who owns the entries. The user must have the Web Services Admin role to use this parameter.
+
+```## Create a New Expense Entry <a name="post"></a>
 
     POST  /api/v3.0/expense/entries
 
@@ -58,6 +79,17 @@ Name | Type | Format | Description
 ```
 https://www.concursolutions.com/api/v3.0/expense/entries/gWidFO7ikXV66iSvqtG6Yd0wZ%24s4ftzvzTCg
 ```
+
+## Get an Expense Entry <a name="get"></a>
+
+    GET  /api/v3.0/expense/entries/{id}
+
+### Parameters
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`id`|````string````|`path`|**Required** The expense entry ID.
+`user`|````query````|`string`|The login ID of the user who owns the entries. The user must have the Web Services Admin role to use this parameter.
 
 ## Delete an Expense Entry <a name="delete"></a>
 
