@@ -72,8 +72,8 @@ user.read|Get user information, necessary for `userID`.|GET
 
 5. **Portal retrieves the user's delegators via Identity v4** that can be used by the portal to then retrieve all the delegators' requests to approve in the next step. 
 
-6. **Portal retrieves latest reports to approve via [Get Reports To Approve]() API which is enhanced to allow retrieval by Delegates.**
-   * [Get Reports To Approve](api-reference/expense/expense-report/v4.reports-temporary.html#get-reports-to-approve) endpoint retrieves all reports that a user can approve as either an approver or delegate.
+6. **Portal retrieves latest reports to approve via [Get Reports To Approve](/api-reference/expense/expense-report/v4.reports.html#get-reports-to-approve) API which is enhanced to allow retrieval by Delegates.**
+   * [Get Reports To Approve](/api-reference/expense/expense-report/v4.reports.html#get-reports-to-approve) endpoint retrieves all reports that a user can approve as either an approver or delegate.
    * To retrieve reports pending approval for delegated employees, the parameter `includeDelegateApprovals` should be included in the API request as a boolean value. When this parameter is set to true, the API will return the reports that require approval from employees for whom the user has delegated authority.
    * If user is a delegate, the portal will iterate through to also retrieve each delegator’s reports to approve – by doing so, the user will have a complete list of all reports to approve.
    * This step would work for a user who has logged into the portal, regardless of whether they received a notification event as a user/delegate.
