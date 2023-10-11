@@ -1,0 +1,212 @@
+---
+title: Cost Object Workflows v4
+layout: reference
+---
+
+# Cost Object Workflows v4
+
+{% include prerelease.html %}
+
+The Cost Object Workflows API can be used to view a report's cost objects that are pending approval.
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Required Scopes:
+
+|Name|Description|Endpoint|
+|---|---|---|
+|`expense.report.read`|Get information about expense reports.|GET|
+|`expense.report.readwrite`|Read and write expense report headers.|PATCH|
+
+## <a name="dependencies"></a>Dependencies
+
+SAP Concur clients must purchase Concur Expense in order to use this API. Please contact your SAP Concur representative for more information.
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+This API supports both company level and user level access tokens.
+
+## Retrieve Cost Objects for a specific Report
+
+This endpoint retrieves all cost objects for a report that the calling approver is able to approve and/or that one of their delegators is able to approve.
+
+If the workflow setting "Filter expenses to those that are applicable to Cost Object" is set to false, then this endpoint will return all cost objects related to the report regardless of if the approver has permission to approve them.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userId}/reports/{reportId}/costObjectsForApprover
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
+* `Concur-CorrelationId` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Request
+
+```shell
+curl --location --request GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: abcd-efgh-xyzw' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+```json
+[
+  {
+    "name": "Development",
+    "approvedAmount": {
+      "value": 150,
+      "currencyCode": "USD"
+    },
+    "claimedAmount": {
+      "value": 150,
+      "currencyCode": "USD"
+    },
+    "approverId": "aa024d31-95eb-4270-b9f8-cb6b5f558a7c",
+    "expenses": [
+      {
+        "approvedAmount": {
+          "value": 100,
+          "currencyCode": "USD"
+        },
+        "postedAmount": {
+          "value": 100,
+          "currencyCode": "USD"
+        },
+        "id": "080286AAA453AD449CB4DD6128BC9BA5"
+      },
+      {
+        "approvedAmount": {
+          "value": 50,
+          "currencyCode": "USD"
+        },
+        "postedAmount": {
+          "value": 50,
+          "currencyCode": "USD"
+        },
+        "id": "1C7DE29EA1CFB34AAE819264683BAF87"
+      }
+    ],
+    "isOwnedByCaller": true,
+    "isFullyApproved": false,
+    "isApprovableAsUser": true,
+    "isApprovableAsDelegate": false
+  }
+]
+```
+
+#### Exception Response
+
+```json
+{
+  "timestamp": "2023-04-12T15:22:44.248Z",
+  "httpStatus": "string",
+  "errorMessage": "string",
+  "errorId": "string",
+  "validationErrors": [
+    {
+      "source": "string",
+      "message": "string",
+      "id": "string"
+    }
+  ],
+  "customResponseData": {
+    "additionalProp1": "string",
+    "additionalProp2": "string",
+    "additionalProp3": "string"
+  },
+  "path": "string"
+}
+```
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+## <a name="schema"></a>Schema
+
+### CostObjectForApprover
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`name`|`string`|-|**Required** The name of the cost object.
+|`approvedAmount`|[`Amount`](#amount-schema)|-|**Required** The approved amount of the cost object expense(s) in the report currency.|
+|`claimedAmount`|[`Amount`](#amount-schema)|-|**Required** The approved amount of the cost object expense(s) in the report currency.|
+|`approverId`|`String`|-|**Required** The unique identifier of the cost object approver.|
+|`expenses`|[`CostObjectExpense`](#amount-schema]|-|**Required** TA list of expenses associated with the cost object.|
+|`isOwnedByCaller`|`Boolean`|-|**Required** Whether the caller is one of the cost object owners.|
+|`isFullyApproved`|`Boolean`|-|**Required** Whether the cost object flow is completed.|
+|`isApprovableAsUser`|`Boolean`|-|**Required** Whether the cost object is pending approval by the calling approver.|
+|`isApprovableAsDelegate`|`Boolean`|-|**Required** Whether the cost object flow is pending approval by the calling delegate.|
+
+### <a name="cost-object-expense-schema"></a>CostObjectExpense
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`approvedAmount`|`Amount`|-|**Required** The approved amount of the expense, in the report currency.|
+|`claimedAmount`|`Amount`|-|**Required** The approved amount of the expense, in the report currency.|
+|`id`|`String`|-|**Required** The unique identifier for the expense.|
+
+### <a name="amount-schema"></a>Amount
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`currencyCode`|`string`|-|**Required** The 3-letter ISO 4217 currency code for the expense report currency, based on the user's assigned reimbursement currency when the report was created. Examples: `USD` - US dollars; `BRL` - Brazilian real; `CAD` - Canadian dollar; `CHF` - Swiss franc; `EUR` - Euro; `GBO` - Pound sterling; `HKD` - Hong Kong dollar; `INR` - Indian rupee; `MXN` - Mexican peso; `NOK` - Norwegian krone; `SEK` - Swedish krona|
+|`value`|`number`|`double`|**Required** The amount in the defined currency.|
+
+### <a name="error-message-schema"></a>ErrorMessage
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`customResponseData`|`object`|-|The custom parameters related to error.|
+|`errorId`|`string`|-|The unique identifier of the error associated with the response.|
+|`errorMessage`|`string`|-|**Required** The detailed error message.|
+|`httpStatus`|`string`|-|**Required** The http response code and phrase for the response.|
+|`path`|`string`|-|**Required** The URI of the attempted request.|
+|`timestamp`|`string`|`date-time`|**Required** The time when the error was captured.|
+|`validationErrors`|[`ValidationError`](#validation-error-schema)|-|The validation error messages.|
+
+### <a name="validation-errors-schema"></a>ValidationError
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`id`|`string`|-|The ID of the validation error.|
+|`message`|`string`|-|The detailed message of the validation error.|
+|`source`|`string`|-|The type of validation that failed.|

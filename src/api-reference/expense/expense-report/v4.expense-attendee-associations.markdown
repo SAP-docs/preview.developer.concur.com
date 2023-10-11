@@ -1,0 +1,225 @@
+---
+title: Attendee Associations v4
+layout: reference
+
+---
+# Attendee Associations v4
+
+The Expense Attendee Associations v4 API can be used to retrieve the attendees associated with a specific expense.
+
+## Prior Versions
+
+* Expense Entry Attendee v2 documentation is available [here](./v2.expense-entry-attendee.html).
+* Expense Entry Attendee v3 documentation is available [here](./v3.expense-entry-attendee.html).
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name|Description|Endpoint
+---|---|---
+`expense.report.read`|Get information about attendee associations.| GET |
+`expense.report.readwrite`|Read and write attendee associations.| GET |
+
+## Dependencies <a name="dependencies"></a>
+
+SAP Concur clients must purchase Concur Expense in order to use this API. User based API requires the use of the [Identity v4 API](/api-reference/profile/v4.identity.html). Please contact your SAP Concur representative for more information.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports both company level and user level access tokens.
+
+## Retrieves Associated Attendees on a Specific Expense ID <a name="specific-report-expenses"></a>
+
+Retrieves the attendees that are associated with a specific expense ID.
+
+### Scopes
+
+* `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/attendees
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`userID`|`string`|-| **Required** The unique identifier of the SAP Concur user. Please use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+`contextType`|`string`|-| **Required** The access level of the user, which determines the form fields they can view/modify. Supported values: `TRAVELER`,`PROXY`|
+`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.|
+`expenseId`|`string`|-| **Required** The unique identifier of the expense that is being read.|
+
+### Payloads
+
+  * Request: None
+  * Response: [Expense Attendee Associations Response](#attendees-response-schema)
+
+### Examples
+
+#### Request
+
+```shell
+curl -X 'GET' \
+  'https://us.api.concursolutions.com/expensereports/v4/users/33cdbba7-062c-42bb-92c4-a82c06b07eae/context/TRAVELER/reports/24E51595E17E4627B2AF/expenses/51ADA86C8EB164488FE67180CCE16EDB/attendees' \
+  --header 'Authorization: Bearer {access_token}' \
+  --header 'Content-Type: application/json'
+```
+
+#### <a name="attendees-response-schema"></a> Response
+
+```shell
+{
+  "noShowAttendeeCount": 0,
+  "expenseAttendeeList": [
+    {
+      "attendeeId": "695E66E2A472074D8895057311C6A158",
+      "customData": null,
+      "isAmountUserEdited": false,
+      "isTraveling": null,
+      "associatedAttendeeCount": 1,
+      "versionNumber": 1,
+      "transactionAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      },
+      "approvedAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      }
+    }
+  ]
+}
+```
+
+## Retrieves Associated Attendees on a Specific Expense ID Using System User <a name="specific-report-expenses-using-system-user"></a>
+
+Retrieves the attendees that are associated with a specific expense ID using a system user.
+
+### Scopes
+
+* `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+/expensereports/v4/reports/{reportId}/expenses/{expenseId}/attendees
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.|
+`expenseId`|`string`|-| **Required** The unique identifier of the expense that is being read.|
+
+### Payloads
+
+  * Request: None
+  * Response: [Expense Attendee Associations Response](#attendees-response-schema-2)
+
+### Examples
+
+#### Request
+
+```shell
+curl -X 'GET' \
+  'https://us.api.concursolutions.com/expensereports/v4/reports/24E51595E17E4627B2AF/expenses/51ADA86C8EB164488FE67180CCE16EDB/attendees' \
+  --header 'Authorization: Bearer {access_token}' \
+  --header 'Content-Type: application/json'
+```
+
+#### <a name="attendees-response-schema-2"></a> Response
+
+```shell
+{
+  "noShowAttendeeCount": 0,
+  "expenseAttendeeList": [
+    {
+      "attendeeId": "695E66E2A472074D8895057311C6A158",
+      "customData": null,
+      "isAmountUserEdited": false,
+      "isTraveling": null,
+      "associatedAttendeeCount": 1,
+      "versionNumber": 1,
+      "transactionAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      },
+      "approvedAmount": {
+        "value": 100,
+        "currencyCode": "USD"
+      }
+    }
+  ]
+}
+```
+
+## <a name="schema"></a>Schema
+
+### <a name="expense-attendees-with-amounts-response-schema"></a> Expense Attendee Associations With Amounts
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`noShowAttendeeCount`|`integer`| - |The number of attendees that were planned but did not show up. Default value: `0`|
+`expenseAttendeeList`|[`ExpenseAttendeeAssociationWithAmounts`](#expense-attendee-with-amounts-schema)| - |The list of attendees associated with the expense.|
+
+### <a name="expense-attendee-with-amounts-schema"></a> Expense Attendee Association With Amounts
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`attendeeId`|`string`| - | **Required** The unique identifier of the associated expense attendee within the SAP Concur systems.|
+`customData`| [`CustomData`](#expense-attendees-custom-data-schema)| - |The set of data the custom fields contain for the attendee based on the configuration. This set may be empty if no custom fields are configured.|
+`isAmountUserEdited`|`boolean`| `true`/`false` |If `true`, this field indicates that the amount value for the attendee on this expense was manually edited by the end user. Default value: `false`|
+`isTraveling`|`boolean`| `true`/`false` |If `true`, the attendee was traveling when the expense was incurred. This is used for FBT tax calculations.|
+`associatedAttendeeCount`|`integer`| - |The count of total attendees. A count greater than `1` means there are unnamed attendees associated with this expense-attendee record. Default value: `1`|
+`versionNumber`|`integer`| - |The version number of the attendee. This field value may always be `1`, depending on the configuration. Default value: `1`|
+`transactionAmount`|[`Amount`](#expense-attendees-amount-schema)| - | **Required** The portion of the expense transaction amount assigned to this attendee for both individual expense tracking and attendee totals across time periods.|
+`approvedAmount`|[`Amount`](#expense-attendees-amount-schema)| - | **Required** The approved amount assigned to this attendee, in the report currency.|
+
+#### <a name="expense-attendees-custom-data-schema"></a>Custom Data
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`id`|`string`|-| **Required** The unique identifier of the custom field. Examples: `custom1`, `orgUnit1`|
+`isValid`|`boolean`|`true`/`false`|If `true`, the value returned is valid. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: `true`|
+`value`|`string`|-|The value of the custom field. This field can have values for all the supported data types such as `text`, `integer`, `boolean` and `listItemId`. Maximum length: 48 characters|
+`listItemUrl`|`string`|-|href (string): The URL of the related HATEOAS link that you can use for subsequent calls.|
+
+#### <a name="expense-attendees-amount-schema"></a>Amount
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`value`|`number`|-| **Required** The amount in the defined currency.|
+`currencyCode` |`string`|-| **Required** The 3-letter ISO 4217 currency code for the expense report currency, based on the user's assigned reimbursement currency when the report was created. Examples: `USD` - US dollars; `BRL` - Brazilian real; `CAD` - Canadian dollar; `CHF` - Swiss franc; `EUR` - Euro; `GBO` - Pound sterling; `HKD` - Hong Kong dollar; `INR` - Indian rupee; `MXN` - Mexican peso; `NOK` - Norwegian krone; `SEK` - Swedish krona |
+
+### <a name="error-message-schema"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`customResponseData`|`object`|-|The custom parameters related to error.|
+`errorId`|`string`|-|The unique identifier of the error associated with the response.|
+`errorMessage`|`string`|-| **Required** The detailed error message.|
+`httpStatus`|`string`|-| **Required** The HTTP response code and phrase for the response.|
+`path`|`string`|-| **Required** The URI of the attempted request.|
+`timestamp`|`string`|`date-time`| **Required** The time when the error was captured.|
+`validationErrors`|[`ValidationError`](#validation-error-schema)|-|The validation error messages.|
+
+### <a name="validation-errors-schema"></a>Validation Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`id`|`string`|-|The ID of the validation error.|
+`message`|`string`|-|The detailed message of the validation error.|
+`source`|`string`|-|The type of validation which failed.|

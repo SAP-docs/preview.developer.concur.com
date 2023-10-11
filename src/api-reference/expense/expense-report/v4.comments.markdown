@@ -5,7 +5,9 @@ layout: reference
 
 # Comments v4
 
-The Comments v4 API is used to read the comments entered on the expense report header, or expenses of an existing expense report. This API is used to detail information about spending that occurs out of policy, which is justified by the report owner, or inaccuracies pointed out by the approvers of the expense report.
+The Comments v4 API POSTs, GETs, PUTs, and DELETEs comments associated with an expense or a report.
+
+Comments are typically added to an expense or a report to add additional information about an expense or a report. For example, a comment may highlight spending that is out of policy or a comment may be added to justify a particular expenditure.
 
 ## <a name="prior-versions"></a>Prior Versions
 
@@ -20,26 +22,9 @@ This API is only available to partners who have been granted access by SAP Concu
 * Concur Expense Professional Edition
 * Concur Expense Standard Edition
 
-## <a name="scope-usage"></a>Scope Usage
-
-Required Scopes:
-
-| Name|Description|Endpoint|
-| ---|---|---|
-|`expense.report.read`| Get information about expense reports.|GET|
-|`user.read`|Get User Information, necessary for `userID`.|GET|
-
-Optional Scope:
-
-|Name|Description|Endpoint|
-|---|---|---|
-|`expense.report.readwrite`|Read and write expense report headers.|PATCH|
-|`expense.report.workflowstatus.write`|Approve or Send Back the Report in the workflow|PATCH|
-
-
 ## <a name="dependencies"></a>Dependencies
 
-SAP Concur clients must purchase Concur Expense in order to use this API. This API requires the Identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
+SAP Concur clients must purchase Concur Expense in order to use this API. User based API requires the Identity v4 API . Please contact your SAP Concur representative for more information.
 
 ## <a name="access-token-usage"></a>Access Token Usage
 
@@ -51,7 +36,8 @@ Retrieves the comments on the specific report header.
 
 ### Scopes
 
-`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.read`
+* `expense.report.readwrite`
 
 ### Request
 
@@ -79,24 +65,19 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 * [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
 
 ### Response
 
 #### Status Codes
 
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
 * [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
 * [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
 * [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-
-#### Headers
-
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 #### Payload
 
@@ -109,7 +90,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 ```shell
 curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/comments?includeAllComments=true' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Report-test' \
 --header 'Content-Type: application/json'
 ```
 
@@ -141,13 +121,543 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
   }
 ]
 ```
+
+## <a name="retrieve-report-header-comments-with-system-user"></a>Retrieve Report Header Comments Using System User
+
+Retrieves the comments on the specific report header using a system user.
+
+### Scopes
+
+* `expense.report.read`
+* `expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+|`includeAllComments`|`boolean`|true or false|Return all the comments that are present on the report at all levels. Default value: false|
+
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Report Header Comments Response](#report-header-comments-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/comments?includeAllComments=true' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+[
+  {
+    "comment": "This is an expense report for office supplies",
+    "author": {
+      "firstName": "Concur",
+      "lastName": "Administrator",
+      "middleInitial": ""
+    },
+    "createdForEmployee": {
+      "firstName": "Tester",
+      "lastName": "Insert",
+      "middleInitial": "A"
+    },
+    "createdForEmployeeId": "32c2fcc3-b2e8-4907-9672-5b3f49b1c643",
+    "creationDate": "2021-03-17T22:29:50.090Z",
+    "expenseId": null
+    "isAuditorComment": false,
+    "isLatest": true,
+    "stepInstanceId": "54279E6A6D940741A9CEEDEE2240C5D3"
+  }
+]
+```
+## <a name="post-report-header-comments"></a>Post Report Header Comment
+
+Creates a new comment for the specified report.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+#### Payload
+
+* [Comment](#comment-schema)
+
+### Response
+
+
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'POST' \
+'https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/93B9D238A6864C019258/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This is a new comment."
+}'
+```
+
+#### Response
+
+
+```shell
+201 Created
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/93B9D238A6864C019258/comments"
+}
+```
+
+## <a name="post-report-header-comments-with-system-user"></a>Post Report Header Comment Using System User
+
+Creates a new comment for the specified report using a system user.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+#### Payload
+
+* [Comment](#comment-schema)
+
+### Response
+
+
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'POST' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This is a new comment."
+}'
+```
+
+#### Response
+
+
+```shell
+201 Created
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/comments"
+}
+```
+
+## <a name="update-report-header-comments"></a>Update Report Header Comments
+
+Updates the latest comment for the specified report.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+### Payload
+
+* [Comment](#comment-schema)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'PUT' \
+'https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/93B9D238A6864C019258/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This report is for stationery expenses."
+}'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/93B9D238A6864C019258/comments"
+}
+```
+
+## <a name="update-report-header-comments-with-system-user"></a>Update Report Header Comments Using System User
+
+Updates the latest comment for the specified report using a system user.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Payload
+
+* [Comment](#comment-schema)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'PUT' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This report is for stationery expenses."
+}'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/comments"
+}
+```
+
+## <a name="Delete-report-header-comments"></a>Delete Report Header Comments
+
+Deletes the latest comment for the specified report.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/93B9D238A6864C019258/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+204 No Content
+```
+
+## <a name="Delete-report-header-comments-with-system-user"></a>Delete Report Header Comments Using System User
+
+Deletes the latest comment for the specified report using a system user.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report that is being read.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+204 No Content
+```
+
+
 ## <a name="retrieve-expense-comments"></a>Retrieve Expense Comments
 
 Retrieves the comments on the specific expense within an expense report.
 
 ### Scopes
 
-`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.read`
+* `expense.report.readwrite`
 
 ### Request
 
@@ -174,23 +684,105 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 * [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
 
 ### Response
 
 #### Status Codes
 
-* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
 * [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
 * [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
 * [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
+#### Payload
+
+* [Expense Comments Response](#expense-comments-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+[
+    {
+        "comment": "This expense is allowed due to the pandemic",
+        "author": {
+            "firstName": "Concur",
+            "lastName": "Administrator",
+            "middleInitial": ""
+        },
+        "createdForEmployee": {
+            "firstName": "Tester",
+            "lastName": "Insert",
+            "middleInitial": "A"
+        },
+        "createdForEmployeeId": "32c2fcc3-b2e8-4907-9672-5b3f49b1c643",
+        "creationDate": "2021-03-17T23:05:40.340Z",
+        "expenseId": "84FCBB92BD4E5342B849DAC29FD163A1",
+        "isAuditorComment": false,
+        "isLatest": true,
+        "stepInstanceId": "54279E6A6D940741A9CEEDEE2240C5D3"
+    }
+]
+```
+
+## <a name="retrieve-expense-comments"></a>Retrieve Expense Comments Using System User
+
+Retrieves the comments on the specific expense within an expense report using a system user.
+
+### Scopes
+
+* `expense.report.read`
+* `expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
 #### Headers
 
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
 #### Payload
 
@@ -201,9 +793,8 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 #### Request
 
 ```shell
-curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments' \
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Report-test' \
 --header 'Content-Type: application/json'
 ```
 
@@ -236,9 +827,452 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
 ]
 ```
 
+## <a name="post-expense-comments"></a>Post Expense Comments
+
+Creates a new comment for the specified expense.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+#### Payload
+
+* [Comment](#comment-schema)
+
+
+### Response
+
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request POST 'https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/E364C14BAEEA4BE5922C/expenses/36CBAA8D4ADE6C46BB587C05293405DC/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This expense is for a business meal."
+}'
+```
+
+#### Response
+
+
+```shell
+201 Created
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/E364C14BAEEA4BE5922C/expenses/36CBAA8D4ADE6C46BB587C05293405DC/comments"
+}
+```
+
+## <a name="post-expense-comments"></a>Post Expense Comments Using System User
+
+Creates a new comment for the specified expense using a system user.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+#### Payload
+
+* [Comment](#comment-schema)
+
+
+### Response
+
+#### Status Codes
+
+* [201 Created](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request POST 'https://us.api.concursolutions.com/expensereports/v4/reports/E364C14BAEEA4BE5922C/expenses/36CBAA8D4ADE6C46BB587C05293405DC/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This expense is for a business meal."
+}'
+```
+
+#### Response
+
+
+```shell
+201 Created
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/reports/E364C14BAEEA4BE5922C/expenses/36CBAA8D4ADE6C46BB587C05293405DC/comments"
+}
+```
+
+## <a name="update-expense-comments"></a>Update Expense Comments
+
+Updates the latest comment for the specified expense.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+#### Payload
+
+* [Comment](#comment-schema)
+
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request PUT 'https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/E364C14BAEEA4BE5922C/expenses/36CBAA8D4ADE6C46BB587C05293405DC/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This expense is for a leisure meal."
+}'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/E364C14BAEEA4BE5922C/expenses/36CBAA8D4ADE6C46BB587C05293405DC/comments"
+}
+```
+
+
+
+## <a name="update-expense-comments"></a>Update Expense Comments Using System User
+
+Updates the latest comment for the specified expense using a system user.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+#### Payload
+
+* [Comment](#comment-schema)
+
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Payload
+
+* [Comment Save Response](#comment-save-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request PUT 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+  "comment": "This expense is for a leisure meal."
+}'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments"
+}
+```
+
+
+
+## <a name="delete-report-header-comments"></a>Delete Expense Comments
+
+Deletes the latest comment for the specified expense.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/users/750524a2-907b-4dde-9fec-d038ab043f53/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+204 No Content
+```
+
+## <a name="delete-report-header-comments"></a>Delete Expense Comments With System User
+
+Deletes the latest comment for the specified expense using a system user.
+
+### Scopes
+
+`expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/comments
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
+|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry to which the comments belong.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/84FCBB92BD4E5342B849DAC29FD163A1/comments' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+204 No Content
+```
+
+
 ## <a name="schema"></a>Schema
 
-### <a name="report-header-comments-response-schema"></a> Report Header Comments
+### <a name="report-header-comments-response-schema"></a> Report Header Comments Response
 
 Name|Type|Format|Description
 ---|---|---|---
@@ -249,6 +1283,19 @@ Name|Type|Format|Description
 Name|Type|Format|Description
 ---|---|---|---
 `commentDetails`|`array`|[`commentDetails`](#comment-details)|A key linking to another schema for the format.
+
+### <a name="comment-schema"></a> Comment
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`comment`|`string`|-|The comments input on the report/expense by all users.|
+
+
+### <a name="comment-save-response-schema"></a> Comment Save Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`uri`|`string`|-|The URI of the comment.|
 
 #### <a name="comment-details"></a>commentDetails
 

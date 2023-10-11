@@ -97,6 +97,7 @@ Name|Type|Format|Description
 `expenseTypeName`|`String`|-|Alphanumeric. Expense type name. Maximum length 64 characters.
 `legacyEntryId`|`Number`|-|Legacy report entry key. Maximum length 11 characters.
 `liabilityAccountCode`|`String`|-|Alphanumeric. The liability account code assigned to the funding account paying this entry. Maximum length 48 characters.
+`merchantTaxId`|`String`|-|Alphanumeric. Merchant Tax ID is populated by the following (in order of precedence): EReceipt v4 with tax data, Company card transaction, and ExpenseIt OCR transaction. Maximum length 64 characters.
 `offsetPayType`|`String`|Y/N|Use Offsets. Y = Yes, N= No.
 `reportEntryPatKey`|`String`|-|Alphanumeric. Report Entry Payment Code. Maximum length 4 characters.
 `reportEntryPaymentTypeCode`|`String`|-|Alphanumeric. Localized Report Entry Payment Code Name. Name labels that are managed by SAP Concur may change over time; it is strongly recommended that any programming use the Payment Type Code field and then refer to the FI equivalent which is "reportEntryPatKey". Maximum length 80 characters.
@@ -137,6 +138,281 @@ Name|Type|Format|Description
 `cashAdvanceClearingAccountCode`| `String`|-|Alphanumeric. The Account Code is the clearing account code which was configured for the employee in the profile. Maximum length 48 characters.
 `cashAdvanceId`|`String`|-|GUUID. Unique system ID assigned to the cash advance. Maximum length 32 characters.
 `cashAdvanceTransactionType`|`Number`|-|Type of transaction: 1 = Issue or return to administrator, 2 = Application, including cash advance return expense within a report, or 3 = System cash advance, from balance carry forward.
+
+## Payroll <a name="scpayroll"></a>
+
+Name|Type|Format|Description
+---|---|---|---
+`report`|`Object`| [Payroll - Report](#scprlrep)|Report Data.
+`employee`|`Object`| [Payroll - Employee](#scprlemploy) |Employee Data.
+`cashAdvanceApplication`|`Object`| [Payroll - CashAdvanceUtilizationData](#scprlcaa)|Currency. Cash advance utilized amount on a given expense report.
+`expenseEntry`|`Array`| Array of [Payroll - ExpenseEntry](#scprlexpent)|Expense Entry Data.
+`travelAllowances`|`Array`| Array of [Payroll - ItineraryResultDetail](#scprltnryrsltdtl) |Detailed travel allowance calculation results of the itinerary.
+
+### <a name="scprlemploy"></a>Payroll - Employee
+
+Name|Type|Format|Description
+---|---|---|---
+`employeeOrgUnit1Code` through `employeeOrgUnit6Code`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.`employeeOrgUnit1Value` through `employeeOrgUnit6Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.`employeeOrgUnit1Value` through `employeeOrgUnit6Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.`employeeOrgUnit1Value` through `employeeOrgUnit6Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.`employeeOrgUnit1Value` through `employeeOrgUnit6Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`employeeOrgUnit1Value` through `employeeOrgUnit6Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`employeeCustom1Code` through `employeeCustom22Code`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.
+`employeeCustom1Value` through `employeeCustom22Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`employeeFirstName`|`String`|-|Alphanumeric. First name of employee. Maximum length 32 characters.
+`employeeId`|`String`|-|Alphanumeric. Employee ID often also serves as the employee’s Vendor ID for AP system integrations or payroll ID for payroll integrations. Maximum length 128 characters.
+`employeeLastName`|`String`|-|Alphanumeric. Last name of employee. Maximum length 32 characters.
+`employeeMI`|`String`|-|Alphanumeric. Middle initial of employee. Maximum length 1 character.
+
+### <a name="scprlrep"></a>Payroll - Report
+
+Name|Type|Format|Description 
+---|---|---|--- 
+`employeeCurrencyAlphaCode`|`String`|3-letter ISO 4217 alpha code.|Alphanumeric. Reimbursement currency.
+`homeCountryCode`|`String`|ISO 3166-1 alpha-2 country code.|Alphanumeric. The report country. Example: United States is US.
+`isTest`|`String`|Y/N|Signifies if this report belongs to a test user in system. Y = test user, N = not a test user.
+`reportCustom1Code` through `reportCustom20Code`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.
+`reportCustom1Value` through `reportCustom20Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`reportEndDate`|`String`|yyyy-mm-ddThr:min:sec.msZ|End date from the report header. Can be imported from trip data or manually entered.
+`reportId`|`String`|Unique (across all SAP Concur clients) 32 character alphanumeric.|Alphanumeric. Often used as a voucher number when integrating across AP systems.
+`reportName`|`String`|-|Alphanumeric. Report name assigned by employee. Maximum length 40 characters.
+`reportNumber`|`String`|-|Alphanumeric - all uppercase. Unique 6 character code identifying the report. Maximum length 6 characters.
+`reportOrgUnit1Code` through `reportOrgUnit6Code`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. The second segment in the fully qualified GL string should use Org Unit 2, except the natural account field. The natural account data is stored in column 167 of the SAE. Maximum length 48 characters.
+`reportOrgUnit1Value` through `reportOrgUnit6Value`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`reportPaymentProcessingDate`|`String`|yyyy-mm-ddThr:min:sec.msZ|The date that the report completed all approvals and was ready to be extracted for payment. Maximum length 24 characters.
+`reportStartDate`|`String`|-|Report start date. Maximum length 24 characters.
+`reportSubmitDate`|`String`|-|Date/time the employee submitted the report for approval. Maximum length 24 characters.
+`reportUserDefinedDate`|`String`|-|Custom date/time specified by user. Maximum length 24 characters.
+`revisionNumber`|`Number`|-|Report revision number. This will be used to track changes made to posted expenses. Default value is 1. Maximum length 32 characters.
+`totalApprovedAmount`|`Number`|Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field.|Total approved amount of the report.
+`versionId`|`Number`|-|The version of the FI Document, which is the same as the version of the API endpoint. Maximum length 32 characters.
+`benefitInKindWageType`|`String`|-|Benifit In Kind Wage Type
+
+### <a name="scprlexpent"></a>Payroll - ExpenseEntry
+
+Name|Type|Format|Description 
+---|---|---|--- 
+`entryApprovedAmount`|`Number`| Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. |Currency. Amount approved in the reimbursement currency.
+`entryCountryCode`|`String`| 2-character country code. |Alphanumeric. Report entry country code.
+`entryCustom1Code` through `entryCustom40Code`|`CustomField`| - |The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.
+`entryCustom1Value` through `entryCustom40Value`|`CustomField`| - |The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`entryDate`|`String`| yyyy-mm-ddThr:min:sec.msZ |Date that this expense was incurred (when the money was spent or credit card receipt date).
+`entryDescription`|`String`| - |Alphanumeric. Expense description as entered by the employee. Maximum length 64 characters.
+`entryId`|`String`| - |Report entry sync GUUID unique key. Maximum length 32 characters.
+`entryIsPersonal`|`String`| Y/N |Yes or no is the expense personal.
+`entryLocationName`|`String`| - |Alphanumeric. Report entry location name. Maximum length 64 characters.
+`entryOrgUnit1Value` through `entryOrgUnit6Value`| `CustomField`| - |The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.
+`entryOrgUnit1Code` through `entryOrgUnit6Code`|`CustomField`| - |The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.
+`expenseTypeCode`|`String`| - |Alphanumeric. Code for the expense type. Maximum length 5 characters.
+`payrollData`|`Array`| Array of [PayrollData](#scpayrolldata) |Represents payroll related data for an expense entry
+
+### <a name="scpayrolldata"></a>Payroll - ExpenseEntry - Payroll Data
+
+Name|Type|Format|Description
+---|---|---|---
+`taxableType`|`String`|-|Determines if taxable or non-taxable.
+`taxationType`|`String`|-|Determines what type of taxation (eg: flat rate, individual, Non taxable) for taxable entries
+`entryApprovedAmount`|`Number`|-|Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field.|Currency. Amount approved in the reimbursement currency.
+`wageType`|`String`|-|The wage type required by the payroll system for posting
+`payrollPayIndicator`|`String`|-| Indicates whether the amounts due employee will be reimbursed through payroll or not. possible values Y or N. If N, then amounts transferred to payroll are for taxation record-keeping purposes only.  If Y, then amounts transferred to payroll are for reimbursement AND taxation record-keeping purposes
+
+### <a name="scprlcaa"></a>Payroll - CashAdvanceUtilizationData
+
+Name|Type|Format|Description
+---|---|---|---
+`cashAdvanceApplicationAmount`|`Number`|Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field.|Currency. Cash advance utilized amount.
+`cashAdvanceClearingWageType`|`String`|-|Cash Advance Clearing Wage Type
+`payrollPayIndicator`|`String`|Y/N|This field indicates whether the expense group the report user belongs to is configured to reimburse employees using Payroll.
+`cashAdvanceReturnsAmount`|`Number`|Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field.|Currency. Amount of cash advance returned.
+
+### <a name="scprltnryrsltdtl"></a>Payroll - ItineraryResultDetail
+
+Name|Type|Format|Description
+---|---|---|---
+`itineraryHeader`|`Object`|[Payroll - ItineraryHeader](#payroll---travelallowances---itineraryheader)|Header with general information about the itinerary
+`dailyAllowanceDetails`|`Array`| Array of [Payroll - DailyAllowanceDetail](#payroll---travelallowances---daily-allowance-details)|List of summarized and detailed daily travel allowance calculation results of the itinerary. 
+`itineraryResultHeader`|`Object`| [Payroll - ItineraryResultHeader](#payroll---travelallowances---itineraryresultheader)|General data of the itinerary
+
+### Payroll - TravelAllowances - ItineraryHeader
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`| `String`  | - |Identification of the company of the traveler.
+`configurationCode`| `String`  | - |The configuration code used to calculate the settlement for the itinerary.
+`description`| `String`  | - |Description of the itinerary.
+`id`| `Number`  | - |Identification of the itinerary.
+`tripTypeCode`| `String`  | - |Can be used to apply different calculation rules or allowance rates for different trip types.
+`userId`| `String`  | - |Identification of the owner of the itinerary, i.e. the traveler.
+`startDate`| `String`  | -  |Start date of the reimbursement interval for which per diems are granted. Used to calculate allowances when time-based constraints are configured. 
+`startTime`| `String`  | -  |Start time in UTC of the itinerary. Used to calculate allowances when time-based constraints are configured.
+`endDate`| `String`  | -   |End time in UTC of the itinerary. Used to calculate allowances when time-based constraints are configured.
+`endTime`| `String`  | -  |End date of the reimbursement interval. Used to calculate allowances when time-based constraints are configured.
+`numberOfDays`| `Number`  | -   |Represents number of calendar days in the trip.
+`domestic`| `Boolean` | true/false |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
+
+### Payroll - TravelAllowances - Daily Allowance Details
+
+Name|Type|Format|Description
+---|---|---|---
+`date`| `String` | - | Daily allowance date.        
+`paymentCurrency`| `String` | -  | Allowance amount in reimbursement currency.    
+`clientAmountInPaymentCurrency`| `Number` | - |Amount of client allowance limit in reimbursement currency.
+`governmentAmountInPaymentCurrency`| `Number` | - |Amount of government allowance limit in reimbursement currency.
+`benefitInKindAmountInPaymentCurrency`| `Number` | -  |Amount of benefit in kind received by employee in reimbursement currency. A benefit to the employee, usually a meal supplied by the company, that may create a tax obligation for the user. 
+`locationCountry`| `String` | - |Country location used for rate determination and whether foreign or domestic.
+`dailyAllowanceRateTypeDetailList`| `Array`  | Array of [Payroll - DailyAllowanceRateTypeDetail](#payroll---travelallowances---daily-allowance-details---dailyallowanceratetypedetail) | List of Summarized and detailed travel allowance calculation results per rate type of a day of the itinerary.
+
+### Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail
+
+Name|Type|Format|Description
+---|---|---|---
+`dailyAllowanceRateType`| `Object` | [Payroll - DailyAllowanceRateType](#payroll---travelallowances---daily-allowance-details---dailyallowanceratetypedetail---dailyallowanceratetype) | Summarized daily travel allowance calculation results.
+`governmentCalculationDetail`| `Object` | [Payroll - CalculationDetail](#scprlclcltndtl) | Allowance calculations when statutory rates are relevant.
+`clientCalculationDetail`| `Object` | [Payroll - CalculationDetail](#scprlclcltndtl) |Allowance calcuations when client rates are relevant.
+
+### <a name="scprlclcltndtl"></a>Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail - CalculationDetail
+
+Name|Type|Format|Description
+---|---|---|---
+`startDate`| `String`    | `yyyy-mm-dd`|Start date of the reimbursement interval for which per diems are granted.
+`startTime`| `LocalTime` | `hr:min:sec` |Start time in UTC of the itinerary.
+`endDate`| `String`    | `yyyy-mm-dd`|End date of the reimbursement interval.
+`endTime`| `LocalTime` | `hr:min:sec` |End time in UTC of the itinerary.
+`rateCurrency`| `String`    | - |Currency of the daily allowance rate.
+`rateAmount`| `Number`    | -  |Amount of the daily allowance rate.
+`adjustmentFactors`| `Array`     | Array of [Payroll - AdjustmentRule](#scprladjstmntrle) | Adjusted amount; this amount is the rate amount multiplied with all adjustment factors.
+`adjustedAmountInRateCurrency`| `Number`    | - | List of Adjustment rule to be adapted to base amounts.
+`deductions`| `Array` | Array of [Payroll - Deduction](#scprldedctin)| List of deduction to be adapted to amounts after application of adjustments.
+`amountInRateCurrency`| `Number` | - | Resulting amount; this amount is the adjustment amount after deduction of all deduction amounts.
+`locationKey`| `String`    | - | UUID of the location for which the travel allowance calculation on the given day was done.
+`location`| `Object`  | [Payroll - Location](#scprllocation) | Location for which the travel allowance calculation on the given day was done.
+
+
+### <a name="scprladjstmntrle"></a>Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail - CalculationDetail - AdjustmentRule
+
+Name|Type|Format|Description
+---|---|---|---
+`adjustmentFactor`| `Number`   | - |Factor of the adjustment rule; the base amount is multiplied with this factor to get the adjusted amount.
+
+### <a name="scprldedctin"></a>Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail - CalculationDetail - Deduction
+
+Name|Type|Format|Description
+---|---|---|---
+`categoryCode`| `String` | - |Category of deduction; it can be used to distinguish between e.g. breakfast, lunch, Lunch & dinner, night.
+`typeCode`| `String` | -   |Type of deduction; it can be used to distinguish e.g between full deduction or partial deduction for the given category.
+`deductionCurrency`| `String` | - |Currency of the deduction amount.
+`deductionAmount`| `Number` | -   |Amount of deduction in deduction currency, this amount is deducted from the adjusted amount to get the reimbursement amount.
+`conversionRate`| `Number` | - |Conversion rate of the deduction amount.
+`dateOfConversionRate`| `String` | `yyyy-mm-dd` |Date of conversion between deduction and rate currency for deduction amount.
+`deductionAmountInRateCurrency`| `Number` | `example: 5.26`  |Amount of deduction in rate currency, this amount is deducted from the adjusted amount to get the reimbursement amount.
+`benefitInKindAmountInRateCurrency`| `Number` | `example: 3.38`  |Amount of benefit-in-kind in rate currency; this amount is added to the traveler's taxable amount if the adjusted amount is already zero.
+`rateCurrency`| `String` | `example: EUR`   |Currency of the deduction amount.
+
+### <a name="scprllocation"></a>Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail - CalculationDetail - Location
+
+Name|Type|Format|Description
+---|---|---|---
+`countryISOCode`| `String` | `example: DE` |ISO 3166-1 Alpha 2 country code.
+`subDivisionISOCode`| `String` | `example: DE-BW` |ISO 3166-2 subdivison code.
+`getuNLocationCode`| `String` | `example: DEKAR` |UN location code.
+`travelAllowanceRegionCode`| `String` | - |Travel allowance region code.
+
+### Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail - DailyAllowanceRateType
+
+Name|Type|Format|Description
+---|---|---|---
+`benefitInKindAmountInPaymentCurrency`| `Number` | - |Benefit in kind amount in payment currency.
+`benefitInKindAmountInRateCurrency`| `Number` | -  |Benefit in kind amount in government rate currency.
+`clientAmountInPaymentCurrency`| `Number` | - |Client specific travel allowance amount in payment currency.
+`clientAmountInRateCurrency`| `Number` | - |Client specific travel allowance amount in client rate currency.
+`conversionRate`| `Number` | - |Conversion rate of the client travel allowance rate.
+`dateOfConversionRate`| `String` | -  |Date of conversion between rate and payment currency for travel allowance rates.
+`day`| `String` | - |Date of the day of the allowance.
+`expenseTypeCode`| `String` | - |Expense type code assigned to the given travel allowance rate type; needed when transferring the travel allowance to an expense service.
+`governmentAmountInPaymentCurrency`| `Number` | - |Government specific travel allowance amount in payment currency.
+`governmentAmountInRateCurrency`| `Number` | - |Government specific travel allowance amount in government rate currency.
+`governmentConversionRate`| `Number` | - |Conversion rate of the government travel allowance rate.
+`governmentRateCurrency`| `String` | -   |ISO 4217 currency of the government travel allowance rate.
+`location`| `Object` | [Payroll - Location](#scprllocation2)|Location for which the travel allowance calculation on the given day was done.
+`paymentCurrency`| `String` | - |Payment currency of the travel allowance amounts.
+`rateCategoryCode`| `String` | One of [ OTHER, MEAL, LODGING, INCIDENTAL ] |Rate category of the expense type. It can be used to distinguish between different rates for meals, lodging, incidentals.
+`rateCurrency`| `String` | - |ISO 4217 currency of the client travel allowance rate.
+`rateTypeCode`| `String` | - |Travel allowance rate type; Code list can be defined by customer and can contain values like lunch, breakfast, dinner.
+`expenseEntryID`| `String` | - |Unique ID for the Expense Entry.
+`deductions`| `Object` | [Payroll - Deduction](#scprldedctin2) |Deduction to be adapted to amounts after application of adjustments.
+
+### <a name="scprllocation2"></a>Payroll - TravelAllowances - Daily Allowance Details - DailyAllowanceRateTypeDetail - CalculationDetail - Location
+
+Name|Type|Format|Description
+---|---|---|---
+`countryISOCode`| `String` | `example: DE`    |ISO 3166-1 Alpha 2 country code.
+`subDivisionISOCode`| `String` | `example: DE-BW` |ISO 3166-2 subdivison code.
+`getuNLocationCode`| `String` | `example: DEKAR` |UN location code.
+`travelAllowanceRegionCode`| `String` | - |Travel allowance region code.
+
+### <a name="scprldedctin2"></a>Payroll - TravelAllowances- Daily Allowance Details - DailyAllowanceRateTypeDetail - DailyAllowanceRateType - Deduction
+
+Name|Type|Format|Description
+---|---|---|---
+`categoryCode`| `String` | -  |Category of deduction; it can be used to distinguish between e.g. breakfast, lunch, Lunch & dinner, night.
+`typeCode`| `String` | - |Type of deduction; it can be used to distinguish e.g between full deduction or partial deduction for the given category.
+`deductionCurrency`| `String` | - |Currency of the deduction amount.
+`deductionAmount`| `Number` | -  |Amount of deduction in deduction currency, this amount is deducted from the adjusted amount to get the reimbursement amount.
+`conversionRate`| `Number` | -  |Conversion rate of the deduction amount.
+`dateOfConversionRate`| `String` | `yyyy-mm-dd` |Date of conversion between deduction and rate currency for deduction amount.
+`deductionAmountInRateCurrency`| `Number` | `example: 5.26`  |Amount of deduction in rate currency, this amount is deducted from the adjusted amount to get the reimbursement amount.
+`benefitInKindAmountInRateCurrency`| `Number` | `example: 3.38`  |Amount of benefit-in-kind in rate currency; this amount is added to the traveler's taxable amount if the adjusted amount is already zero.
+`rateCurrency`| `String` | `example: EUR`   |Currency of the deduction amount.
+
+
+### Payroll - TravelAllowances - ItineraryResultHeader
+
+Name|Type|Format|Description
+---|---|---|---
+`itineraryHeader`|`Object`|[Payroll - ItineraryHeader](#payroll---travelallowances---itineraryresultheader---itineraryheader)|Header with general information about the itinerary.
+`itineraryDerivedData`| `Object` | [Payroll - TravelAllowances - ItineraryResultHeader - ItineraryDerivedData](#payroll---travelallowances---itineraryresultheader---itineraryderiveddata)  | Itinerary Derived Data.
+`configurationCode`| `String`  | - | Configuration for the travel allowance calculation of the itinerary.
+`clientRateBundleCode`| `String`  | - | Client created rate bundle for the travel allowance calculation of the itinerary.
+`governmentRateBundleCode`| `String`  | - | Government delivered rate bundle for the travel allowance calculation of the itinerary.
+`isLegalGovernmentRateBundleCode`| `Boolean` | `true/false` | Defines if GovernmentRateBundleCode is predefined by TA service.
+
+### Payroll - TravelAllowances - ItineraryResultHeader - ItineraryHeader
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`| `String`  | -   |Identification of the company of the traveler.
+`configurationCode`| `String`  | -  |The configuration code used to calculate the settlement for the itinerary.
+`description`| `String`  | -   |Description of the itinerary.
+`id`| `Number`  | -  |Identification of the itinerary.
+`tripTypeCode`| `String`  | -  |Can be used to apply different calculation rules or allowance rates for different trip types.
+`userId`| `String`  | -  |Identification of the owner of the itinerary, i.e. the traveler.
+`startDate`| `String`  | - |Start date of the reimbursement interval for which per diems are granted. Used to calculate allowances when time-based constraints are configured. 
+`startTime`| `String`  | -  |Start time in UTC of the itinerary. Used to calculate allowances when time-based constraints are configured.
+`endDate`| `String`  | - |End time in UTC of the itinerary. Used to calculate allowances when time-based constraints are configured.
+`endTime`| `String`  | - |End date of the reimbursement interval. Used to calculate allowances when time-based constraints are configured.
+`numberOfDays`| `Number`  | - |Represents number of calendar days in the trip.
+`domestic`| `Boolean` | true/false |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
+
+### Payroll - TravelAllowances - ItineraryResultHeader - ItineraryDerivedData
+
+Name|Type|Format|Description
+---|---|---|---
+`startDate`| `String`  | -  |Start date of the itinerary.
+`startTime`| `String`  | -  |Start time of the itinerary.
+`endDate`| `String`  | - |End date of the itinerary.
+`endTime`| `String`  | - |End time of the itinerary.
+`startDateUtc`| `String`  | - |Start date in UTC of the itinerary.
+`startTimeUtc`| `String`  | - |End time in UTC of the itinerary.
+`endDateUtc`| `String`  | - |End date in UTC of the itinerary.
+`endTimeUtc`| `String`  | - |End time in UTC of the itinerary.
+`numberOfDays`| `Number`  | - |Represents number of calendar days in the trip.
+`userProfile`| `Object` | [Payroll - UserProfile](#payroll---userprofile) | User Profile information
+`domestic`| `Boolean` | true/false |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
+
+### Payroll - UserProfile
+
+Name|Type|Format|Description
+---|---|---|---
+`homeCountry`| `String`  | - |Home Country Code.
+`homeCurrency`| `String` | - |Home Currency Code.
 
 ## Invoice <a name="scinvoice"></a>
 
@@ -301,339 +577,6 @@ Name|Type|Format|Description
 `payee`|`String`|-|Alphanumeric. Either a company or an employee depending on the payment type. Maximum length 64 characters.
 `payer`|`String`|-|Alphanumeric. Either a company or an employee depending on the payment type. Maximum length 64 characters.
 `paymentCode`|`String`|-|Alphanumeric. The payment code for either a payee or payer. Maximum length 80 characters.
-
-# <a name="scobligation"></a>Obligation/Funds Reservation
-
-## <a name="screquestobligation"></a>Request Obligation
-
-### <a name="screquestobligationschema"></a>Request Obligation Schema
-
-| Name|Type| Format|Description |
-|----|---|---|---|
-| `instruction`| `Object` | [Instruction](#scinstruction) | The instruction to the financial system on expected handling of the obligation. |
-| `employee`| `Object` | [Request Employee](#screquestemployee) | Employee details for the travel request. |
-| `requestHeader` | `Object` | [Request Header](#screquestheader) | Travel Request header information. |
-| `requestEntry` | `Array` | Array of [Request Expense Entry](#screquestexpenseentry) | Request Entries associated with the Travel Request. |
-| `previousRevisionRequestHeader` | `Object` | [Request Header](#screquestheader) | Request Header of the previous committed version of the travel request obligation. Usually seen in UPDATE, and RELEASE of obligation. |
-| `previousRevisionRequestEntry` | `Array` | Array of [Request Expense Entry](#screquestexpenseentry) | Request Entries of the previous committed version of the travel request obligation. Usually seen in UPDATE, and RELEASE of obligation. |
-
-
-### <a name="scinstruction"></a>Instruction
-
-| Name|Type| Format|Description|
-|----|---|--|---|
-| `instruction`|`String` |-| Instruction to the financial system on expected handling obligation, create or revise a commitment for the enclosed contents respond with the result fundsCheck, attempt to create a commitment for the enclosed contents but do not commit respond with the result release, release all commitments related to this Request. |                                                                                                                                    
-
-### <a name="screquestemployee"></a>Request Employee
-
-
-| Name| Type| Format| Description |
-|-----|----|----|---|
-| `loginId` | `String` | - | The user’s login ID. |
-| `employeeCustom1Code` through `employeeCustom21Code` | `String` | - | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `employeeCustom1Value`through `employeeCustom21Value` | `String` | - | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `employeeId` | `String` | - | Alphanumeric. Employee ID often also serves as the employee’s Vendor ID for AP system integrations or payroll ID for payroll integrations. Maximum length 128 characters. |
-| `employeeFirstName` | `String` | - | Alphanumeric. First name of employee. Maximum length 32 characters. |
-| `employeeLastName` | `String` | - | Alphanumeric. Last name of employee. Maximum length 32 characters. |
-| `employeeMI` | `String` | - | Alphanumeric. Middle initial of employee. Maximum length 1 character. |
-| `employeeOrgUnit1Code `through `employeeOrgUnit6Code` | `String` | - | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `employeeOrgUnit1Value `through `employeeOrgUnit6Value` | `String` | - | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `employeeLedgerCode` | `String` | - | The user’s assigned account code ledger. |
-| `employeeReimbursementCurrency` | `String` | 3-letter ISO 4217 alpha code. | Valid three digit or letter currency code in the list of system reimbursement currencies. Length: 3 characters. |
-| `employeeCountryCode` | `String` | ISO 3166-1 alpha-2 country code. | Alphanumeric. The travel request country code. Example: United States is US. |
-| `isTest` | `String` | Y/N | Signifies if this report belongs to a test user in system. Y = test user, N = not a test user. |
-
-### <a name="screquestheader"></a>Request Header
-
-| Name| Type| Format| Description |
-|----|----|---|---|
-| `requestApprovalStatusCode` | `String` | - | The code for the approval status of the Request. Supported values: `NOT_SUBMITTED`, `SUBMITTED`, `APPROVED`, `CANCELED`, or `SENTBACK` |
-| `requestApproverId` | `String` | - | The approver UUID to whom the Request was sent. |
-| `requestLastApproverId` | `String` | - | The last approver UUID who approved the Request. |
-| `requestAuthorizedDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | For approved Request, the date at which the approval process was completed. |
-| `requestCreationDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The date the Request was created. |
-| `requestCustom1Code` through `requestCustom20Code` | `Custom Field` | - | The details from the Custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `requestCustom1Value` through `requestCustom20value` | `Custom Field` | - | The details from the Custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `requestEndDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The end date of the Request. |
-| `requestId` | `String` | UUID | The UUID of the Request. |
-| `requestPolicyId` | `String` | UUID | The policy Id that applies to the Request. |
-| `requestName` | `String` | - | The name of the Request. |
-| `requestKey` | `String` | 4 to 6 alphanumeric characters | The public key of the Request (unique per customer). |
-| `requestStartDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The start date of the Request. |
-| `requestSubmitDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The date the Request was submitted (last submit date in case of recall). |
-| `totalApprovedAmount` | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | The total amount of approved expected expenses in the Request, expressed in the reimbursement currency of the employee at the time they created the Request. |
-| `requestTypeCode` | `String` | - | The code of the type inherited from the Request Policy type. Possible values: `Authorization`, `Cash Advance`, `Travel`. |
-| `revisionNumber` | `Number` | - | Report revision number. This will be used to track changes made to posted expenses. Default value is 1. Maximum length 32 characters. |
-| `versionId` | `Number` | - | The version of the FI Document (Value :4). Maximum length 32 characters. |
-| `commitmentReference` | `Array of `[`Posting Document Details`](#scpostingdocumentdetails) | - | **Optional** Unique Commitment identifier sent by the financial system as part of the posting document details collection from the confirmation status event payload. To be used during updates only. |
-| `fgiRefId` | `String` | - | Unique identifier sent by FGI to identify the obligation transaction. |
-
-### <a name="screquestexpenseentry"></a>Request Expense Entry
-
-| Name| Type| Format| Description|
-|----|----|---|---|
-| `allocation` | `Array` | `Array of`[`Request Allocation`](#screquestallocation) | The details of the allocations for this expected expense. |
-| `entryAccountCode` | `String` | - | Alphanumeric. Contains the expense type account code.Maximum length 48 characters. |
-| `entryApprovedAmount` | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | The approved amount of the expected expense entry, in the transaction currency of the Request. |
-| `entryCustom1Code` through `entryCustom40Code` | `CustomField` | - | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `entryCustom1Value` through `entryCustom40Value` | `CustomField` | - | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `expenseTypeCode` | `String` | - | The expense type code of the entry. **Required** for expected expenses, automatically set for segments depending on the `SegmentType` code. |
-| `expenseTypeName` | `String` | - | The expense type name of the entry. **Required** for expected expenses, automatically set for segments depending on the `SegmentType` code. |
-| `entryId` | `String` | - | The unique identifier of the expected expense entry. |
-| `entryCommitmentReference` | `Array of `[`Posting Document Details`](#scpostingdocumentdetails) | - | **Optional**Commitment Identifier published by the financial system corresponding to the entry as part of the posting document details collection from the confirmation status event payload. To be used during updates only. |
-| `entryLastModifiedDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | The date when this expected expense was last modified. |
-| `entryLocationCityName` | `String` | - | Alphanumeric. Report entry location city name. Maximum length 64 characters. |
-| `entryLocationName` | `String` | - | Alphanumeric. Report entry location name. Maximum length 64 characters. |
-| `entryOrgUnit1Code` through `entryOrgUnit6Code` | `CustomField` | - | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `entryOrgUnit1Value` through `entryOrgUnit6Value` | `CustomField` | - | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `entrySource` | `Enum` | - | The source that created the expected expense. Supported values: `CASH_ADVANCE` or `TRAVEL_ALLOWANCE`. This field will be empty in any other case |
-| `entryTransactionDate` | `Timestamp` | [RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'` | **Required** The date of the transaction. |
-| `paymentTypeCode` | `String` | - | Represents the payment type code applied to the Request. |
-| `vendorId` | `String` | - | The vendor identifier of the expected expense entry. |
-
-### <a name="screquestallocation"></a>Request Allocation
-
-| Name| Type| Format| Description|
-|---|----|---|---|
-| `allocationId` | `String` | - | The unique allocation identifier. |
-| `allocationCommitmentReference` | `Array of `[`Posting Document Details`](#scpostingdocumentdetails) | - | **Optional** Allocation commitment identifier supplied by the financial system as part of the posting document details collection from the confirmation status event payload. To be used during updates only. |
-| `allocationCustom1Code `through `allocationCustom20Code` | `String` | - | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters. |
-| `allocationCustom1Value `through `allocationCustom20Value` | `String` | - | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `allocationPercentage` | `Number` | - | The percentage of the total expected expense that this allocation represents. Maximum length 11 characters. |
-| `allocationAmount` | `Number` | - | The amount of the allocation calculated with the percentage value multiplied by the transaction amount on the expected expense. This amount is given in the transaction’s currency and rounded to eight digits after the decimal point. |
-| `allocationAccountResolverKey` | `String` | - | Calculated request allocation account resolver key. |
-
-## <a name="scpostingdocumentdetails"></a>Posting Documents Details
-
-This data comes during confirmation posting document Details [`Event Data Schema - Confirmation`](#sceventdataschemaconfirmation).
-
-| Name| Type| Format| Description|
-|---|---|---|---|
-| `companyId`|`string`| - | External system organizational unit ID. Maximum 32 characters. |
-| `documentNumber`| `string` | - | External system document identifier. Maximum 80 characters.|
-| `fiscalYear` | `int32`  | - | External system fiscal year.|
-| `paymentRelevantLineItems`| `array` | Array of [Commitment Sources](#sccommitmentsources) | Optional Payment relevant line items.|
-| `postingDate`| `string` | `YYYY-MM-DD` | External system posting date.|
-
-## <a name="sccommitmentsources"></a>Commitment Sources
-
-| Name| Type| Format| Description|
-|---|---|---|---|
-|`type`|`enum`| - |Type of source DOCUMENT- Commitment corresponding to the document ,	ENTRY- Commitment relating to expense entry,	ALLOCATION- Commitment created for the allocation The unique identifier as per the type of source|
-| `id` | `string` | - |  [Id Of Document](#scidofdocument) Optional Parent identifier for the id field |
-| `parentId` | `string`  | - |[Parent Id Of Document](#scparentidofdocument) |
-
-
-## <a name="scidofdocument"></a>Id Of Document
-
-| source type | Request Identifiers| Report Identifiers |
-|---|---|---|
-| `DOCUMENT  ` |`requestId`| `reportId`|
-| `ENTRY`| `entryId` | `entryId` |
-| `ALLOCATION` | `allocationAccountResolverKey`  | `allocationAccountResolverKey`|
-
-## <a name="scparentidofdocument"></a>Parent Id Of Document
-
-| source type | Request Identifiers| Report Identifiers |
-|---|---|---|
-| `DOCUMENT  ` |`null`| `null`|
-| `ENTRY`| `requestId` | `reportId` |
-| `ALLOCATION` | `entryId` | `entryId`|
-
-## <a name="sceventdataschemaconfirmation"></a>Event Data Schema - Confirmation
-
-| Name| Type| Format | Description|
-|---|---|---|---|
-| `systemId`|`string`| - | The external system ID that acknowledged the documents. Maximum 50 characters. |
-| `docId`| `string` | - | Required The financial document ID to confirm. Maximum 32 characters.|
-| `overallPostingStatusCode` | `string`  | - | Required Posting status. VALUES: error or success.|
-| `postingDocs`| `array` | [Posting Document Details](#scpostingdocumentdetails) | Posting documents details, if any.|
-| `systemMessages`| `array` | [System Messages](#scsystemmessages)| Required Messages to post to the SAP Concur platform, if any.|
-
-## <a name="scsystemmessages"></a>System Messages
-
-| Name| Type| Format | Description|
-|---|---|---|---|
-| `concurTransactionLineItemId`| `string` | - | Report relevant line item id. |
-| `messageId`| `string` | - | External System message identifier.|
-| `messageLanguage` | `string` | - | Message Language code, example EN, FR.|
-| `messageLongText`| `array`  | - | Message text, will be posted on the audit trail in the SAP Concur platform. Maximum 1300 characters.|
-| `messageShortText`| `string` | -| Message text, will be posted on the audit trail in the SAP Concur platform. Maximum 1300 characters.|
-
-## Report Obligation
-
-## Schema
-
-| Name                           | Type     | Format                                                                    | Description                                                                                                                          |
-|--------------------------------|----------|---------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
-| instruction                    | `Object` | [Instruction](#scinstruction)                                             | The instruction to the financial system on expected handling of the obligation                                                       |
-| employee                       | `Object` | [Report Employee](#screportemployee)                                      | Employee details for the expense report                                                                                              |
-| `report`                       | `Object` | [Report Header](#screportheader)                                          | Expense report header information                                                                                                    |
-| `expenseEntry`                 | `Array`  | Array of [Report Entry](#screportentry)                                   | Expense Entries associated with the expense report                                                                                   |
-| `previousRevisionReportHeader` | `Object` | [Report Header](#screportheader)                                          | Report Header of the previous committed version of the expense report obligation. Usually seen in UPDATE, and RELEASE of obligation  |
-| `previousRevisionReportEntry`  | `Array`  | Array of [Report Entry](#screportentry)                                   | Report Entries of the previous committed version of the expense report obligation. Usually seen in UPDATE, and RELEASE of obligation |
-| `linkedRequestHeader`          | `Array`  | Array of [Request Header](#screquestheader)                               | Array of Request headers of the linked requests                                                                                      |
-| `linkedRequestEntry`           | `Array`  | Array of [Request Entry](#screquestentry)                                 | Array of the request expense entries linked with the report expense entries.                                                         |
-| `cashAdvanceApplication`       | Array    | Array of [Cash Advance Application Entry](#sccashadvanceapplicationentry) | Array of the cash advance application entries related with the expense report                                                        |
-
-## <a name="screportemployee"></a>Report Employee
-
-| Name                                                    | Type          | Format | Description                                                                                                                                                                                               |
-|---------------------------------------------------------|---------------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `employeeCustom1Code` through `employeeCustom21Code`    | `CustomField` | \-     | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.                                                                         |
-| `employeeCustom1Value `through `employeeCustom21Value`  | `CustomField` | \-     | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `employeeFirstName`                                     | `String`      | \-     | Alphanumeric. First name of employee. Maximum length 32 characters.                                                                                                                                       |
-| `employeeId`                                            | `String`      | \-     | Alphanumeric. Employee ID often also serves as the employee’s Vendor ID for AP system integrations or payroll ID for payroll integrations. Maximum length 128 characters.                                 |
-| `employeeLastName`                                      | `String`      | \-     | Alphanumeric. Last name of employee. Maximum length 32 characters.                                                                                                                                        |
-| `employeeMI`                                            | `String`      | \-     | Alphanumeric. Middle initial of employee. Maximum length 1 character.                                                                                                                                     |
-| `employeeOrgUnit1Code`through `employeeOrgUnit6Code`    | `CustomField` | \-     | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.                                                                         |
-| `employeeOrgUnit1Value `through `employeeOrgUnit6Value` | `CustomField` | \-     | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
-| `employeeReimbursementMethodCode`                         | `String`        | \-     | Employee Reimbursement method code.                                                                                                                                                                       |
-
-## <a name="screportheader"></a>Report Header
-
-| Name                                                | Type                                                                                                                             | Format                                                                                                                                        | Description                                                                                                                                                                                                                                                                                                |
-|-----------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `cashAdvanceReturnsAmount`                          | `Number`                                                                                                                         | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Currency. Amount of cash advance returned.                                                                                                                                                                                                                                                                 |
-| `employeeCurrencyAlphaCode`                         | `String`                                                                                                                         | 3-letter ISO 4217 alpha code.                                                                                                                 | Alphanumeric. Reimbursement currency.                                                                                                                                                                                                                                                                      |
-| `homeCountryCode`                                   | `String`                                                                                                                         | ISO 3166-1 alpha-2 country code.                                                                                                              | Alphanumeric. The report country. Example: United States is US.                                                                                                                                                                                                                                            |
-| `isTest`                                            | `String`                                                                                                                         | Y/N                                                                                                                                           | Signifies if this report belongs to a test user in system. Y = test user, N = not a test user.                                                                                                                                                                                                             |
-| `ledgerCode`                                        | `String`                                                                                                                         | \-                                                                                                                                            | Alphanumeric. External accounting system ID. Maximum length 20 characters.                                                                                                                                                                                                                                 |
-| `payrollPayIndicator`                               | `String`                                                                                                                         | Y/N                                                                                                                                           | This field indicates whether the expense group the report user belongs to is configured to reimburse employees using Payroll.                                                                                                                                                                              |
-| `payrollPaymentClearingAccountCode`                 | `String`                                                                                                                         | \-                                                                                                                                            | Alphanumeric. SAP customers who reimburse their employees via Payroll need to capture a payroll clearing account code as part of the accounting entry during the financial posting process. Maximum length 128 characters.                                                                                 |
-| `reportLastApproverId`                              | `String`                                                                                                                         | \-                                                                                                                                            | The last approver UUID who approved the Expense Report                                                                                                                                                                                                                                                     |
-| `reportCreationDate`                                | `String`                                                                                                                         | yyyy-mm-ddThr:min:sec.msZ                                                                                                                     | Date the report was created. Maximum length 24 characters.                                                                                                                                                                                                                                                 |
-| `reportCustom1Code` through `reportCustom20Code`    | `CustomField`                                                                                                                    | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.                                                                                                                                                                          |
-| `reportCustom1Value` through `reportCustom20Value`  | `CustomField`                                                                                                                    | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.                                                                                                  |
-| `reportEndDate`                                     | `String`                                                                                                                         | yyyy-mm-ddThr:min:sec.msZ                                                                                                                     | End date from the report header. Can be imported from trip data or manually entered.                                                                                                                                                                                                                       |
-| `reportId`                                          | `String`                                                                                                                         | Unique (across all SAP Concur clients) 32 character alphanumeric.                                                                             | Alphanumeric. Often used as a voucher number when integrating across AP systems.                                                                                                                                                                                                                           |
-| `reportKey`                                         | `Number`                                                                                                                         | \-                                                                                                                                            | A unique ID (within a single SAP Concur client’s company) generated by the system. An alternative to the `reportId`. Starts with 1 and increments with each expense report. Maximum length 11 characters.                                                                                                  |
-| `reportName`                                        | `String`                                                                                                                         | \-                                                                                                                                            | Alphanumeric. Report name assigned by employee. Maximum length 40 characters.                                                                                                                                                                                                                              |
-| `reportNumber`                                      | `String`                                                                                                                         | \-                                                                                                                                            | Alphanumeric - all uppercase. Unique 6 character code identifying the report. Maximum length 6 characters.                                                                                                                                                                                                 |
-| `reportOrgUnit1Code` through `reportOrgUnit6Code`   | `CustomField`                                                                                                                    | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. The second segment in the fully qualified GL string should use Org Unit 2, except the natural account field. The natural account data is stored in column 167 of the SAE. Maximum length 48 characters. |
-| `reportOrgUnit1Value` through `reportOrgUnit6Value` | `CustomField`                                                                                                                    | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.                                                                                                  |
-| `reportPaymentProcessingDate`                       | `String`                                                                                                                         | yyyy-mm-ddThr:min:sec.msZ                                                                                                                     | The date that the report completed all approvals and was ready to be extracted for payment. Maximum length 24 characters.                                                                                                                                                                                  |
-| `reportStartDate`                                   | `String`                                                                                                                         | \-                                                                                                                                            | Report start date. Maximum length 24 characters.                                                                                                                                                                                                                                                           |
-| `reportSubmitDate`                                  | `String`                                                                                                                         | \-                                                                                                                                            | Date/time the employee submitted the report for approval. Maximum length 24 characters.                                                                                                                                                                                                                    |
-| `reportUserDefinedDate`                             | `String`                                                                                                                         | \-                                                                                                                                            | Custom date/time specified by user. Maximum length 24 characters.                                                                                                                                                                                                                                          |
-| `revisionNumber`                                    | `Number`                                                                                                                         | \-                                                                                                                                            | Report revision number. This will be used to track changes made to posted expenses. Default value is 1. Maximum length 32 characters.                                                                                                                                                                      |
-| `totalApprovedAmount`                               | `Number`                                                                                                                         | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Total approved amount of the report.                                                                                                                                                                                                                                                                       |
-| `policyId`                                          | `String`                                                                                                                         | UUID                                                                                                                                          | The policy Id that applies to the Expense Report.                                                                                                                                                                                                                                                          |
-| `versionId`                                         | `Number`                                                                                                                         | \-                                                                                                                                            | The version of the FI Document, which is the same as the version of the API endpoint. Maximum length 32 characters.                                                                                                                                                                                        |
-| `commitmentReference`                               | `Array of `[`Posting Document Details`](#scpostingdocumentdetails) | \-                                                                                                                                            | **Optional**Unique Commitment identifier sent by the financial system as part of the posting document details collection from the confirmation status event payload. To be used during updates only                                                                                                        |
-| `fgiRefId`                                          | `String`                                                                                                                         | \-                                                                                                                                            | Unique identifier sent by FGI to identify the obligation transaction.                                                                                                                                                                                                                                      |
-| `requestId`                                         | `Array`                                                                                                                          | \-                                                                                                                                            | Array of linked request identifiers                                                                                                                                                                                                                                                                        |
-
-## <a name="screportentry"></a>Report Entry
-
-| Name                                              | Type                                                                                                                                                                    | Format                                                                                                                                        | Description                                                                                                                                                                                                                                                                                                                                                                              |
-|---------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `allocation`                                      | `Array`                                                                                                                                                                 | `Array of `[`Report Allocation`](#screportallocation)                                                                                         | The details of the allocations for this expense.                                                                                                                                                                                                                                                                                                                                         |
-| `cardAccountID`                                   | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. ID for the card account. This can be used by the receiving system to condense transactions associated with this card. Maximum length 32 characters.                                                                                                                                                                                                                        |
-| `cardProgramTypeCode`                             | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. The code used to identify the card’s program type. Maximum length 5 characters.                                                                                                                                                                                                                                                                                            |
-| `cardStatementPeriodEndDate`                      | `String`                                                                                                                                                                | yyyy-mm-ddThr:min:sec.msZ                                                                                                                     | The date of the end of the statement period. Maximum length 24 characters.                                                                                                                                                                                                                                                                                                               |
-| `cardStatementPeriodStartDate`                    | `String`                                                                                                                                                                | yyyy-mm-ddThr:min:sec.msZ                                                                                                                     | The date of the start of the statement period. Maximum length 24 characters.                                                                                                                                                                                                                                                                                                             |
-| `cardTransactionAmount`                           | `Number`                                                                                                                                                                | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Currency. Amount of the charge in the spend currency.                                                                                                                                                                                                                                                                                                                                    |
-| `cardTransactionCurrency`                         | `String`                                                                                                                                                                | ISO 4217 3-letter alpha code.                                                                                                                 | Alphanumeric. Currency code for the spend currency.                                                                                                                                                                                                                                                                                                                                      |
-| `cardTransactionID`                               | `String`                                                                                                                                                                | \-                                                                                                                                            | Reference number from the credit card vendor. Maximum length 32 characters.                                                                                                                                                                                                                                                                                                              |
-| `cardTransactionPostedAmount`                     | `Number`                                                                                                                                                                | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Amount of the charge in the billing currency of the card.                                                                                                                                                                                                                                                                                                                                |
-| `cardTransactionPostedCurrency`                   | `String`                                                                                                                                                                | ISO 4217 3-letter alpha code.                                                                                                                 | Alphanumeric. Currency code for the card billing currency.                                                                                                                                                                                                                                                                                                                               |
-| `clearingAccountCode`                             | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Contains the expense type account code. - or - If a CBCP Personal expense, the company card clearing account code. - or - If charge is tied to a Statement Report, and accounting code is set for Company Billed card account, the card’s accounting code as specified in the **Account Code** field when creating or editing a CBS account. Maximum length 20 characters. |
-| `entryApprovedAmount`                             | `Number`                                                                                                                                                                | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Currency. Amount approved in the reimbursement currency.                                                                                                                                                                                                                                                                                                                                 |
-| `entryCountryCode`                                | `String`                                                                                                                                                                | 2-character country code.                                                                                                                     | Alphanumeric. Report entry country code.                                                                                                                                                                                                                                                                                                                                                 |
-| `entryCountrySubCode`                             | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Report entry country sub code. Maximum length 6 characters.                                                                                                                                                                                                                                                                                                                |
-| `entryCurrAlphaCode`                              | `String`                                                                                                                                                                | ISO 4217 3-letter alpha code.                                                                                                                 | Alphanumeric. Currency ISO alpha code for the spend currency if not an imported credit card or the invoice currency if this is a credit card. Maximum length 4 characters.                                                                                                                                                                                                               |
-| `entryCustom1Code` through `entryCustom40Code`    | `CustomField`                                                                                                                                                           | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.                                                                                                                                                                                                                                                        |
-| `entryCustom1Value` through `entryCustom40Value`  | `CustomField`                                                                                                                                                           | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.                                                                                                                                                                                |
-| `entryDate`                                       | `String`                                                                                                                                                                | yyyy-mm-ddThr:min:sec.msZ                                                                                                                     | Date that this expense was incurred (when the money was spent or credit card receipt date).                                                                                                                                                                                                                                                                                              |
-| `entryDescription`                                | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Expense description as entered by the employee. Maximum length 64 characters.                                                                                                                                                                                                                                                                                              |
-| `entryElectronicReceiptId`                        | `String`                                                                                                                                                                | \-                                                                                                                                            | GUUID. Electronic receipt ID. Maximum length 24 characters.                                                                                                                                                                                                                                                                                                                              |
-| `entryExchangeRate`                               | `Number`                                                                                                                                                                | \-                                                                                                                                            | Rate used to convert from the report entry (spend) currency to the report (reimbursement) currency. Maximum length 23 characters.                                                                                                                                                                                                                                                        |
-| `entryExchangeRateDirection`                      | `String`                                                                                                                                                                | M/D                                                                                                                                           | Alphanumeric. The direction of the exchange rate conversion. Either: M = Multiply or D = Divide.                                                                                                                                                                                                                                                                                         |
-| `entryId`                                         | `String`                                                                                                                                                                | \-                                                                                                                                            | Report entry sync GUUID unique key. Maximum length 32 characters.                                                                                                                                                                                                                                                                                                                        |
-| `entryCommitmentReference`                        | `Array of `[`Posting Document Details`](#scpostingdocumentdetails) | \-                                                                                                                                            | **Optional** Commitment Identifier published by the financial system corresponding to the entry as part of the posting document details collection from the confirmation status event payload. To be used during updates only                                                                                                                                                            |
-| `entryIsBillable`                                 | `String`                                                                                                                                                                | Y/N                                                                                                                                           | Yes or no is the expense billable.                                                                                                                                                                                                                                                                                                                                                       |
-| `entryIsPersonal`                                 | `String`                                                                                                                                                                | Y/N                                                                                                                                           | Yes or no is the expense personal.                                                                                                                                                                                                                                                                                                                                                       |
-| `entryLocationCityName`                           | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Report entry location city name. Maximum length 64 characters.                                                                                                                                                                                                                                                                                                             |
-| `entryLocationName`                               | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Report entry location name. Maximum length 64 characters.                                                                                                                                                                                                                                                                                                                  |
-| `entryOrgUnit1Value` through `entryOrgUnit6Value` | `CustomField`                                                                                                                                                           | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.                                                                                                                                                                                |
-| `entryOrgUnit1Code` through `entryOrgUnit6Code`   | `CustomField`                                                                                                                                                           | \-                                                                                                                                            | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.                                                                                                                                                                                                                                                        |
-| `entryReceiptId`                                  | `String`                                                                                                                                                                | \-                                                                                                                                            | GUUID. Non-electronic receipt image. Maximum length 32 characters.                                                                                                                                                                                                                                                                                                                       |
-| `entryReceiptType`                                | `String`                                                                                                                                                                | T/R/N                                                                                                                                         | Alphanumeric. One of these: T = Tax receipt, R = Regular receipt, or N = No receipt.                                                                                                                                                                                                                                                                                                     |
-| `entrySupplierTaxID`                              | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Report entry XML receipt supplier tax ID. Maximum length 64 characters.                                                                                                                                                                                                                                                                                                    |
-| `entryUuid`                                       | `String`                                                                                                                                                                | \-                                                                                                                                            | Report Entry XML Receipt UUID. Maximum length 32 characters.                                                                                                                                                                                                                                                                                                                             |
-| `entryVendorCode`                                 | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Vendor name list short code. Maximum length 32 characters.                                                                                                                                                                                                                                                                                                                 |
-| `entryVendorDescription`                          | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Vendor description. Maximum length 64 characters.                                                                                                                                                                                                                                                                                                                          |
-| `expensePayIndicator`                             | `String`                                                                                                                                                                | Either: 1 = Expense Pay or blank = not Expense Pay.                                                                                           | Indicates whether Expense Pay reimbursed this journal entry.                                                                                                                                                                                                                                                                                                                             |
-| `expenseTypeCode`                                 | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Code for the expense type. Maximum length 5 characters.                                                                                                                                                                                                                                                                                                                    |
-| `expenseTypeName`                                 | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Expense type name. Maximum length 64 characters.                                                                                                                                                                                                                                                                                                                           |
-| `legacyEntryId`                                   | `Number`                                                                                                                                                                | \-                                                                                                                                            | Legacy report entry key. Maximum length 11 characters.                                                                                                                                                                                                                                                                                                                                   |
-| `liabilityAccountCode`                            | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. The liability account code assigned to the funding account paying this entry. Maximum length 48 characters.                                                                                                                                                                                                                                                                |
-| `offsetPayType`                                   | `String`                                                                                                                                                                | Y/N                                                                                                                                           | Use Offsets. Y = Yes, N= No.                                                                                                                                                                                                                                                                                                                                                             |
-| `reportEntryPatKey`                               | `String`                                                                                                                                                                | \-                                                                                                                                            | Alphanumeric. Report Entry Payment Code. Maximum length 4 characters.                                                                                                                                                                                                                                                                                                                    |
-| `linkedRequestId`                                 | `String`                                                                                                                                                                | \-                                                                                                                                            | Travel request identifier linked to this report expense entry                                                                                                                                                                                                                                                                                                                            |
-| `linkedRequestEntryId`                            | `String`                                                                                                                                                                | \-                                                                                                                                            | Travel request expense entry identifier linked to this report expense entry                                                                                                                                                                                                                                                                                                              |
-
-## <a name="screportallocation"></a>Report Allocation
-
-| Name                                                     | Type                                                                                                                                                                 | Format                           | Description                                                                                                                                                                                                                                                                    |
-|----------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `allocationCustom1Code `through `allocationCustom20Code` | `String`                                                                                                                                                             | \-                               | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.                                                                                                                                              |
-| `allocationCustom1Value `through `allocationCustom20Value` | `String`                                                                                                                                                             | \-                               | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters.                                                                      |
-| `allocationId`                                           | `String`                                                                                                                                                             | \-                               | GUUID. System-generated unique key for this allocation record. Maximuml length 32 characters.                                                                                                                                                                                  |
-| `allocationCommitmentReference`                          | `Array of `[`Posting Document Details`](#scpostingdocumentdetails) | \-                               | **Optional** Allocation commitment identifier supplied by the financial system as part of the posting document details collection from the confirmation status event payload. To be used during updates only                                                                   |
-| `allocationPercentage`                                   | `Number`                                                                                                                                                             | \-                               | Percent of the report entry assigned to this allocation record. Maximum length 11 characters.                                                                                                                                                                                  |
-| `allocationAccountResolverKey`                           | `String`                                                                                                                                                             | UUIDv5                           | Calculated request allocation account resolver key in UUIDv5 format. Refer to the [algorithm](https://wiki.one.int.sap/wiki/pages/createpage.action?spaceKey=CONEENGT5&title=resolver&linkCreation=true&fromPageId=3301105310) to calculate the key. Max length 36 characters. |
-| `journal`                                                | `Array`                                                                                                                                                              | [Allocation Journal](#scallocationjournal) | List of journal entries for the allocation                                                                                                                                                                                                                                     |
-| `tax`                                                    | `Array`                                                                                                                                                              | [Allocation Tax](#allocationtax) | List of tax entries for the allocation                                                                                                                                                                                                                                         |
-
-## <a name="screportallocationjournal"></a>Report Allocation Journal
-
-| Name                            | Type     | Format (length)                                                                                                                               | Description                                                                                                                                                                                                                                                                                                                                                                             |
-|---------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `accountingTransactionType`     | `String` | \-                                                                                                                                            | Alphanumeric. This is the Intuit QuickBooks specific transaction value. It will be null or a value (GJ, CC, or BILL) depending on if it’s a `journalpayee` or `journalpayer`. This determines if a transaction should be posted as Bill or Credit Card in QuickBooks. Maximum length 24 characters.                                                                                     |
-| `amountGross`                   | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Gross Amount for this detail row.                                                                                                                                                                                                                                                                                                                                                       |
-| `amountGrossCard`               | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Amount due to the company card of either CBCP or IBCP type for this detail row.                                                                                                                                                                                                                                                                                                         |
-| `amountNetOfReclaim`            | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Currency. Gross Journal amount subtracting reclaimable tax. Or the Net Journal amount adding non-reclaimable tax.                                                                                                                                                                                                                                                                       |
-| `amountNetOfTax`                | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Currency. Allocated net of reclaim tax. You get this by starting from the net and adding the tax that is not reclaimable, or starting with the gross and subtracting reclaimable.                                                                                                                                                                                                       |
-| `cardTransactionReferenceNumber` | `Number` | \-                                                                                                                                            | Reference number from the credit card vendor. Maximum length 64 characters.                                                                                                                                                                                                                                                                                                             |
-| `journalAccountCode`            | `String` | \-                                                                                                                                            | Alphanumeric. Contains the expense type account code. - or - If a CBCP Personal expense, the company card clearing account code. - or - If charge is tied to a Statement Report, and accounting code is set for Company Billed card account, the card’s accounting code as specified in the **Account Code**field when creating or editing a CBS account. Maximum length 48 characters. |
-| `journalPayee`                  | `String` | \-                                                                                                                                            | Alphanumeric. Payment code name for the payee. Maximum length 4 characters.                                                                                                                                                                                                                                                                                                             |
-| `journalPayer`                  | `String` | \-                                                                                                                                            | Alphanumeric. Payment code name for the payer. Maximum length 4 characters.                                                                                                                                                                                                                                                                                                             |
-| `taxGuid`                       | `Array`  | \-                                                                                                                                            | Array of tax GUID. List of unique tax identifiers associated with the report entry allocation. Maximum length 32 characters.                                                                                                                                                                                                                                                            |
-
-## <a name="screportallocationtax"></a>Report Allocation Tax
-
-| Name                   | Type     | Format                          | Description                                                    |
-|------------------------|----------|---------------------------------|----------------------------------------------------------------|
-| `taxReclaimCode`       | `String` | \-                              | The tax reclaim code. Maximum length: 20 characters            |
-| `amountTax`            | `Number` | `double`                        | The tax transaction amount.                                    |
-| `taxSource`            | `String` | \-                              | The source for the tax                                         |
-| `taxAuthorityLabel`    | `String` | \-                              | The name of the tax authority.                                 |
-| `amountReclaim`        | `Number` | `double`                        | The tax reclaim transaction amount.                            |
-| `locationCountryCode`  | `String` | ISO 3166-1 alpha-2 country code | The tax location country code.                                 |
-| `locationCountrySubCode` | `String` | \-                              | The tax location country sub code. Maximum length 6 characters. |
-| `taxCode`              | `String` | \-                              | The tax code. Maximum length: 20 characters                    |
-| `nonDomesticCode`      | `String` | \-                              | The non domestic tax code                                      |
-| `taxGuid`              | `String` | \-                              | Unique tax identifier associated with this tax entry           |
-
-## <a name="screportcashadvanceapplication"></a>Report Cash Advance Application
-
-| Name                             | Type     | Format                                                                                                                                        | Description                                                                                                                                                                                |
-|----------------------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `cashAdvanceApplicationAmount`   | `Number` | Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field. | Currency. Cash advance utilized amount.                                                                                                                                                    |
-| `cashAdvanceClearingAccountCode` | `String` | \-                                                                                                                                            | Alphanumeric. The Account Code is the clearing account code which was configured for the employee in the profile. Maximum length 48 characters.                                            |
-| `cashAdvanceId`                  | `String` | \-                                                                                                                                            | GUUID. Unique system ID assigned to the cash advance. Maximum length 32 characters.                                                                                                        |
-| `cashAdvanceTransactionType`     | `Number` | \-                                                                                                                                            | Type of transaction: 1 = Issue or return to administrator, 2 = Application, including cash advance return expense within a report, or 3 = System cash advance, from balance carry forward. |
-
-## <a name="scpostingdocumentdetails"></a>Posting Documents Details
-
-| Name             | Type     | Format       | Description                                                    |
-|:-----------------|:---------|:-------------|:---------------------------------------------------------------|
-| `companyId`      | `string` | \-           | External system organizational unit ID. Maximum 32 characters. |
-| `documentNumber` | `string` | \-           | External system document identifier. Maximum 80 characters.    |
-| `fiscalYear`     | `int32`  | \-           | External system fiscal year.                                   |
-| `postingDate`    | `string` | `YYYY-MM-DD` | External system posting date.                                  |
 
 # <a name="scallocationaccountresolverkey"></a>Allocation Account Resolver Key
 
