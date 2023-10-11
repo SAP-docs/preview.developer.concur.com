@@ -669,186 +669,176 @@ Credit Card Vendor|-|USD 284
 
  
 ## Funds Reservation/Obligation
+The use case examples below illustrate Funds and Grants Integration (FGI) scenarios and the related records of Funds Reservation and Funds Check. The use case documentation is not meant to be a comprehensive list of all use cases and FGI scenarios. However, the JSON from FIS will provide all the required data to support all potential use cases.
 
-The use case examples below illustrate Funds and Grants Integration (FGI) scenarios and the related records of Funds Reservation and Funds Check. The use case documentation is not meant to be a comprehensive list of all use cases and FGI scenarios. However, the JSON from FIS will provide all the required data to support all potential financial use cases.
+
+
+Travel Request and Expense Report identifies documents that are eligible for FGI based on entity and the expense group configuration.
 
 ### Funds Reservation on Request
 
-When the Request is created, the employee group configuration is evaluated to determine if FGI is enabled. During the workflow when the Funds Reservation step is reached, the workflow is paused, and a Request  document payload is made available to the financial system via the FIS API.
+Consider a Request that includes one or more Funds Reservation step in the workflow.
 
-#### Example
+**Sample request workflow Set Up**
 
-The Request with one or more Funds Reservation in the Request workflow.
-
-### Sample Set Up
-
-*	Funds reservation step right after submit.
-*	Funds reservation step after Manager approval.
+1. Funds reservation step right after submit.
+2. Funds reservation step after Manager approval.
  
 Travel Request with one expense item: Laundry – USD 1200.
  
-**Request Record in the SAP Concur System**
+Request Record in the SAP Concur System
  
 Request ID|	Expense Entry|Amount
 ---|---|---
 FGI1|	Laundry|	$1200
 
-After Request has been submitted, during the Funds Reservation step in the workflow, a Request Payload with instruction "obligate" is made available to the financial system via the FIS API.
+**1. Funds Reservation in the Financial System after Submit**
+
+Following the submission of a request, at the Funds Reservation step of the workflow, a request payload is provided to the financial system through FIS API, containing the instruction "obligate."
 
 [**Request Funds Reservation JSON Example**](json/FI-API-FundsReservation-RequestID-D5448EFC253CD04C955F277013E8AA11-Example-1.0.0.json)
- 
-### Funds Reservation in the Financial System after Submit
 
-Once the Request Payload with instruction "obligate" is received, the financial system sends acknowledgement back to the SAP Concur system.
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-0ba77eb2cf6240beb7dac99632fd6d8a-Example-1.0.0.json)
- 
-The Financial system attempts to reserve funds against the details in the Request Payload.
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
+
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
+
+The Financial system attempts to reserve funds against the details in the request payload.
 Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-0463835510d740de873752c00347b3d1-Example-1.0.0.json)
- 
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
- 
-### Funds Reservation in the Financial System after Manager Approval
+**2. Funds Reservation in the Financial System after Manager Approval**
+
 During the second Funds Reservation workflow step,
 
-#### Case 1
+**Case 1**
+
 Request was modified. The expense entry Laundry is updated with– 1300 USD
 
-The Travel Request payload with instruction "obligate" is made available to the financial system via the FIS API.
+Following the submission of a request, at the Funds Reservation step of the workflow, a request payload is provided to the financial system through FIS API, containing the instruction "obligate".
 
 [**Request Funds Reservation JSON Example**](json/FI-API-FundsReservation-RequestID-D5448EFC253CD04C955F277013E8AA11-Example-1.0.1.json)
 
-Once the Request Payload with instruction "obligate" is received, the financial system sends acknowledgement back to the SAP Concur system.
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-60f0d6afda754eb8b18b73847fee55f0-Example-1.0.1.json)
- 
-The Financial system attempts to update the funds reservation against the details in the Request Obligation.
-If successful/unsuccessful, the financial system responds with a message.
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-fa55b544ff334268ac4b288dec10deb7-Example-1.0.1.json)
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
-#### Case 2
-No changes in the Travel Request. 
-The Travel Request payload with instruction "obligate" is made available to the financial system via the FIS API.
+The Financial system attempts to reserve funds against the details in the request payload.
+Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
+
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
+
+
+**Case 2**
+
+No changes in the Travel Request.
+
+Following the submission of a request, at the Funds Reservation step of the workflow, a request payload is provided to the financial system through FIS API, containing the instruction "obligate".
 
 [**Request Funds Reservation JSON Example**](json/FI-API-FundsReservation-RequestID-44FBE24939BA8148ADBD88B80C721C59-Example-1.0.2.json)
 
-Once the Request Payload with instruction "obligate" is received, the financial system sends acknowledgement back to the SAP Concur system.
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-26f00d0618594923a9f66cc6473560dd-Example-1.0.2.json)
+Once the financial system receives the document, as there are no new funds to reserve the financial system sends acknowledgement and confirmation back to the SAP Concur system.
 
-As there is no change in the details of Request, there will not be any further funds reserved in the Financial system.  
-The Financial System will provide a corresponding message to indicate whether the operation was successful or not.
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-8423f1f533cd439eb4d5fbc8528dd8a0-Example-1.0.2.json)
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
-[**Release Funds Reserved on Request**](json/FI-API-FundsReservation-release-44FBE24939BA8148ADBD88B80C721C59-Example-1.0.2.json)
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
-#### Option 1
-When a Request is closed, FGI evaluates the status of all linked Reports. 
+**Request Release**
 
-* When all the linked Reports are paid, release of funds reserved in Request is initiated.
-* A Request Payload with instruction "release" is made available to the financial system via the FIS API.
+Request release takes place at two different scenarios:
 
-#### Option 2
-When a Request is deleted, a Request Payload with instruction "release" is made available to the financial system via the FIS API.
+1. When a Request is closed, FGI evaluates the status of all linked Reports. 
+
+   1. When all the linked Reports are paid, release of funds reserved in Request is initiated. 
+   2. A request payload is provided to the financial system through FIS API, containing the instruction "release".
+  
+2. When a Request is deleted, a request payload is provided to the financial system through FIS API, containing the instruction "release".
 
 [**Release JSON Example**](json/FI-API-FundsReservation-release-D5448EFC253CD04C955F277013E8AA11-Example-1.0.1.json)
- 
+
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/). 
 
 ### Funds Check on Request
 
-When the Request is created, the employee group configuration is evaluated to determine if FGI is enabled. During the workflow when the Funds Check step is reached, the workflow is paused, and a Request document with instruction "fundsCheck" is made available to the financial system via the FIS API.
- 
-#### Examples
+Consider a request that includes one or more Funds Check step in the workflow.
 
-*	Funds Check as a first step in the Request workflow after submit.
-* Funds Check after Funds Reservation step in the Request workflow.
- 
-#### Example 1: Funds Check as a first step in the Request workflow after submit.
+**Sample request workflow set up**
+1. Funds Check step right after submit. 
+2. Funds Check after Funds Reservation step in the Request workflow.
 
-### Sample Set Up
- 
 Travel Request with one expense item: Laundry – USD 1200.
- 
-**Request Record in the SAP Concur System**
+
+Request Record in the SAP Concur System
 
 Request ID|	Expense Entry|Amount
 ---|---|---
 FGI1|	Laundry|	$1200
- 
-After Request has been submitted, during the Funds Check Step in the workflow, a Payload with instruction "fundsCheck" is made available to the financial system via the FIS API.
+
+**1.  Funds Check step right after submit.**
+
+Following the submission of a request, at the Funds Check step of the workflow, a request payload is provided to the financial system through FIS API, containing the instruction "fundsCheck"
 
 [**Request Funds Check JSON Example**](json/FI-API-FundsReservation-fundsCheck-76C110739F662844897A282B5482F8CC-Example-1.0.0.json)
- 
 
-Once the Request  Payload with instruction "fundsCheck" is received, the financial system sends acknowledgement back to the SAP Concur system.
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-f06252c32aa44a338f7cd181433c4414-Example-1.0.0.json)
- 
-The Financial System determines if there are sufficient funds using the information in the Request Payload and will provide a corresponding message to indicate whether the operation was successful or not.
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-c2f8058fbe23461a978151471ddbe147-Example-1.0.0.json)
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
+The Financial System determines if there are sufficient funds using the information in the request payload and will provide a corresponding message to indicate whether the operation was successful or not.
 
-#### Example 2: Funds Check after Funds Reservation step in the Request workflow.
- 
-### Sample Set Up
- 
-Travel Request with one expense item: Laundry – USD 1200.
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
-**Request Record in the SAP Concur System**
+**2. Funds Check after Funds Reservation step in the Request workflow.**
 
-Request ID|	Expense Entry|Amount
----|---|---
-FGI1|	Laundry|	$1200
+Upon request submission, funds are successfully reserved at funds reservation step, proceeding to manager approval step followed by funds check step.
 
-When the request reaches the funds check step following funds reservation,
+**Case 1**
 
-#### Case 1
-Request was modified. The expense entry Laundry is updated with– 1300 USD
+Request was modified by manager and approved. The expense entry Laundry is updated with– 1100 USD
 
-The Request payload with instruction "fundsCheck" is made available to the financial system via the FIS API
+A request payload is provided to the financial system through FIS API, containing the instruction "fundsCheck"
 
-[Request Funds Reservation JSON Example]
+[**Request Funds Check JSON Example**](FI-API-FundsReservation-fundsCheck-6F8A4DD151900F48B313C7B85BDE47C7-Example-1.0.0.json)
 
+**Case 2**
+
+Request was approved by the manager without modification.
+
+A request payload is provided to the financial system through FIS API, containing the instruction "fundsCheck"
+
+[**Request Funds Check JSON Example**](json/FI-API-FundsReservation-requestID-BD101AAD08A97B4B80B137DE2657F1CF-Example-1.0.0.json)
 
 
-#### Case 2
-No changes in the Request. 
-The Request payload with instruction "fundsCheck" is made available to the financial system via the FIS API.
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-Request Funds Check JSON Example
-[**Request Obligation JSON Example**](json/FI-API-FundsReservation-requestID-BD101AAD08A97B4B80B137DE2657F1CF-Example-1.0.0.json)
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
 
-Once the Request  Payload with instruction "fundsCheck" is received, the financial system sends acknowledgement back to the SAP Concur system.
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-52291b93e91f4063a62d017591c977d2-Example-1.0.0.json)
- 
-The financial system checks for the funds availaiblity against the details in the Request Payload.
-will provide a corresponding message to indicate whether the operation was successful or not
+The Financial System determines if there are sufficient funds using the information in the request payload and will provide a corresponding message to indicate whether the operation was successful or not.
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-70d239cd99974436a72ab548c50e8160-Example-1.0.0.json)
- 
-During the Funds Check workflow step, Request Obligation Payload with instruction "fundsCheck" is made available to the financial system via the FIS API.
-
-[**Request Obligation JSON Example**](json/FI-API-FundsReservation-fundsCheck-BD101AAD08A97B4B80B137DE2657F1CF-Example-1.0.0.json)
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
 
 ### Funds Reservation on Report
 
-When an Expense Report originates from a Travel Request and the Request has been enabled for Funds and Grants Integration (FGI), the resulting report will automatically be enabled for FGI. Furthermore, when the Expense Report is not created from the Travel Request, the employee group configuration is evaluated to determine if FGI is enabled. During the workflow when the Funds Reservation step is reached, the workflow is paused, and a Report Payload with instruction "obligate" is made available to the financial system via the FIS API
+When an Expense Report originates from a Travel Request and the Request has been enabled for Funds and Grants Integration (FGI), the resulting report will automatically be enabled for FGI. Furthermore, when the Expense Report is not created from the Travel Request, Expense Report identifies documents that are eligible for FGI based on entity and the expense group configuration.
 
-#### Example
+Consider a Report that incldues one or more Funds Reservation in the Report workflow, linked to one or more Request.
 
-The Report with one or more Funds Reservation in the Report workflow, linked to one or more Request.
+**Sample Set Up**
 
-### Sample Set Up
-
-*	Funds reservation step right after submit.
-*	Funds reservation step after Manager approval.
+1. Funds reservation step right after submit. 
+2. Funds reservation step after Manager approval.
 
 FGI enabled Travel Request is created with one entry – Airfare – USD 4 is approved and an Expense Report is created with one expense item: Airfare – USD 4.
 
@@ -858,124 +848,124 @@ Report ID| 	Expense Entry |Amount
 ---|----------------|---
 FGI1| 	Airfare       |	$4
 
+**Funds Reservation right after Submit**
 
-### Funds Reservation in the Financial System after Submit
+Following the submission of a report, at the Funds Reservation step of the workflow, a report payload is provided to the financial system through FIS API, containing the instruction "obligate."
 
-After Report has been submitted, during the Funds Reservation step in the workflow, a Payload with instruction "obligate" is made available to the financial system via the FIS API.
+[**Report Funds Reservation JSON Example**](json/FI-API-FundsReservation-ReportID-B33CEEB1CE814808A06A-Example-1.0.0.json)
 
-[**Report Funds Reservation payload JSON Example**](json/FI-API-FundsReservation-ReportID-B33CEEB1CE814808A06A-Example-1.0.0.json)
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
 
-Once the Report Payload with instruction "obligate" is received, the financial system sends acknowledgement back to the SAP Concur system.
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-2ddb1fe8eb4944b2aa58a09e7e34c6de-Example-1.0.0.json)
+The Financial system attempts to reserve funds against the details in the report payload.
+Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
 
-The Financial system attempts to reserve funds based on the information contained in the Report payload. Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-7acc5976287c4ab5acf1bc7195a2593e-Example-1.0.0.json)
-
-### Funds Reservation in the Financial System after Manager Approval
+**Funds Reservation after Manager Approval**
 
 During the second Funds Reservation workflow step,
-#### Case 1
-Report was modified. The expense entry Airfare is updated with– $ 5.
 
-The Expense Report payload with instruction "obligate" is made available to the financial system via the FIS API.
+**Case 1**
+
+Report was modified. The expense entry Airfare is updated with– $ 3.
+
+At the Funds Reservation step of the workflow, a report payload is provided to the financial system through FIS API, containing the instruction "obligate".
+
 
 [**Report Funds Reservation JSON Example**](json/FI-API-FundsReservation-ReportID-B33CEEB1CE814808A06A-Example-1.0.1.json)
 
-#### Case 2
+**Case 2**
+
 No changes in the expense report.
 
-The Expense Report payload with instruction "obligate" is made available to the financial system via the FIS API.
+At the Funds Reservation step of the workflow, a report payload is provided to the financial system through FIS API, containing the instruction "obligate".
 
 [**Report Funds Reservation JSON Example**](json/FI-API-FundsReservation-ReportID-B33CEEB1CE814808A06A-Example-1.0.2.json)
 
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
 
-Once the Report Obligation Payload with instruction "obligate" is received, the financial system sends acknowledgement back to the SAP Concur system.
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-0da40f8164dd45668e4bb22c2badbaaf-Example-1.0.1.json)
+The Financial system attempts to reserve funds against the details in the report payload.
+Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
 
-The Financial system attempts to reserve funds based on the information contained in the Report payload.
- Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
-
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-1631bb98e78340699aa3b968757105fe-Example-1.0.1.json)
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
 **Release Report Commitment**
 
+Report release takes place at two different scenarios:
 
-#### Option 1
-When an Expense Report is deleted, the Funds Reserved against the deleted expense report is released.
-*	A Report Payload with instruction "release" is made available to the financial system via the FIS API.
-  
-#### Option 2
+1. When an Expense Report is deleted, the Funds Reserved against the deleted expense report is released. 
+   1. A Report Payload with instruction "release" is made available to the financial system via the FIS API. 
 
-* When a Report is paid or in other words, the employee is reimbursed, The remaining funds reserved(if any) against the Expense Report is released.
-* A Report Payload with instruction "release" is made available to the financial system via the FIS API.
+2. When a Report is paid or in other words, the employee is reimbursed, The remaining funds reserved(if any) against the Expense Report is released. 
+   1. A Report Payload with instruction "release" is made available to the financial system via the FIS API.
   
 [**Expense Report Release JSON Example**](json/FI-API-FundsReservation-release-99509FA3DC4F4159B557-Example-1.0.1.json)
 
-* Further, if the linked Request is closed, and this Request is linked to both Reports 1 and 2, both of which have been paid, then the remaining funds reserved(if any) against the Travel Request is also released.
-*	A Request Payload with instruction "release" is made available to the financial system via the FIS API.
-
-[**Travel Request Release JSON Example**]
 
 ### Funds Check on Report
+At the Funds Check step of the workflow, a report payload is provided to the financial system through FIS API, containing the instruction "fundsCheck"
 
-When an Expense Report originates from a Travel Request and the Request has been enabled for Funds and Grants Integration (FGI), the 
-resulting report will automatically be enabled for FGI. Furthermore, When the Expense Report is not created from the Travel Request, the employee group configuration is evaluated to determine if FGI is enabled. 
-During the workflow when the Funds Check step is reached, the workflow is paused, and a Report Payload with instruction "fundsCheck” is made available to the financial system via the FIS API.
+Consider a report with one or more Funds Check in the workflow,
 
-#### Examples
-* The Report with one or more Funds Check in the Report workflow,
+1. Funds Check step right after submit. 
+2. Funds Check step after Manager approval
 
-### Sample Set Up
-
-*	Funds Check step right after submit.
-*	Funds Check step after Manager approval
-
-#### Funds Check step right after submit
+**1. Funds Check step right after submit**
 
 Expense Report is created with one expense item: Laundry – USD 1200.
 
-**Report Record in the SAP Concur System**
+Report Record in the SAP Concur System
 
 Request ID| 	Expense Entry |Amount
 ---|----------------|---
 FGI1| 	Airfare       |	$4
 
-After Report has been submitted, during the Funds Check step in the workflow, a Payload with instruction "fundsCheck" is made available to the financial system via the FIS API.
+Following the submission of a report, at the Funds Check step of the workflow, a report payload is provided to the financial system through FIS API, containing the instruction "fundsCheck"
+
 
 [**Report Funds Check JSON Example**](json/FI-API-FundsReservation-fundsCheck-5537EA583D4E486D9469-Example-1.0.0.json)
 
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-Once the Report Payload with instruction "fundsCheck" is received, the financial system sends acknowledgement back to the SAP Concur system
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-e9fbf821f2c14e738fb2aa693a7e2dbc-Example-1.0.0.json)
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
 
-The Financial system check for the availability of funds based on the information contained in the Report payload. 
-Subsequently, the financial system will provide a corresponding message to indicate whether the operation was successful or not.
+The Financial System determines if there are sufficient funds using the information in the report payload and will provide a corresponding message to indicate whether the operation was successful or not.
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-3e0b085fae6841d58dbcaf7803b587ef-Example-1.0.0.json)
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
 
-####  Funds Check in the Financial System after Manager Approval
+**2. Funds Check in the Financial System after Manager Approval**
 
 During the second Funds Check workflow step,
-#### Case 1
-Report was modified. The expense entry Airfare is updated with– 5 USD
 
-The Expense Report payload with instruction "fundsCheck" is made available to the financial system via the FIS API.
+**Case 1**
+
+Report was modified by manager and approved. The expense entry Laundry is updated with– 3 USD
+
+A report payload is provided to the financial system through FIS API, containing the instruction "fundsCheck".
+
 [**Report Funds Check JSON Example**](json/FI-API-FundsReservation-fundsCheck-5537EA583D4E486D9469-Example-1.0.1.json)
 
-#### Case 2
+**Case 2**
+
 No changes in the expense report. 
 
-The Expense Report payload with instruction "fundsCheck" is made available to the financial system via the FIS API.
+A report payload is provided to the financial system through FIS API, containing the instruction "fundsCheck".
 
 [**Report Funds Check JSON Example**](json/FI-API-FundsReservation-CNF-3e0b085fae6841d58dbcaf7803b587ef-Example-1.0.0.json)
-Once the Report Payload with instruction "fundsCheck" is received, the financial system sends acknowledgement back to the SAP Concur system.
 
-[**Acknowledgement JSON Example**](json/FI-API-FundsReservation-ACK-e79a43d1211c4ff3ba181500f9e18fe3-Example-1.0.0.json)
 
-The financial system checks for the funds availaiblity against the details in the Report Payload and will provide a corresponding message to indicate whether the operation was successful or not
+For the FIS end point URL, refer to [Get Financial Transactions](https://developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#/).
 
-[**Confirmation JSON Example**](json/FI-API-FundsReservation-CNF-a4ba403357e34581b78fe0e29ffa6c77-Example-1.0.0.json)
+Upon the receipt of the document by the financial system, it sends an acknowledgment back to the SAP Concur system.
+
+[FIS Acknowledgement URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transaction-acknowledgements-).
+
+The Financial System determines if there are sufficient funds using the information in the report payload and will provide a corresponding message to indicate whether the operation was successful or not.
+
+[FIS Confirmation URL and Payload](https://preview.developer.concur.com/api-reference/financial-integration/v4.financial-integration.html#post-financial-transactions-confirmations-).
