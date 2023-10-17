@@ -22,8 +22,8 @@ The Financial Integration API provides clients and authorized partners access to
 `invoice.readyForIntegration`|Notify the subscribers that there is a new invoice document ready to be imported.| Subscribe to the topic and call the Financial Integration API to import the document.|
 `payroll.readyForIntegration`|Notify the subscribers that there is a new payroll document ready to be imported.| Subscribe to the topic and call the Financial Integration API to import the document.|
 `cashadvance.readyForIntegration`|Notify the subscribers that there is a new cash advance document ready to be imported.| Subscribe to the topic and call the Financial Integration API to import the document.|
-`requestObligation.readyForIntegration`|Notify the subscribers that there is a new request obligation document ready to be imported.|Subscribe to the topic and call the Financial Integration API to import the document. **Important:** This document type is currently in pre-release status and is only available to approved early access participants. To become an early access participant, contact your SAP Concur Representative.|
-`reportObligation.readyForIntegration`|Notify the subscribers that there is a new report obligation document ready to be imported.|Subscribe to the topic and call the Financial Integration API to import the document. **Important:** This document type is currently in pre-release status and is only available to approved early access participants. To become an early access participant, contact your SAP Concur Representative.|
+`requestObligation.readyForIntegration`|Notify the subscribers that there is a new request obligation document ready to be imported.|Subscribe to the topic and call the Financial Integration API to import the document.|
+`reportObligation.readyForIntegration`|Notify the subscribers that there is a new report obligation document ready to be imported.|Subscribe to the topic and call the Financial Integration API to import the document.|
 ## <a name="schema"></a>Schema
 
 ### <a name="eventexpense.readyForIntegration"></a>Schema for Event `expense.readyForIntegration`
