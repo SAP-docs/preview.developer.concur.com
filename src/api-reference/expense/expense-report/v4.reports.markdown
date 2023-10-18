@@ -409,87 +409,6 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 ```shell
 204 No Content
 ```
-## Approve or Send Back a Report <a name="approve-or-send-back-a-report"></a>
-
-The Approve function advances the specified report to the next step if it is in a system step. The Send Back function sends back the specified report to report owner.
-
-Please note that if any expense on a report has been marked with `isExpenseRejected`, a comment is mandatory for an Approve action. This comment should explain why the selected expenses are being returned to the user.
-
-### Scopes
-
-`expense.report.workflowstatus.write` - Refer to [Scope Usage](#scope-usage) for full details.
-
-### Request
-
-#### URI Template
-
-```shell
-https://{datacenterURI}/expensereports/v4/reports/{reportId}/approve
-https://{datacenterURI}/expensereports/v4/reports/{reportId}/sendBack
-```
-
-#### Parameters
-
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`reportId`|string|-|**Required** The unique identifier of the report that is being approved or sent back.|
-
-#### Headers
-
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### REST Design Specification
-
-PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:
-
-* [RFC 7386 Authorization - JSON Merge Patch](https://tools.ietf.org/html/rfc7386)
-
-#### Payload
-
-* [Approve Report Request](#report-approve-request-schema)
-* [Sendback Report Request](#report-send-back-request-schema)
-
-### Response
-
-#### Status Codes
-
-* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-### Example
-
-#### <a name="patch-approve-sendback-report-request-schema"></a>Request
-
-```shell
-curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/Approve' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Viswa test' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "reportSource":"OTHER"
-}'
-```
-
-#### <a name="patch-approve-sendback-report-response-schema"></a>Response
-
-```shell
-204 No Content
-```
 
 ## Schema <a name="schema"></a>
 
@@ -608,25 +527,6 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 |---|---|---|---|
 |`amount`|[`Amount`](#amount-schema)|-|**Required** The value of funds redirected to the IBCP card account.|
 |`creditCardId`|`string`|-|**Required** The unique identifier of the IBCP card account to which funds need to be redirected.|
-
-### <a name="report-send-back-request-schema"></a>ReportSendBackRequest
-
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`comment`|`string`|-|**Required** Comments for sending back the report.|
-|`expectedWorkflowStepInstanceId`|`string`|-|The ID of the workflow step in which this report is expected to be in. This parameter can be used to verify that the report is still in the expected workflow step.|
-|`reasonCodeId`|`string`|-|The unique identifier of the Reason Code only by processor.|
-|`reportSource`|`string`|-|The source of the report. Supported values: `EA` - Expense Assistant, `MOB` - Mobile, `OTHER` - Unknown, `SE` - Smart Expense, `TR` - Travel Request, `UI` - Web UI|
-
-### <a name="report-approve-request-schema"></a>ReportApproveRequest
-
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`comment`|`string`|-|Approver comments.|
-|`expectedWorkflowStepInstanceId`|`string`|-|The ID of the workflow step in which this report is expected to be in. This parameter can be used to verify that the report is still in the expected workflow step.|
-|`expenseRejectedComment`|`string`|-|This comment identifies why some of the expense is rejected on this report.|
-|`reportSource`|`string`|-|The source of the report. Supported values: `EA` - Expense Assistant, `MOB` - Mobile, `OTHER` - Unknown, `SE` - Smart Expense, `TR` - Travel Request, `UI` - Web UI|
-|`statusId`|`string`|-|Status that will be assigned to the report by this workflow transition.|
 
 ### <a name="link-schema"></a>Link
 
