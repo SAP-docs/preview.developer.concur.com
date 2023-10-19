@@ -24,94 +24,95 @@ The Financial Integration API provides clients and authorized partners access to
 `cashadvance.readyForIntegration`|Notify the subscribers that there is a new cash advance document ready to be imported.| Subscribe to the topic and call the Financial Integration API to import the document.|
 `requestObligation.readyForIntegration`|Notify the subscribers that there is a new request obligation document ready to be imported.|Subscribe to the topic and call the Financial Integration API to import the document.|
 `reportObligation.readyForIntegration`|Notify the subscribers that there is a new report obligation document ready to be imported.|Subscribe to the topic and call the Financial Integration API to import the document.|
+
 ## <a name="schema"></a>Schema
 
-### <a name="eventexpense.readyForIntegration"></a>Schema for Event `expense.readyForIntegration`
+### <a name="eventexpense-readyForIntegration"></a>Schema for Event expense.readyForIntegration
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`String`|UUID| event id - a unique id for the event |
-`correlationId`|`String`|-|correlation id for the event|
-`eventType`|`String`|-|This will be `expense.readyForIntegration`|
-`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
+`id`|`String`|UUID| event id - a unique id for the event. |
+`correlationId`|`String`|-|correlation id for the event.|
+`eventType`|`String`|-|This will be `expense.readyForIntegration`.|
+`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the expense document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
 
-### <a name="eventinvoice.readyForIntegration"></a>Schema for Event `invoice.readyForIntegration`
+### <a name="eventinvoice-readyForIntegration"></a>Schema for Event invoice.readyForIntegration
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`String`|UUID| event id - a unique id for the event |
-`correlationId`|`String`|-|correlation id for the event|
-`eventType`|`String`|-|This will be `invoice.readyForIntegration`|
-`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
+`id`|`String`|UUID| event id - a unique id for the event.|
+`correlationId`|`String`|-|correlation id for the event.|
+`eventType`|`String`|-|This will be `invoice.readyForIntegration`.|
+`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the invoice document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
-### <a name="eventpayroll.readyForIntegration"></a>Schema for Event `payroll.readyForIntegration`
+### <a name="eventpayroll-readyForIntegration"></a>Schema for Event payroll.readyForIntegration
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`String`|UUID| event id - a unique id for the event |
-`correlationId`|`String`|-|correlation id for the event|
-`eventType`|`String`|-|This will be `payroll.readyForIntegration`|
-`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
+`id`|`String`|UUID| event id - a unique id for the event. |
+`correlationId`|`String`|-|correlation id for the event.|
+`eventType`|`String`|-|This will be `payroll.readyForIntegration`.|
+`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the payroll document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
-### <a name="eventcashadvance.readyForIntegration"></a>Schema for Event `cashadvance.readyForIntegration`
+### <a name="eventcashadvance-readyForIntegration"></a>Schema for Event cashadvance.readyForIntegration
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`String`|UUID| event id - a unique id for the event |
-`correlationId`|`String`|-|correlation id for the event|
-`eventType`|`String`|-|This will be `cashadvance.readyForIntegration`|
-`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
+`id`|`String`|UUID| event id - a unique id for the event. |
+`correlationId`|`String`|-|correlation id for the event.|
+`eventType`|`String`|-|This will be `cashadvance.readyForIntegration`.|
+`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the cashadvance document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
-### <a name="eventrequestObligation.readyForIntegration"></a>Schema for Event `requestObligation.readyForIntegration`
+### <a name="eventrequestObligation-readyForIntegration"></a>Schema for Event requestObligation.readyForIntegration
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`String`|UUID| event id - a unique id for the event |
-`correlationId`|`String`|-|correlation id for the event|
-`eventType`|`String`|-|This will be `requestObligation.readyForIntegration`|
-`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
+`id`|`String`|UUID| event id - a unique id for the event. |
+`correlationId`|`String`|-|correlation id for the event.|
+`eventType`|`String`|-|This will be `requestObligation.readyForIntegration`.|
+`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the requestObligation document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
-### <a name="eventreportObligation.readyForIntegration"></a>Schema for Event `reportObligation.readyForIntegration`
+### <a name="eventreportObligation-readyForIntegration"></a>Schema for Event reportObligation.readyForIntegration
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`String`|UUID| event id - a unique id for the event |
-`correlationId`|`String`|-|correlation id for the event|
-`eventType`|`String`|-|This will be `reportObligation.readyForIntegration`|
-`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`|
+`id`|`String`|UUID| event id - a unique id for the event. |
+`correlationId`|`String`|-|correlation id for the event.|
+`eventType`|`String`|-|This will be `reportObligation.readyForIntegration`.|
+`topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the reportObligation document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the companyId, documentId , href, entityId
+`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
-### <a name="Facts"></a>Schema for`Facts`
+### <a name="facts"></a>Schema for Facts
 
 |Name|Type|Format|Description|
 |---|---|---|---|
@@ -123,12 +124,12 @@ The Financial Integration API provides clients and authorized partners access to
 
 ## Flow Diagram
 
-### <a name="process-flow-expense.readyForIntegration"></a>Process Flow 
+### <a name="process-flow-expense-readyForIntegration"></a>Process Flow 
 ![Process Flow for ReadyForIntegration](./readyForIntegrationeventsequence.png)
 
 ## <a name="samples"></a>Sample Events
 
-### <a name="expense.readyForIntegrationExample"></a>Example for Event `expense.readyForIntegration`
+### <a name="expense-readyForIntegrationExample"></a>Example for Event expense.readyForIntegration
 
 ```json
 {
@@ -150,7 +151,7 @@ The Financial Integration API provides clients and authorized partners access to
 }
 ```
 
-### <a name="invoice.readyForIntegrationExample"></a>Example for Event `invoice.readyForIntegration`
+### <a name="invoice-readyForIntegrationExample"></a>Example for Event invoice.readyForIntegration
 
 ```json
 {
@@ -171,7 +172,7 @@ The Financial Integration API provides clients and authorized partners access to
   }
 }
 ```
-## <a name="payroll.readyForIntegrationExample"></a>Example for Event `payroll.readyForIntegration`
+## <a name="payroll-readyForIntegrationExample"></a>Example for Event payroll.readyForIntegration
 
 ```json
 {
@@ -194,7 +195,7 @@ The Financial Integration API provides clients and authorized partners access to
   ```
 
 
-### <a name="cashadvance.readyForIntegrationExample"></a>Example for Event `cashadvance.readyForIntegration`
+### <a name="cashadvance-readyForIntegrationExample"></a>Example for Event cashadvance.readyForIntegration
 
 ```json
 {
@@ -216,7 +217,7 @@ The Financial Integration API provides clients and authorized partners access to
 }
   ```
 
-### <a name="requestObligation.readyForIntegrationExample"></a>Example for Event `requestObligation.readyForIntegration`
+### <a name="requestObligation-readyForIntegrationExample"></a>Example for Event requestObligation.readyForIntegration
 
 ```json
 {
@@ -238,7 +239,7 @@ The Financial Integration API provides clients and authorized partners access to
 }
 ```
 
-### <a name="reportObligation.readyForIntegrationExample"></a>Example for Event `reportObligation.readyForIntegration`
+### <a name="reportObligation-readyForIntegrationExample"></a>Example for Event reportObligation.readyForIntegration
 
 ```json
 {
