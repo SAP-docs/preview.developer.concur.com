@@ -1,0 +1,87 @@
+---
+title: Deeplink Integration for Travel
+layout: reference
+---
+
+# Deeplink Integration for Travel
+The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page in one click.
+
+## Prerequisites
+Users must have an account in Concur Travel and they need to authenticate (or be logged in). Authentication methods supported are username/password and SSO SAML2.
+
+Company must be part of the Evolution of Travel (Concur Travel's new booking experience).
+
+## Limitations
+When using SAML2 IdP-Initiated flow there is the caveat that IdP must support setting `relayState` with the encoded Deeplink path. Example for SAP Cloud Identity Services (CIS):
+```
+{IdP_URI}?sp={concur_URI}&relayState=%2Ftravel%2Fdeeplink%2Fair-shop%2Fv1%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
+```
+
+Deeplink Integration is not available for mobile and currently it only supports flight search.
+
+## Integration Details
+
+### Flight Search
+Deeplink Integration allows users to perform a search in Concur Travel without having to manually fulfill the information in the UI. Departure/return date, airport and time are incorporated in the URL, as well as the cabin type.
+
+Users can search for round-trip flights by informing a departure date, origin airport, a return date and a destination/return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn't provide a return date.
+
+The users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their **home airport**. For this, they need to have a preferred airport configured in their profile.
+
+In case of errors, the user is redirected to the OBT's home page. 
+
+#### URI Template
+```
+https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation={departurelocation}&departuredate={departuredate}&departuretime={departuretime}&returnlocation={returnlocation}&returndate={returndate}&returntime={returntime}&cabintype={cabintype}
+```
+
+| Name              | Type     | Format                | Description                       |
+| -------- |     -------- | -------- | -------- |
+| `departurelocation`   | `string`   | [Location Format](https://gist.github.tools.sap/I563497/151eb738a25e478d8be7d7aa10626c22#location-format) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place |
+| `departuredate`       | `string`   | `YYYY-MM-DD`    | **Required** <br>Departure flight date  |
+| `departuretime`       | `string`   | `hh:mm`         | Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
+| `returnlocation`      | `string`   | [Location Format](https://gist.github.tools.sap/I563497/151eb738a25e478d8be7d7aa10626c22#location-format) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place |
+| `returndate`          | `string`   | `YYYY-MM-DD`    | Return flight date |
+| `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
+| `cabintype`           | `string`   | [Cabin Types](https://gist.github.tools.sap/I563497/151eb738a25e478d8be7d7aa10626c22#cabin-types)     | The section of the aircraft that the user wants to travel on |
+
+#### Location Format
+The airport can be informed in different ways:
+1. **IATA Code**: a three-letter code that represents the airport, for example `LAX` for Los Angeles International Airport
+1. **Geographic Coordinates**: latitude and longitude for a geopoint  
+Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With this coordinates, a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search
+
+#### Cabin Types
+The supported cabin types are:
+1. `Economy`
+1. `Premium Economy`
+1. `Business`
+1. `First`
+
+#### Example: Round-Trip
+```
+https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=Business
+```
+
+This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring Business class flights.
+
+#### Example: One-way Trip
+```
+https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
+```
+
+This deeplink will perform a search for a flight from LBG (airport in Paris) to SDU, on June 1st, 2024 with departure time at 02:00AM ±2.
+
+#### Example: Omitting departure or return location
+In this example, we are considering that the user has defined **LAX** as their preferred airport.
+
+On the deeplink below the user is omitting the desired **departure location**. Therefore, they will be taken to the search results page, showing departure flights from LAX (preferred airport) to BER. The next page will show return flights, from BER back to LAX.
+```
+https://concursolutions.com/travel/deeplink/air/v1/shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
+```
+
+In this next example the user omitted `returnlocation`. This will result on a search for a flight from LBG (airport in Paris) to LAX.
+
+```
+https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
+```
