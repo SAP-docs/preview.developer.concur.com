@@ -5,7 +5,7 @@ layout: reference
 
 # Deeplink Integration for Travel
 
-{% include prerelease.html %}
+ **Important**: This feature is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.
 
 The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page in one click.
 
