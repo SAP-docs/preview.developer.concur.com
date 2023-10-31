@@ -5,7 +5,7 @@ layout: reference
 
 # Deeplink Integration for Travel
 
- **Important**: This feature is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.
+ **Important**: This feature is currently in pre-release status and is only available to approved early access participants. It is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.
 
 The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page in one click.
 
@@ -33,7 +33,7 @@ Deeplink Integration allows users to perform a search in Concur Travel without h
 
 Users can search for round-trip flights by informing a departure date, origin airport, a return date and a destination/return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn't provide a return date.
 
-The users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their **home airport**. For this, they need to have a preferred airport configured in their profile.
+The users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred airport configured in their Travel Profile — under Air Travel Preferences, set **Preferred Departure Airport**.
 
 In case of errors, the user is redirected to the OBT's home page. 
 
