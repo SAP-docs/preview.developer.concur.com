@@ -45,22 +45,22 @@ https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation={d
 
 | Name | Type| Format | Description                       |
 | -------- |     -------- | -------- | -------- |
-| `departurelocation`   | `string`   | [Location Format](https://gist.github.tools.sap/I563497/151eb738a25e478d8be7d7aa10626c22#location-format) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place |
+| `departurelocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place |
 | `departuredate`       | `string`   | `YYYY-MM-DD`    | **Required** <br>Departure flight date  |
 | `departuretime`       | `string`   | `hh:mm`         | Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
-| `returnlocation`      | `string`   | [Location Format](https://gist.github.tools.sap/I563497/151eb738a25e478d8be7d7aa10626c22#location-format) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place |
+| `returnlocation`      | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place |
 | `returndate`          | `string`   | `YYYY-MM-DD`    | Return flight date |
 | `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
-| `cabintype`           | `string`   | [Cabin Types](https://gist.github.tools.sap/I563497/151eb738a25e478d8be7d7aa10626c22#cabin-types)     | The section of the aircraft that the user wants to travel on |
+| `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel on |
 
-#### Location Format
+#### <a name="location-type"></a>Location Format
 
 The airport can be informed in different ways:
 * **IATA Code**: a three-letter code that represents the airport, for example `LAX` for Los Angeles International Airport
 * **Geographic Coordinates**: latitude and longitude for a geopoint  
 Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With this coordinates, a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search
 
-#### Cabin Types
+#### <a name="cabin-types"></a>Cabin Types
 The supported cabin types are:
 * `Economy`
 * `Premium Economy`
