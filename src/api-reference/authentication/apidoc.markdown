@@ -601,7 +601,8 @@ In all cases, the friendly error description should be displayed to the user.
 | 14   | `invalid_grant`   | Account Locked. Please contact support                 |
 | 16   | `invalid_request` | user lives elsewhere                                   |
 | 19   | `invalid_grant`   | Incorrect credentials. Please Retry                    |
-| 20   | `invalid_grant`   | Logon Denied. Please contact support (typically due to IP restriction)                    |
+| 20   | `invalid_grant`   | Logon Denied. Please contact support (typically due to IP restriction)     |
+| 21   | `invalid_request` | Incorrect credentials. SSO-only client attempted a password login.         |
 | 51   | `invalid_request` | username was not supplied                              |
 | 52   | `invalid_request` | password was not supplied                              |
 | 53   | `invalid_client`  | company is not enabled for this client                 |
@@ -637,10 +638,14 @@ In all cases, the friendly error description should be displayed to the user.
 | 118  | `invalid_request` | display is invalid                                     |
 | 119  | `invalid_request` | prompt is invalid                                      |
 | 119  | `invalid_request` | prompt must be set to consent for `offline_access`     |
-| 120  | `invalid_request` | `credtype` is invalid     |
-| 121  | `invalid_request` | `login_type` is invalid     |
-| 122  | `invalid_request` | proxies supplied are invalid     |
-| 123  | `invalid_request` | principal is disabled     |
+| 120  | `invalid_request` | `credtype` is invalid                                  |
+| 121  | `invalid_request` | `login_type` is invalid                                |
+| 122  | `invalid_request` | proxies supplied are invalid                           |
+| 123  | `invalid_request` | principal is disabled                                  |
+| 124  | `invalid_request` | `product` is invalid                                   |
+| 135  | `invalid_request` | unsupported request format                             |
+| 136  | `invalid_request` | Authtoken was not issued for you                       |
+| 139  | `invalid_request` | Logon Denied. Password must be changed to meet company policy.             |
 
 ##### /otp
 
@@ -657,6 +662,7 @@ In all cases, the friendly error description should be displayed to the user.
 | 80   | `invalid_request` | invalid channel type                                   |
 | 81   | `invalid_request` | bad channel handle                                     |
 | 82   | `invalid_request` | the number of open otp requests has been exceeded      |
+| 135  | `invalid_request` | unsupported request format                             |
 
 ## Troubleshooting <a name="troubleshooting"></a>
 
