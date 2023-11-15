@@ -824,10 +824,10 @@ Content-Type: application
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client_id={client_id}
 &amp;client_secret={client_secret}
 &amp;channel_type=email
-&amp;channel_handle={email_address}
-&amp;name={user_name_in_email}
-&amp;company={company_name_in_email}
-&amp;link={callback_url}
+&amp;channel_handle=william.never@companydemo.com
+&amp;name=William Never
+&amp;company=Company Demo
+&amp;link=https://connect.companydemo.com/auth
 </code></pre></div>    </div>
 
     <p><strong>Response</strong></p>
@@ -845,10 +845,12 @@ Content-Type: application
     <p><img src="/assets/img/api-guides/e-receipts/otp-email-sample.png" alt="Sample OTP Email User Received" /></p>
   </li>
   <li>
-    <p>After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token <strong><code class="language-plaintext highlighter-rouge">otl</code></strong> that will be used to obtain an official OAuth2 <code class="language-plaintext highlighter-rouge">access_token</code> and <code class="language-plaintext highlighter-rouge">refresh_token</code>. Example: <code class="language-plaintext highlighter-rouge">&lt;https://{partner_redirect_URI}&amp;otl=7add4621f00b47e1aa2d8a61739c97e6&gt;</code></p>
+    <p>After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token <strong><code class="language-plaintext highlighter-rouge">token</code></strong> that will be used to obtain an official OAuth2 <code class="language-plaintext highlighter-rouge">access_token</code> and <code class="language-plaintext highlighter-rouge">refresh_token</code>. Example: <code class="language-plaintext highlighter-rouge">&lt;[https://connect.companydemo.com/auth&amp;token=dd-36w6vji244m5qsfy23a3jvw3no1e4c](https://connect.companydemo.com/auth&amp;token=dd-36w6vji244m5qsfy23a3jvw3no1e4c)</code></p>
   </li>
+  <li>When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 <code class="language-plaintext highlighter-rouge">access_token</code> and <code class="language-plaintext highlighter-rouge">refresh_token</code> using the <a href="https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant">OTP grant</a> while <a href="https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware">being geo aware</a>.</li>
+  <li>If you used the optional parameters in the /otp call in step 3, such as ‘name’, ‘company’ and ‘link’, please include these parameters in the following /auth API call too.</li>
   <li>
-    <p>When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 <code class="language-plaintext highlighter-rouge">access_token</code> and <code class="language-plaintext highlighter-rouge">refresh_token</code> using the <a href="https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant">OTP grant</a> while <a href="https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware">being geo aware</a>. The following are reserved words and cannot be used as client application defined parameters for <code class="language-plaintext highlighter-rouge">/token</code> API: <code class="language-plaintext highlighter-rouge">client_id</code>,<code class="language-plaintext highlighter-rouge">client_secret</code>,<code class="language-plaintext highlighter-rouge">channel_type</code>,<code class="language-plaintext highlighter-rouge">channel_handle</code>,<code class="language-plaintext highlighter-rouge">scope</code>,<code class="language-plaintext highlighter-rouge">grant_type</code>,<code class="language-plaintext highlighter-rouge">otp</code>.</p>
+    <p>The following are reserved words and cannot be used as client application defined parameters for <code class="language-plaintext highlighter-rouge">/token</code> API: <code class="language-plaintext highlighter-rouge">client_id</code>,<code class="language-plaintext highlighter-rouge">client_secret</code>,<code class="language-plaintext highlighter-rouge">channel_type</code>,<code class="language-plaintext highlighter-rouge">channel_handle</code>,<code class="language-plaintext highlighter-rouge">scope</code>,<code class="language-plaintext highlighter-rouge">grant_type</code>,<code class="language-plaintext highlighter-rouge">otp</code>.</p>
 
     <p><strong>Example:</strong></p>
 
@@ -860,10 +862,13 @@ Host: us.api.concursolutions.com
 </code></pre></div>    </div>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client_id={client_id}
 &amp;client_secret={client_secret}
-&amp;channel_type=email
-&amp;channel_handle={email_address}
 &amp;grant_type=otp
 &amp;otp={one_time_token}
+&amp;channel_type=email
+&amp;channel_handle=william.never@companydemo.com
+&amp;name=William Never
+&amp;company=Company Demo
+&amp;link=https://connect.companydemo.com/auth
 </code></pre></div>    </div>
 
     <p><strong>Response</strong></p>
@@ -889,19 +894,18 @@ Content-Type: application/json
   <li>
     <p>An <code class="language-plaintext highlighter-rouge">access_token</code> is valid only for <strong>one hour</strong>. The access token should be cached in memory and discarded after use.</p>
   </li>
-  <li>
-    <p>Store the following with the users profile in your database.</p>
+  <li>Store the following with the users profile in your database.</li>
+</ol>
 
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">refresh_token</code>: (36 characters including dashes) valid for six months from the day and time issued.</li>
-      <li><code class="language-plaintext highlighter-rouge">refresh_expires_in</code>: expiration date &amp; time in Epoch time format, please convert to UTC format.</li>
-      <li><code class="language-plaintext highlighter-rouge">geolocation</code>: to be used as the base URI when making API calls on behalf of the user.</li>
-      <li><code class="language-plaintext highlighter-rouge">sub</code>: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.</li>
-    </ul>
-  </li>
-  <li>
-    <p>Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.</p>
-  </li>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">refresh_token</code>: (36 characters including dashes) valid for six months from the day and time issued.</li>
+  <li><code class="language-plaintext highlighter-rouge">refresh_expires_in</code>: expiration date &amp; time in Epoch time format, please convert to UTC format.</li>
+  <li><code class="language-plaintext highlighter-rouge">geolocation</code>: to be used as the base URI when making API calls on behalf of the user.</li>
+  <li><code class="language-plaintext highlighter-rouge">sub</code>: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.</li>
+</ul>
+
+<ol>
+  <li>Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.</li>
 </ol>
 
 <h2 id="token-management">Token Management</h2>
