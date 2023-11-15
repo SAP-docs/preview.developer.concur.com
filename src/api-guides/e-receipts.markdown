@@ -241,10 +241,10 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    client_id={client_id}
    &client_secret={client_secret}
    &channel_type=email
-   &channel_handle={email_address}
-   &name={user_name_in_email}
-   &company={company_name_in_email}
-   &link={callback_url}
+   &channel_handle=william.never@companydemo.com
+   &name=William Never
+   &company=Company Demo
+   &link=https://connect.companydemo.com/auth
    ```
 
    **Response**
@@ -261,9 +261,11 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    ![Sample OTP Email User Received](/assets/img/api-guides/e-receipts/otp-email-sample.png)
 
-5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token **`otl`** that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `<https://{partner_redirect_URI}&otl=7add4621f00b47e1aa2d8a61739c97e6>`
+5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token **`token`** that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `<[https://connect.companydemo.com/auth&token=dd-36w6vji244m5qsfy23a3jvw3no1e4c](https://connect.companydemo.com/auth&token=dd-36w6vji244m5qsfy23a3jvw3no1e4c)`
 
-6. When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [OTP grant](https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware). The following are reserved words and cannot be used as client application defined parameters for `/token` API: `client_id`,`client_secret`,`channel_type`,`channel_handle`,`scope`,`grant_type`,`otp`.
+6. When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [OTP grant](https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware).
+7. If you used the optional parameters in the /otp call in step 3, such as 'name', 'company' and 'link', please include these parameters in the following /auth API call too. 
+8. The following are reserved words and cannot be used as client application defined parameters for `/token` API: `client_id`,`client_secret`,`channel_type`,`channel_handle`,`scope`,`grant_type`,`otp`. 
 
    **Example:**
 
@@ -277,10 +279,13 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    ```
    client_id={client_id}
    &client_secret={client_secret}
-   &channel_type=email
-   &channel_handle={email_address}
    &grant_type=otp
    &otp={one_time_token}
+   &channel_type=email
+   &channel_handle=william.never@companydemo.com
+   &name=William Never
+   &company=Company Demo
+   &link=https://connect.companydemo.com/auth
    ```
 
    **Response**
@@ -302,18 +307,18 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    }
    ```
 
-7. Decode the `id_token` to obtain the `sub` value and store this value as the user `id` (see [https://jwt.io](https://jwt.io/)).
+9. Decode the `id_token` to obtain the `sub` value and store this value as the user `id` (see [https://jwt.io](https://jwt.io/)).
 
-8. An `access_token` is valid only for **one hour**. The access token should be cached in memory and discarded after use.
+10. An `access_token` is valid only for **one hour**. The access token should be cached in memory and discarded after use.
 
-9. Store the following with the users profile in your database.
+11. Store the following with the users profile in your database.
 
    * `refresh_token`: (36 characters including dashes) valid for six months from the day and time issued.
    * `refresh_expires_in`: expiration date & time in Epoch time format, please convert to UTC format.
    * `geolocation`: to be used as the base URI when making API calls on behalf of the user.
    * `sub`: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.
 
-10. Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.
+11. Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.
 
 ## Token Management
 
