@@ -318,7 +318,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
    * `geolocation`: to be used as the base URI when making API calls on behalf of the user.
    * `sub`: (36 characters including dashes) The user id will be used to post receipts to the user’s SAP Concur account.
 
-11. Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.
+12. Confirm visually to the user that their partner app account has been successfully linked with their SAP Concur account, and that the receipts will be posted to the user’s SAP Concur account after payment.
 
 ## Token Management
 
