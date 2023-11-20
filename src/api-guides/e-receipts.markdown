@@ -79,7 +79,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    **Request**
 
-   ```
+   ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
@@ -135,7 +135,13 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
 2. Your app will make a call to the authorization service.
 
-   Example: `GET /oauth2/v0/authorize?client_id={your-app-clientId}&redirect_uri={partner_redirect_URI}&response_type=code`
+> **_NOTE:_**  the grant type must be accessed using the `www-` version of the API Gateway in order to avoid certificate issues with some browsers. (ex: https://www-us.api.concursolutions.com instead of https://us.api.concursolutions.com)
+
+   Example: 
+   ```http
+   GET /oauth2/v0/authorize?client_id={your-app-clientId}&redirect_uri={partner_redirect_URI}&response_type=code HTTP/1.1
+   Host: https://www-us.api.concursolutions.com
+   ```
 
 3. The authorization service will prompt the user with two options: **Username** or **Send a link to my email**
 
@@ -149,7 +155,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    * After successfully logging in, the user will be redirected to the partner’s redirect URI with a query parameter containing a one time use code and user’s geolocation, which will be used to obtain an official OAuth2 `access_token` and `refresh_token`.
 
-     Example: `<https://{partner_redirect_URI}?geolocation={geolocation}&code={code}>`
+     Example: `https://{partner_redirect_URI}?geolocation={geolocation}&code={code}`
 
 5. Handling the **email** option:
 
@@ -160,7 +166,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    * After the user clicks the “Sign in with Concur” link within the email, the user will be redirected to your redirect URI with a query parameter containing a one-time use code and user’s geolocation, which will be used to obtain an official OAuth2 `access_token` and `refresh_token`.
 
-     Example: `<https://{partner_redirect_URI}?geolocation={geolocation}&code={code}>`
+     Example: `https://{partner_redirect_URI}?geolocation={geolocation}&code={code}`
 
      ![Sample of Auth Email](/assets/img/api-guides/e-receipts/auth-mail.png)
 
@@ -170,7 +176,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
    **Request**
 
-   ```
+   ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
@@ -261,9 +267,10 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    ![Sample OTP Email User Received](/assets/img/api-guides/e-receipts/otp-email-sample.png)
 
-5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter containing a one-time token **`token`** that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `<[https://connect.companydemo.com/auth&token=dd-36w6vji244m5qsfy23a3jvw3no1e4c](https://connect.companydemo.com/auth&token=dd-36w6vji244m5qsfy23a3jvw3no1e4c)`
+5. After user clicks the “Sign in with Concur” link within the email, they will be redirected to the partner’s redirect URI with a query parameter **`token`** containing a one-time token that will be used to obtain an official OAuth2 `access_token` and `refresh_token`. Example: `https://connect.companydemo.com/auth&token=dd-36w6vji244m5qsfy23a3jvw3no1e4c`
 
 6. When your application receives the redirect call with the one-time token, strip the token value from the redirect URI and use that token on a Post request to the authorization service to obtain an official OAuth2 `access_token` and `refresh_token` using the [OTP grant](https://developer.concur.com/api-reference/authentication/apidoc.html#otp-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware).
+
 7. If you used the optional parameters in the /otp call in step 3, such as 'name', 'company' and 'link', please include these parameters in the following /auth API call too. 
 8. The following are reserved words and cannot be used as client application defined parameters for `/token` API: `client_id`,`client_secret`,`channel_type`,`channel_handle`,`scope`,`grant_type`,`otp`. 
 
@@ -271,7 +278,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Request**
 
-   ```
+   ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
    Host: us.api.concursolutions.com
@@ -356,7 +363,7 @@ If you receive the error code 16 ("user lives elsewhere") while calling the auth
 
 For example, if you make following API call to `https://us2.api.concursolutions.com` by mistake:
 
-```
+```http
 POST /oauth2/v0/token HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 Host: us2.api.concursolutions.com
@@ -383,7 +390,7 @@ You should make another call to `https://us.api.concursolutions.com` which is th
 
 > **Note**: _This `geolocation` value might NOT be user token's geolocation. It only redirects you to the correct API endpoint_.
 
-```
+```http
 POST /oauth2/v0/token HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
 Host: us.api.concursolutions.com
@@ -434,7 +441,7 @@ The general eReceipt schema includes all receipt core definitions.
 
    **Request**
 
-   ```
+   ```http
    POST /receipts/v4/users/{UUID} HTTP/1.1
    Host: {HOST}
    Authorization: Bearer {ACCESS_TOKEN}
@@ -516,7 +523,7 @@ Receipt is now shown in the Available Expense list and the receipt Expense Type 
 
 **Request**
 
-```
+```http
 POST /receipts/v4/users/{UUID} HTTP/1.1
 Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
@@ -635,7 +642,7 @@ The Quick Expense API can be used to create an expense with basic information su
 **Request**
 
 
-```
+```http
 POST /quickexpense/v4/users/{UUID}/context/TRAVELER/quickexpenses HTTP/1.1
 Host: {HOST}
 Authorization: Bearer {ACCESS_TOKEN}
