@@ -349,7 +349,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
 ### Revoke Token
 
-You need to revoke a user’s `access_token` if the user terminates their account from your application. To revoke a user’s `access_token` call the /app-mgmt/v0/connections endpoint with a **DELETE** action. Refer to [revoking a token](https://developer.concur.com/api-reference/authentication/apidoc.html#revoking-a-token-) for more details and the post example.
+You need to revoke a user’s `access_token` if the user terminates their account from your application. To revoke a user’s `access_token` call the /app-mgmt/v0/connections endpoint with a **DELETE** action. You are required to demonstrate your integration has the capability to revoke `access_token` for the inactive or disconnected users. 
+Refer to [revoking a token](https://developer.concur.com/api-reference/authentication/apidoc.html#revoking-a-token-) for more details and the post example.
 
 ## <a name="being-geo-aware"></a>Being Geo Aware
 
