@@ -165,6 +165,6 @@ Based on SAP Concur product activity, you should now begin to see events coming 
 
 Click the button below to download the ESS API collection in Postman.
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/1527280-5855f895-e74d-4836-b59d-f3e5c7249b79?action=collection%2Ffork&collection-url=entityId%3D1527280-5855f895-e74d-4836-b59d-f3e5c7249b79%26entityType%3Dcollection%26workspaceId%3Dc798f711-eead-4885-814f-8dcf58e70860)
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/31374415-d70ee8d6-46cb-40db-b3b9-fc54524f8b45?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D31374415-d70ee8d6-46cb-40db-b3b9-fc54524f8b45%26entityType%3Dcollection%26workspaceId%3D2a9e2e42-656a-474c-b78a-1b6be9959a2e)
 
 Or you may download the [JSON collection](/api-guides/postman/ESS%20API%20endpoints.postman_collection.zip).
