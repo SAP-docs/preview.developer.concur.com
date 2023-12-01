@@ -22,10 +22,10 @@ This API is only available to partners who have been granted access by SAP Concu
 
 ## <a name="scope-usage"></a>Scope Usage
 
-Name|Description|Endpoint|
----|-----------|---|
-`expense.report.read`|Get information about exceptions(s).|GET|
-`expense.report.readwrite`|Read, write and delete exception(s).|GET, PUT, DELETE|
+|Name|Description|Endpoint|
+|---|-----------|---|
+|`expense.report.read`|Get information about exceptions(s).|GET|
+|`expense.report.readwrite`|Read, write and delete exception(s).|GET, PUT, DELETE|
 
 ## Dependencies <a name="dependencies"></a>
 
@@ -190,7 +190,7 @@ https://{datacenterURI}/expensereports/v4/reports/{reportId}/exceptions
 #### Request
 
 ```shell
-curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/exceptions?excludeExpenses=true'' \
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/exceptions?excludeExpenses=true' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Content-Type: application/json'
 ```
@@ -359,6 +359,316 @@ curl --location --request 'DELETE' \
 204 No Content
 ```
 
+## Retrieve Expense Exceptions <a name="retrieve-expense-exceptions"></a>
+
+Retrieves the exceptions on a specific expense.
+
+### Scopes
+
+* `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/exceptions?excludeItemizations=false
+```
+
+#### Parameters
+
+|Name|Type|Format| Description                                                                                                                                        |
+|---|---|---|----------------------------------------------------------------------------------------------------------------------------------------------------|
+|`userID`|`string`|-| **Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.    |
+|`contextType`|`string`|-| **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY` |
+|`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.                                                                               |
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry to which the exceptions belong.                                                            |
+|`excludeItemizations`|`boolean`|true or false| Include only exceptions for non-itemized and parent expenses. Default value: false                                                                 |
+
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Expense Exceptions Response](#report-header-exceptions-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/99F8CC6B1AEE6049B03652F018CAF096/exceptions?excludeItemizations=true' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+[
+	{
+		"exceptionCode": "ITEMDIFF",
+		"exceptionVisibility": "ALL",
+		"isBlocking": true,
+		"message": "The itemization amounts do not add up to the expense amount.",
+		"allocationId": null,
+		"expenseId": "99F8CC6B1AEE6049B03652F018CAF096",
+		"parentExpenseId": null
+	},
+	{
+		"exceptionCode": "MISSREQFLD",
+		"exceptionVisibility": "ALL",
+		"isBlocking": true,
+		"message": "Missing required field: Receipt Status. ",
+		"allocationId": null,
+		"expenseId": "50279352D5F0DD469EC8899A636971B1",
+		"parentExpenseId": null
+	}
+]
+```
+
+## Retrieve Expense Exceptions Using System User <a name="retrieve-expense-exceptions-using-system-user"></a>
+
+Retrieves the exceptions on a specific expense using a system user.
+
+### Scopes
+
+* `expense.report.read`
+* `expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/exceptions?excludeItemizations=false
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.                                                                               |
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry to which the exceptions belong.                                                            |
+|`excludeItemizations`|`boolean`|true or false| Include only exceptions for non-itemized and parent expenses. Default value: false                                                                 |
+
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Report Header Exceptions Response](#report-header-exceptions-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/expenses/99F8CC6B1AEE6049B03652F018CAF096/exceptions?excludeItemizations=true' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+[
+	{
+		"exceptionCode": "ITEMDIFF",
+		"exceptionVisibility": "ALL",
+		"isBlocking": true,
+		"message": "The itemization amounts do not add up to the expense amount.",
+		"allocationId": null,
+		"expenseId": "99F8CC6B1AEE6049B03652F018CAF096",
+		"parentExpenseId": null
+	},
+	{
+		"exceptionCode": "MISSREQFLD",
+		"exceptionVisibility": "ALL",
+		"isBlocking": true,
+		"message": "Missing required field: Receipt Status. ",
+		"allocationId": null,
+		"expenseId": "50279352D5F0DD469EC8899A636971B1",
+		"parentExpenseId": null
+	}
+]
+```
+
+## Add Expense Exception <a name="add-expense-exception-using-system-user"></a>
+
+Adds an exception on the specified expense using a system user.
+
+### Scopes
+
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/exceptions
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report.|
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry.                                                            |
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+#### Payload
+
+* [Exceptions](#exceptions-schema)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'PUT' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/99F8CC6B1AEE6049B03652F018CAF096/exceptions' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+    "exceptionCode": "MISSREQFLD",
+    "exceptionVisibility": "ALL"
+}'
+```
+
+#### Response
+
+```shell
+200 OK No Content
+```
+
+## Delete Expense Exception <a name="Delete-expense-exception-with-system-user"></a>
+
+Deletes an exception on the specified expense specified by exceptionCode using a system user.
+
+### Scopes
+
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/exceptions/{exceptionCode}
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report.|
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry.                                                            |
+|`exceptionCode`| `string` |-| **Required** The code for the exception.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/99F8CC6B1AEE6049B03652F018CAF096/exceptions/MISSREQFLD' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+```shell
+204 No Content
+```
+
 ## <a name="schema"></a>Schema
 
 ### <a name="report-header-exceptions-response-schema"></a> Report Header Exceptions
@@ -386,18 +696,18 @@ curl --location --request 'DELETE' \
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`customResponseData`|`object`|-|The custom parameters related to error.|
-`errorId`|`string`|-|The unique identifier of the error associated with the response.|
-`errorMessage`|`string`|-| **Required** The detailed error message.|
-`httpStatus`|`string`|-| **Required** The HTTP response code and phrase for the response.|
-`path`|`string`|-| **Required** The URI of the attempted request.|
-`timestamp`|`string`|`date-time`| **Required** The time when the error was captured.|
-`validationErrors`|[`ValidationError`](#validation-error-schema)|-|The validation error messages.|
+|`customResponseData`|`object`|-|The custom parameters related to error.|
+|`errorId`|`string`|-|The unique identifier of the error associated with the response.|
+|`errorMessage`|`string`|-| **Required** The detailed error message.|
+|`httpStatus`|`string`|-| **Required** The HTTP response code and phrase for the response.|
+|`path`|`string`|-| **Required** The URI of the attempted request.|
+|`timestamp`|`string`|`date-time`| **Required** The time when the error was captured.|
+|`validationErrors`|[`ValidationError`](#validation-error-schema)|-|The validation error messages.|
 
 ### <a name="validation-errors-schema"></a>Validation Error
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`id`|`string`|-|The ID of the validation error.|
-`message`|`string`|-|The detailed message of the validation error.|
-`source`|`string`|-|The type of validation which failed.|
+|`id`|`string`|-|The ID of the validation error.|
+|`message`|`string`|-|The detailed message of the validation error.|
+|`source`|`string`|-|The type of validation which failed.|
