@@ -500,7 +500,7 @@ https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId
 
 #### Payload
 
-* [Report Header Exceptions Response](#report-header-exceptions-response-schema)
+* [Expense Exceptions Response](#report-header-exceptions-response-schema)
 
 ### Example
 
@@ -608,7 +608,7 @@ curl --location --request 'PUT' \
 200 OK No Content
 ```
 
-## Delete Expense Exception <a name="Delete-expense-exception-with-system-user"></a>
+## Delete Expense Exception <a name="delete-expense-exception-with-system-user"></a>
 
 Deletes an exception on the specified expense specified by exceptionCode using a system user.
 
@@ -659,6 +659,301 @@ https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId
 ```shell
 curl --location --request 'DELETE' \
 'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/99F8CC6B1AEE6049B03652F018CAF096/exceptions/MISSREQFLD' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+```shell
+204 No Content
+```
+
+## Retrieve Allocation Exceptions <a name="retrieve-allocation-exceptions"></a>
+
+Retrieves the exceptions on a specific allocation.
+
+### Scopes
+
+* `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions
+```
+
+#### Parameters
+
+|Name|Type|Format| Description                                                                                                                                   |
+|---|---|---|-----------------------------------------------------------------------------------------------------------------------------------------------|
+|`userID`|`string`|-| **Required** The unique identifier of the SAP Concur user. Use [Identity v4](/api-reference/profile/v4.identity.html) to retrieve the `userID`.|
+|`contextType`|`string`|-| **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported values: `TRAVELER`, `PROXY`|
+|`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.|
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry to which the exceptions belong.|
+|`allocationId`|`string`|-| **Required** The unique identifier of the expense allocation to which the exceptions belong.|
+
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the user access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Allocation Exceptions Response](#report-header-exceptions-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/99F8CC6B1AEE6049B03652F018CAF096/allocations/6E23ECF391221145898792F926D4E7A5/exceptions' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+[
+	{
+		"exceptionCode": "MISSALLOCREQFLD",
+		"exceptionVisibility": "ALL",
+		"isBlocking": true,
+		"message": "Missing required allocation field: Custom 05. ",
+		"allocationId": "6E23ECF391221145898792F926D4E7A5",
+		"expenseId": "9F6D943AB10E314D86D67011F5FD1C1E",
+		"parentExpenseId": null
+	}
+]
+```
+
+## Retrieve Allocation Exceptions Using System User <a name="retrieve-allocation-exceptions-using-system-user"></a>
+
+Retrieves the exceptions on a specific allocation using a system user.
+
+### Scopes
+
+* `expense.report.read`
+* `expense.report.readwrite`
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.                                                                               |
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry to which the exceptions belong.                                                            |
+|`allocationId`|`string`|-| **Required** The unique identifier of the expense allocation to which the exceptions belong.                                                       |
+
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
+#### Payload
+
+* [Allocation Exceptions Response](#report-header-exceptions-response-schema)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/expenses/99F8CC6B1AEE6049B03652F018CAF096/allocations/6E23ECF391221145898792F926D4E7A5/exceptions' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+
+```shell
+200 OK
+
+[
+	{
+		"exceptionCode": "MISSALLOCREQFLD",
+		"exceptionVisibility": "ALL",
+		"isBlocking": true,
+		"message": "Missing required allocation field: Custom 05. ",
+		"allocationId": "6E23ECF391221145898792F926D4E7A5",
+		"expenseId": "9F6D943AB10E314D86D67011F5FD1C1E",
+		"parentExpenseId": null
+	}
+]
+```
+
+## Add Allocation Exception <a name="add-allocation-exception-using-system-user"></a>
+
+Adds an exception on the specified allocation using a system user.
+
+### Scopes
+
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report.|
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry.|
+|`allocationId`|`string`|-| **Required** The unique identifier of the expense allocation to which the exceptions belong.                                                       |
+
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+#### Payload
+
+* [Exceptions](#exceptions-schema)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'PUT' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/99F8CC6B1AEE6049B03652F018CAF096/allocations/6E23ECF391221145898792F926D4E7A5/exceptions' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+--data-raw '{
+    "exceptionCode": "MISSREQFLD",
+    "exceptionVisibility": "ALL"
+}'
+```
+
+#### Response
+
+```shell
+200 OK No Content
+```
+
+## Delete Allocation Exception <a name="delete-allocation-exception-with-system-user"></a>
+
+Deletes an exception on the specified allocation specified by exceptionCode using a system user.
+
+### Scopes
+
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions/{exceptionCode}
+```
+
+#### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`reportId`|`string`|-|**Required** The unique identifier of the report.|
+|`expenseId`|`string`|-| **Required** The unique identifier of the expense entry.|
+|`allocationId`|`string`|-| **Required** The unique identifier of the expense allocation to which the exceptions belong.|
+|`exceptionCode`| `string` |-| **Required** The code for the exception.|
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the company access token.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/99F8CC6B1AEE6049B03652F018CAF096/allocations/6E23ECF391221145898792F926D4E7A5/exceptions/MISSREQFLD' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Content-Type: application/json'
 ```
