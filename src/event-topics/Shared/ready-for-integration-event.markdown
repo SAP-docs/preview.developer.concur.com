@@ -1,8 +1,8 @@
 ---
-title: ReadyForIntegration Events
+title: Ready For Integration Events
 layout: reference
 ---
-# ReadyForIntegration Events
+# Ready For Integration Events
 
 ## <a name="overview"></a>Overview
 
