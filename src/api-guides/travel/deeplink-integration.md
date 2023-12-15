@@ -74,7 +74,7 @@ https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&de
 
 This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring Business class flights.
 
-#### <a> name="example-one-way"</a> Example: One-way Trip
+#### <a name="example-one-way"></a> Example: One-way Trip
 ```
 https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
 ```
