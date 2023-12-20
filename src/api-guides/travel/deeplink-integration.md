@@ -63,7 +63,7 @@ Format: `{lat},{long}`, with no blank space inbetween. Example: `48.856942735277
 #### <a name="cabin-types"></a>Cabin Types
 The supported cabin types are:
 * `ECONOMY`
-* `PREMIUM ECONOMY`
+* `PREMIUM_ECONOMY`
 * `BUSINESS`
 * `FIRST`
 
