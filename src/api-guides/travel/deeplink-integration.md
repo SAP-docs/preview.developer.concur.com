@@ -62,14 +62,14 @@ Format: `{lat},{long}`, with no blank space inbetween. Example: `48.856942735277
 
 #### <a name="cabin-types"></a>Cabin Types
 The supported cabin types are:
-* `Economy`
-* `Premium Economy`
-* `Business`
-* `First`
+* `ECONOMY`
+* `PREMIUM ECONOMY`
+* `BUSINESS`
+* `FIRST`
 
 #### Example: Round-Trip
 ```
-https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=Business
+https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=BUSINESS
 ```
 
 This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring Business class flights.
