@@ -1,4 +1,4 @@
-ruby '2.7.3'
+ruby '3.3.0'
 source 'https://rubygems.org'
 
 gem 'jekyll'
