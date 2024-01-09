@@ -1207,11 +1207,13 @@
   <li>Do not use Trip 1.1 to get data for an entire company.  Use <a href="/api-reference/travel/itinerary-v4/v4.itinerary.html">Itinerary v4</a> instead.</li>
   <li>Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.</li>
   <li>This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and most bookings from your travel agency. Some customers may have multiple booking options which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.</li>
+  <li>Use the POST endpoint if you do not want the query parameters to appear in the URL.</li>
 </ul>
 
 <h3 id="request">Request</h3>
 
-<p>GET /travel/trip/v1.1/{query_parameters}</p>
+<p>GET /travel/trip/v1.1/{query_parameters}
+  POST /travel/trip/v1.1/GetTrips</p>
 
 <h3 id="query-parameters">Query Parameters</h3>
 
@@ -1336,6 +1338,10 @@
 </code></pre></div></div>
 
 <p>The access token used to make the API call is associated with the SAP Concur account with the specified login credentials.</p>
+
+<h3 id="request-content-body">Request Content Body</h3>
+
+<p>Only specified for the POST endpoint.  A JSON document with any of the parameters documented in <a href="#query-parameters">Query Parameters</a>, above.</p>
 
 <h3 id="headers">Headers</h3>
 
@@ -1503,6 +1509,19 @@ Where <code class="language-plaintext highlighter-rouge">access_token</code> is 
 <span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
 <span class="s">...</span>
 </code></pre></div></div>
+<p>or</p>
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/api/travel/trip/v1.1/GetTrips</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">www.concursolutions.com</span>
+<span class="na">Authorization</span><span class="p">:</span> <span class="s">OAuth {access token}</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/xml</span>
+<span class="s">... </span>
+
+<span class="p">{</span><span class="w">
+    </span><span class="nl">"startDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-02-01"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"endDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-12-31"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response">Response</h4>
 
@@ -3135,11 +3154,11 @@ Where <code class="language-plaintext highlighter-rouge">access_token</code> is 
 
 <p>Where <code class="language-plaintext highlighter-rouge">access_token</code> is the OAuth 2.0 access token of the user whose trip you want to create or update. If you want to access company-wide itinerary information, the user account associated with the OAuth 2.0 access token must have an SAP Concur account with one of these roles: Web Services Administrator for Professional or Can Administer for Standard.</p>
 
-<h3 id="request-content-body">Request Content Body</h3>
+<h3 id="request-content-body-1">Request Content Body</h3>
 
 <p>None.</p>
 
-<p>###<a name="delete-schema"></a>Cancel Trip Request Schema</p>
+<h3 id="cancel-trip-request-schema"><a name="delete-schema"></a>Cancel Trip Request Schema</h3>
 
 <p>The request returns the full trip details for the cancelled trip. If the request is successful, the response trip will not contain any segments because they have been cancelled. The response includes the following additional elements inside the <code class="language-plaintext highlighter-rouge">Itinerary</code> parent element:</p>
 
