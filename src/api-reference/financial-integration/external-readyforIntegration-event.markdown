@@ -144,7 +144,7 @@ The Financial Integration API provides clients and authorized partners access to
   {
     "companyId":"00001cd1-07a1-405f-b3e2-f83566ab4e39",
     "documentId":"5F8FC21234374B979809",
-    "href":"https://financial-integration.service.cnqr.tech/fi/v4/companies/transactiontypes/expense/transactions?docId=5F8FC21234374B979809",
+    "href":"https://us2.api.concursolutions.com/financialintegration/fi/v4/companies/transactiontypes/expense/transactions?docId=5F8FC21234374B979809",
     "entityId":"p0608532bdtt"
   }
 }
@@ -166,7 +166,7 @@ The Financial Integration API provides clients and authorized partners access to
   {
     "companyId":"1c3564d9-92bd-495a-a8c8-3aba068fff09",
     "documentId":"101F7074D9F3457D924T",
-    "href":"https://financial-integration.service.cnqr.tech/fi/v4/companies/transactiontypes/invoice/transactions?docId=101F7074D9F3457D924T",
+    "href":"https://us2.api.concursolutions.com/financialintegration/fi/v4/companies/transactiontypes/invoice/transactions?docId=101F7074D9F3457D924T",
     "entityId":"p0607623zrtt"
   }
 }
@@ -187,7 +187,7 @@ The Financial Integration API provides clients and authorized partners access to
   {
     "companyId":"566t38be-37dd-4fda-b367-b39f4c1f685a",
     "documentId":"D5768BD31B604BCE842T",
-    "href":"https://financial-integration.service.cnqr.tech/fi/v4/companies/transactiontypes/payroll/transactions?docId=D5768BD31B604BCE842T",
+    "href":"https://us2.api.concursolutions.com/financialintegration/fi/v4/companies/transactiontypes/payroll/transactions?docId=D5768BD31B604BCE842T",
     "entityId":"p0601728drww"
   }
 }
@@ -210,7 +210,7 @@ The Financial Integration API provides clients and authorized partners access to
   {
     "companyId":"be463ad2-b2ce-4033-b079-663ca6c7t3d5",
     "documentId":"BB6963B71DE97746B37FE399FAE994B6",
-    "href":"https://financial-integration.service.cnqr.tech/fi/v4/companies/transactiontypes/cashadvance/transactions?docId=BB6963B71DE97746B37FE399FAE994B6",
+    "href":"https://us2.api.concursolutions.com/financialintegration/fi/v4/companies/transactiontypes/cashadvance/transactions?docId=BB6963B71DE97746B37FE399FAE994B6",
     "entityId":"p0603355bmll"
   }
 }
@@ -231,7 +231,7 @@ The Financial Integration API provides clients and authorized partners access to
   {
     "companyId": "325b8e77-14ee-458e-aebt-8193dc166786",
     "documentId": "B96B0E572F91714085616A3F2ABA00BAT",
-    "href": "https://financial-integration.service.cnqr.tech/fi/v4/companies/transactiontypes/requestobligation/transactions?docId=B96B0E572F91714085616A3F2ABA00BAT",
+    "href": "https://us2.api.concursolutions.com/financialintegration/fi/v4/companies/transactiontypes/requestobligation/transactions?docId=B96B0E572F91714085616A3F2ABA00BAT",
     "entityId": "p1007275pott"
   },
   "data": null
@@ -253,7 +253,7 @@ The Financial Integration API provides clients and authorized partners access to
   {
     "companyId": "325b8e7t-14ee-458e-aeb9-8193dc166786",
     "documentId": "CC79684B741042679T16",
-    "href": "https://financial-integration.service.cnqr.tech/fi/v4/companies/transactiontypes/reportobligation/transactions?docId=CC79684B741042679T16",
+    "href": "https://us2.api.concursolutions.com/financialintegration/fi/v4/companies/transactiontypes/reportobligation/transactions?docId=CC79684B741042679T16",
     "entityId": "p1007275pott"
   },
   "data": null
