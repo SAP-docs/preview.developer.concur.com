@@ -59,7 +59,8 @@ You must meet following certification requirements before proceeding to the cert
 | --- | --- |
 |Geolocation | Must securely store last received `geoLocation` to use on subsequent calls. |
 |Refresh Token | Must securely store last received `refresh_token` to use on subsequent calls. |
-|Token Expiration Date | Must securely store `refresh_token` expiry date. |
+|Refresh Token Expiration Date | Must securely store `refresh_token` expiry date. Must provide scheduled job to refresh the token before the expiry date. |
+|Revoke Token | Must revoke the tokens for the inactive users or disconnected users.  |
 
  **API Logging**
 
@@ -85,7 +86,6 @@ You must meet following certification requirements before proceeding to the cert
 | --- | --- |
 |OAuth2 - US DC Client |You must demonstrate ability to authenticate clients in the US Data Center (default geolocation). |
 |OAuth2 - EU DC Client |You must demonstrate ability to authenticate client in the EU Data Center (token geolocation). |
-|OAuth2 - CN DC Client |(Optional) If your App supports the users hosted on China Data Center, you must demonstrate ability to authenticate client in China Data Center (default geolocation). |
 |eReceipt or Quick Expense API - US DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in US Data Center. |
 |eReceipt or Quick Expense API - EU DC Client |You must demonstrate ability to post eReceipt or Quick Expense data in EU Data Center. |
-|eReceipt or Quick Expense API - CN DC Client |(Optional) If your App supports the users hosted on China Data Cetner, you must demonstrate ability to post eReceipt or Quick Expense data in China Data Center. |
+

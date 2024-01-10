@@ -25,8 +25,8 @@ SAP Concur Certification Project Manager will prepare the development environmen
 
 ### Sandboxes and Accounts
 
-* You will have a shared sandbox on each of following SAP Concur data centers: US2, EU2, and China (by request).
-* You will have 3 test accounts on each of following SAP Concur data centers: US2, EU2, and China (by request).
+* You will have a shared sandbox on each of following SAP Concur data centers: US2, EU2.
+* You will have 3 test accounts on each of following SAP Concur data centers: US2, EU2.
 
 ### Development App
 
@@ -349,7 +349,8 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
 ### Revoke Token
 
-You need to revoke a user’s `access_token` if the user terminates their account from your application. To revoke a user’s `access_token` call the /app-mgmt/v0/connections endpoint with a **DELETE** action. Refer to [revoking a token](https://developer.concur.com/api-reference/authentication/apidoc.html#revoking-a-token-) for more details and the post example.
+You need to revoke a user’s `access_token` if the user terminates their account from your application. To revoke a user’s `access_token` call the /app-mgmt/v0/connections endpoint with a **DELETE** action. You are required to demonstrate your integration has the capability to revoke `access_token` for the inactive or disconnected users. 
+Refer to [revoking a token](https://developer.concur.com/api-reference/authentication/apidoc.html#revoking-a-token-) for more details and the post example.
 
 ## <a name="being-geo-aware"></a>Being Geo Aware
 
@@ -357,7 +358,7 @@ A client’s SAP Concur account may reside one of our many data centers. During 
 
 You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user's geolocation when you request the token for the first time, you should always make the API call using the **default** Base URI.
 
-For a user hosted on both the US data center and EU data center, please use the **default** Base URI `https://us.api.concursolutions.com`. For a user hosted on the China data center, please use the **default** base URI `https://cn.api.concurcdc.cn`.
+For a user hosted on both the US data center and EU data center, please use the **default** Base URI `https://us.api.concursolutions.com`.
 
 If you receive the error code 16 ("user lives elsewhere") while calling the authentication service, the error message returns a new `geolocation`. Use this new 'geolocation' as the Base URI to call the Auth API again to get the token.
 
@@ -413,7 +414,6 @@ The base URI for obtaining a token will use your application’s geolocation. Th
 
 * US Production = <https://us.api.concursolutions.com>
 * EU Production = <https://emea.api.concursolutions.com>
-* China Production = <https://cn.api.concurcdc.cn>
 
 The full list of available token geolocations is available on the [Base URIs](https://developer.concur.com/platform/base-uris.html) page.
 
