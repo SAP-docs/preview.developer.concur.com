@@ -2,6 +2,7 @@
 title: Ready For Integration Events
 layout: reference
 ---
+
 # Ready For Integration Events
 
 ## <a name="overview"></a>Overview
