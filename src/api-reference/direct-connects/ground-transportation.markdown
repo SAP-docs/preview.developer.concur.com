@@ -16,6 +16,10 @@ This callout differs from the inbound SAP Concur web services in the following w
 
 **NOTE**: This direct connect was originally designed to work with Limo providers, but can support all types of ground transportation.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## <a name="products-editions"></a>Products and Editions
 * Concur Travel Professional Edition
 * Concur Travel Standard Edition

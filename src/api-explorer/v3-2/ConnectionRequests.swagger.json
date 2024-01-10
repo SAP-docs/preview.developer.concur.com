@@ -2,6 +2,13 @@
     "swagger": "2.0",
     "host": "us.api.concursolutions.com",
     "basePath": "/api/v3.2",
+    "x-sap-shortText": "A Connection Request is an object of an SAP Concur user to connect with a specific TripLink partner.",
+    "x-servers": [
+      {
+        "url": "https://us.api.concursolutions.com/api/v3.2",
+        "description": "Concur TripLink API EndPoint"
+      }
+    ],
     "schemes": [
         "https"
     ],
@@ -15,8 +22,20 @@
     ],
     "info": {
         "title": "Connection Requests",
-        "description": "",
+        "description": "A Connection Request is an object representing the willingness of an SAP Concur user to connect with a specific TripLink partner.",
         "version": "3.2"
+    },
+    "securityDefinitions": {
+        "oauth2_password": {
+            "type": "oauth2",
+            "description": "OAuth2 Password Grant Flow",
+            "flow": "password",
+            "tokenUrl": "https://us.api.concursolutions.com/oauth2/v0/token", 
+            "scopes": {
+                "read": "Grants read access",
+                "write": "Grants write access"
+            }
+        }
     },
     "tags": [
         {
@@ -34,13 +53,6 @@
                 "description": "Gets all connection requests that match the TripLink supplier ID.",
                 "parameters": [
                     {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "The starting point of the next set of results, after the limit specified in the limit field has been reached. The default is the beginning of the page.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
                         "name": "limit",
                         "in": "query",
                         "description": "The number of records to return. The default is 5 and the maximum is 10.",
@@ -49,11 +61,12 @@
                         "format": "int32"
                     },
                     {
-                        "name": "status",
+                        "name": "offset",
                         "in": "query",
-                        "description": "The status code representing the state of the connection request. The possible values are Pending, Processing, Connected, Failed, and Retry.",
+                        "description": "The starting point of the set of results. The default is the first page, which is equivalent to the value 0.",
                         "required": false,
-                        "type": "string"
+                        "type": "integer",
+                        "format": "int32"
                     }
                 ],
                 "responses": {
@@ -61,6 +74,24 @@
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/ConnectionRequestCollection"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
                         }
                     }
                 }
@@ -75,7 +106,7 @@
                     {
                         "name": "user",
                         "in": "query",
-                        "description": "The login ID of the user for whom to create the connection request. The user must have the Web Services Admin role to use this parameter.",
+                        "description": "The login ID of the user for whom to create the connection request.",
                         "required": true,
                         "type": "string"
                     }
@@ -85,6 +116,24 @@
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/CreateResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
                         }
                     }
                 }
@@ -112,6 +161,18 @@
                         "schema": {
                             "$ref": "#/definitions/ConnectionRequestGet"
                         }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
                     }
                 }
             },
@@ -130,7 +191,7 @@
                         "type": "string"
                     },
                     {
-                        "name": "content",
+                        "name": "status",
                         "in": "body",
                         "description": "The connection request object to update.",
                         "required": true,
@@ -140,12 +201,30 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Success",
                         "schema": {
                             "$ref": "#/definitions/Void"
                         }
-                    }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/Void"
+                        }
+                    }                    
                 }
             }
         }
@@ -158,7 +237,7 @@
                 },
                 "NextPage": {
                     "type": "string",
-                    "description": "If provided, the URI for the next GET call."
+                    "description": "The URI of the next page of results, if any." 
                 }
             }
         },

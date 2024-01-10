@@ -7,15 +7,44 @@ layout: reference
 
 The Expense Entries API is used to manage expense reports and their entries in SAP Concur solutions. It allows for the synchronizing and reconciliation of expense related information with your internal systems and reporting modules.
 
-1.1 documentation is available [here.](/api-reference/expense/expense-report/v1dot1.expense-entry.html)  
+1.1 documentation is available [here.](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)  
+
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ## Retrieve All Expense Entries <a name="get"></a>
 
 [Version 2.0](/api-reference/expense/expense-report/expense-report-get.html), covers a wider range of partner scenarios and is recommended as the first step. However, depending on  the entries you need to retrieve, using a combination of version 2.0 and version 3.0 should be considered. To see examples, review the [VAT Reclaim](/api-guides/vat-reclaim/vat-reclaim-guide.html) integration guide.
 
+## Get a New Expense Entry <a name="Get"></a>
+
+```
+GET  /api/v3.0/expense/entries
+```
+
+### Parameters
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`reportID`|````query````|`string`|The report ID of the entries to be retrieved. Format: An alpha-numeric GUID string.
+`paymentTypeID`|````query````|`string`|The ID of the payment type of the entries to be retrieved.
+`batchID`|````query````|`string`|	The batch ID for the entries to be retrieved. The batch ID identifies the batch that contains the report payee associated with the entries.
+`isBillable`|````query````|`boolean`|Determines whether the operation retrieves entries that are billable. Format: true or false
+`attendeeTypeCode`|````query````|`string`|The ID of the attendee type for the entries to be retrieved.
+`hasAttendees`|````query````|`boolean`|Determines whether the operation retrieves entries that have attendees. Format: true or false
+`hasVAT`|````query````|`boolean`|Determines whether the operation retrieves entries that have VAT details. Format: true or false
+`expenseTypeCode`|````query````|`string`|The code for the expense type for the entries to be retrieved.
+`attendeeID`|````query````|`string`|The attendee associated with the entries to be retrieved.
+`offset`|````query````|`string`|The starting point of the next set of results, after the limit specified in the limit field has been reached.
+`limit`|````query````|`integer`|The number of records to return. Default value: 25
+`user`|````query````|`string`|The login ID of the user who owns the entries. The user must have the Web Services Admin role to use this parameter.
+
 ## Create a New Expense Entry <a name="post"></a>
 
-    POST  /api/v3.0/expense/entries
+```
+POST  /api/v3.0/expense/entries
+```
 
 ### Parameters
 
@@ -54,6 +83,17 @@ Name | Type | Format | Description
 ```
 https://www.concursolutions.com/api/v3.0/expense/entries/gWidFO7ikXV66iSvqtG6Yd0wZ%24s4ftzvzTCg
 ```
+
+## Get an Expense Entry <a name="get"></a>
+
+    GET  /api/v3.0/expense/entries/{id}
+
+### Parameters
+
+Name | Type | Format | Description
+-----|------|--------|------------
+`id`|````string````|`path`|**Required** The expense entry ID.
+`user`|````query````|`string`|The login ID of the user who owns the entries. The user must have the Web Services Admin role to use this parameter.
 
 ## Delete an Expense Entry <a name="delete"></a>
 
@@ -126,7 +166,7 @@ Name | Type | Format | Description
 `SpendCategoryName`	|	`string`	|	-	|	The name of the spending category that is specified for this expense entry, localized to the user's language.
 `TaxReceiptType`	|	`string`	|	-	|	The receipt type for this entry. Supported values: `T` - tax receipt, `R` - regular receipt, `N` - no receipt
 `TransactionAmount`	|	`decimal`	|	-	|	**Required** The amount of the expense entry, in the transaction currency paid to the vendor.
-`TransactionCurrencyCode`	|	`string`	|	-	|	**Required** The 3-letter ISO 4217 currency code for the expense entry transaction amount. This is the currency in which the vendor was paid. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because for these two expense codes the currency is always the Report Currency.
+`TransactionCurrencyCode`	|	`string`	|	-	|	**Required** The 3-letter ISO 4217 currency code for the expense entry transaction amount. This is the currency in which the vendor was paid. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because for these two expense codes the currency is always the Report Currency. Updating an entry's TransactionCurrencyCode through an API call will not automatically update the ExchangeRate, both must explicitly be updated for the report to reflect the posted amount in the report's currency.
 `TransactionDate`	|	`dateTime`	|	`YYYY-MM-DD`	|	**Required** The date when the good or service associated with this expense entry was provided.
 `TripID`	|	`string`	|	-	|	The unique identifier of a trip in the Itinerary Service that includes a travel booking associated with this expense. Use GET ItineraryDetails to get information about this trip and the travel booking. This element is null when there is no trip associated with the expense.
 `URI`	|	`string`	|	-	|	The URI to the resource.

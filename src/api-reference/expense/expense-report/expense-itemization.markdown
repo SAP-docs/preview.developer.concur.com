@@ -7,9 +7,11 @@ layout: reference
 
 1.1 documentation is available [here](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)  
 
-## Retrieve all expense itemizations owned by the user <a name="get"></a>
+## Limitations
 
-**DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
+Access to this documentation does not provide access to the API. 
+
+## Retrieve all expense itemizations owned by the user <a name="get"></a>
 
     GET  /api/v3.0/expense/itemizations
 
@@ -241,7 +243,7 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations
 
 ## Update an expense itemization <a name="put"></a>
 
-**DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
+**DEPRECATED: 05/19/2016**  
 
     PUT  /api/v3.0/expense/itemizations/{id}
 
@@ -267,7 +269,7 @@ no content
 
 ## Delete an expense itemization <a name="delete"></a>
 
-**DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016**  
+**DEPRECATED: 05/19/2016**  
 
     DELETE  /api/v3.0/expense/itemizations/{id}
 

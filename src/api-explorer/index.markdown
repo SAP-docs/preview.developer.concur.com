@@ -7,7 +7,7 @@ Browse [Swagger](https://swagger.io/) documents, such as what APIs are available
 
 ## SAP API Hub
 
-For v4 and newer APIs, you will be redirected to the [SAP API Hub](https://api.sap.com/products/SAPConcur/apis/REST). Over time the SAP API Hub will provide support for an improved Swagger experience as we make new APIs available.
+For v4 and newer APIs, you will be redirected to the [SAP Business Accelerator Hub](https://api.sap.com/products/SAPConcur/apis/REST). Over time the SAP Business Accelerator Hub will provide support for an improved Swagger experience as we make new APIs available.
 
 Previous versions of APIs will continue to be displayed here.
 

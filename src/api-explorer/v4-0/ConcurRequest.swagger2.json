@@ -29,6 +29,10 @@
       "description": "Manage expected expenses attached to a Request"
     },
     {
+      "name": "Allocation Resource",
+      "description": "Manage allocations attached to a Request"
+    },
+    {
       "name": "Cash Advance Resource",
       "description": "Retrieve cash advance for Concur Request"
     },
@@ -38,7 +42,7 @@
     }
   ],
   "paths": {
-    "/travelrequest/requests": {
+    "/requests": {
       "get": {
         "tags": [
           "Request Resource"
@@ -2505,6 +2509,202 @@
           }
         }
       }
+    },
+    "/v4/requests/{requestUuid}/allocations/{allocationUuid}": {
+      "get": {
+        "tags": [
+          "Allocation Resource"
+        ],
+        "summary": "Get the details of an existing allocation by id",
+        "description": "Provides the details of existing allocations by id within a Request.",
+        "operationId": "getAllocation",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "allocationUuid",
+            "in": "path",
+            "description": "The unique identifier of the allocation",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "concur-correlationid",
+            "in": "header",
+            "description": "Client generated request identifier passed through all requests",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user viewing the allocation of a Request",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Allocation"
+            }
+          },
+          "400": {
+            "description": "Bad param: invalid Guid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid or non existent authorization HTTP header",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update the content of an existing Allocation.",
+        "tags": [
+          "Allocation Resource"
+        ],
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "allocationUuid",
+            "in": "path",
+            "description": "The unique identifier of the allocation",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "concur-correlationid",
+            "in": "header",
+            "description": "Client generated request identifier passed through all requests",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "contextRoleType",
+            "in": "query",
+            "description": "The role of the Concur user, which determines the form fields they can view/modify",
+            "required": false,
+            "type": "string",
+            "default": "REQ_TRAVELER",
+            "enum": [
+                "REQ_TRAVELER",
+                "REQ_MANAGER",
+                "REQ_PROCESSOR1",
+                "REQ_PROCESSOR2",
+                "REQ_PROCESSOR3",
+                "RISK_PROCESSOR"
+            ]
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user to update the allocation of a Request",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "allocation",
+            "description": "Allocation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Allocation"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Allocation"
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid or non existent authorization HTTP header",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -2525,7 +2725,7 @@
         },
         "agencyProposalType": {
           "type": "string",
-          "description": "The agency proposal type - equal API for generic proposition",
+          "description": "The agency proposal type - equal [API] for generic proposal",
           "enum": [
             "API"
           ]
@@ -2537,7 +2737,7 @@
         "booked": {
           "type": "boolean",
           "example": false,
-          "description": "True if this trip is (or has to be) handled by a Travel Agency"
+          "description": "[true] if this trip is pre-booked by a travel agency. It will pre-select this proposal within the agency proposal comparison screen"
         },
         "comments": {
           "type": "string",
@@ -2558,24 +2758,24 @@
         "policyCompliant": {
           "type": "boolean",
           "example": false,
-          "description": "The policy Compliant"
+          "description": "Whether the Agency Proposal is policy compliant or not. [true] if proposal is in policy; [false] if proposal is out of policy"
         },
         "proposal": {
           "type": "boolean",
           "example": false,
-          "description": "True if the status is proposal and false if the status is confirmed or Ticket issued"
+          "description": "[true] by default corresponding to the [PROPOSAL] status."
         },
         "proposalBatchSize": {
           "type": "integer",
           "format": "int32",
-          "description": "The size of the batch of Proposals imported.",
+          "description": "The size of the batch of Proposals imported. If this value is greater than 1, the Request will not be sent back to the traveler as long as the expected number of proposals (respective proposalOrder) are not integrated into the Request",
           "minimum": 1,
           "exclusiveMinimum": false
         },
         "proposalOrder": {
           "type": "integer",
           "format": "int32",
-          "description": "The position of the Proposal",
+          "description": "The position of the Proposal. Up to 3 proposals can be submitted with values [1], [2], [3]",
           "minimum": 1,
           "exclusiveMinimum": false
         },
@@ -2592,11 +2792,11 @@
         "selected": {
           "type": "boolean",
           "example": false,
-          "description": "True if the Traveler has selected the current Proposal"
+          "description": "[true] if the Traveler has selected the current Proposal"
         },
         "status": {
           "type": "string",
-          "description": "The status send in the proposal equal [proposal] or [confirmed] or [ticketissue]",
+          "description": "The agency proposal status value. Supported value: [PROPOSAL]. If not provided, will be set by default to [PROPOSAL].",
           "enum": [
             "PROPOSAL",
             "CONFIRMED",
@@ -2653,7 +2853,6 @@
       "type": "object",
       "required": [
         "booked",
-        "confirmationNumber",
         "pnr",
         "proposalSegmentType",
         "vendorName"
@@ -2697,12 +2896,12 @@
         "policyCompliant": {
           "type": "boolean",
           "example": false,
-          "description": "The policy Compliant"
+          "description": "Whether the Agency Proposal is policy compliant or not. [true] if proposal is in policy; [false] if proposal is out of policy"
         },
         "policyCompliantLevel": {
           "type": "integer",
           "format": "int32",
-          "description": "The policy Compliant Level",
+          "description": "The policy Compliant Level. [0] if policyCompliant is true; [100] if policyCompliant is false",
           "minimum": 0,
           "maximum": 100,
           "exclusiveMinimum": false,
@@ -2740,15 +2939,11 @@
         },
         "startTime": {
           "type": "string",
-          "description": "The start time of the proposal segment (in the format HH:MM). It is expressed in the local time of the startLocation\""
-        },
-        "timeZone": {
-          "type": "string",
-          "description": "The timezone. Either in UTC/GMT + offset format or matching TZDB names."
+          "description": "The start time of the proposal segment (in the format HH:MM). It is expressed in the local time of the startLocation"
         },
         "vendorName": {
           "type": "string",
-          "description": "The name of the vendor of this Proposal Segment.",
+          "description": "The name of the vendor of this Proposal Segment. Max length 64 characters.",
           "minLength": 0,
           "maxLength": 64
         },
@@ -2762,7 +2957,7 @@
         },
         "airConditioning": {
           "type": "boolean",
-          "description": "Indicates if car has an air conditioner. Y - AC, N - No AC. For the CAR segment leg only"
+          "description": "Indicates if car has an air conditioner. For the CAR segment leg only"
         },
         "arrivalTerminal": {
           "type": "string",
@@ -2776,6 +2971,10 @@
           "type": "string",
           "description": "The class of the AIR, CAR or RAIL segment leg only"
         },
+        "classListItem": {
+          "description": "The unique identifier of the class of service of the segment (will populate the Class list field of the segment form - if displayed)",
+          "$ref": "#/definitions/ResourceLink"
+        },
         "departureTerminal": {
           "type": "string",
           "description": "The departure terminal, for the AIR segment leg only"
@@ -2787,7 +2986,7 @@
         "duration": {
           "type": "integer",
           "format": "int32",
-          "description": "The duration of the booked flight or train, for the AIR or RAIL segment leg only. Must be greater than 0",
+          "description": "The duration in minutes of the booked flight or train, for the AIR or RAIL segment leg only. Must be greater than 0",
           "minimum": 1
         },
         "endLocation": {
@@ -3468,7 +3667,7 @@
         },
         "type": {
           "type": "string",
-          "description": "Defines the type of the source which can be one of \"ALLOCATION\", \"CASH_ADVANCE\", \"EXPENSE\", \"HEADER\"",
+          "description": "Defines the type of the source which can be one of ALLOCATION, CASH_ADVANCE, EXPENSE, HEADER",
           "enum": [
             "ALLOCATION",
             "CASH_ADVANCE",
@@ -3835,6 +4034,10 @@
         "pendingApproval": {
           "type": "boolean",
           "description": "Indicates whether this Request is pending approval"
+        },
+        "pnr": {
+          "type": "string",
+          "description": "The value of the pnr provided within the agency proposals by the travel agency"
         },
         "policy": {
           "description": "The policy that applies to the Request",
@@ -4249,19 +4452,29 @@
         },
         "proposalType": {
           "type": "string",
-          "description": "The travel agency proposal type",
-          "enum": [
-            "CWTF",
-            "AEBT",
-            "API",
-            "NONE"
-          ]
+          "description": "The travel agency proposal type"
+        },
+        "customerAccountCode": {
+          "type": "string",
+          "description": "The code of the customer account configured within the Travel Agency Office admin page. Available only if proposalType is [AEBT] or [API]"
+        },
+        "customerAccountName": {
+          "type": "string",
+          "description": "The name of the customer account configured within the Travel Agency Office admin page. Available only if proposalType is [AEBT] or [API]"
         }
       }
     },
     "SegmentLeg": {
       "type": "object",
       "properties": {
+        "cardProgram": {
+          "type": "string",
+          "description": "The value of the card program provided in the segment leg."
+        },
+        "cardValidity": {
+          "type": "string",
+          "description": "The value of the card validity provided in the segment leg."
+        },
         "class": {
           "description": "The class of the segment leg.",
           "$ref": "#/definitions/ListItemField"
@@ -4478,6 +4691,10 @@
         "startTime": {
           "type": "string",
           "description": "The start time of the segment leg (in the format HH:MM). It is expressed in the local time of the start location"
+        },
+        "serviceName": {
+          "type": "string",
+          "description": "The value of the service name provided in the segment leg."
         },
         "vendorName": {
           "type": "string",

@@ -18,6 +18,10 @@ This callout differs from the inbound SAP Concur web services in the following w
 * It uses an outbound message where Travel calls a public facing API endpoint provided by the hotel supplier.
 * The supplier configures and maintains the public web service interface. This guide specifies the request and response format required by SAP Concur.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Works With These SAP Concur Products
 
 * **Travel** for Concur Professional/Premium
@@ -207,4 +211,3 @@ Code|Description
 38|Linked reference
 39|Contract
 40|Confirmation number
-

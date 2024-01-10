@@ -5,10 +5,6 @@ layout: reference
 
 # Authentication
 
-If you are an existing partner with an existing app, please read both the [Migration to Oauth2 Tokens](/api-reference/authentication/migrationguide.html) and [Getting Started](/api-reference/authentication/getting-started.html) documentation first. If you have any questions, please contact your Partner Enablement team representative before proceeding.
-
-**Note:** The Pre-2017 Authorization (Deprecated) documentation be found [here](/deprecated.html#pre-2017-authorization-deprecated)
-
 ## Access Tokens <a name="access_token"></a>
 
 The Oauth2 service generates access tokens for authenticated users, applications or companies. The token returned in the Oauth2 response can be used to access protected resources on SAP Concur services.
@@ -196,8 +192,8 @@ When refreshing a token or when calling any other APIs, the token's geolocation 
 
 **Note:** Client-side calls should use the www- variant of the base URI.
 
-For example:
-When obtaining a token, if the response was the below:
+#### Example
+Consider an example where your application obtains a token and receives the response below:
 
 ```http
 HTTP/1.1 200 OK
@@ -219,7 +215,7 @@ Connection: Close
 }
 ```
 
-When then calling the receipts API to post a receipt, your request should be made to https://us.api.concursolutions.com (if server side) or https://www-us.api.concursolutions.com (for clients).
+When your application calls another API, such as the receipts API to post a receipt, the request should be made using the base URI specified in the geolocation value of the response.  In the example above, that request would be made to https://us.api.concursolutions.com (if server side) or https://www-us.api.concursolutions.com (for clients).  The geolocation value can be any of the supported base URIs.  The application should store the specific geolocation it receives, and use it as the base URI for future API calls when using that token.
 
 
 ## ID Token <a name="id_token"></a>
@@ -647,6 +643,7 @@ In all cases, the friendly error description should be displayed to the user.
 | 136  | `invalid_request` | Authtoken was not issued for you                       |
 | 139  | `invalid_request` | Logon Denied. Password must be changed to meet company policy.             |
 
+
 ##### /otp
 
 
@@ -687,7 +684,7 @@ Only the [Password Grant Type](#password_grant) is available for obtaining compa
 1. To begin the authentication flow, a Customer's SAP Concur Administrator clicks on the Connect button within the App Center listing and authorizes the partner's app.  This app listing is located within customer's SAP Concur system's App Center tab.
 1. The SAP Concur authorization service will redirect the Admin to the Partner’s Landing Page.  Partners should follow the [App Center UX Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-enterprise.html) to create a web page that listens for an HTTP GET request from SAP Concur.
 1. The redirect URI will contain an id, requestToken and userId parameters.  Example: `https://{partner_redirect_URI}?id=8568a4cd-8ffc-49d6-9417-be2d69aa075f&requestToken=5l85ae5a-426f-4d6f-8af4-08648c4b696b&userId=9bdded51-00b8-4f84-8bef-6d3afe727007`
-1. When the Partner application receives the redirect call, the Partner should strip the `id` and `requestToken` values from the URI and use those on a Post request to the SAP Concur Authorization service to obtain the official Oauth2 Access Token and Refresh Token for the customer using the [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant). As explained in detail in this [presentation](https://prezi.com/p/lw0qqy51zcmd/), the Partner must have [Data Center Geo Awareness](https://developer.concur.com/api-reference/authentication/apidoc.html#base_uri) related to the token. We currently have 3 Data Centers and the API end points change based on these Data Centers so it is imperative the proper token management is followed.  Otherwise, your app will not make the correct call per Access token.
+1. When the Partner application receives the redirect call, the Partner should strip the `id` and `requestToken` values from the URI and use those on a Post request to the SAP Concur Authorization service to obtain the official Oauth2 Access Token and Refresh Token for the customer using the [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant). We currently have 3 Data Centers and the API end points change based on these Data Centers so it is imperative the proper token management is followed.  Otherwise, your app will not make the correct call per Access token.
 1. An access token is valid for only one hour.  The access token should be cached in memory and discarded after use.
 1. After the Admin has successfully completed the login/enrollment process, the Partner should store the following elements with the customer’s profile metadata.
   * `refresh_token`: Valid for six months from the day and time issued.

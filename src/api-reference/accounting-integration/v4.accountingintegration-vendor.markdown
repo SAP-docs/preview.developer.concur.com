@@ -7,17 +7,21 @@ layout: reference
 
 {% include prerelease.html %}
 
+Return to [Accounting Integration v4 - Getting Started](/api-reference/accounting-integration/v4.accountingintegration-get-started.html)
+
 ## <a name="patch-vendors"></a>Add, Update, or Delete Vendors
 
-This endpoint allows users to add, update, or delete ERP vendor data that is cached. Upon receiving the data, the server will process the request asynchronously and return immediately with a response payload containing the status and the link of the progressing status.
+This endpoint allows users to add, update, or delete ERP vendor data that is cached in the SAP Concur system. Upon receiving the data, the server will return immediately with a response payload containing the request current status and a link to check the request status progress, then process the request asynchronously.
 
-In addition, events will be published to notify API users of important updates. For more information, please see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+In addition, events will be published to notify the API consumers of important updates. For more information, please see [Accounting Integration Events](/event-topics/accounting-integration/event-subscription-topic-accountingintegration.html).
 
 ### Limitations
 
+* **Employee Vendor data has a TTL(Time-To-Live) of 150 days. They need to be re-sent before the expiration so that customers' data will stay up to date.**
+* Creating Vendors through this API will not automatically import those vendors into the SAP Concur system, it only caches the ERP data. Customers will need to add the accounting and employee vendors in the SAP Concur system via the provided UI screens. You can use [Invoice Vendor v3 API](api-reference/invoice/v3.1.vendor.html) to import invoice vendors.
+* Access to this documentation does not provide access to the API.
 * The total request payload size should not exceed 4 MB.
 * Any given ERP record size should not exceed 200 KB.
-* The ERP data will be cached in SAP Concur data center for no more than 150 days.
 * This endpoint can be called once per second.
 
 ### Scopes
@@ -39,12 +43,12 @@ Name|Type|Format|Description
 
 ### Payloads
 
-* Request: [List of Vendor](./v4.accountingintegration-schema.html#list-of-vendor)
-* Request: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [Error](./v4.accountingintegration-schema.html#schema-error)
+* Request: [Update ERP Vendors Request](./v4.accountingintegration-schema.html#list-of-vendor)
+* Request: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
-#### Request: delete all data, then add new data
+#### Request: delete all the cached vendors data in the SAP Concur system, then add new data
 
 ```shell
 PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/vendors
@@ -55,28 +59,40 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
   "deleteAll": true,
   "data": [
     {
-      "id": "string",
+      "id": "1",
+      "type": "EMPLOYEE",
+      "currencyCode": "USD",
+      "lastName": "Joe",
+      "firstName": "J",
+      "name": "Joe J",
+      "employeeId": "1",
+      "companyName": "SAP",
+      "email": "JoeJ@sap.com"
+    },
+    {
+      "id": "2",
       "type": "ACCOUNTING",
-      "currencyCode": "string",
-      "lastName": "string",
-      "firstName": "string",
-      "name": "string",
-      "employeeId": "string",
-      "companyName": "string",
-      "email": "string",
-      "taxId": "string",
-      "phone": "string",
-      "accountNumber": "string",
+      "currencyCode": "USD",
+      "name": "SAP America, Inc.",
+      "companyName": "SAP America, Inc.",
       "address": {
-        "addr1": "string",
-        "addr2": "string",
-        "addr3": "string",
-        "state": "string",
-        "country": "string",
-        "postalCode": "string",
-        "city": "string",
-        "note": "string"
+        "addr1": "3999 West Chester Pike",
+        "city": "Newton Square",
+        "state": "Pennsylvania",
+        "country": "USA",
+        "postalCode": "19073"
       }
+    },
+    {
+      "id": "3",
+      "type": "EMPLOYEE",
+      "currencyCode": "USD",
+      "lastName": "Kevin",
+      "firstName": "J",
+      "name": "Kevin J",
+      "employeeId": "3",
+      "companyName": "SAP",
+      "email": "KevinJ@sap.com"
     }
   ]
 }
@@ -92,32 +108,33 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
 {
   "data": [
     {
-      "id": "string",
-      "type": "ACCOUNTING",
-      "currencyCode": "string",
-      "lastName": "string",
-      "firstName": "string",
-      "name": "string",
-      "employeeId": "string",
-      "companyName": "string",
-      "email": "string",
-      "taxId": "string",
-      "phone": "string",
-      "accountNumber": "string",
-      "address": {
-        "addr1": "string",
-        "addr2": "string",
-        "addr3": "string",
-        "state": "string",
-        "country": "string",
-        "postalCode": "string",
-        "city": "string",
-        "note": "string"
-      }
-    },    
+      "id": "1",
+      "type": "EMPLOYEE",
+      "currencyCode": "USD",
+      "lastName": "Joe",
+      "firstName": "J",
+      "name": "Joe J",
+      "employeeId": "1",
+      "companyName": "SAP",
+      "email": "JoeJ@sap.com"
+    },
     {
-      "isDeleted": true,
-      "id": "string2"
+      "id": "2",
+      "type": "ACCOUNTING",
+      "currencyCode": "USD",
+      "name": "SAP America, Inc.",
+      "companyName": "SAP America, Inc.",
+      "address": {
+        "addr1": "3999 West Chester Pike",
+        "city": "Newton Square",
+        "state": "Pennsylvania",
+        "country": "USA",
+        "postalCode": "19073"
+      }
+    },
+    {
+      "id": "3",
+      "isDeleted": true
     }
   ]
 }
@@ -146,7 +163,7 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
 
 ## <a name="get-vendors"></a>Retrieve Vendors
 
-This endpoint is to retrieve the ERP vendor data.
+This endpoint's purpose is to retrieve the ERP vendor data that is cached in the SAP Concur system.
 
 ### Limitations
 
@@ -172,7 +189,7 @@ Name|Type|Format|Description
 ### Payloads
 
 * Request: None
-* Response: [List of Vendor](./v4.accountingintegration-schema.html#list-of-vendor), [Error](./v4.accountingintegration-schema.html#schema-error)
+* Response: [List of Vendor](./v4.accountingintegration-schema.html#list-of-vendor), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
@@ -192,27 +209,42 @@ GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erp
 {
   "data": [
     {
-      "id": "string",
+      "id": "1",
+      "type": "EMPLOYEE",
+      "currencyCode": "USD",
+      "lastName": "Joe",
+      "firstName": "J",
+      "name": "Joe J",
+      "employeeId": "1",
+      "companyName": "SAP",
+      "email": "JoeJ@sap.com",
+      "taxId": null,
+      "phone": null,
+      "accountNumber": null,
+      "address": null
+    },
+    {
+      "id": "2",
       "type": "ACCOUNTING",
-      "currencyCode": "string",
-      "lastName": "string",
-      "firstName": "string",
-      "name": "string",
-      "employeeId": "string",
-      "companyName": "string",
-      "email": "string",
-      "taxId": "string",
-      "phone": "string",
-      "accountNumber": "string",
+      "currencyCode": "USD",
+      "lastName": null,
+      "firstName": null,
+      "name": "SAP America, Inc.",
+      "employeeId": null,
+      "companyName": "SAP America, Inc.",
+      "email": null,
+      "taxId": null,
+      "phone": null,
+      "accountNumber": null,
       "address": {
-        "addr1": "string",
-        "addr2": "string",
-        "addr3": "string",
-        "state": "string",
-        "country": "string",
-        "postalCode": "string",
-        "city": "string",
-        "note": "string"
+        "addr1": "3999 West Chester Pike",
+        "addr2": null,
+        "addr3": null,
+        "state": "Pennsylvania",
+        "country": "USA",
+        "postalCode": "19073",
+        "city": "Newton Square",
+        "note": null
       }
     }
   ],

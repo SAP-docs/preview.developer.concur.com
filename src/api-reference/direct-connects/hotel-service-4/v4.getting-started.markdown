@@ -1,0 +1,217 @@
+---
+title: Direct Connect - Hotel Service v4 - Getting Started
+layout: reference
+---
+
+# Direct Connect - Hotel Service v4 - Getting Started
+
+Hotel Service v4 API provides a method for Custom Hotel Source suppliers to provide hotel inventory, rates, and booking related functionality to users of the SAP Concur Online Booking Tool (OBT).
+
+This guide provides information on how the hotel supplier can make their content available for Concur Travel users. Once the interface has been developed and certified with SAP Concur, the inventory will begin appearing in hotel searches by opted-in Travel users.
+
+This API has client/server architecture, where SAP Concur services act as client, pulling information from the hotel suppliers, who acts as server, responding to requests.
+
+## Limitations
+
+Access to this documentation does not provide access to the API. SAP Concur products are highly configurable, and not all clients will have access to all features.
+
+## Prior Versions
+
+Hotel Service v2 documentation is available [here](/api-reference/direct-connects/hotel-service-2/Introduction.html).
+
+## Process Flow
+
+This is a basic scenario encompassing all the functionality provided by Hotel Service v4 incorporated into Concur Travel starting from a hotel search through to confirmation of a booking, modification of booking, and ending with a cancellation.
+
+![A process flow diagram of the Hotel Service v4 API](./images/diagrams/hs4-sequence-diagram.png)
+
+## Products and Editions
+
+* Concur Travel Professional Edition
+* Concur Travel Standard Edition
+
+## Scope Usage <a name="scope-usage"></a>
+
+* None
+
+## Dependencies <a name="dependencies"></a>
+
+* None
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+* None
+
+### Reservation and Read Requests
+
+If a Read request does not arrive within five minutes for a given reservation, the supplier should treat that reservation as an orphan and should seek to cancel it.
+
+## Supported Operations
+
+|Operation|Description|
+|---|---|
+[`/hotels/search`](./v4.endpoints.html#search-hotels-)|Perform the initial search for hotels.|
+[`/hotels/rates`](./v4.endpoints.html#rates-)|Retrieve hotel rates.|
+[`/hotels/ratedetails`](./v4.endpoints.html#rate-details-)|Retrieve details the rates of a property, guarantee, cancellation penalty, or nightly prices. This action is required if these details are missing from the `/hotels/rates` response or `rateDetailsCallRequired` flag is set to true for a given rate.|
+[`/hotels/details`](/.v4.endpoints.html#hotel-details-)|Retrieve hotel description info including media.|
+[`/hotels/reservation`](./v4.endpoints.html#reservation-)|Reserve hotel rate.|
+[`/hotels/reservation/read`](./v4.endpoints.html#read-)|Read reservation details. Used to acknowledge the receipt of booking confirmation, as well as write information to itinerary while reserving a hotel.|
+[`/hotels/reservation/modify`](./v4.endpoints.html#modify-)|Modify given reservation.|
+[`/hotels/reservation/cancel`](./v4.endpoints.html#cancel-)|Cancel specified reservation.|
+
+## Supported OTA Codes <a id="supported-ota-codes"></a>
+
+The current list of supported OTA codes for different code list types (RMA, HAC etc.) can be found [here](./v4.supported-ota-codes.html).
+
+## Supported Error Codes <a id="supported-error-codes"></a>
+
+The current list of supported OTA error codes can be found [here](./v4.supported-error-codes.html).
+
+## <a name="non-functional-requirements"></a>Non Functional Requirements
+
+### Payload Limits
+
+Please note that any responses higher than the suggested content-length may be dropped/truncated and result in an error.
+
+|Operation|Maximum Response (content-length)|
+|---|---|
+`/hotels/search`|5 MB|
+`/hotels/rates`|5 MB|
+`/hotels/details`|5 MB|
+`/hotels/ratedetails`|5 MB|
+
+### Recommended Response Times and Retries
+
+All endpoints carry a timeout of 55 seconds. Some operations below support retries in case of 5xx errors as noted. No endpoints will attempt a retry in the event there is a timeout.
+
+SAP Concur services have monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.
+
+|Operation|Recommended Response Times|Support Retries (for 5xx errors)|
+|---|---|---|
+`/hotels/search`|< 5 seconds|Yes|
+`/hotels/rates`|< 5 seconds|Yes|
+`/hotels/details`|< 1 second|Yes|
+`/hotels/ratedetails`|< 1 second|Yes|
+`/hotels/reservation`|< 5 seconds|No|
+`/hotels/reservation/read`|< 1 second|Yes|
+`/hotels/reservation/modify`|< 5 seconds|No|
+`/hotels/reservation/cancel`|< 5 seconds|No|
+
+### Recommended Throughput
+
+Higher throughput allows system to scale and serve large number of travelers. We recommend suppliers provision for resources to support the following throughput.
+
+|Operation|Recommended Throughput (Requests Per Minute)|
+|---|---|
+`/hotels/search`|< 50|
+`/hotels/rates`|< 100|
+`/hotels/details`|< 100|
+`/hotels/ratedetails`|< 50 |
+`/hotels/reservation`|< 20|
+`/hotels/reservation/read`|< 20|
+`/hotels/reservation/modify`|< 10|
+`/hotels/reservation/cancel`|< 10|
+
+**Note**: To prevent no show fees, duplicate bookings and other similar issues, we requires the Hotel Supplier auto-cancel a reservation if a corresponding `/hotels/reservations/read` call is not made by SAP Concur systems within 5 minutes after the `/hotels/reservation` call was made.
+
+### Emergency Technical Contact
+
+The hotel supplier needs to provide emergency technical contact email that will be used for communication in case of blocking technical issues.
+
+### Testing Environment
+
+We require the hotel supplier to provide a testing URL or specify properties for testing in a production URL. We require the ability to preform test bookings with test credit cards.
+
+### Security
+
+#### PCI DSS Compliance
+
+As sensitive data and payment card details are transferred via API, hotel suppliers are required to comply with PCI DSS standards.
+
+#### HTTPS
+
+We require Transport Layer Security v1.2 (TLS 1.2) or higher SSL protocol with a 256-bit AES cipher for data transfers. The hotel supplier is required to provide HTTPS URLs of its endpoint. Standard HTTPS port 443 should be used.
+
+### URLs
+
+We will receive a single URL for each environment (Test and Production) from the hotel supplier. All requests will go to that URL.   
+
+### Authentication
+
+SAP Concur services will send a username and password in the HTTP header (Authorization) where the value of the header will be a `base64` encoded `string` in the form of `Basic <username:password>`. If the username and password generates an authentication error, then there will be a HTTP 401 response.
+
+## HTTP Headers <a name="http-headers"></a>
+
+SAP Concur services will send the following HTTP headers in every request. Please note that some libraries used to handle the requests may be case sensitive and that the SAP Concur `login-id` and traveler `uuid` are now part of the payload for each request and no longer available as headers.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`Authorization`|`string`|`base64`| An encoded string in the form of `Basic <username:password>`.|
+`Content-Type`|`string`|-| All communication with the HS4 API is by way of a `application/json` content type.|
+`Accept`|`string`|-| SAP Concur will always set the `Accept` header to `application/json`.|
+`concur-correlationid`|`string`|-| In order to assist with troubleshooting, SAP Concur provides a unique `correlationId` in the request header. This unique code can be used during troubleshooting as it identifies the API call in the log files.|
+`Accept-Language`|`string`|-| Value of this header will follow language tag of the format LanguageCode-CountryCode, e.g. `en-US`, `fr-CA`, `de-CH` etc.|
+
+## Confirmation Codes <a name="confirmation-codes"></a>
+
+Please note current definitions of `ConfirmationCodeType` differ from what was used in [Hotel Service v2](./hotel-service-2/Introduction.html) (HSv2).
+* `RESERVATION`: Maps to OTA Unique ID Type `14` and has no equivalent for HSv2. This will be the record locator of supplier PNR and will be provided in all subsequent read/modify/cancel request on a booking. This is optional and will be mostly pass through for SAP Concur systems.
+* `SUPPLIER_CONFIRMATION`: **(Required)** Maps to OTA Unique ID Type `40` and represents supplier's confirmation number. This also be provided in all subsequent read/modify/cancel request on a booking, and it is also used in the passive segment created in the GDS. (Equivalent to `14` in HSv2).
+* `HOTEL_CONFIRMATION`: Maps to OTA Unique ID Type `10`. Used by travelers if they want to change their reservation outside of SAP Concur Online Booking Tool. If the property confirmation code is not available, the supplier may send the aggregator confirmation code in this field. (Equivalent to `1000` in HSv2). This field will appear on the itinerary page together with `SUPPLIER_CONFIRMATION` confirmation number.
+* `CANCELLATION`: **(Required)** Maps to OTA Unique ID Type `15` and is same as HSv2 and must be provided as a part of `CancelDetails` response object.
+* `CONCUR_GDS_REFERENCE`: This is custom code for **future** use (Type `14`) which will be sent by SAP Concur in read/modify requests and will provide Concur Booking Record Locator for passives.
+* `PASSIVE_CONFIRMATION`: Use this code type to provide confirmation code value that you need to use in passive segment. If not provided value from `SUPPLIER_CONFIRMATION` is used instead in passive segment.
+* `PIN`: Use this code type to provide any pin number that may be required to modify the booking at a later point. If provided this code will be returned back in all subsequent calls for this booking. (Sometimes sent as `1000` in HSv2)
+
+## Vendor/Supplier Provided Virtual Payment <a name="vendor-virtual-payment"></a>
+With the current Hotel Service v2, several mechanisms are in place to support vendor provided virtual payments (not managed by SAP Concur) as required by different suppliers. With HSv4, support for the vendor provided virtual payment will be achieved through the `acceptedPayments` element.   Details of this are below.
+
+1. Suppliers wanting to use their own virtual payment solution will need to provide `VENDOR_PROVIDED` as one of the option in `acceptedPayments` element of [RoomRate](./v4.endpoints.html#schemaroomrateresponse) as returned in response of [`/hotels/rates`](./v4.endpoints.html#rates-) endpoint. 
+2. If user selects this payment option during booking ([`/hotels/reservation`](./v4.endpoints.html#reservation-) endpoint), [ReservationCriteria]() will have `paymentModeIndicator` set to value `VENDOR_VIRTUAL_CARD`. This indicator suggests that all payment will be handled by suppliers and no other payment details will be provided for this scenario.
+
+**Note**:  The acceptedPayments element should also contain all the cards that are accepted at the property. In the first release for Hotel, customers will have the option of selecting their own personal card or the vendor’s virtual card as payment for their reservation.  Support for Policy rules around this option will be introduced in a subsequent release. If a rule exists where a ghost/corporate card is `Required`, this will override the `VENDOR_PROVIDED` option.
+
+
+## Error Handling <a name="error-handling"></a>
+
+All HSv4 endpoints use consistent error handling. API responses can have one of the following HTTP response code:
+
+|HTTP Code|Description|
+|---|---|
+|200|Operation successful without any errors.|
+|400|Invalid client request. Request shouldn’t be retried without changing it. Response should follow [Error](./v4.endpoints.html#schemaerror) schema and include OTA Code providing accurate reason for request being invalid.|
+|401|Request unauthorized. Credentials used for the request are not valid.|
+|500|System error while processing the request. Request can be retried as is at a later time. Response should follow [Error](./v4.endpoints.html#schemaerror) schema. OTA Code is optional for such errors but we expect useful message for better troubleshooting.|
+
+As noted above, please ensure to provide appropriate OTA code for all application level errors (with HTTP 400 response code). SAP Concur rely on OTA Code to display localized message to end users. Please refer to [OTA error code list](./v4.supported-error-codes.html) for extensive list of error codes that are supported today. If you see a need for additional OTA codes to be supported, please contact Concur Support.
+
+Errors should always be returned in an [Error](./v4.endpoints.html#schemaerror) schema response. For example:
+```
+{
+  "otaCode": 69,
+  "message": “Minimum stay criteria not fulfilled"
+}
+```
+If `otaCode` is missing in an error, then only generic error is displayed to user and may not provide proper context.  Any message text from the supplier will be logged but SAP Concur does not support displaying of supplier generated error messages directly in the UI.
+
+## API Schema
+
+The Swagger/OpenAPI schema is available at: [API Explorer](https://developer.concur.com/api-explorer/v4-0/HotelService.html#/).
+
+## API Testing
+To enable faster certification, Suppliers can use the following testing tools to validate the majority of functional and non-functional requirements of this API during the development phase. Please use these tools both during development and once development is complete. 
+
+### Functional Testing
+
+To download our [functional testing tool package](./v4.tests.zip).
+
+   * Includes a [Postman](https://www.postman.com/downloads/) collection that validates responses for all API endpoints against the OpenAPI [schema](https://developer.concur.com/api-explorer/v4-0/HotelService.html).
+   * Validates basic features of the API, for example search response has properties in specified radius; all properties in details response have hotel images; checkin and checkout dates are valid; all hotel rates have appropriate amenity codes; cancel penalties have valid cancel deadlines; etc.
+   * For more detailed instructions on how to run these tests please refer to the README inside the testing tool zip.
+
+### Performance Testing
+
+To download our [non-functional testing tool package](./v4.perf-tests.zip).
+   * Includes taurus and jmeter test scripts.
+   * Running these tests validates against our [Non Functional Requirements](#non-functional-requirements).
+   * For more detailed instructions on how to run these tests please refer to the README inside the testing tool zip.

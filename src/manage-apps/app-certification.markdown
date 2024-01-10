@@ -7,7 +7,7 @@ Handling data with care and delivering a positive experience for our customers i
 
 **NOTE:** This only applies to developers who are building an integration across multiple clients (that is, an app that would appear in the App Center or TMC integrations). SAP Concur clients who are using these APIs for interaction with their own data do not need to go through certification.
 
-#### **Get Started on Your API Review**
+#### **Get Started on Your App Review**
 
 Start with an overview of the whole process: [API documentation]({{ site.baseurl }}/api-reference/). Consider these three integration scenarios:
 
@@ -18,11 +18,6 @@ Start with an overview of the whole process: [API documentation]({{ site.baseur
 Once you choose the desired path and the relevant contract is in place, you will be assigned a technical resource to guide you through the corresponding process. The process includes gaining access to a Professional Edition and/or Standard Edition sandbox depending on the above scenario. The sandbox will allow you to validate your integration during development.
 
 As you develop your app, your Certification Project Manager will record the exact APIs (including the version and verbs) that you will use for your application. See the requirements to pass certification in these Overview docs (including Support requirements expected of the Partner):
-
-* [Enterprise apps](https://prezi.com/p/lw0qqy51zcmd/)
-* [eReceipt apps](https://prezi.com/p/ur2i1m8thynz/)
-
-> Note: These do not apply a Triplink app integration.
 
 Once you complete the walkthrough demonstration(s) of your integration, you may be asked for additional information or be requested to make changes to your app integration depending on the outcome of the review.  
 

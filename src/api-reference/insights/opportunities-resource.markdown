@@ -10,6 +10,10 @@ Retrieves a collection of opportunities for a specified trip or for all trips th
 ### Version
 3.0
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve all connection requests that match the TripLink supplier ID <a name="get"></a>
 
     GET  https://www.concursolutions.com/api/v3.0/insights/opportunities

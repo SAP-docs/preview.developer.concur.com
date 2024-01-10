@@ -1,0 +1,287 @@
+---
+title: Document Compliance Gateway v4
+layout: reference
+---
+
+# Document Compliance Gateway v4
+
+Document Compliance Gateway v4 API is designed to manage the transmission of the compliance document  to the validating vendor. Vendors can implement the API to read the compliance document sent to the SAP Concur system by the end user from an approved email, validate the compliance document against government records, and return the validation result. In addition, the vendor can read and parse the compliance document file to provide tax relevant data for creating expense entry.
+
+The API supports an improved and efficient process for compliance document validation. The end user gets the compliance document validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The API also uses the data from the compliance document file to initiate the expense line item, saving the need for the user to manually type the information.
+
+
+
+## Prior Versions
+
+No prior API version available
+
+##  <a name="limitations"></a>Limitations
+
+API access is available only to the authenticated companies with granted permission. Access to this documentation does not provide access to the API. The API will be deployed to US2 & EU2 data centers.
+
+## <a name="process-flow"></a>Process Flow
+
+![Process Flow for Document Compliance Gateway](./dcg-process-flow.png)
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name| Description|Endpoint
+---|----|---
+`receipts.read`| Receipts - Tax Validation |GET
+`receipts.write`| Receipts - Tax Validation |PUT
+
+## <a name="authentication"></a>Authentication
+
+Authentication is provided through an App for company JWT. This API requires the valid access token with required scopes. Before making requests to the API, please obtain an access token from the [Authentication API](https://developer.concur.com/api-reference/authentication/getting-started.html).
+
+## <a name="dependencies"></a>Dependencies
+
+None.
+
+## <a name="endpoint"></a>Endpoints
+
+#### GET API CALL
+
+`Get the compliance document`
+
+### Scopes
+
+Refer to [Scope Usage](#scope-usage) for full details.
+
+`receipts.read`
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}
+```
+##### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`documentId`|`string`|-|Unique id assigned to a document.
+
+#### Headers
+
+* Authorization is provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
+* concur-correlationid is used to track the workflow for every step.
+
+#### Notes
+
+* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in. 
+* To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html).
+* Once you have the token use the following curl command to POST invoice details:
+
+```sh
+curl --location --request GET 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
+  -H 'concur-correlationid: {LogicalId}'
+```
+
+### Response
+
+#### Error Codes
+
+Code|Description
+---|---
+400|Validation errors in request body.
+401|Unauthorized (invalid JWT or expired, etc.)
+404|DCG Company Not Found
+500|Internal Server Error
+503|Service Unavailable
+502|Bad Gateway
+
+### Example
+
+#### Request
+
+```shell
+GET https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+Authorization: Bearer <JWT Token>
+concur-correlationid: "Test-FlOW"
+```
+
+#### Response
+```shell
+HTTP/1.1 200 OK
+Content-Type: XML
+```
+
+#### PUT API CALL
+
+`Provide the compliance document validation result and parsed tax relevant data from the compliance document.`
+
+### Scopes
+
+Refer to [Scope Usage](#scope-usage) for full details.
+
+`receipts.write`
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}
+```
+##### Parameters
+
+| Name       | Type | Format | Description
+|------------|------|--------|------------
+| `documentId` |string| |Unique id assigned to a document.
+
+#### Headers
+
+* Authorization is provided through an App for Business and the company JWT. More details can be found [here](https://developer.concur.com/api-reference/authentication/getting-started.html)
+* concur-correlationid is used to track the workflow for every step.
+
+### Payload
+
+* DigitalTax Token
+
+#### Notes
+
+* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. 
+* To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to the API.
+* Once you have the token, use the following curl command to POST invoice details:
+   
+```sh
+curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
+  -H "concur-correlationid": {LogicalId}\
+  --form "digitalTaxDocument"=@"DigitalTaxToken.json"
+```
+
+### Response
+
+#### Error Codes
+
+Code|Description
+---|---
+400|Validation errors in request body.
+401|Unauthorized (invalid JWT or expired, etc.)
+404|DCG Company Not Found
+500|Internal Server Error
+503|Service Unavailable
+502|Bad Gateway
+
+### Example
+
+#### Request
+
+```shell
+POST https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+Authorization: Bearer <JWT Token>
+concur-correlationid: "Test-FlOW"
+digitalTaxDocument:
+{
+   "Status":"processed",
+   "DocumentData":{
+      "FormatVersion":"4.0",
+      "Code":"pos",
+      "Number":"1234",
+      "IssueDateTime":"2021-12-07T23:59:59",
+      "UUID":"ED1752FE-E865-4FF2-BFE1-0F552E770DC9",
+      "PaymentType":"Cash",
+      "GrossAmount":0.0,
+      "Discount":0.0,
+      "Currency":"MXN",
+      "ExchangeRate":"0.0",
+      "NetAmount":0.0,
+      "PaymentMethod":"PUE",
+      "TotalWithholdingTax":0.0,
+      "TotalSalesTax":0.0,
+      "Vendor":{
+         "CertificateNumber":"0000",
+         "TaxNumber":"TXN-No-1000",
+         "Name":"Vendor 1",
+         "city":"Bellevue",
+         "state":"WA",
+         "country":"US",
+         "phone":"888-867-5309",
+         "addressLine":"123 Main St"
+      },
+      "Buyer":{
+         "TaxNumber":"TXN-No-10001",
+         "Name":"Buyer 1",
+         "PostalCode":"MX-000001"
+      },
+      "LineItems":[
+         {
+            "ProductCode":"P1",
+            "Description":"Decription",
+            "Amount":0.0
+         }
+      ],
+      "DocumentPostalCode":"MX-000002"
+   },
+   "Description":"Document is valid",
+   "Code":"200"
+}
+```
+#### Response
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "DocumentId": "c92565ca-78c7-47be-a730-1d33ef35cdac",
+  "Description": "Tokens have been received."
+}
+```
+### Schema <a name="schema"></a>
+
+### <a name="schema-paymentRequest"></a>DigitalTax Token
+
+Name|Type|Format|Description
+---|---|---|---
+`Status`|`string`|-|Status of the compliance document (processed, failed ).
+`DocumentData`|`object`|-|Document data and tax tokens info.
+`FormatVersion`|`string`|-|The version of the document format.
+`Code`|`string`|-|Prefix of receipt (an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.).
+`Number`|`string`|-|Number of the receipt.
+`IssueDateTime`|`string`|date-time |Date and time when the document was created in the local timezone where it was issued.
+`UUID`|`string`|-|Document UUID - field present in compliance document.
+`PaymentType` |`enum`|-|Means of payment (Cash, Credit Card, Digital Wallet).
+`GrossAmount`|`number`|-| Sum of amounts before discounts and taxes.
+`Discount`|`string`|-|Total amount of applicable discounts before taxes.
+`Currency`|`string`|-|Currency used to express amounts (According to the ISO 4217 codes) (MXN).
+`ExchangeRate`|`number`|-|Exchange Rate according to currency used. Mandatory id currency <> MXN.
+`NetAmount`|`number`|-|Sub Total–Discounts+VAT Taxes–Withholding Taxes.
+`PaymentMethod`|`string`|-|Specify the code of payment method: PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.
+`TotalWithholdingTax`|`number`|-|Sum of all withheld tax amounts of line items.
+`TotalSalesTax`|`number`|-| Sum of all sales tax amounts of line items.
+`DocumentPostalCode`|`string`|-|Postal code of place of receipt issue.
+`VerificationCode`|`string`|-|Company's certificate used to generate digital signature.
+`Comments`|`string`|-|Comments.
+`Vendor`|`object`|-|Details of the vendor.
+`CertificateNumber`|`string`|-|Company's certificate used to generate digital signature.
+`TaxNumber`|`string`|-|Taxpayer ID of the vendor.
+`Name`|`string`|-|Name of receipt issuer.
+`City`|`string`|-|City of receipt issuer.
+`State`|`string`|-|State of receipt issuer.
+`Country`|`boolean`|-|Country of receipt issuer.
+`Phone`|`string`|-|Phone number of receipt issuer.
+`AddressLine`|`string`|Address of receipt issuer.
+`Buyer`|`object`|-|Details of the buyer.
+`TaxNumber`|`string`|-|Buyer Tax Number.
+`Name`|`string`|-|Buyer Name.
+`PostalCode`|`string`|-|Postal code of recipient's tax domicile.
+`LineItems`|`array`|-|Line items present in the compliance document.
+`LineItem`|`object`|-|Line item present in the compliance document.
+`ProductCode`|`string`|-|Key of product or service covered For example, 10101502 (Dogs), 10101506 (Horses).
+`Description`|`string`|-|Product Description.
+`Amount`|`number`|-|Total amount of good or service.
+`Description`|`string`|-|Comment/description provided by partner.
+`Code`|`string`|-|Response code provided by partner.
+

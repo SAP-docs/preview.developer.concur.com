@@ -7,12 +7,16 @@ layout: reference
 
 The Event Subscription Service (ESS) implements the Publish/Subscribe pattern using principles of Event Driven Architecture in the SAP Concur platform. It allows clients and partners to be notified through web services when certain actions take place in connected companies. When the business/system event occurs ESS sends that event to the configured endpoint with relevant information.
 
-* **Event** - a state of a business/system object or entity. Always has an `EventType` that represents a type of entity change or specific state in a workflow. Example: Report Created, Report Submitted, etc.
-* **Topic** - a stream of events of business/system object or entity. Example: `concur.user`, `concur.expense.report`, `concur.travel.request`.
+* **Event** - a state of a business/system object or entity. Always has an `EventType` that represents a type of entity change or specific state in a workflow. Example: StatusChanged, etc.
+* **Topic** - a stream of events of business/system object or entity. Example: `public.concur.expense.report`, `public.concur.travel.request`.
 * **Subscription** - a topic consumer. Each subscription has a topic it is subscribed to.  
 * **Webhook** - an ESS application that uses a subscription model and delivers events to the endpoint.
 
 In order to begin receiving events, you must first subscribe to the relevant topic(s) for your application. To subscribe to an event, you must work with your relevant SAP Concur technical contact; for partners, please work with your technical enablement contact. For customers, your web services consultant will subscribe on your behalf to the relevant topic(s).
+
+## Limitations
+
+Access to this documentation does not provide access to the API.
 
 ## Scope Usage <a name="scope-usage"></a>
 
@@ -24,6 +28,7 @@ Name                | Description                       | Endpoint
 `%topic scope%`     | Access to specific topic (events) | GET, POST, PUT, DELETE
 
 * If application has only the `events.topic.read` scope an empty list of topics will always be returned.
+* See the [Event Topics](https://developer.concur.com/event-topics/) section for the various Topics and corresponding required scope(s).
 
 ## Process Flow <a name="process-flow"></a>
 
@@ -34,7 +39,7 @@ Name                | Description                       | Endpoint
 ESS requires a caller to have a proper JWT and scopes, for more details please see the [Scopes](/api-reference/authentication/scopes.html) documentation. A caller must have the following types of scopes:
 
 * The ESS API level scope `events.topic.read` is required to be able to access ESS API.
-* A resource level scope, for example `expense.request.read` is required to be able to access the `expense.request` topic and to be able to create subscriptions to that topic.
+* A resource level scope, for example `expense.report.read` is required to be able to access the `public.concur.expense.request` topic and to be able to create subscriptions to that topic.
 
 All required scopes can be requested for a caller application by Partner Enablement team.
 
@@ -54,14 +59,28 @@ ESS guarantees at least once event delivery. This is accomplished through the r
 * The subscriber must maintain a reasonable uptime to support the requirements of the integration scenario.
 * Your HTTPS server endpoint must be accessible from the public web with a non-self-signed certificate.  The certificate should be signed by a known Certificate Authority and should be reachable through DNS.
 
-### <a name="ess-authentication"></a> ESS Authentication
+### ESS Authentication <a name="ess-authentication"></a>
 
-There are several ways that you can be sure that your endpoint being accessed by our service.
+We strongly recommend you use the certificate Common Name as the authentication mechanism to ensure your endpoint is accessed by our service. We will always use the same client [x509 certificate](./webhook.api.concursolutions.com.pem). The common name is `C=US, ST=Washington, L=Bellevue, O=Concur Technologies, Inc., CN=webhook.api.concursolutions.com` and the certificate serial number is `0804AA16E0BAAD2B86F75421A13FCC68` ( Up to 20 Nov 2023 it is: `0DB77DE3CEE04514936B0ABA6C95B53B`) 
 
-* We will always use the same client [x509 certificate](./webhook.api.concursolutions.com.pem). The common name is `CN=webhook.api.concursolutions.com,O=Concur Technologies\, Inc.,L=Bellevue,ST=Washington,C=US` and the certificate serial number is `06803f78037aaef342f9baf6b51d869e` 
-* We strongly recommend you use the certificate Common Name as the authentication mechanism. If you rely on the certificate Serial Number or the certificate itself, please be aware that at the beginning of each year the certificate will be re-issued and you have to update your authentication mechanisms.
-* We will always use a digital signature, supplied in the request header `Concur-Signature`. If you decide to use this authentication method you will need  our Public Key.
+If you decide not to follow that approach and rely on the certificate Serial Number or the certificate itself, please be aware that at the beginning of each year the certificate will be re-issued and you have to update your authentication mechanisms.
 
+We will always use a digital signature, supplied in the request header `Concur-Signature`. If you decide to use this authentication method you will need our Public Key.
+After 20 Nov 2023:
+
+```
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2wJd8TVDGUxD00bCqemz
+cptSfm7VGNa8Bm2DIpmqobzN6jv/HNzI3HPjeqcP1GtA4vjoFkFRaW2Qs286cI7e
+9GcLbJP4mzww97LfbZYGTI+9SAlxDKEZl/AWbwTi6P8lOxho8fQ4Sv4eSK7hyL3l
+I82XdBYJ2JWRpEQ1hZOui1f0BlFyqFVrEbzolE6S0eeP3gb1szFELz8ES5T4/T0o
+Tz1KZE2knMsugAz760Mlmc7EuLutnNhfCZQypNUZ9fI2CMSZWHZa8IH9MCz/ywuE
+NYp3hlsu0Q+oYeAwpDKyoWNLcV8pKaStVnP+3yn+/J3/oK4Rtqz/lKRrepxwTVRA
+1wIDAQAB
+-----END PUBLIC KEY-----
+```
+
+Before 20 Nov 2023:
 ```
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxS1LsXrEWEEMPooLHa4r
@@ -74,12 +93,12 @@ HlbTP6jE7MqB5sJ9r2EEzrJzJZjD13UqlzvI61tTC8SKpuk5AEaSsUV7RKlKUCjB
 -----END PUBLIC KEY-----
 ```
 
-### <a name="ess-behavior"></a>ESS Behavior
+### ESS Behavior<a name="ess-behavior"></a>
 
 The Event Subscription service has the following characteristics from the subscriber perspective:
 
 * Requests will come from `us.api.concursolutions.com`, `emea.api.concursolutions.com`, or `cn.api.concursolutions.com`.
-* Connection will always be established using a client x509 certificate.
+* Connection will always be established using a mutual TLS with `webhook.api.concursolutions.com` x509 certificate.
 * Requests will always have a digital signature.
 * Requests will be re-tried when the subscriber responds with HTTP Response Code(s): 5xx, 401, 403, or 429.
 * Requests will not be re-tried when subscriber responds with HTTP Response Code(s):
@@ -88,6 +107,15 @@ The Event Subscription service has the following characteristics from the subscr
 * Request will be retried until delivery OR event retention period expiration.
 * Event retention period is 72 hours from the time of event being published.
 * Events are not archived, but all of the event delivery attempts/responses are logged and retained for 30 days.
+
+### ESS Resourse usage<a name="ess-resources"></a>
+
+Every ESS subscription is a separate application with dedicated resources. In order to make sure that resources are used efficiently we have several limitations and guidelines.
+
+* Each application can have up to 5 subscriptions.
+* Subscriptions that are not working properly will be deleted after 30 days. This includes unused subscriptions with incomplete setup (missing company ids) and subscriptions with no successful deliveries due to endpoint errors.
+* When creating a new subscription please choose a name that reflects the subscription purpose or workflow, eg. test, prod, etc.
+* Please make sure you delete your unused subscriptions created for testing purposes after testing is complete.
 
 ## Related Topics
 

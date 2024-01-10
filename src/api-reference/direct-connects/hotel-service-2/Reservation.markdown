@@ -5,6 +5,13 @@ layout: reference
 
 # Hotel v2 - Reservation Message
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 10/14/2022</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 Message to reserve a hotel.
 
 |SOAPAction|OTA Name|Message Structure|
@@ -349,8 +356,8 @@ Message to reserve a hotel.
 
 |Name|Type|Description|
 |---------|------------|-------------|
-|`Name`|`stringLength1to32`|**Required** Name of the custom field.|
-|`Value`|`stringLength1to32`|Value of the custom field.|
+|`Name`|`string`|**Required** Name of the custom field.|
+|`Value`|`string`|Value of the custom field.|
 
 #### <a name="ThreeDSecure"></a>ThreeDSecure
 
@@ -384,22 +391,15 @@ The maximum allowed size of `OTA_HotelResRS` is 150 KB. Any response that exceed
             <RoomStay>
               <RatePlans>
                 <RatePlan RatePlanID="EZ57LL7">
-                  <CancelPenalties CancelPolicyIndicator="true">
-                    <CancelPenalty>
+                  <CancelPenalties>
+                    <CancelPenalty NoCancelInd="true">
+                      <Deadline AbsoluteDeadline="2017-01-26T18:00"/>
                       <PenaltyDescription>
                         <Text>test cancel policy 1</Text>
-                      </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <PenaltyDescription>
                         <Text>test cancel policy 2</Text>
-                      </PenaltyDescription>
-                      <PenaltyDescription>
                         <Text>test cancel policy 3</Text>
                       </PenaltyDescription>
                     </CancelPenalty>
-                    <CancelPenalty>
-                      <Deadline AbsoluteDeadline="2017-01-26T18:00"/>
                     </CancelPenalty>
                   </CancelPenalties>
                 </RatePlan>

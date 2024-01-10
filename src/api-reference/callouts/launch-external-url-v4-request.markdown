@@ -8,6 +8,10 @@ layout: reference
 
 Concur Expense will send a request with the information in an encoded query string when the user clicks the field configured to use the Launch External URL callout.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## URI <a name="uri"></a>
 
 The Launch External URL V4 callout launches the URI for the application connector, which can be in a custom location for each client. The standard location is:

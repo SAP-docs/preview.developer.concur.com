@@ -1,432 +1,1588 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "description": "SAP Concur partners with external payment providers for processing invoice payments. These payment providers are listed on the App Center and can integrate with the Invoice product by using the Invoice Pay APIs. Payment providers can get a list of all the payments authorized to be processed by them, and send back status of those payments.",
-    "version": "4.0",
-    "title": "Invoice Payment Service API Documentation"
-  },
-  "host": "www.concursolutions.com",
-  "basePath": "/",
-  "tags": [
-    {
-    "name": "Resources",
-    "description": " "
-    }
-  ],
-  "paths": {
-    "/invoice/provider-payment/v4/payments": {
-      "get": {
-        "tags": [
-          "Resources"
-        ],
-        "summary": "Payment Providers can use this API to get details of payments marked to be paid by them",
-        "operationId": "manyUsingGET",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "paramType": "query",
-            "name": "invoiceId",
-            "description": "InvoiceId",
-            "dataType": "string",
-            "required": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/readPaymentResult"
+    "openapi": "3.0.1",
+    "servers": [
+        {
+            "url": "https://invoice-payment-metadata.k8s.cnqr.tech",
+            "description": "Generated server url"
+        }
+    ],
+    "paths": {
+        "/provider-payment/v4/payments/{paymentId}": {
+            "post": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Payment Providers can use this API to update the status of payments made by them",
+                "operationId": "updatePayment",
+                "parameters": [
+                    {
+                        "name": "paymentId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdatePaymentDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdatePaymentDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
         },
-        "deprecated": false
-      }
-    },
-    "/invoice/provider-payment/v4/payments/{PaymentId}": {
-      "post": {
-        "tags": [
-          "Resources"
-        ],
-        "summary": "Payment Providers can use this API to update the status of payments made by them",
-        "operationId": "oneUsingPOST",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "Payment",
-            "description": "Payment",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/updatePayment"
+        "/provider-payment/v4/payments/bulkUpdate": {
+            "post": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Payment Providers can use this API to update the status of payments made by them",
+                "operationId": "updateBulkPayments",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "maxItems": 500,
+                                "minItems": 1,
+                                "type": "array",
+                                "description": "Payments",
+                                "items": {
+                                    "$ref": "#/components/schemas/UpdatePaymentDTO"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BulkUpdatePaymentResultDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "207": {
+                        "description": "Multi-Status"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
-          },
-          {
-            "name": "PaymentId",
-            "in": "path",
-            "description": "PaymentId",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/updatePaymentResult"
+        },
+        "/payment-confirmation/v4/payments": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "An endpoint to get the extracted invoices for payment confirmation.",
+                "operationId": "getExtractedInvoiceList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page",
+                        "required": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "limit",
+                        "required": false,
+                        "schema": {
+                            "maximum": 500,
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 500
+                        }
+                    },
+                    {
+                        "name": "payStatusFromDate",
+                        "in": "query",
+                        "description": "payStatusFromDate",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "payStatusToDate",
+                        "in": "query",
+                        "description": "payStatusToDate",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "invoiceFromDate",
+                        "in": "query",
+                        "description": "invoiceFromDate",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "invoiceToDate",
+                        "in": "query",
+                        "description": "invoiceToDate",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "vendorName",
+                        "in": "query",
+                        "description": "vendorName",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 255,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vendorCode",
+                        "in": "query",
+                        "description": "vendorCode",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 32,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "addressCode",
+                        "in": "query",
+                        "description": "addressCode",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 64,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoiceNumber",
+                        "in": "query",
+                        "description": "invoiceNumber",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 50,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentConfirmationGenericDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "An endpoint to get the newly paid invoices for payment confirmation and update those invoices with the extracted date.",
+                "operationId": "getPaidInvoiceList",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page",
+                        "required": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 1
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "limit",
+                        "required": false,
+                        "schema": {
+                            "maximum": 500,
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int32",
+                            "default": 500
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaymentConfirmationGenericDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
-          },
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          }
         },
-        "deprecated": false
-      }
+        "/payment-confirmation/v4/payments/bulkUpdate": {
+            "post": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Client ERP can use this API to update the status of payments in concur system",
+                "operationId": "updatePayments",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "description": "Payments",
+                                "items": {
+                                    "$ref": "#/components/schemas/UpdatePaymentConfirmationDTO"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdatePaymentConfirmationResultListDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "207": {
+                        "description": "Multi-Status"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/provider-payment/v4/invoices/{invoiceId}/paymentmetadata": {
+            "patch": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Payment Providers can use this API to update the ERP Document Number of an invoice.",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "name": "invoiceId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateInvoiceDTO"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UpdateInvoiceResultDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/provider-payment/v4/payments": {
+            "get": {
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Payment Providers can use this API to get details of payments marked to be paid by them",
+                "operationId": "many",
+                "parameters": [
+                    {
+                        "name": "invoiceId",
+                        "in": "query",
+                        "description": "invoiceId",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 255,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "invoiceDate",
+                        "in": "query",
+                        "description": "invoiceDate",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "createDate",
+                        "in": "query",
+                        "description": "createDate",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "vendorName",
+                        "in": "query",
+                        "description": "vendorName",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 255,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vendorCode",
+                        "in": "query",
+                        "description": "vendorCode",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "vendorAddrCode",
+                        "in": "query",
+                        "description": "vendorAddrCode",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paymentGroup",
+                        "in": "query",
+                        "description": "paymentGroup",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paymentStatus",
+                        "in": "query",
+                        "description": "paymentStatus",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 255,
+                            "minLength": 0,
+                            "type": "string",
+                            "default": "PENDING_RETRIEVAL"
+                        }
+                    },
+                    {
+                        "name": "invoiceNumber",
+                        "in": "query",
+                        "description": "invoiceNumber",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 255,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "paymentId",
+                        "in": "query",
+                        "description": "paymentId",
+                        "required": false,
+                        "schema": {
+                            "maxLength": 36,
+                            "minLength": 0,
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReadPaymentResultDTO"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AmountDTO": {
+                "required": [
+                    "amount"
+                ],
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "string"
+                    },
+                    "currency": {
+                        "maxLength": 3,
+                        "minLength": 3,
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdatePaymentDTO": {
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "providerReference": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PAID",
+                            "CANCELED",
+                            "CARD_AUTHORIZED",
+                            "CARD_EMAIL_SENT",
+                            "CARD_SETTLED",
+                            "CHECK_MAILED",
+                            "CHECK_PRINTED",
+                            "CHECK_PROCESSED",
+                            "CHECK_VOIDED",
+                            "PENDING_RETRIEVAL",
+                            "PROCESSING",
+                            "REJECTED",
+                            "RETRIEVED",
+                            "RETURNED"
+                        ]
+                    },
+                    "statusMessage": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "statusDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "paymentSettlementDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "thirdPartyPaymentIdentifier": {
+                        "maxLength": 510,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "enum": [
+                            "ACH",
+                            "CHECK",
+                            "WIRE",
+                            "CARD",
+                            "OTHER"
+                        ]
+                    },
+                    "paidAmount": {
+                        "$ref": "#/components/schemas/AmountDTO"
+                    },
+                    "paymentInitiationDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "paymentAdjustmentNotes": {
+                        "maxLength": 500,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingSourceRef": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "cashAccountCode": {
+                        "maxLength": 96,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "liabilityAccountCode": {
+                        "maxLength": 96,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingRequestRef": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "checkNumber": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingCurrency": {
+                        "maxLength": 3,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentCurrency": {
+                        "maxLength": 3,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingSettlementDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "foreignExchangeRate": {
+                        "maxLength": 23,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "createdDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "modifiedDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "errorMessage": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    }
+                },
+                "description": "Payment"
+            },
+            "BulkUpdatePaymentResultDTO": {
+                "type": "object",
+                "properties": {
+                    "successfulPayments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UpdatePaymentDTO"
+                        }
+                    },
+                    "failedPayments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UpdatePaymentDTO"
+                        }
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "100 CONTINUE",
+                            "101 SWITCHING_PROTOCOLS",
+                            "102 PROCESSING",
+                            "103 CHECKPOINT",
+                            "200 OK",
+                            "201 CREATED",
+                            "202 ACCEPTED",
+                            "203 NON_AUTHORITATIVE_INFORMATION",
+                            "204 NO_CONTENT",
+                            "205 RESET_CONTENT",
+                            "206 PARTIAL_CONTENT",
+                            "207 MULTI_STATUS",
+                            "208 ALREADY_REPORTED",
+                            "226 IM_USED",
+                            "300 MULTIPLE_CHOICES",
+                            "301 MOVED_PERMANENTLY",
+                            "302 FOUND",
+                            "302 MOVED_TEMPORARILY",
+                            "303 SEE_OTHER",
+                            "304 NOT_MODIFIED",
+                            "305 USE_PROXY",
+                            "307 TEMPORARY_REDIRECT",
+                            "308 PERMANENT_REDIRECT",
+                            "400 BAD_REQUEST",
+                            "401 UNAUTHORIZED",
+                            "402 PAYMENT_REQUIRED",
+                            "403 FORBIDDEN",
+                            "404 NOT_FOUND",
+                            "405 METHOD_NOT_ALLOWED",
+                            "406 NOT_ACCEPTABLE",
+                            "407 PROXY_AUTHENTICATION_REQUIRED",
+                            "408 REQUEST_TIMEOUT",
+                            "409 CONFLICT",
+                            "410 GONE",
+                            "411 LENGTH_REQUIRED",
+                            "412 PRECONDITION_FAILED",
+                            "413 PAYLOAD_TOO_LARGE",
+                            "413 REQUEST_ENTITY_TOO_LARGE",
+                            "414 URI_TOO_LONG",
+                            "414 REQUEST_URI_TOO_LONG",
+                            "415 UNSUPPORTED_MEDIA_TYPE",
+                            "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+                            "417 EXPECTATION_FAILED",
+                            "418 I_AM_A_TEAPOT",
+                            "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+                            "420 METHOD_FAILURE",
+                            "421 DESTINATION_LOCKED",
+                            "422 UNPROCESSABLE_ENTITY",
+                            "423 LOCKED",
+                            "424 FAILED_DEPENDENCY",
+                            "425 TOO_EARLY",
+                            "426 UPGRADE_REQUIRED",
+                            "428 PRECONDITION_REQUIRED",
+                            "429 TOO_MANY_REQUESTS",
+                            "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+                            "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+                            "500 INTERNAL_SERVER_ERROR",
+                            "501 NOT_IMPLEMENTED",
+                            "502 BAD_GATEWAY",
+                            "503 SERVICE_UNAVAILABLE",
+                            "504 GATEWAY_TIMEOUT",
+                            "505 HTTP_VERSION_NOT_SUPPORTED",
+                            "506 VARIANT_ALSO_NEGOTIATES",
+                            "507 INSUFFICIENT_STORAGE",
+                            "508 LOOP_DETECTED",
+                            "509 BANDWIDTH_LIMIT_EXCEEDED",
+                            "510 NOT_EXTENDED",
+                            "511 NETWORK_AUTHENTICATION_REQUIRED"
+                        ]
+                    },
+                    "successCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "failureCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                }
+            },
+            "PaymentConfirmationDTO": {
+                "type": "object",
+                "properties": {
+                    "requestId": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "invoiceNumber": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "purchaseOrderNumber": {
+                        "maxLength": 32,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "requestName": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentMethodType": {
+                        "maxLength": 6,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentAmount": {
+                        "maximum": 23,
+                        "minimum": 0,
+                        "type": "number"
+                    },
+                    "paymentAdjustmentNotes": {
+                        "maxLength": 500,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentStatusDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "checkNumber": {
+                        "maxLength": 100,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentStatus": {
+                        "maxLength": 6,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "supplierName": {
+                        "type": "string"
+                    },
+                    "vendorCode": {
+                        "maxLength": 32,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "vendorAddressCode": {
+                        "maxLength": 64,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentDemandId": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingInitiationDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "fundingSettlementDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "returnInitiationDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "returnSettlementDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "paymentSettlementDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "paymentInitiationDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "cashAccountCode": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "liabilityAccountCode": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "batchId": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingSourceReference": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingRequestReference": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "providerPaymentMethod": {
+                        "maxLength": 30,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "thirdPartyReference": {
+                        "maxLength": 510,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "invoiceCurrency": {
+                        "maxLength": 3,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "fundingCurrency": {
+                        "maxLength": 3,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentCurrency": {
+                        "maxLength": 3,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "foreignExchangeRate": {
+                        "type": "number"
+                    }
+                }
+            },
+            "PaymentConfirmationGenericDTO": {
+                "type": "object",
+                "properties": {
+                    "pageNumber": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "pageLimit": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "totalRecordCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "payments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PaymentConfirmationDTO"
+                        }
+                    }
+                }
+            },
+            "CustomFieldsDTO": {
+                "type": "object",
+                "properties": {
+                    "custom1": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom2": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom3": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom4": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom5": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom6": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom7": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom8": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom9": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom10": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom11": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom12": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom13": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom14": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom15": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom16": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom17": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom18": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom19": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom20": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom21": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom22": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom23": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "custom24": {
+                        "maxLength": 48,
+                        "minLength": 0,
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdatePaymentConfirmationDTO": {
+                "type": "object",
+                "properties": {
+                    "requestId": {
+                        "maxLength": 20,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "invoiceNumber": {
+                        "maxLength": 50,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "invoiceAmount": {
+                        "type": "number"
+                    },
+                    "vendorName": {
+                        "maxLength": 255,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "vendorCode": {
+                        "maxLength": 32,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "vendorAddressCode": {
+                        "maxLength": 64,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentStatus": {
+                        "type": "string",
+                        "enum": [
+                            "PAID",
+                            "CANCEL",
+                            "VOID"
+                        ]
+                    },
+                    "paymentStatusDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "checkNumbers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "paymentMethodType": {
+                        "type": "string",
+                        "enum": [
+                            "ACH",
+                            "CHECK",
+                            "CARD",
+                            "CLIENT",
+                            "VCHER",
+                            "WIRE"
+                        ]
+                    },
+                    "paymentAmount": {
+                        "type": "number"
+                    },
+                    "notesToSupplier": {
+                        "maxLength": 500,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "paymentAdjNotes": {
+                        "maxLength": 500,
+                        "minLength": 0,
+                        "type": "string"
+                    },
+                    "customFields": {
+                        "$ref": "#/components/schemas/CustomFieldsDTO"
+                    },
+                    "errorMessage": {
+                        "maxLength": 200,
+                        "minLength": 0,
+                        "type": "string"
+                    }
+                }
+            },
+            "UpdatePaymentConfirmationResultListDTO": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "100 CONTINUE",
+                            "101 SWITCHING_PROTOCOLS",
+                            "102 PROCESSING",
+                            "103 CHECKPOINT",
+                            "200 OK",
+                            "201 CREATED",
+                            "202 ACCEPTED",
+                            "203 NON_AUTHORITATIVE_INFORMATION",
+                            "204 NO_CONTENT",
+                            "205 RESET_CONTENT",
+                            "206 PARTIAL_CONTENT",
+                            "207 MULTI_STATUS",
+                            "208 ALREADY_REPORTED",
+                            "226 IM_USED",
+                            "300 MULTIPLE_CHOICES",
+                            "301 MOVED_PERMANENTLY",
+                            "302 FOUND",
+                            "302 MOVED_TEMPORARILY",
+                            "303 SEE_OTHER",
+                            "304 NOT_MODIFIED",
+                            "305 USE_PROXY",
+                            "307 TEMPORARY_REDIRECT",
+                            "308 PERMANENT_REDIRECT",
+                            "400 BAD_REQUEST",
+                            "401 UNAUTHORIZED",
+                            "402 PAYMENT_REQUIRED",
+                            "403 FORBIDDEN",
+                            "404 NOT_FOUND",
+                            "405 METHOD_NOT_ALLOWED",
+                            "406 NOT_ACCEPTABLE",
+                            "407 PROXY_AUTHENTICATION_REQUIRED",
+                            "408 REQUEST_TIMEOUT",
+                            "409 CONFLICT",
+                            "410 GONE",
+                            "411 LENGTH_REQUIRED",
+                            "412 PRECONDITION_FAILED",
+                            "413 PAYLOAD_TOO_LARGE",
+                            "413 REQUEST_ENTITY_TOO_LARGE",
+                            "414 URI_TOO_LONG",
+                            "414 REQUEST_URI_TOO_LONG",
+                            "415 UNSUPPORTED_MEDIA_TYPE",
+                            "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+                            "417 EXPECTATION_FAILED",
+                            "418 I_AM_A_TEAPOT",
+                            "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+                            "420 METHOD_FAILURE",
+                            "421 DESTINATION_LOCKED",
+                            "422 UNPROCESSABLE_ENTITY",
+                            "423 LOCKED",
+                            "424 FAILED_DEPENDENCY",
+                            "425 TOO_EARLY",
+                            "426 UPGRADE_REQUIRED",
+                            "428 PRECONDITION_REQUIRED",
+                            "429 TOO_MANY_REQUESTS",
+                            "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+                            "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+                            "500 INTERNAL_SERVER_ERROR",
+                            "501 NOT_IMPLEMENTED",
+                            "502 BAD_GATEWAY",
+                            "503 SERVICE_UNAVAILABLE",
+                            "504 GATEWAY_TIMEOUT",
+                            "505 HTTP_VERSION_NOT_SUPPORTED",
+                            "506 VARIANT_ALSO_NEGOTIATES",
+                            "507 INSUFFICIENT_STORAGE",
+                            "508 LOOP_DETECTED",
+                            "509 BANDWIDTH_LIMIT_EXCEEDED",
+                            "510 NOT_EXTENDED",
+                            "511 NETWORK_AUTHENTICATION_REQUIRED"
+                        ]
+                    },
+                    "successCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "failureCount": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "successfulPayments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UpdatePaymentConfirmationDTO"
+                        }
+                    },
+                    "failedPayments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UpdatePaymentConfirmationDTO"
+                        }
+                    }
+                }
+            },
+            "UpdateInvoiceDTO": {
+                "type": "object",
+                "properties": {
+                    "erpDocumentNumber": {
+                        "type": "string"
+                    }
+                },
+                "description": "Invoice"
+            },
+            "UpdateInvoiceResultDTO": {
+                "type": "object",
+                "properties": {
+                    "erpDocumentNumber": {
+                        "type": "string"
+                    }
+                }
+            },
+            "InvoicePaymentGroup": {
+                "type": "object",
+                "properties": {
+                    "groupName": {
+                        "type": "string",
+                        "xml": {
+                            "name": "GroupName"
+                        }
+                    }
+                }
+            },
+            "PaymentDTO": {
+                "type": "object",
+                "properties": {
+                    "paymentId": {
+                        "type": "string"
+                    },
+                    "paymentMethod": {
+                        "type": "string"
+                    },
+                    "paymentStatus": {
+                        "type": "string",
+                        "enum": [
+                            "PAID",
+                            "CANCELED",
+                            "CARD_AUTHORIZED",
+                            "CARD_EMAIL_SENT",
+                            "CARD_SETTLED",
+                            "CHECK_MAILED",
+                            "CHECK_PRINTED",
+                            "CHECK_PROCESSED",
+                            "CHECK_VOIDED",
+                            "PENDING_RETRIEVAL",
+                            "PROCESSING",
+                            "REJECTED",
+                            "RETRIEVED",
+                            "RETURNED"
+                        ]
+                    },
+                    "paymentDueDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "createdDate": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "paymentGroups": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InvoicePaymentGroup"
+                        }
+                    },
+                    "totalAmount": {
+                        "$ref": "#/components/schemas/AmountDTO"
+                    },
+                    "invoices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReadPaymentInvoiceDTO"
+                        }
+                    },
+                    "vendor": {
+                        "$ref": "#/components/schemas/VendorDTO"
+                    }
+                }
+            },
+            "ReadPaymentInvoiceDTO": {
+                "type": "object",
+                "properties": {
+                    "invoiceNumber": {
+                        "type": "string"
+                    },
+                    "invoiceId": {
+                        "type": "string"
+                    },
+                    "invoiceDate": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "invoiceAmount": {
+                        "$ref": "#/components/schemas/AmountDTO"
+                    },
+                    "paymentAmount": {
+                        "$ref": "#/components/schemas/AmountDTO"
+                    },
+                    "notesToSupplier": {
+                        "type": "string"
+                    },
+                    "erpDocumentNumber": {
+                        "type": "string"
+                    },
+                    "custom1": {
+                        "type": "string"
+                    },
+                    "custom2": {
+                        "type": "string"
+                    },
+                    "custom3": {
+                        "type": "string"
+                    },
+                    "custom4": {
+                        "type": "string"
+                    },
+                    "custom5": {
+                        "type": "string"
+                    },
+                    "custom6": {
+                        "type": "string"
+                    },
+                    "custom7": {
+                        "type": "string"
+                    },
+                    "custom8": {
+                        "type": "string"
+                    },
+                    "custom9": {
+                        "type": "string"
+                    },
+                    "custom10": {
+                        "type": "string"
+                    },
+                    "custom11": {
+                        "type": "string"
+                    },
+                    "custom12": {
+                        "type": "string"
+                    },
+                    "custom13": {
+                        "type": "string"
+                    },
+                    "custom14": {
+                        "type": "string"
+                    },
+                    "custom15": {
+                        "type": "string"
+                    },
+                    "custom16": {
+                        "type": "string"
+                    },
+                    "custom17": {
+                        "type": "string"
+                    },
+                    "custom18": {
+                        "type": "string"
+                    },
+                    "custom19": {
+                        "type": "string"
+                    },
+                    "custom20": {
+                        "type": "string"
+                    },
+                    "custom21": {
+                        "type": "string"
+                    },
+                    "custom22": {
+                        "type": "string"
+                    },
+                    "custom23": {
+                        "type": "string"
+                    },
+                    "custom24": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ReadPaymentResultDTO": {
+                "type": "object",
+                "properties": {
+                    "payments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PaymentDTO"
+                        }
+                    }
+                }
+            },
+            "VendorDTO": {
+                "type": "object",
+                "properties": {
+                    "addressLine1": {
+                        "type": "string"
+                    },
+                    "addressLine2": {
+                        "type": "string"
+                    },
+                    "addressLine3": {
+                        "type": "string"
+                    },
+                    "vendorAddrCode": {
+                        "type": "string"
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "postalCode": {
+                        "type": "string"
+                    },
+                    "countryName": {
+                        "type": "string"
+                    },
+                    "countryCode": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "phoneNumber": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "vendorCode": {
+                        "type": "string"
+                    },
+                    "vendorName": {
+                        "type": "string"
+                    },
+                    "buyerAccountNumber": {
+                        "type": "string"
+                    },
+                    "custom1": {
+                        "type": "string"
+                    },
+                    "custom2": {
+                        "type": "string"
+                    },
+                    "custom3": {
+                        "type": "string"
+                    },
+                    "custom4": {
+                        "type": "string"
+                    },
+                    "custom5": {
+                        "type": "string"
+                    },
+                    "custom6": {
+                        "type": "string"
+                    },
+                    "custom7": {
+                        "type": "string"
+                    },
+                    "custom8": {
+                        "type": "string"
+                    },
+                    "custom9": {
+                        "type": "string"
+                    },
+                    "custom10": {
+                        "type": "string"
+                    },
+                    "custom11": {
+                        "type": "string"
+                    },
+                    "custom12": {
+                        "type": "string"
+                    },
+                    "custom13": {
+                        "type": "string"
+                    },
+                    "custom14": {
+                        "type": "string"
+                    },
+                    "custom15": {
+                        "type": "string"
+                    },
+                    "custom16": {
+                        "type": "string"
+                    },
+                    "custom17": {
+                        "type": "string"
+                    },
+                    "custom18": {
+                        "type": "string"
+                    },
+                    "custom19": {
+                        "type": "string"
+                    },
+                    "custom20": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
     }
-  },
-  "definitions": {
-    "amount": {
-      "type": "object",
-      "properties": {
-        "amount": {
-          "type": "string",
-          "description": "Amount. Maximum 20 characters."
-        },
-        "currency": {
-          "type": "string",
-          "description": "Currency Code. Maximum 3 characters.",
-          "minLength": 3,
-          "maxLength": 3
-        }
-      },
-      "title": "amount"
-    },
-    "invoice": {
-      "type": "object",
-      "properties": {
-        "erpDocumentNumber": {
-          "type": "string",
-          "description": "ErpDocumentNumber of that invoice.Maximum 20 characters."
-        },
-        "invoiceAmount": {
-          "$ref": "#/definitions/amount"
-        },
-        "invoiceId": {
-          "type": "string",
-          "description": "Unique identifier of the invoice in SAP Concur. This can be used to get additional invoice information from other APIs. This is the same as paymentRequestID in other Invoice APIs. Maximum 20 characters."
-        },
-        "invoiceNumber": {
-          "type": "string",
-          "description": "Invoice Number. Maximum 50 characters."
-        },
-        "notesToSupplier": {
-          "type": "string",
-          "description": "Notes to the supplier contain remittance information that the buyer wants to provide to the supplier. Maximum 500 characters."
-        },
-        "paymentAmount": {
-          "$ref": "#/definitions/amount"
-        }
-      },
-      "title": "invoice"
-    },
-    "payment": {
-      "type": "object",
-      "properties": {
-        "invoices": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/invoice"
-          }
-        },
-        "paymentDueDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date by which the payment should be made."
-        },
-        "paymentId": {
-          "type": "string",
-          "description": "Unique identifier of the payment in SAP Concur. Maximum 36 characters."
-        },
-        "paymentMethod": {
-          "type": "string",
-          "description": "The value is always PAYPVD which means that the client wants to pay using a payment provider. Maximum 15 characters."
-        },
-        "totalAmount": {
-          "$ref": "#/definitions/amount"
-        },
-        "vendor": {
-          "$ref": "#/definitions/vendor"
-        }
-      },
-      "title": "payment"
-    },
-    "readPaymentResult": {
-      "type": "object",
-      "properties": {
-        "payments": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/payment"
-          }
-        }
-      },
-      "title": "readPaymentResult"
-    },
-    "updatePayment": {
-      "type": "object",
-      "required" : ["status", "statusDate"],
-      "properties": {
-        "paidAmount": {
-          "$ref": "#/definitions/amount"
-        },
-        "paymentAdjustmentNotes": {
-          "type": "string",
-          "description": "Payment adjustment notes sent by the payment provider. Maximum 255 characters."
-        },
-        "paymentInitiationDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date the payment was initiated."
-        },
-        "paymentMethod": {
-          "type": "string",
-          "description": "Payment method used by the payment provider. Required if the status is PAID, CHECK_PROCESSED, or CARD_SETTLED.",
-          "enum": [
-            "ACH",
-            "CHECK",
-            "WIRE",
-            "CARD",
-            "OTHER"
-          ]
-        },
-        "paymentSettlementDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date the payment will be in the payees account."
-        },
-        "providerReference": {
-          "type": "string",
-          "description": "Unique identifier of the payment in the payment provider's system. This will be used for internal troubleshooting. Maximum 100 characters.",
-          "minLength": 0,
-          "maxLength": 100
-        },
-        "status": {
-          "type": "string",
-          "description": "Used to depict success, error or any other intermediate state, defined by SAP Concur.",
-          "enum": [
-            "PAID",
-            "CANCELED",
-            "CARD_AUTHORIZED",
-            "CARD_EMAIL_SENT",
-            "CARD_SETTLED",
-            "CHECK_MAILED",
-            "CHECK_PRINTED",
-            "CHECK_PROCESSED",
-            "CHECK_VOIDED",
-            "PENDING_RETRIEVAL",
-            "PROCESSING",
-            "REJECTED",
-            "RETRIEVED",
-            "RETURNED"
-          ]
-        },
-        "statusDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date that the payment provider recorded this status change."
-        },
-        "statusMessage": {
-          "type": "string",
-          "description": "Payment provider description of the status. Providers can supply any message. Maximum 255 characters.",
-          "minLength": 0,
-          "maxLength": 255
-        },
-        "thirdPartyPaymentIdentifier": {
-          "type": "string",
-          "description": "Check number if the payment was done via check or trace number for ACH payments. Maximum 255 characters."
-        }
-      },
-      "title": "updatePayment"
-    },
-    "updatePaymentResult": {
-      "type": "object",
-      "required" : ["status", "statusDate"],
-      "properties": {
-        "createdDate": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The date the payment was created."
-        },
-        "lastModifiedDate": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The date the payment was last modified."
-        },
-        "paidAmount": {
-          "$ref": "#/definitions/amount"
-        },
-        "paymentAdjustmentNotes": {
-          "type": "string",
-          "description": "Payment adjustment notes sent by the payment provider. Maximum 255 characters."
-        },
-        "paymentInitiationDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date the payment was initiated."
-        },
-        "paymentMethod": {
-          "type": "string",
-          "description": "Payment method used by the payment provider. Required if the status is PAID, CHECK_PROCESSED, or CARD_SETTLED.",
-          "enum": [
-            "ACH",
-            "CHECK",
-            "WIRE",
-            "CARD",
-            "OTHER"
-          ]
-        },
-        "paymentSettlementDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date the payment will be in the payees account."
-        },
-        "providerReference": {
-          "type": "string",
-          "description": "Unique identifier of the payment in the payment provider's system. Maximum 100 characters.",
-          "minLength": 0,
-          "maxLength": 100
-        },
-        "status": {
-          "type": "string",
-          "description": "Used to depict success, error or any other intermediate state, defined by SAP Concur.",
-          "enum": [
-            "PAID",
-            "CANCELED",
-            "CARD_AUTHORIZED",
-            "CARD_EMAIL_SENT",
-            "CARD_SETTLED",
-            "CHECK_MAILED",
-            "CHECK_PRINTED",
-            "CHECK_PROCESSED",
-            "CHECK_VOIDED",
-            "PENDING_RETRIEVAL",
-            "PROCESSING",
-            "REJECTED",
-            "RETRIEVED",
-            "RETURNED"
-          ]
-        },
-        "statusDate": {
-          "type": "string",
-          "format": "date",
-          "description": "The date that the payment provider recorded this status change."
-        },
-        "statusMessage": {
-          "type": "string",
-          "description": "Payment provider description of the status. Providers can supply any message. Maximum 255 characters.",
-          "minLength": 0,
-          "maxLength": 255
-        },
-        "thirdPartyPaymentIdentifier": {
-          "type": "string",
-          "description": "Check number if the payment was done via check or trace number for ACH payments. Maximum 255 characters."
-        }
-      },
-      "title": "updatePaymentResult"
-    },
-    "vendor": {
-      "type": "object",
-      "properties": {
-        "addressLine1": {
-          "type": "string",
-          "description": "Vendor Address line 1. Maximum 255 characters."
-        },
-        "addressLine2": {
-          "type": "string",
-          "description": "Vendor Address line 2. Maximum 255 characters."
-        },
-        "addressLine3": {
-          "type": "string",
-          "description": "Vendor Address line 3. Maximum 255 characters."
-        },
-        "buyerAccountNumber": {
-          "type": "string",
-          "description": "Buyer Account Number. Maximum 50 characters."
-        },
-        "city": {
-          "type": "string",
-          "description": "Vendor Address City. Maximum 255 characters."
-        },
-        "countryCode": {
-          "type": "string",
-          "description": "Vendor Address Country Code. Maximum 2 characters."
-        },
-        "countryName": {
-          "type": "string",
-          "description": "Vendor Address Country Name. Maximum 64 characters."
-        },
-        "email": {
-          "type": "string",
-          "description": "Email Address. Maximum 255 characters."
-        },
-        "firstName": {
-          "type": "string",
-          "description": "First Name. Maximum 255 characters."
-        },
-        "lastName": {
-          "type": "string",
-          "description": "Last Name. Maximum 255 characters."
-        },
-        "phoneNumber": {
-          "type": "string",
-          "description": "Phone Number. Maximum 25 characters."
-        },
-        "postalCode": {
-          "type": "string",
-          "description": "Vendor Address Postal Code. Maximum 20 characters."
-        },
-        "state": {
-          "type": "string",
-          "description": "Vendor Address State. Maximum 10 characters."
-        },
-        "vendorAddrCode": {
-          "type": "string",
-          "description": "Vendor Address Code. Maximum 64 characters."
-        },
-        "vendorCode": {
-          "type": "string",
-          "description": "Vendor Code. Maximum 32 characters."
-        },
-        "vendorName": {
-          "type": "string",
-          "description": "Vendor Name. Maximum 255 characters."
-        }
-      },
-      "title": "vendor"
-    }
-  }
 }

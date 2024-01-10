@@ -7,6 +7,10 @@ layout: reference
 
 This API provides an endpoint to ingest real time user location information from Rideshare Services.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Regional Availability <a name="regional-availability"></a>
 
 ```

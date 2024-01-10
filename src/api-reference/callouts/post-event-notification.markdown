@@ -5,7 +5,9 @@ layout: reference
 
 # Post an Event Notification Request
 
+## Limitations
 
+Access to this documentation does not provide access to the API. 
 
 ## Request <a name="request"></a>
 

@@ -5,6 +5,9 @@ layout: reference
 
 # Post an Attendee Search Request
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ## Request <a name="request"></a>
 

@@ -7,6 +7,10 @@ layout: reference
 
 Supplier companies provide travel services to users. The Suppliers resource can be used to retrieve information about suppliers.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve all suppliers based on search criteria <a name="get"></a>
 
     GET  /api/v3.0/common/suppliers/

@@ -13,6 +13,10 @@ redirect_from:
 
 The Expense Group Configuration contains the list of Expense Polices, Expense Types and Payment Types for the Expense Group the user specified in the OAuth access token is assigned to.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Resource URI
 
 ```
@@ -125,4 +129,3 @@ Content-Type: application/xml
   </PolicyAndExpenseTypesList>
 </ExpenseGroupConfiguration>
 ```
-

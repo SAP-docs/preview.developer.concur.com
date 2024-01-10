@@ -5,6 +5,10 @@ layout: reference
 
 # Post a Reservation Detail Search
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request
 
 The following request is sent to the supplier when the Travel user selects a ground transportation reservation to get additional details.

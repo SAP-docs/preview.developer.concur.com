@@ -13,6 +13,10 @@ redirect_from:
 * [Attendees v1.1](./v1dot1.attendees.html)
 * [Attendees v1](./v1.attendees.html)
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve all attendees owned by the specified user <a name="get"></a>
 
 ### Request
@@ -33,7 +37,7 @@ Name|Type|Format|Description
 `attendeeTypeID`|`string`|`query`|The ID of an attendee type. By entering a value for this parameter, you can limit the results to the attendees who match the specified type.
 `offset`|`string`|`query`|The starting point of the next set of results, after the limit specified in the limit field has been reached.
 `limit`|`Int32`|`query`|The number of records to return. Default value: 25
-`user`|`string`|`query`|The login ID of the user that has added the attendee to an expense. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
+`user`|`string`|`query`|The login ID of the user that is making the request (this must also be the owner if the attendee type is private) . The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
 
 #### Payload
 
@@ -124,8 +128,8 @@ GET https://www.concursolutions.com/api/v3.0/expense/attendees?limit=15
 
 Name|Type|Format|Description
 ---|---|---|---
-`id`|`string`|`path`|**Required** The attendee object to create.
-`user`|`string`|`query`|The login ID of the user that has added the attendee to an expense. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
+`id`|`string`|`path`|**Required** The attendee object to retrieve.
+`user`|`string`|`query`|The login ID of the user that is making the request (this must also be the owner if the attendee type is private). The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
 
 #### Payload
 
@@ -212,7 +216,7 @@ GET https://www.concursolutions.com/api/v3.0/expense/attendees/gWj3IHRYiHZGd0HJy
 
 Name|Type|Format|Description
 ---|---|---|---
-`user`|`string`|`query`|The login ID of the user that has added the attendee to an expense. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
+`user`|`string`|`query`|The login ID of the user that is adding the attendee. If the attendee type is (private), the user is also made the owner, otherwise the owner is "ConcurSystem" (shared) . The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
 
 #### Payload
 
@@ -231,6 +235,8 @@ Name|Type|Format|Description
 ```shell
 POST https://www.concursolutions.com/api/v3.0/expense/attendees
 ```
+#### Note 
+* Creation of NOSHOWS attendee types are not allowed.
 
 #### Response
 
@@ -258,7 +264,7 @@ POST https://www.concursolutions.com/api/v3.0/expense/attendees
 Name|Type|Format|Description
 ---|---|---|---
 `id`|`string`|`path`|**Required** The attendee ID
-`user`|`string`|`query`|The login ID of the user that has added the attendee to an expense. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
+`user`|`string`|`query`|The login ID of the user that is updating the attendee(s). If the attendee type is (private), the user must also be the owner of the attendee being updated. The user who is performing this API request must have the Web Services Admin (Professional) or Can Administer (Standard) user role to use this parameter
 
 #### Payload
 
@@ -282,6 +288,11 @@ Name|Type|Format|Description
 PUT https://www.concursolutions.com/api/v3.0/expense/attendees/gWj3IHRYiHZOQ2T9NNdJ%24plN%24s7%24sG8LhZwjoQ
 ```
 
+#### Note 
+* Updates to NOSHOWS attendees are not allowed.
+* Updates to employee attendees type ID are not allowed. 
+* Updates to employee attendees configured as type SYSEMP are not allowed.
+
 #### Response
 
 ToDo
@@ -300,10 +311,10 @@ Name|Type|Format|Description
 Name|Type|Format|Description
 ---|---|---|---
 `AttendeeTypeCode`|`string`|-|A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 40 characters
-`AttendeeTypeID`|`string`|-|The ID of the attendee type. To obtain the attendee type ID value, use the GET /expense/attendeetypes endpoint. The value of the ID element in the response is the attendee type ID.
+`AttendeeTypeID`|`string`|-|The ID of the attendee type. To obtain the attendee type ID value, use the GET /expense/attendeetypes endpoint. The value of the ID element in the response is the attendee type ID. An attendee's type cannot be updated.
 `Company`|`string`|-|The name of the attendee's company. Maximum length: 150 characters
 `CurrencyCode`|`string`|-|The 3-letter ISO 4217 currency code for monetary amounts related to an attendee.
-`Custom1 through Custom25`|`CustomField`|-|A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured.
+`Custom1 through Custom25`|`CustomField`|-|A custom field associated with the attendee. This field may or may not have data, depending on how Expense is configured. Maximum length: Custom 1-20: 100 characters, Custom 21-25: 48 characters
 `ExternalID`|`string`|-|A unique identifier for the attendee, assigned outside of Concur. Maximum length: 48 characters **NOTE: For HCP connectors where information returned to Concur represents one record per attendee+address pair, this value should be a unique identifier for that pair, and the unique identifier for the individual should be placed into a custom field.**
 `FirstName`|`string`|-|The attendee's first name. Maximum length: 50 characters
 `HasExceptionsPrevYear`|`Boolean`|-|Determines whether the attendee had exceptions in the previous year, based on yearly total limits for attendees. Format: true or false

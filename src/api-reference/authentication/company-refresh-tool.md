@@ -5,97 +5,54 @@ layout: reference
 
 # Company Request Token Self-Service Tool
 
-The Company Request Token tool enables clients to generate a Company Request Token without assistance from SAP Concur support. A Company Request Token is required to request a JSON web token (JWT) when connecting to APIs in the SAP Concur platform. This tool also enables clients to generate a replacement Company Request Token without assistance from SAP Concur support if their Company Request Token expires or is lost.
+The Company Request Token tool enables clients to generate a Company Request Token. A Company Request Token is required by some integrations, and can also be used to request an Access/Refresh Token (JSON web token or JWT) for connecting to APIs in the SAP Concur platform. The Company Request Tokens Tool also enables clients to generate a replacement Company Request Token without assistance from SAP Concur Support if their Company Request Token expires or is lost.
 
-## Limitations
+## Authentication Workflow Options
 
-This tool is currently only available in the US (North America) and EMEA data centers. All other data centers can contact Client Web Services for assistance.
+The Company Request Tokens page can be used to generate only a Company Request token, or may be used to additionally generate an Access/Refresh token for the company. The different tokens are:
 
-## What the Admin Sees
+* Request Token: This token can be generated to use with integrations, using the integration's App ID (also known as Client ID). Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm). Once generated, the Request Token is used in the admin interface for the SAP product. This authentication flow does not require the customer to generate an App ID/Client ID or Client Secret.
 
-Admins with the required permissions see a link to the **Company Request Token** page on the **Administration** > **Company** > **Authentication Administration** page.
+* Access/Refresh Token: This token is created after creating the Company Request token. This token can be used with the Concur API platform, and is sometimes necessary for integrations. If you are creating an Access/Refresh token, you need to obtain a Client ID and Client Secret via the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html).
 
-After clicking **Company Request Token**, the admin sees the **Company Request Tokens** page.
+## Prerequisites
 
-![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
+The SAP Concur administrator must have the correct user role to access the Company Request Tokens page:
+* Professional Edition: Web Services Administrator
+* Standard Edition: Can Administer
+  
+**NOTE**: If a company administrator needs to use this feature and does not have the proper permissions, they should contact the company's SAP Concur administrator.
 
-On the **Company Request Tokens** page, the admin enters their **Client ID** in the **App ID** field, and then clicks **Submit**.
-
->**NOTE**: Clients can obtain a **Client ID** through one of the following methods:
-
-* Clients with Client Web Services who have requested access to the self-service tool for application management can generate a Client ID using the self-service tool.
-* Clients who do not have Client Web Services can contact SAP Concur support to obtain an App ID as needed.
-
-The **Company Request Token Successfully Created** dialog appears.
-
-![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/company-refresh-tool-02.png)
-
-This dialog contains the Company UUID and the Company Request Token. The admin must copy and save both the Company UUID and the Company Request Token before signing out or navigating away from this dialog.
-
-The admin can use the Company Request Token to generate a Company JWT, using the Password Grant process. Instructions for the Password Grant process are on the Company Request Token page, as well as the [SAP Concur Developer Center](https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant).
-
-The Company Request Token has a token expiry lifetime of 24 hours. The admin must obtain the Company JWT within that 24-hour period. If the Company Request Token expires or is lost, the admin can access the Company Request Tokens page again, enter their Client ID into the App ID field, and then generate a replacement Company Request Token.
-
-## Company Authentication Workflow
-
-There are three steps for completing the company authentication workflow:
-
-1. Obtain a Client ID and Client Secret via the OAuth 2.0 Application Management tool.
-2. Obtain a Company Request Token via the Company Request Token tool.
-3. Exchange the Company Request Token for Access and Refresh Tokens.
-
-### OAuth 2.0 Application Management Tool
-
-To generate a new Client ID (App ID) and Client Secret:
+## Generating a Company Request Token
 
 1. Click **Administration** > **Company** > **Authentication Admin**. The **Authentication Administration** page appears.
-2. Click **OAuth 2.0 Application Management**. The **Application List** page appears.
-3. Click **Create New App**.
 
-![Product screen showing the Application List page](./tool-images/company-refresh-tool-03.png)
-
-The **Create New App** page appears.
-
-![Product screen showing the Create New App page](./tool-images/company-refresh-tool-04.png)
-
->**NOTE**: The App Type is read-only.
-
-4. Populate the fields.
-
-Field Name|	Definition|	Required|	Description
----|---|---|---
-`App Name`|	String|	Y	|Name of the App. NOTE: Include Company, Partner, or Team Name
-`App Type`|	NA|	NA|	This field defaults to Client and is read-only.
-`Allowed Grants`|	Selected Grants|	Y	|In order to obtain a token, the client application needs to call the OAuth2 endpoint using various grants depending on the authentication scenarios required. NOTE: For more information, refer to Authorization Grants (https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant).
-`Allowed Scopes`|	Selected Scopes|	Y	|Scopes limit access to the APIs required for your application. All scopes listed on the Developer Center are available in the tool. Scopes that are not listed can be requested. NOTE: For more information, refer to [Scopes](https://developer.concur.com/api-reference/authentication/scopes.html)
-SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is only enabled for SAP ICS client apps.
-
-5. Click **Submit**. The **App Credentials** page appears. The **App Credentials** page displays the **Client ID** and **Client Secret**. Before clicking **OK**, record the **Client ID** and **Client Secret**. They will be required in subsequent steps of this procedure.
-
-![Product screen showing the App Credentials page](./tool-images/company-refresh-tool-05.png)
-
-6. Click **OK**. The new application appears in the list on the **Application List** page. You can confirm the details of the app, including the **Client ID** and **Client Secret** by clicking the **Client ID** in the list on the **Application List** page.
-
-## Company Request Token UI
-
-1. Click **Administration** > **Company** > **Authentication Admin. The **Authentication Administration** page appears.
 2. Click **Company Request Token**. The admin **Company Request Tokens** page appears.
 
-![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
+    ![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
 
-3. In the **App ID** field, type the **Client ID** you recorded in Step 5 of the preceding procedure.
+3. In the **App ID** field, type the **App ID or Client ID**.
+    >**NOTE**: Clients can obtain a **App ID or Client ID** through one of the following methods:
 
-![Product screen showing the Company Request dialog](./tool-images/company-refresh-tool-06.png)
+* Clients with Client Web Services who have requested access to the self-service tool for application management can generate a Client ID using the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html).
+* Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm).
+* Clients who do not have Client Web Services or an SAP cross-product integration can contact SAP Concur support to obtain an App ID as needed.
 
-4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
+    ![Product screen showing the Company Request dialog](./tool-images/refresh-token-submit.png)
 
-![Product screen showing the Company Request Tokens page](./tool-images/company-refresh-tool-01.png)
+4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears, displaying the **Company UUID** and the **Company Request Token**. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
 
->**NOTE**: The Company Request Token expires after 24 hours. If you cannot complete the workflow within 24 hours of generating the Company Request Token, you must regenerate the token before completing the workflow. You can regenerate the Company Request Token by reentering the Client ID in the App ID and clicking Submit again.
+    ![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/refresh-token-created.png)
 
-5. To obtain a Company JWT, follow the steps on the **Company Request Tokens** page:
+    >**NOTE**: The Company Request Token expires after 24 hours. If you cannot complete the authentication workflow within 24 hours of generating the Company Request Token, you must regenerate the token before completing the workflow. You can regenerate the Company Request Token by reentering the App ID/Client ID and clicking **Submit** again.
 
-*  To exchange the Request Token for a Refresh Token and an Access Token, replace the following values and run the Password Grant CURL command to obtain an Access Token and Refresh Token.
+## Generating an Access/Refresh Token
+
+The admin can use the Company Request Token to generate an Access/Refresh Token (Company JWT). 
+
+To obtain an Access/Refresh Token, follow the steps on the **Company Request Tokens** page:
+
+Replace the following values and run the Password Grant CURL command to obtain an Access Token and Refresh Token.
 
    * `client_id`
    * `client_secret`
@@ -115,7 +72,7 @@ SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is onl
 
 For more information, refer to the [Password Grants](https://developer.concur.com/api-reference/authentication/apidoc.html#password_grant).
 
-* A successful response will be in the following form:
+A successful response will be in the following form:
 
   ```
   CURL response
@@ -133,6 +90,6 @@ For more information, refer to the [Password Grants](https://developer.concur.co
   "geolocation":"https://us.api.concursolutions.com/oauth2/v0/token"
   }
   ```
-* The Company JWT or `access_token` has a token lifetime of 1 hour and can be used to call SAP Concur APIs. The Company JWT can be refreshed by calling the Refresh Grant. The application must store the `refresh_token` in order to be able to continue refreshing the Company JWT when it expires.
+* The Access Token (Company JWT) has a lifetime of 1 hour and can be used to call SAP Concur APIs and connect some SAP cross-product integrations. The Access Token can be refreshed by calling the Refresh Grant. The application must store the Refresh Token in order to be able to continue refreshing the Access Token when it expires.
 For more information on Refresh Grants, refer to [Refreshing a Token](https://developer.concur.com/api-reference/authentication/apidoc.html#refresh_token).
-* If the `refresh_token` is lost, expires, or is revoked, a new request token must be obtained. For more information, refer to [Authentication](https://developer.concur.com/api-reference/authentication/apidoc.html). After you have completed the steps on the **Company Request Tokens** page, you have completed the process of obtaining the Company JWT and can start making calls to SAP Concur APIs.
+* If the Refresh Token is lost, expires, or is revoked, you must generate a new request token. After you have completed the steps on the **Company Request Tokens** page, you have completed the process of obtaining the Access/Refresh Token and can start making calls to SAP Concur APIs.

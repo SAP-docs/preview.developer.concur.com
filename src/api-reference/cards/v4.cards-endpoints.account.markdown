@@ -1,0 +1,169 @@
+---
+title: Cards v4 - Credit Card Account
+layout: reference
+---
+
+# Cards v4 - Credit Card Account
+
+## <a name="account-bulk-create"></a>Create Card Accounts (Bulk)
+
+Endpoint to create credit card accounts as bulk operation. Assuming that the request is properly authorized and the schema validation passes, the API immediately returns `202 (Request Accepted)` and performs the actual processing asynchronously.
+
+### Scopes
+
+`cards.account.writeonly` - Refer to [Scope Usage](./v4.cards-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+POST https://{datacenterURI}/cards/v4/companies/{companyId}/accounts/bulk
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|-|**Required** The unique identifier of the SAP Concur company.
+
+### Payloads
+
+* Request: [Create Account List](./v4.cards-endpoints.schemas.html#schema-create-account-list)
+* Response: [Bulk API Response](./v4.cards-endpoints.schemas.html#schema-bulkapi-response)
+
+Notes:
+* This API can only be used for creating new accounts. If the same `externalId` is sent a second time, it will be ignored with an error during processing.
+* The `externalId` is a unique identifier (token) for a card account as defined by an external system (outside the SAP Concur platform). It must not contain the primary account number (PAN).
+* Accounts with accountType `V` must reference a billingAccount via `externalId` (which has to be of type `M` or `I`). The billingAccount may be part of the same bulk request or sent before.
+* The owner of the account is identified via `cardholder` attributes based on the following order of priority: `userId`, `employeeId`, `email` (first match is considered).
+* Test users are not supported and cannot be assigned to accounts sent via this API.
+
+###  Headers
+
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
+###  HTTP Status Codes
+
+In case of success, HTTP status code `202 (Request Accepted)` is returned.
+In case of a bad request, HTTP status code `400 (Bad Request)` is returned along with an error code describing the cause. Possible error codes are: `invalidRequest`, `invalidJson`. For `invalidRequest` the error response usually contains a detailed error list.
+
+To learn more about response HTTP status codes for this API see [HTTP Status Codes](./v4.cards-endpoints.schemas.html#http-status-codes).
+
+### Examples
+
+#### Valid Request
+
+```shell
+POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/accounts/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 99239c14-678a-41ef-80ab-462454cde49f
+```
+
+```json
+{
+  "accounts": [
+    {
+      "accountType": "I",
+      "billedCurrency": "USD",
+      "cardBrand": "AX",
+      "cardProductDescription": "Platinum Rewards",
+      "cardProductType": "CORP",
+      "cardholder": {
+        "email": "john.doe@mycorp.com",
+        "firstName": "John",
+        "lastName": "Doe",
+        "userId": "e48fda91-15c8-4670-afe5-6c76501813c9"
+      },
+      "externalId": "59edf00e-6e0a-46c4-bf59-c233000c5b98",
+      "lastSegment": "1853",
+      "liabilityType": "IBIP",
+      "nameOnCard": "JOHN DOE",
+      "provider": {
+        "countryCode": "US"
+      },
+      "status": "A"
+    }
+  ]
+}
+```
+
+#### Success Response
+
+```shell
+202 Accepted
+Content-Type: application/json
+```
+
+```json
+{
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/bulkrequests/f328a518-be22-4207-aa53-87ac147eb416",
+      "rel": "self"
+    }
+  ],
+  "requestId": "f328a518-be22-4207-aa53-87ac147eb416"
+}
+```
+#### Invalid Request
+
+```shell
+POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/accounts/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 99239c14-678a-41ef-80ab-462454cde49f
+```
+
+```json
+{
+  "accounts": [
+    {
+      "accountType": "X",
+      "cardProductDescription": "Platinum Rewards",
+      "cardProductType": "CORP",
+      "lastSegment": "1853",
+      "liabilityType": "IBIP",
+      "nameOnCard": "JOHN DOE",
+      "provider": {
+        "countryCode": "XX"
+      }
+    }
+  ]
+}
+```
+
+#### Error Response
+
+```shell
+400 Bad Request
+Content-Type: application/json
+```
+
+```json
+[
+  {
+    "errorCode": "invalidRequest",
+    "errorMessage": "The request contains errors",
+    "dataPath": "/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/accounts/bulk",
+    "errors": [
+      {
+        "errorCode": "invalidCountryCode",
+        "errorMessage": "Value is not a valid ISO 3166-1 Alpha-2 country code",
+        "dataPath": "accounts[0].provider.countryCode"
+      },
+      {
+        "errorCode": "invalidEnum",
+        "errorMessage": "Value is not one of the allowed values",
+        "dataPath": "accounts[0].accountType"
+      },
+      {
+        "errorCode": "missingRequiredField",
+        "errorMessage": "Missing required field",
+        "dataPath": "accounts[0].externalId"
+      }
+    ]
+  }
+]
+```

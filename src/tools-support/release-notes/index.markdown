@@ -4,26 +4,33 @@ layout: reference
 ---
 # Release Notes
 
-## Client Release Notes
-
-* [Professional Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC.htm)
-* [Standard Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC_CPS.htm)
-
 ## Developer Platform Release Notes
 
+* [December 2023](./api/2023-12-14.html)
+* [November 2023](./api/2023-11-02.html)
+* [October 2023](./api/2023-10-12.html)
+* [September 2023](./api/2023-09-07.html)
+* [August 2023](./api/2023-08-10.html)
+* [July 2023](./api/2023-07-12.html)
+* [June 2023](./api/2023-06-02.html)
+* [May 2023](./api/2023-05-04.html)
+* [April 2023](./api/2023-04-07.html)
+* [March 2023](./api/2023-03-10.html)
+* [February 2023](./api/2023-02-03.html)
+* [January 2023](./api/2023-01-05.html)
+* [December 2022](./api/2022-12-02.html)
+* [November 2022](./api/2022-11-10.html)
+* [October 2022](./api/2022-10-14.html)
+* [September 2022](./api/2022-09-16.html)
+* [August 2022](./api/2022-08-12.html)
+* [July 2022](./api/2022-07-08.html)
+* [June 2022](./api/2022-06-24.html)
+* [May 2022](./api/2022-05-19.html)
+* [April 2022](./api/2022-04-08.html)
+* [March 2022](./api/2022-03-17.html)
+* [February 2022](./api/2022-02-17.html)
 * [January 2022](./api/2022-01-13.html)
-* [December 2021](./api/2021-12-09.html)
-* [November 2021](./api/2021-11-10.html)
-* [October 2021](./api/2021-10-15.html)
-* [September 2021](./api/2021-09-17.html)
-* [August 2021](./api/2021-08-20.html)
-* [July 2021](./api/2021-07-16.html)
-* [June 2021](./api/2021-06-18.html)
-* [May 2021](./api/2021-05-21.html)
-* [April 2021](./api/2021-04-16.html)
-* [March 2021](./api/2021-03-19.html)
-* [February 2021](./api/2021-02-19.html)
-* [January 2021](./api/2021-01-22.html)
+* [2021 Release Notes](./api/archive/2021-archive-dev.html)
 * [2020 Release Notes](./api/archive/2020-archive-dev.html)
 * [2019 Release Notes](./api/archive/2019-archive-dev.html)
 * [2018 Release Notes](./api/archive/2018-archive-dev.html)
@@ -32,9 +39,23 @@ layout: reference
 * [2015 Release Notes](./api/archive/2015-archive-dev.html)
 * [2014 Release Notes](./api/archive/2014-archive-dev.html)
 
+## Client Release Notes
+
+* [Professional Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC.htm)
+* [Standard Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC_CPS.htm)
+
 ## App Center Release Notes
 
-To view App Center release notes, please visit [ConcurTraining](http://www.concurtraining.com/customers/tech_pubs/Docs/AppCenter/ReleaseNotesAppCenter_Client.htm).
+* [2023 Release Notes](./app-center/2023-app-center.html)
+* [2022 Release Notes](./app-center/AppCenter_RN_Client_2022.pdf)
+* [2021 Release Notes](./app-center/AppCenter_RN_Client_2021.pdf)
+* [2020 Release Notes](./app-center/AppCenter_RN_Client_2020.pdf)
+* [2019 Release Notes](./app-center/AppCenter_RN_Client_2019.pdf)
+* [2018 Release Notes](./app-center/AppCenter_RN_Client_2018.pdf)
+* [2017 Release Notes](./app-center/AppCenter_RN_Client_2017.pdf)
+* [2016 Release Notes](./app-center/AppCenter_RN_Client_2016.pdf)
+* [2015 Release Notes](./app-center/AppCenter_RN_Client_2015.pdf)
+* [2014 Release Notes](./app-center/AppCenter_RN_Client_2014.pdf)
 
 ## Combined App Center and Developer Platform Release Notes
 

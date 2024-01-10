@@ -6,6 +6,10 @@ layout: reference
 
 The SAP Concur platform will send a request with the information in an encoded query string when the user clicks the button.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## <a name="request"></a>Request
 
 ### URI

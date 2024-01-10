@@ -60,7 +60,7 @@ https://{datacenterURI}/financialintegration/fi/v4/companies/transactiontypes/{d
 
 Name|Type|Format|Description
 ---|---|---|---
-`docType`|`string`|`path`|**Required** The financial document type to return. Only one type of transaction can be retrieved at a time. Supported values are: `expense`, `invoice`, `cashadvance`, `payroll`, `obligation`.
+`docType`|`string`|`path`|**Required** The financial document type to return. Only one type of transaction can be retrieved at a time. Supported values are: `expense`, `invoice`, `cashadvance`, `payroll`, `requestobligation`, `reportobligation`.
 `page`|`int32`|`query`|Starting page number.
 `limit`|`int32`|`query`|Number of records to return per page. Default: 25.
 `docId`|`string`|`query`|The transaction unique identifier, it could be expense report ID, payment request ID or cash advance ID. If specified, a single document that matches `docId` is returned.
@@ -211,7 +211,7 @@ https://{datacenterURI}/financialintegration/fi/v4/companies/transactiontypes/{d
 
 Name|Type|Format|Description
 ---|---|---|---
-`docType`|`string`|`path`|**Required** The financial document type. Only one type of transaction can be acknowledged at a time. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `obligation`.
+`docType`|`string`|`path`|**Required** The financial document type. Only one type of transaction can be acknowledged at a time. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `requestobligation`.
 
 #### Headers
 
@@ -308,7 +308,7 @@ https://{datacenterURI}/financialintegration/fi/v4/companies/transactiontypes/{d
 
 Name|Type|Format|Description
 ---|---|---|---
-`docType`|`string`|`path`|**Required** The financial document type to return.  Only one type of transaction can be retrieved at a time. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `obligation`
+`docType`|`string`|`path`|**Required** The financial document type to return.  Only one type of transaction can be retrieved at a time. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `requestobligation`
 `confirmationRequest`|-|[body](#confirmationrequest)|**Required** The JSON request to be posted.
 
 #### Headers
@@ -454,7 +454,7 @@ https://{datacenterURI}/financialintegration/fi/v4/companies/transactiontypes/{d
 
 Name|Type|Format|Description
 ---|---|---|---
-`docType`|`string`|`path`|**Required** The financial document type to return. Only one type of transaction can be retrieved at a time. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `obligation`
+`docType`|`string`|`path`|**Required** The financial document type to return. Only one type of transaction can be retrieved at a time. Currently supported: `expense`, supported in a future release: `invoice`, `cashadvance`, `payroll`, `requestobligation`
 `confirmationRequest`||[body](#confirmationrequest)|**Required** The JSON request to be posted.
 
 #### Headers
@@ -652,6 +652,8 @@ Code|Description|Category
 116|This document does not exist in the FI database.|Posting
 198|Invalid request - this same request will not work if tried again.|Posting
 199|Unknown error, please try again later.|Any
+213|Payment confirmation has been posted for this document.|Posting
+298|Invalid payment request - this same request will not work if tried again.|Posting
 
 ## Schema <a name="schema"></a>
 
@@ -668,7 +670,7 @@ Name|Type|Format|Description
 Name|Type|Format|Description
 ---|---|---|---
 `id`|`string`|-|The unique identifier for the document.
-`docType`|`string`|-|Transaction type. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `obligation`.
+`docType`|`string`|-|Transaction type. Supported values: `expense`, `invoice`, `cashadvance`, `payroll`, `requestobligation`.
 `companyId`|`string`|-|Unique identifier for the company in SAP Concur. Maximum 32 characters.
 `entityId`|`string`|-|Unique identifier for the entity in SAP Concur. Maximum 32 characters.
 `companyUuid`|`string`|`UUID`|UUID for the company in SAP Concur. Maximum 36 characters.
@@ -680,9 +682,9 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 ---|---|---|---
-`size`|int32|-|Total number of pages returned.
-`totalElements`|int32|-|Total count of records returned.
-`totalPages`|int32|-|Total number of pages returned.
+`size`|int32|-|The number of transactions returned on the page.
+`totalElements`|int32|-|The count of elements returned.
+`totalPages`|int32|-|Total number of pages that are available.
 `number`|int32|-|Page location for which the result is returned, for example: first page starts with 0, second page starts with 1.
 
 ### <a name="schema-Link"></a>Link
@@ -815,7 +817,7 @@ Name|Type|Format|Description
 `companyCode`|`string`|-|Company code.
 `financialDocumentId`|`string`|-|Document ID in ERP.
 `fiscalYear`|`string`|-|Fiscal year.
-`paymentRef`|`string`|-|Payment reference ID.
+`paymentRef`|`string`|-|Payment reference ID. Must be unique for each confirmation.
 `paymentMethod`|`string`|-|Payment method Where `E` = Electronic Fund Transfer or `C` = Check.
 
 ### <a name="schema-paymentconfirmationresponse"></a>Payment Confirmation Response
@@ -892,6 +894,8 @@ Name|Type|Format|Description
       "employeeCustom19Value": null,
       "employeeCustom20Value": null,
       "employeeCustom21Value": "US Group",
+      "loginId":"fi_sample@example.com",
+      "employeeReimbursementMethodCode":null,
       "employeeOrgUnit1Code": null,
       "employeeOrgUnit2Code": null,
       "employeeOrgUnit3Code": null,
@@ -911,6 +915,8 @@ Name|Type|Format|Description
       "isTest": "N",
       "reportStartDate": null,
       "reportEndDate": null,
+      "reportNumber":"W4JPAB",
+      "policyId":"70995FBF4AAF6244ACEE8A6ABC4E8EAB",
       "employeeCurrencyAlphaCode": "USD",
       "payrollPayIndicator": "N",
       "payrollPaymentClearingAccountCode": null,
@@ -977,6 +983,7 @@ Name|Type|Format|Description
    },
    "expenseEntry": [
       {
+         "expensePayAccountingIndicator":"Y",
          "cardProgramTypeCode": null,
          "entryCustom20Code": null,
          "entryCustom21Code": null,
@@ -1038,6 +1045,7 @@ Name|Type|Format|Description
          "cardTransactionCurrency": null,
          "cardTransactionPostedAmount": null,
          "cardTransactionPostedCurrency": null,
+         "cardBillingDate":null,
          "clearingAccountCode": null,
          "entryApprovedAmount": 200,
          "expensePayIndicator": "N",
@@ -1092,6 +1100,8 @@ Name|Type|Format|Description
          "entryOrgUnit6Value": null,
          "entryLocationName": "Minneapolis",
          "entryReceiptId": "E921EECCBCBA393EAC5A9212DCE57D9B",
+         "reportEntryPaymentTypeName":"Cash",
+         "reportEntryPaymentTypeCode":"CASH",
          "entryElectronicReceiptId": null,
          "allocation": [
             {
@@ -1171,6 +1181,7 @@ Name|Type|Format|Description
          "entryIsPersonal": "N",
          "entryVendorDescription": "Astron Hotels",
          "legacyEntryId": 294,
+         "requestEntryId":null,
          "liabilityAccountCode": null,
          "expenseTypeName": "Hotel",
          "entryDate": "2018-02-17T00:00:00.000Z",
@@ -1179,7 +1190,9 @@ Name|Type|Format|Description
          "expenseTypeCode": "LODNG",
          "cardStatementPeriodStartDate": null,
          "cardStatementPeriodEndDate": null,
-         "reportEntryPatKey": "CASH"
+         "reportEntryPatKey": "CASH",
+         "requestId":null,
+         "merchantTaxId": null
       }
    ],
    "cashAdvanceApplication": [
@@ -1287,7 +1300,10 @@ Name|Type|Format|Description
       "netPaymentTermDays":"30",
       "requestCreationDate":"2018-09-05T03:37:00.143Z",
       "requestCustom23Code":null,
-      "requestDescription":null
+      "requestDescription":null,
+      "vendorTaxId": null,
+      "externalPolicyId": "BB015C3A7701469C93B1",
+      "policyName": "FI"
    },
    "ownerEmployee":{
       "employeeCustom20Value":null,

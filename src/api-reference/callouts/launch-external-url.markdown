@@ -3,9 +3,14 @@ title: Launch External URL Callout v1
 layout: reference
 ---
 
-# Launch External URL Callout v1
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 06/15/2023</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest version.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
 
-> **Limitations**: For all new Launch External URL solutions, please use the [Launch External URL v4](https://developer.concur.com/api-reference/callouts/v4.launch-external-url.html) API.
+# Launch External URL Callout v1
 
 The Launch External URL callout gives clients and developers a platform to extend the functionality of the SAP Concur platform providing a means to deliver custom user interactions, or access functionality found in an external system. The client can arrange to add an Expense Entry form field that is configured to use the Launch External URL callout to a Concur Expense Entry form. Concur Expense will display this field with an attached button that launches a separate window when clicked. The window is controlled by an application connector, created by a third-party developer, the client, or us. The application connector is a web server that presents information in the window.
 
@@ -22,7 +27,7 @@ This callout differs from the standard SAP Concur web services in the following 
 
 ## <a name="limitations"></a>Limitations
 
-For all new Launch External URL solutions, please use the [Launch External URL v4](https://developer.concur.com/api-reference/callouts/v4.launch-external-url.html) API.
+Access to this documentation does not provide access to the API. For all new Launch External URL solutions, please use the [Launch External URL v4](https://developer.concur.com/api-reference/callouts/v4.launch-external-url.html) API.
 
 ## <a name="process-flow"></a>Process Flow
 

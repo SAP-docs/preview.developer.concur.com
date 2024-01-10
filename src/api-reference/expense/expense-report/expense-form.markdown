@@ -7,6 +7,10 @@ layout: reference
 
 The configured expense forms in SAP Concur. Clients can have multiple forms configured for each form type.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI
 `https://www.concursolutions.com/api/expense/expensereport/v1.1/report/Forms/ `
 

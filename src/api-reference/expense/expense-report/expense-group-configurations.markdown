@@ -11,6 +11,10 @@ NOTE: The Concur Expense product is highly configurable, and each client may hav
 
 1.1 documentation is available [here](./v1dot1.expense-group-configurations.html)
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve a configuration of an expense group <a name="get"></a>
 
     GET  /api/v3.0/expense/expensegroupconfigurations

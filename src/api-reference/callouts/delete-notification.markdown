@@ -5,6 +5,10 @@ layout: reference
 
 # Delete Notification Requests
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## URI
 `https://www.concursolutions.com/api/platform/notifications/v1.0/notification/`
 

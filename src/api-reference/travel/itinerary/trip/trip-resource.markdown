@@ -5,11 +5,15 @@ layout: reference
 
 # Trips v1.1
 
-The Trips resource represents itineraries in the Concur Travel system. TripLink suppliers use this resource to display a subset of the full booking fields.
+The Trips resource represents itineraries in the Concur Travel system.
 
 ### Version
 
 1.1
+
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ### URI  
 
@@ -21,20 +25,19 @@ In order to obtain itinerary data when making Itinerary API calls, the value of 
 
 ## Get Trip Summaries <a name="getts"></a>
 
-The Get Itinerary Summaries endpoint is used for retrieving trip summaries for the traveler whose account is associated with the OAuth access token used to make the API call. This endpoint can also be used to get trip summaries for a different user or the whole company. This is usually done when a Travel Management Company (TMC) needs to get trip summaries on behalf of a user or company.
+The Get Itinerary Summaries endpoint is used for retrieving trip summaries for a single user.  Do not use this to get trips for an entire company.  Use [Itinerary v4 events](/event-topics/travel/v4.itinerary-events.html) instead.
 
 ## Best Practices
-
-* When extracting past data:
-    * Extract a month of trip summaries to gauge volume. If hundreds are returned, then adjust extraction to weekly.
-    * Do not extract more than a year of data at any given time regardless of the volume. For longer look backs, extract 6 month segments maximum at a time.
-    * Do not multi-thread requests to retrieve multiple pages of data.  Concurrent requests will impact your application’s performance.
+* Do not use Trip 1.1 to extract historical data.
+* Do not use Trip 1.1 to get data for an entire company.  Use [Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html) instead.
 * Itineraries change frequently. Changes do not necessarily indicate that the traveler modified their trip. If your application works with upcoming or in progress trips, be aware that you must evaluate the individual segments to determine whether it is a material change for your application.
 * This API will only return itineraries that have been sent to Concur Travel; this includes travel booked within Concur Travel, TripIt, on TripLink supplier sites, and most bookings from your travel agency. Some customers may have multiple booking options which may mean not all employee trips are available via this API. A good rule of thumb: if the traveler sees the itinerary in their “trips” list, then you can retrieve it from this API.
+* Use the POST endpoint if you do not want the query parameters to appear in the URL.
 
 ### Request
 
   GET /travel/trip/v1.1/{query_parameters}
+  POST /travel/trip/v1.1/GetTrips
 
 ### Query Parameters
 
@@ -81,6 +84,10 @@ https://www.concursolutions.com/api/travel/trip/v1.1/?startDate={_startdate_}&en
 ```
 
 The access token used to make the API call is associated with the SAP Concur account with the specified login credentials.
+
+### Request Content Body
+
+Only specified for the POST endpoint.  A JSON document with any of the parameters documented in [Query Parameters](#query-parameters), above.
 
 ### Headers
 
@@ -148,6 +155,20 @@ GET /api/travel/trip/v1.1/?startDate=2012%2F02%2F01&endDate=2013%2F12%2F31 HTTP/
 Host: www.concursolutions.com
 Authorization: OAuth {access token}
 ...
+```
+or
+```http
+POST /api/travel/trip/v1.1/GetTrips HTTP/1.1
+Host: www.concursolutions.com
+Authorization: OAuth {access token}
+Content-Type: application/json
+Accept: application/xml
+... 
+
+{
+    "startDate": "2012-02-01",
+    "endDate": "2013-12-31"
+}
 ```
 
 #### Response
@@ -1314,7 +1335,7 @@ Where `access_token` is the OAuth 2.0 access token of the user whose trip you wa
 
 None.
 
-###<a name="delete-schema"></a>Cancel Trip Request Schema
+### <a name="delete-schema"></a>Cancel Trip Request Schema
 
 The request returns the full trip details for the cancelled trip. If the request is successful, the response trip will not contain any segments because they have been cancelled. The response includes the following additional elements inside the `Itinerary` parent element:
 

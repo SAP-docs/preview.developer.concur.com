@@ -1,0 +1,792 @@
+---
+title: List Item Bulk v4
+layout: reference
+---
+
+# List Item Bulk v4
+
+The List Item Bulk API provides an automated solution to clients who would like to add, update, and delete list items (up to 250 list items can be modified per bulk request).
+
+## <a name="limitations"></a>Limitations
+
+This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API.
+
+## Prior Versions
+
+* List Items v1 documentation is available [here](https://developer.concur.com/api-reference/common/list-item/v1.list-item.html).
+
+## <a name="process-flow"></a>Process Flow
+
+![A process flow diagram of the List Item Bulk API](./v4-list-item-bulk-process-flow.png)
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+* Concur Request Professional Edition
+* Concur Request Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+|Name|Description|Endpoint|
+|---|---|---|
+|`spend.listitem.write`|Read and write access to spend list items.|POST, PATCH|
+
+## <a name="dependencies"></a>Dependencies
+
+Users must be a Concur Expense, Concur Invoice, Shared, or Concur Request Configuration Administrator in order to perform POST and PATCH actions.
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+This API supports both company level and user level access tokens.
+
+## <a name="post-list-item-bulk"></a>Create List Items
+
+Create list items for a specific list with the provided request body. Each API request contains up to 250 [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part). Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) represents one item to be created.
+
+The [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) are executed in order. The caller will need to manage the ordering of the [Bulk List Item Create Request Parts](#schema-bulk-list-item-create-request-part) within the request
+to ensure dependencies are met, such as when creating list items in a connected list, make sure the 'create parent list item' comes before the 'create child list item' within the API request.
+
+Each [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part) executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the [Error Messages](#post-list-item-error-messages) for the execution failure error messages.
+
+#### List Item Code Naming Restrictions
+Hyphens are not supported and should not be used in item names or item codes. When an item name or item code with a hyphen is created or saved, the hyphen might be interpreted as a delimiter (separator) which can have unpredictable results on the saved data including possible corruption of the item list. 
+
+#### <a name="list-item-codes"></a>List Item Codes Explanation
+Refer to the [List Items v4 documentation](https://developer.concur.com/api-reference/common/list-item/v4.list-item.html) for the full List Item object.
+
+Each list item has a `shortCode` which is the individual item's code. Each list item has a `code`, also referred to as "long code". The long code uniquely identifies an item in a list. 
+The long code is constructed by concatenating the parent list item's `code` ("long code") and the current item's `shortCode` with a hyphen delimiter. A first-level list item will have the same value for `shortCode` and `code`, because it has no parent item. 
+
+The result is a list item's long code contains the `shortCode` values of all ancestors concatenated by hyphens.
+
+**Examples**:
+
+First level list item:
+```
+"shortCode": "first"
+"code": "first"
+```
+
+Second level list item (child of the first level list item):
+```
+"shortCode": "second"
+"code": "first-second"
+"parentCode": "first"
+```
+
+Third level list item (child of the second level list item):
+```
+"shortCode": "third"
+"code": "first-second-third"
+"parentCode": "first-second"
+```
+
+Fourth level list item (child of the third level list item):
+```
+"shortCode": "fourth"
+"code": "first-second-third-fourth"
+"parentCode": "first-second-third"
+```
+
+### Scopes
+
+`spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### Template
+
+```shell
+POST /list/v4/lists/{listId}/bulk
+```
+
+#### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+`Accept-Language`|`string`|Language code. Default: `en`
+`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+`itemCreateRequests`|-|**Required** Array of list item objects to be created for the company.|
+
+#### Payload
+
+* [Bulk List Item Create Request](#schema-bulk-list-item-create-request)
+* [Bulk List Item Create Request Part](#schema-bulk-list-item-create-request-part)
+
+### Response
+
+#### Payload
+
+* [Bulk List Item Response](#schema-bulk-list-item-response)
+* [Error Message](#schema-error-message)
+
+### <a name="post-list-item-error-messages"></a>Error Messages
+
+**API Error Response**
+
+The values for the `id` and `message` field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
+
+|Error Id|Error Message
+|---|---|
+`list.not.found`|List not found.|
+`list.deleted`|The list is currently deleted.|
+`item.duplicate.code`|This item code is already used by another item in the same list.|
+`item.parent.not.found`|Parent `listItem` not found.|
+`item.parent.deleted`|Parent `listItem` has been deleted.|
+`item.list.id.not.match.parent`|List ID does not match that of parent `listItem`.|
+`item.max.level.exceeded`|Parent at max level. List items cannot be added to this parent.|
+`item.duplicate.item.shared`|The list item already exists in another list with the same list category. This list item already exists in another linked list.|
+
+
+**Validation Error**
+
+The [Error Message](#schema-error-message) will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:
+
+```shell
+{
+  "timestamp":"2022-12-13T20:30:06.230+00:00",
+  "httpStatus":"400 - Bad Request",
+  "error":{
+    "id":"request.validation.error",
+    "message":"Please check your request parameter"
+  },
+  "validationErrors":[
+    {
+      "source":"requests",
+      "message":"size must be between 1 and 250"
+    }
+  ],
+  "path":"/list/v4/lists/ab2bdee3-71d9-c549-977f-6172a4502f34/bulk"
+}
+```
+
+**Rate Limit Error**
+
+```shell
+HTTP/1.1 429
+retry-after: 0
+concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
+content-length: 146
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:13:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "timestamp":"2022-08-26T16:13:17.230+00:00",
+  "httpStatus":"429 - Too Many Requests",
+  "error":{
+    "id":"security.rate.limit.reached",
+    "message":"Too many requests"
+  },
+  "path":"/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk"
+}
+```
+
+
+### Examples
+
+#### Create Single First-level List Item with Successful Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "ITEM",
+      "value": "ITEM"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
+content-length: 71
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:13:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 1,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+#### Create First-level list item and Children Items with Successful Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "FIRST_LEVEL_PARENT_ITEM",
+      "value": "FIRST_LEVEL_PARENT_ITEM"
+    },
+    {
+      "shortCode": "SECOND_LEVEL_CHILD_ITEM",
+      "value": "SECOND_LEVEL_CHILD_ITEM",
+      "parentCode": "PARENT_ITEM"
+    },
+    {
+      "shortCode": "THIRD_LEVEL_CHILD_ITEM",
+      "value": "THIRD_LEVEL_CHILD_ITEM",
+      "parentCode": "PARENT_ITEM-SECOND_LEVEL_CHILD_ITEM"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 201
+concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
+content-length: 227
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:15:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 3,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+#### Create Child Item with Failure Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "CHILD_ITEM",
+      "value": "CHILD_ITEM",
+      "parentCode": "ITEM"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 400
+concur-correlationid: 6086f0a8-8aa3-479c-9bf7-ddf7449efa51
+content-length: 227
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:15:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+````json
+{
+  "status": "FAILURE",
+  "recordsSucceeded": 0,
+  "recordsFailed": 1,
+  "errors": [
+    {
+      "id": "item.duplicate.code",
+      "message": "This item code is already used by another item in the same list",
+      "listItem": {
+        "shortCode": "CHILD_ITEM",
+        "value": "CHILD_ITEM",
+        "parentCode": "ITEM"
+      }
+    }
+  ]
+}
+````
+
+#### Create Multiple Items with Partial Success Response Example
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "shortCode": "CHILD_ITEM_ONE",
+      "value": "CHILD_ITEM_ONE",
+      "parentCode": "ITEM"
+    },
+    {
+      "shortCode": "CHILD_ITEM_B",
+      "value": "CHILD_ITEM_B",
+      "parentCode": "ITEM"
+    },
+    {
+      "shortCode": "ITEM_THREE",
+      "value": "ITEM_THREE"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 206
+concur-correlationid: 97a8db78-9f87-427c-928a-c92c9ff2349a
+content-length: 233
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:17:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "PARTIAL_SUCCESS",
+  "recordsSucceeded": 2,
+  "recordsFailed": 1,
+  "errors": [
+    {
+      "id": "item.duplicate.code",
+      "message": "This item code is already used by another item in the same list",
+      "listItem": {
+        "shortCode": "CHILD_ITEM_ONE",
+        "value": "CHILD_ITEM_ONE",
+        "parentCode": "ITEM"
+      }
+    }
+  ]
+}
+```
+
+
+## <a name="patch-list-item-bulk"></a>Update List Items
+
+Update and delete list items by long code for a specific list with provided request body. Each API request contains up to 250 [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part). Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) represents one item to be updated or deleted.
+
+The [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) are executed in order. The caller will need to manage the ordering of the [Bulk List Item Update Request Parts](#schema-bulk-list-item-update-request-part) within the request to ensure dependencies are met.
+
+Each [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part) executes individually so a single API request can have some request parts that execute successfully and some request parts that fail. See the [Error Messages](#patch-list-item-error-messages) for the execution failure error messages.
+
+#### List Item Code Naming Restrictions
+Hyphens are not supported and should not be used in item names or item codes. When an item name or item code with a hyphen is created or saved, the hyphen might be interpreted as a delimiter (separator) which can have unpredictable results on the saved data including possible corruption of the item list.
+
+#### Delete List Item Behavior
+In a connected list, when deleting a list item, all children of that list item are also deleted.
+
+### Scopes
+
+`spend.listitem.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### Template
+
+```shell
+PATCH /list/v4/lists/{listId}/bulk
+```
+
+#### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Accept-Language`|`string`|Language code. Default: `en` |
+|`listId`|-|**Required** The unique identifier of the list (SYNC_GUID).|
+|`itemUpdateRequests`|-|**Required** Array of list item objects to be updated.|
+
+#### Payload
+
+* [Bulk List Item Update Request](#schema-bulk-list-item-update-request)
+* [Bulk List Item Update Request Part](#schema-bulk-list-item-update-request-part)
+
+### Response
+
+#### Payload
+
+* [Bulk List Item Response](#schema-bulk-list-item-response)
+* [Error Message](#schema-error-message)
+
+### <a name="patch-list-item-error-messages"></a>Error Messages
+
+**API Error Response**
+
+The values for the `id` and `message` field of the [Bulk List Item Error](#schema-bulk-list-item-error) in the [Bulk List Item Response](#schema-bulk-list-item-response):
+
+|Error Id|Error Message|
+|---|---|---|
+`item.not.found`|listItem not found.|
+`item.list.id.not.match.parent`|List ID does not match that of parent listItem.|
+`list.not.found`|List not found.|
+`item.deleted`|The list item has been deleted.|
+`item.duplicate.code`|This item code is already used by another item in the same list.|
+`item.duplicate.code.deleted`|This item code is already used by other item that's been deleted.|
+
+**Validation Error**
+
+The [Error Message](#schema-error-message) will be returned in the case of a request validation error. For example, if a request is sent with more than 250 request parts:
+
+```shell
+{
+  "timestamp":"2022-12-13T20:30:06.230+00:00",
+  "httpStatus":"400 - Bad Request",
+  "error":{
+    "id":"request.validation.error",
+    "message":"Please check your request parameter"
+  },
+  "validationErrors":[
+    {
+      "source":"requests",
+      "message":"size must be between 1 and 250"
+    }
+  ],
+  "path":"/list/v4/lists/ab2bdee3-71d9-c549-977f-6172a4502f34/bulk"
+}
+```
+
+**Rate Limit Error**
+
+```shell
+HTTP/1.1 429
+retry-after: 0
+concur-correlationid: 610425c5-4c2e-4bdb-ab5d-02775e23c7c9
+content-length: 146
+content-type: application/json;charset=UTF-8
+date: Fri,26 Aug 2022 16:13:17 GMT
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+cache-control: no-cache, private
+```
+```json
+{
+  "timestamp":"2022-08-26T16:13:17.230+00:00",
+  "httpStatus":"429 - Too Many Requests",
+  "error":{
+    "id":"security.rate.limit.reached",
+    "message":"Too many requests"
+  },
+  "path":"/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk"
+}
+```
+
+### Examples
+
+#### Update Single First-level Item with Successful Response
+
+##### Request
+
+```shell
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "value": "ITEM UPDATED"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
+content-length: 289
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:11:35 GMT
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 1,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+#### Delete Single First-level Item with Successful Response
+
+##### Request
+
+```shell
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "deleted": true
+    }
+  ]
+}
+```
+
+##### Response
+```shell
+HTTP/1.1 200
+concur-correlationid: 46d1b015-635e-4bca-be76-2ed39c122065
+content-length: 289
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:11:35 GMT
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 1,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+#### Update Multiple Items with Partial Success Response
+
+##### Request
+
+```shell
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "code": "ITEM",
+      "value": "ITEM"
+    },
+    {
+      "code": "ITEM_TWO",
+      "deleted": true
+    },
+    {
+      "code": "ITEM_THREE",
+      "value": "ITEM_THREE UPDATED"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 206
+concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
+content-length: 165
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:14:35 GMT
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "PARTIAL_SUCCESS",
+  "recordsSucceeded": 2,
+  "recordsFailed": 1,
+  "errors": [
+    {
+      "id": "item.deleted",
+      "message": "The list item has been deleted",
+      "listItem": {
+        "code": "ITEM",
+        "value": "ITEM"
+      }
+    }
+  ]
+}
+```
+
+#### Update Items in different levels
+
+##### Request
+
+```shell
+PATCH https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+```json
+{
+  "requests": [
+    {
+      "code": "FIRST_LEVEL",
+      "value": "firstLevelItem"
+    },
+    {
+      "code": "FIRST_LEVEL-SECOND_LEVEL",
+      "value": "secondLevelItem"
+    },
+    {
+      "code": "FIRST_LEVEL-SECOND_LEVEL-THIRD_LEVEL",
+      "deleted": true
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 6774cd63-67aa-4be3-bd1d-519753d126b0
+content-length: 165
+content-type: application/json;charset=UTF-8
+location: https://us.api.concursolutions.com/list/v4/lists/530ae443-3b22-a44c-8211-c66d96c58d9e/bulk
+date: Fri,26 Aug 2022 17:14:35 GMT
+cache-control: no-cache, private
+```
+```json
+{
+  "status": "SUCCESS",
+  "recordsSucceeded": 3,
+  "recordsFailed": 0,
+  "errors": []
+}
+```
+
+## <a name="schema"></a>Schema
+
+### <a name="schema-bulk-list-item-create-request"></a>Bulk List Item Create Request
+
+|Name| Type|Format|Description|
+|---|---|---|---|
+|`requests`| `array` |[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part)|**Required** The requests in the bulk list item create request.|
+
+### <a name="schema-bulk-list-item-create-request-part"></a>Bulk List Item Create Request Part
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`shortCode`|`string`|-|**Required** List item short code. See [List Item Codes](#list-item-codes) for further details.|
+|`value`|`string`|-|**Required** List item value.|
+|`parentCode`|`string`|-|The long code of parent list item. See [List Item Codes](#list-item-codes) for further details.|
+
+### <a name="schema-bulk-list-item-update-request"></a>Bulk List Item Update Request
+
+|Name| Type|Format|Description|
+|---|---|---|---|
+|`requests`|`array`|[`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|**Required** The requests in the bulk list item update request.|
+
+### <a name="schema-bulk-list-item-update-request-part"></a>Bulk List Item Update Request Part
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`code`|`string`|-|**Required** List item long code. See [List Item Codes](#list-item-codes) for further details.|
+|`value`|`string`|-|List item value.|
+|`deleted`|`boolean`|-|List item deleted status.|
+
+### <a name="schema-bulk-list-item-response"></a>Bulk List Item Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`status`|`string`|-|Response status. ( Enum:`SUCCESS`, `PARTIAL_SUCCESS`, `FAILURE`)|
+|`recordsSucceeded`|`int`|-|Number of list items successfully created for the list.|
+|`recordsFailed`|`int`|-|Number of list items failed to be created for the list.|
+|`errors`|`array`|[`BulkListItemError`](#schema-bulk-list-item-error)|List of error codes and list items failed to be created/updated.|
+
+### <a name="schema-bulk-list-item-error"></a>Bulk List Item Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`id` |`string`|-|The identifier of the error.|
+|`message`|`string`|-|The detailed error message.|
+|`listItem`|[`BulkListItemCreateRequestPart`](#schema-bulk-list-item-create-request-part) or [`BulkListItemUpdateRequestPart`](#schema-bulk-list-item-update-request-part)|-|List item corresponding to the error.|
+
+### <a name="schema-bulk-list-item-request"></a>Bulk List Item Request
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|[`BulkListItemCreateRequest`](#schema-bulk-list-item-create-request) or [`BulkListItemUpdateRequest`](#schema-bulk-list-item-update-request)|-|-|List item corresponding to the error.|
+
+### <a name="schema-error-message"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`error`|[`Message`](#schema-message)|-|**Required** The detailed error message.|
+|`httpStatus`|`string`|-|**Required** The http response code and phrase for the response.|
+|`path`|`string`|-|**Required** The URI of the attempted request.|
+|`timestamp`|`string`|`date-time`|**Required** The time when the error was captured.|
+|`validationErrors`|`array`|[`ValidationError`](#schema-validation-error)|The validation error messages.|
+
+### <a name="schema-validation-error"></a>Validation Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`message`|`string`|-|The detailed message of the validation error.|
+|`source`|`string`|-|The type of validation which failed.|
+
+### <a name="schema-message"></a>Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`message`|`string`|-|The detailed error message.|
+|`id`|`string`|-|The identifier of the error.|
+
+## Migration from List Import
+
+For callers who are migrating from using a flat file list import, be aware of the following differences:
+
+**Transactional vs Incremental Update:** The list import is a transactional update (all or nothing process) but List Item Bulk API is incremental.
+For example, when executing a list import file with 10 list items, if 1 list item modification fails, then the entire transaction is rolled back and all 10 list items remain unchanged.
+When sending a List Item Bulk API request with 10 list items, if 1 list item modification fails, the 9 list item modifications that were successful are updated, and only the 1 list item modification that failed remains unchanged.
+
+**Modifications permitted in single request:** The list import can support create, update and delete in the same import file. The List Item Bulk API requires separate create (POST) and update/delete (PATCH).
+
+**Managing dependencies within a request:** The list import can manage ordering dependencies between list items such as creating a parent list item before the dependent child list item.
+With the List Item Bulk API, the caller needs to manage the ordering of dependencies to make sure the create parent list item comes before the create child item within the API request.

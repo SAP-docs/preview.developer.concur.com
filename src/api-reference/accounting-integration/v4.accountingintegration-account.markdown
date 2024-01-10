@@ -2,21 +2,24 @@
 title: Managing ERP Accounts in SAP Concur
 layout: reference
 ---
+
 # Accounting Integration v4 - Manage ERP Accounts
 
 {% include prerelease.html %}
 
+Return to [Accounting Integration v4 - Getting Started](/api-reference/accounting-integration/v4.accountingintegration-get-started.html)
+
 ## <a name="patch-accounts"></a>Add, Update, or Delete Accounts
 
-This endpoint allows users to add, update, or delete ERP account data that is cached in SAP Concur systems. Upon receiving the data, the server will process the request asynchronously and return immediately with a response payload containing the status and the link of the progressing status.
+This endpoint allows users to add, update, or delete ERP account data that is cached in the SAP Concur system. Upon receiving the data, the server will return immediately with a response payload containing the request current status and a link to check the request status progress, then process the request asynchronously.
 
-In addition, events will be published to notify API users of important updates. For more information, please see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+In addition, events will be published to notify the API consumers of important updates. For more information, please see [Accounting Integration Events](/event-topics/accounting-integration/event-subscription-topic-accountingintegration.html).
 
 ### Limitations
 
+* Access to this documentation does not provide access to the API.
 * The total request payload size should not exceed 4 MB.
 * Any given ERP record size should not exceed 200 KB.
-* The ERP data will be cached in a SAP Concur data center for no more than 150 days.
 * This endpoint can be called once per second.
 
 ### Scopes
@@ -38,12 +41,12 @@ Name|Type|Format|Description
 
 ### Payloads
 
-* Request: [List of Account](./v4.accountingintegration-schema.html#list-of-account)
-* Response: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [Error](./v4.accountingintegration-schema.html#schema-error)
+* Request: [Update ERP Accounts Request](./v4.accountingintegration-schema.html#list-of-account)
+* Response: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
-#### Request: delete all, then add new data
+#### Request: delete all the cached accounts data in the SAP Concur system, then add new data
 
 ```shell
 PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/accounts
@@ -54,10 +57,20 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
   "deleteAll": true,
   "data": [
     {
-      "id": "string",
-      "name": "string",
-      "number": "string",
+      "id": "001",
+      "name": "Accounts Payable",
+      "number": "01234",
       "type": "ACCOUNTS_PAYABLE"
+    },
+    {
+      "id": "002",
+      "name": "Accounts Receivable",
+      "type": "ACCOUNTS_RECEIVABLE"
+    },
+    {
+      "id": "003",
+      "name": "Bank",
+      "type": "BANK"
     }
   ]
 }
@@ -73,15 +86,24 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
 {
   "data": [
     {
-      "id": "string",
-      "name": "string",
-      "number": "string",
-      "type": "ACCOUNTS_PAYABLE"
+      "id": "004",
+      "name": "Cost Of Goods Sold",
+      "type": "COST_OF_GOODS_SOLD"
     },
     {
-      "id": "string2",
+      "id": "005",
+      "name": "Credit Card",
+      "type": "CREDIT_CARD"
+    },
+    {
+      "id": "006",
+      "name": "Depreciation",
+      "type": "DEPRECIATION"
+    },
+    {
+      "id": "001",
       "isDeleted": true
-    }    
+    }
   ]
 }
 ```
@@ -109,7 +131,7 @@ PATCH /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/e
 
 ## <a name="get-accounts"></a>Retrieve Accounts
 
-This endpoint is to retrieve the ERP account data that is cached in SAP Concur systems.
+This endpoint's purpose is to retrieve the ERP account data that is cached in the SAP Concur system.
 
 ### Limitations
 
@@ -135,7 +157,7 @@ Name|Type|Format|Description
 ### Payloads
 
 * Request: None
-* Response: [List of Account](./v4.accountingintegration-schema.html#list-of-account), [Error](./v4.accountingintegration-schema.html#schema-error)
+* Response: [List of Account](./v4.accountingintegration-schema.html#list-of-account), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
@@ -155,10 +177,16 @@ GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erp
 {
   "data": [
     {
-      "id": "string",
-      "name": "string",
-      "number": "string",
+      "id": "001",
+      "number": "01234",
+      "name": "Accounts Payable",
       "type": "ACCOUNTS_PAYABLE"
+    },
+    {
+      "id": "002",
+      "number": null,
+      "name": "Accounts Receivable",
+      "type": "ACCOUNTS_RECEIVABLE"
     }
   ],
   "links": {

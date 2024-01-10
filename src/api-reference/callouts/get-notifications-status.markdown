@@ -6,6 +6,10 @@ layout: reference
 
 Retrieves the list of event notifications that are in the supplied status.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request <a name="request"></a>
 
 ### Request Parameters

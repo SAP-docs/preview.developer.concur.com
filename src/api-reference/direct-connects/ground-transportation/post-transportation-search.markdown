@@ -7,6 +7,10 @@ layout: reference
 
 A post transportation search request is sent when the Travel user searches for ground transportation.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Request <a name="request"></a>
 
 ### URI

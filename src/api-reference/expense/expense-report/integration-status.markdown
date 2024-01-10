@@ -9,6 +9,10 @@ The integration status of the supplied object. Currently supports expense report
 
 This resource allows developers to ensure that the necessary transactions to account for expenses and arrange payment for the expenses in a specified report were created in the financial system prior to committing the expense report in Concur Expense. If they were, the developer uses this function to indicate the report was successfully integrated and move the report forward in the workflow to the Paid step. In Concur Expense, when a report arrives at the Paid workflow step the report is committed, meaning its data can't be changed and it can't be sent back in the workflow.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI
 `https://www.concursolutions.com/api/expense/expensereport/v2.0/integrationstatus/`
 

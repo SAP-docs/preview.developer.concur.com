@@ -30,7 +30,7 @@ The [Launch External URL v1](https://developer.concur.com/api-reference/callouts
 
 ## Limitations <a name="limitations"></a>
 
-SAP Concur products are highly configurable, and not all clients will have access to all features. Partner developers must determine which configurations are required for their solution prior to the review process. Existing clients can work with SAP Concur Integration Services to create custom applications that work with their configuration.
+Access to this documentation does not provide access to the API. SAP Concur products are highly configurable, and not all clients will have access to all features. Partner developers must determine which configurations are required for their solution prior to the review process. Existing clients can work with SAP Concur Integration Services to create custom applications that work with their configuration.
 
 The Launch External URL callout is not supported for expense entry bulk editing. For situations where the data needs to be the same, we recommend configuring Copy-Down of the desired data fields.
 

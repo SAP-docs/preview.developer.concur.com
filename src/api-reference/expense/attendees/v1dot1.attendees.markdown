@@ -23,6 +23,10 @@ Attendees that are privately owned or part of shared lists that allow manual add
 
 * Posting expense report information is a multi-stage process. Refer to the [Expense Reports v3](/api-reference/expense/expense-report/v3.reports.html) documentation for the steps required to post new expense reports and entries.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### Supported Content Types
 
 * application/xml
@@ -216,4 +220,3 @@ Content-Type: application/xml
   </AttendeeInfoList>
 </attendee-batch-result>
 ```
-

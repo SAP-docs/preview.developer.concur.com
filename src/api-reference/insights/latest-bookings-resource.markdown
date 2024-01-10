@@ -10,6 +10,10 @@ Gets the latest hotel and air booking for a particular user.
 ### Version
 3.0
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Retrieve the latest hotel and air booking for a particular user <a name="get"></a>
 
     GET   /api/v3.0/insights/latestbookings/

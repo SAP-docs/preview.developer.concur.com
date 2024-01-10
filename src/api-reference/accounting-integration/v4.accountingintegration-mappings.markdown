@@ -1,5 +1,5 @@
 ---
-title: Configuration Settings and Mappings between SAP Concur and the ERP data
+title: Configuration Settings and Mappings between the SAP Concur data and the ERP data
 layout: reference
 ---
 
@@ -7,13 +7,15 @@ layout: reference
 
 {% include prerelease.html %}
 
+Return to [Accounting Integration v4 - Getting Started](/api-reference/accounting-integration/v4.accountingintegration-get-started.html)
+
 ## <a name="get-mappings"></a>Retrieve Configuration Settings and Mappings
 
-This endpoint allows users to retrieve configuration settings and mappings between SAP Concur systems and the ERP data.
+This endpoint allows users to retrieve configuration settings and mappings between SAP Concur data and the ERP data.
 
 ### Limitations
 
-None.
+Access to this documentation does not provide access to the API. 
 
 ### Scopes
 
@@ -27,15 +29,15 @@ GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}/mappings
 
 ### Parameters
 
-Name|Type|Format|Description
----|---|---|---
-`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
-`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.|
+|`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.|
 
 ### Payloads
 
 * Request: None
-* Response: [MappingsResponse](./v4.accountingintegration-schema.html#mappings-response), [Error](./v4.accountingintegration-schema.html#schema-error)
+* Response: [MappingsResponse](./v4.accountingintegration-schema.html#mappings-response), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
 
 ### Examples
 
@@ -54,11 +56,28 @@ GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erp
 ```json
 {
   "erpId": "string",
+  "ledger": {
+    "name": "string",
+    "code": "string",
+    "expenseHierarchy": [
+      {
+        "formTypeCode": "string",
+        "alternateFieldId": "string",
+        "level": 0
+      }
+    ],
+    "invoiceHierarchy": [
+      {
+        "formTypeCode": "string",
+        "alternateFieldId": "string",
+        "level": 0
+      }
+    ]
+  },
   "features": [
     {
       "id": "string",
-      "value": "string",
-      "description": "string"
+      "value": {}
     }
   ],
   "files": [
@@ -73,7 +92,9 @@ GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erp
           "clearingAccountCode": "string",
           "name": "string",
           "creditCardVendorId": "string",
-          "currencyCode": "string"
+          "currencyCode": "string",
+          "cashAccountCode": "string",
+          "erpCreditCardAccount": "string"
         }
       ],
       "listMappings": [
@@ -88,6 +109,16 @@ GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erp
                   "alternateFieldId": "string",
                   "level": 0
                 }
+              ],
+              "connectedLists": [
+                {
+                  "fields": [
+                    {
+                      "alternateFieldId": "string",
+                      "level": 0
+                    }
+                  ]
+                }
               ]
             }
           ]
@@ -95,8 +126,13 @@ GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erp
       ],
       "invoiceLiabilityAccount": {
         "id": "string",
+        "number": "string",
         "name": "string",
         "type": "ACCOUNTS_PAYABLE"
+      },
+      "billableField": {
+        "formTypeCode": "allocation",
+        "alternateFieldId": "string"
       }
     }
   ]

@@ -5,6 +5,13 @@ layout: reference
 
 # Hotel v2 - Introduction
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 10/14/2022</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 The Hotel Services v2 Direct Connect provides a method for Travel users to access hotel inventory.
 
 The Hotel Service 2.0 API from SAP Concur is a specification based on OTA 2015 standard for Hotel Suppliers. Please refer to XSD schema of the service and WSDL service description. This Guide provides information how the Hotel Supplier can make their content available for Concur Travel users using Hotel Service 2.0 API. Once the Hotel Supplier has developed and certified their interface with SAP Concur, their inventory will begin appearing in hotel searches by opted-in Travel users. This API has client/server architecture, where SAP Concur acts as client, pulling information from the Hotel Supplier, who acts as server, responding to SAP Concur’s requests. This guide specifies the request and response format required by SAP Concur.
@@ -13,6 +20,10 @@ This call-out differs from the in-bound SAP Concur web services in the following
 
 * It uses an out-bound message where SAP Concur calls a public facing API end-point provided by the hotel supplier.
 * The supplier configures and maintains the public web service interface. This guide specifies the request and response format required by SAP Concur.
+
+## Limitations
+
+Access to this documentation does not provide access to the API. 
 
 ## Product Restrictions <a name="product-restrictions"></a>
 SAP Concur products are highly configurable, and not all clients will have access to all features.

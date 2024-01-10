@@ -12,8 +12,12 @@ Retrieves the list of users that have granted delegate permissions to the user s
 ### Version
 1.1
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ### URI
-`https://www.concursolutions.com/api/expense/expensereport/v1.1/Delegators`
+`https://www.concursolutions.com/api/expense/expensereport/v1.1/delegators`
 
 ### Operations
 [GET](#get)  
@@ -21,7 +25,11 @@ Retrieves the list of users that have granted delegate permissions to the user s
 ## Request <a name="request"></a>
 
 #### Request Parameters
-None.
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`includeInactive`|`string`|`query`|Allows to include inactive delegators in the response for the delegate. Accepted values: `Y|N`. Default: `N`|
+
+Example: `https://{datacenterURI}/api/expense/expensereport/v1.1/delegators?includeInactive=Y`
 
 ### Headers
 

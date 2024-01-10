@@ -4,6 +4,13 @@ layout: reference
 ---
 # Hotel v2 - Appendix
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 10/14/2022</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 ## Search
 
 ![./media/image1.png](./images/examples/search.png)
@@ -519,14 +526,12 @@ WIth Availability response also cancellation information comes which can be disp
             <RoomStay>
               <RatePlans>
                 <RatePlan RatePlanID="EZ57LL7">
-                  <CancelPenalties CancelPolicyIndicator="true">
-                    <CancelPenalty>
+                  <CancelPenalties>
+                    <CancelPenalty NoCancelInd="true">
+                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                       <PenaltyDescription>
                         <Text>test cancel policy 1</Text>
                       </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                     </CancelPenalty>
                   </CancelPenalties>
                 </RatePlan>
@@ -676,22 +681,14 @@ WIth Availability response also cancellation information comes which can be disp
             <RoomStay>
               <RatePlans>
                 <RatePlan RatePlanID="P4PGI5Q">
-                  <CancelPenalties CancelPolicyIndicator="true">
-                    <CancelPenalty>
+                  <CancelPenalties>
+                    <CancelPenalty NoCancelInd="true">
+                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                       <PenaltyDescription>
                         <Text>test cancel policy 1</Text>
-                      </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <PenaltyDescription>
                         <Text>test cancel policy 2</Text>
-                      </PenaltyDescription>
-                      <PenaltyDescription>
                         <Text>test cancel policy 3</Text>
                       </PenaltyDescription>
-                    </CancelPenalty>
-                    <CancelPenalty>
-                      <Deadline AbsoluteDeadline="2018-02-22T18:00"/>
                     </CancelPenalty>
                   </CancelPenalties>
                 </RatePlan>
@@ -845,4 +842,3 @@ WIth Availability response also cancellation information comes which can be disp
 
 ![./media/image1.png](./images/examples/15.png)
 ![./media/image1.png](./images/examples/16.png)
-

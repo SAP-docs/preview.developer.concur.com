@@ -12,6 +12,10 @@ This callout differs from the inbound SAP Concur web services in the following w
 * The third-party developer or client can configure and maintain the public web service interface (the application connector), or the connector can be maintained by us. This guide specifies the request and response format required by us.
 * The client Expense administrator must configure a list (most commonly a connected list), and we must perform database configuration on the list before this service can be used.
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## <a name="process-flow"></a>Process Flow
 
 ![A process flow diagram showing flow between the SAP Concur platform, an application connector, and client's data source](./fetch-list-item.png)

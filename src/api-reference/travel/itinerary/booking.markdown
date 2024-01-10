@@ -10,6 +10,10 @@ TOC
 * Update an existing booking
 * Cancel a booking
 
+## Limitations
+
+Access to this documentation does not provide access to the API. 
+
 ## Create a new booking
 
 POST /api/travel/booking/v1.0?tripId=12345678
@@ -107,4 +111,3 @@ Name | Type | Description
 `name`|`type` | Description.
 
 ### Response
-
