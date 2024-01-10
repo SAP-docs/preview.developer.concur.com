@@ -684,6 +684,14 @@
       "example": "EARTH_CHECK",
       "type": "string"
     },
+    "Measure" : {
+      "enum" : [ "CO2E", "CO2" ],
+      "type" : "string"
+    },
+    "UnitOfMeasure" : {
+      "enum" : [ "TONNES", "KILOGRAMS" ],
+      "type" : "string"
+    },
     "BasicHotelProperty": {
       "properties": {
         "address": {
@@ -1271,6 +1279,9 @@
             "$ref": "#/definitions/SustainabilityAward"
           },
           "type": "array"
+        },
+        "emissionInfo" : {
+          "$ref" : "#/definitions/EmissionInfo"
         }
       },
       "required": [
@@ -2206,6 +2217,11 @@
         "rateChangesOverStay": {
           "type": "boolean"
         },
+        "loyaltyMembershipRequired": {
+          "description": "Whether or not loyalty card/program is required for booking this rate",
+          "example": true,
+          "type": "boolean"
+        },
         "rateDescription": {
           "example": [
             "Promotional Rate"
@@ -2396,6 +2412,28 @@
       ],
       "type": "object"
     },
+    "EmissionInfo" : {
+      "description" : "Hotel Sustainability Index information",
+      "properties" : {
+        "emissions" : {
+          "description" : "total emissions value for hotel",
+          "example" : 1.3141592722321,
+          "type" : "number"
+        },
+        "sustainabilityScore" : {
+          "description" : "sustainability score in range 0-100",
+          "example" : 40,
+          "type" : "integer"
+        },
+        "measure" : {
+          "$ref" : "#/definitions/Measure"
+        },
+        "unitOfMeasure" : {
+          "$ref" : "#/definitions/UnitOfMeasure"
+        }
+      },
+      "type" : "object"
+    },
     "Taxes": {
       "description": "Representation of nightly tax amount associated with a rate along with optional breakdown.",
       "properties": {
@@ -2475,6 +2513,12 @@
           "multipleOf": 0.01,
           "type": "number"
         },
+        "feesBreakdown": {
+          "items": {
+            "$ref": "#/definitions/FeeTaxType"
+          },
+          "type": "array"
+        },
         "isTotalBeforeTaxDisplayEligible": {
           "default": true,
           "description": "Controls what value is shown on property details page for rates. Displays totalBeforeTax if set to true otherwise display totalAftertax. Note that totalAfterTax will be required if this is set false.",
@@ -2485,6 +2529,12 @@
           "example": 10,
           "multipleOf": 0.01,
           "type": "number"
+        },
+        "taxesBreakdown": {
+          "items": {
+            "$ref": "#/definitions/FeeTaxType"
+          },
+          "type": "array"
         },
         "totalAfterTax": {
           "example": 190.95,

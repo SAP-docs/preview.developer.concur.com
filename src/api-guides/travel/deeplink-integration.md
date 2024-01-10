@@ -48,7 +48,7 @@ https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation={d
 | `departurelocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place |
 | `departuredate`       | `string`   | `YYYY-MM-DD`    | **Required** <br>Departure flight date  |
 | `departuretime`       | `string`   | `hh:mm`         | Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
-| `returnlocation`      | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place |
+| `returnlocation`      | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place <br> For one-way trips, this will be considered as the destination airport, see [Example: One-way trip](/api-guides/travel/deeplink-integration.html#example-one-way) |
 | `returndate`          | `string`   | `YYYY-MM-DD`    | Return flight date |
 | `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
 | `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel on |
@@ -62,19 +62,19 @@ Format: `{lat},{long}`, with no blank space inbetween. Example: `48.856942735277
 
 #### <a name="cabin-types"></a>Cabin Types
 The supported cabin types are:
-* `Economy`
-* `Premium Economy`
-* `Business`
-* `First`
+* `ECONOMY`
+* `PREMIUM_ECONOMY`
+* `BUSINESS`
+* `FIRST`
 
 #### Example: Round-Trip
 ```
-https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=Business
+https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=BUSINESS
 ```
 
 This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring Business class flights.
 
-#### Example: One-way Trip
+#### <a name="example-one-way"></a> Example: One-way Trip
 ```
 https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
 ```
