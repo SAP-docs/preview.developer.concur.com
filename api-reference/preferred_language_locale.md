@@ -26,7 +26,7 @@ Russian|ru_RU|ru-RU|Preferred Name + Family Name
 Slovak|sk_SK|sk-SK|Preferred Name + Family Name
 Spanish (Spain)|es_ES|es-ES|Preferred Name + Family Name
 Spanish (Latin America)|es_LA, es_AR, es_BO, es_CL, es_CO, es_CR, es_DO, es_EC, es_GT, es_HN, es_MX, es_NI, es_PA, es_PE, es_PR, es_PY, es_SV, es_UY, es_VE|es-LA|Preferred Name + Family Name
-Swedish|sv_SE|sv-SE|Preferred Name + Family Name
+Swedish|sv_SE|sv-SE|Preferred Name + Family Name 
 Ukrainian|uk_UA|uk-UA|Preferred Name + Family Name
 Thai|th_TH|th-TH|Given Name + Family Name
 Turkish|tr_TR|tr-TR|Preferred Name
