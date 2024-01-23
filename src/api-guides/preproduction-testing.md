@@ -46,7 +46,7 @@ Only a few easy steps are needed before a customer can test App Center in a PSE:
   
 **Guidance for Partners:**
   
-With customers now using partner apps in production and PSE (for testing purposes), partners should distinguish between a testing vs production site connection on their side. This is imperative to keep reporting distinct for accounting purposes. Below is the guidance from SAP Concur to assist partners with this delineation.  
+With customers now using partner apps in production and PSE (for testing purposes), partners should distinguish between a testing vs production site connection on their side. This is imperative to keep reporting distinct for accounting purposes. Below is the guidance from SAP Concur to assist partners with this delineation. For more information about [Production Sandbox Environments](https://assets.concur.com/concurtraining/cte/en-us/WW_External_FAQ_Production_Sandbox_Environment.pdf).
 
 A customer will experience one of 2 types of a Partner “Landing Page” during the connection flow:  
   
