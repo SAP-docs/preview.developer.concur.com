@@ -5,33 +5,34 @@ layout: reference
 
 # Leave of Absence Guide
 
-The leave of absence(LOA) guide is designed to support clients & partners as they adopt the use of leave of absence dates.
-This guide presents a set of detailed requirements, examples of functionality of LOA.
+{% include prerelease.html %}
+
+The leave of absence (LOA) guide is designed to support clients & partners as they adopt the use of leave of absence dates. This guide presents a set of detailed requirements, as well as examples of LOA functionality.
 
 ### Requirements
 
-* A user can go on a leave of absence (LOA)
-* Each LOA has a start date
-* Current LOA may or may not have an end date
-* Past LOAs must have an end date
-* LOAs can be voluntary or mandatory (not a required field)
-* LOAs are independent of active flag and start/termination date
+* A user can go on a leave of absence (LOA).
+* Each LOA has a start date.
+* Current LOA may or may not have an end date.
+* Past LOAs must have an end date.
+* LOAs can be voluntary or mandatory (not a required field).
+* LOAs are independent of active flag and start/termination date.
 
 ### Implementation
 
-* added a field `leavesOfAbsence` to the user profile (under the enterprise extension)
-  * multi-valued of type `leaveOfAbsence`
-* type `leaveOfAbsence` has fields:
+* Added a field `leavesOfAbsence` to the user profile (under the enterprise extension).
+  * Multi-valued of type `leaveOfAbsence`
+* Type `leaveOfAbsence` has fields:
   * `startDate` (start of leave)
   * `endDate` (end of leave)
   * `type` (string with canonical values `"voluntary"`, `"mandatory"`)
-* added some validations:
-  * for each LOA, `startDate` must be before `endDate`
-  * LOAs cannot overlap
+* Added some validations:
+  * For each LOA, `startDate` must be before `endDate`.
+  * LOAs cannot overlap.
 
-### Example patches
+### Example Patches
 
-#### creating or replacing the list of LOAs for a user:
+#### Creating or replacing the list of LOAs for a user
 
 ```
 {
@@ -56,7 +57,7 @@ This guide presents a set of detailed requirements, examples of functionality of
 }
 ```
 
-#### adding an LOA to the end of an existing list:
+#### Adding an LOA to the end of an existing list
 
 ```
 {
@@ -70,7 +71,7 @@ This guide presents a set of detailed requirements, examples of functionality of
 }
 ```
 
-#### replacing a particular LOA:
+#### Replacing a particular LOA
 
 ```
 {
@@ -84,7 +85,7 @@ This guide presents a set of detailed requirements, examples of functionality of
 }
 ```
 
-#### removing a particular LOA:
+#### Removing a particular LOA
 
 ```
 {
