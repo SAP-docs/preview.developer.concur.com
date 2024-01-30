@@ -39,8 +39,9 @@ A snapshot of most production data (configuration + transactional) is copied ove
 
 Only a few easy steps are needed before a customer can test App Center in a PSE:  
 
-* In Concur Module Management, SAP Concur must update the App Center module “Property value” to true. This makes the App Center tab available in the site.      
-* Users can navigate to the App Center tab and click on the Connect button within the desired App Center listing. 
+* A customer must submit a SAP Concur Support ticket with details specifying that they would like to enable App Center for their PSE {insert entity code}.
+* In Concur Module Management, SAP Concur Support must update the App Center module “Property value” to true. This makes the App Center tab available in the site.      
+* Customers can then navigate to the App Center tab and click on the Connect button within the desired App Center listing. 
     * Note that Admin role is only required to connect to Enterprise application listings. User Connections do not require Admin role.  
     * Listings will be displayed based on the customer’s configuration such as product and geographic location among others; however, customer can remove the filters to see other apps as desired.  
   
