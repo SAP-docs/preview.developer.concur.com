@@ -7,7 +7,7 @@ layout: reference
 
  **Important**: This feature is currently in pre-release status and is only available to approved early access participants. It is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.
 
-The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page in one click.
+The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page (for a flight search), respectively the itinerary page (for an itinerary deeplink) in one click.
 
 ## Prerequisites
 
@@ -23,7 +23,7 @@ When using SAML2 IdP-Initiated flow there is the caveat that IdP must support se
 {IdP_URI}?sp={concur_URI}&relayState=%2Ftravel%2Fdeeplink%2Fair-shop%2Fv1%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 ```
 
-Deeplink Integration is not available for mobile and currently it only supports flight search.
+Deeplink Integration is not available for mobile and currently it only supports flight search and itinerary lookup.
 
 ## Integration Details
 
@@ -94,4 +94,30 @@ In this next example the user omitted `returnlocation`. This will result on a se
 
 ```
 https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
+```
+
+### Itinerary
+
+Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.
+
+The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger or an approver. An approver user will see the approvers view of an itinerary, while the traveler and the arranger will see the travelers view of an itinerary.
+
+This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur home page.
+
+#### URI Template
+
+```
+https://{environment}.concursolutions.com/goto/trip/{tripID}
+```
+
+| Name | Type| Format | Description                       |
+| -------- |     -------- | -------- | -------- |
+| `environment`       | `string`   | `-`    | **Required** <br>Specifies the environment (e.g. 'US2' or 'EU2')|
+| `tripID`       | `string`   | `-`    | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
+
+This deep link URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.
+
+#### Example:
+```
+https://eu2.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
 ```
