@@ -69,14 +69,14 @@ The supported cabin types are:
 
 #### Example: Round-Trip
 ```
-https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=BUSINESS
+https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=BUSINESS
 ```
 
 This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring Business class flights.
 
 #### <a name="example-one-way"></a> Example: One-way Trip
 ```
-https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
+https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
 ```
 
 This deeplink will perform a search for a flight from LBG (airport in Paris) to SDU, on June 1st, 2024 with departure time at 02:00AM ±2.
@@ -87,13 +87,13 @@ In this example, we are considering that the user has defined **LAX** as their p
 
 On the deeplink below the user is omitting the desired **departure location**. Therefore, they will be taken to the search results page, showing departure flights from LAX (preferred airport) to BER. The next page will show return flights, from BER back to LAX.
 ```
-https://concursolutions.com/travel/deeplink/air/v1/shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
+https://www.concursolutions.com/travel/deeplink/air/v1/shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
 ```
 
 In this next example the user omitted `returnlocation`. This will result on a search for a flight from LBG (airport in Paris) to LAX.
 
 ```
-https://concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
+https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
 ```
 
 ### Itinerary
@@ -107,17 +107,16 @@ This integration streamlines the user experience, making trip management more ef
 #### URI Template
 
 ```
-https://{environment}.concursolutions.com/goto/trip/{tripID}
+https://www.concursolutions.com/goto/trip/{tripID}
 ```
 
 | Name | Type| Format | Description                       |
 | -------- |     -------- | -------- | -------- |
-| `environment`       | `string`   | `-`    | **Required** <br>Specifies the environment (e.g. 'US2' or 'EU2')|
 | `tripID`       | `string`   | `-`    | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deep link URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.
 
 #### Example:
 ```
-https://eu2.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
+https://www.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
 ```
