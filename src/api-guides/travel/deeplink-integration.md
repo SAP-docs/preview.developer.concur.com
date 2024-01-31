@@ -107,16 +107,17 @@ This integration streamlines the user experience, making trip management more ef
 #### URI Template
 
 ```
-https://www.concursolutions.com/goto/trip/{tripID}
+https://{environment}.concursolutions.com/goto/trip/{tripID}
 ```
 
 | Name | Type| Format | Description                       |
 | -------- |     -------- | -------- | -------- |
+| `environment`       | `string`   | `-`    | **Required** <br>Specifies the environment (e.g. 'US2' or 'EU2')|
 | `tripID`       | `string`   | `-`    | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deep link URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.
 
 #### Example:
 ```
-https://www.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
+https://eu2.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
 ```
