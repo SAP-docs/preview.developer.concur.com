@@ -146,7 +146,72 @@ PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-
 
 ### Payload
 
-* DigitalTax Token
+* 	**digitalTaxDocument** is the **mandatory** field in the payload                                                                                                                                            
+  -->	for digitalTaxDocument Partner needs to upload digitalTaxDocument in JSON Format                                                                                                                          
+                                                                                                                                                                                                                
+*	**displayedVersion** is an optional field in the payload                                                                                                                                                      
+-->	for displayedVersion  Partner needs to upload Multipart Compliant document (Human Readable PDF format)                                                                                                      
+                                                                                                                                                                                                                
+#### DigitalTaxDocument Schema:                                                                                                                                                                                 
+                                                                                                                                                                                                                
+| Name           | Type   | Format                                              | Description                                                                        |                                          
+|----------------|--------|-----------------------------------------------------|------------------------------------------------------------------------------------|                                          
+| `status`       | string | "enum": ["processed, failed"]                       | **Required** - Status of the CFDI document                                         |                                          
+| `documentData` | object | #DocumentData Schema | **Required** - Document details and Tax Token info (Can be null for failed status) |                                                                         
+| `code`         | string | optional                                            | Response code provided by partner                                                  |                                          
+ | `description`  | string | optional                        | Comment/description provided by partner      |                                                                                                   
+                                                                                                                                                                                                                
+ #### DocumentData Schema:                                                                                                                                                                                      
+| Name                | Type   | Format                        | Description                               |                                                                                                    
+|---------------------|--------|-------------------------------|-------------------------------------------|                                                                                                    
+| `issueDateTime`     | string | YYYY-MM-DDTHH:mm:ssZ          | **Required** - Date and time when the document was created in the local timezone where it was issued |                                         
+| `uuid`              | string | -                             | **Required** - document UUID |                                                                                                                 
+| `grossAmount`       | number | -                             | **Required** - Sum of amounts before discounts and taxes |                                                                                     
+| `currency`          | string | "enum": ["INR","MXN","USD"]    | **Required** - Currency used to express amounts (According to the ISO 4217 codes) |                                                           
+| `exchangeRate`      | string | -                             | **Required** - Exchange Rate according to currency used |                                                                                      
+| `netAmount`         | number | -                             | **Required** - Sub Total – Discounts + VAT Taxes – Withholding Taxes |                                                                         
+| `paymentMethod`     | string | -                             | **Required** - Specify the code of payment method - PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and p
+| `vendor`            | object | #Vendor schema                | **Required** - details of the vendor |                                                                                                         
+| `formatVersion`     | string | "enum": ["3.3, 4.0"]          | Version of the CFDI document |                                                                                                                 
+| `buyer`             | object | #Buyer schema                 | details of the buyer |                                                                                                                         
+| `number`            | string | -                             | Number of the receipt |                                                                                                                        
+| `code`              | string | -                             | Prefix of receipt (an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criter
+| `documentPostalCode`| string | -                             | - |                                                                                                                                            
+| `paymentType`       | string | "enum": ["01, 02, 03"]        | Means of payment (01 (Cash), 02 (Cheque), 03 (Bank Transfer)) |                                                                                
+| `discount`          | number | -                             | Total amount of applicable discounts before taxes |                                                                                            
+| `totalSalesTax`      | number | -                               | Sum of all sales tax amounts of line items |                                                                                                
+| `totalWithholdingTax`| number | -                               | Sum of all withhold tax amounts of line items |                                                                                             
+| `lineItems`          | array  | #LineItem schema                | Line items present in the CFDI         |                                                                                                    
+| `verificationCode`   | string | -                               |                                      |                                                                                                      
+| `comments`           | string | -                               | Comment/description                   |                                                                                                     
+                                                                                                                                                                                                                
+ #### Vendor schema:                                                                                                                                                                                            
+                                                                                                                                                                                                                
+| Name               | Type   | Format                          | Description                                  |                                                                                                
+|--------------------|--------|---------------------------------|----------------------------------------------|                                                                                                
+| `taxNumber`        | string | -                               | **Required** - taxpayer ID of the vendor      |                                                                                               
+| `certificateNumber`| string | -                               | Company's certificate used to generate digital signature |                                                                                    
+| `name`             | string | -                               | Name of issuer of receipt                     |                                                                                               
+| `city`             | string | -                               | City of issuer of receipt                     |                                                                                               
+| `state`            | string | -                               | State of issuer of receipt                    |                                                                                               
+| `country`          | string | -                               | Country of issuer of receipt                  |                                                                                               
+| `phone`            | string | -                               |                                              |                                                                                                
+| `addressLine`      | string | -                               |                                              |                                                                                                
+                                                                                                                                                                                                                
+ #### Buyer schema:                                                                                                                                                                                             
+| Name       | Type   | Format                        | Description                                                                                                                                             
+|------------|--------|-------------------------------|------------                                                                                                                                             
+| `taxNumber`   | string | -                             | **Required** - Buyer Tax Number                                                                                                                      
+| `PostalCode`  | string | -                             | Postal code of tax domicile of recipient                                                                                                             
+| `name`        | string | -                             | Buyer Name                                                                                                                                           
+                                                                                                                                                                                                                
+ #### LineItem schema:                                                                                                                                                                                          
+| Name         | Type   | Format                         | Description                                 |                                                                                                        
+|--------------|--------|--------------------------------|---------------------------------------------|                                                                                                        
+| `amount`     | number | -                              | **Required** - Total amount of goods or service |                                                                                                    
+| `description`| string | -                              | Product Description                         |                                                                                                        
+| `productCode`| string | -                              | **Required** - Key of product or service covered - 10101502 (Dogs), 10101506 (Horses) (Catalogue: c_ClaveProdServ)" |                                
+                                                                                                                                                                                                                
 
 #### Notes
 
