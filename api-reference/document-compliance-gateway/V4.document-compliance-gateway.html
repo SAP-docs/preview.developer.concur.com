@@ -1395,7 +1395,20 @@ Content-Type: XML
 <h3 id="payload">Payload</h3>
 
 <ul>
-  <li>DigitalTax Token</li>
+  <li>
+    <p><strong><a href="#DigitalTaxDocument-Schema">digitalTaxDocument</a></strong> - A digitalTaxDocument file in JSON format that is <strong>required</strong>.</p>
+  </li>
+  <li>
+    <p><strong>displayedVersion</strong> - A multipart compliant document in human-readable PDF format.</p>
+    <ul>
+      <li>If the end user only uploads the XML file, the partner will receive the event with <em>isDisplayVersionRequired</em> <em>= true</em>.
+        <ul>
+          <li>In such scenarios, If the xml file is valid and processed, the partner needs to convert the XML file into PDF format and upload it in the <strong>displayedVersion</strong> field <strong>mandatorily</strong>.</li>
+          <li>If the XML file is invalid or has failed, uploading the displayedVersion is <strong>optional</strong> .</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>
 
 <h4 id="notes-1">Notes</h4>
@@ -1513,9 +1526,9 @@ Content-Type: application/json
   </span><span class="nl">"Description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tokens have been received."</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
-<h3 id="schema-">Schema <a name="schema"></a></h3>
+<h3 id="schema">Schema</h3>
 
-<h3 id="digitaltax-token"><a name="schema-paymentRequest"></a>DigitalTax Token</h3>
+<h3 id="digitaltaxdocument-schema"><a name="DigitalTaxDocument-Schema"></a>DigitalTaxDocument Schema</h3>
 
 <table>
   <thead>
@@ -1528,242 +1541,132 @@ Content-Type: application/json
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Status</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Status of the compliance document (processed, failed ).</td>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td>string</td>
+      <td>“enum”: [“processed, failed”]</td>
+      <td><strong>Required</strong> - Status of the CFDI document</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">DocumentData</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>-</td>
-      <td>Document data and tax tokens info.</td>
+      <td><code class="language-plaintext highlighter-rouge">documentData</code></td>
+      <td>object</td>
+      <td>#<a href="#DocumentData-Schema">DocumentData Schema </a></td>
+      <td><strong>Required</strong> - Document details and Tax Token info (Can be null for failed status)</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">FormatVersion</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>The version of the document format.</td>
+      <td><code class="language-plaintext highlighter-rouge">code</code></td>
+      <td>string</td>
+      <td>optional</td>
+      <td>Response code provided by partner</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Code</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Prefix of receipt (an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Number</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Number of the receipt.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">IssueDateTime</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>date-time</td>
-      <td>Date and time when the document was created in the local timezone where it was issued.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Document UUID - field present in compliance document.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">PaymentType</code></td>
-      <td><code class="language-plaintext highlighter-rouge">enum</code></td>
-      <td>-</td>
-      <td>Means of payment (Cash, Credit Card, Digital Wallet).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">GrossAmount</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>-</td>
-      <td>Sum of amounts before discounts and taxes.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Discount</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Total amount of applicable discounts before taxes.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Currency</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Currency used to express amounts (According to the ISO 4217 codes) (MXN).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">ExchangeRate</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>-</td>
-      <td>Exchange Rate according to currency used. Mandatory id currency &lt;&gt; MXN.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">NetAmount</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>-</td>
-      <td>Sub Total–Discounts+VAT Taxes–Withholding Taxes.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">PaymentMethod</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Specify the code of payment method: PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">TotalWithholdingTax</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>-</td>
-      <td>Sum of all withheld tax amounts of line items.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">TotalSalesTax</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>-</td>
-      <td>Sum of all sales tax amounts of line items.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">DocumentPostalCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Postal code of place of receipt issue.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">VerificationCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Company’s certificate used to generate digital signature.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Comments</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Comments.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Vendor</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>-</td>
-      <td>Details of the vendor.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">CertificateNumber</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Company’s certificate used to generate digital signature.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">TaxNumber</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Taxpayer ID of the vendor.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Name</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Name of receipt issuer.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">City</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>City of receipt issuer.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">State</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>State of receipt issuer.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Country</code></td>
-      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
-      <td>Country of receipt issuer.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Phone</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Phone number of receipt issuer.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">AddressLine</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Address of receipt issuer.</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Buyer</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>-</td>
-      <td>Details of the buyer.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">TaxNumber</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Buyer Tax Number.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Name</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Buyer Name.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">PostalCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Postal code of recipient’s tax domicile.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">LineItems</code></td>
-      <td><code class="language-plaintext highlighter-rouge">array</code></td>
-      <td>-</td>
-      <td>Line items present in the compliance document.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">LineItem</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>-</td>
-      <td>Line item present in the compliance document.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">ProductCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Key of product or service covered For example, 10101502 (Dogs), 10101506 (Horses).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Description</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Product Description.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Amount</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>-</td>
-      <td>Total amount of good or service.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Description</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Comment/description provided by partner.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Code</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Response code provided by partner.</td>
+      <td><code class="language-plaintext highlighter-rouge">description</code></td>
+      <td>string</td>
+      <td>optional</td>
+      <td>Comment/description provided by partner</td>
     </tr>
   </tbody>
 </table>
 
+<h4 id="documentdata-schema"><a name="DocumentData-Schema"></a>DocumentData Schema:</h4>
+<p>| Name                | Type   | Format                            | Description                                                                                                                                                                              |                                                                                                                                                                                        <br />
+|———————|——–|———————————–|——————————————————————————————————————————————————————————————|                                                                                                                                                                                        <br />
+| <code class="language-plaintext highlighter-rouge">issueDateTime</code>     | string | YYYY-MM-DDTHH:mm:ssZ              | <strong>Required</strong> - Date and time when the document was created in the local timezone where it was issued                                                                                     |                                                                                                                             <br />
+| <code class="language-plaintext highlighter-rouge">uuid</code>              | string | -                                 | <strong>Required</strong> - Document UUID - field present in compliance document.                                                                                                                     |                                                                                                                                                                                                     <br />
+| <code class="language-plaintext highlighter-rouge">grossAmount</code>       | number | -                                 | <strong>Required</strong> - Sum of amounts before discounts and taxes                                                                                                                                 |                                                                                                                                                                         <br />
+| <code class="language-plaintext highlighter-rouge">currency</code>          | string | “enum”: [“INR”,”MXN”,”USD”]       | <strong>Required</strong> - Currency used to express amounts (According to the ISO 4217 codes)(MXN).                                                                                                  |                                                                                                                                               <br />
+| <code class="language-plaintext highlighter-rouge">exchangeRate</code>      | string | -                                 | <strong>Required</strong> - Exchange Rate according to currency used. Mandatory id currency &lt;&gt; MXN.                                                                                                   |                                                                                                                                                                          <br />
+| <code class="language-plaintext highlighter-rouge">netAmount</code>         | number | -                                 | <strong>Required</strong> - Gross Amount – Discounts + VAT Taxes – Withholding Taxes                                                                                                                  |                                                                                                                                                             <br />
+| <code class="language-plaintext highlighter-rouge">paymentMethod</code>     | string | -                                 | <strong>Required</strong> - Specify the code of payment method - PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities                               |                                                                       <br />
+| <code class="language-plaintext highlighter-rouge">vendor</code>            | object | #<a href="#vendor-schema">Vendor schema </a> | <strong>Required</strong> - details of the vendor                                                                                                                                                     |                                                                                                                                                                                             <br />
+| <code class="language-plaintext highlighter-rouge">formatVersion</code>     | string | “enum”: [“3.3, 4.0”]              | Version of the CFDI document                                                                                                                                                             |                                                                                                                                                                                                     <br />
+| <code class="language-plaintext highlighter-rouge">buyer</code>             | object | #<a href="#buyer-schema">Buyer schema </a>   | details of the buyer                                                                                                                                                                     |                                                                                                                                                                                                             <br />
+| <code class="language-plaintext highlighter-rouge">number</code>            | string | -                                 | Number of the receipt                                                                                                                                                                    |                                                                                                                                                                                                            <br />
+| <code class="language-plaintext highlighter-rouge">code</code>              | string | -                                 | Prefix of receipt (an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.) |                                         <br />
+| <code class="language-plaintext highlighter-rouge">documentPostalCode</code>| string | -                                 | Postal code of place of receipt issue.                                                                                                                                                   |                                                                                                                                                                                                                                <br />
+| <code class="language-plaintext highlighter-rouge">paymentType</code>       | string | “enum”: [“01, 02, 03”]            | Means of payment (01 (Cash), 02 (Cheque), 03 (Bank Transfer/Digital Wallet))                                                                                                             |                                                                                                                                                                    <br />
+| <code class="language-plaintext highlighter-rouge">discount</code>          | number | -                                 | Total amount of applicable discounts before taxes                                                                                                                                        |                                                                                                                                                                                <br />
+| <code class="language-plaintext highlighter-rouge">totalSalesTax</code>      | number | -                                 | Sum of all sales tax amounts of line items                                                                                                                                               |                                                                                                                                                                                    <br />
+| <code class="language-plaintext highlighter-rouge">totalWithholdingTax</code>| number | -                                 | Sum of all withhold tax amounts of line items                                                                                                                                            |                                                                                                                                                                                 <br />
+| <code class="language-plaintext highlighter-rouge">lineItems</code>          | array  | #<a href="#lineitem-schema">LineItem schema </a> | Line items present in the CFDI compliance document                                                                                                                                       |                                                                                                                                                                                        <br />
+| <code class="language-plaintext highlighter-rouge">verificationCode</code>   | string | -                                 | Company’s certificate used to generate digital signature.                                                                                                                                |                                                                                                                                                                                          <br />
+| <code class="language-plaintext highlighter-rouge">comments</code>           | string | -                                 | Comment/description                                                                                                                                                                      |</p>
+
+<h4 id="-vendor-schema"><a name="vendor-schema"></a> Vendor Schema:</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxNumber</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td><strong>Required</strong> - taxpayer ID of the vendor</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">certificateNumber</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>Company’s certificate used to generate digital signature</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>Name of receipt issuer.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">city</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>City of receipt issuer.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">state</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>State of receipt issuer.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>Country of receipt issuer.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">phone</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>Phone number of receipt issuer.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine</code></td>
+      <td>string</td>
+      <td>-</td>
+      <td>AddressLine of receipt issuer.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="-buyer-schema"><a name="buyer-schema"></a> Buyer Schema:</h4>
+<p>| Name         | Type   | Format                         | Description                                 |       <br />
+|————|——–|——————————-|————                                                                                                                                                                                                                                 <br />
+| <code class="language-plaintext highlighter-rouge">taxNumber</code>   | string | -                             | <strong>Required</strong> - Buyer Tax Number                                                                                                                                                                                                          <br />
+| <code class="language-plaintext highlighter-rouge">PostalCode</code>  | string | -                             | Postal code of tax domicile of recipient                                                                                                                                                                                                 <br />
+| <code class="language-plaintext highlighter-rouge">name</code>        | string | -                             | Buyer Name</p>
+
+<h4 id="-lineitem-schema"><a name="lineitem-schema"></a> LineItem Schema:</h4>
+<p>| Name         | Type   | Format                         | Description                                 |                                                                                                                                                                                            <br />
+|————–|——–|——————————–|———————————————|                                                                                                                                                                                            <br />
+| <code class="language-plaintext highlighter-rouge">amount</code>     | number | -                              | <strong>Required</strong> - Total amount of goods or service |                                                                                                                                                                                        <br />
+| <code class="language-plaintext highlighter-rouge">description</code>| string | -                              | Product Description                         |                                                                                                                                                                                            <br />
+| <code class="language-plaintext highlighter-rouge">productCode</code>| string | -                              | <strong>Required</strong> - Key of product or service covered - 10101502 (Dogs), 10101506 (Horses) (Catalogue: c_ClaveProdServ)” |</p>
 
       </div>
       <!--/col-md-8-->
