@@ -27,7 +27,7 @@ Learn best practices for marketing your app and interact directly with the App C
 
  * **Date:** Office hours take place the first Tuesday of each month.
  * **Time:** 8:30-9:00 AM PST
- * **Teams Link:** (https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZjJjMDc3ODUtZDBhMS00OWM1LTkwNGYtNDJlY2MyZTQ5NTk4%40thread.v2/0?context=%7b%22Tid%22%3a%2242f7676c-f455-423c-82f6-dc2d99791af7%22%2c%22Oid%22%3a%22ad5b4110-8e3b-470c-a3d2-bd81a599e694%22%7d)
+ * **Teams Link:** [Click to join](https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZjJjMDc3ODUtZDBhMS00OWM1LTkwNGYtNDJlY2MyZTQ5NTk4%40thread.v2/0?context=%7b%22Tid%22%3a%2242f7676c-f455-423c-82f6-dc2d99791af7%22%2c%22Oid%22%3a%22ad5b4110-8e3b-470c-a3d2-bd81a599e694%22%7d)
 * **Meeting ID:** 311 402 232 989, Passcode: K2o2tu
 
 Or email us at [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarketing@sap.com).
@@ -134,7 +134,7 @@ Do not position any text, graphic element, or other visual marks inside the defi
 
 Acceptable|Branding
 :---:|---
-&#9989;|![Clear Space](./app-center-partner-marketing-toolkit-clear-space.png)
+&#9989;|![Clear Space](/app-center-partner-marketing-toolkit-clear-space.png)
 
 #### <a name="font-treatment-color-specification"></a>Color Specification
 
@@ -184,7 +184,7 @@ For logo files, please email [concur_AppCenterMarketing@SAP.com](mailto:concur_A
 
 Acceptable|Branding
 :---:|---
-&#9989; (Certain cases and with App Center Marketing approval only.)|![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-blue.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-white.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-black.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-solid-white.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-solid-black.png)
+&#9989; (Certain cases and with App Center Marketing approval only.)|![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-blue.png)<br />![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-white.png)<br />![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-black.png)<br />![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-solid-white.png)<br />![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-solid-black.png)
 
 #### <a name="sap-concur-logos-available-app-icon"></a>App Icon
 
@@ -332,7 +332,7 @@ SAP expects to review and approve all partner press releases that reference SAP 
 
 Please send your release to [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarketing@sap.com) for review prior to submission to the SAP PR Team.
 
-[**Download the Press Release Template**](/manage-apps/go-market-docs/sap-concur-build-partner-pr-template-final.pdf)
+[**Download the Press Release Template**](./manage-apps/go-market-docs/sap-concur-build-partner-pr-template-final.pdf)
 
 
 ### <a name="social-media-overview"></a>Social Media Overview
