@@ -27,7 +27,7 @@ Learn best practices for marketing your app and interact directly with the App C
 
  * **Date:** Office hours take place the first Tuesday of each month.
  * **Time:** 8:30-9:00 AM PST
- * **Teams Link:** https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZjJjMDc3ODUtZDBhMS00OWM1LTkwNGYtNDJlY2MyZTQ5NTk4%40thread.v2/0?context=%7b%22Tid%22%3a%2242f7676c-f455-423c-82f6-dc2d99791af7%22%2c%22Oid%22%3a%22ad5b4110-8e3b-470c-a3d2-bd81a599e694%22%7d
+ * **Teams Link:** (https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZjJjMDc3ODUtZDBhMS00OWM1LTkwNGYtNDJlY2MyZTQ5NTk4%40thread.v2/0?context=%7b%22Tid%22%3a%2242f7676c-f455-423c-82f6-dc2d99791af7%22%2c%22Oid%22%3a%22ad5b4110-8e3b-470c-a3d2-bd81a599e694%22%7d)
 * **Meeting ID:** 311 402 232 989, Passcode: K2o2tu
 
 Or email us at [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarketing@sap.com).
@@ -43,9 +43,10 @@ Acceptable|Branding|Notes
 &#9989;|We are an SAP Concur partner.|-
 &#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner.png)|-
 &#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner-app-center.png)|Download the font treatment [here](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#font-treatment-download-links). Make sure to follow the [Font Treatment brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf) for use. ​
-Specific cases only|![](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-logo.png)|Partners may use the SAP Concur logo only in specific situations, such as your integration or connection landing page UI or in a list of all of your partnerships. You must follow brand guidelines and submit content for review.
+Specific cases only|![SAP Concur logo](./app-center-marketing-toolkit-sap-concur-logo-blue.png)|Partners may use the SAP Concur logo only in specific situations, such as your integration or connection landing page UI or in a list of all of your partnerships. You must follow brand guidelines and submit content for review.
 &#10060;|![Do Not Use SAP Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-logo.png)|Partners are **not** permitted to use the SAP corporate logo.
 &#10060;|![Do Not Use Concur Logo](./app-center-partner-marketing-toolkit-logo-brand-concur-logo.png)|Do **not** use an outdated “Concur” logo when creating materials.
+&#10060;|![](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-logo.png)|Do not use the outdated blue and gold SAP Concur logo when creating materials.
 
 ### <a name="communicating-your-partnership"></a>Communicating Your Partnership
 
@@ -145,8 +146,8 @@ Against dark backgrounds, use the font treatment in SAP white. If printing in bl
 
 Acceptable|Branding
 :---:|---
-&#9989;|![SAP Dark Gray Image](./app-center-partner-marketing-toolkit-color-sap-dark-gray.png)
-&#9989;|![SAP Gold Image](./app-center-partner-marketing-toolkit-color-sap-gold.png)
+&#9989;|![SAP Blue 11 Image](./app-center-partner-marketing-toolkit-color-sap-blue-11.png)
+&#9989;|![SAP Blue 7 Image](./app-center-partner-marketing-toolkit-color-sap-blue-7.png)
 
 ### <a name="sap-concur-logos"></a>SAP Concur Logos
 
@@ -156,7 +157,7 @@ In general, SAP Concur logo usage is not permitted. However, App Center partners
 * [Clear Space and Size Requirements](#sap-concur-logos-clear-space-and-size)
 * [Available Logos](#sap-concur-logos-available)
   * [Full Logo](#sap-concur-logos-available-full)
-  * [Icon Only](#sap-concur-logos-available-c-dot)
+  * [Icon Only](#sap-concur-logos-available-app-icon)
 
 #### <a name="sap-concur-logos-using"></a>Using the Logo
 
@@ -183,13 +184,13 @@ For logo files, please email [concur_AppCenterMarketing@SAP.com](mailto:concur_A
 
 Acceptable|Branding
 :---:|---
-&#9989; (Certain cases and with App Center Marketing approval only.)|![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-blue.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-white.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-black.png)
+&#9989; (Certain cases and with App Center Marketing approval only.)|![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-blue.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-white.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-black.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-solid-white.png)![Full logo image](./app-center-marketing-toolkit-sap-concur-logo-solid-black.png)
 
-#### <a name="sap-concur-logos-available-c-dot"></a>App Icon
+#### <a name="sap-concur-logos-available-app-icon"></a>App Icon
 
 Acceptable|Branding
 :---:|---
-&#9989; (Certain cases and with App Center Marketing approval only. C-dot to be used only when the full logo will not fit the intended space.) |![App Icon](./app-center-marketing-toolkit-sap-concur-icon.png)
+&#9989; (Certain cases and with App Center Marketing approval only. App icon to be used only when the full logo will not fit the intended space.) |![App Icon](./app-center-marketing-toolkit-sap-concur-icon.png)
 
 ## <a name="marketing-content-best-practices"></a>Marketing Content Best Practices
 
@@ -205,6 +206,7 @@ During onboarding, the App Center marketing team works with partners to ensure y
 To edit or send additional marketing content, email the edited/new content to concur_AppCenterMarketing@sap.com and plan on a 10-day turnaround for the marketing content review process.
 
 ### <a name="messaging-framework"></a>Messaging Framework
+
 This messaging framework can be used to create compelling marketing content and collateral.​
 
 * **Target Audience**<br>Who is the intended audience? App Center partner content is distributed to two main audiences: customers/prospects and the SAP Concur field who help introduce them to your solution. If the content is intended for a customer, which roles or departments is this relevant for?  
