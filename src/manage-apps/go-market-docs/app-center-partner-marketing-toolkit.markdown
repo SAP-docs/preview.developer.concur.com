@@ -332,7 +332,7 @@ SAP expects to review and approve all partner press releases that reference SAP 
 
 Please send your release to [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarketing@sap.com) for review prior to submission to the SAP PR Team.
 
-[**Download the Press Release Template**](./sap-concur-build-partner-pr-template-final.pdf)
+[**Download the Press Release Template**](./sap-concur-build-partner-pr-template-final.docx)
 
 
 ### <a name="social-media-overview"></a>Social Media Overview
