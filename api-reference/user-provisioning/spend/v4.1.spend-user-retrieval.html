@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Spend User v4 - Getting Started</title>
+  <title> SAP Concur Developer Center | Spend User Retrieval</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/user-provisioning/spend/v4.spend-user-get-started.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/user-provisioning/spend/v4.1.spend-user-retrieval.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -1177,82 +1177,603 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="spend-user-v4---getting-started">Spend User v4 - Getting Started</h1>
+        <h1 id="spend-user-retrieval">Spend User Retrieval</h1>
 
-<p>Spend User Provisioning allows callers to provision or modify a user in the SAP Concur spend domain. This is an asynchronous downstream process from the <a href="/api-reference/user-provisioning/v4.user-provisioning.html">User Provisioning v4</a> service. Currently, spend user data can be created, modified, and replaced with the POST, PATCH, and PUT provisioning operations. The retrieval of spend user data is supported through GET endpoints: One that can retrieve a filtered and paginated set of all spend users in a company, and another that can retrieve a specific spend user’s data using their unique identifier.</p>
+<p>Spend User Retrieval allows callers to retrieve users in the SAP Concur spend domain.</p>
 
-<h2 id="limitations"><a name="limitations"></a>Limitations</h2>
+<h2 id="limitations">Limitations</h2>
 
-<p>This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API.</p>
+<p>Access to this documentation does not provide access to the API. </p>
 
-<p>Callers need to acquire the scope listed below in order to access the following extensions under spend domain.</p>
+<h2 id="retrieving-all-spend-users-in-a-company"><a name="get-users-endpoint"></a>Retrieving all Spend Users in a Company</h2>
 
-<ul>
-  <li><a href="./v4.spend-user-extension-schema.html#spend-user-extension-schema">SpendUser</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#role-schema">SpendRole</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#approver-extension-schema">Approver</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#delegate-extension-schema">Delegate</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#user-preference-extension-schema">UserPreference</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#invoice-preference-extension-schema">InvoicePreference</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#workflow-preferences-extension-schema">WorkflowPreference</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html#adp-schema">Payroll</a></li>
-</ul>
+<p>Retrieves all the spend users for a given company. The result is paginated and can be filtered using the parameters listed below.</p>
 
-<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
+<h3 id="scopes">Scopes</h3>
 
-<ul>
-  <li>Concur Expense Professional Edition</li>
-  <li>Concur Expense Standard Edition</li>
-  <li>Concur Invoice Professional Edition</li>
-  <li>Concur Invoice Standard Edition</li>
-  <li>Concur Request Professional Edition</li>
-  <li>Concur Request Standard Edition</li>
-</ul>
+<p><code class="language-plaintext highlighter-rouge">spend.user.general.read</code> - Refer to <a href="./v4.spend-user-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
 
-<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+<h4 id="uri">URI</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us2.api.concursolutions.com/profile/spend/v4.1/Users
+</code></pre></div></div>
+
+<h5 id="parameters">Parameters</h5>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
-      <th>Endpoint</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">spend.user.general.read</code></td>
-      <td>View spend user information.</td>
-      <td>GET</td>
+      <td><code class="language-plaintext highlighter-rouge">startIndex</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">startIndex</code> &gt;= 1</td>
+      <td>The starting index of the paginated result.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">spend.user.general.writeonly</code></td>
-      <td>Change spend user information.</td>
-      <td>POST / PATCH</td>
+      <td><code class="language-plaintext highlighter-rouge">itemsPerPage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>100 &gt;= <code class="language-plaintext highlighter-rouge">itemsPerPage</code> &gt;= 1</td>
+      <td>The number of user resources to return on a single page.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">filter</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>ABNF compliant</td>
+      <td>The SCIM compliant filter string to be used when retrieving user resources.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DateTime</code></td>
+      <td>ISO 8601</td>
+      <td>The startDate field (pattern = “yyyy-MM-dd”) specifies the beginning date for the range of results to be included. If not provided, then the standard Java Epoch: 1970-01-01T00:00:00 is considered by default. Currently, this field isused for UAC/DDS historical hydration of users in an entity.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">endDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">DateTime</code></td>
+      <td>ISO 8601</td>
+      <td>The endDate field (pattern = “yyyy-MM-dd”) specifies the end date for the range of results to be included. If not provided, then the current date time is considered by default. Currently, this field isused for UAC/DDS historical hydration of users in an entity.</td>
     </tr>
   </tbody>
 </table>
 
-<p><strong>NOTE</strong>: In addition to the spend scopes, you will need the scopes listed in <a href="/api-reference/user-provisioning/v4.user-provisioning.html">User Provisioning v4</a> in order to provision core user data.</p>
-
-<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
-
-<p>Users must purchase Concur Expense in order to use the spend extensions to provision spend related data. Clients must use the User Provisioning v4 API to provision users in order to use this endpoint to retrieve user data.</p>
-
-<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
-
-<p>This API currently only supports company level access tokens.</p>
-
-<h2 id="additional-resources"><a name="additional-resources"></a>Additional Resources</h2>
-
-<p>See the following pages for further details.</p>
+<p><strong>NOTE:</strong> Not all aspects of SCIM filtering are supported. The following fields are implemented with the corresponding set of operators:</p>
 
 <ul>
-  <li><a href="./v4.spend-user-provisioning.html">Spend User Provisioning</a></li>
-  <li><a href="./v4.spend-user-retrieval.html">Spend User Retrieval</a></li>
-  <li><a href="./v4.spend-user-extension-schema.html">Spend Extension Schema</a></li>
-  <li><a href="./v4.spend-role-code-definition.html">Spend Role Codes</a></li>
+  <li><code class="language-plaintext highlighter-rouge">cashAdvanceAccountCode</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">country</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">customData</code> { <strong>complexValue</strong> that contains <strong>and</strong>, <strong>eq</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">ledgerCode</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">locale</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">nonEmployee</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">reimbursementCurrency</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">reimbursementType</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">stateProvince</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
+  <li><code class="language-plaintext highlighter-rouge">testEmployee</code> { <strong>eq</strong>, <strong>ne</strong> }</li>
 </ul>
+
+<h4 id="payloads">Payloads</h4>
+
+<ul>
+  <li><a href="#list-response-schema">List Response</a></li>
+  <li><a href="#error-message-response-schema">Error</a></li>
+</ul>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us2.api.concursolutions.com/profile/spend/v4.1/Users?startIndex=1&amp;itemsPerPage=4&amp;filter=urn:ietf:params:scim:schemas:extension:spend:2.0:User:country+eq+%22US%22
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+    ],
+    "totalResults": 10294,
+    "Resources": [
+        {
+            "schemas": [
+                "urn:ietf:params:scim:schemas:ScimResource",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:User",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate",
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Role"
+            ],
+            "id": "aaaaaaaa-xxxx-zzzz-xxxx-xxxxxxxxxxxx",
+            "meta": {
+                "resourceType": "User",
+                "created": null,
+                "lastModified": "2022-03-18T01:22:37.327Z",
+                "location": "https://us2.api.concursolutions.com/profile/spend/v4/Users/aaaaaaaa-xxxx-zzzz-xxxx-xxxxxxxxxxxx",
+                "version": null
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:User": {
+                "reimbursementCurrency": "USD",
+                "reimbursementType": "CONCUR_PAY",
+                "ledgerCode": "DEFAULT",
+                "country": "US",
+                "budgetCountryCode": null,
+                "stateProvince": "WA",
+                "locale": "en-US",
+                "cashAdvanceAccountCode": null,
+                "testEmployee": false,
+                "nonEmployee": false,
+                "biManager": null,
+                "customData": []
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {},
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate": {},
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:Role": {
+                "roles": [
+                    {
+                        "roleName": "SHD_BUDGET_APPROVER"
+                    },
+                    {
+                        "roleName": "EXP_REIMBURSEMENT_APPROVER",
+                        "roleGroups": [
+                            ""
+                        ]
+                    }
+                ]
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference": {
+                "showImagingIntro": true,
+                "expenseAuditRequired": "REQUIRED",
+                "allowCreditCardTransArrivalEmails": true,
+                "allowReceiptImageAvailEmails": true,
+                "promptForCardTransactionsOnReport": true,
+                "autoAddTripCardTransOnReport": false,
+                "promptForReportPrintFormat": true,
+                "defaultReportPrintFormat": "DETAILED",
+                "showTotalOnReport": true,
+                "showExpenseOnReport": "ALL",
+                "showInstructHelpPanel": true,
+                "useQuickItinAsDefault": false,
+                "enableOcrForUi": true,
+                "enableOcrForEmail": true,
+                "enableTripBasedAssistant": false
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference": {},
+            "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll": {},
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference": {
+                "emailStatusChangeOnCashAdvance": false,
+                "emailAwaitApprovalOnCashAdvance": false,
+                "emailStatusChangeOnReport": false,
+                "emailAwaitApprovalOnReport": false,
+                "promptForApproverOnReportSubmit": false,
+                "emailStatusChangeOnTravelRequest": false,
+                "emailAwaitApprovalOnTravelRequest": false,
+                "promptForApproverOnTravelRequestSubmit": false,
+                "emailStatusChangeOnPayment": false,
+                "emailAwaitApprovalOnPayment": false,
+                "promptForApproverOnPaymentSubmit": false,
+                "emailOnPurchaseRequestStatusChange": false,
+                "emailOnPurchaseRequestAwaitApproval": false,
+                "promptForPurchaseRequestApproverOnSubmit": false
+            }
+        },
+        {
+            "schemas": [
+                "urn:ietf:params:scim:schemas:ScimResource",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:User",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate",
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference",
+                "urn:ietf:params:scim:schemas:extension:spend:2.0:Role"
+            ],
+            "id": "aaaaabbb-xxxx-zzzz-xxxx-xxxxxxxxxxxx",
+            "meta": {
+                "resourceType": "User",
+                "created": null,
+                "lastModified": "2022-03-17T19:18:04.123Z",
+                "location": "https://us2.api.concursolutions.com/profile/spend/v4/Users/aaaaabbb-xxxx-zzzz-xxxx-xxxxxxxxxxxx",
+                "version": null
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:User": {
+                "reimbursementCurrency": "USD",
+                "reimbursementType": "CONCUR_PAY",
+                "ledgerCode": "DEFAULT",
+                "country": "US",
+                "budgetCountryCode": null,
+                "stateProvince": "WA",
+                "locale": "en-US",
+                "cashAdvanceAccountCode": null,
+                "testEmployee": false,
+                "nonEmployee": false,
+                "biManager": null,
+                "customData": []
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {},
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate": {},
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:Role": {
+                "roles": []
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference": {
+                "showImagingIntro": true,
+                "expenseAuditRequired": "REQUIRED",
+                "allowCreditCardTransArrivalEmails": true,
+                "allowReceiptImageAvailEmails": true,
+                "promptForCardTransactionsOnReport": true,
+                "autoAddTripCardTransOnReport": false,
+                "promptForReportPrintFormat": true,
+                "defaultReportPrintFormat": "DETAILED",
+                "showTotalOnReport": true,
+                "showExpenseOnReport": "ALL",
+                "showInstructHelpPanel": true,
+                "useQuickItinAsDefault": false,
+                "enableOcrForUi": true,
+                "enableOcrForEmail": true,
+                "enableTripBasedAssistant": false
+            },
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference": {},
+            "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll": {},
+            "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference": {
+                "emailStatusChangeOnCashAdvance": false,
+                "emailAwaitApprovalOnCashAdvance": false,
+                "emailStatusChangeOnReport": false,
+                "emailAwaitApprovalOnReport": false,
+                "promptForApproverOnReportSubmit": false,
+                "emailStatusChangeOnTravelRequest": false,
+                "emailAwaitApprovalOnTravelRequest": false,
+                "promptForApproverOnTravelRequestSubmit": false,
+                "emailStatusChangeOnPayment": false,
+                "emailAwaitApprovalOnPayment": false,
+                "promptForApproverOnPaymentSubmit": false,
+                "emailOnPurchaseRequestStatusChange": false,
+                "emailOnPurchaseRequestAwaitApproval": false,
+                "promptForPurchaseRequestApproverOnSubmit": false
+            }
+        }
+    ],
+    "startIndex": 1,
+    "itemsPerPage": 2
+}
+</code></pre></div></div>
+
+<h2 id="retrieving-a-spend-user"><a name="get-user-endpoint"></a>Retrieving a Spend User</h2>
+
+<p>Retrieves a specific user’s spend data.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.user.general.read</code> - Refer to <a href="./v4.spend-user-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
+
+<h4 id="uri-1">URI</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us2.api.concursolutions.com/profile/spend/v4.1/Users/{UserId}
+</code></pre></div></div>
+
+<h5 id="parameters-1">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>UserId</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></td>
+      <td>The unique identifier for the user that should be retrieved.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="payload">Payload</h4>
+
+<ul>
+  <li><a href="#full-spend-user-schema">Full Spend User</a></li>
+  <li><a href="#error-message-response-schema">Error</a></li>
+</ul>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us2.api.concursolutions.com/profile/spend/v4.1/Users/aaaaaeee-xxxx-zzzz-xxxx-xxxxxxxxxxxx
+</code></pre></div></div>
+<h4 id="response-1">Response</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "schemas": [
+        "urn:ietf:params:scim:schemas:ScimResource",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:User",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate",
+        "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference",
+        "urn:ietf:params:scim:schemas:extension:spend:2.0:Role"
+    ],
+    "id": "94bf66c2-272c-4760-91f5-4d5290a033a8",
+    "meta": {
+        "resourceType": "User",
+        "created": null,
+        "lastModified": "2024-01-19T20:10:34.377Z",
+        "location": "https://us2.api.concursolutions.com/profile/spend/v4/Users/aaaaaeee-xxxx-zzzz-xxxx-xxxxxxxxxxxx",
+        "version": null
+    },
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:User": {
+        "reimbursementCurrency": "USD",
+        "reimbursementType": null,
+        "ledgerCode": "DEFAULT",
+        "country": "US",
+        "budgetCountryCode": null,
+        "stateProvince": null,
+        "locale": "en-US",
+        "cashAdvanceAccountCode": "",
+        "testEmployee": false,
+        "nonEmployee": false,
+        "biManager": null,
+        "customData": [
+            {
+                "id": "orgUnit4",
+                "value": ""
+            },
+            {
+                "id": "custom17",
+                "value": ""
+            },
+            {
+                "id": "custom16",
+                "value": "ag1"
+            },
+            {
+                "id": "orgUnit2",
+                "value": ""
+            },
+            {
+                "id": "custom19",
+                "value": ""
+            },
+            {
+                "id": "custom4",
+                "value": ""
+            },
+            {
+                "id": "custom18",
+                "value": ""
+            },
+            {
+                "id": "custom20",
+                "value": ""
+            },
+            {
+                "id": "custom5",
+                "value": ""
+            }
+        ]
+    },
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:Approver": {},
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate": {},
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:Role": {
+        "roles": [
+            {
+                "roleName": "EXP_USER"
+            }
+        ]
+    },
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference": {
+        "showImagingIntro": false,
+        "expenseAuditRequired": "ALWAYS",
+        "allowCreditCardTransArrivalEmails": false,
+        "allowReceiptImageAvailEmails": false,
+        "promptForCardTransactionsOnReport": false,
+        "autoAddTripCardTransOnReport": false,
+        "promptForReportPrintFormat": false,
+        "defaultReportPrintFormat": "FAX",
+        "showTotalOnReport": false,
+        "showExpenseOnReport": "ALL",
+        "showInstructHelpPanel": false,
+        "useQuickItinAsDefault": false,
+        "enableOcrForUi": false,
+        "enableOcrForEmail": true,
+        "enableTripBasedAssistant": false
+    },
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference": {
+        "emailOnPurchasingAssigned": true,
+        "emailOnPurchasingSendBack": true,
+        "emailOnFaxImageAvailablePaymentRequest": true,
+        "promptNewLineItemsPaymentRequest": true,
+        "displayInlineImage": false,
+        "autoOpenImage": false
+    },
+    "urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll": {},
+    "urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference": {
+        "emailStatusChangeOnCashAdvance": true,
+        "emailAwaitApprovalOnCashAdvance": true,
+        "emailStatusChangeOnReport": true,
+        "emailAwaitApprovalOnReport": true,
+        "promptForApproverOnReportSubmit": false,
+        "emailStatusChangeOnTravelRequest": true,
+        "emailAwaitApprovalOnTravelRequest": true,
+        "promptForApproverOnTravelRequestSubmit": false,
+        "emailStatusChangeOnPayment": true,
+        "emailAwaitApprovalOnPayment": true,
+        "promptForApproverOnPaymentSubmit": false,
+        "emailOnPurchaseRequestStatusChange": false,
+        "emailOnPurchaseRequestAwaitApproval": false,
+        "promptForPurchaseRequestApproverOnSubmit": false
+    }
+}
+</code></pre></div></div>
+
+<h2 id="schema"><a name="schema"></a>Schema</h2>
+
+<h3 id="list-response-">List Response <a name="list-response-schema"></a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemas</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The schemas present in the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">totalResults</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td><strong>Required</strong> The total number of results returned by the list or query operation.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Resources</code></td>
+      <td><a href="#full-spend-user-schema"><code class="language-plaintext highlighter-rouge">FullSpendUser</code></a></td>
+      <td>-</td>
+      <td>A multi-valued list of complex objects containing the requested resources.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">startIndex</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The 1-based index of the first result in the current set of list results.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">itemsPerPage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The number of resources returned in a list response page.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="full-spend-user-">Full Spend User <a name="full-spend-user-schema"></a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemas</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The schemas present in the resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:User</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#spend-user-extension-schema"><code class="language-plaintext highlighter-rouge">SpendUser</code></a></td>
+      <td>-</td>
+      <td>The user’s base spend data.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:Approver</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#approver-extension-schema"><code class="language-plaintext highlighter-rouge">ApproverExtension</code></a></td>
+      <td>-</td>
+      <td>The user’s spend approver data.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:Delegate</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#delegate-extension-schema"><code class="language-plaintext highlighter-rouge">DelegateExtension</code></a></td>
+      <td>-</td>
+      <td>The user’s spend delegate data.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:Role</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#role-schema"><code class="language-plaintext highlighter-rouge">SpendRole</code></a></td>
+      <td>-</td>
+      <td>The user’s spend role data.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:UserPreference</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#user-preference-extension-schema"><code class="language-plaintext highlighter-rouge">UserPreferenceExtension</code></a></td>
+      <td>-</td>
+      <td>The user’s user preference settings.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:InvoicePreference</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#invoice-preference-extension-schema"><code class="language-plaintext highlighter-rouge">InvoicePreferenceExtension</code></a></td>
+      <td>-</td>
+      <td>The user’s invoice preference settings.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:enterprise:2.0:Payroll</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#adp-extension-schema"><code class="language-plaintext highlighter-rouge">ADPExtension</code></a></td>
+      <td>-</td>
+      <td>The user’s ADP data.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urn:ietf:params:scim:schemas:extension:spend:2.0:WorkflowPreference</code></td>
+      <td><a href="./v4.spend-user-extension-schema.html#workflow-preferences-extension-schema"><code class="language-plaintext highlighter-rouge">WorkflowPreferenceExtension</code></a></td>
+      <td>-</td>
+      <td>The user’s workflow preference settings.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-message-response-">Error Message Response <a name="error-message-response-schema"></a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">schemas</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The schemas present in this resource.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scimType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A SCIM detailed error keyword.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">detail</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>A detailed, human readable message.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int32</code></td>
+      <td>The HTTP status code.</td>
+    </tr>
+  </tbody>
+</table>
 
       </div>
       <!--/col-md-8-->
@@ -1304,7 +1825,7 @@
       <a href="https://www.concur.com/en-us/privacy-policy">Privacy Policy</a> |
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/user-provisioning/spend/v4.spend-user-get-started.md">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/user-provisioning/spend/v4.1.spend-user-retrieval.md">Edit this page on GitHub</a>
     </p>
   </div>
 
