@@ -1,85 +1,242 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "Spend Documents API",
-    "version": "4.0"
-  },
-  "host": "us.api.concursolutions.com",
-  "basePath": "/spend-documents/v4/receipts",
-  "schemes": [
-    "https"
-  ],
-  "securityDefinitions": {
-    "ApiKeyAuth": {
-      "in": "header",
-      "name": "Authorization",
-      "type": "apiKey"
-    }
-  },
-  "security": [
-    {
-      "ApiKeyAuth": []
-    }
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "paths": {
-    "/spend-documents/v4/receipts/{receiptId}/representations": {
-      "get": {
-        "description": "Retrive receipt document representations based on type",
-        "tags": [
-          "Spend Documents"
-        ],
-        "operationId": "getComplianceDocuments",
-        "deprecated": false,
-        "parameters": [
-          {
-            "name": "receiptId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "Universally unique identifier of a Receipt in Concur"
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "required": true,
-            "type": "string",
-            "description": "Type of document. eg: compliance"
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Spend Documents API",
+        "description": "Rest API for Spend Receipt Service",
+        "version": "4.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "security": [
+      {
+        "bearer-jwt": ["read", "write"]
+      }
+    ],
+    "tags": [
+        {
+            "name": "Spend Documents",
+            "description": "Receipts API"
+        }
+    ],
+    "paths": {
+        "/spend-documents/v4/receipts/{receiptId}/representations": {
+            "get": {
+                "tags": [
+                    "Spend Documents"
+                ],
+                "summary": "Get receipt representations by receiptId.",
+                "description": "Get receipt representations by receiptId.",
+                "operationId": "getDocumentsByReceiptId",
+                "parameters": [
+                    {
+                        "name": "receiptId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "display"
+                        }
+                    },
+                    {
+                        "name": "concur-correlationid",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "concur-forwarded-for",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "4XX": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Receipt Representations Retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "byte"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spend-documents/v4/receipts/representations": {
+            "get": {
+                "tags": [
+                    "Spend Documents"
+                ],
+                "summary": "Get receipt representations by imageId and companyId.",
+                "description": "Get receipt representations by imageId and companyId.",
+                "operationId": "getDocumentsByImageId",
+                "parameters": [
+                    {
+                        "name": "imageId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "companyId",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "default": "display"
+                        }
+                    },
+                    {
+                        "name": "concur-correlationid",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "concur-forwarded-for",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "4XX": {
+                        "description": "Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "Receipt Representations Retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "byte"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "byte"
-              }
+    },        
+    "components": {
+        "schemas": {
+            "ErrorMessage": {
+                "type": "object",
+                "properties": {
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "validationErrors": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "ValidationError": {
+                "type": "object",
+                "properties": {
+                    "source": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                }
             }
           },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "Server Error"
-          }
+        "parameters": {
+            "concur-forwarded-for": {
+                "name": "concur-forwarded-for",
+                "in": "header",
+                "required": true,
+                "schema": {
+                    "type": "string",
+                    "description": "concur-forwarded-for"
+                }
+            },
+            "concur-correlationid": {
+                "name": "concur-correlationid",
+                "in": "header",
+                "description": "concur-correlationid",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        },
+      "securitySchemes": {
+        "bearer-jwt": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
         }
       }
     }
   }
-}
