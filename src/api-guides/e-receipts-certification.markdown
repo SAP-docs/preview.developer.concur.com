@@ -77,7 +77,7 @@ You must meet following certification requirements before proceeding to the cert
 
 |Requirement | Description |
 | --- | --- |
-|Documentation |Please create a technical document that includes your solution architecture, functions, and design. This document should also cover API calls, including the specific parameters used, as well as the various methods users can connect to your application. Additionally, please provide detailed information on token management, such as obtaining, refreshing, and storing tokens, and any other technical aspects related to integration. This document will be used for internal archiving purposes at SAP Concur. |
+|Documentation |You need to create a technical document for SAP Concur internal archiving. This document should include your solution architecture, functions, and design. It should also cover API calls with specific parameters, ways users can connect to your App, token management (obtaining, refreshing, and storing tokens), and other technical integration aspects.|
 |Register Authorized Support Contacts |You must have registered authorized support contacts​. Please provide the support contact list to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) before your SAP Concur App Center launch.|
 |Submit Support Case |You must submit at least one support case at partner support portal. Please refer [How to Log a Support Case](https://developer.concur.com/tools-support/support.html#log-a-support-case)|
 
