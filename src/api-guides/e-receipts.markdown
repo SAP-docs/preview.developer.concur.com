@@ -255,7 +255,7 @@ The [one-time password grant](/api-reference/authentication/apidoc.html#otp-gran
 
    **Response**
 
-   ```json
+   ```
    HTTP/1.1 200 OK
    Content-Type: application/json
    {
