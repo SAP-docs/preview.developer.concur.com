@@ -787,7 +787,7 @@ Please find your certification date time based on the [certification calendar](u
 
 ### How do I log a support case?
 
-You should be provide the contact detail to your SAP Concur BD/Alliance manager for creating an account on the partner support portal.
+You should be provide the contact detail to your SAP Concur BD/Alliance manager or [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) for creating an account on the partner support portal.
 
 To log a support case, please login and open a partner support case from [partner support portal](https://sapconcur.my.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi). You will need to provide the [required information](https://developer.concur.com/tools-support/support.html#how-to-log-a-support-case) when logging a support case.
 
