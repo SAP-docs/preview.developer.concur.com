@@ -70,7 +70,7 @@ You must meet following certification requirements before proceeding to the cert
 |Correlation ID|The API response header contains `concur-correlationid` field which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
 |User UUID |Log user's UUID (extracted from user's access_token or id_token).|
 |Request Body |Log the complete API request body raw data. |
-|Response Header |For the eReceipt integration,log response header `link` and `location` data in addition to `concur-correlationid` . |
+|Response Header |For the eReceipt integration,log response header `link` and `location` data in addition to `concur-correlationid`. |
 |Response Body |For the Quick Expense App,log the response body. |
 
 **Production Readiness**
@@ -79,7 +79,7 @@ You must meet following certification requirements before proceeding to the cert
 | --- | --- |
 |Documentation |You need to create a technical document for SAP Concur internal archiving. This document should include your solution architecture, functions, and design. It should also cover API calls with specific parameters, ways users can connect to your App, token management (obtaining, refreshing, and storing tokens), and other technical integration aspects.|
 |Register Authorized Support Contacts |You must have registered authorized support contacts​. Please provide the support contact list to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) before your SAP Concur App Center launch.|
-|Submit Support Case |You must submit at least one support case at partner support portal. Please refer [How to Log a Support Case](https://developer.concur.com/tools-support/support.html#log-a-support-case)|
+|Submit Support Case |You must submit at least one support case at partner support portal. Please refer to [How to Log a Support Case](https://developer.concur.com/tools-support/support.html#log-a-support-case).|
 
 **Certified APIs**
 
