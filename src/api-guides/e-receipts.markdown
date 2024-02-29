@@ -710,6 +710,8 @@ The App Center Marketing team will review your content for clarity, ease of read
 
 Once your content is finalized, your listing will be queued for launch on an agreed upon date. Your app must be certified prior to launch.
 
+Please visit [Go To Market](https://developer.concur.com/manage-apps/go-to-market.html) page to prepare your SAP Concur App Center launch. 
+
 User Connection apps are launched on the following [release dates](https://developer.concur.com/manage-apps/go-market-docs/apps-for-me-release-schedule.html).
 
 
