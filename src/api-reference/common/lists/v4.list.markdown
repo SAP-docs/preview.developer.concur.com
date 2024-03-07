@@ -1000,13 +1000,13 @@ cache-control: no-cache, private
 
 ## Managed Lists <a name="managed-lists"></a>
 
-A managed list is a list in which all modifications to the list are restricted to a single application ID. 
-When a list is managed, only API calls from that managing application ID are authorized to make updates to the list items in the list. 
+A managed list is a list in which all modifications to the list are restricted to a single application ID or a single internal service identifier.
+When a list is managed, only API calls from that managing application ID or managing internal service identifier are authorized to make updates to the list items in the list.
 Modifications to the managed list in the UI are disabled.
 
 Additionally, list imports are not permitted on the managed list. Running a list import on a managed list will result in error.
 
-The managed list feature is useful if a partner application is responsible for maintaining the items in a list and needs to restrict modifications 
+The managed list feature is useful if a partner application or internal service is responsible for maintaining the items in a list and needs to restrict modifications
 of the list by the UI users or other API callers.
 
 To set a list to be managed, use the Create List API call. See the example in [Create Managed List](#create-managed-list).
@@ -1019,11 +1019,12 @@ all application IDs will be permitted. The application ID that set the list to m
 
 ### Create Managed List <a name="create-managed-list"></a>
 
-To create a managed list, call the Create List API setting the `isManaged` field to `true`. The API will extract the application ID from the Authorization JWT token. 
-This application ID will be the only application ID permitted to perform modifications to this list. 
-Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list. 
+To create a managed list, call the Create List API setting the `isManaged` field to `true`. The API will extract the application ID from the Authorization JWT token.
+This application ID will be the only application ID permitted to perform modifications to this list.
+Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list.
 
-The Create List API response will contain the `managedBy` field populated with the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+The Create List API response will contain the `managedBy` field populated with either the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`)
+or the internal service identifier in the format `service:<service identifier>` (Example: `service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce`).
 
 #### Request
 
@@ -1055,6 +1056,7 @@ location: http://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-961
 cache-control: no-cache, private
 ```
 
+##### Managed list by appId
 ```json
 {
     "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
@@ -1071,7 +1073,23 @@ cache-control: no-cache, private
     "managedBy": "appId:898e830b-254a-4167-9499-a33de423e950"
 }
 ```
-
+##### Managed list by internal service identifier
+```json
+{
+    "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+    "value": "Custom Managed List",
+    "levelCount": 1,
+    "searchCriteria": "TEXT",
+    "displayFormat": "(CODE) TEXT",
+    "category": {
+        "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+        "type": "Normal"
+    },
+    "isReadOnly": false,
+    "isDeleted": false,
+    "managedBy": "service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce"
+}
+```
 
 ### Update Managed List to Not be Managed <a name="update-managed-list-not-managed"></a>
 
@@ -1132,9 +1150,10 @@ cache-control: no-cache, private
 To update an existing list to be managed, call the Update List API setting the `isManaged` field to `true`.
 The API will extract the application ID from the Authorization JWT token. 
 
-The API response will include the `managedBy` field populated with the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`).
+The API response will include the `managedBy` field populated with either the application ID from the request Authorization JWT token in the format `appId:<uuid app id>` (Example: `appId:898e830b-254a-4167-9499-a33de423e950`)
+or the internal service identifier in the format `service:<service identifier>` (Example: `service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce`).
 
-After this successful API call, this application ID will be the only application ID permitted to perform modifications to this list.
+After this successful API call, this application ID or service identifier will be the only application ID permitted to perform modifications to this list.
 
 #### Request
 
@@ -1164,6 +1183,8 @@ date: Wed, 08 Jul 2020 03:24:16 GMT
 cache-control: no-cache, private
 ```
 
+##### Managed list by appId
+
 ```json
 {
   "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
@@ -1178,6 +1199,25 @@ cache-control: no-cache, private
   "isReadOnly": false,
   "isDeleted": false,
   "managedBy": "appId:898e830b-254a-4167-9499-a33de423e950"
+}
+```
+
+##### Managed list by internal service identifier
+
+```json
+{
+  "id": "d43127b3-6bd2-45f8-9615-1d3dcdfbffc7",
+  "value": "Custom Managed List",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "e45e20ce-2974-46b0-a920-e3301febf268",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": "service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce"
 }
 ```
 
@@ -1196,7 +1236,7 @@ The `managedBy` value in the response payload does not change.
 ```
 
 ##### Response
-
+##### Managed list by appId
 ```shell
 {
   "id": "9705ce8e-7957-3f4e-a6cf-19ef2b437099",
@@ -1211,6 +1251,24 @@ The `managedBy` value in the response payload does not change.
   "isReadOnly": false,
   "isDeleted": false,
   "managedBy": "appId:c2dd1948-bc84-4449-920d-3ff92c69d9af"
+}
+```
+
+##### Managed list by internal service identifier
+```shell
+{
+  "id": "9705ce8e-7957-3f4e-a6cf-19ef2b437099",
+  "value": "New Managed List Updated",
+  "levelCount": 1,
+  "searchCriteria": "TEXT",
+  "displayFormat": "(CODE) TEXT",
+  "category": {
+    "id": "4bdcc9da-9c9d-fe47-a39f-cb1e82380d54",
+    "type": "Normal"
+  },
+  "isReadOnly": false,
+  "isDeleted": false,
+  "managedBy": "service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce"
 }
 ```
 
