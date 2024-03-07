@@ -2633,13 +2633,13 @@ cache-control: no-cache, private
 
 <h2 id="managed-lists-">Managed Lists <a name="managed-lists"></a></h2>
 
-<p>A managed list is a list in which all modifications to the list are restricted to a single application ID. 
-When a list is managed, only API calls from that managing application ID are authorized to make updates to the list items in the list. 
+<p>A managed list is a list in which all modifications to the list are restricted to a single application ID or a single internal service identifier.
+When a list is managed, only API calls from that managing application ID or managing internal service identifier are authorized to make updates to the list items in the list.
 Modifications to the managed list in the UI are disabled.</p>
 
 <p>Additionally, list imports are not permitted on the managed list. Running a list import on a managed list will result in error.</p>
 
-<p>The managed list feature is useful if a partner application is responsible for maintaining the items in a list and needs to restrict modifications 
+<p>The managed list feature is useful if a partner application or internal service is responsible for maintaining the items in a list and needs to restrict modifications
 of the list by the UI users or other API callers.</p>
 
 <p>To set a list to be managed, use the Create List API call. See the example in <a href="#create-managed-list">Create Managed List</a>.</p>
@@ -2652,11 +2652,12 @@ all application IDs will be permitted. The application ID that set the list to m
 
 <h3 id="create-managed-list-">Create Managed List <a name="create-managed-list"></a></h3>
 
-<p>To create a managed list, call the Create List API setting the <code class="language-plaintext highlighter-rouge">isManaged</code> field to <code class="language-plaintext highlighter-rouge">true</code>. The API will extract the application ID from the Authorization JWT token. 
-This application ID will be the only application ID permitted to perform modifications to this list. 
+<p>To create a managed list, call the Create List API setting the <code class="language-plaintext highlighter-rouge">isManaged</code> field to <code class="language-plaintext highlighter-rouge">true</code>. The API will extract the application ID from the Authorization JWT token.
+This application ID will be the only application ID permitted to perform modifications to this list.
 Modifications include updating and deleting the list, and creating, updating, and deleting list items from the list.</p>
 
-<p>The Create List API response will contain the <code class="language-plaintext highlighter-rouge">managedBy</code> field populated with the application ID from the request Authorization JWT token in the format <code class="language-plaintext highlighter-rouge">appId:&lt;uuid app id&gt;</code> (Example: <code class="language-plaintext highlighter-rouge">appId:898e830b-254a-4167-9499-a33de423e950</code>).</p>
+<p>The Create List API response will contain the <code class="language-plaintext highlighter-rouge">managedBy</code> field populated with either the application ID from the request Authorization JWT token in the format <code class="language-plaintext highlighter-rouge">appId:&lt;uuid app id&gt;</code> (Example: <code class="language-plaintext highlighter-rouge">appId:898e830b-254a-4167-9499-a33de423e950</code>)
+or the internal service identifier in the format <code class="language-plaintext highlighter-rouge">service:&lt;service identifier&gt;</code> (Example: <code class="language-plaintext highlighter-rouge">service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce</code>).</p>
 
 <h4 id="request-13">Request</h4>
 
@@ -2685,6 +2686,7 @@ location: http://us.api.concursolutions.com/list/v4/lists/d43127b3-6bd2-45f8-961
 cache-control: no-cache, private
 </code></pre></div></div>
 
+<h5 id="managed-list-by-appid">Managed list by appId</h5>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d43127b3-6bd2-45f8-9615-1d3dcdfbffc7"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Custom Managed List"</span><span class="p">,</span><span class="w">
@@ -2698,6 +2700,22 @@ cache-control: no-cache, private
     </span><span class="nl">"isReadOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="nl">"managedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"appId:898e830b-254a-4167-9499-a33de423e950"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h5 id="managed-list-by-internal-service-identifier">Managed list by internal service identifier</h5>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d43127b3-6bd2-45f8-9615-1d3dcdfbffc7"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Custom Managed List"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"levelCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"searchCriteria"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEXT"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"displayFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"(CODE) TEXT"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e45e20ce-2974-46b0-a920-e3301febf268"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Normal"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"isReadOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"managedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2756,9 +2774,10 @@ cache-control: no-cache, private
 <p>To update an existing list to be managed, call the Update List API setting the <code class="language-plaintext highlighter-rouge">isManaged</code> field to <code class="language-plaintext highlighter-rouge">true</code>.
 The API will extract the application ID from the Authorization JWT token.</p>
 
-<p>The API response will include the <code class="language-plaintext highlighter-rouge">managedBy</code> field populated with the application ID from the request Authorization JWT token in the format <code class="language-plaintext highlighter-rouge">appId:&lt;uuid app id&gt;</code> (Example: <code class="language-plaintext highlighter-rouge">appId:898e830b-254a-4167-9499-a33de423e950</code>).</p>
+<p>The API response will include the <code class="language-plaintext highlighter-rouge">managedBy</code> field populated with either the application ID from the request Authorization JWT token in the format <code class="language-plaintext highlighter-rouge">appId:&lt;uuid app id&gt;</code> (Example: <code class="language-plaintext highlighter-rouge">appId:898e830b-254a-4167-9499-a33de423e950</code>)
+or the internal service identifier in the format <code class="language-plaintext highlighter-rouge">service:&lt;service identifier&gt;</code> (Example: <code class="language-plaintext highlighter-rouge">service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce</code>).</p>
 
-<p>After this successful API call, this application ID will be the only application ID permitted to perform modifications to this list.</p>
+<p>After this successful API call, this application ID or service identifier will be the only application ID permitted to perform modifications to this list.</p>
 
 <h4 id="request-15">Request</h4>
 
@@ -2785,6 +2804,8 @@ content-type: application/json<span class="p">;</span><span class="nv">charset</
 cache-control: no-cache, private
 </code></pre></div></div>
 
+<h5 id="managed-list-by-appid-1">Managed list by appId</h5>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d43127b3-6bd2-45f8-9615-1d3dcdfbffc7"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Custom Managed List"</span><span class="p">,</span><span class="w">
@@ -2798,6 +2819,24 @@ cache-control: no-cache, private
   </span><span class="nl">"isReadOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
   </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
   </span><span class="nl">"managedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"appId:898e830b-254a-4167-9499-a33de423e950"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="managed-list-by-internal-service-identifier-1">Managed list by internal service identifier</h5>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d43127b3-6bd2-45f8-9615-1d3dcdfbffc7"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Custom Managed List"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"levelCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"searchCriteria"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TEXT"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"displayFormat"</span><span class="p">:</span><span class="w"> </span><span class="s2">"(CODE) TEXT"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e45e20ce-2974-46b0-a920-e3301febf268"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Normal"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"isReadOnly"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"isDeleted"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"managedBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2815,7 +2854,7 @@ The <code class="language-plaintext highlighter-rouge">managedBy</code> value in
 </code></pre></div></div>
 
 <h5 id="response-16">Response</h5>
-
+<h5 id="managed-list-by-appid-2">Managed list by appId</h5>
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
   <span class="s2">"id"</span>: <span class="s2">"9705ce8e-7957-3f4e-a6cf-19ef2b437099"</span>,
   <span class="s2">"value"</span>: <span class="s2">"New Managed List Updated"</span>,
@@ -2829,6 +2868,23 @@ The <code class="language-plaintext highlighter-rouge">managedBy</code> value in
   <span class="s2">"isReadOnly"</span>: <span class="nb">false</span>,
   <span class="s2">"isDeleted"</span>: <span class="nb">false</span>,
   <span class="s2">"managedBy"</span>: <span class="s2">"appId:c2dd1948-bc84-4449-920d-3ff92c69d9af"</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="managed-list-by-internal-service-identifier-2">Managed list by internal service identifier</h5>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+  <span class="s2">"id"</span>: <span class="s2">"9705ce8e-7957-3f4e-a6cf-19ef2b437099"</span>,
+  <span class="s2">"value"</span>: <span class="s2">"New Managed List Updated"</span>,
+  <span class="s2">"levelCount"</span>: 1,
+  <span class="s2">"searchCriteria"</span>: <span class="s2">"TEXT"</span>,
+  <span class="s2">"displayFormat"</span>: <span class="s2">"(CODE) TEXT"</span>,
+  <span class="s2">"category"</span>: <span class="o">{</span>
+    <span class="s2">"id"</span>: <span class="s2">"4bdcc9da-9c9d-fe47-a39f-cb1e82380d54"</span>,
+    <span class="s2">"type"</span>: <span class="s2">"Normal"</span>
+  <span class="o">}</span>,
+  <span class="s2">"isReadOnly"</span>: <span class="nb">false</span>,
+  <span class="s2">"isDeleted"</span>: <span class="nb">false</span>,
+  <span class="s2">"managedBy"</span>: <span class="s2">"service:60e7c1eb-3264-4ff2-b358-22c3fb5a39ce"</span>
 <span class="o">}</span>
 </code></pre></div></div>
 
