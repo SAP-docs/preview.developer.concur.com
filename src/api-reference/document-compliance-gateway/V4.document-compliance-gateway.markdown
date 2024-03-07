@@ -9,8 +9,6 @@ Document Compliance Gateway v4 API is designed to manage the transmission of the
 
 The API supports an improved and efficient process for compliance document validation. The end user gets the compliance document validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The API also uses the data from the compliance document file to initiate the expense line item, saving the need for the user to manually type the information.
 
-
-
 ## Prior Versions
 
 No prior API version available
@@ -76,7 +74,7 @@ Name|Type|Format|Description
 
 #### Notes
 
-* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in. 
+* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in.
 * To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html).
 * Once you have the token use the following curl command to POST invoice details:
 
@@ -135,9 +133,9 @@ PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-
 ```
 ##### Parameters
 
-| Name       | Type | Format | Description
-|------------|------|--------|------------
-| `documentId` |string| |Unique id assigned to a document.
+Name|Type|Format|Description
+---|---|---|---
+`documentId` |string| |Unique id assigned to a document.
 
 #### Headers
 
@@ -146,14 +144,19 @@ PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-
 
 ### Payload
 
-* DigitalTax Token
+* **[digitalTaxDocument](#DigitalTaxDocument-Schema)** - A digitalTaxDocument file in JSON format that is **required**.
+
+*	**displayedVersion** - A multipart compliant document in human-readable PDF format.
+     * If the end user only uploads the XML file, the partner will receive the event with _isDisplayVersionRequired_ _= true_.
+       * In such scenarios, If the xml file is valid and processed, the partner needs to convert the XML file into PDF format and upload it in the **displayedVersion** field **mandatorily**.
+       * If the XML file is invalid or has failed, uploading the displayedVersion is **optional** .
 
 #### Notes
 
-* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in. 
+* The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in.
 * To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to the API.
 * Once you have the token, use the following curl command to POST invoice details:
-   
+
 ```sh
 curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
   -H "concur-correlationid": {LogicalId}\
@@ -217,7 +220,7 @@ digitalTaxDocument:
       "LineItems":[
          {
             "ProductCode":"P1",
-            "Description":"Decription",
+            "Description":"Description",
             "Amount":0.0
          }
       ],
@@ -239,49 +242,68 @@ Content-Type: application/json
   "Description": "Tokens have been received."
 }
 ```
-### Schema <a name="schema"></a>
+## Schema
 
-### <a name="schema-paymentRequest"></a>DigitalTax Token
+### <a name="DigitalTaxDocument-Schema"></a>DigitalTaxDocument Schema
 
-Name|Type|Format|Description
----|---|---|---
-`Status`|`string`|-|Status of the compliance document (processed, failed ).
-`DocumentData`|`object`|-|Document data and tax tokens info.
-`FormatVersion`|`string`|-|The version of the document format.
-`Code`|`string`|-|Prefix of receipt (an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.).
-`Number`|`string`|-|Number of the receipt.
-`IssueDateTime`|`string`|date-time |Date and time when the document was created in the local timezone where it was issued.
-`UUID`|`string`|-|Document UUID - field present in compliance document.
-`PaymentType` |`enum`|-|Means of payment (Cash, Credit Card, Digital Wallet).
-`GrossAmount`|`number`|-| Sum of amounts before discounts and taxes.
-`Discount`|`string`|-|Total amount of applicable discounts before taxes.
-`Currency`|`string`|-|Currency used to express amounts (According to the ISO 4217 codes) (MXN).
-`ExchangeRate`|`number`|-|Exchange Rate according to currency used. Mandatory id currency <> MXN.
-`NetAmount`|`number`|-|Sub Total–Discounts+VAT Taxes–Withholding Taxes.
-`PaymentMethod`|`string`|-|Specify the code of payment method: PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.
-`TotalWithholdingTax`|`number`|-|Sum of all withheld tax amounts of line items.
-`TotalSalesTax`|`number`|-| Sum of all sales tax amounts of line items.
-`DocumentPostalCode`|`string`|-|Postal code of place of receipt issue.
-`VerificationCode`|`string`|-|Company's certificate used to generate digital signature.
-`Comments`|`string`|-|Comments.
-`Vendor`|`object`|-|Details of the vendor.
-`CertificateNumber`|`string`|-|Company's certificate used to generate digital signature.
-`TaxNumber`|`string`|-|Taxpayer ID of the vendor.
-`Name`|`string`|-|Name of receipt issuer.
-`City`|`string`|-|City of receipt issuer.
-`State`|`string`|-|State of receipt issuer.
-`Country`|`boolean`|-|Country of receipt issuer.
-`Phone`|`string`|-|Phone number of receipt issuer.
-`AddressLine`|`string`|Address of receipt issuer.
-`Buyer`|`object`|-|Details of the buyer.
-`TaxNumber`|`string`|-|Buyer Tax Number.
-`Name`|`string`|-|Buyer Name.
-`PostalCode`|`string`|-|Postal code of recipient's tax domicile.
-`LineItems`|`array`|-|Line items present in the compliance document.
-`LineItem`|`object`|-|Line item present in the compliance document.
-`ProductCode`|`string`|-|Key of product or service covered For example, 10101502 (Dogs), 10101506 (Horses).
-`Description`|`string`|-|Product Description.
-`Amount`|`number`|-|Total amount of good or service.
-`Description`|`string`|-|Comment/description provided by partner.
-`Code`|`string`|-|Response code provided by partner.
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`status`| `string` | "enum": ["processed, failed"]| **Required** - Status of the CFDI document.| 
+|`documentData` | `object` | [DocumentData Schema ](#DocumentData-Schema) | **Required** - Document details and Tax Token info (Can be null for failed status). |     
+| `code` | `string` | optional | Response code provided by partner.|     
+| `description`  | `string` | optional| Comment/description provided by partner. | 
 
+#### <a name="DocumentData-Schema"></a>DocumentData Schema
+
+|Name|Type|Format|Description|
+|---|---|---|---|  
+| `issueDateTime` | `string` | YYYY-MM-DDTHH:mm:ssZ | **Required** - Date and time when the document was created in the local timezone where it was issued.| 
+| `uuid`| `string` | - |**Required** - Document UUID - field present in compliance document.|                         
+| `grossAmount` | `number` | - | **Required** - Sum of amounts before discounts and taxes. |
+| `currency` | `string` | "enum": ["INR","MXN","USD"]| **Required** - Currency used to express amounts (According to the ISO 4217 codes)(MXN).|
+| `exchangeRate` | `string` | - | **Required** - Exchange Rate according to currency used. Mandatory id currency <> MXN.|                                   
+| `netAmount`| `number` | - | **Required** - Gross Amount – Discounts + VAT Taxes – Withholding Taxes.|                                
+| `paymentMethod`| `string` | - | **Required** - Specify the code of payment method - PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.|   
+| `vendor` | `object` | [Vendor schema ](#vendor-schema) | **Required** - details of the vendor.|
+| `formatVersion` | `string` | "enum": ["3.3, 4.0"]| Version of the CFDI document.|                          
+| `buyer`| `object` | [Buyer schema ](#buyer-schema)| Details of the buyer.|
+| `number`| `string` | -  | Number of the receipt.| 
+| `code` | `string` | -  | Prefix of receipt, an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.) |                                           
+| `documentPostalCode`| `string` | - | Postal code of place of receipt issue.|     
+| `paymentType` | `string` | "enum": ["01, 02, 03"] | Means of payment (01 (Cash), 02 (Cheque), 03 (Bank Transfer/Digital Wallet)).|                                     
+| `discount` | `number` | - | Total amount of applicable discounts before taxes.| 
+| `totalSalesTax`| `number` | - | Sum of all sales tax amounts of line items.|                   
+| `totalWithholdingTax`| `number` | - | Sum of all withhold tax amounts of line items.|          
+| `lineItems`  | `array`  | [LineItem schema ](#lineitem-schema) | Line items present in the CFDI compliance document.| 
+| `verificationCode` | `string` | - | Company's certificate used to generate digital signature.|  
+| `comments`| `string` | - | Comment/description.|                                              
+
+#### <a name="vendor-schema"></a> Vendor Schema
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `taxNumber`| `string` | -   | **Required** - Taxpayer ID of the vendor.|                                          
+| `certificateNumber` | `string` | - | Company's certificate used to generate digital signature. |                        
+| `name` | `string` | -  | Name of receipt issuer.|                                                  
+| `city`  | `string` | - | City of receipt issuer.|                                   
+| `state` | `string` | -  | State of receipt issuer. |                                                  
+| `country` | `string` | - | Country of receipt issuer.|                           
+| `phone`| `string` | -  | Phone number of receipt issuer. |                                  
+| `addressLine`| `string` | - | AddressLine of receipt issuer. |         
+
+
+#### <a name="buyer-schema"></a> Buyer Schema
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `taxNumber` | `string` | - | **Required** - Buyer Tax Number.|
+| `PostalCode`  | `string` | -  | Postal code of tax domicile of recipient.|
+| `name` | `string` | - | Buyer Name. |
+
+#### <a name="lineitem-schema"></a> LineItem Schema
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `amount` | `number` | - | **Required** - Total amount of goods or service. |                                        
+| `description`| `string` | - | Product Description.|                                                             
+| `productCode`| `string` | - | **Required** - Key of product or service covered - 10101502 (Dogs), 10101506 (Horses) (Catalogue: c_ClaveProdServ)| 

@@ -38,7 +38,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the expense document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
+`facts`|`Object`|[Facts](#facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -53,7 +53,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the invoice document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
+`facts`|`Object`|[Facts](#facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -67,7 +67,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the payroll document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
+`facts`|`Object`|[Facts](#facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -81,7 +81,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the `cashadvance` document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
+`facts`|`Object`|[Facts](#facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -95,7 +95,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the requestObligation document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
+`facts`|`Object`|[Facts](#facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
@@ -109,7 +109,7 @@ The Financial Integration API provides clients and authorized partners access to
 `topic`|`String`|-|This is the topic to which the event will be published. This will always be `public.concur.financialintegration`.|
 `timeStamp`|`String`|yyyy-mm-ddThr:min:sec.msZ|Timestamp for the event being published. Maximum length 24 characters.|
 `subtopic`|`String`|-|This is set to the Entity id of the company for which the reportObligation document is ready to be imported.|
-`facts`|`Object`|[Facts](#Facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
+`facts`|`Object`|[Facts](#facts)|This is the facts object that will contain the `companyId`, `documentId` , `href`, `entityId`.
 `data`|`Object`|-|This will be set to null. The data will be in facts.|
 `route`|`String`|-|This will be set to `stable`.|
 
