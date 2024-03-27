@@ -58,14 +58,14 @@ https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=PO
 | `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
 | `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel on |
 
-##### <a name="location-type"></a>Location Format
+<a name="location-type"></a>**Location Format**
 
 The airport can be informed in different ways:
 * **IATA Code**: a three-letter code that represents the airport, for example `LAX` for Los Angeles International Airport
 * **Geographic Coordinates**: latitude and longitude for a geopoint  
 Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With this coordinates, a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search
 
-##### <a name="cabin-types"></a>Cabin Types
+<a name="cabin-types"></a>**Cabin Types**
 The supported cabin types are:
 * `ECONOMY`
 * `PREMIUM_ECONOMY`
