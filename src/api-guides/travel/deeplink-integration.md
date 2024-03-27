@@ -41,6 +41,13 @@ In case of errors, the user is redirected to the OBT's home page.
 https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation={departurelocation}&departuredate={departuredate}&departuretime={departuretime}&returnlocation={returnlocation}&returndate={returndate}&returntime={returntime}&cabintype={cabintype}
 ```
 
+#### Example of Usage
+```
+https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=POA&departuredate=2024-08-04&departuretime=13:00&returnlocation=SDU&returndate=2024-08-20&returntime=09:00&cabintype=ECONOMY
+```
+
+#### Query Parameters
+
 | Name | Type| Format | Description                       |
 | -------- |     -------- | -------- | -------- |
 | `departurelocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place |
@@ -51,14 +58,14 @@ https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation={d
 | `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
 | `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel on |
 
-#### <a name="location-type"></a>Location Format
+##### <a name="location-type"></a>Location Format
 
 The airport can be informed in different ways:
 * **IATA Code**: a three-letter code that represents the airport, for example `LAX` for Los Angeles International Airport
 * **Geographic Coordinates**: latitude and longitude for a geopoint  
 Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With this coordinates, a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search
 
-#### <a name="cabin-types"></a>Cabin Types
+##### <a name="cabin-types"></a>Cabin Types
 The supported cabin types are:
 * `ECONOMY`
 * `PREMIUM_ECONOMY`
