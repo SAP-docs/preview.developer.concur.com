@@ -66,6 +66,7 @@ The airport can be informed in different ways:
 Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With this coordinates, a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search
 
 <a name="cabin-types"></a>**Cabin Types**
+
 The supported cabin types are:
 * `ECONOMY`
 * `PREMIUM_ECONOMY`
