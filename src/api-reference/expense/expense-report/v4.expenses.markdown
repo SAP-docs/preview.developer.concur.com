@@ -841,7 +841,7 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 ```
 ## Update a Specific Expense Entry in a Submitted Report <a name="update-expense-entry-in-a-submitted-report"></a>
 
-Updates the specified expense in an unsubmitted or submitted report and is restricted to modify 'Business Purpose', 'Custom/Org unit', and 'isExpenseRejected' fields only.
+Updates the specified expense on an unsubmitted or submitted report and is restricted to modify 'Business Purpose', 'Custom/Org unit', 'Expense Rejected' and 'Paper Receipt Received' fields only.
 
 ### Scopes
 
@@ -903,12 +903,14 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 
 ### <a name="update-report-expense-compact-schema"></a>Update Report Expense Compact Schema
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`businessPurpose`|`string`|-|The text input for the business purpose by the user. Maximum length: 64 characters|
-|`customData`|[`CustomData`](#custom-data-schema)|-|The details from the `customData` fields. These fields may not have data, depending on the configuration.|
-|`expenseSource`|`string`|-|**Required** The source of the expense. Supported values: `EA` - Expense Assistant, `MOB` - Mobile, `OTHER` - Unknown, `SE` - Smart Expense, `TA` - Travel Allowance, `TR` - Travel Request, `UI` - Web UI|
-|`isExpenseRejected`|`boolean`|`true`/`false`|Whether the approver or processor has rejected this expense in the report. If this is true then this expense will be sent back to the report submitted in an addendum (split) report|
+|Name|Type|Format| Description                                                                                                                                                                                                 |
+|---|---|---|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|`businessPurpose`|`string`|-| The text input for the business purpose by the user. Maximum length: 64 characters.                                                                                                                         |
+|`customData`|[`CustomData`](#custom-data-schema)|-| The details from the `customData` fields. These fields may not have data, depending on the configuration.                                                                                                   |
+|`expenseSource`|`string`|-| **Required** The source of the expense. Supported values: `EA` - Expense Assistant, `MOB` - Mobile, `OTHER` - Unknown, `SE` - Smart Expense, `TA` - Travel Allowance, `TR` - Travel Request, `UI` - Web UI. |
+|`isExpenseRejected`|`boolean`|`true`/`false`| Whether the approver or processor has rejected this expense in the report. If this is true then this expense will be sent back to the report submitted in an addendum (split) report.                       |
+|`isPaperReceiptReceived`|`boolean`|`true`/`false`| Whether paper receipts have been received for the expense.             |
+
 
 #### <a name="report-expense-custom-data-schema"></a>CustomData
 
@@ -938,7 +940,8 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
     ],
     "businessPurpose":"Office Supplies",
     "expenseSource":"OTHER",
-    "isExpenseRejected": false
+    "isExpenseRejected": false,
+    "isPaperReceiptReceived": false
 }'
 ```
 
@@ -1055,7 +1058,7 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 
 ### <a name="expense-source-identifiers-schema"></a>ExpenseSourceIdentifiers
 
-||Name|Type|Format|Description|
+|Name|Type|Format|Description|
 |---|---|---|---|
 |`creditCardTransactionId`|`string`| - |The unique identifier of the credit card transaction (indexed `transactionId`) associated with the expense.|
 |`ereceiptId`| `string` | - | - |
@@ -1072,11 +1075,11 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 
 ### <a name="report-receipt-mapping"></a>Report Receipt Mapping
 
-||Name|Type|Format|Description|
+|Name|Type|Format|Description|
 |---|---|---|---|
 |`receiptId` |`string` | UUID  |**Required** The unique identifier of the Receipt with the expense.|
-|`imageId`   |`string` | -   |**Required** The unique identifier of the Receipt image associated with the expense.|
-|`feature`  |`string` | -  |**Required** Receipt feature of the Receipt with the expense. Supported values: 'expenseIt'|
+|`imageId`  |`string` | -   |**Required** The unique identifier of the Receipt image associated with the expense.|
+|`feature` |`string` | -  |**Required** Receipt feature of the Receipt with the expense. Supported values: 'expenseIt'|
 |`version`|`string` | -  |Receipt version of the Receipt with the expense. Default value: 5|
 
 ### <a name="exchange-rate-schema"></a>ExchangeRate
