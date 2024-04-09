@@ -45,7 +45,8 @@ Name | Type | Format | Description
 ```
 POST  /api/v3.0/expense/entries
 ```
-Note: Entries cannot be created on reports that have entered workflow at least once.
+Note: Entries cannot be created on reports that have entered a workflow at least once.
+
 ### Parameters
 
 Name | Type | Format | Description
