@@ -33,6 +33,7 @@ layout: reference
 
 ## App Center Release Notes
 
+* [2024 Release Notes](./app-center/2024-app-center.html)
 * [2023 Release Notes](./app-center/2023-app-center.html)
 * [2022 Release Notes](./app-center/AppCenter_RN_Client_2022.pdf)
 * [2021 Release Notes](./app-center/AppCenter_RN_Client_2021.pdf)
