@@ -45,6 +45,7 @@ Name | Type | Format | Description
 ```
 POST  /api/v3.0/expense/entries
 ```
+Note: Entries cannot be created on reports that have entered a workflow at least once.
 
 ### Parameters
 
@@ -156,7 +157,7 @@ Name | Type | Format | Description
 `LocationName`	|	`string`	|	-	|	The location where the expense was incurred, usually the city name.
 `LocationSubdivision`	|	`string`	|	-	|	The ISO 3166-2:2007 country subdivision state, province, or other country subdivision where the expense was incurred.
 `OrgUnit1 through OrgUnit6`	|	`customField`	|	-	|	The details from the Org Unit fields. These fields may not have data, depending on the configuration.
-`PaymentTypeID`	|	`string`	|	-	|	**Required** The ID of the payment type for the entry. Use GET /expense/expensegroupconfigurations to learn the payment type ID for payment types that are active for this report's expense group. For mileage expenses, use the Cash payment type. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because these two expense codes always use the Cash payment type.
+`PaymentTypeID`	|	`string`	|	-	|	**Required** The ID of the payment type for the entry. Use GET /expense/expensegroupconfigurations to learn the payment type ID for payment types that are active for this report's expense group. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because these two expense codes always use the Cash payment type.
 `PaymentTypeName`	|	`string`	|	-	|	The name of the payment type, localized to the user's language.
 `PostedAmount`	|	`decimal`	|	-	|	The amount of the expense entry, in the report currency.
 `ReceiptReceived`	|	`boolean`	|	`true` / `false`	|	Indicates whether this entry has been reviewed by a processor. Format: true or false
@@ -165,7 +166,7 @@ Name | Type | Format | Description
 `SpendCategoryCode`	|	`string`	|	-	|	The ID of the spending category that is specified for this expense entry.
 `SpendCategoryName`	|	`string`	|	-	|	The name of the spending category that is specified for this expense entry, localized to the user's language.
 `TaxReceiptType`	|	`string`	|	-	|	The receipt type for this entry. Supported values: `T` - tax receipt, `R` - regular receipt, `N` - no receipt
-`TransactionAmount`	|	`decimal`	|	-	|	**Required** The amount of the expense entry, in the transaction currency paid to the vendor.
+`TransactionAmount`	|	`decimal`	|	-	|	**Required** The amount of the expense entry, in the transaction currency paid to the vendor. This element should not be used for expense types with an expense code for Company Car or Personal Car.
 `TransactionCurrencyCode`	|	`string`	|	-	|	**Required** The 3-letter ISO 4217 currency code for the expense entry transaction amount. This is the currency in which the vendor was paid. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because for these two expense codes the currency is always the Report Currency. Updating an entry's TransactionCurrencyCode through an API call will not automatically update the ExchangeRate, both must explicitly be updated for the report to reflect the posted amount in the report's currency.
 `TransactionDate`	|	`dateTime`	|	`YYYY-MM-DD`	|	**Required** The date when the good or service associated with this expense entry was provided.
 `TripID`	|	`string`	|	-	|	The unique identifier of a trip in the Itinerary Service that includes a travel booking associated with this expense. Use GET ItineraryDetails to get information about this trip and the travel booking. This element is null when there is no trip associated with the expense.

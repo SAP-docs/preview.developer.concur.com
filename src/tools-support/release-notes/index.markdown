@@ -6,6 +6,7 @@ layout: reference
 
 ## Developer Platform Release Notes
 
+* [April 2024](./api/2024-04-04.html)
 * [March 2024](./api/2024-03-14.html)
 * [February 2024](./api/2024-02-08.html)
 * [January 2024](./api/2024-01-11.html)
@@ -32,6 +33,7 @@ layout: reference
 
 ## App Center Release Notes
 
+* [2024 Release Notes](./app-center/2024-app-center.html)
 * [2023 Release Notes](./app-center/2023-app-center.html)
 * [2022 Release Notes](./app-center/AppCenter_RN_Client_2022.pdf)
 * [2021 Release Notes](./app-center/AppCenter_RN_Client_2021.pdf)
