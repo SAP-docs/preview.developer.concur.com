@@ -9,7 +9,9 @@ layout: reference
 
 ## Description
 
-Change Notification API provides a way to book hotels/accommodations that are not available in the GDS or any other online booking management system - and TMC agent is required to do the fulfillment. Example of such accommodations are corporate apartments, speciality hotels etc. Such hotels are marked as `On Request`.
+The Hotel Service Change Notification API allows Custom Hotel Source (CHS) suppliers to provide the SAP Concur platform with details of offline cancellations and changes they make to bookings created in the SAP Concur Online Booking tool (OBT). The API allows CHS vendors to provide updates in real time so that travelers have the most up-to-date information about their booking.
+
+Change Notification API also provides a way to confirm hotels/accommodations that are not available in any online booking management system - and manual intervention is required to do the fulfillment. Example of such accommodations are corporate apartments, speciality hotels etc. Such hotels are marked as `OnRequest` for a [HotelProperty](./v4.endpoints.html#schemahotelproperty) in search response.
 
 ## Limitations
 
@@ -17,21 +19,15 @@ Access to this documentation does not provide access to the API. SAP Concur prod
 
 ## Process Flow
 
-The following steps describe the booking process of a hotel marked as `On Request`:
+Flow diagram below depicts various use-cases supported by Change Notification API. 
 
-* Booking process will not change to the user. To the user, some hotels will be marked as `On Request`, which indicates that the booking confirmation will not be available immediately.
+* User goes through regular hotel booking process in Concur's OBT. If hotel is marked as `OnRequest` - it is clearly indicated to user during booking suggesting that the booking confirmation will not be available immediately.
+* If user books an `OnRequest` hotel, booking will be created with `Pending` status. Status will be transitioned to `RESERVED` once it is confirmed by supplier using `Change Notification API` endpoint (using `changeTypeCode` as `UPDATE`). 
+* If booking is `cancelled` offline, supplier can call `Change Notification API` with `changeTypeCode` as `CANCEL` and trigger cancellation of previously booked hotel booking in Concur OBT.
+* If booking is `Replaced` offline, supplier can call `Change Notification API` with `changeTypeCode` as `REPLACE` and previously booked hotel is canceled while a replaced hotel is added in Concur OBT.
+* Supplier can also use `Change Notification API` for other offline changes to previously used hotel booking. For example, check-in/check-out dates, room rate etc. or add a new booking altogether on existing trip.
 
-* When user selects a hotel with the `On Request` option, hotel booking will be created in TripStore with status Pending, but will continue to be marked as Reserved in TSM to allow user journey to work as usual with finalize and approval flow.
-
-* Trip Overview page for traveler and approver will show booking status as Pending with `On Request` marker on the hotel and will show a message to indicate that booking is not confirmed yet.
-
-![A process flow diagram of the Hotel Service v4 API](./images/diagrams/OnRequestBookingPending.png)
-
-The complete process will require TMC action:
-
-* TMC agent confirms the booking offline and provides confirmation back to Concur via a public change notification API. 
-    * If TMC agent is not able to confirm the booking, user will be notified and booking will be either cancelled or replaced with another hotel(s).
-
+![A process flow diagram of Change Notification API](./images/diagrams/ChangeNotificationAPI.png)
 
 ## Products and Editions
 
@@ -40,20 +36,34 @@ The complete process will require TMC action:
 
 ## Scope Usage <a name="scope-usage"></a>
 
-* None
+| Name| Description                                   | Endpoint |
+| ---|-----------------------------------------------|----------|
+|`travel.hotel.write`| Read and update hotel bookings | POST |
 
 ## Dependencies <a name="dependencies"></a>
-
-* None
+CHS partner interesting in using this API must have implemented [Hotel Service v4](v4.getting-started.markdown) API and integrated hotel shop and book flows with SAP Concur OBT using their `Connector`. 
 
 ## Access Token Usage <a name="access-token-usage"></a>
 
-* None
+1. Each CHS supplier planning to use this API will need to [request access](https://developer.concur.com/api-reference/authentication/getting-started.html#obtain-your-application-clientid-and-clientsecret-) to register a client application with SAP Concur. If a supplier already have client application registered, this step can be skipped.  `clientId` and `clientSecret` obtained here need to be used for client credentials grant based auth as described [here](https://developer.concur.com/api-reference/authentication/apidoc.html#client-credentials-grant-).
+2. Suppliers will need to have `travel.hotel.write` [scope](https://developer.concur.com/api-reference/authentication/scopes.html) in application access they request above. API implementation verifies the presence of this scope in JWT before allowing access.
 
+## Authorization <a name="authorization"></a>
 
-## <a name="create-resource"></a>Change Notification Endpoint
+Change Notification API can only be used to add/update bookings by authorized CHS suppliers. Authorization is controlled by matching `clientId` of your client application for each environment with `Hotel Service Connector` already established with SAP Concur. Hence, to gain access, `clientId` for your application **must** be provided to SAP Concur team working with you. 
 
-This endpoint allows CHS suppliers to update, cancel/replace or add new hotel booking on existing trip. Trip Id must be already known and any existing bookings can be updated only if supplier is the source for the booking.
+Association of `clientId` to `Connector` is then used to enforce the following authorization rules:
+1. For existing bookings, a given client/partner can only update/replace bookings created by their connector.
+2. For new bookings, a given client/partner's connector must be enabled on SAP Concur's travel configuration used by Trip.
+
+## <a name="change-notification"></a>Change Notification Endpoint
+
+This endpoint allows CHS suppliers to update, cancel/replace or add new hotel booking on existing trip. `tripId` must be already known and any existing bookings can be updated only if supplier is the source for the booking.
+
+### API Schema
+
+TODO - new change notification schema link
+The Swagger/OpenAPI schema is available at: [API Explorer](https://developer.concur.com/api-explorer/v4-0/HotelService.html#/).
 
 ### URI
 
@@ -65,16 +75,75 @@ https://{datacenterURI}/travel/v4/trips/{tripId}/hotels/change-notification:
 
 Name|Type|Format|Description
 ---|---|---|---
-`tripId`|`string`|-|**Required** Trip ID related which will be updated.
+`tripId`|`string`|-|**Required** ID of user trip/itinerary that contains booking(s) that needs to be updated.
+
+### Examples
+TODO: Add examples of various use-cases/scenarios described in flow i.e. Confirm/update a booking, cancel a booking, replace a booking, add new booking
+#### Request 
 
 
-## API Schema
+## Schemas
 
-The Swagger/OpenAPI schema is available at: [API Explorer](https://developer.concur.com/api-explorer/v4-0/HotelService.html#/).
+### <a id="schemaHotelChangeNotificationRQ"></a> HotelChangeNotificationRQ
 
-### Functional Testing
+|Name|Type|Description|Required|
+|---|---|---|---|
+`changeTypeCode`|[`HotelChangeTypeCode`](#schemaHotelChangeTypeCode)|-|Yes|
+`changeId`|`string`|Uniquely identifies this change|Yes|
+`changeTimestamp`|`string`|-|Yes|
+`changeSource`|[`HotelChangeSource`](#schemaHotelChangeSource)|-||
+`changeDescription`|`string`|Brief description associated with the change||
+`changeReasonCode`|[`HotelChangeReasonCode`](#schemaHotelChangeReasonCode)|-||
+`oldBooking`|[`HotelBooking`](#schemaHotelBooking)|Previous state of the booking that is modified (before modification)||
+`updatedBookings`|`array` of [`HotelBooking`](#schemaHotelBooking)|New state of the bookings that are modified or added (after modification)||
 
-To download our [functional testing tool package](./v4.tests.zip).
+### <a id="schemaHotelChangeNotificationRS"></a> HotelChangeNotificationRS
 
-   * Includes a [Postman](https://www.postman.com/downloads/) collection that validates responses for all API endpoints against the OpenAPI [schema](https://developer.concur.com/api-explorer/v4-0/HotelService.html).
-   * For more detailed instructions on how to run these tests please refer to the README inside the testing tool zip.
+|Name|Type|Description|
+|---|---|---|
+`correlationId`|`string`|Unique Concur correlation ID for tracing purposes|
+`impactedBookings`|`array` of [`HotelBookingRef`](#schemaHotelBookingRef)|List of booking references that are impacted by this change (old and new). Note that this will allow suppliers to get Concur booking ids of any newly added booking and match to their confirmation number.|
+
+### <a id="schemaHotelChangeTypeCode"></a> HotelChangeTypeCode
+
+|Name|Type|Description|Example|Enum|
+|---|---|---|---|---|
+||`string`|Code describing type of change|`UPDATE`|`ADD`, `UPDATE`, `CANCEL`, `REPLACE`|
+
+### <a id="schemaHotelChangeSource"></a> HotelChangeSource
+
+|Name|Type|Description|Example|Enum|
+|---|---|---|---|---|
+||`string`|Original source of this change|`TMC`|`TMC`, `CHSSupplier`, `GDS`, `HOTEL`|
+
+### <a id="schemaHotelChangeReasonCode"></a> HotelChangeReasonCode
+
+|Name|Type|Description|Example|Enum|
+|---|---|---|---|---|
+||`string`|Code specifying reason for the change|`AGENT_UPDATED`|`USER_REQUESTED`, `AGENT_UPDATED`, `HOTEL_UPDATED`, `SUPPLIER_UPDATED`|
+
+### <a id="schemaHotelBooking"></a> HotelBooking
+
+|Name|Type|Description|Required|
+|---|---|---|---|
+`bookingId`|`string`|Concur Id of existing booking that needs to be updated (Required for `oldBookings`)|Yes|
+`confirmationCodes`|`array` of [`ConfirmationCode`](#schemaConfirmationCode)|-|Yes|
+`status`|[`ReservationStatus`](#schemaReservationStatus)|-|Yes|
+`basicHotelProperty`|[`BasicHotelProperty`](#schemaBasicHotelProperty)|-||
+`roomRate`|[`RoomRateDetails`](#schemaRoomRateDetails)|-||
+`checkin`|`string`|-||
+`checkout`|`string`|-||
+`guests`|`array` of [`Guest`](#schemaGuest)|-||
+`roomDescription`|`array` of `string`|-||
+`comments`|`array` of `string`|Comments about special requests for this booking||
+`isModifiable`|`boolean`|Whether or not this reservation can be modified.|Yes|
+
+### <a id="schemaHotelBookingRef"></a> HotelBookingRef
+
+|Name|Type|Description|Required|
+|---|---|---|---|
+`bookingId`|`string`|Concur Id of booking that is impacted with this change (existing or new)|Yes|
+`confirmationCodes`|`array` of [`ConfirmationCode`](#schemaConfirmationCode)|-|Yes|
+
+### TODO - all schema needs to be in a shared schema file (use between HS4 and this api)  
+
