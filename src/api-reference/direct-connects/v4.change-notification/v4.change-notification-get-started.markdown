@@ -1,0 +1,80 @@
+---
+title: Hotel Service v4 - Change Notification API
+layout: reference
+---
+
+{% include prerelease.html %}
+
+# Change Notification API
+
+## Description
+
+Change Notification API provides a way to book hotels/accommodations that are not available in the GDS or any other online booking management system - and TMC agent is required to do the fulfillment. Example of such accommodations are corporate apartments, speciality hotels etc. Such hotels are marked as `On Request`.
+
+## Limitations
+
+Access to this documentation does not provide access to the API. SAP Concur products are highly configurable, and not all clients will have access to all features.
+
+## Process Flow
+
+The following steps describe the booking process of a hotel marked as `On Request`:
+
+* Booking process will not change to the user. To the user, some hotels will be marked as `On Request`, which indicates that the booking confirmation will not be available immediately.
+
+* When user selects a hotel with the `On Request` option, hotel booking will be created in TripStore with status Pending, but will continue to be marked as Reserved in TSM to allow user journey to work as usual with finalize and approval flow.
+
+* Trip Overview page for traveler and approver will show booking status as Pending with `On Request` marker on the hotel and will show a message to indicate that booking is not confirmed yet.
+
+![A process flow diagram of the Hotel Service v4 API](./diagrams/OnRequestBookingPending.png)
+
+The complete process will require TMC action:
+
+* TMC agent confirms the booking offline and provides confirmation back to Concur via a public change notification API. 
+    * If TMC agent is not able to confirm the booking, user will be notified and booking will be either cancelled or replaced with another hotel(s).
+
+
+## Products and Editions
+
+* Concur Travel Professional Edition
+* Concur Travel Standard Edition
+
+## Scope Usage <a name="scope-usage"></a>
+
+* None
+
+## Dependencies <a name="dependencies"></a>
+
+* None
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+* None
+
+
+## <a name="create-resource"></a>Change Notification Endpoint
+
+This endpoint allows CHS suppliers to update, cancel/replace or add new hotel booking on existing trip. Trip Id must be already known and any existing bookings can be updated only if supplier is the source for the booking.
+
+### URI
+
+```shell
+https://{datacenterURI}/travel/v4/trips/{tripId}/hotels/change-notification:
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`tripId`|`string`|-|**Required** Trip ID related which will be updated.
+
+
+## API Schema
+
+The Swagger/OpenAPI schema is available at: [API Explorer](https://developer.concur.com/api-explorer/v4-0/HotelService.html#/).
+
+### Functional Testing
+
+To download our [functional testing tool package](./v4.tests.zip).
+
+   * Includes a [Postman](https://www.postman.com/downloads/) collection that validates responses for all API endpoints against the OpenAPI [schema](https://developer.concur.com/api-explorer/v4-0/HotelService.html).
+   * For more detailed instructions on how to run these tests please refer to the README inside the testing tool zip.
