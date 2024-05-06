@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Direct Connect - Hotel Service v4 - Getting Started</title>
+  <title> SAP Concur Developer Center | Hotel Service v4 - Change Notification API</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/direct-connects/hotel-service-4/v4.getting-started.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/direct-connects/hotel-service-4/v4.change-notification-get-started.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -548,13 +548,13 @@
 
     
 
-    <li class="list-group-item list-toggle active">
+    <li class="list-group-item list-toggle ">
       <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-direct-connect-hotel-service-v4">
         Direct Connect - Hotel Service v4
       </a>
-      <ul id="collapse-direct-connect-hotel-service-v4" class="collapse in">
+      <ul id="collapse-direct-connect-hotel-service-v4" class="collapse ">
         
-          <li  class="active" >
+          <li >
             <a href="/api-reference/direct-connects/hotel-service-4/v4.getting-started.html">Getting Started</a>
           </li>
         
@@ -1205,27 +1205,35 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="direct-connect---hotel-service-v4---getting-started">Direct Connect - Hotel Service v4 - Getting Started</h1>
+        <div id="attn-prerelease">
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
 
-<p>Hotel Service v4 API provides a method for Custom Hotel Source suppliers to provide hotel inventory, rates, and booking related functionality to users of the SAP Concur Online Booking Tool (OBT).</p>
+<h1 id="change-notification-api">Change Notification API</h1>
 
-<p>This guide provides information on how the hotel supplier can make their content available for Concur Travel users. Once the interface has been developed and certified with SAP Concur, the inventory will begin appearing in hotel searches by opted-in Travel users.</p>
+<h2 id="description">Description</h2>
 
-<p>This API has client/server architecture, where SAP Concur services act as client, pulling information from the hotel suppliers, who acts as server, responding to requests.</p>
+<p>The Hotel Service Change Notification API allows Custom Hotel Source (CHS) suppliers to provide the SAP Concur platform with details of offline cancellations and changes they make to bookings created in the SAP Concur Online Booking tool (OBT). The API allows CHS vendors to provide updates in real time so that travelers have the most up-to-date information about their booking.</p>
+
+<p>Change Notification API also provides a way to confirm hotels/accommodations that are not available in any online booking management system - and manual intervention is required to do the fulfillment. Example of such accommodations are corporate apartments, speciality hotels etc. Such hotels are marked as <code class="language-plaintext highlighter-rouge">OnRequest</code> for a <a href="./v4.schemas.html#schemahotelproperty">HotelProperty</a> in search response.</p>
 
 <h2 id="limitations">Limitations</h2>
 
 <p>Access to this documentation does not provide access to the API. SAP Concur products are highly configurable, and not all clients will have access to all features.</p>
 
-<h2 id="prior-versions">Prior Versions</h2>
-
-<p>Hotel Service v2 documentation is available <a href="/api-reference/direct-connects/hotel-service-2/Introduction.html">here</a>.</p>
-
 <h2 id="process-flow">Process Flow</h2>
 
-<p>This is a basic scenario encompassing all the functionality provided by Hotel Service v4 incorporated into Concur Travel starting from a hotel search through to confirmation of a booking, modification of booking, and ending with a cancellation.</p>
+<p>Flow diagram below depicts various use-cases supported by Change Notification API.</p>
 
-<p><img src="./images/diagrams/hs4-sequence-diagram.png" alt="A process flow diagram of the Hotel Service v4 API" /></p>
+<ul>
+  <li>User goes through regular hotel booking process in Concur’s OBT. If hotel is marked as <code class="language-plaintext highlighter-rouge">OnRequest</code> - it is clearly indicated to user during booking suggesting that the booking confirmation will not be available immediately.</li>
+  <li>If user books an <code class="language-plaintext highlighter-rouge">OnRequest</code> hotel, booking will be created with <code class="language-plaintext highlighter-rouge">Pending</code> status. Status will be transitioned to <code class="language-plaintext highlighter-rouge">RESERVED</code> once it is confirmed by supplier using <code class="language-plaintext highlighter-rouge">Change Notification API</code> endpoint (using <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">UPDATE</code>).</li>
+  <li>If booking is <code class="language-plaintext highlighter-rouge">cancelled</code> offline, supplier can call <code class="language-plaintext highlighter-rouge">Change Notification API</code> with <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">CANCEL</code> and trigger cancellation of previously booked hotel booking in Concur OBT.</li>
+  <li>If booking is <code class="language-plaintext highlighter-rouge">Replaced</code> offline, supplier can call <code class="language-plaintext highlighter-rouge">Change Notification API</code> with <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">REPLACE</code> and previously booked hotel is canceled while a replaced hotel is added in Concur OBT.</li>
+  <li>Supplier can also use <code class="language-plaintext highlighter-rouge">Change Notification API</code> for other offline changes to previously used hotel booking. For example, check-in/check-out dates, room rate etc. or add a new booking altogether on existing trip.</li>
+</ul>
+
+<p><img src="./images/diagrams/ChangeNotificationAPI.png" alt="A process flow diagram of Change Notification API" /></p>
 
 <h2 id="products-and-editions">Products and Editions</h2>
 
@@ -1236,248 +1244,58 @@
 
 <h2 id="scope-usage-">Scope Usage <a name="scope-usage"></a></h2>
 
-<ul>
-  <li>None</li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">travel.hotel.write</code></td>
+      <td>Read and update hotel bookings</td>
+      <td>POST</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="dependencies-">Dependencies <a name="dependencies"></a></h2>
-
-<ul>
-  <li>None</li>
-</ul>
+<p>CHS partner interesting in using this API must have implemented <a href="v4.getting-started.markdown">Hotel Service v4</a> API and integrated hotel shop and book flows with SAP Concur OBT using their <code class="language-plaintext highlighter-rouge">Connector</code>.</p>
 
 <h2 id="access-token-usage-">Access Token Usage <a name="access-token-usage"></a></h2>
 
-<ul>
-  <li>None</li>
-</ul>
+<ol>
+  <li>Each CHS supplier planning to use this API will need to <a href="https://developer.concur.com/api-reference/authentication/getting-started.html#obtain-your-application-clientid-and-clientsecret-">request access</a> to register a client application with SAP Concur. If a supplier already have client application registered, this step can be skipped.  <code class="language-plaintext highlighter-rouge">clientId</code> and <code class="language-plaintext highlighter-rouge">clientSecret</code> obtained here need to be used for client credentials grant based auth as described <a href="https://developer.concur.com/api-reference/authentication/apidoc.html#client-credentials-grant-">here</a>.</li>
+  <li>Suppliers will need to have <code class="language-plaintext highlighter-rouge">travel.hotel.write</code> <a href="https://developer.concur.com/api-reference/authentication/scopes.html">scope</a> in application access they request above. API implementation verifies the presence of this scope in JWT before allowing access.</li>
+</ol>
 
-<h3 id="reservation-and-read-requests">Reservation and Read Requests</h3>
+<h2 id="authorization-">Authorization <a name="authorization"></a></h2>
 
-<p>If a Read request does not arrive within five minutes for a given reservation, the supplier should treat that reservation as an orphan and should seek to cancel it.</p>
+<p>Change Notification API can only be used to add/update bookings by authorized CHS suppliers. Authorization is controlled by matching <code class="language-plaintext highlighter-rouge">clientId</code> of your client application for each environment with <code class="language-plaintext highlighter-rouge">Hotel Service Connector</code> already established with SAP Concur. Hence, to gain access, <code class="language-plaintext highlighter-rouge">clientId</code> for your application <strong>must</strong> be provided to SAP Concur team working with you.</p>
 
-<h2 id="supported-operations">Supported Operations</h2>
+<p>Association of <code class="language-plaintext highlighter-rouge">clientId</code> to <code class="language-plaintext highlighter-rouge">Connector</code> is then used to enforce the following authorization rules:</p>
+<ol>
+  <li>For existing bookings, a given client/partner can only update/replace bookings created by their connector.</li>
+  <li>For new bookings, a given client/partner’s connector must be enabled on SAP Concur’s travel configuration used by Trip.</li>
+</ol>
 
-<table>
-  <thead>
-    <tr>
-      <th>Operation</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><a href="./v4.endpoints.html#search-hotels-"><code class="language-plaintext highlighter-rouge">/hotels/search</code></a></td>
-      <td>Perform the initial search for hotels.</td>
-    </tr>
-    <tr>
-      <td><a href="./v4.endpoints.html#rates-"><code class="language-plaintext highlighter-rouge">/hotels/rates</code></a></td>
-      <td>Retrieve hotel rates.</td>
-    </tr>
-    <tr>
-      <td><a href="./v4.endpoints.html#rate-details-"><code class="language-plaintext highlighter-rouge">/hotels/ratedetails</code></a></td>
-      <td>Retrieve details the rates of a property, guarantee, cancellation penalty, or nightly prices. This action is required if these details are missing from the <code class="language-plaintext highlighter-rouge">/hotels/rates</code> response or <code class="language-plaintext highlighter-rouge">rateDetailsCallRequired</code> flag is set to true for a given rate.</td>
-    </tr>
-    <tr>
-      <td><a href="/.v4.endpoints.html#hotel-details-"><code class="language-plaintext highlighter-rouge">/hotels/details</code></a></td>
-      <td>Retrieve hotel description info including media.</td>
-    </tr>
-    <tr>
-      <td><a href="./v4.endpoints.html#reservation-"><code class="language-plaintext highlighter-rouge">/hotels/reservation</code></a></td>
-      <td>Reserve hotel rate.</td>
-    </tr>
-    <tr>
-      <td><a href="./v4.endpoints.html#read-"><code class="language-plaintext highlighter-rouge">/hotels/reservation/read</code></a></td>
-      <td>Read reservation details. Used to acknowledge the receipt of booking confirmation, as well as write information to itinerary while reserving a hotel.</td>
-    </tr>
-    <tr>
-      <td><a href="./v4.endpoints.html#modify-"><code class="language-plaintext highlighter-rouge">/hotels/reservation/modify</code></a></td>
-      <td>Modify given reservation.</td>
-    </tr>
-    <tr>
-      <td><a href="./v4.endpoints.html#cancel-"><code class="language-plaintext highlighter-rouge">/hotels/reservation/cancel</code></a></td>
-      <td>Cancel specified reservation.</td>
-    </tr>
-  </tbody>
-</table>
+<h2 id="change-notification-endpoint"><a name="change-notification"></a>Change Notification Endpoint</h2>
 
-<h2 id="supported-ota-codes-">Supported OTA Codes <a id="supported-ota-codes"></a></h2>
+<p>This endpoint allows CHS suppliers to update, cancel/replace or add new hotel booking on existing trip. <code class="language-plaintext highlighter-rouge">tripId</code> must be already known and any existing bookings can be updated only if supplier is the source for the booking.</p>
 
-<p>The current list of supported OTA codes for different code list types (RMA, HAC etc.) can be found <a href="./v4.supported-ota-codes.html">here</a>.</p>
+<h3 id="api-schema">API Schema</h3>
 
-<h2 id="supported-error-codes-">Supported Error Codes <a id="supported-error-codes"></a></h2>
+<p>TODO - new change notification schema link
+The Swagger/OpenAPI schema is available at: <a href="https://developer.concur.com/api-explorer/v4-0/HotelService.html#/">API Explorer</a>.</p>
 
-<p>The current list of supported OTA error codes can be found <a href="./v4.supported-error-codes.html">here</a>.</p>
+<h3 id="uri">URI</h3>
 
-<h2 id="non-functional-requirements"><a name="non-functional-requirements"></a>Non Functional Requirements</h2>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/travel/v4/trips/<span class="o">{</span>tripId<span class="o">}</span>/hotels/change-notification:
+</code></pre></div></div>
 
-<h3 id="payload-limits">Payload Limits</h3>
-
-<p>Please note that any responses higher than the suggested content-length may be dropped/truncated and result in an error.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Operation</th>
-      <th>Maximum Response (content-length)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/search</code></td>
-      <td>5 MB</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/rates</code></td>
-      <td>5 MB</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/details</code></td>
-      <td>5 MB</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/ratedetails</code></td>
-      <td>5 MB</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="recommended-response-times-and-retries">Recommended Response Times and Retries</h3>
-
-<p>All endpoints carry a timeout of 55 seconds. Some operations below support retries in case of 5xx errors as noted. No endpoints will attempt a retry in the event there is a timeout.</p>
-
-<p>SAP Concur services have monitoring in place for each endpoint and will open a ticket with suppliers if a significant degradation or variance of service quality is detected.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Operation</th>
-      <th>Recommended Response Times</th>
-      <th>Support Retries (for 5xx errors)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/search</code></td>
-      <td>&lt; 5 seconds</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/rates</code></td>
-      <td>&lt; 5 seconds</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/details</code></td>
-      <td>&lt; 1 second</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/ratedetails</code></td>
-      <td>&lt; 1 second</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation</code></td>
-      <td>&lt; 5 seconds</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation/read</code></td>
-      <td>&lt; 1 second</td>
-      <td>Yes</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation/modify</code></td>
-      <td>&lt; 5 seconds</td>
-      <td>No</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation/cancel</code></td>
-      <td>&lt; 5 seconds</td>
-      <td>No</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="recommended-throughput">Recommended Throughput</h3>
-
-<p>Higher throughput allows system to scale and serve large number of travelers. We recommend suppliers provision for resources to support the following throughput.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Operation</th>
-      <th>Recommended Throughput (Requests Per Minute)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/search</code></td>
-      <td>&lt; 50</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/rates</code></td>
-      <td>&lt; 100</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/details</code></td>
-      <td>&lt; 100</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/ratedetails</code></td>
-      <td>&lt; 50</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation</code></td>
-      <td>&lt; 20</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation/read</code></td>
-      <td>&lt; 20</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation/modify</code></td>
-      <td>&lt; 10</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">/hotels/reservation/cancel</code></td>
-      <td>&lt; 10</td>
-    </tr>
-  </tbody>
-</table>
-
-<p><strong>Note</strong>: To prevent no show fees, duplicate bookings and other similar issues, we requires the Hotel Supplier auto-cancel a reservation if a corresponding <code class="language-plaintext highlighter-rouge">/hotels/reservations/read</code> call is not made by SAP Concur systems within 5 minutes after the <code class="language-plaintext highlighter-rouge">/hotels/reservation</code> call was made.</p>
-
-<h3 id="emergency-technical-contact">Emergency Technical Contact</h3>
-
-<p>The hotel supplier needs to provide emergency technical contact email that will be used for communication in case of blocking technical issues.</p>
-
-<h3 id="testing-environment">Testing Environment</h3>
-
-<p>We require the hotel supplier to provide a testing URL or specify properties for testing in a production URL. We require the ability to preform test bookings with test credit cards.</p>
-
-<h3 id="security">Security</h3>
-
-<h4 id="pci-dss-compliance">PCI DSS Compliance</h4>
-
-<p>As sensitive data and payment card details are transferred via API, hotel suppliers are required to comply with PCI DSS standards.</p>
-
-<h4 id="https">HTTPS</h4>
-
-<p>We require Transport Layer Security v1.2 (TLS 1.2) or higher SSL protocol with a 256-bit AES cipher for data transfers. The hotel supplier is required to provide HTTPS URLs of its endpoint. Standard HTTPS port 443 should be used.</p>
-
-<h3 id="urls">URLs</h3>
-
-<p>We will receive a single URL for each environment (Test and Production) from the hotel supplier. All requests will go to that URL.</p>
-
-<h3 id="authentication">Authentication</h3>
-
-<p>SAP Concur services will send a username and password in the HTTP header (Authorization) where the value of the header will be a <code class="language-plaintext highlighter-rouge">base64</code> encoded <code class="language-plaintext highlighter-rouge">string</code> in the form of <code class="language-plaintext highlighter-rouge">Basic &lt;username:password&gt;</code>. If the username and password generates an authentication error, then there will be a HTTP 401 response.</p>
-
-<h2 id="http-headers-">HTTP Headers <a name="http-headers"></a></h2>
-
-<p>SAP Concur services will send the following HTTP headers in every request. Please note that some libraries used to handle the requests may be case sensitive and that the SAP Concur <code class="language-plaintext highlighter-rouge">login-id</code> and traveler <code class="language-plaintext highlighter-rouge">uuid</code> are now part of the payload for each request and no longer available as headers.</p>
+<h3 id="parameters">Parameters</h3>
 
 <table>
   <thead>
@@ -1490,127 +1308,625 @@
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">Authorization</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">base64</code></td>
-      <td>An encoded string in the form of <code class="language-plaintext highlighter-rouge">Basic &lt;username:password&gt;</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Content-Type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">tripId</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td>All communication with the HS4 API is by way of a <code class="language-plaintext highlighter-rouge">application/json</code> content type.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Accept</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>SAP Concur will always set the <code class="language-plaintext highlighter-rouge">Accept</code> header to <code class="language-plaintext highlighter-rouge">application/json</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">concur-correlationid</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>In order to assist with troubleshooting, SAP Concur provides a unique <code class="language-plaintext highlighter-rouge">correlationId</code> in the request header. This unique code can be used during troubleshooting as it identifies the API call in the log files.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">Accept-Language</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td>Value of this header will follow language tag of the format LanguageCode-CountryCode, e.g. <code class="language-plaintext highlighter-rouge">en-US</code>, <code class="language-plaintext highlighter-rouge">fr-CA</code>, <code class="language-plaintext highlighter-rouge">de-CH</code> etc.</td>
+      <td><strong>Required</strong> ID of user trip/itinerary that contains booking(s) that needs to be updated.</td>
     </tr>
   </tbody>
 </table>
 
-<h2 id="confirmation-codes-">Confirmation Codes <a name="confirmation-codes"></a></h2>
+<h3 id="examples">Examples</h3>
 
-<p>Please note current definitions of <code class="language-plaintext highlighter-rouge">ConfirmationCodeType</code> differ from what was used in <a href="./hotel-service-2/Introduction.html">Hotel Service v2</a> (HSv2).</p>
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">RESERVATION</code>: Maps to OTA Unique ID Type <code class="language-plaintext highlighter-rouge">14</code> and has no equivalent for HSv2. This will be the record locator of supplier PNR and will be provided in all subsequent read/modify/cancel request on a booking. This is optional and will be mostly pass through for SAP Concur systems.</li>
-  <li><code class="language-plaintext highlighter-rouge">SUPPLIER_CONFIRMATION</code>: <strong>(Required)</strong> Maps to OTA Unique ID Type <code class="language-plaintext highlighter-rouge">40</code> and represents supplier’s confirmation number. This also be provided in all subsequent read/modify/cancel request on a booking, and it is also used in the passive segment created in the GDS. (Equivalent to <code class="language-plaintext highlighter-rouge">14</code> in HSv2).</li>
-  <li><code class="language-plaintext highlighter-rouge">HOTEL_CONFIRMATION</code>: Maps to OTA Unique ID Type <code class="language-plaintext highlighter-rouge">10</code>. Used by travelers if they want to change their reservation outside of SAP Concur Online Booking Tool. If the property confirmation code is not available, the supplier may send the aggregator confirmation code in this field. (Equivalent to <code class="language-plaintext highlighter-rouge">1000</code> in HSv2). This field will appear on the itinerary page together with <code class="language-plaintext highlighter-rouge">SUPPLIER_CONFIRMATION</code> confirmation number.</li>
-  <li><code class="language-plaintext highlighter-rouge">CANCELLATION</code>: <strong>(Required)</strong> Maps to OTA Unique ID Type <code class="language-plaintext highlighter-rouge">15</code> and is same as HSv2 and must be provided as a part of <code class="language-plaintext highlighter-rouge">CancelDetails</code> response object.</li>
-  <li><code class="language-plaintext highlighter-rouge">CONCUR_GDS_REFERENCE</code>: This is custom code for <strong>future</strong> use (Type <code class="language-plaintext highlighter-rouge">14</code>) which will be sent by SAP Concur in read/modify requests and will provide Concur Booking Record Locator for passives.</li>
-  <li><code class="language-plaintext highlighter-rouge">PASSIVE_CONFIRMATION</code>: Use this code type to provide confirmation code value that you need to use in passive segment. If not provided value from <code class="language-plaintext highlighter-rouge">SUPPLIER_CONFIRMATION</code> is used instead in passive segment.</li>
-  <li><code class="language-plaintext highlighter-rouge">PIN</code>: Use this code type to provide any pin number that may be required to modify the booking at a later point. If provided this code will be returned back in all subsequent calls for this booking. (Sometimes sent as <code class="language-plaintext highlighter-rouge">1000</code> in HSv2)</li>
-</ul>
+<p>Bellow are examples of JSON payloads that can be sent to the endpoint to update, cancel/replace or add new hotel booking on existing trip (colapsed for doc readability).</p>
 
-<h2 id="vendorsupplier-provided-virtual-payment-">Vendor/Supplier Provided Virtual Payment <a name="vendor-virtual-payment"></a></h2>
-<p>With the current Hotel Service v2, several mechanisms are in place to support vendor provided virtual payments (not managed by SAP Concur) as required by different suppliers. With HSv4, support for the vendor provided virtual payment will be achieved through the <code class="language-plaintext highlighter-rouge">acceptedPayments</code> element.   Details of this are below.</p>
+<details>
+<summary>Add booking to existing trip</summary>
 
-<ol>
-  <li>Suppliers wanting to use their own virtual payment solution will need to provide <code class="language-plaintext highlighter-rouge">VENDOR_PROVIDED</code> as one of the option in <code class="language-plaintext highlighter-rouge">acceptedPayments</code> element of <a href="./v4.schemas.html#schemaroomrateresponse">RoomRate</a> as returned in response of <a href="./v4.endpoints.html#rates-"><code class="language-plaintext highlighter-rouge">/hotels/rates</code></a> endpoint.</li>
-  <li>If user selects this payment option during booking (<a href="./v4.endpoints.html#reservation-"><code class="language-plaintext highlighter-rouge">/hotels/reservation</code></a> endpoint), <a href="">ReservationCriteria</a> will have <code class="language-plaintext highlighter-rouge">paymentModeIndicator</code> set to value <code class="language-plaintext highlighter-rouge">VENDOR_VIRTUAL_CARD</code>. This indicator suggests that all payment will be handled by suppliers and no other payment details will be provided for this scenario.</li>
-</ol>
-
-<p><strong>Note</strong>:  The acceptedPayments element should also contain all the cards that are accepted at the property. In the first release for Hotel, customers will have the option of selecting their own personal card or the vendor’s virtual card as payment for their reservation.  Support for Policy rules around this option will be introduced in a subsequent release. If a rule exists where a ghost/corporate card is <code class="language-plaintext highlighter-rouge">Required</code>, this will override the <code class="language-plaintext highlighter-rouge">VENDOR_PROVIDED</code> option.</p>
-
-<h2 id="error-handling-">Error Handling <a name="error-handling"></a></h2>
-
-<p>All HSv4 endpoints use consistent error handling. API responses can have one of the following HTTP response code:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>HTTP Code</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>200</td>
-      <td>Operation successful without any errors.</td>
-    </tr>
-    <tr>
-      <td>400</td>
-      <td>Invalid client request. Request shouldn’t be retried without changing it. Response should follow <a href="./v4.schemas.html#schemaerror">Error</a> schema and include OTA Code providing accurate reason for request being invalid.</td>
-    </tr>
-    <tr>
-      <td>401</td>
-      <td>Request unauthorized. Credentials used for the request are not valid.</td>
-    </tr>
-    <tr>
-      <td>500</td>
-      <td>System error while processing the request. Request can be retried as is at a later time. Response should follow <a href="./v4.schemas.html#schemaerror">Error</a> schema. OTA Code is optional for such errors but we expect useful message for better troubleshooting.</td>
-    </tr>
-  </tbody>
-</table>
-
-<p>As noted above, please ensure to provide appropriate OTA code for all application level errors (with HTTP 400 response code). SAP Concur rely on OTA Code to display localized message to end users. Please refer to <a href="./v4.supported-error-codes.html">OTA error code list</a> for extensive list of error codes that are supported today. If you see a need for additional OTA codes to be supported, please contact Concur Support.</p>
-
-<p>Errors should always be returned in an <a href="./v4.schemas.html#schemaerror">Error</a> schema response. For example:</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
-  "otaCode": 69,
-  "message": “Minimum stay criteria not fulfilled"
+```shell 
+{
+    "changeId": "00000000-0000-0000-0000-000000000000",
+    "changeTimestamp": "2024-04-30T12:26:18-05:00",
+    "changeTypeCode": "ADD",
+    "updatedBookings": [
+        {
+            "basicHotelProperty": {
+                "address": {
+                    "addressLines": [
+                        "line 1",
+                        "line 2"
+                    ],
+                    "city": "dummy city",
+                    "countryCode": "dummy country code",
+                    "postalCode": "dummy postal code",
+                    "state": "dummy state",
+                    "stateName": "dummy state name"
+                },
+                "chainCode": "dummy chain code",
+                "cityCode": "dummy city code",
+                "contactInfo": {
+                    "emails": [
+                        "someone@somewhere.com"
+                    ],
+                    "faxNumber": "000",
+                    "phoneNumbers": [
+                        "000",
+                        "000"
+                    ]
+                },
+                "hotelName": "dummy hotel name",
+                "position": {
+                    "latitude": 0,
+                    "longitude": 0
+                },
+                "propertyCode": "dummy property code"
+            },
+            "checkin": "2024-04-30",
+            "checkout": "2024-05-03",
+            "confirmationCodes": [
+                {
+                    "code": "dummy supplier confirmation code",
+                    "codeType": "SUPPLIER_CONFIRMATION"
+                }
+            ],
+            "guests": [
+                {
+                    "address": {
+                        "addressLines": [
+                            "123 Green St",
+                            ""
+                        ],
+                        "city": "Albuquerque",
+                        "countryCode": "US",
+                        "postalCode": "87104",
+                        "state": "New Mexico"
+                    },
+                    "birthdate": "1959-09-07",
+                    "companyName": "Best Company Ever",
+                    "contactInfo": {
+                        "emails": [
+                            "w@w.com"
+                        ],
+                        "faxNumber": "000",
+                        "phoneNumbers": [
+                            "000"
+                        ]
+                    },
+                    "firstname": "John",
+                    "lastname": "Smith"
+                }
+            ],
+            "isModifiable": true,
+            "roomRate": {
+                "cancelPenalties": {
+                    "penalties": [
+                        {
+                            "amountPercent": {
+                                "amount": {
+                                    "amount": 100,
+                                    "currencyCode": "USD"
+                                },
+                                "applyAs": "FIRST_AND_LAST_NIGHT_DEPOSIT",
+                                "basisType": "FULL_STAY",
+                                "feesInclusive": true,
+                                "numberOfNights": 3,
+                                "percent": 99,
+                                "taxInclusive": true
+                            },
+                            "cancelDeadline": "2018-10-10T19:10:59Z",
+                            "description": "\u003cb\u003edummy description\u003c/b\u003e",
+                            "refundableStatus": "FULLY_REFUNDABLE"
+                        },
+                        {
+                            "cancelDeadline": "2018-10-10T19:10:59Z",
+                            "description": "\u003cb\u003eanother one\u003c/b\u003e",
+                            "refundableStatus": "FULLY_REFUNDABLE"
+                        }
+                    ],
+                    "penaltyDescription": "dummy penalty description"
+                },
+                "guarantee": {
+                    "acceptedPayments": [
+                        "VISA"
+                    ],
+                    "guaranteeType": "DEPOSIT_REQUIRED"
+                },
+                "nightlyPrices": [
+                    {
+                        "basePrice": 90,
+                        "currencyCode": "USD",
+                        "endDate": "2024-05-01",
+                        "fees": {
+                            "amount": 0
+                        },
+                        "startDate": "2024-04-30",
+                        "taxes": {
+                            "amount": 10,
+                            "taxBreakdown": [
+                                {
+                                    "amount": 6,
+                                    "fttCode": 33,
+                                    "inclusive": true
+                                },
+                                {
+                                    "amount": 4,
+                                    "fttCode": 44,
+                                    "inclusive": true
+                                }
+                            ]
+                        },
+                        "totalPrice": 120
+                    },
+                    {
+                        "basePrice": 10,
+                        "currencyCode": "EUR",
+                        "endDate": "2024-05-02",
+                        "fees": {
+                            "amount": 20,
+                            "feeBreakdown": [
+                                {
+                                    "amount": 6,
+                                    "fttCode": 33,
+                                    "inclusive": true
+                                },
+                                {
+                                    "amount": 4,
+                                    "fttCode": 44,
+                                    "inclusive": true
+                                }
+                            ]
+                        },
+                        "startDate": "2024-05-01",
+                        "taxes": {
+                            "amount": 0
+                        },
+                        "totalPrice": 60
+                    }
+                ],
+                "prepayRequired": true,
+                "rateCategory": "AAA",
+                "rateDescription": [
+                    "dummy rate description 0",
+                    "dummy rate description 1"
+                ],
+                "ratePlanId": "dummy rate plan id",
+                "refundable": true,
+                "roomId": "dummy room id",
+                "totalPrice": {
+                    "currencyCode": "USD",
+                    "fees": 10,
+                    "taxes": 20,
+                    "totalAfterTax": 130,
+                    "totalBeforeTax": 100
+                }
+            },
+            "status": "RESERVED"
+        }
+    ]
 }
-</code></pre></div></div>
-<p>If <code class="language-plaintext highlighter-rouge">otaCode</code> is missing in an error, then only generic error is displayed to user and may not provide proper context.  Any message text from the supplier will be logged but SAP Concur does not support displaying of supplier generated error messages directly in the UI.</p>
+```
 
-<h2 id="api-schema">API Schema</h2>
+</details>
 
-<p>The Swagger/OpenAPI schema is available at: <a href="https://developer.concur.com/api-explorer/v4-0/HotelService.html#/">API Explorer</a>.</p>
+<details>
+<summary>Update booking on existing trip</summary>
 
-<h2 id="api-testing">API Testing</h2>
-<p>To enable faster certification, Suppliers can use the following testing tools to validate the majority of functional and non-functional requirements of this API during the development phase. Please use these tools both during development and once development is complete.</p>
+```shell
 
-<h3 id="functional-testing">Functional Testing</h3>
+{
+    "changeId": "00000000-0000-0000-0000-000000000000",
+    "changeTimestamp": "2024-04-30T12:26:16-05:00",
+    "changeTypeCode": "UPDATE",
+    "oldBooking": {
+        "bookingId": "00000000-0000-0000-0000-000000000000",
+        "confirmationCodes": null,
+        "status": "PENDING_CONFIRMATION"
+    },
+    "updatedBookings": [
+        {
+            "bookingId": "00000000-0000-0000-0000-000000000000",
+            "confirmationCodes": null,
+            "roomDescription": [
+                "updated room description"
+            ],
+            "status": "RESERVED"
+        }
+    ]
+}
+```       
+</details>
+<details>
+<summary>Replace booking on existing trip</summary>
 
-<p>To download our <a href="./v4.tests.zip">functional testing tool package</a>.</p>
+```shell
+{
+    "changeId": "00000000-0000-0000-0000-000000000000",
+    "changeTimestamp": "2024-04-30T12:26:19-05:00",
+    "changeTypeCode": "REPLACE",
+    "oldBooking": {
+        "bookingId": "00000000-0000-0000-0000-000000000000",
+        "confirmationCodes": [
+            {
+                "code": "000000-TEST",
+                "codeType": "CANCELLATION"
+            }
+        ],
+        "status": "CANCELLED"
+    },
+    "updatedBookings": [
+        {
+            "basicHotelProperty": {
+                "address": {
+                    "addressLines": [
+                        "line 1",
+                        "line 2"
+                    ],
+                    "city": "dummy city",
+                    "countryCode": "dummy country code",
+                    "postalCode": "dummy postal code",
+                    "state": "dummy state",
+                    "stateName": "dummy state name"
+                },
+                "chainCode": "dummy chain code",
+                "cityCode": "dummy city code",
+                "contactInfo": {
+                    "emails": [
+                        "someone@somewhere.com"
+                    ],
+                    "faxNumber": "456",
+                    "phoneNumbers": [
+                        "123",
+                        "890"
+                    ]
+                },
+                "hotelName": "dummy hotel name",
+                "position": {
+                    "latitude": 2,
+                    "longitude": 3
+                },
+                "propertyCode": "dummy property code"
+            },
+            "checkin": "2024-04-30",
+            "checkout": "2024-05-03",
+            "confirmationCodes": [
+                {
+                    "code": "dummy supplier confirmation code",
+                    "codeType": "SUPPLIER_CONFIRMATION"
+                }
+            ],
+            "guests": [
+                {
+                    "address": {
+                        "addressLines": [
+                            "123 Green St",
+                            ""
+                        ],
+                        "city": "Albuquerque",
+                        "countryCode": "US",
+                        "postalCode": "87104",
+                        "state": "New Mexico"
+                    },
+                    "birthdate": "1959-09-07",
+                    "companyName": "Best Company Ever",
+                    "contactInfo": {
+                        "emails": [
+                            "w@w.com"
+                        ],
+                        "faxNumber": "456",
+                        "phoneNumbers": [
+                            "123"
+                        ]
+                    },
+                    "firstname": "John",
+                    "lastname": "Smith"
+                }
+            ],
+            "isModifiable": true,
+            "roomRate": {
+                "cancelPenalties": {
+                    "penalties": [
+                        {
+                            "amountPercent": {
+                                "amount": {
+                                    "amount": 100,
+                                    "currencyCode": "USD"
+                                },
+                                "applyAs": "FIRST_AND_LAST_NIGHT_DEPOSIT",
+                                "basisType": "FULL_STAY",
+                                "feesInclusive": true,
+                                "numberOfNights": 3,
+                                "percent": 99,
+                                "taxInclusive": true
+                            },
+                            "cancelDeadline": "2018-10-10T19:10:59Z",
+                            "description": "<b>dummy description</b>",
+                            "refundableStatus": "FULLY_REFUNDABLE"
+                        },
+                        {
+                            "cancelDeadline": "2018-10-10T19:10:59Z",
+                            "description": "<b>another one</b>",
+                            "refundableStatus": "FULLY_REFUNDABLE"
+                        }
+                    ],
+                    "penaltyDescription": "dummy penalty description"
+                },
+                "guarantee": {
+                    "acceptedPayments": [
+                        "VISA"
+                    ],
+                    "guaranteeType": "DEPOSIT_REQUIRED"
+                },
+                "nightlyPrices": [
+                    {
+                        "basePrice": 90,
+                        "currencyCode": "USD",
+                        "endDate": "2024-05-01",
+                        "fees": {
+                            "amount": 0
+                        },
+                        "startDate": "2024-04-30",
+                        "taxes": {
+                            "amount": 10,
+                            "taxBreakdown": [
+                                {
+                                    "amount": 6,
+                                    "fttCode": 33,
+                                    "inclusive": true
+                                },
+                                {
+                                    "amount": 4,
+                                    "fttCode": 44,
+                                    "inclusive": true
+                                }
+                            ]
+                        },
+                        "totalPrice": 120
+                    },
+                    {
+                        "basePrice": 10,
+                        "currencyCode": "EUR",
+                        "endDate": "2024-05-02",
+                        "fees": {
+                            "amount": 20,
+                            "feeBreakdown": [
+                                {
+                                    "amount": 6,
+                                    "fttCode": 33,
+                                    "inclusive": true
+                                },
+                                {
+                                    "amount": 4,
+                                    "fttCode": 44,
+                                    "inclusive": true
+                                }
+                            ]
+                        },
+                        "startDate": "2024-05-01",
+                        "taxes": {
+                            "amount": 0
+                        },
+                        "totalPrice": 60
+                    }
+                ],
+                "prepayRequired": true,
+                "rateCategory": "AAA",
+                "rateDescription": [
+                    "dummy rate description 0",
+                    "dummy rate description 1"
+                ],
+                "ratePlanId": "dummy rate plan id",
+                "refundable": true,
+                "roomId": "dummy room id",
+                "totalPrice": {
+                    "currencyCode": "USD",
+                    "fees": 10,
+                    "taxes": 20,
+                    "totalAfterTax": 130,
+                    "totalBeforeTax": 100
+                }
+            },
+            "status": "RESERVED"
+        },
+        {
+            "basicHotelProperty": {
+                "address": {
+                    "addressLines": [
+                        "line 1",
+                        "line 2"
+                    ],
+                    "city": "dummy city",
+                    "countryCode": "dummy country code",
+                    "postalCode": "dummy postal code",
+                    "state": "dummy state",
+                    "stateName": "dummy state name"
+                },
+                "chainCode": "dummy chain code",
+                "cityCode": "dummy city code",
+                "contactInfo": {
+                    "emails": [
+                        "sasha@sap.com"
+                    ],
+                    "faxNumber": "456",
+                    "phoneNumbers": [
+                        "123",
+                        "890"
+                    ]
+                },
+                "hotelName": "dummy hotel name",
+                "position": {
+                    "latitude": 2,
+                    "longitude": 3
+                },
+                "propertyCode": "dummy property code"
+            },
+            "checkin": "2024-04-30",
+            "checkout": "2024-05-03",
+            "confirmationCodes": [
+                {
+                    "code": "dummy supplier confirmation code",
+                    "codeType": "SUPPLIER_CONFIRMATION"
+                }
+            ],
+            "guests": [
+                {
+                    "address": {
+                        "addressLines": [
+                            "123 Green St",
+                            ""
+                        ],
+                        "city": "Albuquerque",
+                        "countryCode": "US",
+                        "postalCode": "87104",
+                        "state": "New Mexico"
+                    },
+                    "birthdate": "1959-09-07",
+                    "companyName": "Best Company Ever",
+                    "contactInfo": {
+                        "emails": [
+                            "w@w.com"
+                        ],
+                        "faxNumber": "456",
+                        "phoneNumbers": [
+                            "123"
+                        ]
+                    },
+                    "firstname": "John",
+                    "lastname": "Smith"
+                }
+            ],
+            "isModifiable": true,
+            "roomRate": {
+                "cancelPenalties": {
+                    "penalties": [
+                        {
+                            "amountPercent": {
+                                "amount": {
+                                    "amount": 100,
+                                    "currencyCode": "USD"
+                                },
+                                "applyAs": "FIRST_AND_LAST_NIGHT_DEPOSIT",
+                                "basisType": "FULL_STAY",
+                                "feesInclusive": true,
+                                "numberOfNights": 3,
+                                "percent": 99,
+                                "taxInclusive": true
+                            },
+                            "cancelDeadline": "2018-10-10T19:10:59Z",
+                            "description": "<b>dummy description</b>",
+                            "refundableStatus": "FULLY_REFUNDABLE"
+                        },
+                        {
+                            "cancelDeadline": "2018-10-10T19:10:59Z",
+                            "description": "<b>another one</b>",
+                            "refundableStatus": "FULLY_REFUNDABLE"
+                        }
+                    ],
+                    "penaltyDescription": "dummy penalty description"
+                },
+                "guarantee": {
+                    "acceptedPayments": [
+                        "VISA"
+                    ],
+                    "guaranteeType": "DEPOSIT_REQUIRED"
+                },
+                "nightlyPrices": [
+                    {
+                        "basePrice": 90,
+                        "currencyCode": "USD",
+                        "endDate": "2024-05-01",
+                        "fees": {
+                            "amount": 0
+                        },
+                        "startDate": "2024-04-30",
+                        "taxes": {
+                            "amount": 10,
+                            "taxBreakdown": [
+                                {
+                                    "amount": 6,
+                                    "fttCode": 33,
+                                    "inclusive": true
+                                },
+                                {
+                                    "amount": 4,
+                                    "fttCode": 44,
+                                    "inclusive": true
+                                }
+                            ]
+                        },
+                        "totalPrice": 120
+                    },
+                    {
+                        "basePrice": 10,
+                        "currencyCode": "EUR",
+                        "endDate": "2024-05-02",
+                        "fees": {
+                            "amount": 20,
+                            "feeBreakdown": [
+                                {
+                                    "amount": 6,
+                                    "fttCode": 33,
+                                    "inclusive": true
+                                },
+                                {
+                                    "amount": 4,
+                                    "fttCode": 44,
+                                    "inclusive": true
+                                }
+                            ]
+                        },
+                        "startDate": "2024-05-01",
+                        "taxes": {
+                            "amount": 0
+                        },
+                        "totalPrice": 60
+                    }
+                ],
+                "prepayRequired": true,
+                "rateCategory": "AAA",
+                "rateDescription": [
+                    "dummy rate description 0",
+                    "dummy rate description 1"
+                ],
+                "ratePlanId": "dummy rate plan id",
+                "refundable": true,
+                "roomId": "dummy room id",
+                "totalPrice": {
+                    "currencyCode": "USD",
+                    "fees": 10,
+                    "taxes": 20,
+                    "totalAfterTax": 130,
+                    "totalBeforeTax": 100
+                }
+            },
+            "status": "RESERVED"
+        }
+    ]
+}
+```
+</details>
+<details>
+<summary>Cancel booking on existing trip</summary>
 
-<ul>
-  <li>Includes a <a href="https://www.postman.com/downloads/">Postman</a> collection that validates responses for all API endpoints against the OpenAPI <a href="https://developer.concur.com/api-explorer/v4-0/HotelService.html">schema</a>.</li>
-  <li>Validates basic features of the API, for example search response has properties in specified radius; all properties in details response have hotel images; checkin and checkout dates are valid; all hotel rates have appropriate amenity codes; cancel penalties have valid cancel deadlines; etc.</li>
-  <li>For more detailed instructions on how to run these tests please refer to the README inside the testing tool zip.</li>
-</ul>
+```shell
 
-<h3 id="performance-testing">Performance Testing</h3>
+{
+    "changeId": "00000000-0000-0000-0000-000000000000",
+    "changeTimestamp": "2024-04-30T12:26:17-05:00",
+    "changeTypeCode": "CANCEL",
+    "oldBooking": {
+        "bookingId": "00000000-0000-0000-0000-000000000000",
+        "confirmationCodes": [
+            {
+                "code": "123456",
+                "codeType": "CANCELLATION"
+            }
+        ],
+        "status": "CANCELLED"
+    }
+}
 
-<p>To download our <a href="./v4.perf-tests.zip">non-functional testing tool package</a>.</p>
-<ul>
-  <li>Includes taurus and jmeter test scripts.</li>
-  <li>Running these tests validates against our <a href="#non-functional-requirements">Non Functional Requirements</a>.</li>
-  <li>For more detailed instructions on how to run these tests please refer to the README inside the testing tool zip.</li>
-</ul>
+```
+</details>
 
       </div>
       <!--/col-md-8-->
@@ -1663,7 +1979,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/direct-connects/hotel-service-4/v4.getting-started.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/direct-connects/hotel-service-4/v4.change-notification-get-started.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
