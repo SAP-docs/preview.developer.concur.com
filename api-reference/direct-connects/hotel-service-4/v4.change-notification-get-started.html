@@ -1205,17 +1205,11 @@
            class="col-md-8 markdown-body">
         
 
-        <div id="attn-prerelease">
-  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
-</div>
-
-<h1 id="change-notification-api">Change Notification API</h1>
-
-<h2 id="description">Description</h2>
+        <h1 id="change-notification-api">Change Notification API</h1>
 
 <p>The Hotel Service Change Notification API allows Custom Hotel Source (CHS) suppliers to provide the SAP Concur platform with details of offline cancellations and changes they make to bookings created in the SAP Concur Online Booking tool (OBT). The API allows CHS vendors to provide updates in real time so that travelers have the most up-to-date information about their booking.</p>
 
-<p>Change Notification API also provides a way to confirm hotels/accommodations that are not available in any online booking management system - and manual intervention is required to do the fulfillment. Example of such accommodations are corporate apartments, speciality hotels etc. Such hotels are marked as <code class="language-plaintext highlighter-rouge">OnRequest</code> for a <a href="./v4.schemas.html#schemahotelproperty">HotelProperty</a> in search response.</p>
+<p>Change Notification API also provides a way to confirm hotels/accommodations that are not available in any online booking management system - and manual intervention is required to do the fulfillment. Example of such accommodations are corporate apartments, specialty hotels, etc. Such hotels are marked as <code class="language-plaintext highlighter-rouge">OnRequest</code> for a <a href="./v4.schemas.html#schemahotelproperty">HotelProperty</a> in search response.</p>
 
 <h2 id="limitations">Limitations</h2>
 
@@ -1223,13 +1217,13 @@
 
 <h2 id="process-flow">Process Flow</h2>
 
-<p>Flow diagram below depicts various use-cases supported by Change Notification API.</p>
+<p>Flow diagram below depicts various use cases supported by the Change Notification API.</p>
 
 <ul>
-  <li>User goes through regular hotel booking process in Concur’s OBT. If hotel is marked as <code class="language-plaintext highlighter-rouge">OnRequest</code> - it is clearly indicated to user during booking suggesting that the booking confirmation will not be available immediately.</li>
+  <li>User goes through regular hotel booking process in the OBT. If hotel is marked as <code class="language-plaintext highlighter-rouge">OnRequest</code> - it is clearly indicated to user during booking suggesting that the booking confirmation will not be available immediately.</li>
   <li>If user books an <code class="language-plaintext highlighter-rouge">OnRequest</code> hotel, booking will be created with <code class="language-plaintext highlighter-rouge">Pending</code> status. Status will be transitioned to <code class="language-plaintext highlighter-rouge">RESERVED</code> once it is confirmed by supplier using <code class="language-plaintext highlighter-rouge">Change Notification API</code> endpoint (using <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">UPDATE</code>).</li>
   <li>If booking is <code class="language-plaintext highlighter-rouge">cancelled</code> offline, supplier can call <code class="language-plaintext highlighter-rouge">Change Notification API</code> with <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">CANCEL</code> and trigger cancellation of previously booked hotel booking in Concur OBT.</li>
-  <li>If booking is <code class="language-plaintext highlighter-rouge">Replaced</code> offline, supplier can call <code class="language-plaintext highlighter-rouge">Change Notification API</code> with <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">REPLACE</code> and previously booked hotel is canceled while a replaced hotel is added in Concur OBT.</li>
+  <li>If booking is <code class="language-plaintext highlighter-rouge">Replaced</code> offline, supplier can call <code class="language-plaintext highlighter-rouge">Change Notification API</code> with <code class="language-plaintext highlighter-rouge">changeTypeCode</code> as <code class="language-plaintext highlighter-rouge">REPLACE</code> and previously booked hotel is canceled while a replaced hotel is added in the OBT.</li>
   <li>Supplier can also use <code class="language-plaintext highlighter-rouge">Change Notification API</code> for other offline changes to previously used hotel booking. For example, check-in/check-out dates, room rate etc. or add a new booking altogether on existing trip.</li>
 </ul>
 
@@ -1250,10 +1244,12 @@
       <th>Name</th>
       <th>Description</th>
       <th>Endpoint</th>
+      <th> </th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td> </td>
       <td><code class="language-plaintext highlighter-rouge">travel.hotel.write</code></td>
       <td>Read and update hotel bookings</td>
       <td>POST</td>
@@ -1262,33 +1258,34 @@
 </table>
 
 <h2 id="dependencies-">Dependencies <a name="dependencies"></a></h2>
+
 <p>CHS partner interesting in using this API must have implemented <a href="v4.getting-started.markdown">Hotel Service v4</a> API and integrated hotel shop and book flows with SAP Concur OBT using their <code class="language-plaintext highlighter-rouge">Connector</code>.</p>
 
 <h2 id="access-token-usage-">Access Token Usage <a name="access-token-usage"></a></h2>
 
-<ol>
-  <li>Each CHS supplier planning to use this API will need to <a href="https://developer.concur.com/api-reference/authentication/getting-started.html#obtain-your-application-clientid-and-clientsecret-">request access</a> to register a client application with SAP Concur. If a supplier already have client application registered, this step can be skipped.  <code class="language-plaintext highlighter-rouge">clientId</code> and <code class="language-plaintext highlighter-rouge">clientSecret</code> obtained here need to be used for client credentials grant based auth as described <a href="https://developer.concur.com/api-reference/authentication/apidoc.html#client-credentials-grant-">here</a>.</li>
-  <li>Suppliers will need to have <code class="language-plaintext highlighter-rouge">travel.hotel.write</code> <a href="https://developer.concur.com/api-reference/authentication/scopes.html">scope</a> in application access they request above. API implementation verifies the presence of this scope in JWT before allowing access.</li>
-</ol>
+<ul>
+  <li>Each CHS supplier planning to use this API will need to <a href="https://developer.concur.com/api-reference/authentication/getting-started.html#obtain-your-application-clientid-and-clientsecret-">request access</a> to register a client application with the SAP Concur platform. If a supplier already has a client application registered, this step can be skipped.  <code class="language-plaintext highlighter-rouge">clientId</code> and <code class="language-plaintext highlighter-rouge">clientSecret</code> obtained here need to be used for client credentials grant based auth as described <a href="https://developer.concur.com/api-reference/authentication/apidoc.html#client-credentials-grant-">here</a>.</li>
+  <li>Suppliers will need to have the <code class="language-plaintext highlighter-rouge">travel.hotel.write</code> <a href="https://developer.concur.com/api-reference/authentication/scopes.html">scope</a> in the application access they request above. API implementation verifies the presence of this scope in JWT before allowing access.</li>
+</ul>
 
 <h2 id="authorization-">Authorization <a name="authorization"></a></h2>
 
-<p>Change Notification API can only be used to add/update bookings by authorized CHS suppliers. Authorization is controlled by matching <code class="language-plaintext highlighter-rouge">clientId</code> of your client application for each environment with <code class="language-plaintext highlighter-rouge">Hotel Service Connector</code> already established with SAP Concur. Hence, to gain access, <code class="language-plaintext highlighter-rouge">clientId</code> for your application <strong>must</strong> be provided to SAP Concur team working with you.</p>
+<p>Change Notification API can only be used to add/update bookings by authorized CHS suppliers. Authorization is controlled by matching <code class="language-plaintext highlighter-rouge">clientId</code> of your client application for each environment with <code class="language-plaintext highlighter-rouge">Hotel Service Connector</code> already established with the SAP Concur platform. Therefore, to gain access, <code class="language-plaintext highlighter-rouge">clientId</code> for your application <strong>must</strong> be provided to the SAP Concur team working with you.</p>
 
 <p>Association of <code class="language-plaintext highlighter-rouge">clientId</code> to <code class="language-plaintext highlighter-rouge">Connector</code> is then used to enforce the following authorization rules:</p>
-<ol>
+
+<ul>
   <li>For existing bookings, a given client/partner can only update/replace bookings created by their connector.</li>
-  <li>For new bookings, a given client/partner’s connector must be enabled on SAP Concur’s travel configuration used by Trip.</li>
-</ol>
+  <li>For new bookings, a given client/partner’s connector must be enabled on the SAP Concur travel configuration used by Trip.</li>
+</ul>
 
 <h2 id="change-notification-endpoint"><a name="change-notification"></a>Change Notification Endpoint</h2>
 
 <p>This endpoint allows CHS suppliers to update, cancel/replace or add new hotel booking on existing trip. <code class="language-plaintext highlighter-rouge">tripId</code> must be already known and any existing bookings can be updated only if supplier is the source for the booking.</p>
 
-<h3 id="api-schema">API Schema</h3>
+<h2 id="schema">Schema</h2>
 
-<p>TODO - new change notification schema link
-The Swagger/OpenAPI schema is available at: <a href="https://developer.concur.com/api-explorer/v4-0/HotelService.html#/">API Explorer</a>.</p>
+<p>The  schema is available at: <a href="/api-reference/direct-connects/hotel-service-4/v4.schemas.html">Direct Connect - Hotel Service v4 - Schemas</a>.</p>
 
 <h3 id="uri">URI</h3>
 
@@ -1318,615 +1315,968 @@ The Swagger/OpenAPI schema is available at: <a href="https://developer.concur.co
 
 <h3 id="examples">Examples</h3>
 
-<p>Bellow are examples of JSON payloads that can be sent to the endpoint to update, cancel/replace or add new hotel booking on existing trip (colapsed for doc readability).</p>
+<p>Below are examples of JSON payloads that can be sent to the endpoint to update, cancel/replace, or add new hotel booking on an existing trip.</p>
 
-<details>
-<summary>Add booking to existing trip</summary>
+<p>Add booking to existing trip.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"changeId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+    <span class="s2">"changeTimestamp"</span>: <span class="s2">"2024-04-30T12:26:18-05:00"</span>,
+    <span class="s2">"changeTypeCode"</span>: <span class="s2">"ADD"</span>,
+    <span class="s2">"updatedBookings"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"basicHotelProperty"</span>: <span class="o">{</span>
+                <span class="s2">"address"</span>: <span class="o">{</span>
+                    <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                        <span class="s2">"line 1"</span>,
+                        <span class="s2">"line 2"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"city"</span>: <span class="s2">"dummy city"</span>,
+                    <span class="s2">"countryCode"</span>: <span class="s2">"dummy country code"</span>,
+                    <span class="s2">"postalCode"</span>: <span class="s2">"dummy postal code"</span>,
+                    <span class="s2">"state"</span>: <span class="s2">"dummy state"</span>,
+                    <span class="s2">"stateName"</span>: <span class="s2">"dummy state name"</span>
+                <span class="o">}</span>,
+                <span class="s2">"chainCode"</span>: <span class="s2">"dummy chain code"</span>,
+                <span class="s2">"cityCode"</span>: <span class="s2">"dummy city code"</span>,
+                <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                    <span class="s2">"emails"</span>: <span class="o">[</span>
+                        <span class="s2">"someone@somewhere.com"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"faxNumber"</span>: <span class="s2">"000"</span>,
+                    <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                        <span class="s2">"000"</span>,
+                        <span class="s2">"000"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"hotelName"</span>: <span class="s2">"dummy hotel name"</span>,
+                <span class="s2">"position"</span>: <span class="o">{</span>
+                    <span class="s2">"latitude"</span>: 0,
+                    <span class="s2">"longitude"</span>: 0
+                <span class="o">}</span>,
+                <span class="s2">"propertyCode"</span>: <span class="s2">"dummy property code"</span>
+            <span class="o">}</span>,
+            <span class="s2">"checkin"</span>: <span class="s2">"2024-04-30"</span>,
+            <span class="s2">"checkout"</span>: <span class="s2">"2024-05-03"</span>,
+            <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"code"</span>: <span class="s2">"dummy supplier confirmation code"</span>,
+                    <span class="s2">"codeType"</span>: <span class="s2">"SUPPLIER_CONFIRMATION"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"guests"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"address"</span>: <span class="o">{</span>
+                        <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                            <span class="s2">"123 Green St"</span>,
+                            <span class="s2">""</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"city"</span>: <span class="s2">"Albuquerque"</span>,
+                        <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>,
+                        <span class="s2">"postalCode"</span>: <span class="s2">"87104"</span>,
+                        <span class="s2">"state"</span>: <span class="s2">"New Mexico"</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"birthdate"</span>: <span class="s2">"1959-09-07"</span>,
+                    <span class="s2">"companyName"</span>: <span class="s2">"Best Company Ever"</span>,
+                    <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                        <span class="s2">"emails"</span>: <span class="o">[</span>
+                            <span class="s2">"w@w.com"</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"faxNumber"</span>: <span class="s2">"000"</span>,
+                        <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                            <span class="s2">"000"</span>
+                        <span class="o">]</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"firstname"</span>: <span class="s2">"John"</span>,
+                    <span class="s2">"lastname"</span>: <span class="s2">"Smith"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"isModifiable"</span>: <span class="nb">true</span>,
+            <span class="s2">"roomRate"</span>: <span class="o">{</span>
+                <span class="s2">"cancelPenalties"</span>: <span class="o">{</span>
+                    <span class="s2">"penalties"</span>: <span class="o">[</span>
+                        <span class="o">{</span>
+                            <span class="s2">"amountPercent"</span>: <span class="o">{</span>
+                                <span class="s2">"amount"</span>: <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 100,
+                                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+                                <span class="o">}</span>,
+                                <span class="s2">"applyAs"</span>: <span class="s2">"FIRST_AND_LAST_NIGHT_DEPOSIT"</span>,
+                                <span class="s2">"basisType"</span>: <span class="s2">"FULL_STAY"</span>,
+                                <span class="s2">"feesInclusive"</span>: <span class="nb">true</span>,
+                                <span class="s2">"numberOfNights"</span>: 3,
+                                <span class="s2">"percent"</span>: 99,
+                                <span class="s2">"taxInclusive"</span>: <span class="nb">true</span>
+                            <span class="o">}</span>,
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"</span><span class="se">\u</span><span class="s2">003cb</span><span class="se">\u</span><span class="s2">003edummy description</span><span class="se">\u</span><span class="s2">003c/b</span><span class="se">\u</span><span class="s2">003e"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>,
+                        <span class="o">{</span>
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"</span><span class="se">\u</span><span class="s2">003cb</span><span class="se">\u</span><span class="s2">003eanother one</span><span class="se">\u</span><span class="s2">003c/b</span><span class="se">\u</span><span class="s2">003e"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"penaltyDescription"</span>: <span class="s2">"dummy penalty description"</span>
+                <span class="o">}</span>,
+                <span class="s2">"guarantee"</span>: <span class="o">{</span>
+                    <span class="s2">"acceptedPayments"</span>: <span class="o">[</span>
+                        <span class="s2">"VISA"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"guaranteeType"</span>: <span class="s2">"DEPOSIT_REQUIRED"</span>
+                <span class="o">}</span>,
+                <span class="s2">"nightlyPrices"</span>: <span class="o">[</span>
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 90,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-04-30"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 10,
+                            <span class="s2">"taxBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 120
+                    <span class="o">}</span>,
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 10,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"EUR"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-02"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 20,
+                            <span class="s2">"feeBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 60
+                    <span class="o">}</span>
+                <span class="o">]</span>,
+                <span class="s2">"prepayRequired"</span>: <span class="nb">true</span>,
+                <span class="s2">"rateCategory"</span>: <span class="s2">"AAA"</span>,
+                <span class="s2">"rateDescription"</span>: <span class="o">[</span>
+                    <span class="s2">"dummy rate description 0"</span>,
+                    <span class="s2">"dummy rate description 1"</span>
+                <span class="o">]</span>,
+                <span class="s2">"ratePlanId"</span>: <span class="s2">"dummy rate plan id"</span>,
+                <span class="s2">"refundable"</span>: <span class="nb">true</span>,
+                <span class="s2">"roomId"</span>: <span class="s2">"dummy room id"</span>,
+                <span class="s2">"totalPrice"</span>: <span class="o">{</span>
+                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                    <span class="s2">"fees"</span>: 10,
+                    <span class="s2">"taxes"</span>: 20,
+                    <span class="s2">"totalAfterTax"</span>: 130,
+                    <span class="s2">"totalBeforeTax"</span>: 100
+                <span class="o">}</span>
+            <span class="o">}</span>,
+            <span class="s2">"status"</span>: <span class="s2">"RESERVED"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p>Update booking on existing trip.</p>
 
-```shell 
-{
-    "changeId": "00000000-0000-0000-0000-000000000000",
-    "changeTimestamp": "2024-04-30T12:26:18-05:00",
-    "changeTypeCode": "ADD",
-    "updatedBookings": [
-        {
-            "basicHotelProperty": {
-                "address": {
-                    "addressLines": [
-                        "line 1",
-                        "line 2"
-                    ],
-                    "city": "dummy city",
-                    "countryCode": "dummy country code",
-                    "postalCode": "dummy postal code",
-                    "state": "dummy state",
-                    "stateName": "dummy state name"
-                },
-                "chainCode": "dummy chain code",
-                "cityCode": "dummy city code",
-                "contactInfo": {
-                    "emails": [
-                        "someone@somewhere.com"
-                    ],
-                    "faxNumber": "000",
-                    "phoneNumbers": [
-                        "000",
-                        "000"
-                    ]
-                },
-                "hotelName": "dummy hotel name",
-                "position": {
-                    "latitude": 0,
-                    "longitude": 0
-                },
-                "propertyCode": "dummy property code"
-            },
-            "checkin": "2024-04-30",
-            "checkout": "2024-05-03",
-            "confirmationCodes": [
-                {
-                    "code": "dummy supplier confirmation code",
-                    "codeType": "SUPPLIER_CONFIRMATION"
-                }
-            ],
-            "guests": [
-                {
-                    "address": {
-                        "addressLines": [
-                            "123 Green St",
-                            ""
-                        ],
-                        "city": "Albuquerque",
-                        "countryCode": "US",
-                        "postalCode": "87104",
-                        "state": "New Mexico"
-                    },
-                    "birthdate": "1959-09-07",
-                    "companyName": "Best Company Ever",
-                    "contactInfo": {
-                        "emails": [
-                            "w@w.com"
-                        ],
-                        "faxNumber": "000",
-                        "phoneNumbers": [
-                            "000"
-                        ]
-                    },
-                    "firstname": "John",
-                    "lastname": "Smith"
-                }
-            ],
-            "isModifiable": true,
-            "roomRate": {
-                "cancelPenalties": {
-                    "penalties": [
-                        {
-                            "amountPercent": {
-                                "amount": {
-                                    "amount": 100,
-                                    "currencyCode": "USD"
-                                },
-                                "applyAs": "FIRST_AND_LAST_NIGHT_DEPOSIT",
-                                "basisType": "FULL_STAY",
-                                "feesInclusive": true,
-                                "numberOfNights": 3,
-                                "percent": 99,
-                                "taxInclusive": true
-                            },
-                            "cancelDeadline": "2018-10-10T19:10:59Z",
-                            "description": "\u003cb\u003edummy description\u003c/b\u003e",
-                            "refundableStatus": "FULLY_REFUNDABLE"
-                        },
-                        {
-                            "cancelDeadline": "2018-10-10T19:10:59Z",
-                            "description": "\u003cb\u003eanother one\u003c/b\u003e",
-                            "refundableStatus": "FULLY_REFUNDABLE"
-                        }
-                    ],
-                    "penaltyDescription": "dummy penalty description"
-                },
-                "guarantee": {
-                    "acceptedPayments": [
-                        "VISA"
-                    ],
-                    "guaranteeType": "DEPOSIT_REQUIRED"
-                },
-                "nightlyPrices": [
-                    {
-                        "basePrice": 90,
-                        "currencyCode": "USD",
-                        "endDate": "2024-05-01",
-                        "fees": {
-                            "amount": 0
-                        },
-                        "startDate": "2024-04-30",
-                        "taxes": {
-                            "amount": 10,
-                            "taxBreakdown": [
-                                {
-                                    "amount": 6,
-                                    "fttCode": 33,
-                                    "inclusive": true
-                                },
-                                {
-                                    "amount": 4,
-                                    "fttCode": 44,
-                                    "inclusive": true
-                                }
-                            ]
-                        },
-                        "totalPrice": 120
-                    },
-                    {
-                        "basePrice": 10,
-                        "currencyCode": "EUR",
-                        "endDate": "2024-05-02",
-                        "fees": {
-                            "amount": 20,
-                            "feeBreakdown": [
-                                {
-                                    "amount": 6,
-                                    "fttCode": 33,
-                                    "inclusive": true
-                                },
-                                {
-                                    "amount": 4,
-                                    "fttCode": 44,
-                                    "inclusive": true
-                                }
-                            ]
-                        },
-                        "startDate": "2024-05-01",
-                        "taxes": {
-                            "amount": 0
-                        },
-                        "totalPrice": 60
-                    }
-                ],
-                "prepayRequired": true,
-                "rateCategory": "AAA",
-                "rateDescription": [
-                    "dummy rate description 0",
-                    "dummy rate description 1"
-                ],
-                "ratePlanId": "dummy rate plan id",
-                "refundable": true,
-                "roomId": "dummy room id",
-                "totalPrice": {
-                    "currencyCode": "USD",
-                    "fees": 10,
-                    "taxes": 20,
-                    "totalAfterTax": 130,
-                    "totalBeforeTax": 100
-                }
-            },
-            "status": "RESERVED"
-        }
-    ]
-}
-```
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"changeId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+    <span class="s2">"changeTimestamp"</span>: <span class="s2">"2024-04-30T12:26:16-05:00"</span>,
+    <span class="s2">"changeTypeCode"</span>: <span class="s2">"UPDATE"</span>,
+    <span class="s2">"oldBooking"</span>: <span class="o">{</span>
+        <span class="s2">"bookingId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+        <span class="s2">"confirmationCodes"</span>: null,
+        <span class="s2">"status"</span>: <span class="s2">"PENDING_CONFIRMATION"</span>
+    <span class="o">}</span>,
+    <span class="s2">"updatedBookings"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"bookingId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+            <span class="s2">"confirmationCodes"</span>: null,
+            <span class="s2">"roomDescription"</span>: <span class="o">[</span>
+                <span class="s2">"updated room description"</span>
+            <span class="o">]</span>,
+            <span class="s2">"status"</span>: <span class="s2">"RESERVED"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-</details>
+<p>Replace booking on existing trip.</p>
 
-<details>
-<summary>Update booking on existing trip</summary>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"changeId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+    <span class="s2">"changeTimestamp"</span>: <span class="s2">"2024-04-30T12:26:19-05:00"</span>,
+    <span class="s2">"changeTypeCode"</span>: <span class="s2">"REPLACE"</span>,
+    <span class="s2">"oldBooking"</span>: <span class="o">{</span>
+        <span class="s2">"bookingId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+        <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"code"</span>: <span class="s2">"000000-TEST"</span>,
+                <span class="s2">"codeType"</span>: <span class="s2">"CANCELLATION"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"status"</span>: <span class="s2">"CANCELLED"</span>
+    <span class="o">}</span>,
+    <span class="s2">"updatedBookings"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"basicHotelProperty"</span>: <span class="o">{</span>
+                <span class="s2">"address"</span>: <span class="o">{</span>
+                    <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                        <span class="s2">"line 1"</span>,
+                        <span class="s2">"line 2"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"city"</span>: <span class="s2">"dummy city"</span>,
+                    <span class="s2">"countryCode"</span>: <span class="s2">"dummy country code"</span>,
+                    <span class="s2">"postalCode"</span>: <span class="s2">"dummy postal code"</span>,
+                    <span class="s2">"state"</span>: <span class="s2">"dummy state"</span>,
+                    <span class="s2">"stateName"</span>: <span class="s2">"dummy state name"</span>
+                <span class="o">}</span>,
+                <span class="s2">"chainCode"</span>: <span class="s2">"dummy chain code"</span>,
+                <span class="s2">"cityCode"</span>: <span class="s2">"dummy city code"</span>,
+                <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                    <span class="s2">"emails"</span>: <span class="o">[</span>
+                        <span class="s2">"someone@somewhere.com"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                    <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                        <span class="s2">"123"</span>,
+                        <span class="s2">"890"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"hotelName"</span>: <span class="s2">"dummy hotel name"</span>,
+                <span class="s2">"position"</span>: <span class="o">{</span>
+                    <span class="s2">"latitude"</span>: 2,
+                    <span class="s2">"longitude"</span>: 3
+                <span class="o">}</span>,
+                <span class="s2">"propertyCode"</span>: <span class="s2">"dummy property code"</span>
+            <span class="o">}</span>,
+            <span class="s2">"checkin"</span>: <span class="s2">"2024-04-30"</span>,
+            <span class="s2">"checkout"</span>: <span class="s2">"2024-05-03"</span>,
+            <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"code"</span>: <span class="s2">"dummy supplier confirmation code"</span>,
+                    <span class="s2">"codeType"</span>: <span class="s2">"SUPPLIER_CONFIRMATION"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"guests"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"address"</span>: <span class="o">{</span>
+                        <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                            <span class="s2">"123 Green St"</span>,
+                            <span class="s2">""</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"city"</span>: <span class="s2">"Albuquerque"</span>,
+                        <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>,
+                        <span class="s2">"postalCode"</span>: <span class="s2">"87104"</span>,
+                        <span class="s2">"state"</span>: <span class="s2">"New Mexico"</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"birthdate"</span>: <span class="s2">"1959-09-07"</span>,
+                    <span class="s2">"companyName"</span>: <span class="s2">"Best Company Ever"</span>,
+                    <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                        <span class="s2">"emails"</span>: <span class="o">[</span>
+                            <span class="s2">"w@w.com"</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                        <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                            <span class="s2">"123"</span>
+                        <span class="o">]</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"firstname"</span>: <span class="s2">"John"</span>,
+                    <span class="s2">"lastname"</span>: <span class="s2">"Smith"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"isModifiable"</span>: <span class="nb">true</span>,
+            <span class="s2">"roomRate"</span>: <span class="o">{</span>
+                <span class="s2">"cancelPenalties"</span>: <span class="o">{</span>
+                    <span class="s2">"penalties"</span>: <span class="o">[</span>
+                        <span class="o">{</span>
+                            <span class="s2">"amountPercent"</span>: <span class="o">{</span>
+                                <span class="s2">"amount"</span>: <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 100,
+                                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+                                <span class="o">}</span>,
+                                <span class="s2">"applyAs"</span>: <span class="s2">"FIRST_AND_LAST_NIGHT_DEPOSIT"</span>,
+                                <span class="s2">"basisType"</span>: <span class="s2">"FULL_STAY"</span>,
+                                <span class="s2">"feesInclusive"</span>: <span class="nb">true</span>,
+                                <span class="s2">"numberOfNights"</span>: 3,
+                                <span class="s2">"percent"</span>: 99,
+                                <span class="s2">"taxInclusive"</span>: <span class="nb">true</span>
+                            <span class="o">}</span>,
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;dummy description&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>,
+                        <span class="o">{</span>
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;another one&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"penaltyDescription"</span>: <span class="s2">"dummy penalty description"</span>
+                <span class="o">}</span>,
+                <span class="s2">"guarantee"</span>: <span class="o">{</span>
+                    <span class="s2">"acceptedPayments"</span>: <span class="o">[</span>
+                        <span class="s2">"VISA"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"guaranteeType"</span>: <span class="s2">"DEPOSIT_REQUIRED"</span>
+                <span class="o">}</span>,
+                <span class="s2">"nightlyPrices"</span>: <span class="o">[</span>
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 90,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-04-30"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 10,
+                            <span class="s2">"taxBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 120
+                    <span class="o">}</span>,
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 10,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"EUR"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-02"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 20,
+                            <span class="s2">"feeBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 60
+                    <span class="o">}</span>
+                <span class="o">]</span>,
+                <span class="s2">"prepayRequired"</span>: <span class="nb">true</span>,
+                <span class="s2">"rateCategory"</span>: <span class="s2">"AAA"</span>,
+                <span class="s2">"rateDescription"</span>: <span class="o">[</span>
+                    <span class="s2">"dummy rate description 0"</span>,
+                    <span class="s2">"dummy rate description 1"</span>
+                <span class="o">]</span>,
+                <span class="s2">"ratePlanId"</span>: <span class="s2">"dummy rate plan id"</span>,
+                <span class="s2">"refundable"</span>: <span class="nb">true</span>,
+                <span class="s2">"roomId"</span>: <span class="s2">"dummy room id"</span>,
+                <span class="s2">"totalPrice"</span>: <span class="o">{</span>
+                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                    <span class="s2">"fees"</span>: 10,
+                    <span class="s2">"taxes"</span>: 20,
+                    <span class="s2">"totalAfterTax"</span>: 130,
+                    <span class="s2">"totalBeforeTax"</span>: 100
+                <span class="o">}</span>
+            <span class="o">}</span>,
+            <span class="s2">"status"</span>: <span class="s2">"RESERVED"</span>
+        <span class="o">}</span>,
+        <span class="o">{</span>
+            <span class="s2">"basicHotelProperty"</span>: <span class="o">{</span>
+                <span class="s2">"address"</span>: <span class="o">{</span>
+                    <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                        <span class="s2">"line 1"</span>,
+                        <span class="s2">"line 2"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"city"</span>: <span class="s2">"dummy city"</span>,
+                    <span class="s2">"countryCode"</span>: <span class="s2">"dummy country code"</span>,
+                    <span class="s2">"postalCode"</span>: <span class="s2">"dummy postal code"</span>,
+                    <span class="s2">"state"</span>: <span class="s2">"dummy state"</span>,
+                    <span class="s2">"stateName"</span>: <span class="s2">"dummy state name"</span>
+                <span class="o">}</span>,
+                <span class="s2">"chainCode"</span>: <span class="s2">"dummy chain code"</span>,
+                <span class="s2">"cityCode"</span>: <span class="s2">"dummy city code"</span>,
+                <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                    <span class="s2">"emails"</span>: <span class="o">[</span>
+                        <span class="s2">"sasha@sap.com"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                    <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                        <span class="s2">"123"</span>,
+                        <span class="s2">"890"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"hotelName"</span>: <span class="s2">"dummy hotel name"</span>,
+                <span class="s2">"position"</span>: <span class="o">{</span>
+                    <span class="s2">"latitude"</span>: 2,
+                    <span class="s2">"longitude"</span>: 3
+                <span class="o">}</span>,
+                <span class="s2">"propertyCode"</span>: <span class="s2">"dummy property code"</span>
+            <span class="o">}</span>,
+            <span class="s2">"checkin"</span>: <span class="s2">"2024-04-30"</span>,
+            <span class="s2">"checkout"</span>: <span class="s2">"2024-05-03"</span>,
+            <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"code"</span>: <span class="s2">"dummy supplier confirmation code"</span>,
+                    <span class="s2">"codeType"</span>: <span class="s2">"SUPPLIER_CONFIRMATION"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"guests"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"address"</span>: <span class="o">{</span>
+                        <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                            <span class="s2">"123 Green St"</span>,
+                            <span class="s2">""</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"city"</span>: <span class="s2">"Albuquerque"</span>,
+                        <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>,
+                        <span class="s2">"postalCode"</span>: <span class="s2">"87104"</span>,
+                        <span class="s2">"state"</span>: <span class="s2">"New Mexico"</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"birthdate"</span>: <span class="s2">"1959-09-07"</span>,
+                    <span class="s2">"companyName"</span>: <span class="s2">"Best Company Ever"</span>,
+                    <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                        <span class="s2">"emails"</span>: <span class="o">[</span>
+                            <span class="s2">"w@w.com"</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                        <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                            <span class="s2">"123"</span>
+                        <span class="o">]</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"firstname"</span>: <span class="s2">"John"</span>,
+                    <span class="s2">"lastname"</span>: <span class="s2">"Smith"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"isModifiable"</span>: <span class="nb">true</span>,
+            <span class="s2">"roomRate"</span>: <span class="o">{</span>
+                <span class="s2">"cancelPenalties"</span>: <span class="o">{</span>
+                    <span class="s2">"penalties"</span>: <span class="o">[</span>
+                        <span class="o">{</span>
+                            <span class="s2">"amountPercent"</span>: <span class="o">{</span>
+                                <span class="s2">"amount"</span>: <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 100,
+                                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+                                <span class="o">}</span>,
+                                <span class="s2">"applyAs"</span>: <span class="s2">"FIRST_AND_LAST_NIGHT_DEPOSIT"</span>,
+                                <span class="s2">"basisType"</span>: <span class="s2">"FULL_STAY"</span>,
+                                <span class="s2">"feesInclusive"</span>: <span class="nb">true</span>,
+                                <span class="s2">"numberOfNights"</span>: 3,
+                                <span class="s2">"percent"</span>: 99,
+                                <span class="s2">"taxInclusive"</span>: <span class="nb">true</span>
+                            <span class="o">}</span>,
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;dummy description&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>,
+                        <span class="o">{</span>
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;another one&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"penaltyDescription"</span>: <span class="s2">"dummy penalty description"</span>
+                <span class="o">}</span>,
+                <span class="s2">"guarantee"</span>: <span class="o">{</span>
+                    <span class="s2">"acceptedPayments"</span>: <span class="o">[</span>
+                        <span class="s2">"VISA"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"guaranteeType"</span>: <span class="s2">"DEPOSIT_REQUIRED"</span>
+                <span class="o">}</span>,
+                <span class="s2">"nightlyPrices"</span>: <span class="o">[</span>
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 90,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-04-30"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 10,
+                            <span class="s2">"taxBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 120
+                    <span class="o">}</span>,
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 10,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"EUR"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-02"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 20,
+                            <span class="s2">"feeBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 60
+                    <span class="o">}</span>
+                <span class="o">]</span>,
+                <span class="s2">"prepayRequired"</span>: <span class="nb">true</span>,
+                <span class="s2">"rateCategory"</span>: <span class="s2">"AAA"</span>,
+                <span class="s2">"rateDescription"</span>: <span class="o">[</span>
+                    <span class="s2">"dummy rate description 0"</span>,
+                    <span class="s2">"dummy rate description 1"</span>
+                <span class="o">]</span>,
+                <span class="s2">"ratePlanId"</span>: <span class="s2">"dummy rate plan id"</span>,
+                <span class="s2">"refundable"</span>: <span class="nb">true</span>,
+                <span class="s2">"roomId"</span>: <span class="s2">"dummy room id"</span>,
+                <span class="s2">"totalPrice"</span>: <span class="o">{</span>
+                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                    <span class="s2">"fees"</span>: 10,
+                    <span class="s2">"taxes"</span>: 20,
+                    <span class="s2">"totalAfterTax"</span>: 130,
+                    <span class="s2">"totalBeforeTax"</span>: 100
+                <span class="o">}</span>
+            <span class="o">}</span>,
+            <span class="s2">"status"</span>: <span class="s2">"RESERVED"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-```shell
+<blockquote>
+  <p>Cancel booking on existing trip.&lt;/summary&gt;</p>
+</blockquote>
 
-{
-    "changeId": "00000000-0000-0000-0000-000000000000",
-    "changeTimestamp": "2024-04-30T12:26:16-05:00",
-    "changeTypeCode": "UPDATE",
-    "oldBooking": {
-        "bookingId": "00000000-0000-0000-0000-000000000000",
-        "confirmationCodes": null,
-        "status": "PENDING_CONFIRMATION"
-    },
-    "updatedBookings": [
-        {
-            "bookingId": "00000000-0000-0000-0000-000000000000",
-            "confirmationCodes": null,
-            "roomDescription": [
-                "updated room description"
-            ],
-            "status": "RESERVED"
-        }
-    ]
-}
-```       
-</details>
-<details>
-<summary>Replace booking on existing trip</summary>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"changeId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+    <span class="s2">"changeTimestamp"</span>: <span class="s2">"2024-04-30T12:26:17-05:00"</span>,
+    <span class="s2">"changeTypeCode"</span>: <span class="s2">"CANCEL"</span>,
+    <span class="s2">"oldBooking"</span>: <span class="o">{</span>
+        <span class="s2">"bookingId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+        <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"code"</span>: <span class="s2">"123456"</span>,
+                <span class="s2">"codeType"</span>: <span class="s2">"CANCELLATION"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"status"</span>: <span class="s2">"CANCELLED"</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
-```shell
-{
-    "changeId": "00000000-0000-0000-0000-000000000000",
-    "changeTimestamp": "2024-04-30T12:26:19-05:00",
-    "changeTypeCode": "REPLACE",
-    "oldBooking": {
-        "bookingId": "00000000-0000-0000-0000-000000000000",
-        "confirmationCodes": [
-            {
-                "code": "000000-TEST",
-                "codeType": "CANCELLATION"
-            }
-        ],
-        "status": "CANCELLED"
-    },
-    "updatedBookings": [
-        {
-            "basicHotelProperty": {
-                "address": {
-                    "addressLines": [
-                        "line 1",
-                        "line 2"
-                    ],
-                    "city": "dummy city",
-                    "countryCode": "dummy country code",
-                    "postalCode": "dummy postal code",
-                    "state": "dummy state",
-                    "stateName": "dummy state name"
-                },
-                "chainCode": "dummy chain code",
-                "cityCode": "dummy city code",
-                "contactInfo": {
-                    "emails": [
-                        "someone@somewhere.com"
-                    ],
-                    "faxNumber": "456",
-                    "phoneNumbers": [
-                        "123",
-                        "890"
-                    ]
-                },
-                "hotelName": "dummy hotel name",
-                "position": {
-                    "latitude": 2,
-                    "longitude": 3
-                },
-                "propertyCode": "dummy property code"
-            },
-            "checkin": "2024-04-30",
-            "checkout": "2024-05-03",
-            "confirmationCodes": [
-                {
-                    "code": "dummy supplier confirmation code",
-                    "codeType": "SUPPLIER_CONFIRMATION"
-                }
-            ],
-            "guests": [
-                {
-                    "address": {
-                        "addressLines": [
-                            "123 Green St",
-                            ""
-                        ],
-                        "city": "Albuquerque",
-                        "countryCode": "US",
-                        "postalCode": "87104",
-                        "state": "New Mexico"
-                    },
-                    "birthdate": "1959-09-07",
-                    "companyName": "Best Company Ever",
-                    "contactInfo": {
-                        "emails": [
-                            "w@w.com"
-                        ],
-                        "faxNumber": "456",
-                        "phoneNumbers": [
-                            "123"
-                        ]
-                    },
-                    "firstname": "John",
-                    "lastname": "Smith"
-                }
-            ],
-            "isModifiable": true,
-            "roomRate": {
-                "cancelPenalties": {
-                    "penalties": [
-                        {
-                            "amountPercent": {
-                                "amount": {
-                                    "amount": 100,
-                                    "currencyCode": "USD"
-                                },
-                                "applyAs": "FIRST_AND_LAST_NIGHT_DEPOSIT",
-                                "basisType": "FULL_STAY",
-                                "feesInclusive": true,
-                                "numberOfNights": 3,
-                                "percent": 99,
-                                "taxInclusive": true
-                            },
-                            "cancelDeadline": "2018-10-10T19:10:59Z",
-                            "description": "<b>dummy description</b>",
-                            "refundableStatus": "FULLY_REFUNDABLE"
-                        },
-                        {
-                            "cancelDeadline": "2018-10-10T19:10:59Z",
-                            "description": "<b>another one</b>",
-                            "refundableStatus": "FULLY_REFUNDABLE"
-                        }
-                    ],
-                    "penaltyDescription": "dummy penalty description"
-                },
-                "guarantee": {
-                    "acceptedPayments": [
-                        "VISA"
-                    ],
-                    "guaranteeType": "DEPOSIT_REQUIRED"
-                },
-                "nightlyPrices": [
-                    {
-                        "basePrice": 90,
-                        "currencyCode": "USD",
-                        "endDate": "2024-05-01",
-                        "fees": {
-                            "amount": 0
-                        },
-                        "startDate": "2024-04-30",
-                        "taxes": {
-                            "amount": 10,
-                            "taxBreakdown": [
-                                {
-                                    "amount": 6,
-                                    "fttCode": 33,
-                                    "inclusive": true
-                                },
-                                {
-                                    "amount": 4,
-                                    "fttCode": 44,
-                                    "inclusive": true
-                                }
-                            ]
-                        },
-                        "totalPrice": 120
-                    },
-                    {
-                        "basePrice": 10,
-                        "currencyCode": "EUR",
-                        "endDate": "2024-05-02",
-                        "fees": {
-                            "amount": 20,
-                            "feeBreakdown": [
-                                {
-                                    "amount": 6,
-                                    "fttCode": 33,
-                                    "inclusive": true
-                                },
-                                {
-                                    "amount": 4,
-                                    "fttCode": 44,
-                                    "inclusive": true
-                                }
-                            ]
-                        },
-                        "startDate": "2024-05-01",
-                        "taxes": {
-                            "amount": 0
-                        },
-                        "totalPrice": 60
-                    }
-                ],
-                "prepayRequired": true,
-                "rateCategory": "AAA",
-                "rateDescription": [
-                    "dummy rate description 0",
-                    "dummy rate description 1"
-                ],
-                "ratePlanId": "dummy rate plan id",
-                "refundable": true,
-                "roomId": "dummy room id",
-                "totalPrice": {
-                    "currencyCode": "USD",
-                    "fees": 10,
-                    "taxes": 20,
-                    "totalAfterTax": 130,
-                    "totalBeforeTax": 100
-                }
-            },
-            "status": "RESERVED"
-        },
-        {
-            "basicHotelProperty": {
-                "address": {
-                    "addressLines": [
-                        "line 1",
-                        "line 2"
-                    ],
-                    "city": "dummy city",
-                    "countryCode": "dummy country code",
-                    "postalCode": "dummy postal code",
-                    "state": "dummy state",
-                    "stateName": "dummy state name"
-                },
-                "chainCode": "dummy chain code",
-                "cityCode": "dummy city code",
-                "contactInfo": {
-                    "emails": [
-                        "sasha@sap.com"
-                    ],
-                    "faxNumber": "456",
-                    "phoneNumbers": [
-                        "123",
-                        "890"
-                    ]
-                },
-                "hotelName": "dummy hotel name",
-                "position": {
-                    "latitude": 2,
-                    "longitude": 3
-                },
-                "propertyCode": "dummy property code"
-            },
-            "checkin": "2024-04-30",
-            "checkout": "2024-05-03",
-            "confirmationCodes": [
-                {
-                    "code": "dummy supplier confirmation code",
-                    "codeType": "SUPPLIER_CONFIRMATION"
-                }
-            ],
-            "guests": [
-                {
-                    "address": {
-                        "addressLines": [
-                            "123 Green St",
-                            ""
-                        ],
-                        "city": "Albuquerque",
-                        "countryCode": "US",
-                        "postalCode": "87104",
-                        "state": "New Mexico"
-                    },
-                    "birthdate": "1959-09-07",
-                    "companyName": "Best Company Ever",
-                    "contactInfo": {
-                        "emails": [
-                            "w@w.com"
-                        ],
-                        "faxNumber": "456",
-                        "phoneNumbers": [
-                            "123"
-                        ]
-                    },
-                    "firstname": "John",
-                    "lastname": "Smith"
-                }
-            ],
-            "isModifiable": true,
-            "roomRate": {
-                "cancelPenalties": {
-                    "penalties": [
-                        {
-                            "amountPercent": {
-                                "amount": {
-                                    "amount": 100,
-                                    "currencyCode": "USD"
-                                },
-                                "applyAs": "FIRST_AND_LAST_NIGHT_DEPOSIT",
-                                "basisType": "FULL_STAY",
-                                "feesInclusive": true,
-                                "numberOfNights": 3,
-                                "percent": 99,
-                                "taxInclusive": true
-                            },
-                            "cancelDeadline": "2018-10-10T19:10:59Z",
-                            "description": "<b>dummy description</b>",
-                            "refundableStatus": "FULLY_REFUNDABLE"
-                        },
-                        {
-                            "cancelDeadline": "2018-10-10T19:10:59Z",
-                            "description": "<b>another one</b>",
-                            "refundableStatus": "FULLY_REFUNDABLE"
-                        }
-                    ],
-                    "penaltyDescription": "dummy penalty description"
-                },
-                "guarantee": {
-                    "acceptedPayments": [
-                        "VISA"
-                    ],
-                    "guaranteeType": "DEPOSIT_REQUIRED"
-                },
-                "nightlyPrices": [
-                    {
-                        "basePrice": 90,
-                        "currencyCode": "USD",
-                        "endDate": "2024-05-01",
-                        "fees": {
-                            "amount": 0
-                        },
-                        "startDate": "2024-04-30",
-                        "taxes": {
-                            "amount": 10,
-                            "taxBreakdown": [
-                                {
-                                    "amount": 6,
-                                    "fttCode": 33,
-                                    "inclusive": true
-                                },
-                                {
-                                    "amount": 4,
-                                    "fttCode": 44,
-                                    "inclusive": true
-                                }
-                            ]
-                        },
-                        "totalPrice": 120
-                    },
-                    {
-                        "basePrice": 10,
-                        "currencyCode": "EUR",
-                        "endDate": "2024-05-02",
-                        "fees": {
-                            "amount": 20,
-                            "feeBreakdown": [
-                                {
-                                    "amount": 6,
-                                    "fttCode": 33,
-                                    "inclusive": true
-                                },
-                                {
-                                    "amount": 4,
-                                    "fttCode": 44,
-                                    "inclusive": true
-                                }
-                            ]
-                        },
-                        "startDate": "2024-05-01",
-                        "taxes": {
-                            "amount": 0
-                        },
-                        "totalPrice": 60
-                    }
-                ],
-                "prepayRequired": true,
-                "rateCategory": "AAA",
-                "rateDescription": [
-                    "dummy rate description 0",
-                    "dummy rate description 1"
-                ],
-                "ratePlanId": "dummy rate plan id",
-                "refundable": true,
-                "roomId": "dummy room id",
-                "totalPrice": {
-                    "currencyCode": "USD",
-                    "fees": 10,
-                    "taxes": 20,
-                    "totalAfterTax": 130,
-                    "totalBeforeTax": 100
-                }
-            },
-            "status": "RESERVED"
-        }
-    ]
-}
-```
-</details>
-<details>
-<summary>Cancel booking on existing trip</summary>
+<p>Replace booking on existing trip.</p>
 
-```shell
-
-{
-    "changeId": "00000000-0000-0000-0000-000000000000",
-    "changeTimestamp": "2024-04-30T12:26:17-05:00",
-    "changeTypeCode": "CANCEL",
-    "oldBooking": {
-        "bookingId": "00000000-0000-0000-0000-000000000000",
-        "confirmationCodes": [
-            {
-                "code": "123456",
-                "codeType": "CANCELLATION"
-            }
-        ],
-        "status": "CANCELLED"
-    }
-}
-
-```
-</details>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">{</span>
+    <span class="s2">"changeId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+    <span class="s2">"changeTimestamp"</span>: <span class="s2">"2024-04-30T12:26:19-05:00"</span>,
+    <span class="s2">"changeTypeCode"</span>: <span class="s2">"REPLACE"</span>,
+    <span class="s2">"oldBooking"</span>: <span class="o">{</span>
+        <span class="s2">"bookingId"</span>: <span class="s2">"00000000-0000-0000-0000-000000000000"</span>,
+        <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+            <span class="o">{</span>
+                <span class="s2">"code"</span>: <span class="s2">"000000-TEST"</span>,
+                <span class="s2">"codeType"</span>: <span class="s2">"CANCELLATION"</span>
+            <span class="o">}</span>
+        <span class="o">]</span>,
+        <span class="s2">"status"</span>: <span class="s2">"CANCELLED"</span>
+    <span class="o">}</span>,
+    <span class="s2">"updatedBookings"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"basicHotelProperty"</span>: <span class="o">{</span>
+                <span class="s2">"address"</span>: <span class="o">{</span>
+                    <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                        <span class="s2">"line 1"</span>,
+                        <span class="s2">"line 2"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"city"</span>: <span class="s2">"dummy city"</span>,
+                    <span class="s2">"countryCode"</span>: <span class="s2">"dummy country code"</span>,
+                    <span class="s2">"postalCode"</span>: <span class="s2">"dummy postal code"</span>,
+                    <span class="s2">"state"</span>: <span class="s2">"dummy state"</span>,
+                    <span class="s2">"stateName"</span>: <span class="s2">"dummy state name"</span>
+                <span class="o">}</span>,
+                <span class="s2">"chainCode"</span>: <span class="s2">"dummy chain code"</span>,
+                <span class="s2">"cityCode"</span>: <span class="s2">"dummy city code"</span>,
+                <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                    <span class="s2">"emails"</span>: <span class="o">[</span>
+                        <span class="s2">"someone@somewhere.com"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                    <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                        <span class="s2">"123"</span>,
+                        <span class="s2">"890"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"hotelName"</span>: <span class="s2">"dummy hotel name"</span>,
+                <span class="s2">"position"</span>: <span class="o">{</span>
+                    <span class="s2">"latitude"</span>: 2,
+                    <span class="s2">"longitude"</span>: 3
+                <span class="o">}</span>,
+                <span class="s2">"propertyCode"</span>: <span class="s2">"dummy property code"</span>
+            <span class="o">}</span>,
+            <span class="s2">"checkin"</span>: <span class="s2">"2024-04-30"</span>,
+            <span class="s2">"checkout"</span>: <span class="s2">"2024-05-03"</span>,
+            <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"code"</span>: <span class="s2">"dummy supplier confirmation code"</span>,
+                    <span class="s2">"codeType"</span>: <span class="s2">"SUPPLIER_CONFIRMATION"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"guests"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"address"</span>: <span class="o">{</span>
+                        <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                            <span class="s2">"123 Green St"</span>,
+                            <span class="s2">""</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"city"</span>: <span class="s2">"Albuquerque"</span>,
+                        <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>,
+                        <span class="s2">"postalCode"</span>: <span class="s2">"87104"</span>,
+                        <span class="s2">"state"</span>: <span class="s2">"New Mexico"</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"birthdate"</span>: <span class="s2">"1959-09-07"</span>,
+                    <span class="s2">"companyName"</span>: <span class="s2">"Best Company Ever"</span>,
+                    <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                        <span class="s2">"emails"</span>: <span class="o">[</span>
+                            <span class="s2">"w@w.com"</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                        <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                            <span class="s2">"123"</span>
+                        <span class="o">]</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"firstname"</span>: <span class="s2">"John"</span>,
+                    <span class="s2">"lastname"</span>: <span class="s2">"Smith"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"isModifiable"</span>: <span class="nb">true</span>,
+            <span class="s2">"roomRate"</span>: <span class="o">{</span>
+                <span class="s2">"cancelPenalties"</span>: <span class="o">{</span>
+                    <span class="s2">"penalties"</span>: <span class="o">[</span>
+                        <span class="o">{</span>
+                            <span class="s2">"amountPercent"</span>: <span class="o">{</span>
+                                <span class="s2">"amount"</span>: <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 100,
+                                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+                                <span class="o">}</span>,
+                                <span class="s2">"applyAs"</span>: <span class="s2">"FIRST_AND_LAST_NIGHT_DEPOSIT"</span>,
+                                <span class="s2">"basisType"</span>: <span class="s2">"FULL_STAY"</span>,
+                                <span class="s2">"feesInclusive"</span>: <span class="nb">true</span>,
+                                <span class="s2">"numberOfNights"</span>: 3,
+                                <span class="s2">"percent"</span>: 99,
+                                <span class="s2">"taxInclusive"</span>: <span class="nb">true</span>
+                            <span class="o">}</span>,
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;dummy description&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>,
+                        <span class="o">{</span>
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;another one&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"penaltyDescription"</span>: <span class="s2">"dummy penalty description"</span>
+                <span class="o">}</span>,
+                <span class="s2">"guarantee"</span>: <span class="o">{</span>
+                    <span class="s2">"acceptedPayments"</span>: <span class="o">[</span>
+                        <span class="s2">"VISA"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"guaranteeType"</span>: <span class="s2">"DEPOSIT_REQUIRED"</span>
+                <span class="o">}</span>,
+                <span class="s2">"nightlyPrices"</span>: <span class="o">[</span>
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 90,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-04-30"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 10,
+                            <span class="s2">"taxBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 120
+                    <span class="o">}</span>,
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 10,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"EUR"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-02"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 20,
+                            <span class="s2">"feeBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 60
+                    <span class="o">}</span>
+                <span class="o">]</span>,
+                <span class="s2">"prepayRequired"</span>: <span class="nb">true</span>,
+                <span class="s2">"rateCategory"</span>: <span class="s2">"AAA"</span>,
+                <span class="s2">"rateDescription"</span>: <span class="o">[</span>
+                    <span class="s2">"dummy rate description 0"</span>,
+                    <span class="s2">"dummy rate description 1"</span>
+                <span class="o">]</span>,
+                <span class="s2">"ratePlanId"</span>: <span class="s2">"dummy rate plan id"</span>,
+                <span class="s2">"refundable"</span>: <span class="nb">true</span>,
+                <span class="s2">"roomId"</span>: <span class="s2">"dummy room id"</span>,
+                <span class="s2">"totalPrice"</span>: <span class="o">{</span>
+                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                    <span class="s2">"fees"</span>: 10,
+                    <span class="s2">"taxes"</span>: 20,
+                    <span class="s2">"totalAfterTax"</span>: 130,
+                    <span class="s2">"totalBeforeTax"</span>: 100
+                <span class="o">}</span>
+            <span class="o">}</span>,
+            <span class="s2">"status"</span>: <span class="s2">"RESERVED"</span>
+        <span class="o">}</span>,
+        <span class="o">{</span>
+            <span class="s2">"basicHotelProperty"</span>: <span class="o">{</span>
+                <span class="s2">"address"</span>: <span class="o">{</span>
+                    <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                        <span class="s2">"line 1"</span>,
+                        <span class="s2">"line 2"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"city"</span>: <span class="s2">"dummy city"</span>,
+                    <span class="s2">"countryCode"</span>: <span class="s2">"dummy country code"</span>,
+                    <span class="s2">"postalCode"</span>: <span class="s2">"dummy postal code"</span>,
+                    <span class="s2">"state"</span>: <span class="s2">"dummy state"</span>,
+                    <span class="s2">"stateName"</span>: <span class="s2">"dummy state name"</span>
+                <span class="o">}</span>,
+                <span class="s2">"chainCode"</span>: <span class="s2">"dummy chain code"</span>,
+                <span class="s2">"cityCode"</span>: <span class="s2">"dummy city code"</span>,
+                <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                    <span class="s2">"emails"</span>: <span class="o">[</span>
+                        <span class="s2">"sasha@sap.com"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                    <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                        <span class="s2">"123"</span>,
+                        <span class="s2">"890"</span>
+                    <span class="o">]</span>
+                <span class="o">}</span>,
+                <span class="s2">"hotelName"</span>: <span class="s2">"dummy hotel name"</span>,
+                <span class="s2">"position"</span>: <span class="o">{</span>
+                    <span class="s2">"latitude"</span>: 2,
+                    <span class="s2">"longitude"</span>: 3
+                <span class="o">}</span>,
+                <span class="s2">"propertyCode"</span>: <span class="s2">"dummy property code"</span>
+            <span class="o">}</span>,
+            <span class="s2">"checkin"</span>: <span class="s2">"2024-04-30"</span>,
+            <span class="s2">"checkout"</span>: <span class="s2">"2024-05-03"</span>,
+            <span class="s2">"confirmationCodes"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"code"</span>: <span class="s2">"dummy supplier confirmation code"</span>,
+                    <span class="s2">"codeType"</span>: <span class="s2">"SUPPLIER_CONFIRMATION"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"guests"</span>: <span class="o">[</span>
+                <span class="o">{</span>
+                    <span class="s2">"address"</span>: <span class="o">{</span>
+                        <span class="s2">"addressLines"</span>: <span class="o">[</span>
+                            <span class="s2">"123 Green St"</span>,
+                            <span class="s2">""</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"city"</span>: <span class="s2">"Albuquerque"</span>,
+                        <span class="s2">"countryCode"</span>: <span class="s2">"US"</span>,
+                        <span class="s2">"postalCode"</span>: <span class="s2">"87104"</span>,
+                        <span class="s2">"state"</span>: <span class="s2">"New Mexico"</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"birthdate"</span>: <span class="s2">"1959-09-07"</span>,
+                    <span class="s2">"companyName"</span>: <span class="s2">"Best Company Ever"</span>,
+                    <span class="s2">"contactInfo"</span>: <span class="o">{</span>
+                        <span class="s2">"emails"</span>: <span class="o">[</span>
+                            <span class="s2">"w@w.com"</span>
+                        <span class="o">]</span>,
+                        <span class="s2">"faxNumber"</span>: <span class="s2">"456"</span>,
+                        <span class="s2">"phoneNumbers"</span>: <span class="o">[</span>
+                            <span class="s2">"123"</span>
+                        <span class="o">]</span>
+                    <span class="o">}</span>,
+                    <span class="s2">"firstname"</span>: <span class="s2">"John"</span>,
+                    <span class="s2">"lastname"</span>: <span class="s2">"Smith"</span>
+                <span class="o">}</span>
+            <span class="o">]</span>,
+            <span class="s2">"isModifiable"</span>: <span class="nb">true</span>,
+            <span class="s2">"roomRate"</span>: <span class="o">{</span>
+                <span class="s2">"cancelPenalties"</span>: <span class="o">{</span>
+                    <span class="s2">"penalties"</span>: <span class="o">[</span>
+                        <span class="o">{</span>
+                            <span class="s2">"amountPercent"</span>: <span class="o">{</span>
+                                <span class="s2">"amount"</span>: <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 100,
+                                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>
+                                <span class="o">}</span>,
+                                <span class="s2">"applyAs"</span>: <span class="s2">"FIRST_AND_LAST_NIGHT_DEPOSIT"</span>,
+                                <span class="s2">"basisType"</span>: <span class="s2">"FULL_STAY"</span>,
+                                <span class="s2">"feesInclusive"</span>: <span class="nb">true</span>,
+                                <span class="s2">"numberOfNights"</span>: 3,
+                                <span class="s2">"percent"</span>: 99,
+                                <span class="s2">"taxInclusive"</span>: <span class="nb">true</span>
+                            <span class="o">}</span>,
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;dummy description&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>,
+                        <span class="o">{</span>
+                            <span class="s2">"cancelDeadline"</span>: <span class="s2">"2018-10-10T19:10:59Z"</span>,
+                            <span class="s2">"description"</span>: <span class="s2">"&lt;b&gt;another one&lt;/b&gt;"</span>,
+                            <span class="s2">"refundableStatus"</span>: <span class="s2">"FULLY_REFUNDABLE"</span>
+                        <span class="o">}</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"penaltyDescription"</span>: <span class="s2">"dummy penalty description"</span>
+                <span class="o">}</span>,
+                <span class="s2">"guarantee"</span>: <span class="o">{</span>
+                    <span class="s2">"acceptedPayments"</span>: <span class="o">[</span>
+                        <span class="s2">"VISA"</span>
+                    <span class="o">]</span>,
+                    <span class="s2">"guaranteeType"</span>: <span class="s2">"DEPOSIT_REQUIRED"</span>
+                <span class="o">}</span>,
+                <span class="s2">"nightlyPrices"</span>: <span class="o">[</span>
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 90,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-04-30"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 10,
+                            <span class="s2">"taxBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 120
+                    <span class="o">}</span>,
+                    <span class="o">{</span>
+                        <span class="s2">"basePrice"</span>: 10,
+                        <span class="s2">"currencyCode"</span>: <span class="s2">"EUR"</span>,
+                        <span class="s2">"endDate"</span>: <span class="s2">"2024-05-02"</span>,
+                        <span class="s2">"fees"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 20,
+                            <span class="s2">"feeBreakdown"</span>: <span class="o">[</span>
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 6,
+                                    <span class="s2">"fttCode"</span>: 33,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>,
+                                <span class="o">{</span>
+                                    <span class="s2">"amount"</span>: 4,
+                                    <span class="s2">"fttCode"</span>: 44,
+                                    <span class="s2">"inclusive"</span>: <span class="nb">true</span>
+                                <span class="o">}</span>
+                            <span class="o">]</span>
+                        <span class="o">}</span>,
+                        <span class="s2">"startDate"</span>: <span class="s2">"2024-05-01"</span>,
+                        <span class="s2">"taxes"</span>: <span class="o">{</span>
+                            <span class="s2">"amount"</span>: 0
+                        <span class="o">}</span>,
+                        <span class="s2">"totalPrice"</span>: 60
+                    <span class="o">}</span>
+                <span class="o">]</span>,
+                <span class="s2">"prepayRequired"</span>: <span class="nb">true</span>,
+                <span class="s2">"rateCategory"</span>: <span class="s2">"AAA"</span>,
+                <span class="s2">"rateDescription"</span>: <span class="o">[</span>
+                    <span class="s2">"dummy rate description 0"</span>,
+                    <span class="s2">"dummy rate description 1"</span>
+                <span class="o">]</span>,
+                <span class="s2">"ratePlanId"</span>: <span class="s2">"dummy rate plan id"</span>,
+                <span class="s2">"refundable"</span>: <span class="nb">true</span>,
+                <span class="s2">"roomId"</span>: <span class="s2">"dummy room id"</span>,
+                <span class="s2">"totalPrice"</span>: <span class="o">{</span>
+                    <span class="s2">"currencyCode"</span>: <span class="s2">"USD"</span>,
+                    <span class="s2">"fees"</span>: 10,
+                    <span class="s2">"taxes"</span>: 20,
+                    <span class="s2">"totalAfterTax"</span>: 130,
+                    <span class="s2">"totalBeforeTax"</span>: 100
+                <span class="o">}</span>
+            <span class="o">}</span>,
+            <span class="s2">"status"</span>: <span class="s2">"RESERVED"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
 
       </div>
       <!--/col-md-8-->
