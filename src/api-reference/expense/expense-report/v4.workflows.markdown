@@ -1,50 +1,67 @@
 ---
-title: Workflows v4
+title: Workflow v4
 layout: reference
 ---
 
 # Workflows v4
 
-The Workflows v4 APIs are used to Approve or Send Back or Recall an expense report that is in the workflow. These APIs are used only for normal approval steps and not for Cost Object Approval steps.
+The Workflows v4 APIs are used to get information about as well as take action on a report's workflow.
 
-## Prior Versions <a name="Prior-versions"></a>
+### Prior Versions <a name="Prior-versions"></a>
 
-* Report Workflow Action v1.1 documentation is available [here](/api-reference/expense/expense-report/post-report-workflow-action.html).
+* Report Workflow Action v1.1 documentation is
+  available [here](/api-reference/expense/expense-report/post-report-workflow-action.html).
 
-## <a name="limitations"></a>Limitations
+### <a name="limitations"></a>Limitations
 
-These APIs are only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the APIs.
+These APIs are only available to partners who have been granted access by SAP Concur. Access to this documentation does
+not provide access to the APIs.
 
-## <a name="products-editions"></a>Products and Editions
+### <a name="products-editions"></a>Products and Editions
 
 * Concur Expense Professional Edition
 * Concur Expense Standard Edition
 
-## Scope Usage <a name="scope-usage"></a>
+### Dependencies <a name="dependencies"></a>
 
-Required Scope:
-
-| Name| Description  |Endpoint|
-| ---|----|---|
-|`expense.report.workflowstatus.write`| Approve or Send Back or Recall the Report in the workflow |PATCH|
-
-## Dependencies <a name="dependencies"></a>
-
-SAP Concur clients must purchase Concur Expense in order to use this API. These APIs requires the identity v4 API which is currently only available to approved early access partners. Please contact your SAP Concur representative for more information.
-
-## Access Token Usage <a name="access-token-usage"></a>
-
-Approve and Send Back short URL (i.e. with no userId and contextType) APIs supports company level access token. Approve, Send Back and Recall long URL (i.e. with userId and contextType) APIs supports user level access token.
+SAP Concur clients must purchase Concur Expense in order to use this API. These APIs requires the identity v4 API which
+is currently only available to approved early access partners. Please contact your SAP Concur representative for more
+information.
 
 ## Approve or Send Back or Recall a Report <a name="approve-or-send-back-or-recall-a-report"></a>
 
-* The Approve function advances the specified report to the next step (use short URL Approve API if the report is in a system step). 
-* The Send Back function sends back the specified report to report owner. 
+* The Approve function advances the specified report to the next step (use the short URL Approve API if the report is in a
+  system step).
+* The Send Back function sends back the specified report to report owner.
 * The Recall function moves the specified report to an unsubmitted state.
+
+### Access Token Usage <a name="access-token-usage"></a>
+
+Approve and Send Back short URL (i.e. with no userId and contextType) APIs support the company level access token. Approve,
+Send Back and Recall long URL (i.e. with userId and contextType) APIs support user level access tokens.
 
 ### Scopes
 
 `expense.report.workflowstatus.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Parameters
+
+| Name          | Type     | Format | Description                                                                                                                                                                                                                |
+|---------------|----------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userId`      | `string` | -      | **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.                                                                        |
+| `contextType` | `string` | -      | **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value for Recall API: `TRAVELER`, `PROXY`. Supported value for Approve and Send Back API: `MANAGER` |
+| `reportId`    | `string` | -      | **Required** The unique identifier of the report that is being approved or sent back or recalled.                                                                                                                          |
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+  This is the Company or User access token.
 
 ### Request
 
@@ -58,52 +75,7 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/recall
 ```
 
-#### Parameters
-
-|Name|Type|Format|Description|
-|---|---|---|---|
-| `userId` |`string`|-| **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userId`.  |
-| `contextType` |`string`|-| **Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value for Recall API: `TRAVELER`, `PROXY`. Supported value for Approve and Send Back API: `MANAGER` |
-| `reportId`    |`string`|-| **Required** The unique identifier of the report that is being approved or sent back or recalled. |
-
-#### Headers
-
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-
-#### REST Design Specification
-
-PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:
-
-* [RFC 7386 Authorization - JSON Merge Patch](https://tools.ietf.org/html/rfc7386)
-
-#### Payload
-
-* [Approve/Sendback/Recall Report Request](#patch-approve-sendback-recall-report-request-schema)
-
-### Response
-
-#### Status Codes
-
-* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Payload
-
-* [Approve/SendBack/Recall Report Response](#patch-approve-sendback-recall-report-response-schema)
-
-### Example
-
-#### <a name="patch-approve-sendback-recall-report-request-schema"></a>Sample Requests (short and long URL)
+#### Curl Example (short and long URL)
 
 ```shell
 curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/reports/764428DD6A664AF0BFCB/approve' \
@@ -122,43 +94,249 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 }'
 ```
 
-#### <a name="patch-approve-sendback-recall-report-response-schema"></a>Response
+#### REST Design Specification
+
+PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:
+
+* [RFC 7386 Authorization - JSON Merge Patch](https://tools.ietf.org/html/rfc7386)
+
+### Response
+
+#### Successful Response
 
 ```shell
 204 No Content
 ```
 
-## Schema <a name="schema"></a>
+#### Status Codes
 
-### <a name="report-send-back-request-schema"></a>ReportSendBackRequest
+* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`comment`|`string`|-|**Required** Comments for sending back the report.|
+#### Payload
 
-### <a name="report-approve-request-schema"></a>ReportApproveRequest
+* [Approve/SendBack/Recall Report Response](#patch-approve-sendback-recall-report-response-schema)
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`comment`|`string`|-| Approver comments.  |
-|`expenseRejectedComment`|`string`|-| This comment identifies why some of the expense is rejected on this report. **Required** if the report has rejected expense(s) |
+## View Cost Objects for a specific Report
 
-### <a name="schema-error"></a>Error
+This endpoint retrieves all cost objects for a report that the calling approver or their delegators is able to approve.
+If the workflow setting "Filter expenses to those that are applicable to Cost Object" is set to false, then this
+endpoint will return all cost objects related to the report regardless of if the approver has permission to approve
+them.
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`customResponseData`|`object`|-|The custom parameters related to error.|
-|`errorId`|`string`|-|The unique identifier of the error associated with the response.|
-|`errorMessage`|`string`|-|**Required** The detailed error message.|
-|`httpStatus`|`string`|-|**Required** The http response code and phrase for the response.|
-|`path`|`string`|-|**Required** The URI of the attempted request.|
-|`timestamp`|`string`|`date-time`|**Required** The time when the error was captured.|
-|`validationErrors`|[`ValidationError`](#validation-error-schema)|-|The validation error messages.|
+### <a name="access-token-usage"></a>Access Token Usage
+
+This API supports both company level and user level access tokens.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Parameters
+
+| Name       | Type     | Format | Description                                                                                                                                         |
+|------------|----------|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userID`   | `string` | -      | **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+| `reportId` | `string` | -      | **Required** The unique identifier of the report that is being read.                                                                                |
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+  This is the Company or User access token.
+* `Concur-CorrelationId` is a Concur specific custom header used for technical support in the form of
+  a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userId}/reports/{reportId}/costObjectsForApprover
+```
+
+#### Curl Example
+
+```shell
+curl --location --request GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: abcd-efgh-xyzw' \
+--header 'Content-Type: application/json'
+```
+
+### Response
+
+#### Success Response
+
+```json
+[
+  {
+    "name": "Development",
+    "approvedAmount": {
+      "value": 150,
+      "currencyCode": "USD"
+    },
+    "claimedAmount": {
+      "value": 150,
+      "currencyCode": "USD"
+    },
+    "approverId": "aa024d31-95eb-4270-b9f8-cb6b5f558a7c",
+    "expenses": [
+      {
+        "approvedAmount": {
+          "value": 100,
+          "currencyCode": "USD"
+        },
+        "postedAmount": {
+          "value": 100,
+          "currencyCode": "USD"
+        },
+        "id": "080286AAA453AD449CB4DD6128BC9BA5"
+      },
+      {
+        "approvedAmount": {
+          "value": 50,
+          "currencyCode": "USD"
+        },
+        "postedAmount": {
+          "value": 50,
+          "currencyCode": "USD"
+        },
+        "id": "1C7DE29EA1CFB34AAE819264683BAF87"
+      }
+    ],
+    "isOwnedByCaller": true,
+    "isFullyApproved": false,
+    "isApprovableAsUser": true,
+    "isApprovableAsDelegate": false
+  }
+]
+```
+
+#### Exception Response
+
+```json
+{
+  "timestamp": "2023-04-12T15:22:44.248Z",
+  "httpStatus": "string",
+  "errorMessage": "string",
+  "errorId": "string",
+  "validationErrors": [
+    {
+      "source": "string",
+      "message": "string",
+      "id": "string"
+    }
+  ],
+  "customResponseData": {
+    "additionalProp1": "string",
+    "additionalProp2": "string",
+    "additionalProp3": "string"
+  },
+  "path": "string"
+}
+```
+
+### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+## <a name="schema"></a>Schema
+
+### CostObjectForApprover
+
+| Name                     | Type                                  | Format | Description                                                                            |
+|--------------------------|---------------------------------------|--------|----------------------------------------------------------------------------------------|
+| `name`                   | `string`                              | -      | **Required** The name of the cost object.                                              
+| `approvedAmount`         | [`Amount`](#amount-schema)            | -      | **Required** The approved amount of the cost object expense(s) in the report currency. |
+| `claimedAmount`          | [`Amount`](#amount-schema)            | -      | **Required** The approved amount of the cost object expense(s) in the report currency. |
+| `approverId`             | `String`                              | -      | **Required** The unique identifier of the cost object approver.                        |
+| `expenses`               | [`CostObjectExpense`](#amount-schema] | -      | **Required** TA list of expenses associated with the cost object.                      |
+| `isOwnedByCaller`        | `Boolean`                             | -      | **Required** Whether the caller is one of the cost object owners.                      |
+| `isFullyApproved`        | `Boolean`                             | -      | **Required** Whether the cost object flow is completed.                                |
+| `isApprovableAsUser`     | `Boolean`                             | -      | **Required** Whether the cost object is pending approval by the calling approver.      |
+| `isApprovableAsDelegate` | `Boolean`                             | -      | **Required** Whether the cost object flow is pending approval by the calling delegate. |
+
+### <a name="cost-object-expense-schema"></a>CostObjectExpense
+
+| Name             | Type     | Format | Description                                                              |
+|------------------|----------|--------|--------------------------------------------------------------------------|
+| `approvedAmount` | `Amount` | -      | **Required** The approved amount of the expense, in the report currency. |
+| `claimedAmount`  | `Amount` | -      | **Required** The approved amount of the expense, in the report currency. |
+| `id`             | `String` | -      | **Required** The unique identifier for the expense.                      |
+
+### <a name="amount-schema"></a>Amount
+
+| Name           | Type     | Format   | Description                                                                                                                                                                                                                                                                                                                                                                                                                       |
+|----------------|----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `currencyCode` | `string` | -        | **Required** The 3-letter ISO 4217 currency code for the expense report currency, based on the user's assigned reimbursement currency when the report was created. Examples: `USD` - US dollars; `BRL` - Brazilian real; `CAD` - Canadian dollar; `CHF` - Swiss franc; `EUR` - Euro; `GBO` - Pound sterling; `HKD` - Hong Kong dollar; `INR` - Indian rupee; `MXN` - Mexican peso; `NOK` - Norwegian krone; `SEK` - Swedish krona |
+| `value`        | `number` | `double` | **Required** The amount in the defined currency.                                                                                                                                                                                                                                                                                                                                                                                  |
+
+### <a name="error-message-schema"></a>ErrorMessage
+
+| Name                 | Type                                          | Format      | Description                                                      |
+|----------------------|-----------------------------------------------|-------------|------------------------------------------------------------------|
+| `customResponseData` | `object`                                      | -           | The custom parameters related to error.                          |
+| `errorId`            | `string`                                      | -           | The unique identifier of the error associated with the response. |
+| `errorMessage`       | `string`                                      | -           | **Required** The detailed error message.                         |
+| `httpStatus`         | `string`                                      | -           | **Required** The http response code and phrase for the response. |
+| `path`               | `string`                                      | -           | **Required** The URI of the attempted request.                   |
+| `timestamp`          | `string`                                      | `date-time` | **Required** The time when the error was captured.               |
+| `validationErrors`   | [`ValidationError`](#validation-error-schema) | -           | The validation error messages.                                   |
 
 ### <a name="validation-errors-schema"></a>ValidationError
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`id`|`string`|-|The ID of the validation error.|
-|`message`|`string`|-|The detailed message of the validation error.|
-|`source`|`string`|-|The type of validation which failed.|
+| Name      | Type     | Format | Description                                   |
+|-----------|----------|--------|-----------------------------------------------|
+| `id`      | `string` | -      | The ID of the validation error.               |
+| `message` | `string` | -      | The detailed message of the validation error. |
+| `source`  | `string` | -      | The type of validation that failed.           |
+
+### <a name="report-send-back-request-schema"></a>ReportSendBackRequest
+
+| Name      | Type     | Format | Description                                        |
+|-----------|----------|--------|----------------------------------------------------|
+| `comment` | `string` | -      | **Required** Comments for sending back the report. |
+
+### <a name="report-approve-request-schema"></a>ReportApproveRequest
+
+| Name                     | Type     | Format | Description                                                                                                                    |
+|--------------------------|----------|--------|--------------------------------------------------------------------------------------------------------------------------------|
+| `comment`                | `string` | -      | Approver comments.                                                                                                             |
+| `expenseRejectedComment` | `string` | -      | This comment identifies why some of the expense is rejected on this report. **Required** if the report has rejected expense(s) |
+
+### <a name="schema-error"></a>Error
+
+| Name                 | Type                                          | Format      | Description                                                      |
+|----------------------|-----------------------------------------------|-------------|------------------------------------------------------------------|
+| `customResponseData` | `object`                                      | -           | The custom parameters related to error.                          |
+| `errorId`            | `string`                                      | -           | The unique identifier of the error associated with the response. |
+| `errorMessage`       | `string`                                      | -           | **Required** The detailed error message.                         |
+| `httpStatus`         | `string`                                      | -           | **Required** The http response code and phrase for the response. |
+| `path`               | `string`                                      | -           | **Required** The URI of the attempted request.                   |
+| `timestamp`          | `string`                                      | `date-time` | **Required** The time when the error was captured.               |
+| `validationErrors`   | [`ValidationError`](#validation-error-schema) | -           | The validation error messages.                                   |
+
+### <a name="validation-errors-schema"></a>ValidationError
+
+| Name      | Type     | Format | Description                                   |
+|-----------|----------|--------|-----------------------------------------------|
+| `id`      | `string` | -      | The ID of the validation error.               |
+| `message` | `string` | -      | The detailed message of the validation error. |
+| `source`  | `string` | -      | The type of validation which failed.          |
