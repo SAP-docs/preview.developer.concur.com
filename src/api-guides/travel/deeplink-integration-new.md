@@ -21,9 +21,9 @@ When using SAML2 IdP-Initiated flow there is the caveat that IdP must support se
 {IdP_URI}?sp={concur_URI}&relayState=%2Fgoto%2Fair-shop%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 ```
 
-Whenever possible use the correct environment in your link, e.g. `eu2` or `us2`, instead of just `www`. This will avoid unnecessary logins.
+Whenever possible use the correct environment in your link, for example, `eu2` or `us2`, instead of just `www`. This will avoid unnecessary logins.
 
-Deeplink Integration is not available for mobile and currently it only supports flight / car / hotel / train search and itinerary lookup.
+> Deeplink Integration is not available for mobile and currently it only supports flight / car / hotel / train search and itinerary lookup.
 
 ## Integration Details
 
@@ -52,22 +52,22 @@ https://eu2.concursolutions.com/goto/air-shop?departurelocation=POA&departuredat
 
 #### Query Parameters
 
-| Name | Type| Format | Description                       |
-| -------- |     -------- | -------- | -------- |
-| `departurelocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-air) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place |
-| `departuredate`       | `string`   | `YYYY-MM-DD`    | **Required** <br>Departure flight date  |
-| `departuretime`       | `string`   | `hh:mm`         | Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
-| `returnlocation`      | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-air) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place <br> For one-way trips, this will be considered as the destination airport, see [Example: One-way trip](/api-guides/travel/deeplink-integration.html#example-one-way) |
-| `returndate`          | `string`   | `YYYY-MM-DD`    | Return flight date |
-| `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00` |
-| `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel on |
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `departurelocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-air) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place. |
+| `departuredate`       | `string`   | `YYYY-MM-DD`    | **Required** <br>Departure flight date.  |
+| `departuretime`       | `string`   | `hh:mm`         | Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`. |
+| `returnlocation`      | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-air) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place <br> For one-way trips, this will be considered as the destination airport, see [Example: One-way trip](/api-guides/travel/.deeplink-integration.html#example-one-way) |
+| `returndate`          | `string`   | `YYYY-MM-DD`    | Return flight date. |
+| `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`. |
+| `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel in. |
 
 <a name="location-format-air"></a>**Location Format**
 
-The airport can be informed in different ways:
-* **IATA Code**: a three-letter code that represents the airport, for example `LAX` for Los Angeles International Airport
-* **Geographic Coordinates**: latitude and longitude for a geopoint  
-Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With these coordinates a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search
+The airport can be identified in different ways:
+* **IATA Code**: a three-letter code that represents the airport, for example `LAX` for Los Angeles International Airport.
+* **Geographic Coordinates**: latitude and longitude for a geopoint.  
+Format: `{lat},{long}`, with no blank space in between. Example: `48.85694273527786,2.3501079080340315` for Paris. With these coordinates a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search.
 
 <a name="cabin-types"></a>**Cabin Types**
 
@@ -107,7 +107,7 @@ https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.8569427352778
 
 ### Car Search
 
-Users can search for cars by informing a pickup date, time and location, a drop-off date, time and location. If pickup and drop-off location should be the same, the drop-off location can be omitted.
+Users can search for cars by requesting a pickup date, time and location, a drop-off date, time and location. If pickup and drop-off location should be the same, the drop-off location can be omitted.
 
 #### URI Template
 
@@ -122,26 +122,26 @@ https://eu2.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2
 
 #### Query Parameters
 
-| Name               | Type       | Format         | Description                                               |
-| ------------------ | ---------- | -------------- | --------------------------------------------------------- |
-| `pickuplocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | **Required** <br>Location where the car will be picked up |
-| `pickupdate`       | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the car will be picked up  |
-| `pickuptime`       | `string`   | `hh:mm`        | **Required** <br>Time when the car will be picked up <br> Utilizes 24-hour format|
-| `dropofflocation`  | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | Location where the car will be dropped off <br>If it is not provided it will default to `pickuplocation`  |
-| `dropoffdate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the car will be dropped off |
-| `dropofftime`      | `string`   | `hh:mm`        | **Required** <br>Time when the car will be dropped off <br>Utilizes 24-hour format|
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `pickuplocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | **Required** <br>Location where the car will be picked up. |
+| `pickupdate`       | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the car will be picked up.  |
+| `pickuptime`       | `string`   | `hh:mm`        | **Required** <br>Time when the car will be picked up <br> Utilizes 24-hour format.|
+| `dropofflocation`  | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | Location where the car will be dropped off <br>If it is not provided it will default to `pickuplocation`.  |
+| `dropoffdate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the car will be dropped off. |
+| `dropofftime`      | `string`   | `hh:mm`        | **Required** <br>Time when the car will be dropped off <br>Utilizes 24-hour format.|
 
 <a name="location-format-car"></a>**Location Format**
 
-* **Geographic Coordinates**: latitude and longitude for a geopoint  
-Format: `{lat},{long}`, with no blank space inbetween. Example: `50.038432519565845,8.562138820315441` for Frankfurt airport. With these coordinates, a search for a location in a radius of 10 km is performed and the closest location is used in the car search
+* **Geographic Coordinates**: latitude and longitude for a geopoint.  
+Format: `{lat},{long}`, with no blank space in between. Example: `50.038432519565845,8.562138820315441` for Frankfurt airport. With these coordinates, a search for a location in a radius of 10 km is performed and the closest location is used in the car search.
 
 
 ### Hotel Search
 
 Users can search for hotels in a certain distance around the location by informing a check-in and checkout date, search center location, a distance around the location and a unit for the distance.
 
-The users are able to **omit** the unit or distance or both when they want to use default values. Omitting the distance will default to a distance of 5mi. Omitting the unit will default to the value set in their Travel Profile — under Profile Settings, System Settings, **mile/km**.
+ Users are able to **omit** the unit or distance or both when they want to use default values. Omitting the distance will default to a distance of 5mi. Omitting the unit will default to the value set in their Travel Profile — under Profile Settings, System Settings, **mile/km**.
 
 #### URI Template
 
@@ -156,21 +156,21 @@ https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutd
 
 #### Query Parameters
 
-| Name               | Type       | Format         | Description                                               |
-| ------------------ | ---------- | -------------- | --------------------------------------------------------- |
-| `checkindate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check in to the hotel  |
-| `checkoutdate`     | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check out of the hotel |
-| `location`         | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel) | **Required** <br>Location of the search center |
-| `distance`         | `string`   | integer - one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius  |
-| `unit`             | `string`   | `km` or `mi`   | Unit for the `distance` <br>If not set the value will be traken from users pofile - under Profile Settings, System Settings, **mile/km**|
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `checkindate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check in to the hotel.  |
+| `checkoutdate`     | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check out of the hotel. |
+| `location`         | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel) | **Required** <br>Location of the search center. |
+| `distance`         | `string`   | integer - one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
+| `unit`             | `string`   | `km` or `mi`   | Unit for the `distance` <br>If not set the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
 
 <a name="location-format-hotel"></a>**Location Format**
 
 The hotel location can be informed in different ways:
-* **Geographic Coordinates**: latitude and longitude for a geopoint  
-Format: `{lat},{long}`, with no blank space inbetween. Example: `48.85694273527786,2.3501079080340315` for Paris. With these coordinates, a search for hotels in a radius of `distance` `unit` is performed
-* **Concur internal Hotel ID**: SAP Concur internal ID of a hotel  
-Format: alpha-numeric string. Example: `1907825ad1f728ccafb22942d61a2715` for Econo Lodge Inn & Suites in Arkansas. With this Concur internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br>Concur internal hotel ID should only be used inside of Concur, e.g. for Concur MS Teams integration
+* **Geographic Coordinates**: latitude and longitude for a geopoint. 
+Format: `{lat},{long}`, with no blank space in between. Example: `48.85694273527786,2.3501079080340315` for Paris. With these coordinates, a search for hotels in a radius of `distance` `unit` is performed.
+* **Concur Travel Internal Hotel ID**: Concur Travel internal ID of a hotel.  
+Format: alpha-numeric string. Example: `1907825ad1f728ccafb22942d61a2715` for Econo Lodge Inn & Suites in Arkansas. With this internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br>The internal hotel ID should only be used inside of Concur, for example, Concur MS Teams integration.
 
 ### Train Search
 
@@ -189,26 +189,26 @@ https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 
 #### Query Parameters
 
-| Name               | Type       | Format         | Description                                               |
-| ------------------ | ---------- | -------------- | --------------------------------------------------------- |
-| `departurelocation`| `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail) | **Required** <br>Location where the train will depart |
-| `departuredate`    | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the train will depart  |
-| `departuretime`    | `string`   | `hh:mm`        | **Required** <br>Time when the train will depart <br>Utilizes 24-hour format|
-| `returnlocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail) | **Required** <br>Location where the train will return <br> For one-way trips, this will be considered as the destination location |
-| `returndate`       | `string`   | `YYYY-MM-DD`   | Date when the train will return |
-| `returntime`       | `string`   | `hh:mm`        | Time when the train will return <br>Utilizes 24-hour format|
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `departurelocation`| `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail) | **Required** <br>Location where the train will depart. |
+| `departuredate`    | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the train will depart.  |
+| `departuretime`    | `string`   | `hh:mm`        | **Required** <br>Time when the train will depart <br>Utilizes 24-hour format.|
+| `returnlocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail) | **Required** <br>Location where the train will return <br> For one-way trips, this will be considered as the destination location. |
+| `returndate`       | `string`   | `YYYY-MM-DD`   | Date when the train will return. |
+| `returntime`       | `string`   | `hh:mm`        | Time when the train will return <br>Utilizes 24-hour format.|
 
 <a name="location-format-rail"></a>**Location Format**
 
-* **Geographic Coordinates**: latitude and longitude for a geopoint  
-Format: `{lat},{long}`, with no blank space inbetween. Example: `41.37891483977241,2.1398877111090844` for Barcelona-Sants. With these coordinates a search for train stations in a radius of 25 km is performed and the closest station is used in the train search
+* **Geographic Coordinates**: latitude and longitude for a geopoint.  
+Format: `{lat},{long}`, with no blank space in between. Example: `41.37891483977241,2.1398877111090844` for Barcelona-Sants. With these coordinates a search for train stations in a radius of 25 km is performed and the closest station is used in the train search.
 
 
 ### Itinerary
 
 Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.
 
-The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger or an approver. An approver user will see the approvers view of an itinerary, while the traveler and the arranger will see the travelers view of an itinerary.
+The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver's view of an itinerary, while the traveler and the arranger will see the traveler's view of an itinerary.
 
 This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur home page.
 
@@ -218,10 +218,10 @@ This integration streamlines the user experience, making trip management more ef
 https://{environment}.concursolutions.com/goto/trip/{tripID}
 ```
 
-| Name | Type| Format | Description                       |
-| -------- |     -------- | -------- | -------- |
-| `environment`       | `string`   | `-`    | **Required** <br>Specifies the environment (e.g. 'US2' or 'EU2')|
-| `tripID`       | `string`   | `-`    | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `environment`       | `string`   | - | **Required** <br>Specifies the environment (for example, 'US2' or 'EU2').|
+| `tripID`       | `string`   | - | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deep link URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.
 
