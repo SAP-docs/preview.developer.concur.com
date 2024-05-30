@@ -11,7 +11,7 @@ In the App Center Partner Program, partners provide first-line support for their
 * If you are an existing partner and would like support from SAP Concur, please follow the steps below to log a ticket.
   * If you do not have login credentials to the partner support portal, please email [App Center Alliance](mailto:concur_appcenteralliance@sap.com?Subject=Support%20Portal%20Credentials) to request them.
 
-> If you are an SAP Concur CUSTOMER seeking support, be aware that this link and alias are meant for App Center, Endorsed Apps, and Solution Extensions PARTNERS only. Please instead reach out to your SAP Concur account owner for customer support access.
+> **NOTE:** If you are an SAP Concur CUSTOMER seeking support, be aware that this link and alias are meant for App Center, Endorsed Apps, and Solution Extensions PARTNERS only. Please instead reach out to your SAP Concur account owner for customer support access.
 
 [Login and open a partner support case](https://sapconcur.my.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi)
 
