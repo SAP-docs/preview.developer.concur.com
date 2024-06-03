@@ -121,7 +121,7 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 
 * [Approve/SendBack/Recall Report Response](#patch-approve-sendback-recall-report-response-schema)
 
-## View Cost Objects for a specific Report
+## Get Cost Objects for a specific Report
 
 This endpoint retrieves all cost objects for a report that the calling approver or their delegators is able to approve.
 If the workflow setting "Filter expenses to those that are applicable to Cost Object" is set to false, then this
@@ -155,8 +155,6 @@ This API supports both company level and user level access tokens.
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
   This is the Company or User access token.
-* `Concur-CorrelationId` is a Concur specific custom header used for technical support in the form of
-  a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 ### Request
 
@@ -171,7 +169,6 @@ https://{datacenterURI}/expensereports/v4/users/{userId}/reports/{reportId}/cost
 ```shell
 curl --location --request GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: abcd-efgh-xyzw' \
 --header 'Content-Type: application/json'
 ```
 
@@ -287,26 +284,6 @@ curl --location --request GET https://integration.api.concursolutions.com/expens
 |----------------|----------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `currencyCode` | `string` | -        | **Required** The 3-letter ISO 4217 currency code for the expense report currency, based on the user's assigned reimbursement currency when the report was created. Examples: `USD` - US dollars; `BRL` - Brazilian real; `CAD` - Canadian dollar; `CHF` - Swiss franc; `EUR` - Euro; `GBO` - Pound sterling; `HKD` - Hong Kong dollar; `INR` - Indian rupee; `MXN` - Mexican peso; `NOK` - Norwegian krone; `SEK` - Swedish krona |
 | `value`        | `number` | `double` | **Required** The amount in the defined currency.                                                                                                                                                                                                                                                                                                                                                                                  |
-
-### <a name="error-message-schema"></a>ErrorMessage
-
-| Name                 | Type                                          | Format      | Description                                                      |
-|----------------------|-----------------------------------------------|-------------|------------------------------------------------------------------|
-| `customResponseData` | `object`                                      | -           | The custom parameters related to error.                          |
-| `errorId`            | `string`                                      | -           | The unique identifier of the error associated with the response. |
-| `errorMessage`       | `string`                                      | -           | **Required** The detailed error message.                         |
-| `httpStatus`         | `string`                                      | -           | **Required** The http response code and phrase for the response. |
-| `path`               | `string`                                      | -           | **Required** The URI of the attempted request.                   |
-| `timestamp`          | `string`                                      | `date-time` | **Required** The time when the error was captured.               |
-| `validationErrors`   | [`ValidationError`](#validation-error-schema) | -           | The validation error messages.                                   |
-
-### <a name="validation-errors-schema"></a>ValidationError
-
-| Name      | Type     | Format | Description                                   |
-|-----------|----------|--------|-----------------------------------------------|
-| `id`      | `string` | -      | The ID of the validation error.               |
-| `message` | `string` | -      | The detailed message of the validation error. |
-| `source`  | `string` | -      | The type of validation that failed.           |
 
 ### <a name="report-send-back-request-schema"></a>ReportSendBackRequest
 
