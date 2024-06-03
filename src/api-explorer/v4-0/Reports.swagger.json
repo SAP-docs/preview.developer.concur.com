@@ -37,24 +37,40 @@
   ],
   "tags": [
     {
-      "name": "Comments",
-      "description": "Gets the comments entered on the expense report header, or expenses of an existing expense report"
-    },
-    {
-      "name": "Workflows",
-      "description": "Manages workflow transitions for a report"
-    },
-    {
-      "name": "Expenses",
-      "description": "Gets the expenses and itemizations that belong to a specific expense report and updates an expense on an existing expense report"
+      "name": "Request Associations",
+      "description": "Gets the requests associated with the specified report"
     },
     {
       "name": "Reports",
       "description": "Gets and updates an expense report header of an existing expense report"
     },
     {
+      "name": "Expense Attendee Associations",
+      "description": "Operations related to association of attendees with expense"
+    },
+    {
       "name": "Allocations",
       "description": "Gets the allocations that belong to a specific expense on an expense report and updates an allocation on an existing expense in an expense report"
+    },
+    {
+      "name": "Exceptions",
+      "description": "Operations related to exceptions on a Report, Expense and Allocation"
+    },
+    {
+      "name": "Expenses",
+      "description": "Gets the expenses and itemizations that belong to a specific expense report and updates an expense on an existing expense report"
+    },
+    {
+      "name": "Comments",
+      "description": "Operations related to comments on a Report and Expense"
+    },
+    {
+      "name": "Reports",
+      "description": "Gets and updates an expense report header of an existing expense report"
+    },
+    {
+      "name": "Workflow Actions",
+      "description": "Manages workflow transitions for a report"
     }
   ],
   "paths": {
@@ -63,8 +79,8 @@
         "tags": [
           "Comments"
         ],
-        "summary": "Get expense comments",
-        "description": "Retrieves the comments on the specific expense within an expense report.",
+        "summary": "Gets comments for the specified expense",
+        "description": "Returns comments for the specified expense.",
         "operationId": "getReportEntryComments",
         "parameters": [
           {
@@ -118,19 +134,6 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Comments successfully retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommentDetails"
-                  }
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
@@ -141,8 +144,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId",
             "content": {
               "application/json": {
                 "schema": {
@@ -152,7 +155,7 @@
             }
           },
           "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type",
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to access this report ",
             "content": {
               "application/json": {
                 "schema": {
@@ -171,10 +174,399 @@
               }
             }
           },
-          "400": {
-            "description": "Specified context not supported",
+          "200": {
+            "description": "Comments successfully retrieved",
             "content": {
               "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentDetails"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Updates a comment for the specified expense",
+        "description": "Updates latest comment for the specified expense.",
+        "operationId": "updateReportEntryComments",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Comment successfully updated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to modify this report ",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found,\nThere are no comments available for you to update. If you want to add a comment, use the POST operation.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Creates a comment for the specified expense",
+        "description": "Creates a new comment for the specified expense.",
+        "operationId": "createReportEntryComments",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Comment successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to modify this report ",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Deletes the comment for the specified expense",
+        "description": "Deletes the latest comment for the specified expense.",
+        "operationId": "deleteReportEntryComments",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Comment successfully deleted"
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to modify this report ",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found,\nThere are no comments available for you to delete.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorMessage"
                 }
@@ -189,7 +581,7 @@
         "tags": [
           "Comments"
         ],
-        "summary": "Get report header comments",
+        "summary": "Gets comments for the specified report",
         "description": "Returns comments for the specified report.",
         "operationId": "getReportComments",
         "parameters": [
@@ -245,6 +637,46 @@
           }
         ],
         "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to access this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "200": {
             "description": "Comments successfully retrieved",
             "content": {
@@ -258,8 +690,418 @@
               }
             }
           },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Updates a comment for the specified report",
+        "description": "Updates latest comment for the specified report.",
+        "operationId": "updateReportComments",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Comment successfully updated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to modify this report ",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nThere are no comments available for you to update. If you want to add a comment, use the POST operation.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Creates a comment for the specified report",
+        "description": "Creates a new comment for the specified report.",
+        "operationId": "createReportComments",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "404": {
             "description": "reportId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Comment successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to modify this report ",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Deletes the comment for the specified report",
+        "description": "Deletes the latest comment for the specified report.",
+        "operationId": "deleteReportComments",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Comment successfully deleted"
+          },
+          "404": {
+            "description": "reportId not found,\nThere are no comments available for you to delete.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to modify this report ",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/expenses/{expenseId}/exceptions": {
+      "get": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Get exceptions for the specified expense using system user",
+        "description": "Returns exceptions for the specified expense using system user.",
+        "operationId": "getReportEntryExceptionsTrustedOrCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeItemizations",
+            "in": "query",
+            "description": "Include only exceptions for non-itemized and parent expenses",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Missing or invalid authorization header\n\nThis endpoint is only accessible by a valid company JWT or a trusted caller",
             "content": {
               "application/json": {
                 "schema": {
@@ -278,8 +1120,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "400": {
+            "description": "Invalid reportId\n\nInvalid expenseId",
             "content": {
               "application/json": {
                 "schema": {
@@ -288,8 +1130,164 @@
               }
             }
           },
-          "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type",
+          "200": {
+            "description": "Exceptions successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportException"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Adds an exception on the specified expense",
+        "description": "Adds an exception on the specified expense specified by exceptionCode.",
+        "operationId": "saveReportEntryException",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Exceptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Invalid reportId\n\nInvalid expenseId\n\nInvalid exceptionCode\n\nCannot perform the operation as the report is already paid",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Expense exception successfully created"
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/expenses/{expenseId}/comments": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Gets comments for the specified expense using system user",
+        "description": "Returns comments for the specified expense using system user.",
+        "operationId": "getReportEntryCommentsTrustedOrCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
             "content": {
               "application/json": {
                 "schema": {
@@ -299,9 +1297,1052 @@
             }
           },
           "400": {
-            "description": "Specified context not supported",
+            "description": "Invalid reportId,\nInvalid expenseId",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Comments successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentDetails"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Updates a comment for the specified expense using system user",
+        "description": "Updates latest comment for the specified expense using system user.",
+        "operationId": "updateReportEntryCommentsWithCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Comment successfully updated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId,\nInvalid expenseId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found,\nThere are no comments available for you to update. If you want to add a comment, use the POST operation.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Creates a comment for the specified expense using system user",
+        "description": "Creates a new comment for the specified expense using system user.",
+        "operationId": "createReportEntryCommentsWithCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Comment successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId,\nInvalid expenseId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Deletes the comment for the specified expense using system user",
+        "description": "Deletes the latest comment for the specified expense using system user.",
+        "operationId": "deleteReportEntryCommentsWithCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Comment successfully deleted"
+          },
+          "400": {
+            "description": "Invalid reportId,\nInvalid expenseId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found,\nThere are no comments available for you to delete.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions": {
+      "get": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Get exceptions for the specified allocation using system user",
+        "description": "Returns exceptions for the specified allocation using system user.",
+        "operationId": "getAllocationExceptionsTrustedOrCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report that contains the expense associated with the allocations",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense associated with the allocations",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "allocationId",
+            "in": "path",
+            "description": "The unique identifier of the expense allocation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Missing or invalid authorization header\n\nThis endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Exceptions successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportException"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found\n\nallocationId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId\n\nInvalid expenseId\n\nInvalid allocationId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Adds an exception on the specified allocation",
+        "description": "Adds an exception on the specified allocation specified by exceptionCode.",
+        "operationId": "saveAllocationException",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "allocationId",
+            "in": "path",
+            "description": "The unique identifier of the expense allocation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Exceptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Allocation exception successfully created"
+          },
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found\n\nallocationId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId\n\nInvalid expenseId\n\nInvalid allocationId\n\nInvalid exceptionCode\n\nCannot perform the operation as the report is already paid",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/exceptions": {
+      "get": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Get exceptions for the specified report using system user",
+        "description": "Returns exceptions for the specified report using system user.",
+        "operationId": "getReportExceptionsTrustedOrCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeExpenses",
+            "in": "query",
+            "description": "Include only exceptions for the report header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Missing or invalid authorization header\n\nThis endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Exceptions successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportException"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Adds an exception on the specified report",
+        "description": "Adds an exception on the specified report specified by exceptionCode.",
+        "operationId": "saveReportException",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Exceptions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Report exception successfully created"
+          },
+          "400": {
+            "description": "Invalid reportId\n\nInvalid exceptionCode\n\nCannot perform the operation as the report is already paid",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/comments": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Gets comments for the specified report using system user",
+        "description": "Returns comments for the specified report using system user.",
+        "operationId": "getReportCommentsTrustedOrCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeAllComments",
+            "in": "query",
+            "description": "Return all the comments that are present on the report at all levels",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Comments successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentDetails"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Updates a comment for the specified report using system user",
+        "description": "Updates latest comment for the specified report using system user.",
+        "operationId": "updateReportCommentsWithCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Comment successfully updated",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nThere are no comments available for you to update. If you want to add a comment, use the POST operation.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Creates a comment for the specified report using system user",
+        "description": "Creates a new comment for the specified report using system user.",
+        "operationId": "createReportCommentsWithCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Comment successfully created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentSaveResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Deletes the comment for the specified report using system user",
+        "description": "Deletes the latest comment for the specified report using system user.",
+        "operationId": "deleteReportCommentsWithCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Comment successfully deleted"
+          },
+          "404": {
+            "description": "reportId not found,\nThere are no comments available for you to delete.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorMessage"
                 }
@@ -392,12 +2433,12 @@
               }
             }
           },
-          "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type",
+          "201": {
+            "description": "Report successfully created",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
+                  "$ref": "#/components/schemas/NewReportResponse"
                 }
               }
             }
@@ -412,12 +2453,12 @@
               }
             }
           },
-          "201": {
-            "description": "Report successfully created",
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/NewReportResponse"
+                  "$ref": "#/components/schemas/ErrorMessage"
                 }
               }
             }
@@ -460,11 +2501,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "default": "false",
               "enum": [
                 "false",
                 "true"
-              ]
+              ],
+              "default": "false"
             }
           },
           {
@@ -500,21 +2541,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Expense summaries successfully retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ReportEntrySummary"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "reportId not found",
+          "400": {
+            "description": "Specified context not supported",
             "content": {
               "application/json": {
                 "schema": {
@@ -533,8 +2561,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "404": {
+            "description": "reportId not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -553,8 +2581,389 @@
               }
             }
           },
+          "200": {
+            "description": "Expense summaries successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportEntrySummary"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/attendees": {
+      "get": {
+        "tags": [
+          "Expense Attendee Associations"
+        ],
+        "summary": "Gets expense attendee associations",
+        "description": "Returns attendees associated with the specified expense.",
+        "operationId": "getExpenseAttendees",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseAttendeesWithAmounts"
+                }
+              }
+            }
+          },
           "400": {
-            "description": "Specified context not supported",
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not authorized to access this report with this context type,\nUser is not allowed to access this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Attendees successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseAttendeesWithAmounts"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Expense Attendee Associations"
+        ],
+        "summary": "Associates a set of attendees to a specified expense",
+        "description": "To successfully associate attendees to the specified expense, the attendees and the expense entry must already exist. During the POST API operation, attendees currently associated with the expense will be removed and replaced with those listed in the POST request. If you want to append additional attendees then it is recommended to call Get Expense Attendee Associations API to get existing attendees on the expense and add any additional attendees that you want to be appended to the expense and then call the Post attendee associations API.",
+        "operationId": "postExpenseAttendees",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseAttendees"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId,\nInvalid field value specified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Attendees successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseAttendeeResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not allowed to modify the reopened report,\nUser is not allowed to modify this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Expense Attendee Associations"
+        ],
+        "summary": "Removes expense attendees",
+        "description": "Removes all attendees associated with the specified expense.",
+        "operationId": "deleteAttendees",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report that contains the expense with attendees",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense with associated attendees",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId,\nInvalid expenseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Attendee associations successfully removed"
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not allowed to modify the reopened report,\nUser is not allowed to modify this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
             "content": {
               "application/json": {
                 "schema": {
@@ -611,8 +3020,6 @@
               "type": "string",
               "enum": [
                 "TRAVELER",
-                "MANAGER",
-                "PROCESSOR",
                 "PROXY"
               ]
             }
@@ -628,8 +3035,8 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "reportId not found",
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
             "content": {
               "application/json": {
                 "schema": {
@@ -648,18 +3055,8 @@
               }
             }
           },
-          "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "404": {
+            "description": "reportId not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -687,6 +3084,16 @@
                   "items": {
                     "$ref": "#/components/schemas/Allocation"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
                 }
               }
             }
@@ -747,18 +3154,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Report details successfully retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReportForm"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "reportId not found",
+          "400": {
+            "description": "Specified context not supported",
             "content": {
               "application/json": {
                 "schema": {
@@ -777,8 +3174,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "404": {
+            "description": "reportId not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -797,8 +3194,18 @@
               }
             }
           },
-          "400": {
-            "description": "Specified context not supported",
+          "200": {
+            "description": "Report details successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportForm"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
             "content": {
               "application/json": {
                 "schema": {
@@ -889,16 +3296,6 @@
               }
             }
           },
-          "404": {
-            "description": "reportId not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
@@ -909,8 +3306,250 @@
               }
             }
           },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "204": {
             "description": "Report successfully updated"
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/sendBack": {
+      "patch": {
+        "tags": [
+          "Workflow Actions"
+        ],
+        "summary": "Sends back the specified report",
+        "description": "Sends back the specified report, returning it to an unsubmitted state.",
+        "operationId": "sendBackReport",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MANAGER"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendBackReport"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report \n\nCaller does not have permission to submit the report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Report sent back successfully"
+          },
+          "400": {
+            "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/recall": {
+      "patch": {
+        "tags": [
+          "Workflow Actions"
+        ],
+        "summary": "Recalls the specified report",
+        "description": "Recalls the specified report to an unsubmitted state.",
+        "operationId": "recallReport",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecallReport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report \n\nCaller does not have permission to submit the report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Report recalled successfully"
+          },
+          "400": {
+            "description": "Specified context not supported\n\nInvalid reportId\n\nerror.workflow.no_clearingcode: Either the credit card account or the payment type is missing a clearing account code. Contact your Expense administrator\n\nerror.workflow.invalid_action: The action cannot be executed because it is not valid for the report workflow\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nerror.recall.cannotRecall: Expense report cannot be recalled\n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
           },
           "401": {
             "description": "Missing or invalid authorization header",
@@ -985,12 +3624,42 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Specified context not supported",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Expense details successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportEntryDetail"
                 }
               }
             }
@@ -1014,19 +3683,71 @@
                 }
               }
             }
-          },
-          "200": {
-            "description": "Expense details successfully retrieved",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReportEntryDetail"
-                }
-              }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/approve": {
+      "patch": {
+        "tags": [
+          "Workflow Actions"
+        ],
+        "summary": "Approves the specified report",
+        "description": "Advances the specified report to approved status.",
+        "operationId": "approveReport",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
-          "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report ",
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MANAGER"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApproveReport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
             "content": {
               "application/json": {
                 "schema": {
@@ -1036,7 +3757,40 @@
             }
           },
           "400": {
-            "description": "Specified context not supported",
+            "description": "Specified context not supported\n\nerror.workflow.no_clearingcode: Either the credit card account or the payment type is missing a clearing account code. Contact your Expense administrator\n\nerror.workflow.invalid_action: The action cannot be executed because it is not valid for the report workflow\n\nerror.workflow.incomplete_receipt_review: You have not finished reviewing all the receipts in this report.  Your company requires that you review receipts during approval\n\ncannot_approve_your_own_report: This expense report was created by you. You cannot approve your own report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nno_approver.change_my_info: Missing the required approver for next workflow step. You may be able to select an approver; otherwise contact your Expense administrator for assistance\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\napprover_cum_reportowner: You cannot send this report to this approver since this person created this report\n\napprover_cum_reportowner.is_editableby: Your workflow is configured such that the report would come back to the report owner during some step. Please contact your Employee Administrator to change the approvers\n\ninstance_out_of_date: The approval workflow that this expense report uses has changed. Please select a new approver in order to approve and process this expense report\n\nreview_approval_flow_approver: Review Approvers in the workflow\n\ncost_object_step: The next approval step is a Cost object step and cannot be approved through Mobile\n\nstep_exit_blocking_by_exception: One or more blocking exceptions are preventing approval submission. Resolve the exception before proceeding\n\nreceiptimagehold.workflow.noapprover: Missing the required approver for next step. Cannot advance report out of imaging hold. Contact your Expense administrator for assistance\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nattendee_total_error: This report contains at least one entry with invalid attendee amounts.  Please correct the attendee amounts before approving\n\napprover_cashadvance_owner.is_editableby: Your workflow is configured such that the cash advance would come back to the cash advance owner during some step. Please contact your Employee Administrator to change the approvers\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nerror.recall.cannotRecall: Expense report cannot be recalled\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nstatusId.invalidValue: Invalid 'statusId' value specified\n\ninvalid.approverId.query: Unable to find approver for the specified user id in the query string parameter.\n\ninvalidAction.currentStep: Approve and Forward operation ('forwardToUserId' querystring parameter in the request) is not supported on this workflow step.\n\nerror.workflow.missingComments: Comments are required to approve this report.\n\nerror.workflow.rejectedExpenseMissingComments: Some of the expenses were rejected on this report and expenseRejectedComment is required to approve this report.\n\nerror.workflow.CostObjectChangeMissingComments: Changes were made on this report that impact Cost Objects and a comment is required to approve this report.\n\nerror.workflow.BudgetObjectChangeMissingComments: Changes were made on this report that impact Budget Objects and a comment is required to approve this report.\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\nreports.workflow.operationNotAllowed: Cannot approve a report when it's in processing payment or paid state\n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Report successfully approved"
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to modify this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
             "content": {
               "application/json": {
                 "schema": {
@@ -1093,7 +3847,6 @@
               "type": "string",
               "enum": [
                 "TRAVELER",
-                "MANAGER",
                 "PROXY"
               ]
             }
@@ -1109,6 +3862,16 @@
           }
         ],
         "responses": {
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
@@ -1119,8 +3882,8 @@
               }
             }
           },
-          "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
+          "400": {
+            "description": "Invalid expenseId\n\nInvalid allocationId",
             "content": {
               "application/json": {
                 "schema": {
@@ -1139,16 +3902,6 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
           "404": {
             "description": "reportId not found\n\nallocationId not found",
             "content": {
@@ -1159,8 +3912,8 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid expenseId\n\nInvalid allocationId",
+          "401": {
+            "description": "Missing or invalid authorization header",
             "content": {
               "application/json": {
                 "schema": {
@@ -1175,8 +3928,8 @@
         "tags": [
           "Allocations"
         ],
-        "summary": "Updates the specified allocation for the report",
-        "description": "Updates the specified allocation for the report.",
+        "summary": "Updates a specified allocation",
+        "description": "Updates the details of the specific allocation of an expense entry on a report.",
         "operationId": "updateReportAllocation",
         "parameters": [
           {
@@ -1243,16 +3996,6 @@
           "204": {
             "description": "Successfully updated the allocation"
           },
-          "404": {
-            "description": "reportId not found\n\nallocationId not found\n\nexpenseId not found\n\nThe policy of the specified report does not have an allocation form defined. Contact your Concur Administrator",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
@@ -1263,8 +4006,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "404": {
+            "description": "reportId not found\n\nallocationId not found\n\nexpenseId not found\n\nThe policy of the specified report does not have an allocation form defined. Contact your Concur Administrator",
             "content": {
               "application/json": {
                 "schema": {
@@ -1292,6 +4035,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -1299,10 +4052,10 @@
     "/expensereports/v4/reports/{reportId}/sendBack": {
       "patch": {
         "tags": [
-          "Workflows"
+          "Workflow Actions"
         ],
-        "summary": "Sends back the specified report",
-        "description": "Sends back the specified report to report owner.",
+        "summary": "Sends back the specified report using system user",
+        "description": "Sends back the specified report, returning it to an unsubmitted state using system user.",
         "operationId": "sendBackReportAsSystem",
         "parameters": [
           {
@@ -1335,16 +4088,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "reportId not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
@@ -1355,8 +4098,8 @@
               }
             }
           },
-          "403": {
-            "description": "Caller cannot modify System workflow step",
+          "404": {
+            "description": "reportId not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1365,8 +4108,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "403": {
+            "description": "Caller cannot modify System workflow step",
             "content": {
               "application/json": {
                 "schema": {
@@ -1387,6 +4130,16 @@
           },
           "204": {
             "description": "Report successfully sent back"
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
           }
         }
       }
@@ -1397,7 +4150,7 @@
           "Expenses"
         ],
         "summary": "Updates (limited fields) the specified expense in an un-submitted or submitted report",
-        "description": "Updates the specified expense in an un-submitted or submitted report and is restricted to modify 'Business Purpose', 'Custom/Org unit' and 'Expense Rejected' fields only",
+        "description": "Updates the specified expense in an un-submitted or submitted report and is restricted to modify 'Business Purpose', 'Custom/Org unit', 'Expense Rejected' and 'Paper Receipt Received' fields only",
         "operationId": "updateReportExpenseUsingShortURL",
         "parameters": [
           {
@@ -1449,6 +4202,29 @@
               }
             }
           },
+          "403": {
+            "description": "User is not allowed to modify the reopened report\n\nUser is not allowed to modify a report in funds and grants obligation step",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Successfully updated the report expense"
+          },
+          "409": {
+            "description": "Your request cannot be processed as the specified resource is locked for another process.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Invalid field value specified\n\nCannot perform the operation as the report is already paid\n\nCannot replace receipt affidavit with receipt image",
             "content": {
@@ -1478,29 +4254,6 @@
                 }
               }
             }
-          },
-          "204": {
-            "description": "Successfully updated the report expense"
-          },
-          "403": {
-            "description": "User is not allowed to modify the reopened report\n\nUser is not allowed to modify a report in funds and grants obligation step",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Your request cannot be processed as the specified resource is locked for another process.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
           }
         }
       }
@@ -1508,10 +4261,10 @@
     "/expensereports/v4/reports/{reportId}/approve": {
       "patch": {
         "tags": [
-          "Workflows"
+          "Workflow Actions"
         ],
-        "summary": "Approves the specified report",
-        "description": "Advances the specified report to the next step if it is in a system step.",
+        "summary": "Approves the specified report using system user",
+        "description": "Advances the specified report to the next step if it is in a system step using system user.",
         "operationId": "approveReportAsSystem",
         "parameters": [
           {
@@ -1540,20 +4293,9 @@
                 "$ref": "#/components/schemas/ApproveReportAsSystem"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
-          "404": {
-            "description": "reportId not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Internal server error. Retry your request again",
             "content": {
@@ -1564,8 +4306,28 @@
               }
             }
           },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "204": {
             "description": "Report successfully approved"
+          },
+          "400": {
+            "description": "Specified context not supported\n\nerror.submit.Generic: An error occurred while submitting the selected report. The report was not submitted\n\nerror.submit.no_entries: The expense report has no expenses. You must create at least one expense in order to submit the report\n\nerror.workflow.no_clearingcode: Either the credit card account or the payment type is missing a clearing account code. Contact your Expense administrator\n\nerror.workflow.invalid_action: The action cannot be executed because it is not valid for the report workflow\n\nerror.workflow.incomplete_receipt_review: You have not finished reviewing all the receipts in this report.  Your company requires that you review receipts during approval\n\nerror.submit.rptXctMaxThreshold: This expense report cannot be submitted until all blocking exceptions are resolved\n\nerror.submit.entryXctMaxThreshold: This expense report cannot be submitted until all blocking exceptions are resolved\n\nerror.submit.undefined_expense_type: The expense report contains one or more expenses with an expense type of Undefined. You must select an expense type for each expense before you can submit the report\n\nerror.submit.missing_reqd_fields: At least one required field in this report is empty. Please provide a value and then submit the report\n\nerror.submit.missing_alloc_reqd_fields: At least one required allocation field in this report is empty. Please provide the appropriate value, and then submit the report\n\nerror.submit.missingKids: This report contains a Lodging expense that is not itemized. Lodging expenses must be itemized in the report before it can be submitted\n\nerror.submit.itemDiff: The expense report contains at least one itemized expense. The itemization amounts do not add up to the expense amount. Edit the itemized entries to make the required changes before submitting the report\n\nerror.submit.itemMissing: This report cannot be submitted because one or more entries must be itemized. Itemize the entries and then submit the report\n\nerror.submit.alreadySubmitted: The report has already been submitted and cannot be submitted again\n\nerror.submit.cannotSubmitAsDelegate: The report cannot be submitted by the Delegate\n\nerror.submit.cashadvance_cant_carry_balance: Cash Advances must be entirely utilized or returned. Please enter a Cash Advance Return on this report to return the remaining balance\n\nerror.submit.cashadvance_negative_balance: The Cash Advance Balance is negative because a Cash Advance Return is greater than the remaining balance. Either enter a Currency Gain/Loss expense to bring the balance to zero or adjust the Cash Advance Return amount to bring the balance to zero. Then, click Submit again\n\nerror.submit.single_row_itinerary: This report contains at least one itinerary with a single itinerary row. An itinerary is not valid until it has at least two rows. Please add another row to complete the itinerary\n\nerror.submit.invalidAttendeeType: This report contains at least one entry with an attendee of an invalid type.  Please remove the attendee(s) before submitting the report\n\ninfo.submit.notify_by_delegate: A notification has been sent to the employee\n\ncannot_approve_your_own_report: This expense report was created by you. You cannot approve your own report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nno_approver.change_my_info: Missing the required approver for next workflow step. You may be able to select an approver; otherwise contact your Expense administrator for assistance\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\napprover_cum_reportowner: You cannot send this report to this approver since this person created this report\n\napprover_cum_reportowner.is_editableby: Your workflow is configured such that the report would come back to the report owner during some step. Please contact your Employee Administrator to change the approvers\n\ninstance_out_of_date: The approval workflow that this expense report uses has changed. Please select a new approver in order to approve and process this expense report\n\nreview_approval_flow_approver: Review Approvers in the workflow\n\ncost_object_step: The next approval step is a Cost object step and cannot be approved through Mobile\n\nstep_exit_blocking_by_exception: One or more blocking exceptions are preventing approval submission. Resolve the exception before proceeding\n\nreceiptimagehold.workflow.noapprover: Missing the required approver for next step. Cannot advance report out of imaging hold. Contact your Expense administrator for assistance\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nattendee_total_error: This report contains at least one entry with invalid attendee amounts.  Please correct the attendee amounts before approving\n\napprover_cashadvance_owner.is_editableby: Your workflow is configured such that the cash advance would come back to the cash advance owner during some step. Please contact your Employee Administrator to change the approvers\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nerror.recall.cannotRecall: Expense report cannot be recalled\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nstatusId.invalidValue: Invalid 'statusId' value specified\n\ninvalid.approverId.query: Unable to find approver for the specified user id in the query string parameter.\n\ninvalidAction.currentStep: Approve and Forward operation ('forwardToUserId' querystring parameter in the request) is not supported on this workflow step.\n\nerror.workflow.missingComments: Comments are required to approve this report.\n\nerror.workflow.rejectedExpenseMissingComments: Some of the expenses were rejected on this report and expenseRejectedComment is required to approve this report.\n\nerror.workflow.CostObjectChangeMissingComments: Changes were made on this report that impact Cost Objects and a comment is required to approve this report.\n\nerror.workflow.BudgetObjectChangeMissingComments: Changes were made on this report that impact Budget Objects and a comment is required to approve this report.\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
           },
           "403": {
             "description": "Caller cannot modify System workflow step",
@@ -1586,16 +4348,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Specified context not supported\n\nerror.submit.Generic: An error occurred while submitting the selected report. The report was not submitted\n\nerror.submit.no_entries: The expense report has no expenses. You must create at least one expense in order to submit the report\n\nerror.workflow.no_clearingcode: Either the credit card account or the payment type is missing a clearing account code. Contact your Expense administrator\n\nerror.workflow.invalid_action: The action cannot be executed because it is not valid for the report workflow\n\nerror.workflow.incomplete_receipt_review: You have not finished reviewing all the receipts in this report.  Your company requires that you review receipts during approval\n\nerror.submit.rptXctMaxThreshold: This expense report cannot be submitted until all blocking exceptions are resolved\n\nerror.submit.entryXctMaxThreshold: This expense report cannot be submitted until all blocking exceptions are resolved\n\nerror.submit.undefined_expense_type: The expense report contains one or more expenses with an expense type of Undefined. You must select an expense type for each expense before you can submit the report\n\nerror.submit.missing_reqd_fields: At least one required field in this report is empty. Please provide a value and then submit the report\n\nerror.submit.missing_alloc_reqd_fields: At least one required allocation field in this report is empty. Please provide the appropriate value, and then submit the report\n\nerror.submit.missingKids: This report contains a Lodging expense that is not itemized. Lodging expenses must be itemized in the report before it can be submitted\n\nerror.submit.itemDiff: The expense report contains at least one itemized expense. The itemization amounts do not add up to the expense amount. Edit the itemized entries to make the required changes before submitting the report\n\nerror.submit.itemMissing: This report cannot be submitted because one or more entries must be itemized. Itemize the entries and then submit the report\n\nerror.submit.alreadySubmitted: The report has already been submitted and cannot be submitted again\n\nerror.submit.cannotSubmitAsDelegate: The report cannot be submitted by the Delegate\n\nerror.submit.cashadvance_cant_carry_balance: Cash Advances must be entirely utilized or returned. Please enter a Cash Advance Return on this report to return the remaining balance\n\nerror.submit.cashadvance_negative_balance: The Cash Advance Balance is negative because a Cash Advance Return is greater than the remaining balance. Either enter a Currency Gain/Loss expense to bring the balance to zero or adjust the Cash Advance Return amount to bring the balance to zero. Then, click Submit again\n\nerror.submit.single_row_itinerary: This report contains at least one itinerary with a single itinerary row. An itinerary is not valid until it has at least two rows. Please add another row to complete the itinerary\n\nerror.submit.invalidAttendeeType: This report contains at least one entry with an attendee of an invalid type.  Please remove the attendee(s) before submitting the report\n\ninfo.submit.notify_by_delegate: A notification has been sent to the employee\n\ncannot_approve_your_own_report: This expense report was created by you. You cannot approve your own report\n\nno_approver: You must identify an approver before the expense report moves on to the next workflow step\n\ninvalid_auth_approver: This report cannot be sent to the next approver. This workflow step must be approved by a specialized approver called an Authorized Approver. The selected approver is not an Authorized Approver. Select another approver\n\nno_approver.not_editable_step: There are no approvers defined in your workflow. Please contact your Expense administrator\n\nno_approver.change_my_info: Missing the required approver for next workflow step. You may be able to select an approver; otherwise contact your Expense administrator for assistance\n\nwf_config_invalid_next_step: You must identify an approver before the expense report moves on to the next workflow step\n\nnot_an_approver: This report cannot be sent to the next approver because the selected approver is no longer authorized to approve reports. Please select another approver\n\napprover_cum_reportowner: You cannot send this report to this approver since this person created this report\n\napprover_cum_reportowner.is_editableby: Your workflow is configured such that the report would come back to the report owner during some step. Please contact your Employee Administrator to change the approvers\n\ninstance_out_of_date: The approval workflow that this expense report uses has changed. Please select a new approver in order to approve and process this expense report\n\nreview_approval_flow_approver: Review Approvers in the workflow\n\ncost_object_step: The next approval step is a Cost object step and cannot be approved through Mobile\n\nstep_exit_blocking_by_exception: One or more blocking exceptions are preventing approval submission. Resolve the exception before proceeding\n\nreceiptimagehold.workflow.noapprover: Missing the required approver for next step. Cannot advance report out of imaging hold. Contact your Expense administrator for assistance\n\nerror.workflow.invalid_report_key: The expense report no longer exists in the system\n\nattendee_total_error: This report contains at least one entry with invalid attendee amounts.  Please correct the attendee amounts before approving\n\napprover_cashadvance_owner.is_editableby: Your workflow is configured such that the cash advance would come back to the cash advance owner during some step. Please contact your Employee Administrator to change the approvers\n\nerror.workflow.missing_alloc_reqd_fields: At least one required allocation field in this report lacks data. Please provide the appropriate value, and then approve the report\n\nerror.recall.cannotRecall: Expense report cannot be recalled\n\nerror.workflow.noComments: Cannot send report back without providing comments. Add a comment to explain why you are returning the report\n\nstatusId.invalidValue: Invalid 'statusId' value specified\n\ninvalid.approverId.query: Unable to find approver for the specified user id in the query string parameter.\n\ninvalidAction.currentStep: Approve and Forward operation ('forwardToUserId' querystring parameter in the request) is not supported on this workflow step.\n\nerror.workflow.missingComments: Comments are required to approve this report.\n\nerror.workflow.rejectedExpenseMissingComments: Some of the expenses were rejected on this report and expenseRejectedComment is required to approve this report.\n\nerror.workflow.CostObjectChangeMissingComments: Changes were made on this report that impact Cost Objects and a comment is required to approve this report.\n\nerror.workflow.BudgetObjectChangeMissingComments: Changes were made on this report that impact Budget Objects and a comment is required to approve this report.\n\nreports.workflow.invalidFGIStep: The action cannot be executed because expense report is not in valid FGI obligation step\n\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
           }
         }
       }
@@ -1605,7 +4357,7 @@
         "tags": [
           "Reports"
         ],
-        "summary": "Gets the reports to approve",
+        "summary": "Gets the reports to approve.",
         "description": "Returns the reports to approve for the specified approver.",
         "operationId": "getReportsToApprove",
         "parameters": [
@@ -1616,7 +4368,6 @@
             "required": false,
             "schema": {
               "type": "string",
-              "default": "reportDate",
               "enum": [
                 "amountDueEmployee",
                 "claimedAmount",
@@ -1625,7 +4376,8 @@
                 "name",
                 "reportDate",
                 "submitDate"
-              ]
+              ],
+              "default": "reportDate"
             }
           },
           {
@@ -1635,11 +4387,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "default": "desc",
               "enum": [
                 "asc",
                 "desc"
-              ]
+              ],
+              "default": "desc"
             }
           },
           {
@@ -1683,8 +4435,8 @@
           }
         ],
         "responses": {
-          "500": {
-            "description": "Internal server error. Retry your request again",
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser does not have proper role",
             "content": {
               "application/json": {
                 "schema": {
@@ -1693,8 +4445,8 @@
               }
             }
           },
-          "401": {
-            "description": "Missing or invalid authorization header",
+          "500": {
+            "description": "Internal server error. Retry your request again",
             "content": {
               "application/json": {
                 "schema": {
@@ -1713,16 +4465,6 @@
               }
             }
           },
-          "403": {
-            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser does not have proper role",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
-            }
-          },
           "200": {
             "description": "Reports to approve successfully retrieved",
             "content": {
@@ -1732,6 +4474,132 @@
                   "items": {
                     "$ref": "#/components/schemas/ReportToApprove"
                   }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/requestassociations": {
+      "get": {
+        "tags": [
+          "Request Associations"
+        ],
+        "summary": "Gets the requests associated with the specified report",
+        "description": "Returns the requests associated with the specified report.",
+        "operationId": "getRequestAssociations",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "MANAGER",
+                "PROCESSOR",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not allowed to access this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Requests successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestAssociations"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported\n\nInvalid reportId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
                 }
               }
             }
@@ -1809,6 +4677,26 @@
               }
             }
           },
+          "400": {
+            "description": "Specified context not supported\n\nInvalid reportId\n\nInvalid expenseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
           "200": {
             "description": "Itemization summaries successfully retrieved",
             "content": {
@@ -1841,6 +4729,112 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/exceptions": {
+      "get": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Get exceptions for the specified expense",
+        "description": "Returns exceptions for the specified expense.",
+        "operationId": "getReportEntryExceptions",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeItemizations",
+            "in": "query",
+            "description": "Include only exceptions for non-itemized and parent expenses",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Exceptions successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportException"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported\n\nInvalid reportId\n\nInvalid expenseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
           },
           "403": {
             "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not allowed to access this report ",
@@ -1852,10 +4846,652 @@
               }
             }
           },
-          "400": {
-            "description": "Specified context not supported\n\nInvalid reportId\n\nInvalid expenseId",
+          "401": {
+            "description": "Missing or invalid authorization header",
             "content": {
               "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions": {
+      "get": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Get exceptions for the specified allocation",
+        "description": "Returns exceptions for the specified allocation.",
+        "operationId": "getAllocationExceptions",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report that contains the expense associated with the allocations",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense associated with the allocations",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "allocationId",
+            "in": "path",
+            "description": "The unique identifier of the expense allocation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type\n\nUser is not authorized to access this report with this context type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Exceptions successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportException"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported\n\nInvalid reportId\n\nInvalid expenseId\n\nInvalid allocationId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found\n\nallocationId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/users/{userId}/context/{contextType}/reports/{reportId}/exceptions": {
+      "get": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Get exceptions for the specified report",
+        "description": "Returns exceptions for the specified report.",
+        "operationId": "getReportExceptions",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeExpenses",
+            "in": "query",
+            "description": "Include only exceptions for the report header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "false"
+            }
+          },
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The unique identifier of the Concur user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "contextType",
+            "in": "path",
+            "description": "The access level of the Concur user, which determines the form fields they can view/modify",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "TRAVELER",
+                "PROXY"
+              ]
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Exceptions successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReportException"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Specified context not supported,\nInvalid reportId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Specified context type is invalid for this API. Review the documentation for supported context type,\nUser is not allowed to access this report ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization header",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/expenses/{expenseId}/attendees": {
+      "get": {
+        "tags": [
+          "Expense Attendee Associations"
+        ],
+        "summary": "Gets expense attendee associations using system user",
+        "description": "Returns attendees associated with the specified expense using system user.",
+        "operationId": "getExpenseAttendeesTrustedOrCompanyJWT",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Missing or invalid authorization header\n\nThis endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found,\nexpenseId not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseAttendeesWithAmounts"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId,\nInvalid expenseId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Attendees successfully retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpenseAttendeesWithAmounts"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/expenses/{expenseId}/exceptions/{exceptionCode}": {
+      "delete": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Deletes an exception on the specified expense",
+        "description": "Deletes an exception on the specified expense specified by exceptionCode.",
+        "operationId": "deleteReportEntryException",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exceptionCode",
+            "in": "path",
+            "description": "The code for the exception",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Expense exception successfully deleted"
+          },
+          "400": {
+            "description": "Invalid reportId\n\nInvalid expenseId\n\nInvalid exceptionCode\n\nCannot perform the operation as the report is already paid\n\nThe exception cannot be deleted. Exceptions can be deleted via the API only if the exception was initially added by the API.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/expenses/{expenseId}/allocations/{allocationId}/exceptions/{exceptionCode}": {
+      "delete": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Deletes an exception on the specified allocation",
+        "description": "Deletes an exception on the specified allocation specified by exceptionCode.",
+        "operationId": "deleteAllocationException",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expenseId",
+            "in": "path",
+            "description": "The unique identifier of the expense",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "allocationId",
+            "in": "path",
+            "description": "The unique identifier of the expense allocation",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exceptionCode",
+            "in": "path",
+            "description": "The code for the exception",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Allocation exception successfully deleted"
+          },
+          "404": {
+            "description": "reportId not found\n\nexpenseId not found\n\nallocationId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid reportId\n\nInvalid expenseId\n\nInvalid allocationId\n\nInvalid exceptionCode\n\nCannot perform the operation as the report is already paid\n\nThe exception cannot be deleted. Exceptions can be deleted via the API only if the exception was initially added by the API.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/expensereports/v4/reports/{reportId}/exceptions/{exceptionCode}": {
+      "delete": {
+        "tags": [
+          "Exceptions"
+        ],
+        "summary": "Deletes an exception on the specified report",
+        "description": "Deletes an exception on the specified report specified by exceptionCode.",
+        "operationId": "deleteReportException",
+        "parameters": [
+          {
+            "name": "reportId",
+            "in": "path",
+            "description": "The unique identifier of the report",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exceptionCode",
+            "in": "path",
+            "description": "The code for the exception",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accept-language",
+            "in": "header",
+            "description": "The unique identifier of the user's locale that indicates the language in which the API response should be formulated.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "500": {
+            "description": "Internal server error. Retry your request again",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint is only accessible by a valid company JWT or a trusted caller",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "reportId not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Report exception successfully deleted"
+          },
+          "400": {
+            "description": "Invalid reportId\n\nInvalid exceptionCode\n\nCannot perform the operation as the report is already paid\n\nThe exception cannot be deleted. Exceptions can be deleted via the API only if the exception was initially added by the API.",
+            "content": {
+              "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorMessage"
                 }
@@ -1932,6 +5568,58 @@
           }
         },
         "description": "The validation error messages"
+      },
+      "Comment": {
+        "required": [
+          "comment"
+        ],
+        "type": "object",
+        "properties": {
+          "comment": {
+            "maxLength": 2000,
+            "minLength": 0,
+            "type": "string",
+            "description": "The comments input on the report/expense by all users"
+          }
+        },
+        "description": "Comment body"
+      },
+      "CommentSaveResponse": {
+        "required": [
+          "uri"
+        ],
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "description": "Uri of the Comment"
+          }
+        }
+      },
+      "Exceptions": {
+        "required": [
+          "exceptionCode",
+          "exceptionVisibility"
+        ],
+        "type": "object",
+        "properties": {
+          "exceptionCode": {
+            "maxLength": 8,
+            "minLength": 1,
+            "type": "string",
+            "description": "The code for the exception"
+          },
+          "exceptionVisibility": {
+            "type": "string",
+            "description": "The visibility of the exception to be added. Possible values: 'ALL' - The exception is visible to the Traveler, Approver, and Processor, 'APPROVER_PROCESSOR' - The exception is visible only to the Approver and Processor, 'PROCESSOR' - The exception is visible only to the Processor. Default value: ALL",
+            "enum": [
+              "ALL",
+              "APPROVER_PROCESSOR",
+              "PROCESSOR"
+            ]
+          }
+        },
+        "description": "Exception body"
       },
       "CustomData": {
         "required": [
@@ -2276,67 +5964,6 @@
         },
         "description": "Exchange rate data for the expense. Please refer to the 'ExchangeRate' object for more information"
       },
-      "ExpenseAttendee": {
-        "required": [
-          "attendeeId"
-        ],
-        "type": "object",
-        "properties": {
-          "attendeeId": {
-            "type": "string",
-            "description": "The unique identifier of the associated expense attendee within Concur"
-          },
-          "customData": {
-            "type": "array",
-            "description": "The set of data the custom fields contain for the attendee based on the configuration. This set might be empty if no custom fields are configured",
-            "items": {
-              "$ref": "#/components/schemas/CustomData"
-            }
-          },
-          "isAmountUserEdited": {
-            "type": "boolean",
-            "description": "This field indicates if the amount value for the attendee on this expense was ever manually edited by the end user. Default value: false"
-          },
-          "isTraveling": {
-            "type": "boolean",
-            "description": "Whether the attendee was traveling when the expense was incurred, used for FBT tax calculations"
-          },
-          "associatedAttendeeCount": {
-            "type": "integer",
-            "description": "The count of total attendees. A count greater than 1 means there are unnamed attendees associated with this expense-attendee record. Default value: 1",
-            "format": "int32"
-          },
-          "versionNumber": {
-            "type": "integer",
-            "description": "The version number of the attendee. This field value may always be 1, depending on the configuration. Default value: 1",
-            "format": "int32"
-          },
-          "transactionAmount": {
-            "type": "number",
-            "description": "The portion of the expense transaction amount assigned to this attendee for both individual expense tracking and attendee totals across time periods"
-          }
-        }
-      },
-      "ExpenseAttendees": {
-        "type": "object",
-        "properties": {
-          "noShowAttendeeCount": {
-            "type": "integer",
-            "description": "The number of attendees that were planned but did not show up",
-            "format": "int32",
-            "default": 0
-          },
-          "expenseAttendeeList": {
-            "maxItems": 500,
-            "type": "array",
-            "description": "The list of attendees associated with the expense.",
-            "items": {
-              "$ref": "#/components/schemas/ExpenseAttendee"
-            }
-          }
-        },
-        "description": "The attendee details associated with the smart expense. Please refer to the 'ExpenseAttendees' object for more information"
-      },
       "ExpenseTax": {
         "required": [
           "taxAuthorityId"
@@ -2652,12 +6279,12 @@
           "id": {
             "type": "string",
             "description": "The unique identifier for the receipt type.",
-            "default": "N",
             "enum": [
               "N - No Receipt",
               "R - Regular Receipt",
               "T - Tax Receipt"
-            ]
+            ],
+            "default": "N"
           },
           "status": {
             "type": "string",
@@ -2709,9 +6336,6 @@
           "personalCardTransactionId": {
             "type": "string",
             "description": "The unique identifier of the personal card transaction associated with the expense"
-          },
-          "expenseAttendees": {
-            "$ref": "#/components/schemas/ExpenseAttendees"
           },
           "trip": {
             "$ref": "#/components/schemas/Trip"
@@ -2937,6 +6561,79 @@
         },
         "description": "The vendor information for the expense. Please refer to the 'Vendor' object for more information"
       },
+      "ExpenseAttendee": {
+        "required": [
+          "attendeeId"
+        ],
+        "type": "object",
+        "properties": {
+          "attendeeId": {
+            "type": "string",
+            "description": "The unique identifier of the associated expense attendee",
+            "format": "uuid"
+          },
+          "customData": {
+            "type": "array",
+            "description": "The set of data the custom fields contain for the attendee based on the configuration. This list might be empty if no custom fields are configured",
+            "items": {
+              "$ref": "#/components/schemas/CustomData"
+            }
+          },
+          "isAmountUserEdited": {
+            "type": "boolean",
+            "description": "This field indicates if the amount value for the attendee on this expense was ever manually edited by the end user. Default value: false"
+          },
+          "isTraveling": {
+            "type": "boolean",
+            "description": "Whether the attendee was traveling when the expense was incurred (used for Fringe Benefit Tax calculations)"
+          },
+          "associatedAttendeeCount": {
+            "type": "integer",
+            "description": "The count of total attendees. A count greater than 1 means there are unnamed attendees associated with this expense attendee record. Default value: 1",
+            "format": "int32"
+          },
+          "versionNumber": {
+            "type": "integer",
+            "description": "The version number of the attendee. This is only needed to be specified if the intention is to preserve the version number of the attendee from the previous set of attendee associations. Default value: the latest version of the attendee",
+            "format": "int32"
+          },
+          "transactionAmount": {
+            "type": "number",
+            "description": "The portion of the expense transaction amount assigned to this attendee for both individual expense tracking and attendee totals across time periods"
+          }
+        }
+      },
+      "ExpenseAttendees": {
+        "type": "object",
+        "properties": {
+          "noShowAttendeeCount": {
+            "type": "integer",
+            "description": "The number of attendees that were planned but did not show up",
+            "format": "int32",
+            "default": 0
+          },
+          "expenseAttendeeList": {
+            "maxItems": 500,
+            "type": "array",
+            "description": "The list of attendees associated with the expense",
+            "items": {
+              "$ref": "#/components/schemas/ExpenseAttendee"
+            }
+          }
+        }
+      },
+      "ExpenseAttendeeResponse": {
+        "required": [
+          "uri"
+        ],
+        "type": "object",
+        "properties": {
+          "uri": {
+            "type": "string",
+            "description": "Uri of the Expense Attendee association"
+          }
+        }
+      },
       "RedirectFund": {
         "required": [
           "amount",
@@ -3034,6 +6731,23 @@
           }
         },
         "description": "Report body"
+      },
+      "SendBackReport": {
+        "required": [
+          "comment"
+        ],
+        "type": "object",
+        "properties": {
+          "comment": {
+            "maxLength": 2000,
+            "type": "string",
+            "description": "This is the approver's remark on the sendback action"
+          }
+        },
+        "description": "Report body"
+      },
+      "RecallReport": {
+        "type": "object"
       },
       "UpdateReportExpense": {
         "required": [
@@ -3192,6 +6906,27 @@
           }
         },
         "description": "Allocation data"
+      },
+      "ApproveReport": {
+        "type": "object",
+        "properties": {
+          "statusId": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "Status that will be assigned to the report by this workflow transition.",
+            "default": "A_APPR"
+          },
+          "comment": {
+            "maxLength": 2000,
+            "type": "string",
+            "description": "This is the approver's remark on the approval action"
+          },
+          "expenseRejectedComment": {
+            "maxLength": 2000,
+            "type": "string",
+            "description": "This comment identifies why some of the expenses are rejected on this report."
+          }
+        }
       },
       "UpdateReportAllocation": {
         "required": [
@@ -3383,10 +7118,6 @@
               "'Regular' or 'Reconciliation' or 'Statement' or 'AutoCreated'"
             ]
           },
-          "crnCode": {
-            "type": "string",
-            "writeOnly": true
-          },
           "employeeFirstName": {
             "type": "string",
             "writeOnly": true
@@ -3396,6 +7127,10 @@
             "writeOnly": true
           },
           "employeeMiddleInitial": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "crnCode": {
             "type": "string",
             "writeOnly": true
           }
@@ -3763,6 +7498,31 @@
         },
         "description": "ReportDetails"
       },
+      "AssociatedRequest": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The unique identifier for the request"
+          }
+        },
+        "description": "Request"
+      },
+      "RequestAssociations": {
+        "type": "object",
+        "properties": {
+          "requests": {
+            "type": "array",
+            "description": "List of requests associated with a report",
+            "items": {
+              "$ref": "#/components/schemas/AssociatedRequest"
+            }
+          }
+        }
+      },
       "ExpenseSourceIdentifiers": {
         "type": "object",
         "properties": {
@@ -3823,7 +7583,7 @@
           "receipts": {
             "maxItems": 1,
             "type": "array",
-            "description": "Receipt details for the receipt entries",
+            "description": "Details for the associated receipts from Receipt Service v5",
             "items": {
               "$ref": "#/components/schemas/ReportReceiptMapping"
             }
@@ -4024,7 +7784,8 @@
             "type": "string",
             "description": "Receipt feature of the Receipt with the expense",
             "enum": [
-              "expenseIt"
+              "expenseIt",
+              "cfdi"
             ]
           }
         }
@@ -4269,7 +8030,6 @@
           "taxRateLocation": {
             "type": "string",
             "description": "Transaction location relative to the employee's home location as defined by their user profile.",
-            "default": "HOME",
             "enum": [
               "FOREIGN",
               "HOME",
@@ -4277,7 +8037,8 @@
               "FOREIGN - The expense transaction took place in foreign currency",
               "HOME - The expense transaction took place in the reimbursement currency",
               "OUT_OF_PROVINCE - The expense transaction took place outside the state jurisdiction"
-            ]
+            ],
+            "default": "HOME"
           },
           "travel": {
             "$ref": "#/components/schemas/Travel"
@@ -4460,6 +8221,50 @@
         },
         "description": "ReportExpenseItemizationSummary"
       },
+      "ReportException": {
+        "required": [
+          "exceptionCode",
+          "exceptionVisibility",
+          "isBlocking"
+        ],
+        "type": "object",
+        "properties": {
+          "exceptionCode": {
+            "type": "string",
+            "description": "The unique identifier of the exception type"
+          },
+          "exceptionVisibility": {
+            "type": "string",
+            "description": "The visibility of the exception. Possible values: 'ALL' - The exception is visible to the Traveler, Approver, and Processor, 'APPROVER_PROCESSOR' - The exception is visible only to the Approver and Processor, 'PROCESSOR' - The exception is visible only to the Processor",
+            "enum": [
+              "ALL",
+              "APPROVER_PROCESSOR",
+              "PROCESSOR"
+            ]
+          },
+          "isBlocking": {
+            "type": "boolean",
+            "description": "Whether the exception will prevent the report from being submitted"
+          },
+          "message": {
+            "type": "string",
+            "description": "Description of the exception, in the user's language"
+          },
+          "allocationId": {
+            "type": "string",
+            "description": "The unique identifier of the allocation to which the exception relates"
+          },
+          "expenseId": {
+            "type": "string",
+            "description": "The unique identifier of the expense to which the exception relates"
+          },
+          "parentExpenseId": {
+            "type": "string",
+            "description": "The unique identifier of the parent expense when the exception relates to an itemized expense"
+          }
+        },
+        "description": "ReportException"
+      },
       "CommentDetails": {
         "required": [
           "author",
@@ -4510,6 +8315,71 @@
           }
         },
         "description": "CommentDetails"
+      },
+      "ExpenseAttendeeWithAmounts": {
+        "required": [
+          "approvedAmount",
+          "attendeeId",
+          "transactionAmount"
+        ],
+        "type": "object",
+        "properties": {
+          "attendeeId": {
+            "type": "string",
+            "description": "The unique identifier of the associated expense attendee",
+            "format": "uuid"
+          },
+          "customData": {
+            "type": "array",
+            "description": "The set of data the custom fields contain for the attendee based on the configuration. This list might be empty if no custom fields are configured",
+            "items": {
+              "$ref": "#/components/schemas/CustomData"
+            }
+          },
+          "isAmountUserEdited": {
+            "type": "boolean",
+            "description": "This field indicates if the amount value for the attendee on this expense was ever manually edited by the end user. Default value: false"
+          },
+          "isTraveling": {
+            "type": "boolean",
+            "description": "Whether the attendee was traveling when the expense was incurred (used for Fringe Benefit Tax calculations)"
+          },
+          "associatedAttendeeCount": {
+            "type": "integer",
+            "description": "The count of total attendees. A count greater than 1 means there are unnamed attendees associated with this expense attendee record. Default value: 1",
+            "format": "int32"
+          },
+          "versionNumber": {
+            "type": "integer",
+            "description": "The version number of the attendee. This is only needed to be specified if the intention is to preserve the version number of the attendee from the previous set of attendee associations. Default value: the latest version of the attendee",
+            "format": "int32"
+          },
+          "transactionAmount": {
+            "$ref": "#/components/schemas/Amount"
+          },
+          "approvedAmount": {
+            "$ref": "#/components/schemas/Amount"
+          }
+        }
+      },
+      "ExpenseAttendeesWithAmounts": {
+        "type": "object",
+        "properties": {
+          "noShowAttendeeCount": {
+            "type": "integer",
+            "description": "The number of attendees that were planned but did not show up.",
+            "format": "int32",
+            "default": 0
+          },
+          "expenseAttendeeList": {
+            "maxItems": 500,
+            "type": "array",
+            "description": "The list of attendees associated with the expense.",
+            "items": {
+              "$ref": "#/components/schemas/ExpenseAttendeeWithAmounts"
+            }
+          }
+        }
       },
       "Allocation": {
         "required": [
@@ -4657,6 +8527,10 @@
           "isExpenseRejected": {
             "type": "boolean",
             "description": "Whether the approver or processor has rejected this expense in the report. If this is true then this expense will be sent back to the report submitted in an addendum (split) report"
+          },
+          "isPaperReceiptReceived": {
+            "type": "boolean",
+            "description": "Whether paper receipts have been received for the expense"
           }
         },
         "description": "Expense data"
