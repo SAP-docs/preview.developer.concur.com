@@ -5,11 +5,11 @@ layout: reference
 
 # Cost Object Workflow Integration Guide
 
-Cost Object Approval Workflow v4 provides the ability for a user to create a workflow within their own external system or portal. Users can retrieve, view, and approve cost objects within reports through those systems, and deep link into  SAP Concur related systems for detailed information. Users are also able to receive necessary notifications regarding pending actions and workflow steps. This system can be used with both Expense and Request.
+The cost object approval function of Workflow v4 provides the ability for a user to create a workflow within their own external system or portal. Users can retrieve, view, and approve cost objects within reports through those systems, and deep link into  SAP Concur related systems for detailed information. Users are also able to receive necessary notifications regarding pending actions and workflow steps. This system can be used with both Expense and Request.
 
 ## Overall WorkFlow for Expense and Request
 
-The Cost Object Approval Workflow Solution provides three core functions:
+It provides three core functions:
 
 * Event notifications when Requests/Expenses have entered cost object approval workflow steps.
 * Expense/Request workflow APIs that enable portal to retrieve Expenses/Requests that are ready for approvers and delegates to approve, review key cost object approval-related details, and approve and send back with or without comments to the employee. 
@@ -26,32 +26,32 @@ Scopes required for Event Subscription Service:
 
 Name|Description
 ---|---
-events.topic.read|Access to ESS API.
-expense.report.read|Get information about expense reports.
+`events.topic.read`|Access to ESS API.
+`expense.report.read`|Get information about expense reports.
 
 Scopes required for [Reports & Expense V4](/api-reference/expense/expense-report/v4.reports.html)
 
 Name|Description|Endpoint
 ---|---|---
-expense.report.read|Get information about expense reports.|GET
-expense.report.readwrite|Read and write expense report headers.|PATCH
-expense.report.workflowstatus.write|Approve or Send Back the Report in the workflow.|PATCH
-user.read|Get User Information, necessary for `userID`.|GET
+`expense.report.read`|Get information about expense reports.|GET
+`expense.report.readwrite`|Read and write expense report headers.|PATCH
+`expense.report.workflowstatus.write`|Approve or Send Back the Report in the workflow.|PATCH
+`user.read`|Get User Information, necessary for `userID`.|GET
 
 Optional Scopes:
 
 Name|Description|Endpoint
 ---|---|---
-spend.listitem.read|Read only access to spend list items `listItemId`.|GET
-spend.list.read|Read only access to spend list and category details.|GET
+`spend.listitem.read`|Read only access to spend list items `listItemId`.|GET
+`spend.list.read`|Read only access to spend list and category details.|GET
 
 Scopes required for [Deeplink URL Integration](/api-guides/expense/deeplink-url.html#scope-usage)
 
 Name|Description|Endpoint
 ---|---|---
-expense.report.read|Get information about expense reports.|GET
-expense.report.readwrite|Read and write expense report headers.|PATCH
-user.read|Get user information, necessary for `userID`.|GET
+`expense.report.read`|Get information about expense reports.|GET
+`expense.report.readwrite`|Read and write expense report headers.|PATCH
+`user.read`|Get user information, necessary for `userID`.|GET
 
 ## Solution Steps for Expense
 
@@ -79,7 +79,7 @@ user.read|Get user information, necessary for `userID`.|GET
    * This step would work for a user who has logged into the portal, regardless of whether they received a notification event as a user/delegate.
 
 7. **Portal retrieves cost object detail for each report** pending approval.
-   * The [cost objects for approver endpoint](/api-reference/expense/expense-report/v4.cost-objects.html) retrieves all cost objects for a report that the calling approver and/or that one of their delegators can approve.
+   * The [cost objects for approver endpoint](/api-reference/expense/expense-report/v4.workflows.html) retrieves all cost objects for a report that the calling approver and/or that one of their delegators can approve.
    * If the workflow setting “Filter expenses to those that are applicable to cost object” is set to false, then this endpoint will return all cost objects related to the report regardless of if the approver has permission to approve them.
 
 8. **[Approver or delegate user approves or sends back expense with or without comments](api-reference/expense/expense-report/v4.reports-temporary.html#get-reports-to-approve).**
