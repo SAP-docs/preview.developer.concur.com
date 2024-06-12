@@ -26,6 +26,10 @@ Retrieves the list of configured form types.
 #### Request Parameters
 None.
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Headers
 
 ##### Authorization Header
@@ -119,6 +123,10 @@ FormCode | required | The identifier for the desired form. |
 Example: `https://www.concursolutions.com/api/expense/expensereport/v1.1/report/Forms/{FormCode}`
 
 **URI Source**: The FormCode is returned in the **FormCode** element in the Get Form Types response.
+
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 #### Headers
 

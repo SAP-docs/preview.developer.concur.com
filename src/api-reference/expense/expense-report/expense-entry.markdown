@@ -23,6 +23,10 @@ Access to this documentation does not provide access to the API. 
 GET  /api/v3.0/expense/entries
 ```
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 ### Parameters
 
 Name | Type | Format | Description
@@ -46,6 +50,10 @@ Name | Type | Format | Description
 POST  /api/v3.0/expense/entries
 ```
 Note: Entries cannot be created on reports that have entered a workflow at least once.
+
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -73,6 +81,10 @@ https://www.concursolutions.com/api/v3.0/expense/entries
 
     PUT  /api/v3.0/expense/entries/{id}
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 ### Parameters
 
 Name | Type | Format | Description
@@ -88,6 +100,10 @@ https://www.concursolutions.com/api/v3.0/expense/entries/gWidFO7ikXV66iSvqtG6Yd0
 ## Get an Expense Entry <a name="get"></a>
 
     GET  /api/v3.0/expense/entries/{id}
+    
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -99,6 +115,10 @@ Name | Type | Format | Description
 ## Delete an Expense Entry <a name="delete"></a>
 
     DELETE  /api/v3.0/expense/entries/{id}
+    
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
