@@ -28,6 +28,8 @@ Most of the SAP Concur APIs support four different types of requests:
 
 SAP Concur also supports an alternative type of API referred to as a Callout. The Callout is a pre-configured step or condition that triggers SAP Concur to make a call out to your app to facilitate some sort of business transaction.
 
+Note, occasionally fields may be added to an API for a variety of reasons. Please ensure that your application's code is robust enough to handle non-breaking changes.
+
 ## Explore the APIs
 
 For the basic information on the APIs and what they do, you can check out the Swagger docs in [API Explorer](/api-explorer/). Need more in-depth information? You can find information on each API using the links on the left side of the page. Finally, there are some [Integration Guides](/api-guides/) that describe specific workflows. Even if none of them maps to your use case, they’re a good way to learn how to work with the SAP Concur APIs.
