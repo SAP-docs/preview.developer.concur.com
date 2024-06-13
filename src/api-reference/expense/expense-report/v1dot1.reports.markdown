@@ -53,6 +53,10 @@ https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}
 
 **URI Source**: The reportId value is returned by the Get List of Reports and Get Report Details functions, and as part of the **Report-Details-Url** element returned by this function.
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Headers
 
 * Authorization - Authorization header with OAuth token for valid Concur user. Required.
@@ -149,6 +153,10 @@ Example:
 ```
 https://www.concursolutions.com/api/expense/expensereport/v1.1/report/batch
 ```
+
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 #### Headers
 

@@ -54,6 +54,10 @@ https://www.concursolutions.com/api/expense/expensereport/v1.1/report/{reportId}
 * The entryId value is returned in the **RpeKey** element of the Get Report Details function.
 * The itemizationId is returned as part of the **Itemization-Url** value returned by this function.
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Headers
 
 * Authorization header with OAuth token for valid Concur user. Required.
