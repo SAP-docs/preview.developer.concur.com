@@ -1213,31 +1213,25 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="spend-documents-v4">Spend Documents V4</h1>
+        <h1 id="spend-document-v4">Spend Document V4</h1>
 
-<p>This is a limited release of the Spend Documents v4 API. This API supports downloading of the receipt images and compliance documents:</p>
+<p>The Spend Document V4 API provides APIs for ingesting &amp; retrieving receipts and compliance documents. Certified vendors, who have achieved compliance, are able to utilize these APIs to submit compliant receipts to Concur. The workflow involves vendors posting a display version of the receipt, accompanied by the necessary data to generate a receipt. Following this, they can put the compliance document for it. The Compliance feature facilitates this workflow. After a successful posting and processing of the receipts, available expenses or receipts are created in Concur Expense.</p>
 
-<p>Receipt Document: Display representation of the Receipt.
-Compliance Document: Compliant representation of the Receipt.</p>
+<h2 id="prior-versions">Prior Versions</h2>
 
-<ul>
-  <li>Fapiao OFD uploaded via the SAP Concur WeChat Mini app.</li>
-  <li>GRDC Receipts uploaded via SAP Concur Mobile.</li>
-  <li>CFDI Receipts uploaded via SAP Concur Mobile or Email.</li>
-</ul>
+<p>The Spend Document V4 API, a suite of APIs designed for the ingestion of compliance receipts, coexists with another set of Receipts V4 APIs. The latter is currently capable of facilitating the submission of electronic receipts (eReceipts) to Concur. Looking ahead, enhancements are planned for the Spend Document V4 API to extend its functionality to include support for eReceipts submission as well.</p>
 
-<h2 id="limitations"><a name="limitations"></a>Limitations</h2>
+<h2 id="limitations">Limitations</h2>
 
-<p>This API is only available to partners who have been granted access. Access to this documentation does not provide access to the API. This API is available in US and EMEA data centers.</p>
+<p>This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
 
-<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
-
+<h2 id="products-and-editions">Products and Editions</h2>
 <ul>
   <li>Concur Expense Professional Edition</li>
   <li>Concur Expense Standard Edition</li>
 </ul>
 
-<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+<h2 id="scope-usage">Scope Usage</h2>
 
 <table>
   <thead>
@@ -1249,163 +1243,572 @@ Compliance Document: Compliant representation of the Receipt.</p>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code></td>
-      <td>Read access to receipt documents</td>
+      <td>spenddocs.receipts.write <br /> spenddocs.receipts.writeonly</td>
+      <td>Post Receipt for the User</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td>spenddocs.receipts.read</td>
+      <td>Retrieve Receipt and its representations either by Receipt Id or Image Id and company Id</td>
       <td>GET</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.read</code></td>
-      <td>Read access to receipt compliance information</td>
+      <td>spenddocs.receipts.compliance.read</td>
+      <td>Retrieve compliance representation of the Receipt</td>
       <td>GET</td>
     </tr>
+    <tr>
+      <td>spenddocs.receipts.compliance.write <br /> spenddocs.receipts.compliance.writeonly</td>
+      <td>Put compliance representation of the receipt</td>
+      <td>PUT</td>
+    </tr>
   </tbody>
 </table>
 
-<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+<h2 id="prerequisites">Prerequisites</h2>
 
-<p>The user can use the Identity v4 API to retrieve the <code class="language-plaintext highlighter-rouge">userId</code> and <code class="language-plaintext highlighter-rouge">companyId</code>.</p>
+<p>Read the Getting Started section of Authentication API to obtain access tokens for User or Company JWT.</p>
 
-<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+<h2 id="endpoints">Endpoints</h2>
 
-<p>This API supports user and company level access tokens only.</p>
+<h1 id="post-a-new-receipt">Post a new receipt</h1>
 
-<h3 id="scopes">Scopes</h3>
+<p>This endpoint facilitates the creation of a new receipt. The data for the receipt should be supplied within the request body. Additionally, the display document for the receipt should be uploaded within the same request body, and the feature should be configured to ‘compliance’.</p>
 
-<p>Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+<h2 id="scopes">Scopes</h2>
+<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeOnly</code>  - Refer to Scope Usage for full details.</p>
 
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code></li>
-  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.read</code></li>
-</ul>
+<p><strong>URI Template:</strong>  <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts</code></p>
 
-<h2 id="get-receipt-representations"><a name="get-receipt-representations"></a>Get Receipt Representations</h2>
+<p><strong>Method:</strong> POST</p>
 
-<h3 id="display-representation">Display Representation</h3>
-
-<p>This endpoint returns display representation of a receipt by <code class="language-plaintext highlighter-rouge">receiptId</code>.</p>
-
-<h4 id="uri">URI</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/spend-documents/v4/receipts/<span class="o">{</span>receiptId<span class="o">}</span>/representations?type<span class="o">=</span>display
-</code></pre></div></div>
-
-<h4 id="parameters">Parameters</h4>
+<h2 id="request">Request</h2>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Type</th>
-      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">receiptId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td><strong>Required</strong></td>
+      <td>receipt</td>
+      <td>object</td>
+      <td>Required. The receipt data in JSON format.</td>
+    </tr>
+    <tr>
+      <td>document</td>
+      <td>PDF, JPEG, PNG, GIF, JPG</td>
+      <td>The receipt document to be uploaded. Compatible formats are ‘PDF, JPEG, PNG, GIF, JPG’.</td>
     </tr>
   </tbody>
 </table>
 
-<h4 id="response">Response</h4>
-
-<h4 id="status-codes">Status Codes</h4>
-
+<h2 id="request-headers">Request Headers</h2>
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">404 Not Found</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
 </ul>
 
-<p>This endpoint returns display representation of a receipt by <code class="language-plaintext highlighter-rouge">imageId</code> and <code class="language-plaintext highlighter-rouge">companyId</code>.</p>
+<h2 id="response">Response</h2>
 
-<h4 id="uri-1">URI</h4>
+<h3 id="status-codes">Status Codes</h3>
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">200 OK</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">400 Bad Request</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401">401 Unauthorized</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">403 Forbidden</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">404 Not Found</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500">500 Internal Server Error</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503">503 Internal Service Unavailable</a></li>
+</ul>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/spend-documents/v4/receipts/representations?imageId<span class="o">={</span>imageId<span class="o">}</span>&amp;companyId<span class="o">={</span>companyId<span class="o">}</span>&amp;type<span class="o">=</span>display
+<h2 id="example">Example</h2>
+
+<h3 id="request-1">Request</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-L</span> <span class="nt">-X</span> POST <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts'</span> <span class="se">\ </span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">-F</span> <span class="s1">'image=@"1.jpg"'</span> <span class="se">\</span>
+<span class="nt">--F</span> <span class="s1">'receipt="{
+  "metadata": {
+    "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
+    "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
+    "origin": "vendor",
+    "feature": "compliance",
+    "category": "general"
+  },
+  "receiptData": {
+    "transactionDateTime": "08/08/2022 3:30 PM",
+    "amount": {
+      "total": "18.47",
+      "currency": "GBP",
+      "subTotal": "15.05"
+    },
+    "vendor": {
+      "name": "Amazon",
+      "addressLine": "1234, Test street",
+      "city": "seattle",
+      "state": "washington",
+      "country": "US",
+      "postalCode": "98050",
+      "taxId": "12ADAqweq",
+      "phone": "4252322323"
+    },
+    "paymentType": {
+      "method": "Credit Card",
+      "creditCard": {
+        "type": "MasterCard",
+        "lastFour": "6170"
+      }
+    },
+    "referenceNumber": "203-6291668-6997137",
+    "lineItems": [
+      {
+        "title": "testTitle",
+        "description": "KetoPlastics 1 ® 110 Litre Black Bin/Refuse Bin With Lockable Lid (Made In The UK)",
+        "date": "2022-08-08T15:30:12-0500",
+        "folioType": "00",
+        "amount": "18.47",
+        "quantity": "5",
+        "unitPrice": "17.07",
+        "subTotal": "15.05",
+        "discounts": [
+          {
+            "discountAmount": "-2.02",
+            "discountName": "Discount lineitem level"
+          }
+        ],
+        "taxes": [
+          {
+            "amount": "3.42",
+            "name": "Tax",
+            "rate": 0.9
+          }
+        ],
+        "additionalDescription": "Seller: Ketoplastics Limited",
+        "semanticsCode": "OTHERS"
+      }
+    ],
+    "discounts": [
+      {
+        "discountAmount": "-2.02",
+        "discountName": "Discount receipt level"
+      }
+    ],
+    "discountsTotal": "-2.33",
+    "taxesTotal": "3.42",
+    "tripDetails": {
+      "itineraryLocator": "12345",
+      "driverNumber": "ss-343",
+      "travelDuration": "test",
+      "mapUrl": "https://test.com",
+      "startDate": "2014-11-10T15:08:24-0700",
+      "endDate": "2014-11-10T15:39:46-0700",
+      "classOfService": "Taxi Cab",
+      "distance": {
+        "totalDistance": 15.6,
+        "unit": "mi"
+      },
+      "source": {
+        "name": "start",
+        "addressLine": "601 108th Ave NE",
+        "city": "Bellevue",
+        "country": "US",
+        "postalCode": "98004"
+      },
+      "destination": {
+        "name": "end",
+        "addressLine": "1218 3rd Ave",
+        "city": "Seattle",
+        "country": "US",
+        "postalCode": "98104"
+      }
+    }
+  }
+}"
+'</span> 
 </code></pre></div></div>
 
-<h4 id="parameters-1">Parameters</h4>
+<h3 id="response-1">Response</h3>
+
+<p>202 Accepted</p>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"imageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"341D9EFCDC4E3833B76F75CFC53FF2E9"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/spend-documents/v4/receipts/3602e892-f463-497a-8654-8b2e802f4d65"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3602e892-f463-497a-8654-8b2e802f4d65"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h1 id="compliance-document-for-an-existing-receipt">Compliance Document for an Existing Receipt</h1>
+<p>This endpoint facilitates the creation of a compliance document for an existing receipt. The compliance document should be uploaded within the request body.</p>
+
+<h2 id="scopes-1">Scopes</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.write</code></li>
+  <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.writeonly</code></li>
+</ul>
+
+<blockquote>
+  <p>Refer to Scope Usage for full details.</p>
+</blockquote>
+
+<h2 id="request-2">Request</h2>
+
+<p><strong>URI Template:</strong> <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts/{receiptId}</code></p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">PUT</code></p>
+
+<p><strong>Parameters:</strong></p>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Type</th>
-      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">imageId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td><strong>Required</strong></td>
+      <td>receiptId</td>
+      <td>string</td>
+      <td>Required. The unique identifier (UUID) of the receipt.</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td><strong>Required</strong></td>
+      <td>Type</td>
+      <td>string</td>
+      <td>Required. compliance</td>
     </tr>
   </tbody>
 </table>
 
-<h4 id="response-1">Response</h4>
-
-<h4 id="status-codes-1">Status Codes</h4>
-
+<p><strong>Headers:</strong></p>
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">404 Not Found</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
 </ul>
 
-<h3 id="compliance-representation">Compliance Representation</h3>
+<h2 id="response-2">Response</h2>
 
-<p>This endpoint returns compliance representations of a receipt by <code class="language-plaintext highlighter-rouge">receiptId</code>.</p>
+<p><strong>Status Codes:</strong></p>
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">200 OK</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">400 Bad Request</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401">401 Unauthorized</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">403 Forbidden</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">404 Not Found</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500">500 Internal Server Error</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503">503 Internal Service Unavailable</a></li>
+</ul>
 
-<h4 id="uri-2">URI</h4>
+<p><strong>Headers:</strong></p>
+<ul>
+  <li>concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</li>
+</ul>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/spend-documents/v4/receipts/<span class="o">{</span>receiptId<span class="o">}</span>/representations?type<span class="o">=</span>compliance
-</code></pre></div></div>
+<h2 id="example-1">Example</h2>
 
-<h4 id="parameters-2">Parameters</h4>
+<p><strong>Request:</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">-F</span> <span class="s1">'image=@"compliance.xml"
+</span></code></pre></div></div>
+
+<p><strong>Response:</strong></p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"imageId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"41545f0b-ebce-47b5-8233-1e6ef7f7b3c8"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h1 id="get-receipt">Get receipt</h1>
+<p>There are two endpoints to retrieve the details of a specific receipt.</p>
+
+<h2 id="by-receipt-id">By Receipt Id</h2>
+<p>This endpoint retrieves the details of a specific receipt using the receipt’s unique identifier (UUID).</p>
+
+<h2 id="by-imageid-and-companyid">By ImageId and CompanyId</h2>
+<p>This endpoint retrieves the details of a specific receipt using the company id and ImageId.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code> - Refer to Scope Usage for full details.</p>
+
+<h3 id="request-3">Request</h3>
+
+<p>URI Template:</p>
+
+<ul>
+  <li>By Receipt Id:  <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts/{receiptId}</code></li>
+  <li>By ImageId and CompanyId: <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts?imageId={imageId}&amp;companyId={companyId}</code></li>
+</ul>
+
+<p>Method: GET</p>
+
+<p>Parameters:</p>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Type</th>
-      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">receiptId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
-      <td><strong>Required</strong></td>
+      <td>receiptId or companyd + ImageId</td>
+      <td>string</td>
+      <td>Required The unique identifier (UUID) of the receipt OR Required The unique identifier (UUID) of the company and identifier for the Image Id</td>
     </tr>
   </tbody>
 </table>
 
-<h4 id="response-2">Response</h4>
+<h3 id="headers">Headers</h3>
+<ul>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+</ul>
 
-<h4 id="status-codes-2">Status Codes</h4>
+<h3 id="response-3">Response</h3>
+
+<p>Status Codes</p>
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">200 OK</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">400 Bad Request</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401">401 Unauthorized</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">403 Forbidden</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">404 Not Found</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500">500 Internal Server Error</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503">503 Internal Service Unavailable</a></li>
+</ul>
+
+<p>Headers: concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</p>
+
+<p>Payload: Receipt Response</p>
+
+<h3 id="example-2">Example</h3>
+
+<p>Request</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<p>Or</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts?imageId=2AB8D2C8078C4E38A5E7F18A6DE5558D&amp;companyId=71f74b81-bb57-4c54-8985-5d7c42f6feb1'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<p>Response</p>
+
+<p>200 OK</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3e2c1b7e-0969-41b1-b5a6-590eb6a5f885"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"imageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F66F323EAC704DA3B3AA85F66D7E1663"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4d3a8d80-0f93-4b0b-bed1-2724a354858c"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8f8fd1d8-bbc6-4611-861d-af714a02275f"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dateTimeReceived"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-04-26T18:37:41.930Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"origin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"captureMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cameraCapture"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"provider"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"feature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"compliance"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"processed"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"compliance"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"processed"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"receiptData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"transactionDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-30T11:30:00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="s2">"30.0"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"vendor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"KIRKLAND PERFORMANCE CENTER"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"KIRKLAND"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WASHINGTON"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"paymentType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"creditCard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$$"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastFour"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1006"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"expenseData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"expenseType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PARKG"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"documents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"representation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"display"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/pdf"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fr_expenseit.pdf"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"renderable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=display"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"representation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"compliance"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/pdf"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4d3a8d80-0f93-4b0b-bed1-2724a354858c.pdf"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"renderable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=compliance"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h1 id="get-receipt-representation">Get receipt representation</h1>
+
+<p>There are two endpoints to retrieve the receipt document (display or compliance) of a specific receipt.</p>
+
+<h2 id="by-receipt-id-1">By Receipt Id</h2>
+
+<p>Retrieves the receipt using the receipt’s unique identifier (UUID).</p>
+
+<h2 id="by-imageid-and-companyid-1">By ImageId and CompanyId</h2>
+
+<p>Retrieves the receipt using the company id and ImageId.</p>
+
+<h2 id="scopes-3">Scopes</h2>
+
+<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read, spenddocs.compliance.read</code><br />
+Refer to Scope Usage for full details.</p>
+
+<h2 id="request-4">Request</h2>
+
+<p><strong>URI Template:</strong><br />
+By Receipt Id: <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts/{receiptId}/representations?type={display or compliance}</code><br />
+By ImageId and CompanyId: <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts?imageId={imageId}&amp;companyId={companyId}&amp;type={display or compliance}</code></p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">GET</code></p>
+
+<p><strong>Parameters:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>receiptId or companyd + ImageId</td>
+      <td>string</td>
+      <td>Required The unique identifier (UUID) of the receipt OR Required The unique identifier (UUID) of the company and identifier for the Image Id</td>
+    </tr>
+    <tr>
+      <td>Type</td>
+      <td>string</td>
+      <td>Required display or compliance</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="headers-1">Headers</h3>
 
 <ul>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">404 Not Found</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
 </ul>
+
+<h2 id="response-4">Response</h2>
+
+<p><strong>Status Codes</strong></p>
+
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">200 OK</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">400 Bad Request</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401">401 Unauthorized</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">403 Forbidden</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404">404 Not Found</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500">500 Internal Server Error</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503">503 Internal Service Unavailable</a></li>
+</ul>
+
+<p><strong>Headers</strong></p>
+
+<p>concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</p>
+
+<h3 id="payload">Payload</h3>
+
+<p>Receipt Response</p>
+
+<h3 id="example-3">Example</h3>
+
+<p><strong>Request</strong></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745/representations?type=display'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+<p>Or</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts?imageId=2AB8D2C8078C4E38A5E7F18A6DE5558D&amp;companyId=71f74b81-bb57-4c54-8985-5d7c42f6feb1&amp;/representations?type=compliance \
+--header '</span>Authorization: Bearer <span class="o">{</span>access_token<span class="o">}</span><span class="s1">' \
+--header '</span>Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034<span class="s1">' \
+--header '</span>Content-Type: application/json<span class="s1">'
+</span></code></pre></div></div>
+
+<p><strong>Response</strong></p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">ok</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">image/png</span>
+<span class="na">Content-Length</span><span class="p">:</span> <span class="s">108842</span>
+</code></pre></div></div>
+
+<p>Returns the image byte stream</p>
+
+<h2 id="schemas">Schemas</h2>
+
+<p>The API uses a number of data schemas for its responses and request bodies. For more details, please refer to the <a href="https://api.sap.com/api/ConcurExpenseSpendDocuments/overview">API Reference</a>.</p>
+
+<h2 id="license">License</h2>
+
+<p>This API is provided unde r the <a href="http://www.concursolutions.com">Concur Technologies Copyrights</a>.</p>
 
       </div>
       <!--/col-md-8-->
