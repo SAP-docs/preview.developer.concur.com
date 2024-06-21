@@ -1,95 +1,76 @@
----
-title: Spend Documents v4
-layout: reference
----
+Spend Document V4
+The Spend Document V4 API provides APIs for ingesting & retrieving receipts and compliance documents. Certified vendors, who have achieved compliance, are able to utilize these APIs to submit compliant receipts to Concur. The workflow involves vendors posting a display version of the receipt, accompanied by the necessary data to generate a receipt. Following this, they can put the compliance document for it. The Compliance feature facilitates this workflow. After a successful posting and processing of the receipts, available expenses or receipts are created in Concur Expense.
 
-# Spend Document V4 
+Prior Versions
+The Spend Document V4 API, a suite of APIs designed for the ingestion of compliance receipts, coexists with another set of Receipts V4 APIs. The latter is currently capable of facilitating the submission of electronic receipts (eReceipts) to Concur. Looking ahead, enhancements are planned for the Spend Document V4 API to extend its functionality to include support for eReceipts submission as well.
 
-The Spend Document V4 API provides APIs for ingesting & retrieving receipts and compliance documents. After a successful posting and processing of the receipts, available expenses or receipts are created in Concur Expense. In addition to posting the Receipts, the API also allows for partners to directly post compliance documents on behalf of the user to Concur Expense.
-
-## Prior Versions
-
-Although the Spend Document V4 API is being released for the first time, there is already another Receipts V4 API available that enables the posting of electronic receipts (eReceipts) to Concur. In the future, the Spend Document V4 API will be improved to also support the posting of eReceipts.
-
-## Limitations
-
+Limitations
 This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
 
-## Products and Editions
-* Concur Expense Professional Edition
-* Concur Expense Standard Edition
-
-## Scope Usage
-
-| Name | Description | Endpoint |
-| --- | --- | --- |
-| spenddocs.receipts.write <br> spenddocs.receipts.writeonly | Post Receipt for the User | POST |
-| spenddocs.receipts.read | Retrieve Receipt and its representations either by Receipt Id or Image Id and company Id | GET |
-| spenddocs.receipts.compliance.read | Retrieve compliance representation of the Receipt | GET |
-| spenddocs.receipts.compliance.write <br> spenddocs.receipts.compliance.writeonly | Put compliance representation of the receipt | PUT |
-
-## Prerequisites
-
+Products and Editions
+Concur Expense Professional Edition
+Concur Expense Standard Edition
+Scope Usage
+Name	Description	Endpoint
+spenddocs.receipts.write
+spenddocs.receipts.writeonly	Post Receipt for the User	POST
+spenddocs.receipts.read	Retrieve Receipt and its representations either by Receipt Id or Image Id and company Id	GET
+spenddocs.receipts.compliance.read	Retrieve compliance representation of the Receipt	GET
+spenddocs.receipts.compliance.write
+spenddocs.receipts.compliance.writeonly	Put compliance representation of the receipt	PUT
+Prerequisites
 Read the Getting Started section of Authentication API to obtain access tokens for User or Company JWT.
 
-## Endpoints
+Endpoints
+Post a new receipt
+This endpoint facilitates the creation of a new receipt. The data for the receipt should be supplied within the request body. Additionally, the display document for the receipt should be uploaded within the same request body, and the feature should be configured to 'compliance'.
 
-# Post a new receipt
+Scopes
+spenddocs.receipts.write spenddocs.receipts.writeOnly - Refer to Scope Usage for full details.
 
-This endpoint allows you to create a new receipt. The receipt data should be provided in the request body.
+URI Template: /spend-documents/v4/receipts
 
-## Scopes
-`spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to Scope Usage for full details.
+Method: POST
 
-**URI Template:**  `/spend-documents/v4/receipts`
-
-**Method:** POST
-
-## Request
-
-Name | Type | Description
---- | --- | ---
-receipt | object | Required. The receipt data in JSON format.
-document | PDF, JPEG, PNG, GIF, JPG | The receipt document to be uploaded. Compatible formats are 'PDF, JPEG, PNG, GIF, JPG'.
-
-## Request Headers
-- [RFC 7231 Accept-Language](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5)
-- [RFC 7231 Content-Type](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5)
-- [RFC 7231 Content-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2)
-- [RFC 7234 Cache-Control](https://datatracker.ietf.org/doc/html/rfc7234#section-5.2)
-- [RFC 7232 If-Modified-Since](https://datatracker.ietf.org/doc/html/rfc7232#section-3.3)
-- [RFC 7231 Accept-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4)
-- [RFC 7235 Authorization](https://datatracker.ietf.org/doc/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-- `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://datatracker.ietf.org/doc/html/rfc4122)
-
-## Response
-
-### Status Codes
-- [200 OK](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)
-- [400 Bad Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400)
-- [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)
-- [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)
-- [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)
-- [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)
-- [503 Internal Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)
-
-
-## Example
-
-### Request
-
-```bash
-curl --location --request POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
---header 'Content-Type: application/json'
-
+Request
+Name	Type	Description
+receipt	object	Required. The receipt data in JSON format.
+document	PDF, JPEG, PNG, GIF, JPG	The receipt document to be uploaded. Compatible formats are 'PDF, JPEG, PNG, GIF, JPG'.
+Request Headers
+RFC 7231 Accept-Language
+RFC 7231 Content-Type
+RFC 7231 Content-Encoding
+RFC 7234 Cache-Control
+RFC 7232 If-Modified-Since
+RFC 7231 Accept-Encoding
+RFC 7235 Authorization - Bearer Token that identifies the caller. This is the Company or User access token.
+concur-correlationid is a Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
+Response
+Status Codes
+200 OK
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+500 Internal Server Error
+503 Internal Service Unavailable
+Example
+Request
 curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \ 
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
 --header 'Content-Type: application/json' \
 -F 'image=@"1.jpg"' \
---F 'receipt="{    "transactionDateTime": "08/08/2022 3:30 PM",
+--F 'receipt="{
+  "metadata": {
+    "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
+    "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
+    "origin": "vendor",
+    "feature": "compliance",
+    "category": "general"
+  },
+  "receiptData": {
+    "transactionDateTime": "08/08/2022 3:30 PM",
     "amount": {
       "total": "18.47",
       "currency": "GBP",
@@ -177,358 +158,262 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
     }
   }
 }"
-' # replace with your receipt data
-```
-
-### Response
-
+' 
+Response
 202 Accepted
-```json
+
 {
     "imageId": "341D9EFCDC4E3833B76F75CFC53FF2E9",
     "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/3602e892-f463-497a-8654-8b2e802f4d65",
     "id": "3602e892-f463-497a-8654-8b2e802f4d65"
 }
-```
+Compliance Document for an Existing Receipt
+This endpoint facilitates the creation of a compliance document for an existing receipt. The compliance document should be uploaded within the request body.
 
-# Compliance Document for an Existing Receipt
+Scopes
+spenddocs.receipts.compliance.write
+spenddocs.receipts.compliance.writeonly
+Refer to Scope Usage for full details.
 
-## Scopes
+Request
+URI Template: /spend-documents/v4/receipts/{receiptId}
 
-- `spenddocs.receipts.compliance.write`
-- `spenddocs.receipts.compliance.writeonly`
+Method: PUT
 
-> Refer to Scope Usage for full details.
+Parameters:
 
-## Request
+Name	Type	Description
+receiptId	string	Required. The unique identifier (UUID) of the receipt.
+Type	string	Required. compliance
+Headers:
 
-**URI Template:** `/spend-documents/v4/receipts/{receiptId}`
+RFC 7231 Accept-Language
+RFC 7231 Content-Type
+RFC 7231 Content-Encoding
+RFC 7234 Cache-Control
+RFC 7232 If-Modified-Since
+RFC 7231 Accept-Encoding
+RFC 7235 Authorization - Bearer Token that identifies the caller. This is the Company or User access token.
+concur-correlationid is a Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
+Response
+Status Codes:
 
-**Method:** `PUT`
+200 OK
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+500 Internal Server Error
+503 Internal Service Unavailable
+Headers:
 
-**Parameters:**
+concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
+Example
+Request:
 
-| Name      | Type   | Description                                                |
-|-----------|--------|------------------------------------------------------------|
-| receiptId | string | Required. The unique identifier (UUID) of the receipt.     |
-| Type      | string | Required. compliance                                       |
-
-**Headers:**
-- [RFC 7231 Accept-Language](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5)
-- [RFC 7231 Content-Type](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5)
-- [RFC 7231 Content-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2)
-- [RFC 7234 Cache-Control](https://datatracker.ietf.org/doc/html/rfc7234#section-5.2)
-- [RFC 7232 If-Modified-Since](https://datatracker.ietf.org/doc/html/rfc7232#section-3.3)
-- [RFC 7231 Accept-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4)
-- [RFC 7235 Authorization](https://datatracker.ietf.org/doc/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-- `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://datatracker.ietf.org/doc/html/rfc4122)
-
-## Response
-
-**Status Codes:**
-- [200 OK](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)
-- [400 Bad Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400)
-- [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)
-- [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)
-- [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)
-- [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)
-- [503 Internal Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)
-
-**Headers:**
-- concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
-
-## Example
-
-**Request:**
-
-```bash
-curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745' \
+curl --location --request PUT 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
 --header 'Content-Type: application/json' \
--F 'image=@"1.jpg"
-```
+-F 'image=@"compliance.xml"
+Response:
 
-**Response:**
-
-```json
 {
     "imageId": null,
     "href": null,
     "id": "41545f0b-ebce-47b5-8233-1e6ef7f7b3c8"
 }
-```
+Get receipt
+There are two endpoints to retrieve the details of a specific receipt.
 
-# Get receipt
-
-## By Receipt Id
+By Receipt Id
 This endpoint retrieves the details of a specific receipt using the receipt's unique identifier (UUID).
 
-## By ImageId and CompanyId
+By ImageId and CompanyId
 This endpoint retrieves the details of a specific receipt using the company id and ImageId.
 
-### Scopes
-`spenddocs.receipts.read` - Refer to Scope Usage for full details.
+Scopes
+spenddocs.receipts.read - Refer to Scope Usage for full details.
 
-### Request
-
+Request
 URI Template:
 
-- By Receipt Id:  `/spend-documents/v4/receipts/{receiptId}`
-- By ImageId and CompanyId: `/spend-documents/v4/receipts?imageId={imageId}&companyId={companyId}`
+By Receipt Id: /spend-documents/v4/receipts/{receiptId}
+By ImageId and CompanyId: /spend-documents/v4/receipts?imageId={imageId}&companyId={companyId}
+Method: GET
+
+Parameters:
+
+Name	Type	Description
+receiptId or companyd + ImageId	string	Required The unique identifier (UUID) of the receipt OR Required The unique identifier (UUID) of the company and identifier for the Image Id
+Headers
+RFC 7231 Accept-Language
+RFC 7231 Content-Type
+RFC 7231 Content-Encoding
+RFC 7234 Cache-Control
+RFC 7232 If-Modified-Since
+RFC 7231 Accept-Encoding
+RFC 7235 Authorization - Bearer Token that identifies the caller. This is the Company or User access token.
+concur-correlationid is a Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
+Response
+Status Codes
+
+200 OK
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+500 Internal Server Error
+503 Internal Service Unavailable
+Headers: concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
+
+Payload: Receipt Response
+
+Example
+Request
+
+curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
+--header 'Content-Type: application/json'
+Or
+
+curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts?imageId=2AB8D2C8078C4E38A5E7F18A6DE5558D&companyId=71f74b81-bb57-4c54-8985-5d7c42f6feb1' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
+--header 'Content-Type: application/json'
+Response
+
+200 OK
+
+{
+  "metadata": {
+    "userId": "3e2c1b7e-0969-41b1-b5a6-590eb6a5f885",
+    "imageId": "F66F323EAC704DA3B3AA85F66D7E1663",
+    "id": "4d3a8d80-0f93-4b0b-bed1-2724a354858c",
+    "companyId": "8f8fd1d8-bbc6-4611-861d-af714a02275f",
+    "dateTimeReceived": "2024-04-26T18:37:41.930Z",
+    "origin": "mobile",
+    "captureMethod": "cameraCapture",
+    "provider": "user",
+    "feature": "compliance",
+    "status": "processed",
+    "compliance": {
+      "status": "processed"
+    }
+  },
+  "receiptData": {
+    "transactionDateTime": "2023-12-30T11:30:00",
+    "amount": {
+      "total": "30.0",
+      "currency": "USD"
+    },
+    "vendor": {
+      "name": "KIRKLAND PERFORMANCE CENTER",
+      "city": "KIRKLAND",
+      "state": "WASHINGTON",
+      "country": "US"
+    },
+    "paymentType": {
+      "creditCard": {
+        "type": "$$",
+        "lastFour": "1006"
+      }
+    },
+    "expenseData": {
+      "expenseType": "PARKG"
+    }
+  },
+  "documents": [
+    {
+      "representation": "display",
+      "type": "application/pdf",
+      "name": "fr_expenseit.pdf",
+      "renderable": true,
+      "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=display"
+    },
+    {
+      "representation": "compliance",
+      "type": "application/pdf",
+      "name": "4d3a8d80-0f93-4b0b-bed1-2724a354858c.pdf",
+      "renderable": true,
+      "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=compliance"
+    }
+  ]
+}
+Get receipt representation
+There are two endpoints to retrieve the receipt document (display or compliance) of a specific receipt.
+
+By Receipt Id
+Retrieves the receipt using the receipt's unique identifier (UUID).
+
+By ImageId and CompanyId
+Retrieves the receipt using the company id and ImageId.
+
+Scopes
+spenddocs.receipts.read, spenddocs.compliance.read
+Refer to Scope Usage for full details.
+
+Request
+URI Template:
+By Receipt Id: /spend-documents/v4/receipts/{receiptId}/representations?type={display or compliance}
+By ImageId and CompanyId: /spend-documents/v4/receipts?imageId={imageId}&companyId={companyId}&type={display or compliance}
 
 Method: GET
 
 Parameters:
 
-| Name | Type | Description |
-| --- | --- | --- |
-| receiptId or companyd + ImageId | string | Required The unique identifier (UUID) of the receipt OR Required The unique identifier (UUID) of the company and identifier for the Image Id |
-
-### Headers
-- [RFC 7231 Accept-Language](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5)
-- [RFC 7231 Content-Type](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5)
-- [RFC 7231 Content-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2)
-- [RFC 7234 Cache-Control](https://datatracker.ietf.org/doc/html/rfc7234#section-5.2)
-- [RFC 7232 If-Modified-Since](https://datatracker.ietf.org/doc/html/rfc7232#section-3.3)
-- [RFC 7231 Accept-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4)
-- [RFC 7235 Authorization](https://datatracker.ietf.org/doc/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-- `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://datatracker.ietf.org/doc/html/rfc4122)
-
-### Response
-
-Status Codes
-- [200 OK](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)
-- [400 Bad Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400)
-- [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)
-- [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)
-- [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)
-- [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)
-- [503 Internal Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)
-
-
-Headers: concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
-
-Payload: Receipt Response
-
-### Example
-
-Request
-
-```bash
-curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
---header 'Content-Type: application/json'
-```
-
-Or
-
-```bash
-curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts?imageId=2AB8D2C8078C4E38A5E7F18A6DE5558D&companyId=71f74b81-bb57-4c54-8985-5d7c42f6feb1' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
---header 'Content-Type: application/json'
-```
-
+Name	Type	Description
+receiptId or companyd + ImageId	string	Required The unique identifier (UUID) of the receipt OR Required The unique identifier (UUID) of the company and identifier for the Image Id
+Type	string	Required display or compliance
+Headers
+RFC 7231 Accept-Language
+RFC 7231 Content-Type
+RFC 7231 Content-Encoding
+RFC 7234 Cache-Control
+RFC 7232 If-Modified-Since
+RFC 7231 Accept-Encoding
+RFC 7235 Authorization - Bearer Token that identifies the caller. This is the Company or User access token.
+concur-correlationid is a Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
 Response
+Status Codes
 
 200 OK
-
-```json
-{
-  "metadata": {
-    "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
-    "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
-    "origin": "vendor",
-    "feature": "cfdi",
-    "category": "groundTransport"
-  },
-  "receiptData": {
-    "transactionDateTime": "08/08/2022 3:30 PM",
-    "amount": {
-      "total": "18.47",
-      "currency": "GBP",
-      "subTotal": "15.05"
-    },
-    "vendor": {
-      "name": "Amazon",
-      "addressLine": "1234, Test street",
-      "city": "seattle",
-      "state": "washington",
-      "country": "US",
-      "postalCode": "98050",
-      "taxId": "12ADAqweq",
-      "phone": "4252322323"
-    },
-    "paymentType": {
-      "method": "Credit Card",
-      "creditCard": {
-        "type": "MasterCard",
-        "lastFour": "6170"
-      }
-    },
-    "referenceNumber": "203-6291668-6997137",
-    "lineItems": [
-      {
-        "title": "testTitle",
-        "description": "KetoPlastics 1 ® 110 Litre Black Bin/Refuse Bin With Lockable Lid (Made In The UK)",
-        "date": "2022-08-08T15:30:12-0500",
-        "folioType": "00",
-        "amount": "18.47",
-        "quantity": "5",
-        "unitPrice": "17.07",
-        "subTotal": "15.05",
-        "discounts": [
-          {
-            "discountAmount": "-2.02",
-            "discountName": "Discount lineitem level"
-          }
-        ],
-        "taxes": [
-          {
-            "amount": "3.42",
-            "name": "Tax",
-            "rate": 0.9
-          }
-        ],
-        "additionalDescription": "Seller: Ketoplastics Limited",
-        "semanticsCode": "OTHERS"
-      }
-    ],
-    "discounts": [
-      {
-        "discountAmount": "-2.02",
-        "discountName": "Discount receipt level"
-      }
-    ],
-    "discountsTotal": "-2.33",
-    "taxesTotal": "3.42",
-    "tripDetails": {
-      "itineraryLocator": "12345",
-      "driverNumber": "ss-343",
-      "travelDuration": "test",
-        "mapUrl": "https://test.com",
-        "startDate": "2014-11-10T15:08:24-0700",
-        "endDate": "2014-11-10T15:39:46-0700",
-        "classOfService": "Taxi Cab",
-        "distance": {
-          "totalDistance": 15.6,
-          "unit": "mi"
-        },
-        "source": {
-          "name": "start",
-          "addressLine": "601 108th Ave NE",
-          "city": "Bellevue",
-          "country": "US",
-          "postalCode": "98004"
-        },
-        "destination": {
-          "name": "end",
-          "addressLine": "1218 3rd Ave",
-          "city": "Seattle",
-          "country": "US",
-          "postalCode": "98104"
-        }
-        }
-        }
-}
-```
-# Get receipt representation
-
-There are two endpoints to retrieve the receipt document (display or compliance) of a specific receipt.
-
-## By Receipt Id
-
-Retrieves the receipt using the receipt's unique identifier (UUID).
-
-## By ImageId and CompanyId
-
-Retrieves the receipt using the company id and ImageId.
-
-## Scopes
-
-`spenddocs.receipts.read, spenddocs.compliance.read`  
-Refer to Scope Usage for full details.
-
-## Request
-
-**URI Template:**  
-By Receipt Id: `/spend-documents/v4/receipts/{receiptId}/representations?type={display or compliance}`  
-By ImageId and CompanyId: `/spend-documents/v4/receipts?imageId={imageId}&companyId={companyId}&type={display or compliance}`
-
-**Method:** `GET`
-
-**Parameters:**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| receiptId or companyd + ImageId | string | Required The unique identifier (UUID) of the receipt OR Required The unique identifier (UUID) of the company and identifier for the Image Id |
-| Type | string | Required display or compliance |
-
-### Headers
-
-- [RFC 7231 Accept-Language](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5)
-- [RFC 7231 Content-Type](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.1.5)
-- [RFC 7231 Content-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-3.1.2.2)
-- [RFC 7234 Cache-Control](https://datatracker.ietf.org/doc/html/rfc7234#section-5.2)
-- [RFC 7232 If-Modified-Since](https://datatracker.ietf.org/doc/html/rfc7232#section-3.3)
-- [RFC 7231 Accept-Encoding](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.4)
-- [RFC 7235 Authorization](https://datatracker.ietf.org/doc/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-- `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://datatracker.ietf.org/doc/html/rfc4122)
-
-## Response
-
-**Status Codes**
-
-- [200 OK](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200)
-- [400 Bad Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400)
-- [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)
-- [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)
-- [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)
-- [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)
-- [503 Internal Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)
-
-**Headers**
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+500 Internal Server Error
+503 Internal Service Unavailable
+Headers
 
 concur-correlationid is a SAP Concur specific custom header used for technical support in the form of a RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace
 
-### Payload
-
+Payload
 Receipt Response
 
-### Example
+Example
+Request
 
-**Request**
-
-```bash
 curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745/representations?type=display' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
 --header 'Content-Type: application/json'
-```
 Or
-```bash
+
 curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts?imageId=2AB8D2C8078C4E38A5E7F18A6DE5558D&companyId=71f74b81-bb57-4c54-8985-5d7c42f6feb1&/representations?type=compliance \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
 --header 'Content-Type: application/json'
-```
+Response
 
-**Response**
-
-```http
 HTTP/1.1 200 ok
 Content-Type: image/png
 Content-Length: 108842
-```
-
 Returns the image byte stream
 
-## Schemas
+Schemas
+The API uses a number of data schemas for its responses and request bodies. For more details, please refer to the Swagger JSON.
 
-The API uses a number of data schemas for its responses and request bodies. For more details, please refer to the [Swagger JSON](#).
-
-## License
-
-This API is provided under the [Concur Technologies Copyrights](http://www.concursolutions.com).
+License
+This API is provided under the Concur Technologies Copyrights.
