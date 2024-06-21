@@ -5,11 +5,11 @@ layout: reference
 
 # Spend Document V4 
 
-The Spend Document V4 API provides APIs for ingesting & retrieving receipts and compliance documents. After a successful posting and processing of the receipts, available expenses or receipts are created in Concur Expense. In addition to posting the Receipts, the API also allows for partners to directly post compliance documents on behalf of the user to Concur Expense.
+The Spend Document V4 API provides APIs for ingesting & retrieving receipts and compliance documents. Certified vendors, who have achieved compliance, are able to utilize these APIs to submit compliant receipts to Concur. The workflow involves vendors posting a display version of the receipt, accompanied by the necessary data to generate a receipt. Following this, they can put the compliance document for it. The Compliance feature facilitates this workflow. After a successful posting and processing of the receipts, available expenses or receipts are created in Concur Expense.
 
 ## Prior Versions
 
-Although the Spend Document V4 API is being released for the first time, there is already another Receipts V4 API available that enables the posting of electronic receipts (eReceipts) to Concur. In the future, the Spend Document V4 API will be improved to also support the posting of eReceipts.
+The Spend Document V4 API, a suite of APIs designed for the ingestion of compliance receipts, coexists with another set of Receipts V4 APIs. The latter is currently capable of facilitating the submission of electronic receipts (eReceipts) to Concur. Looking ahead, enhancements are planned for the Spend Document V4 API to extend its functionality to include support for eReceipts submission as well.
 
 ## Limitations
 
@@ -36,7 +36,7 @@ Read the Getting Started section of Authentication API to obtain access tokens f
 
 # Post a new receipt
 
-This endpoint allows you to create a new receipt. The receipt data should be provided in the request body.
+This endpoint facilitates the creation of a new receipt. The data for the receipt should be supplied within the request body. Additionally, the display document for the receipt should be uploaded within the same request body, and the feature should be configured to 'compliance'.
 
 ## Scopes
 `spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to Scope Usage for full details.
@@ -79,17 +79,21 @@ document | PDF, JPEG, PNG, GIF, JPG | The receipt document to be uploaded. Compa
 ### Request
 
 ```bash
-curl --location --request POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
---header 'Content-Type: application/json'
-
 curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \ 
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
 --header 'Content-Type: application/json' \
 -F 'image=@"1.jpg"' \
---F 'receipt="{    "transactionDateTime": "08/08/2022 3:30 PM",
+--F 'receipt="{
+  "metadata": {
+    "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
+    "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
+    "origin": "vendor",
+    "feature": "compliance",
+    "category": "general"
+  },
+  "receiptData": {
+    "transactionDateTime": "08/08/2022 3:30 PM",
     "amount": {
       "total": "18.47",
       "currency": "GBP",
@@ -177,7 +181,7 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
     }
   }
 }"
-' # replace with your receipt data
+' 
 ```
 
 ### Response
@@ -192,6 +196,7 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
 ```
 
 # Compliance Document for an Existing Receipt
+This endpoint facilitates the creation of a compliance document for an existing receipt. The compliance document should be uploaded within the request body.
 
 ## Scopes
 
@@ -242,11 +247,11 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
 **Request:**
 
 ```bash
-curl --location --request GET 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745' \
+curl --location --request PUT 'https://us.api.concursolutions.com/spend-documents/v4/receipts/8d157fb6-b06b-4ea8-b632-c1f477b93745' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
 --header 'Content-Type: application/json' \
--F 'image=@"1.jpg"
+-F 'image=@"compliance.xml"
 ```
 
 **Response:**
@@ -260,6 +265,7 @@ curl --location --request GET 'https://us.api.concursolutions.com/spend-document
 ```
 
 # Get receipt
+There are two endpoints to retrieve the details of a specific receipt. 
 
 ## By Receipt Id
 This endpoint retrieves the details of a specific receipt using the receipt's unique identifier (UUID).
@@ -338,100 +344,58 @@ Response
 ```json
 {
   "metadata": {
-    "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
-    "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
-    "origin": "vendor",
-    "feature": "cfdi",
-    "category": "groundTransport"
+    "userId": "3e2c1b7e-0969-41b1-b5a6-590eb6a5f885",
+    "imageId": "F66F323EAC704DA3B3AA85F66D7E1663",
+    "id": "4d3a8d80-0f93-4b0b-bed1-2724a354858c",
+    "companyId": "8f8fd1d8-bbc6-4611-861d-af714a02275f",
+    "dateTimeReceived": "2024-04-26T18:37:41.930Z",
+    "origin": "mobile",
+    "captureMethod": "cameraCapture",
+    "provider": "user",
+    "feature": "compliance",
+    "status": "processed",
+    "compliance": {
+      "status": "processed"
+    }
   },
   "receiptData": {
-    "transactionDateTime": "08/08/2022 3:30 PM",
+    "transactionDateTime": "2023-12-30T11:30:00",
     "amount": {
-      "total": "18.47",
-      "currency": "GBP",
-      "subTotal": "15.05"
+      "total": "30.0",
+      "currency": "USD"
     },
     "vendor": {
-      "name": "Amazon",
-      "addressLine": "1234, Test street",
-      "city": "seattle",
-      "state": "washington",
-      "country": "US",
-      "postalCode": "98050",
-      "taxId": "12ADAqweq",
-      "phone": "4252322323"
+      "name": "KIRKLAND PERFORMANCE CENTER",
+      "city": "KIRKLAND",
+      "state": "WASHINGTON",
+      "country": "US"
     },
     "paymentType": {
-      "method": "Credit Card",
       "creditCard": {
-        "type": "MasterCard",
-        "lastFour": "6170"
+        "type": "$$",
+        "lastFour": "1006"
       }
     },
-    "referenceNumber": "203-6291668-6997137",
-    "lineItems": [
-      {
-        "title": "testTitle",
-        "description": "KetoPlastics 1 ® 110 Litre Black Bin/Refuse Bin With Lockable Lid (Made In The UK)",
-        "date": "2022-08-08T15:30:12-0500",
-        "folioType": "00",
-        "amount": "18.47",
-        "quantity": "5",
-        "unitPrice": "17.07",
-        "subTotal": "15.05",
-        "discounts": [
-          {
-            "discountAmount": "-2.02",
-            "discountName": "Discount lineitem level"
-          }
-        ],
-        "taxes": [
-          {
-            "amount": "3.42",
-            "name": "Tax",
-            "rate": 0.9
-          }
-        ],
-        "additionalDescription": "Seller: Ketoplastics Limited",
-        "semanticsCode": "OTHERS"
-      }
-    ],
-    "discounts": [
-      {
-        "discountAmount": "-2.02",
-        "discountName": "Discount receipt level"
-      }
-    ],
-    "discountsTotal": "-2.33",
-    "taxesTotal": "3.42",
-    "tripDetails": {
-      "itineraryLocator": "12345",
-      "driverNumber": "ss-343",
-      "travelDuration": "test",
-        "mapUrl": "https://test.com",
-        "startDate": "2014-11-10T15:08:24-0700",
-        "endDate": "2014-11-10T15:39:46-0700",
-        "classOfService": "Taxi Cab",
-        "distance": {
-          "totalDistance": 15.6,
-          "unit": "mi"
-        },
-        "source": {
-          "name": "start",
-          "addressLine": "601 108th Ave NE",
-          "city": "Bellevue",
-          "country": "US",
-          "postalCode": "98004"
-        },
-        "destination": {
-          "name": "end",
-          "addressLine": "1218 3rd Ave",
-          "city": "Seattle",
-          "country": "US",
-          "postalCode": "98104"
-        }
-        }
-        }
+    "expenseData": {
+      "expenseType": "PARKG"
+    }
+  },
+  "documents": [
+    {
+      "representation": "display",
+      "type": "application/pdf",
+      "name": "fr_expenseit.pdf",
+      "renderable": true,
+      "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=display"
+    },
+    {
+      "representation": "compliance",
+      "type": "application/pdf",
+      "name": "4d3a8d80-0f93-4b0b-bed1-2724a354858c.pdf",
+      "renderable": true,
+      "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=compliance"
+    }
+  ]
 }
 ```
 # Get receipt representation
