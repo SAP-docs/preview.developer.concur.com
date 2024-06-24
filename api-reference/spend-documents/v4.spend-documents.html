@@ -1222,8 +1222,7 @@
 <p>The Spend Document V4 API, a suite of APIs designed for the ingestion of compliance receipts, coexists with another set of Receipts V4 APIs. The latter is currently capable of facilitating the submission of electronic receipts (eReceipts) to Concur. Looking ahead, enhancements are planned for the Spend Document V4 API to extend its functionality to include support for eReceipts submission as well.</p>
 
 <h2 id="limitations">Limitations</h2>
-
-<p>This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.</p>
+<p>To submit electronic receipts (eReceipts) please use the <a href="https://developer.concur.com/api-reference/receipts/endpoints.html">Receipts v4 APIs</a>.</p>
 
 <h2 id="products-and-editions">Products and Editions</h2>
 <ul>
@@ -1265,6 +1264,65 @@
   </tbody>
 </table>
 
+<h2 id="schema">Schema</h2>
+<h3 id="receipt">Receipt</h3>
+<p>| Name         | Type   | Description                                                                                   |
+|————–|——–|———————————————————————————————–|
+| metadata     | object | Receipt API schema for metadata, receipt-data, enrichmentData and document (&amp; representations) |
+| receiptData  | object | Receipt API schema for receipt data                                                           |</p>
+<h3 id="metadata">Metadata</h3>
+<p>| Name                | Type   | Description                                                    |
+|———————|——–|—————————————————————-|
+| userId              | string | User’s UUID                                                    |
+| forwardId           | string | Forward Id that clients provide                                 |
+| imageId             | string | Imaging Id in Imaging Service                                   |
+| id                  | string | Receipt Id                                                     |
+| companyId           | string | Company UUID                                                    |
+| dateTimeReceived    | string | date time of receipt uploaded                                   |
+| origin              | string | Origin of the request - supported origins listed below           |
+| captureMethod       | string | type of the receipt capture method                              |
+| provider            | string | Provider of the request - supported providers listed below       |
+| complianceCountryCode | string | Compliance country code based on user group configuration       |
+| feature             | string | Feature enrichment for the receipt                              |
+| status              | string | Receipt status                                                  |
+| isReceiptPromoted   | boolean| This is set to true if the receipt has been promoted            |
+| compliance          | object | Compliance information for the receipt                          |
+| entityId            | string | Entity Code                                                     |
+| category            | string | eReceipt category                                               |</p>
+
+<h3 id="receiptdata">ReceiptData</h3>
+<p>| Name                | Type   | Description                                                                                                                                                                                                                                                                             |
+|———————|——–|—————————————————————————————————————————————————————————————————————————————————————————————–|
+| receiveDateTime     | string | Date/Time of the document received by Customer                                                                                                                                                                                                                                           |
+| transactionDateTime | string | Date/Time of the transaction                                                                                                                                                                                                                                                                |
+| amount              | object | Transaction Amount - Total, Transaction Currency Code, Total Net Amount, Transaction Amount - Sub Total                                                                                                                                                                                 |
+| vendor              | object | Vendor details: Name, Tax Id of the company/vendor, Address Line, City, State, Country, Postal Code, Phone                                                                                                                                                                              |
+| comments            | string | Comments can be added here for any receipt                                                                                                                                                                                                                                              |
+| paymentType         | object | Supported Payment types based on the data on the Receipt: Payment type method (enum: Cash, Credit Card, Digital Wallet), Credit card type if the payment method is credit card (Name of the card type ex: American Express, MasterCard, Discover etc.., Last 4 digits of credit card number if the payment method is credit card), if the payment method is digitalWallet, type of digital wallet (ex: ApplePay, PayTM, Rupay, GooglePay etc) |
+| documentCompliance  | object | Document Compliance information: UUID of the Document, Version of the document format, Additional identified for the document, Document Type (only code), Codes supported by the document, Verification or Certificate Code                                                                 |
+| lineItems           | array  | Array of LineItems: Line Identifier, Product Code of goods and services, Item Quantity, Item Unit Price, Item Tax Rate (optional), Item Sub Total (optional), Description, Date, Type, Amount, The taxes applied on this LineItem transaction, The discounts offered on this LineItem transaction, Additional Description, Indicates the charge category for the line item. Example.. ‘MOVIE’, ‘PARKING’, ‘OTHER’ etc. |
+| expenseData         | object | Expense Data: Expense Type for Expense reimbursement, Payment type for Expense reimbursement                                                                                                                                                                                            |
+| customData          | object | Custom Data                                                                                                                                                                                                                                                                             |
+| referenceNumber     | string | The unique receipt provider or vendor identifier for this receipt. This value can also be referred to as transaction number, check number, order ID or similar.                                                                                                                                                                                      |
+| discounts           | array  | The discounts offered on this transaction.                                                                                                                                                                                                                                               |
+| discountsTotal      | string | Discounts Total                                                                                                                                                                                                                                                                         |
+| taxesTotal          | string | Taxes Total                                                                                                                                                                                                                                                                             |
+| tripDetails         | object | Trip details, This includes all the trip/travel related information specific to different eReceipt category: Unique identifier of an itinerary (also know as a trip) in Concur Itinerary Service. An itinerary can contain one or more bookings from various sources, Unique identifier assigned by the ride company to a driver, Duration of the ride, Google Map url documenting the route taken, Trip starting Date/Time, Trip ending Date/Time, The class of the booking, Trip Distance (Total Distance, Unit of distance: km, mi), Source address which can be pickup location, departure etc., Destination address which can be drop location, arrival etc. |
+| programName         | string | Name of the program applied to the Receipt.                                                                                                                                                                                                                                              |
+| networkTransactionId| string | The network transaction id for the payment.                                                                                                                                                                                                                                             |
+| taxes               | array  | The taxes applied on this transaction.                                                                                                                                                                                                                                                  |</p>
+
+<h3 id="document-data">Document data</h3>
+<p>| Name         | Type   | Description                                                                                                       |
+|————–|——–|——————————————————————————————————————-|
+| representation | string | For a given receipt document three representations can be stored in the system. Display – a downsized image version to cater for web and mobile UI, compliance - reflects the signed or certified or verified document, original - original document that was submitted |
+| type         | string | File type of the receipt document, e.g., jpeg, png, pdf                                                               |
+| name         | string | File name of the receipt document                                                                                  |
+| renderable   | boolean| Boolean indicating whether the document can be rendered in UI                                                     |
+| href         | string | Href to download the document                                                                                      |</p>
+
+<p>For more details, please refer to the <a href="https://api.sap.com/api/ConcurExpenseSpendDocuments/overview">API Reference</a>.</p>
+
 <h2 id="prerequisites">Prerequisites</h2>
 
 <p>Read the Getting Started section of Authentication API to obtain access tokens for User or Company JWT.</p>
@@ -1276,7 +1334,7 @@
 <p>This endpoint facilitates the creation of a new receipt. The data for the receipt should be supplied within the request body. Additionally, the display document for the receipt should be uploaded within the same request body, and the feature should be configured to ‘compliance’.</p>
 
 <h2 id="scopes">Scopes</h2>
-<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeOnly</code>  - Refer to Scope Usage for full details.</p>
+<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeOnly</code>  - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <p><strong>URI Template:</strong>  <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts</code></p>
 
@@ -1306,6 +1364,8 @@
   </tbody>
 </table>
 
+<p>Refer to the <a href="#schema">Receipt Schema</a> for the structure of the receipt object.</p>
+
 <h2 id="request-headers">Request Headers</h2>
 <ul>
   <li><a href="https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
@@ -1319,6 +1379,41 @@
 </ul>
 
 <h2 id="response">Response</h2>
+<h3 id="success">Success</h3>
+<p>| Name    | Type   | Description                 |
+|———|——–|—————————–|
+| id      | string | UUID of the receipt         |
+| imageId | string | Identifier for the image    |
+| href    | string | URI to retrieve the receipt |</p>
+
+<h3 id="error">Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>timestamp</td>
+      <td>string</td>
+      <td>Date and time</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>string</td>
+      <td>HTTP status code</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>string</td>
+      <td>Error message content</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 id="status-codes">Status Codes</h3>
 <ul>
@@ -1460,9 +1555,7 @@
   <li><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.writeonly</code></li>
 </ul>
 
-<blockquote>
-  <p>Refer to Scope Usage for full details.</p>
-</blockquote>
+<p>Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <h2 id="request-2">Request</h2>
 
@@ -1507,6 +1600,41 @@
 </ul>
 
 <h2 id="response-2">Response</h2>
+<h3 id="success-1">Success</h3>
+<p>| Name    | Type   | Description                 |
+|———|——–|—————————–|
+| id      | string | UUID of the receipt         |</p>
+
+<h3 id="error-1">Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>timestamp</td>
+      <td>string</td>
+      <td>Date and time</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>string</td>
+      <td>HTTP status code</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>string</td>
+      <td>Error message content</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Refer to the <a href="#schema">Receipt Schema</a> for the structure of the receipt object.</p>
 
 <p><strong>Status Codes:</strong></p>
 <ul>
@@ -1538,8 +1666,7 @@
 <p><strong>Response:</strong></p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"imageId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"41545f0b-ebce-47b5-8233-1e6ef7f7b3c8"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -1554,7 +1681,7 @@
 <p>This endpoint retrieves the details of a specific receipt using the company id and ImageId.</p>
 
 <h3 id="scopes-2">Scopes</h3>
-<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code> - Refer to Scope Usage for full details.</p>
+<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <h3 id="request-3">Request</h3>
 
@@ -1599,8 +1726,17 @@
 </ul>
 
 <h3 id="response-3">Response</h3>
+<h3 id="success-2">Success</h3>
+<p><a href="#schema">Receipt Schema</a></p>
 
-<p>Status Codes</p>
+<h3 id="error-2">Error</h3>
+
+<p>| Name       | Type   | Description            |
+|————|——–|————————|
+| timestamp  | string | Date and time          |
+| status     | string | HTTP status code       |
+| message    | string | Error message content  |
+Status Codes</p>
 <ul>
   <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">200 OK</a></li>
   <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">400 Bad Request</a></li>
@@ -1708,7 +1844,7 @@
 <h2 id="scopes-3">Scopes</h2>
 
 <p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read, spenddocs.compliance.read</code><br />
-Refer to Scope Usage for full details.</p>
+Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <h2 id="request-4">Request</h2>
 
@@ -1756,6 +1892,36 @@ By ImageId and CompanyId: <code class="language-plaintext highlighter-rouge">/sp
 </ul>
 
 <h2 id="response-4">Response</h2>
+<h3 id="success-3">Success</h3>
+<p>Returns the image byte stream</p>
+<h3 id="error-3">Error</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>timestamp</td>
+      <td>string</td>
+      <td>Date and time</td>
+    </tr>
+    <tr>
+      <td>status</td>
+      <td>string</td>
+      <td>HTTP status code</td>
+    </tr>
+    <tr>
+      <td>message</td>
+      <td>string</td>
+      <td>Error message content</td>
+    </tr>
+  </tbody>
+</table>
 
 <p><strong>Status Codes</strong></p>
 
@@ -1802,13 +1968,9 @@ By ImageId and CompanyId: <code class="language-plaintext highlighter-rouge">/sp
 
 <p>Returns the image byte stream</p>
 
-<h2 id="schemas">Schemas</h2>
-
-<p>The API uses a number of data schemas for its responses and request bodies. For more details, please refer to the <a href="https://api.sap.com/api/ConcurExpenseSpendDocuments/overview">API Reference</a>.</p>
-
 <h2 id="license">License</h2>
 
-<p>This API is provided unde r the <a href="http://www.concursolutions.com">Concur Technologies Copyrights</a>.</p>
+<p>This API is provided under the <a href="http://www.concursolutions.com">Concur Technologies Copyrights</a>.</p>
 
       </div>
       <!--/col-md-8-->
