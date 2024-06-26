@@ -550,11 +550,11 @@
 
         <h1 id="deeplink-integration-for-travel">Deeplink Integration for Travel</h1>
 
-<p>The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page (for a flight search), respectively the itinerary page (for an itinerary deeplink) in one click.</p>
+<p>The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page (for a flight / car / hotel / train search), respectively the itinerary page (for an itinerary deeplink) in one click.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>Users must have an account in Concur Travel and they need to authenticate (or be logged in). Authentication methods supported are username/password and SSO SAML2.</p>
+<p>Users must have an account in Concur Travel and they need to authenticate (or be logged in). Authentication methods supported are username / password and SSO SAML2.</p>
 
 <p>Company must be part of the Evolution of Travel (Concur Travel’s new booking experience).</p>
 
@@ -562,30 +562,36 @@
 
 <p>When using SAML2 IdP-Initiated flow there is the caveat that IdP must support setting <code class="language-plaintext highlighter-rouge">relayState</code> with the encoded Deeplink path. Example for SAP Cloud Identity Services (CIS):</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{IdP_URI}?sp={concur_URI}&amp;relayState=%2Ftravel%2Fdeeplink%2Fair-shop%2Fv1%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{IdP_URI}?sp={concur_URI}&amp;relayState=%2Fgoto%2Fair-shop%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 </code></pre></div></div>
 
-<p>Deeplink Integration is not available for mobile and currently it only supports flight search and itinerary lookup.</p>
+<p>Whenever possible use the correct environment in your link, for example, <code class="language-plaintext highlighter-rouge">eu2</code> or <code class="language-plaintext highlighter-rouge">us2</code>, instead of just <code class="language-plaintext highlighter-rouge">www</code>. This will avoid unnecessary logins.</p>
+
+<blockquote>
+  <p>Deeplink Integration is not available for mobile and currently it only supports flight / car / hotel / train search and itinerary lookup.</p>
+</blockquote>
 
 <h2 id="integration-details">Integration Details</h2>
 
+<h3 id="search">Search</h3>
+
+<p>Deeplink Integration allows users to perform a search in Concur Travel without having to manually fulfill the information in the UI. Search parameters like location and time are incorporated in the URL.</p>
+
+<p>In case of errors, the user is shown an error page with an error message and a link to the Concur home page from which a regular search can be started.</p>
+
 <h3 id="flight-search">Flight Search</h3>
 
-<p>Deeplink Integration allows users to perform a search in Concur Travel without having to manually fulfill the information in the UI. Departure/return date, airport and time are incorporated in the URL, as well as the cabin type.</p>
-
-<p>Users can search for round-trip flights by informing a departure date, origin airport, a return date and a destination/return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn’t provide a return date.</p>
+<p>Users can search for round-trip flights by informing a departure date, origin / departure airport, a return date and a destination / return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn’t provide a return date.</p>
 
 <p>The users are able to <strong>omit one</strong> of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred airport configured in their Travel Profile — under Air Travel Preferences, set <strong>Preferred Departure Airport</strong>.</p>
 
-<p>In case of errors, the user is redirected to the OBT’s home page.</p>
-
 <h4 id="uri-template">URI Template</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation={departurelocation}&amp;departuredate={departuredate}&amp;departuretime={departuretime}&amp;returnlocation={returnlocation}&amp;returndate={returndate}&amp;returntime={returntime}&amp;cabintype={cabintype}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/air-shop?departurelocation={departurelocation}&amp;departuredate={departuredate}&amp;departuretime={departuretime}&amp;returnlocation={returnlocation}&amp;returndate={returndate}&amp;returntime={returntime}&amp;cabintype={cabintype}
 </code></pre></div></div>
 
 <h4 id="example-of-usage">Example of Usage</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=POA&amp;departuredate=2024-08-04&amp;departuretime=13:00&amp;returnlocation=SDU&amp;returndate=2024-08-20&amp;returntime=09:00&amp;cabintype=ECONOMY
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/air-shop?departurelocation=POA&amp;departuredate=2024-08-04&amp;departuretime=13:00&amp;returnlocation=SDU&amp;returndate=2024-08-20&amp;returntime=09:00&amp;cabintype=ECONOMY
 </code></pre></div></div>
 
 <h4 id="query-parameters">Query Parameters</h4>
@@ -603,55 +609,55 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">departurelocation</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><a href="/api-guides/travel/deeplink-integration.html#location-format">Location Format</a></td>
-      <td><strong>Required if <code class="language-plaintext highlighter-rouge">returnlocation</code> is not informed</strong> <br />Airport where the departure flight will take place</td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-air">Location Format</a></td>
+      <td><strong>Required if <code class="language-plaintext highlighter-rouge">returnlocation</code> is not informed</strong> <br />Airport where the departure flight will take place.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">departuredate</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
-      <td><strong>Required</strong> <br />Departure flight date</td>
+      <td><strong>Required</strong> <br />Departure flight date.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">departuretime</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
-      <td>Departure flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code></td>
+      <td>Departure flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code>.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returnlocation</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><a href="/api-guides/travel/deeplink-integration.html#location-format">Location Format</a></td>
-      <td><strong>Required if <code class="language-plaintext highlighter-rouge">departurelocation</code> is not informed</strong> <br />Airport where the return flight will take place <br /> For one-way trips, this will be considered as the destination airport, see <a href="/api-guides/travel/deeplink-integration.html#example-one-way">Example: One-way trip</a></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-air">Location Format</a></td>
+      <td><strong>Required if <code class="language-plaintext highlighter-rouge">departurelocation</code> is not informed</strong> <br />Airport where the return flight will take place <br /> For one-way trips, this will be considered as the destination airport, see <a href="/api-guides/travel/.deeplink-integration.html#example-one-way">Example: One-way trip</a></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returndate</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
-      <td>Return flight date</td>
+      <td>Return flight date.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returntime</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
-      <td>Return flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code></td>
+      <td>Return flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code>.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">cabintype</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><a href="/api-guides/travel/deeplink-integration.html#cabin-types">Cabin Types</a></td>
-      <td>The section of the aircraft that the user wants to travel on</td>
+      <td>The section of the aircraft that the user wants to travel in.</td>
     </tr>
   </tbody>
 </table>
 
-<p><a name="location-type"></a><strong>Location Format</strong></p>
+<p><a name="location-format-air"></a><strong>Location Format</strong></p>
 
-<p>The airport can be informed in different ways:</p>
+<p>The airport can be identified in different ways:</p>
 <ul>
-  <li><strong>IATA Code</strong>: a three-letter code that represents the airport, for example <code class="language-plaintext highlighter-rouge">LAX</code> for Los Angeles International Airport</li>
-  <li><strong>Geographic Coordinates</strong>: latitude and longitude for a geopoint<br />
-Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, with no blank space inbetween. Example: <code class="language-plaintext highlighter-rouge">48.85694273527786,2.3501079080340315</code> for Paris. With this coordinates, a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search</li>
+  <li><strong>IATA Code</strong>: a three-letter code that represents the airport, for example <code class="language-plaintext highlighter-rouge">LAX</code> for Los Angeles International Airport.</li>
+  <li><strong>Geographic Coordinates</strong>: latitude and longitude for a geopoint.<br />
+Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, with no blank space in between. Example: <code class="language-plaintext highlighter-rouge">48.85694273527786,2.3501079080340315</code> for Paris. With these coordinates a search for airports in a radius of 100 km is performed and the closest airport is used in the flight search.</li>
 </ul>
 
 <p><a name="cabin-types"></a><strong>Cabin Types</strong></p>
@@ -660,18 +666,17 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">ECONOMY</code></li>
   <li><code class="language-plaintext highlighter-rouge">PREMIUM_ECONOMY</code></li>
-  <li><code class="language-plaintext highlighter-rouge">BUSINESS</code></li>
-  <li><code class="language-plaintext highlighter-rouge">FIRST</code></li>
+  <li><code class="language-plaintext highlighter-rouge">BUSINESS_OR_FIRST</code></li>
 </ul>
 
 <h4 id="example-round-trip">Example: Round-Trip</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=OPO&amp;departuredate=2024-06-01&amp;departuretime=02:00&amp;returnlocation=BER&amp;returndate=2024-06-02&amp;returntime=03:00&amp;cabintype=BUSINESS
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/air-shop?departurelocation=OPO&amp;departuredate=2024-06-01&amp;departuretime=02:00&amp;returnlocation=BER&amp;returndate=2024-06-02&amp;returntime=03:00&amp;cabintype=BUSINESS_OR_FIRST
 </code></pre></div></div>
 
-<p>This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring Business class flights.</p>
+<p>This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring flight offers in Business or First class.</p>
 
 <h4 id="-example-one-way-trip"><a name="example-one-way"></a> Example: One-way Trip</h4>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&amp;departuredate=2024-06-01&amp;departuretime=02:00&amp;returnlocation=SDU
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&amp;departuredate=2024-06-01&amp;departuretime=02:00&amp;returnlocation=SDU
 </code></pre></div></div>
 
 <p>This deeplink will perform a search for a flight from LBG (airport in Paris) to SDU, on June 1st, 2024 with departure time at 02:00AM ±2.</p>
@@ -681,23 +686,235 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 <p>In this example, we are considering that the user has defined <strong>LAX</strong> as their preferred airport.</p>
 
 <p>On the deeplink below the user is omitting the desired <strong>departure location</strong>. Therefore, they will be taken to the search results page, showing departure flights from LAX (preferred airport) to BER. The next page will show return flights, from BER back to LAX.</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/travel/deeplink/air/v1/shop?departuredate=2024-06-01&amp;returnlocation=BER&amp;returndate=2024-06-02
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/air-shop?departuredate=2024-06-01&amp;returnlocation=BER&amp;returndate=2024-06-02
 </code></pre></div></div>
 
 <p>In this next example the user omitted <code class="language-plaintext highlighter-rouge">returnlocation</code>. This will result on a search for a flight from LBG (airport in Paris) to LAX.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/travel/deeplink/air/v1/shop?departurelocation=48.85694273527786,2.3501079080340315&amp;departuredate=2024-06-01
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&amp;departuredate=2024-06-01
 </code></pre></div></div>
+
+<h3 id="car-search">Car Search</h3>
+
+<p>Users can search for cars by requesting a pickup date, time and location, a drop-off date, time and location. If pickup and drop-off location should be the same, the drop-off location can be omitted.</p>
+
+<h4 id="uri-template-1">URI Template</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/car-shop?pickuplocation={pickuplocation}&amp;pickupdate={pickupdate}&amp;pickuptime={pickuptime}&amp;dropofflocation={dropofflocation}&amp;dropoffdate={dropoffdate}&amp;dropofftime={dropofftime}
+</code></pre></div></div>
+
+<h4 id="example-of-usage-1">Example of Usage</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2.3501079080340315&amp;pickupdate=2024-06-01&amp;pickuptime=12:00&amp;dropofflocation=50.035467,8.562884&amp;dropoffdate=2024-06-02&amp;dropofftime=18:00
+</code></pre></div></div>
+
+<h4 id="query-parameters-1">Query Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pickuplocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-car">Location Format</a></td>
+      <td><strong>Required</strong> <br />Location where the car will be picked up.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pickupdate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required</strong> <br />Date when the car will be picked up.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pickuptime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
+      <td><strong>Required</strong> <br />Time when the car will be picked up <br /> Utilizes 24-hour format.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dropofflocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-car">Location Format</a></td>
+      <td>Location where the car will be dropped off <br />If it is not provided it will default to <code class="language-plaintext highlighter-rouge">pickuplocation</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dropoffdate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required</strong> <br />Date when the car will be dropped off.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dropofftime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
+      <td><strong>Required</strong> <br />Time when the car will be dropped off <br />Utilizes 24-hour format.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a name="location-format-car"></a><strong>Location Format</strong></p>
+
+<ul>
+  <li><strong>Geographic Coordinates</strong>: latitude and longitude for a geopoint.<br />
+Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, with no blank space in between. Example: <code class="language-plaintext highlighter-rouge">50.038432519565845,8.562138820315441</code> for Frankfurt airport. With these coordinates, a search for a location in a radius of 10 km is performed and the closest location is used in the car search.</li>
+</ul>
+
+<h3 id="hotel-search">Hotel Search</h3>
+
+<p>Users can search for hotels in a certain distance around the location by informing a check-in and checkout date, search center location, a distance around the location and a unit for the distance.</p>
+
+<p>Users are able to <strong>omit</strong> the unit or distance or both when they want to use default values. Omitting the distance will default to a distance of 5mi. Omitting the unit will default to the value set in their Travel Profile — under Profile Settings, System Settings, <strong>mile/km</strong>.</p>
+
+<h4 id="uri-template-2">URI Template</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/hotel-shop?checkindate={checkindate}&amp;checkoutdate={checkoutdate}&amp;location={location}&amp;distance={distance}&amp;unit={unit}
+</code></pre></div></div>
+
+<h4 id="example-of-usage-2">Example of Usage</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&amp;checkoutdate=2024-08-02&amp;location=50.050686,8.565997&amp;distance=15&amp;unit=mi
+</code></pre></div></div>
+
+<h4 id="query-parameters-2">Query Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">checkindate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required</strong> <br />Date when to check in to the hotel.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">checkoutdate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required</strong> <br />Date when to check out of the hotel.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">location</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-hotel">Location Format</a></td>
+      <td><strong>Required</strong> <br />Location of the search center.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">distance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>integer - one of <code class="language-plaintext highlighter-rouge">{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}</code></td>
+      <td>Distance around the <code class="language-plaintext highlighter-rouge">location</code> <br />If not set it will default to 5 mi <code class="language-plaintext highlighter-rouge">distance</code> and <code class="language-plaintext highlighter-rouge">radius</code> as search radius.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">unit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">km</code> or <code class="language-plaintext highlighter-rouge">mi</code></td>
+      <td>Unit for the <code class="language-plaintext highlighter-rouge">distance</code> <br />If not set the value will be taken from users profile - under Profile Settings, System Settings, <strong>mile/km</strong>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a name="location-format-hotel"></a><strong>Location Format</strong></p>
+
+<p>The hotel location can be informed in different ways:</p>
+<ul>
+  <li><strong>Geographic Coordinates</strong>: latitude and longitude for a geopoint. 
+Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, with no blank space in between. Example: <code class="language-plaintext highlighter-rouge">48.85694273527786,2.3501079080340315</code> for Paris. With these coordinates, a search for hotels in a radius of <code class="language-plaintext highlighter-rouge">distance</code> <code class="language-plaintext highlighter-rouge">unit</code> is performed.</li>
+  <li><strong>Concur Travel Internal Hotel ID</strong>: Concur Travel internal ID of a hotel.<br />
+Format: alpha-numeric string. Example: <code class="language-plaintext highlighter-rouge">1907825ad1f728ccafb22942d61a2715</code> for Econo Lodge Inn &amp; Suites in Arkansas. With this internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br />The internal hotel ID should only be used inside of Concur, for example, Concur MS Teams integration.</li>
+</ul>
+
+<h3 id="train-search">Train Search</h3>
+
+<p>Users can search for train round-trips by informing a departure date, time and location, a return date, time and destination/return location. If searching for a train one-way trip, they must inform departure information and destination location, however, they shouldn’t provide a return date or time.</p>
+
+<h4 id="uri-template-3">URI Template</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/rail-shop?departurelocation={departurelocation}&amp;departuredate={departuredate}&amp;departuretime={departuretime}&amp;returnlocation={returnlocation}&amp;returndate={returndate}&amp;returntime={returntime}
+</code></pre></div></div>
+
+<h4 id="example-of-usage-3">Example of Usage</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&amp;departuretime=15:00&amp;returndate=2024-06-13&amp;returntime=07:00&amp;departurelocation=41.378696,2.140457&amp;returnlocation=41.380057,2.138956
+</code></pre></div></div>
+
+<h4 id="query-parameters-3">Query Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departurelocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-rail">Location Format</a></td>
+      <td><strong>Required</strong> <br />Location where the train will depart.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departuredate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td><strong>Required</strong> <br />Date when the train will depart.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">departuretime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
+      <td><strong>Required</strong> <br />Time when the train will depart <br />Utilizes 24-hour format.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">returnlocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-rail">Location Format</a></td>
+      <td><strong>Required</strong> <br />Location where the train will return <br /> For one-way trips, this will be considered as the destination location.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">returndate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
+      <td>Date when the train will return.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">returntime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
+      <td>Time when the train will return <br />Utilizes 24-hour format.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a name="location-format-rail"></a><strong>Location Format</strong></p>
+
+<ul>
+  <li><strong>Geographic Coordinates</strong>: latitude and longitude for a geopoint.<br />
+Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, with no blank space in between. Example: <code class="language-plaintext highlighter-rouge">41.37891483977241,2.1398877111090844</code> for Barcelona-Sants. With these coordinates a search for train stations in a radius of 25 km is performed and the closest station is used in the train search.</li>
+</ul>
 
 <h3 id="itinerary">Itinerary</h3>
 
 <p>Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.</p>
 
-<p>The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger or an approver. An approver user will see the approvers view of an itinerary, while the traveler and the arranger will see the travelers view of an itinerary.</p>
+<p>The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
 
 <p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur home page.</p>
 
-<h4 id="uri-template-1">URI Template</h4>
+<h4 id="uri-template-4">URI Template</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/trip/{tripID}
 </code></pre></div></div>
@@ -715,13 +932,13 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
     <tr>
       <td><code class="language-plaintext highlighter-rouge">environment</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">-</code></td>
-      <td><strong>Required</strong> <br />Specifies the environment (e.g. ‘US2’ or ‘EU2’)</td>
+      <td>-</td>
+      <td><strong>Required</strong> <br />Specifies the environment (for example, ‘US2’ or ‘EU2’).</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">tripID</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><code class="language-plaintext highlighter-rouge">-</code></td>
+      <td>-</td>
       <td><strong>Required</strong> <br />Unique identifier of the trip, formatted as a UUID.</td>
     </tr>
   </tbody>
