@@ -31,6 +31,10 @@ Example: `https://www.concursolutions.com/api/expense/expensereport/v1.1/report/
 
 **URI Source**: The FormId is returned in the **FormId** element by the Get Form Data function.
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 ### Headers
 
 #### Authorization Header

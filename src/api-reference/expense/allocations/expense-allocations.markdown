@@ -14,6 +14,10 @@ Access to this documentation does not provide access to the API. 
 ## Retrieve All Allocations Per Entry or Report <a name="get"></a>
 
     GET  /api/v3.0/expense/allocations
+    
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -32,7 +36,6 @@ Note: userId is not a supported query string parameter for this API.
 ```
 https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 ```
-
 
 ### JSON Example of a Successful Response
 
@@ -112,6 +115,9 @@ https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 
     GET  /api/v3.0/expense/allocations/{id}
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 

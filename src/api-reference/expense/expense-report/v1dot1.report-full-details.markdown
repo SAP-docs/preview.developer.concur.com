@@ -28,6 +28,10 @@ This URI is returned in the `Report-Full-Details-Url` element by the [Expense Re
 GET https://www.concursolutions.com/api/expense/expensereport/v1.1/reportfulldetails/_{reportKey}_
 ```
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Headers
 
 * Content-Type - application/xml

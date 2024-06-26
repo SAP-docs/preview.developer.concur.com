@@ -73,6 +73,10 @@ The LastModified query string is supported only with the following statuses: ALL
 * The LastModified query string returns reports for all users, ignoring the user account specified in the OAuth access token.
 * The ApprovalURL element does not appear when using the LastModified query.
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Headers
 
 * Content-Type - application/xml

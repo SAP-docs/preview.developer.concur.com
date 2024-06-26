@@ -14,6 +14,10 @@ Access to this documentation does not provide access to the API. 
 ## Retrieve all expense itemizations owned by the user <a name="get"></a>
 
     GET  /api/v3.0/expense/itemizations
+    
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -118,7 +122,10 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations?limit=10&user=ALL
 ## Retrieve an expense itemization by ID <a name="getID"></a>
 
     GET  /api/v3.0/expense/itemizations/{id}
+    
+### Scopes
 
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -217,6 +224,9 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations/gWidFO7ikXV6%24pcZ
 
     POST  /api/v3.0/expense/itemizations
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -247,6 +257,9 @@ https://www.concursolutions.com/api/v3.0/expense/itemizations
 
     PUT  /api/v3.0/expense/itemizations/{id}
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -272,7 +285,6 @@ no content
 **DEPRECATED: 05/19/2016**  
 
     DELETE  /api/v3.0/expense/itemizations/{id}
-
 
 ### Parameters
 
