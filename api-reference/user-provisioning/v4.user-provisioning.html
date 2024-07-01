@@ -3874,7 +3874,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">reimbursementType</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td>The reimbursement type for the user. Supported values: <code class="language-plaintext highlighter-rouge">ACCOUNTS_PAYABLE</code>, <code class="language-plaintext highlighter-rouge">ADP_PAYROLL</code>, <code class="language-plaintext highlighter-rouge">CONCUR_PAY</code>, <code class="language-plaintext highlighter-rouge">OTHER</code>. <br />Not a Required field type, but if used, please notes <a href="#adp-extension-schema"><code class="language-plaintext highlighter-rouge">ADP Extension</code></a> if the <code class="language-plaintext highlighter-rouge">ADP_PAYROLL</code> reimbursement method type is specified in this field.</td>
+      <td>The reimbursement type for the user. Supported values: <code class="language-plaintext highlighter-rouge">ACCOUNTS_PAYABLE</code>, <code class="language-plaintext highlighter-rouge">ADP_PAYROLL</code>, <code class="language-plaintext highlighter-rouge">CONCUR_PAY</code>, <code class="language-plaintext highlighter-rouge">OTHER</code>. <br />Not a Required field type, but if used, please notes <a href="#adp-extension-schema"><code class="language-plaintext highlighter-rouge">ADP Extension</code></a> if the <code class="language-plaintext highlighter-rouge">ADP_PAYROLL</code> reimbursement method type is specified in this field.<br /><strong>Note:</strong> For Standard entity, please also send in Custom21.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ledgerCode</code></td>
@@ -3916,7 +3916,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">testEmployee</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
       <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
-      <td>A Boolean value indicating whether the user is a test user. Can’t be modified after the user is created. Can only be set at creation.</td>
+      <td>A Boolean value indicating whether the user is a test user. Can not be modified after the user is created. Can only be set at creation.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">nonEmployee</code></td>
@@ -3928,13 +3928,54 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">biManager</code></td>
       <td><a href="#user-reference-schema"><code class="language-plaintext highlighter-rouge">UserReference</code></a></td>
       <td>-</td>
-      <td>The identity of the Reporting Manager.</td>
+      <td>The employee ID of the Reporting Manager. Must be an existing employee ID or in current import. No circular reporting among users is supporte, field is nulled if logic in error.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">biHierarchy</code></td>
+      <td><a href="#bi-hierarchy-schema"><code class="language-plaintext highlighter-rouge">BiHierarchy</code></a></td>
+      <td>-</td>
+      <td>The object contains the long code and the sync guid of the last list item in Reporting Hierarchy.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">customData</code></td>
       <td><a href="#custom-data-schema"><code class="language-plaintext highlighter-rouge">CustomData</code></a></td>
       <td>-</td>
       <td>The Custom Data associated with this user.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-bihierarchy"><a name="bi-hierarchy-schema"></a> BIHierarchy</h3>
+
+<p>BIHierarchy is the object that contains the long code and the sync guid of the last list item in Reporting Hierarchy.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">code</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The long code of the last list item in Reporting Hierarchy.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">syncGuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The sync guid of the last list item in Reporting Hierarchy.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">URL</code></td>
+      <td>-</td>
+      <td>The URI to the last list item in Reporting Hierarchy.</td>
     </tr>
   </tbody>
 </table>
@@ -3970,7 +4011,7 @@ Content-Type: application/json
   </tbody>
 </table>
 
-<h3 id="spend-adp-extension"><a name="adp-extension-schema"></a>Spend ADP Extension</h3>
+<h3 id="adp-extension"><a name="adp-extension-schema"></a>ADP Extension</h3>
 
 <p>ADP Extension provides the ADP setting associated with a Spend Identity.</p>
 
@@ -3995,7 +4036,7 @@ Content-Type: application/json
   </tbody>
 </table>
 
-<h3 id="spend-adp-user"><a name="adp-schema"></a>Spend ADP User</h3>
+<h3 id="adp-user"><a name="adp-schema"></a>ADP User</h3>
 
 <p>ADP is the object that defines the properties for the ADP settings and used in the ADP extension.</p>
 
@@ -4030,9 +4071,11 @@ Content-Type: application/json
   </tbody>
 </table>
 
-<h3 id="spend-approver-product"><a name="approver-extension-schema"></a>Spend Approver Product</h3>
+<h2 id="approver-extension"><a name="approver-extension-schema"></a>Approver Extension</h2>
 
-<p><strong>NOTE:</strong> In order to be assigned as an approver, the user must have the corresponding value of spend role for each product. Refer to <a href="#spend-role-extension-schema">Spend Role Extension</a> for how to assign a spend role. The user being provisioned as an approver must be active within the SAP Concur platform.</p>
+<p>Approver Extension provides the approvers associated with a Spend Identity.</p>
+
+<p><strong>NOTE:</strong> In order to be assigned as an approver, the user must have the corresponding value of spend role for each product. Refer to <a href="#spend-role-extension-schema">Spend Role Extension</a> for how to assign a spend role.</p>
 
 <table>
   <thead>
@@ -4091,7 +4134,7 @@ Content-Type: application/json
 
 <h3 id="spend-approver"><a name="spend-approver-schema"></a>Spend Approver</h3>
 
-<p>Spend approver is the object for representing an approver that is used in the Approver Extension.</p>
+<p>Spend approver is the object for representing an approver which is used in the Approver Extension.</p>
 
 <table>
   <thead>
@@ -4107,13 +4150,95 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">approver</code></td>
       <td><a href="#user-reference-schema"><code class="language-plaintext highlighter-rouge">UserReference</code></a></td>
       <td>-</td>
-      <td><strong>Required</strong> when using Spend Approver extension. The <code class="language-plaintext highlighter-rouge">UserReference</code> of the approver.</td>
+      <td><strong>Required</strong> The <code class="language-plaintext highlighter-rouge">UserReference</code> of the approver.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">primary</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
       <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
-      <td><strong>Required</strong> If <code class="language-plaintext highlighter-rouge">true</code>, the associated user is primary approver.</td>
+      <td><strong>Required</strong> If <code class="language-plaintext highlighter-rouge">true</code>, the associated user is primary approver. <br /><strong>NOTE:</strong> Only <code class="language-plaintext highlighter-rouge">Report</code> and <code class="language-plaintext highlighter-rouge">Request</code> support non-primary approver.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="approver-limit-extension"><a name="approver-limit-extension-schema"></a>Approver Limit Extension</h2>
+
+<p>Approver Limit Extension provides the approver limits associated with a Spend Identity.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">costObjectApprover</code></td>
+      <td><a href="#spend-approver-limit-config-schema"><code class="language-plaintext highlighter-rouge">SpendApproverLimitConfig</code></a></td>
+      <td>-</td>
+      <td>The user’s cost object approver’s approver limits.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">authorizedApprover</code></td>
+      <td><a href="#spend-approver-limit-config-schema"><code class="language-plaintext highlighter-rouge">SpendApproverLimitConfig</code></a></td>
+      <td>-</td>
+      <td>The user’s authorized approver’s approver limits.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="spend-approver-limit-config-">Spend Approver Limit Config <a name="spend-approver-limit-config-schema"></a></h3>
+
+<p>Spend approver limit config is the object that represents an approver limit that is used in the Approver Limit Extension.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvalType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">expense</code>/<code class="language-plaintext highlighter-rouge">payment</code>/<code class="language-plaintext highlighter-rouge">request</code>/<code class="language-plaintext highlighter-rouge">purchaseRequest</code></td>
+      <td>Delegate options for changing Expense, Invoice, Request, or Purchase Request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">exceptionApprovalAuthority</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Indicate whether this approval config has the exception authority.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvalLimit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">double</code></td>
+      <td>-</td>
+      <td>The upper bound of the approval authority.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reimbursementCurrency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Valid three digit currency code in the list of system reimbursement currencies.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">approvalGroup</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Group to be associated with the approval rights; if blank, resolves to the global group.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">level</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>The approval level of the user. This denotes the sequential order in which the user(s) will approve the report or request.</td>
     </tr>
   </tbody>
 </table>
@@ -4292,6 +4417,14 @@ Content-Type: application/json
 
 <p>Role is the object that defines the spend role and groups, which is used in the Spend Role extension.</p>
 
+<p>Each group-based role in the system is assigned to a specific feature hierarchy that is defined by a customer list. Each <code class="language-plaintext highlighter-rouge">roleGroup</code> represents the assignment of the specified role to a particular node of that hierarchy and each group-based role can be assigned to one or more nodes.</p>
+
+<p>Hierarchies are defined by a connected list, the individual <code class="language-plaintext highlighter-rouge">roleGroup</code> node is defined by the list item codes concatenated by a hyphen. For example, if the feature hierarchy list is configured with the structure <code class="language-plaintext highlighter-rouge">"Research and Development(R&amp;D) -&gt; Quality Assurance(QA) -&gt; Expense Team(Exp)"</code>, the value of the <code class="language-plaintext highlighter-rouge">roleGroups</code> is <code class="language-plaintext highlighter-rouge">"R&amp;D-QA-Exp"</code>.</p>
+
+<p>The structure of the hierarchy for a given role can be viewed by navigating to the “Permissions Administrator” screen. There are two modes for navigating and assigning <code class="language-plaintext highlighter-rouge">roleGroups</code>: Default and Named Groups. The mode to be used is based on the “Use Named Groups” site setting.</p>
+
+<p>By default, the hierarchy structure is navigable via a tree control, and each node of the tree is available for assigning a role. With the “Use Named Groups” feature turned on, only nodes that have been “named” in the Group Configurations screen are available for Role assignment.  See documentation on Named Groups for more information on this feature.</p>
+
 <table>
   <thead>
     <tr>
@@ -4306,18 +4439,18 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">roleName</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong> when using role extension. Spend role for a Spend User.</td>
+      <td><strong>Required</strong> Spend role for a Spend User.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">roleGroups</code></td>
       <td><code class="language-plaintext highlighter-rouge">string array</code></td>
       <td>-</td>
-      <td><strong>Required</strong> when using role extension. Group(s) to be associated with the Spend role.</td>
+      <td><strong>Required</strong> Group(s) to be associated with the Spend role.</td>
     </tr>
   </tbody>
 </table>
 
-<p><strong>NOTE:</strong> Please refer to the <a href="./spend/v4.spend-role-code-definition.html">Spend Role Codes</a> page for the available value of <code class="language-plaintext highlighter-rouge">roleName</code>.</p>
+<p><strong>NOTE:</strong> Please refer to the <a href="./v4.spend-role-code-definition.html">Spend Role Codes</a> page for the available value of <code class="language-plaintext highlighter-rouge">roleName</code>.</p>
 
 <h3 id="spend-user-preference-extension"><a name="expense-user-preference-extension-schema"></a>Spend User Preference Extension</h3>
 
@@ -4404,6 +4537,59 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
       <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
       <td>If <code class="language-plaintext highlighter-rouge">true</code>, uses quick itinerary as default.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="invoice-preference-extension"><a name="invoice-preference-extension-schema"></a>Invoice Preference Extension</h2>
+
+<p>Invoice Preference Extension provides the properties of user’s invoice preference associated with a Spend Identity.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailOnPurchasingAssigned</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, send email when a request is assigned to purchasing.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailOnPurchasingSendBack</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, send email when a request is sent back from purchasing.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">emailOnFaxImageAvailablePaymentRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, send email when a fax image is available for a payment request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">promptNewLineItemsPaymentRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, prompt a user with a window to create new line items when creating a new payment request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">displayInlineImage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, display Image Inline.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">autoOpenImage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>If <code class="language-plaintext highlighter-rouge">true</code>, auto Open Image.</td>
     </tr>
   </tbody>
 </table>
