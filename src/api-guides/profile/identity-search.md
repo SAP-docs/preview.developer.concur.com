@@ -74,7 +74,7 @@ Authorization: BEARER {token}
 ```json
 {
   "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
-  "filter": "active eq true and emails.value ew \"sap.com\"",
+  "filter": "active eq true and emails.value eq \"sap.com\"",
   "attributes": [ "active", "emails" ]
 }
 ```
