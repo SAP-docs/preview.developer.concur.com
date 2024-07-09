@@ -102,10 +102,14 @@ File Type|File Name|Mapping
 310 |User Primary Field Addendum|[310 User Primary Field Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/310.html)
 320|Update ID Information Import|[320 Update ID Information Import](https://developer.concur.com/api-reference/user-provisioning/mapping/320.html)
 350|File Type Travel Addendum|[350 File type Travel Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/350.html)
+360|Invoice Employee Import (|[360 Invoice Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/360.html)
 370|Statement Employee Import|[370 Statement Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/370.html)
 400|Role Import|[400 Role Import](https://developer.concur.com/api-reference/user-provisioning/mapping/400.html)
 500|Delegate Import|[500 Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/500.html)
 550|Enhanced Delegate Import|[550 Enhanced Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/550.html)
+700|Authorized Approver Import|[700 Authorized Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/700.html)
+710|Cost Object Approver Import|[710 Cost Object Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/710.html)
+720|Authorized Approver With Level Import|[720 Authorized Approver With Level Import](https://developer.concur.com/api-reference/user-provisioning/mapping/720.html)
 
 ## <a name="API_mapping_guides"></a>Mapping guides between User V1 and V4 APIs 
 
@@ -128,8 +132,10 @@ schemas:extension:spend:2.0:Approver|Supporting information for spend approvers.
 schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates.|schemas:extension:concur:2.0:Provision:ServiceProviderConfig
 schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences.|schemas:extension:concur:2.0:Provision:ResourceType
 schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences.|-
+schemas:extension:spend:2.0:InvoicePreference|Supporting information for invoice employee import.|-
 schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.|-
 schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|-
+schemas:extension:spend:2.0:ApproverLimit|Supporting information for authorized approver import.|-
 schemas:extension:travel:2.0:User|Supporting information for travel users.|-
 
 ## Sample Postman Collection
