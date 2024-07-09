@@ -102,7 +102,7 @@ File Type|File Name|Mapping
 310 |User Primary Field Addendum|[310 User Primary Field Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/310.html)
 320|Update ID Information Import|[320 Update ID Information Import](https://developer.concur.com/api-reference/user-provisioning/mapping/320.html)
 350|File Type Travel Addendum|[350 File type Travel Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/350.html)
-360|Invoice Employee Import (|[360 Invoice Employee Import (](https://developer.concur.com/api-reference/user-provisioning/mapping/360.html)
+360|Invoice Employee Import (|[360 Invoice Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/360.html)
 370|Statement Employee Import|[370 Statement Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/370.html)
 400|Role Import|[400 Role Import](https://developer.concur.com/api-reference/user-provisioning/mapping/400.html)
 500|Delegate Import|[500 Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/500.html)
