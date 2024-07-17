@@ -110,6 +110,8 @@ File Type|File Name|Mapping
 700|Authorized Approver Import|[700 Authorized Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/700.html)
 710|Cost Object Approver Import|[710 Cost Object Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/710.html)
 720|Authorized Approver With Level Import|[720 Authorized Approver With Level Import](https://developer.concur.com/api-reference/user-provisioning/mapping/720.html)
+750|Delete Authorized Approver Import|[750 Delete Authorized Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/750.html)
+760|Delete Cost Object Approver Import|[760 Delete Cost Object Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/760.html)
 
 ## <a name="API_mapping_guides"></a>Mapping guides between User V1 and V4 APIs 
 
