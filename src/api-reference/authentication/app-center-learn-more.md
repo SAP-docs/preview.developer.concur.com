@@ -90,7 +90,6 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `spend.listitem.write` <a name="spend-listitem-write"></a> |Read and write access to spend list items|[List Item Bulk v4](/api-reference/common/list-item/v4.list-item-bulk.html), [List Item v4](/api-reference/common/list-item/v4.list-item.html)
 `spend.user.general.read` <a name="spend-user-general-read"></a> |View spend user information|[User Provisioning Service v4](/api-reference/user-provisioning/v4.user-provisioning.html)
 `spend.user.general.writeonly` <a name="spend-user-general-writeonly"></a> |Change spend user information|[User Provisioning Service](/api-reference/user-provisioning/v4.user-provisioning.html)
-`SUPSVC` <a name="supsvc"></a> |Get supplier data|[Suppliers v3](/api-reference/common/suppliers/suppliers-resource.html)
 `TAXINV` <a name="taxinv"></a> |Get or validate digital tax invoices|[Sales Tax Validation v3](/api-reference/invoice/v3.sales-tax-validation.html)
 `TMCSP` <a name="tmcsp"></a> |TMC specific information|[Travel Profile v2 TMC](/api-reference/travel-profile/v2.profile-resource.html#General)
 `travelallowance.allowancedays.read` <a name="travelallowance-allowancedays-read"></a> |View the allowance days in an expense report|[Travel Allowance](/api-reference/expense/travelallowance/v4.travel-allowance-days-endpoints.html)
