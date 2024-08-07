@@ -33,7 +33,16 @@ Deeplink Integration allows users to perform a search in Concur Travel without h
 
 In case of errors, the user is shown an error page with an error message and a link to the Concur home page from which a regular search can be started. 
 
-### Flight Search
+### Itinerary
+
+Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.
+
+The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver's view of an itinerary, while the traveler and the arranger will see the traveler's view of an itinerary.
+
+This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur home page.
+
+
+## Flight Search
 
 Users can search for round-trip flights by informing a departure date, origin / departure airport, a return date and a destination / return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn't provide a return date.
 
@@ -105,7 +114,7 @@ In this next example the user omitted `returnlocation`. This will result on a se
 https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
 ```
 
-### Car Search
+## Car Search
 
 Users can search for cars by requesting a pickup date, time and location, a drop-off date, time and location. If pickup and drop-off location should be the same, the drop-off location can be omitted.
 
@@ -137,7 +146,7 @@ https://eu2.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2
 Format: `{lat},{long}`, with no blank space in between. Example: `50.038432519565845,8.562138820315441` for Frankfurt airport. With these coordinates, a search for a location in a radius of 10 km is performed and the closest location is used in the car search.
 
 
-### Hotel Search
+## Hotel Search
 
 Users can search for hotels in a certain distance around the location by informing a check-in and checkout date, search center location, a distance around the location and a unit for the distance.
 
@@ -172,7 +181,7 @@ Format: `{lat},{long}`, with no blank space in between. Example: `48.85694273527
 * **Concur Travel Internal Hotel ID**: Concur Travel internal ID of a hotel.  
 Format: alpha-numeric string. Example: `1907825ad1f728ccafb22942d61a2715` for Econo Lodge Inn & Suites in Arkansas. With this internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br>The internal hotel ID should only be used inside of Concur, for example, Concur MS Teams integration.
 
-### Train Search
+## Train Search
 
 Users can search for train round-trips by informing a departure date, time and location, a return date, time and destination/return location. If searching for a train one-way trip, they must inform departure information and destination location, however, they shouldn't provide a return date or time.
 
@@ -204,7 +213,7 @@ https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 Format: `{lat},{long}`, with no blank space in between. Example: `41.37891483977241,2.1398877111090844` for Barcelona-Sants. With these coordinates a search for train stations in a radius of 25 km is performed and the closest station is used in the train search.
 
 
-### Itinerary
+## Itinerary
 
 Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.
 
