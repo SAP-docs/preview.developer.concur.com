@@ -52,7 +52,7 @@ Host Location|Geolocation based on location of Company GUID|URL to use for Trave
 ------|-----|-----
 EMEA|https://emea.api.concursolutions.com/oauth2/v0/token|https://emea.api.Concursolutions.com/api/travelprofile/v2.0/profile
 US|https://us.api.concursolutions.com/oauth2/v0/token|https://us.api.Concursolutions.com/api/travelprofile/v2.0/profile
-PSCC|https://usg.api.Concursolutions.com/oauth2/v0/token|https://usg.api.Concursolutions.com/api/travelprofile/v2.0/profile
+CCPS|https://usg.api.Concursolutions.com/oauth2/v0/token|https://usg.api.Concursolutions.com/api/travelprofile/v2.0/profile
 
 ## User Profile Web Service
 

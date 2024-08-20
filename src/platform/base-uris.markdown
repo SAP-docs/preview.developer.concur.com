@@ -26,8 +26,8 @@ EU2|Production|https://eu2.api.concursolutions.com |Default for all API calls (O
 EU2|Production|https://www-eu2.api.concursolutions.com |Default for all API calls (Does not request certs).
 China|Production|https://cn.api.concurcdc.cn |Default for all API calls (Optionally request certs).
 China|Production|https://www-cn.api.concurcdc.cn |Default for all API calls (Does not request certs).
-PSCC|Production|https://usg.api.concursolutions.com |Default for all API calls (Optionally request certs).
-PSCC|Production|https://www-usg.api.concursolutions.com |Default for all API calls (Does not request certs).
+CCPS|Production|https://usg.api.concursolutions.com |Default for all API calls (Optionally request certs).
+CCPS|Production|https://www-usg.api.concursolutions.com |Default for all API calls (Does not request certs).
 
 ### <a name="implementation"></a>Implementation
 
