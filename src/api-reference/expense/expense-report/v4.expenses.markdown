@@ -79,7 +79,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 ### Response
 
@@ -92,10 +91,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
 #### Payload
 
 * [Expenses Response](#expenses-response-schema)
@@ -107,7 +102,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 ```shell
 curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Report-test' \
 --header 'Content-Type: application/json'
 ```
 
@@ -334,7 +328,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 ### Response
 
@@ -347,10 +340,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
 #### Payload
 
 * [Expense Entry Response](#expense-entry-response-schema)
@@ -362,7 +351,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 ```shell
 curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Report-test' \
 --header 'Content-Type: application/json'
 ```
 
@@ -546,10 +534,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 
 ### Response
 
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
 #### Payload
 
 * [Expenses Response](#itemizations-response-schema)
@@ -561,7 +545,6 @@ https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/r
 ```shell
 curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1/itemizations' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Report-test' \
 --header 'Content-Type: application/json'
 ```
 
@@ -743,102 +726,6 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
 ]
 ```
 
-## Update a Specific Expense Entry in an Unsubmitted Report <a name="update-expense-entry-in-an-unsubmitted-report"></a>
-
-Updates the specified expense in an unsubmitted report and is flexible for modifying multiple attributes in the schema detailed below
-
-### Scopes
-
-`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
-
-### Request
-#### URI Template
-
-```shell
-https://{datacenterURI}/expensereports/v4/users/{userID}/context/{contextType}/reports/{reportId}/expenses/{expenseId}
-```
-
-#### Parameters
-
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`userID`|`string`|-|**Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
-|`contextType`|`string`|-|**Required** The access level of the SAP Concur user, which determines the form fields they can view/modify. Supported value: `TRAVELER`, `PROXY`|
-|`reportId`|`string`|-|**Required** The unique identifier of the report to which this expense entry belongs.|
-|`expenseId`|`string`|-|**Required** The unique identifier of the expense entry that is being read.|
-
-#### Headers
-
-* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
-* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
-* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
-* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
-* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
-* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### REST Design Specification
-
-PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:
-
-* [RFC 7386 Authorization - JSON Merge Patch](https://tools.ietf.org/html/rfc7386)
-
-#### Payload
-
-* [Patch Expense Request](#patch-unsubmitted-expense-request-schema)
-
-### Response
-
-#### Status Codes
-
-* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
-* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
-* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
-* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
-* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
-* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
-
-#### Payload
-
-* [Patch Expense Response](#patch-expense-response-schema)
-
-### Example
-
-#### <a name="patch-unsubmitted-expense-request-schema"></a> Request
-
-```shell
-curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/context/TRAVELER/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1' \
---header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Test' \
---header 'Content-Type: application/json' \
---header 'Content-Type: text/plain' \
---data-raw '{
-	"customData": [
-        {
-            "id": "custom09",
-            "value": "81188b39-605d-2d4f-b80b-43efa84a7b49",
-            "isValid": true
-        }
-    ],
-    "businessPurpose":"Office Facility Supplies",
-    "transactionAmount":{
-        "value": 50.00000000,
-        "currencyCode": "USD"
-    },
-    "expenseSource":"OTHER"
-}'
-```
-
-#### <a name="patch-expense-response-schema"></a> Response
-
-```shell
-204 No Content
-```
 ## Update a Specific Expense Entry in a Submitted Report <a name="update-expense-entry-in-a-submitted-report"></a>
 
 Updates the specified expense on an unsubmitted or submitted report and is restricted to modify 'Business Purpose', 'Custom/Org unit', 'Expense Rejected' and 'Paper Receipt Received' fields only.
@@ -870,7 +757,6 @@ https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId
 * [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
-* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 #### REST Design Specification
 
@@ -892,10 +778,6 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 * [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
-
-#### Headers
-
-* `concur-correlationid` is a SAP Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
 
 #### Payload
 
@@ -927,7 +809,6 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 ```shell
 curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/expenses/84FCBB92BD4E5342B849DAC29FD163A1' \
 --header 'Authorization: Bearer {access_token}' \
---header 'Concur-CorrelationId: Expense-Test' \
 --header 'Content-Type: application/json' \
 --header 'Content-Type: text/plain' \
 --data-raw '{
