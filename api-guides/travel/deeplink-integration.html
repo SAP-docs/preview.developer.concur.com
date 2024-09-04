@@ -559,7 +559,7 @@
 
 <h2 id="limitations">Limitations</h2>
 
-<p>When using SAML2 IdP-Initiated flow there is the caveat that IdP must support setting <code class="language-plaintext highlighter-rouge">relayState</code> with the encoded Deeplink path. Example for SAP Cloud Identity Services (CIS):</p>
+<p>When using SAML2 IdP-Initiated flow there is the caveat that IdP must support setting <code class="language-plaintext highlighter-rouge">relayState</code> with the encoded deeplink path. Example for SAP Cloud Identity Services (CIS):</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{IdP_URI}?sp={concur_URI}&amp;relayState=%2Fgoto%2Fair-shop%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 </code></pre></div></div>
@@ -582,9 +582,39 @@
 
 <p>Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.</p>
 
-<p>The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
+<p>The deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
 
 <p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur home page.</p>
+
+<h3 id="single-sign-on-sso">Single Sign-On (SSO)</h3>
+
+<p>When a deeplink is shared with users from one company, add the query parameter <code class="language-plaintext highlighter-rouge">companyuuid</code> to the deeplink. This way users are automatically guided to the appropriate identity provider for SSO (if configured). If the deeplink is shared with users from different companies or SSO is not configured for them, don’t add the query parameter <code class="language-plaintext highlighter-rouge">companyuuid</code>.</p>
+
+<h4 id="example-of-usage">Example of Usage</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com?companyuuid=1abc2345-6789-123d-45e6-f7a8b91cd2ef
+</code></pre></div></div>
+
+<h4 id="query-parameters">Query Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyuuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>(Optional) <br /> The unique identifier of a company, to which the user belongs to.</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="flight-search">Flight Search</h2>
 
@@ -597,11 +627,11 @@
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/air-shop?departurelocation={departurelocation}&amp;departuredate={departuredate}&amp;departuretime={departuretime}&amp;returnlocation={returnlocation}&amp;returndate={returndate}&amp;returntime={returntime}&amp;cabintype={cabintype}
 </code></pre></div></div>
 
-<h4 id="example-of-usage">Example of Usage</h4>
+<h4 id="example-of-usage-1">Example of Usage</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/air-shop?departurelocation=POA&amp;departuredate=2024-08-04&amp;departuretime=13:00&amp;returnlocation=SDU&amp;returndate=2024-08-20&amp;returntime=09:00&amp;cabintype=ECONOMY
 </code></pre></div></div>
 
-<h4 id="query-parameters">Query Parameters</h4>
+<h4 id="query-parameters-1">Query Parameters</h4>
 
 <table>
   <thead>
@@ -629,7 +659,7 @@
       <td><code class="language-plaintext highlighter-rouge">departuretime</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
-      <td>Departure flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code>.</td>
+      <td>(Optional) <br /> Departure flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code>.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returnlocation</code></td>
@@ -641,19 +671,19 @@
       <td><code class="language-plaintext highlighter-rouge">returndate</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
-      <td>Return flight date.</td>
+      <td>(Optional) <br /> Return flight date.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returntime</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
-      <td>Return flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code>.</td>
+      <td>(Optional) <br /> Return flight time in 24-hour format. Minutes are disregarded: <code class="language-plaintext highlighter-rouge">16:50</code> becomes <code class="language-plaintext highlighter-rouge">16:00</code>.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">cabintype</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><a href="/api-guides/travel/deeplink-integration.html#cabin-types">Cabin Types</a></td>
-      <td>The section of the aircraft that the user wants to travel in.</td>
+      <td>(Optional) <br /> The section of the aircraft that the user wants to travel in.</td>
     </tr>
   </tbody>
 </table>
@@ -710,11 +740,11 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/car-shop?pickuplocation={pickuplocation}&amp;pickupdate={pickupdate}&amp;pickuptime={pickuptime}&amp;dropofflocation={dropofflocation}&amp;dropoffdate={dropoffdate}&amp;dropofftime={dropofftime}
 </code></pre></div></div>
 
-<h4 id="example-of-usage-1">Example of Usage</h4>
+<h4 id="example-of-usage-2">Example of Usage</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2.3501079080340315&amp;pickupdate=2024-06-01&amp;pickuptime=12:00&amp;dropofflocation=50.035467,8.562884&amp;dropoffdate=2024-06-02&amp;dropofftime=18:00
 </code></pre></div></div>
 
-<h4 id="query-parameters-1">Query Parameters</h4>
+<h4 id="query-parameters-2">Query Parameters</h4>
 
 <table>
   <thead>
@@ -748,7 +778,7 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
       <td><code class="language-plaintext highlighter-rouge">dropofflocation</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><a href="/api-guides/travel/deeplink-integration.html#location-format-car">Location Format</a></td>
-      <td>Location where the car will be dropped off <br />If it is not provided it will default to <code class="language-plaintext highlighter-rouge">pickuplocation</code>.</td>
+      <td>(Optional) <br /> Location where the car will be dropped off <br />If it is not provided it will default to <code class="language-plaintext highlighter-rouge">pickuplocation</code>.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">dropoffdate</code></td>
@@ -783,11 +813,11 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/hotel-shop?checkindate={checkindate}&amp;checkoutdate={checkoutdate}&amp;location={location}&amp;distance={distance}&amp;unit={unit}
 </code></pre></div></div>
 
-<h4 id="example-of-usage-2">Example of Usage</h4>
+<h4 id="example-of-usage-3">Example of Usage</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&amp;checkoutdate=2024-08-02&amp;location=50.050686,8.565997&amp;distance=15&amp;unit=mi
 </code></pre></div></div>
 
-<h4 id="query-parameters-2">Query Parameters</h4>
+<h4 id="query-parameters-3">Query Parameters</h4>
 
 <table>
   <thead>
@@ -819,15 +849,15 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">distance</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>integer - one of <code class="language-plaintext highlighter-rouge">{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}</code></td>
-      <td>Distance around the <code class="language-plaintext highlighter-rouge">location</code> <br />If not set it will default to 5 mi <code class="language-plaintext highlighter-rouge">distance</code> and <code class="language-plaintext highlighter-rouge">radius</code> as search radius.</td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>one of <code class="language-plaintext highlighter-rouge">{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}</code></td>
+      <td>(Optional) <br /> Distance around the <code class="language-plaintext highlighter-rouge">location</code> <br />If not set it will default to 5 mi <code class="language-plaintext highlighter-rouge">distance</code> and <code class="language-plaintext highlighter-rouge">radius</code> as search radius.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">unit</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">km</code> or <code class="language-plaintext highlighter-rouge">mi</code></td>
-      <td>Unit for the <code class="language-plaintext highlighter-rouge">distance</code> <br />If not set the value will be taken from users profile - under Profile Settings, System Settings, <strong>mile/km</strong>.</td>
+      <td>(Optional) <br /> Unit for the <code class="language-plaintext highlighter-rouge">distance</code> <br />If not set the value will be taken from users profile - under Profile Settings, System Settings, <strong>mile/km</strong>.</td>
     </tr>
   </tbody>
 </table>
@@ -851,11 +881,11 @@ Format: alpha-numeric string. Example: <code class="language-plaintext highlight
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://{environment}.concursolutions.com/goto/rail-shop?departurelocation={departurelocation}&amp;departuredate={departuredate}&amp;departuretime={departuretime}&amp;returnlocation={returnlocation}&amp;returndate={returndate}&amp;returntime={returntime}
 </code></pre></div></div>
 
-<h4 id="example-of-usage-3">Example of Usage</h4>
+<h4 id="example-of-usage-4">Example of Usage</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&amp;departuretime=15:00&amp;returndate=2024-06-13&amp;returntime=07:00&amp;departurelocation=41.378696,2.140457&amp;returnlocation=41.380057,2.138956
 </code></pre></div></div>
 
-<h4 id="query-parameters-3">Query Parameters</h4>
+<h4 id="query-parameters-4">Query Parameters</h4>
 
 <table>
   <thead>
@@ -895,13 +925,13 @@ Format: alpha-numeric string. Example: <code class="language-plaintext highlight
       <td><code class="language-plaintext highlighter-rouge">returndate</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">YYYY-MM-DD</code></td>
-      <td>Date when the train will return.</td>
+      <td>(Optional) <br /> Date when the train will return.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returntime</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">hh:mm</code></td>
-      <td>Time when the train will return <br />Utilizes 24-hour format.</td>
+      <td>(Optional) <br /> Time when the train will return <br />Utilizes 24-hour format.</td>
     </tr>
   </tbody>
 </table>
@@ -917,9 +947,11 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 
 <p>Deeplink Integration allows users to lookup an itinerary in Concur Travel without having to manually navigate on the UI, providing instant access to detailed trip data.</p>
 
-<p>The Deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
+<p>The deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
 
 <p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur home page.</p>
+
+<p>The deeplink requires the trip uuid, which will be soon available in the PNR.</p>
 
 <h4 id="uri-template-4">URI Template</h4>
 
@@ -945,13 +977,13 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
     <tr>
       <td><code class="language-plaintext highlighter-rouge">tripID</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td><strong>Required</strong> <br />Unique identifier of the trip, formatted as a UUID.</td>
     </tr>
   </tbody>
 </table>
 
-<p>This deep link URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.</p>
+<p>This deeplink URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.</p>
 
 <h4 id="example">Example:</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://eu2.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
