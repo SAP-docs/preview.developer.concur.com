@@ -55,7 +55,7 @@ https://www.concursolutions.com?companyuuid=1abc2345-6789-123d-45e6-f7a8b91cd2ef
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-| `companyuuid`   | `string`   | UUID | The unique identifier of a company, to which the user belongs to. |
+| `companyuuid`   | `string`   | `UUID` | (Optional) <br> The unique identifier of a company, to which the user belongs to. |
 
 ## Flight Search
 
@@ -80,11 +80,11 @@ https://eu2.concursolutions.com/goto/air-shop?departurelocation=POA&departuredat
 |---|---|---|---|
 | `departurelocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-air) | **Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place. |
 | `departuredate`       | `string`   | `YYYY-MM-DD`    | **Required** <br>Departure flight date.  |
-| `departuretime`       | `string`   | `hh:mm`         | Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`. |
+| `departuretime`       | `string`   | `hh:mm`         | (Optional) <br> Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`. |
 | `returnlocation`      | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-air) | **Required if `departurelocation` is not informed** <br>Airport where the return flight will take place <br> For one-way trips, this will be considered as the destination airport, see [Example: One-way trip](/api-guides/travel/.deeplink-integration.html#example-one-way) |
-| `returndate`          | `string`   | `YYYY-MM-DD`    | Return flight date. |
-| `returntime`          | `string`   | `hh:mm`         | Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`. |
-| `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | The section of the aircraft that the user wants to travel in. |
+| `returndate`          | `string`   | `YYYY-MM-DD`    | (Optional) <br> Return flight date. |
+| `returntime`          | `string`   | `hh:mm`         | (Optional) <br> Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`. |
+| `cabintype`           | `string`   | [Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)     | (Optional) <br> The section of the aircraft that the user wants to travel in. |
 
 <a name="location-format-air"></a>**Location Format**
 
@@ -151,7 +151,7 @@ https://eu2.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2
 | `pickuplocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | **Required** <br>Location where the car will be picked up. |
 | `pickupdate`       | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the car will be picked up.  |
 | `pickuptime`       | `string`   | `hh:mm`        | **Required** <br>Time when the car will be picked up <br> Utilizes 24-hour format.|
-| `dropofflocation`  | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | Location where the car will be dropped off <br>If it is not provided it will default to `pickuplocation`.  |
+| `dropofflocation`  | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | (Optional) <br> Location where the car will be dropped off <br>If it is not provided it will default to `pickuplocation`.  |
 | `dropoffdate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the car will be dropped off. |
 | `dropofftime`      | `string`   | `hh:mm`        | **Required** <br>Time when the car will be dropped off <br>Utilizes 24-hour format.|
 
@@ -185,8 +185,8 @@ https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutd
 | `checkindate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check in to the hotel.  |
 | `checkoutdate`     | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check out of the hotel. |
 | `location`         | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel) | **Required** <br>Location of the search center. |
-| `distance`         | `string`   | integer - one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
-| `unit`             | `string`   | `km` or `mi`   | Unit for the `distance` <br>If not set the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
+| `distance`         | `integer`   | one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | (Optional) <br> Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
+| `unit`             | `string`   | `km` or `mi`   | (Optional) <br> Unit for the `distance` <br>If not set the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
 
 <a name="location-format-hotel"></a>**Location Format**
 
@@ -219,8 +219,8 @@ https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 | `departuredate`    | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when the train will depart.  |
 | `departuretime`    | `string`   | `hh:mm`        | **Required** <br>Time when the train will depart <br>Utilizes 24-hour format.|
 | `returnlocation`   | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail) | **Required** <br>Location where the train will return <br> For one-way trips, this will be considered as the destination location. |
-| `returndate`       | `string`   | `YYYY-MM-DD`   | Date when the train will return. |
-| `returntime`       | `string`   | `hh:mm`        | Time when the train will return <br>Utilizes 24-hour format.|
+| `returndate`       | `string`   | `YYYY-MM-DD`   | (Optional) <br> Date when the train will return. |
+| `returntime`       | `string`   | `hh:mm`        | (Optional) <br> Time when the train will return <br>Utilizes 24-hour format.|
 
 <a name="location-format-rail"></a>**Location Format**
 
@@ -247,7 +247,7 @@ https://{environment}.concursolutions.com/goto/trip/{tripID}
 |Name|Type|Format|Description|
 |---|---|---|---|
 | `environment`       | `string`   | - | **Required** <br>Specifies the environment (for example, 'US2' or 'EU2').|
-| `tripID`       | `string`   | - | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
+| `tripID`       | `string`   | `UUID` | **Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deeplink URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly directing users to the corresponding itinerary.
 
