@@ -61,7 +61,7 @@ https://www.concursolutions.com?companyuuid=1abc2345-6789-123d-45e6-f7a8b91cd2ef
 
 Users can search for round-trip flights by informing a departure date, origin / departure airport, a return date and a destination / return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn't provide a return date.
 
-The users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred airport configured in their Travel Profile — under Air Travel Preferences, set **Preferred Departure Airport**.
+Users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred departure airport configured in their Travel Profile — under Air Travel Preferences, set **Preferred Departure Airport**. Or they can select an airport while following the deeplink. In case the departure airport was missing in the deeplink, there is also the option to save the selected airport to the profile.
 
 #### URI Template
 
@@ -123,7 +123,7 @@ On the deeplink below the user is omitting the desired **departure location**. T
 https://eu2.concursolutions.com/goto/air-shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
 ```
 
-In this next example the user omitted `returnlocation`. This will result on a search for a flight from LBG (airport in Paris) to LAX.
+In this next example the user omitted `returnlocation`. This will result in a search for a flight from LBG (airport in Paris) to LAX.
 
 ```
 https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
