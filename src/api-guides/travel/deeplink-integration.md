@@ -185,12 +185,14 @@ https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutd
 | `checkindate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check in to the hotel.  |
 | `checkoutdate`     | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check out of the hotel. |
 | `location`         | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel) | **Required** <br>Location of the search center. |
+| `locationsource`   | `string`   | `string`       | **Required if location is a Hotel Property ID** <br>Source of the Hotel Property ID. For geo-coordinates and Concur Travel Internal Hotel ID omit this query parameter. |
 | `distance`         | `integer`   | one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | (Optional) <br> Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
 | `unit`             | `string`   | `km` or `mi`   | (Optional) <br> Unit for the `distance` <br>If not set the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
 
 <a name="location-format-hotel"></a>**Location Format**
 
 The hotel location can be informed in different ways:
+* **Hotel Property ID**: Hotel property ID provided by one of the following sources: `northstar`, `giata`, `leonardo`, `amadeus`, `sabre`, `galileo`, `cwt`, `expedia`, `hrs`, `booking.com`, `omnibees`. See also documentation of [Direct Connect - Hotel Service](https://developer.concur.com/api-reference/direct-connects/hotel-service-4/v4.schemas.html#-hotelproperty). Format: alpha-numeric string. Example: `TLLAX308` from amadeus or `56521` from booking.com for Travelodge LAX South in El Segundo, CA. With this Hotel Property ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. The Hotel Property ID value is case sensitive and should be exactly as given by the source.
 * **Geographic Coordinates**: latitude and longitude for a geopoint. 
 Format: `{lat},{long}`, with no blank space in between. Example: `48.85694273527786,2.3501079080340315` for Paris. With these coordinates, a search for hotels in a radius of `distance` `unit` is performed.
 * **Concur Travel Internal Hotel ID**: Concur Travel internal ID of a hotel.  
