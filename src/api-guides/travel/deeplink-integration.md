@@ -243,6 +243,21 @@ https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 * **Geographic Coordinates**: latitude and longitude for a geopoint.  
 Format: `{lat},{long}`, with no blank space in between. Example: `41.37891483977241,2.1398877111090844` for Barcelona-Sants. With these coordinates a search for train stations in a radius of 25 km is performed and the closest station is used in the train search.
 
+## Troubleshooting
+
+Possible scenarios:
+
+| #  |Issue|Error message|possible solution|
+|---|---  |---          |---              |
+|1. |User doesn't have access to Concur Travel|*"Sorry, you don't have the right permissions to shop travel"*|Contact your company admin to enable Concur Travel for your user. This will only work if your company purchased Concur Travel.|
+|2. |User is not setup for new Concur Travel or this specific transportation type|*"Sorry, you don't have the right permissions to use this feature"*|Contact your company admin to enable new Concur Travel for the transportation type, which is specified in the deeplink. For example if a car deeplink isn't working, make sure to be eligible and enabled to use new Concur Travel car. Deeplinks are not supported in the legacy experience of Concur Travel.|
+|3. |Invalid search input|*"The link you followed to start your travel search was not properly formatted"*|Make sure there are no typos in your deeplink. Check that the query parameter values are properly formatted, all required parameters are set and the dates are in the future.|
+|4. |Invalid Hotel Property ID |*"The property requested was not found"* |In a hotel deeplink check that the Hotel Property ID belongs to the specified locationsource and that there are no typos in the values. The Hotel Property ID needs to be exactly as defined in the source.|
+|5. |No search results|*"No offers found for your search criteria"*|Depending on the transportation type, try to extend the time intervals, date ranges or location radius of your search. If applicable double check your geo-coordinates and choose them as close to the desired location as possible. Maybe the next airport is further away from the specified geo-coordinates than the default 100km search radius in an air deeplink. Contact your travel admin to figure out if the required vendor is enabled for the route you are searching for. Maybe only a Spanish train vendor like Renfe is configured for your company, but the train deeplink is pointing to a connection in Germany e.g. Berlin to Munich. In case of a hotel deeplink with Hotel Property ID as location make sure that the locationsource is set. Otherwise the location will be treated as a Concur Travel Internal Hotel ID.|
+|6. |General error following a deeplink|*"Sorry, something went wrong while we were getting your travel options"*|Try again later and make sure the deeplink is properly formatted as described above and its dates are in the future.|
+
+If the previous steps didn't solve the issue, go to the Concur home page and start a search from there by entering the search criteria yourself.
+
 
 ## Itinerary
 
