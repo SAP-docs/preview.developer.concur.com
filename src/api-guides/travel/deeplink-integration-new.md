@@ -61,7 +61,7 @@ https://www.concursolutions.com?companyuuid=1abc2345-6789-123d-45e6-f7a8b91cd2ef
 
 Users can search for round-trip flights by informing a departure date, origin / departure airport, a return date and a destination / return airport. If searching for a one-way flight, they must inform departure information and destination airport, however, they shouldn't provide a return date.
 
-The users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred airport configured in their Travel Profile — under Air Travel Preferences, set **Preferred Departure Airport**.
+Users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred departure airport configured in their Travel Profile — under Air Travel Preferences, set **Preferred Departure Airport**. Or they can select an airport while following the deeplink. In case the departure airport was missing in the deeplink, there is also the option to save the selected airport to the profile.
 
 #### URI Template
 
@@ -123,7 +123,7 @@ On the deeplink below the user is omitting the desired **departure location**. T
 https://eu2.concursolutions.com/goto/air-shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
 ```
 
-In this next example the user omitted `returnlocation`. This will result on a search for a flight from LBG (airport in Paris) to LAX.
+In this next example the user omitted `returnlocation`. This will result in a search for a flight from LBG (airport in Paris) to LAX.
 
 ```
 https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
@@ -185,16 +185,32 @@ https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutd
 | `checkindate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check in to the hotel.  |
 | `checkoutdate`     | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check out of the hotel. |
 | `location`         | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel) | **Required** <br>Location of the search center. |
+| `locationsource`   | `string`   | `string`       | **Required if location is a Hotel Property ID** <br>Source of the Hotel Property ID. For geo-coordinates and Concur Travel Internal Hotel ID omit this query parameter. |
 | `distance`         | `integer`   | one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | (Optional) <br> Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
 | `unit`             | `string`   | `km` or `mi`   | (Optional) <br> Unit for the `distance` <br>If not set the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
 
 <a name="location-format-hotel"></a>**Location Format**
 
 The hotel location can be informed in different ways:
+* **Hotel Property ID**: Hotel property ID provided by one of the following sources: `northstar`, `giata`, `leonardo`, `amadeus`, `sabre`, `galileo`, `cwt`, `expedia`, `hrs`, `booking.com`, `omnibees`. See also documentation of [Direct Connect - Hotel Service](https://developer.concur.com/api-reference/direct-connects/hotel-service-4/v4.schemas.html#-hotelproperty). Format: alpha-numeric string. Example: `TLLAX308` from amadeus or `56521` from booking.com for Travelodge LAX South in El Segundo, CA. With this Hotel Property ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. The Hotel Property ID value is case sensitive and should be exactly as given by the source.
 * **Geographic Coordinates**: latitude and longitude for a geopoint. 
 Format: `{lat},{long}`, with no blank space in between. Example: `48.85694273527786,2.3501079080340315` for Paris. With these coordinates, a search for hotels in a radius of `distance` `unit` is performed.
 * **Concur Travel Internal Hotel ID**: Concur Travel internal ID of a hotel.  
 Format: alpha-numeric string. Example: `1907825ad1f728ccafb22942d61a2715` for Econo Lodge Inn & Suites in Arkansas. With this internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br>The internal hotel ID should only be used inside of Concur, for example, Concur MS Teams integration.
+
+#### <a name="example-one-way"></a> Example: Hotel Property ID location
+```
+https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutdate=2024-11-03&location=708752&locationsource=hrs
+```
+
+This deeplink will perform a search for the hotel Travelodge LAX South in El Segundo (CA) and hotels nearby in the 5 mi default radius, with check-in date on November 2nd, 2024 and checkout date on November 3rd, 2024. It uses the Hotel Property ID from HRS as location.
+
+#### <a name="example-one-way"></a> Example: Concur Travel Internal Hotel ID location
+```
+https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutdate=2024-11-03&location=1907825ad1f728ccafb22942d61a2715
+```
+
+This deeplink will perform a search for the hotel Econo Lodge Inn & Suites in Arkansas and hotels nearby in the 5 mi default radius, with check-in date on November 2nd, 2024 and checkout date on November 3rd, 2024. It uses a Concur Travel Internal Hotel ID as location.
 
 ## Train Search
 
@@ -226,6 +242,21 @@ https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 
 * **Geographic Coordinates**: latitude and longitude for a geopoint.  
 Format: `{lat},{long}`, with no blank space in between. Example: `41.37891483977241,2.1398877111090844` for Barcelona-Sants. With these coordinates a search for train stations in a radius of 25 km is performed and the closest station is used in the train search.
+
+## Troubleshooting
+
+Possible scenarios:
+
+| #  |Issue|Error message|possible solution|
+|---|---  |---          |---              |
+|1. |User doesn't have access to Concur Travel|*"Sorry, you don't have the right permissions to shop travel"*|Contact your company admin to enable Concur Travel for your user. This will only work if your company purchased Concur Travel.|
+|2. |User is not setup for new Concur Travel or this specific transportation type|*"Sorry, you don't have the right permissions to use this feature"*|Contact your company admin to enable new Concur Travel for the transportation type, which is specified in the deeplink. For example if a car deeplink isn't working, make sure to be eligible and enabled to use new Concur Travel car. Deeplinks are not supported in the legacy experience of Concur Travel.|
+|3. |Invalid search input|*"The link you followed to start your travel search was not properly formatted"*|Make sure there are no typos in your deeplink. Check that the query parameter values are properly formatted, all required parameters are set and the dates are in the future.|
+|4. |Invalid Hotel Property ID |*"The property requested was not found"* |In a hotel deeplink check that the Hotel Property ID belongs to the specified locationsource and that there are no typos in the values. The Hotel Property ID needs to be exactly as defined in the source.|
+|5. |No search results|*"No offers found for your search criteria"*|Depending on the transportation type, try to extend the time intervals, date ranges or location radius of your search. If applicable double check your geo-coordinates and choose them as close to the desired location as possible. Maybe the next airport is further away from the specified geo-coordinates than the default 100km search radius in an air deeplink. Contact your travel admin to figure out if the required vendor is enabled for the route you are searching for. Maybe only a Spanish train vendor like Renfe is configured for your company, but the train deeplink is pointing to a connection in Germany e.g. Berlin to Munich. In case of a hotel deeplink with Hotel Property ID as location make sure that the locationsource is set. Otherwise the location will be treated as a Concur Travel Internal Hotel ID.|
+|6. |General error following a deeplink|*"Sorry, something went wrong while we were getting your travel options"*|Try again later and make sure the deeplink is properly formatted as described above and its dates are in the future.|
+
+If the previous steps didn't solve the issue, go to the Concur home page and start a search from there by entering the search criteria yourself.
 
 
 ## Itinerary
