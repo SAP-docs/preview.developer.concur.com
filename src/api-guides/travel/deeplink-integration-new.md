@@ -185,8 +185,8 @@ https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutd
 | `checkindate`      | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check in to the hotel.  |
 | `checkoutdate`     | `string`   | `YYYY-MM-DD`   | **Required** <br>Date when to check out of the hotel. |
 | `location`         | `string`   | [Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel) | **Required** <br>Location of the search center. |
-| `locationsource`   | `string`   | `string`       | **Required if location is a Hotel Property ID** <br>Source of the Hotel Property ID. For geo-coordinates and Concur Travel Internal Hotel ID omit this query parameter. |
-| `distance`         | `integer`   | one of `{1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100}` | (Optional) <br> Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
+| `locationsource`   | `string`   | one of {`northstar`, `giata`, `leonardo`, `amadeus`, `sabre`, `galileo`, `cwt`, `expedia`, `hrs`, `booking.com`, `omnibees`}       | **Required if location is a Hotel Property ID** <br>Source of the Hotel Property ID. For geo-coordinates and Concur Travel Internal Hotel ID omit this query parameter. |
+| `distance`         | `integer`   | one of {`1`, `2`, `3`, `4`, `5`, `10`, `15`, `20`, `25`, `30`, `35`, `40`, `45`, `50`, `55`, `60`, `65`, `70`, `75`, `80`, `85`, `90`, `95`, `100`} | (Optional) <br> Distance around the `location` <br>If not set it will default to 5 mi `distance` and `radius` as search radius.  |
 | `unit`             | `string`   | `km` or `mi`   | (Optional) <br> Unit for the `distance` <br>If not set the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
 
 <a name="location-format-hotel"></a>**Location Format**
