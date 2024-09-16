@@ -1,0 +1,35 @@
+@startuml hotel-cancel
+
+participant "User" as user
+
+participant Concur as concur #Lightcyan
+participant "CHSSupplier" as supply #LightBlue
+participant "GDS" as gds #LightYellow
+participant "OtherSupplierSource" as other #LightYellow
+
+
+== Cancel GDS sourced booking ==
+user -> concur++: Cancel booking/trip
+concur -> gds++: Cancel booking/trip
+gds --> concur--: Ack
+concur -> concur: Update storage
+concur -> supply++: Cancel booking (notification- includes cancellation no.)
+supply -> supply: Update booking status
+supply --> concur--: Cancel booking update response
+concur --> user: Cancel confirmation with cancellation no.
+break
+
+== Cancel direct-connect sourced booking ==
+user -> concur++: Cancel booking
+concur -> supply++: Cancel booking (request)
+supply -> other: Cancel with direct-connect source
+other --> supply--: Cancel response
+supply -> gds: Delete passive segment
+gds --> supply--: Ack
+supply -> concur--: Cancel response with cancellation no.
+concur -> concur: Update storage
+concur --> user--: Cancel confirmation with cancellation no.
+
+@enduml
+
+
