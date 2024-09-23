@@ -35,7 +35,7 @@ SAP Concur clients must purchase Concur Expense in order to use this API. Please
 ## Approve or Send Back or Recall a Report <a name="approve-or-send-back-or-recall-a-report"></a>
 
 * The Approve function advances the specified report to the next step (use the short URL Approve API if the report is in a system step).
-* The Send Back function sends back the specified report to report owner.
+* The Send Back function sends back the specified report to the report owner.
 * The Recall function moves the specified report to an unsubmitted state.
 
 ### Access Token Usage <a name="access-token-usage"></a>
@@ -60,7 +60,6 @@ Approve and Send Back short URL (with no `userId` and `contextType`) APIs suppor
 * [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
 * [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
 * [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
-* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
 * [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
 * [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
   This is the Company or User access token.
@@ -123,6 +122,72 @@ PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specifica
 
 * [Approve/SendBack/Recall Report Response](#patch-approve-sendback-recall-report-response-schema)
 
+## Submit a Specific Report
+
+The submit operation moves the specified report from un-submitted to submitted state for approval.
+
+### <a name="access-token-usage"></a>Access Token Usage
+
+This API supports both company level and user level access tokens.
+
+### Scopes
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Parameters
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`userID`   | `string` | -   | **Required** The unique identifier of the SAP Concur user. Use [Identity v4 API](/api-reference/profile/v4.identity.html) to retrieve the `userID`. |
+|`reportId` | `string` | -   | **Required** The unique identifier of the report that is being read. |
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller. This is the Company or User access token.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/users/{userId}/reports/{reportId}/submit
+```
+
+### Payloads
+
+* Request: None
+* Response: None
+
+#### Curl Example
+
+```shell
+curl --location --request PATCH https://us.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/submit
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+### Response
+
+```shell
+204 No Content
+```
+
+#### Status Codes
+
+* [204 No Content](https://tools.ietf.org/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [409 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.8)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+
 ## Get Cost Objects for a Specific Report
 
 This endpoint retrieves all cost objects for a report that the calling approver or their delegators is able to approve. If the workflow setting "Filter expenses to those that are applicable to Cost Object" is set to false, then this endpoint will return all cost objects related to the report regardless of if the approver has permission to approve them.
@@ -166,7 +231,7 @@ https://{datacenterURI}/expensereports/v4/users/{userId}/reports/{reportId}/cost
 #### Curl Example
 
 ```shell
-curl --location --request GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
+curl --location --request GET https://us.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
 --header 'Authorization: Bearer {access_token}' \
 --header 'Content-Type: application/json'
 ```
