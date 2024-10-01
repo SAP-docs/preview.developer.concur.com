@@ -2,14 +2,6 @@
 
 This endpoint facilitates the creation of a new receipt. There are 2 features that can be used to create a receipt: '_simpleReceipt_' and '_cfdi_'.
 
-### Simple Receipt ### 
-
-This feature allows for the creation of a simple receipt. The document of the receipt should be uploaded with the request along with the metadata of the receipt. The uploaded receipt will be processed and the receipt will be available in Avaialble Receipts/Documents with in Expense.
-
-### CFDI ### 
-
-This feature allows for the creation of a receipt along with the document & data. Vendors can upload the receipt document and the receipt data within the same request body. The uploaded receipt will be processed and the receipt will be available in Avaialble Expenses with in Expense.
-
 ### Scopes
 `spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to [Scope Usage](#./getting-started.md#scope-usage) for full details.
 
