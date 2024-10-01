@@ -1307,7 +1307,7 @@
 
 <ul>
   <li>The Approve function advances the specified report to the next step (use the short URL Approve API if the report is in a system step).</li>
-  <li>The Send Back function sends back the specified report to report owner.</li>
+  <li>The Send Back function sends back the specified report to the report owner.</li>
   <li>The Recall function moves the specified report to an unsubmitted state.</li>
 </ul>
 
@@ -1359,7 +1359,6 @@
   <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller.
 This is the Company or User access token.</li>
@@ -1426,17 +1425,15 @@ curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH 
   <li><a href="#patch-approve-sendback-recall-report-response-schema">Approve/SendBack/Recall Report Response</a></li>
 </ul>
 
-<h2 id="get-cost-objects-for-a-specific-report">Get Cost Objects for a Specific Report</h2>
+<h2 id="submit-a-specific-report">Submit a Specific Report</h2>
 
-<p>This endpoint retrieves all cost objects for a report that the calling approver or their delegators is able to approve. If the workflow setting “Filter expenses to those that are applicable to Cost Object” is set to false, then this endpoint will return all cost objects related to the report regardless of if the approver has permission to approve them.</p>
+<p>The submit operation moves the specified report from un-submitted to submitted state for approval.</p>
 
 <h3 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h3>
 
 <p>This API supports both company level and user level access tokens.</p>
 
 <h3 id="scopes-1">Scopes</h3>
-
-<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
 <p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
 
@@ -1474,27 +1471,117 @@ curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH 
   <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
-  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller.
-This is the Company or User access token.</li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
 </ul>
 
 <h3 id="request-1">Request</h3>
 
 <h4 id="uri-template-1">URI Template</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userId<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/costObjectsForApprover
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userId<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/submit
 </code></pre></div></div>
+
+<h3 id="payloads">Payloads</h3>
+
+<ul>
+  <li>Request: None</li>
+  <li>Response: None</li>
+</ul>
 
 <h4 id="curl-example">Curl Example</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET https://integration.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH https://us.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/submit
 <span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
 </code></pre></div></div>
 
 <h3 id="response-1">Response</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
+</code></pre></div></div>
+
+<h4 id="status-codes-1">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">204 No Content</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.8">409 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h2 id="get-cost-objects-for-a-specific-report">Get Cost Objects for a Specific Report</h2>
+
+<p>This endpoint retrieves all cost objects for a report that the calling approver or their delegators is able to approve. If the workflow setting “Filter expenses to those that are applicable to Cost Object” is set to false, then this endpoint will return all cost objects related to the report regardless of if the approver has permission to approve them.</p>
+
+<h3 id="access-token-usage-1"><a name="access-token-usage"></a>Access Token Usage</h3>
+
+<p>This API supports both company level and user level access tokens.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<p><code class="language-plaintext highlighter-rouge">expense.report.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="parameters-2">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report that is being read.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="headers-2">Headers</h3>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller.
+This is the Company or User access token.</li>
+</ul>
+
+<h3 id="request-2">Request</h3>
+
+<h4 id="uri-template-2">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expensereports/v4/users/<span class="o">{</span>userId<span class="o">}</span>/reports/<span class="o">{</span>reportId<span class="o">}</span>/costObjectsForApprover
+</code></pre></div></div>
+
+<h4 id="curl-example-1">Curl Example</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET https://us.api.concursolutions.com/expensereports/v4/users/aa024d31-95eb-4270-b9yz-cb6b5f558a7c/reports/97F923D6935D4426BF9C/costObjectsForApprover
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h3 id="response-2">Response</h3>
 
 <h4 id="success-response">Success Response</h4>
 
@@ -1565,7 +1652,7 @@ This is the Company or User access token.</li>
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="status-codes-1">Status Codes</h3>
+<h3 id="status-codes-2">Status Codes</h3>
 
 <ul>
   <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
