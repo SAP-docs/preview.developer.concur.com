@@ -63,6 +63,7 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
       "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
       "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
       "origin": "vendor",
+      "provider": "vendor"
       "feature": "simplereceipt"
     }
 }"
@@ -94,6 +95,7 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
     "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
     "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
     "origin": "vendor",
+    "provider": "vendor",
     "feature": "cfdi",
     "category": "general"
   },
