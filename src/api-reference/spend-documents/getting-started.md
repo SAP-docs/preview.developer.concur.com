@@ -12,7 +12,7 @@ This API is only available to partners who have been granted access by SAP Concu
 * Concur Expense Standard Edition
 * 
 
-### <a name="prerequisites"></a>Prerequisites
+## <a name="prerequisites"></a>Prerequisites
 
 Read the [Getting Started](https://developer.concur.com/api-reference/authentication/getting-started.html) section of [Authentication API](https://developer.concur.com/api-reference/authentication/apidoc.html). Once you have registered your application, you must [obtain an access token from the Authentication API](https://developer.concur.com/api-reference/authentication/getting-started.html)
 
