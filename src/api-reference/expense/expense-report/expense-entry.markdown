@@ -154,6 +154,7 @@ Name | Type | Format | Description
 `ElectronicReceiptID`	|	`string`	|	-	|	The unique identifier for an eReceipt that is associated with this expense. Use the GET eReceipts function to get information about this eReceipt. This element is null when there is no eReceipt associated with this expense.
 `EmployeeBankAccountID`	|	`string`	|	-	|	The unique identifier of an employee bank account that is associated with this expense. Typically, this element is used when Expense Pay reimburses the employee for this expense. Use the GET BankAccounts function to get information about this bank account.
 `ExchangeRate`	|	`decimal`	|	-	|	The currency conversion rate that converts the transaction amount that is in the transaction currency into the posted amount that is in the report currency. This element is typically not provided. If this element is empty for transactions in a currency different than the user's reimbursement currency, Expense will use the company's configured exchange rates to determine the posted amount for the transaction. If the system is not able to determine the exchange rate, a value of 1.0 will be used.
+`ExpenseID` |   `string`    |   -   |   The unique identifier of the expense entry that is being retrieved. Compatible for use with v4 endpoints.
 `ExpenseTypeCode`	|	`string`	|	-	|	**Required** The code for the expense type. Use GET /expense/expensegroupconfigurations to learn the expense type code for expense types that are active for this report's policy.
 `ExpenseTypeName`	|	`string`	|	-	|	The name of the expense type, localized to the user's language.
 `FormID`	|	`string`	|	-	|	The ID of the form used by this expense entry.
@@ -164,7 +165,7 @@ Name | Type | Format | Description
 `HasImage`	|	`boolean`	|	`true` / `false`	|	Indicates whether there is an entry image attached to the entry. Use the GET Entry Images function to get this entry image.
 `HasItemizations`	|	`boolean`	|	`true` / `false`	|	Indicates whether the expense has itemizations. Use the GET /expense/itemizations function to get information about this entry's itemizations.
 `HasVAT`	|	`boolean`	|	`true` / `false`	|	Indicates whether the entry has VAT data.
-`ID`	|	`string`	|	-	|	The unique identifier of the resource.
+`ID`	|	`string`	|	-	|	The unique identifier of the resource. Compatible for use with v3 endpoints.
 `IsBillable	`|	`boolean`	|	`true` / `false`	|	Indicates whether the expense is billable.
 `IsImageRequired`	|	`boolean`	|	`true` / `false`	|	Indicates whether an entry image is required for the entry.
 `IsPaidByExpensePay`	|	`boolean`	|	`true` / `false`	|	Whether the entry is paid using the Expense Pay service. This element has a value if the report has reached the Processing Payment workflow step, because this is when Concur Expense determines whether it will be paid by Expense Pay.
