@@ -21,8 +21,6 @@ When using SAML2 IdP-Initiated flow there is the caveat that IdP must support se
 {IdP_URI}?sp={concur_URI}&relayState=%2Fgoto%2Fair-shop%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 ```
 
-Whenever possible, use the correct environment in your link, for example, `eu2` or `us2`, instead of just `www`. This will avoid unnecessary logins.
-
 > Deeplink Integration is not available for mobile and currently it only supports flight / car / hotel / train search and itinerary lookup.
 
 ## Integration Details
@@ -66,12 +64,12 @@ Users are able to **omit one** of the airports (departure or return) when they w
 #### URI Template
 
 ```
-https://{environment}.concursolutions.com/goto/air-shop?departurelocation={departurelocation}&departuredate={departuredate}&departuretime={departuretime}&returnlocation={returnlocation}&returndate={returndate}&returntime={returntime}&cabintype={cabintype}
+https://www.concursolutions.com/goto/air-shop?departurelocation={departurelocation}&departuredate={departuredate}&departuretime={departuretime}&returnlocation={returnlocation}&returndate={returndate}&returntime={returntime}&cabintype={cabintype}
 ```
 
 #### Example of Usage
 ```
-https://eu2.concursolutions.com/goto/air-shop?departurelocation=POA&departuredate=2024-08-04&departuretime=13:00&returnlocation=SDU&returndate=2024-08-20&returntime=09:00&cabintype=ECONOMY
+https://www.concursolutions.com/goto/air-shop?departurelocation=POA&departuredate=2024-08-04&departuretime=13:00&returnlocation=SDU&returndate=2024-08-20&returntime=09:00&cabintype=ECONOMY
 ```
 
 #### Query Parameters
@@ -102,14 +100,14 @@ The supported cabin types are:
 
 #### Example: Round-Trip
 ```
-https://eu2.concursolutions.com/goto/air-shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=BUSINESS_OR_FIRST
+https://www.concursolutions.com/goto/air-shop?departurelocation=OPO&departuredate=2024-06-01&departuretime=02:00&returnlocation=BER&returndate=2024-06-02&returntime=03:00&cabintype=BUSINESS_OR_FIRST
 ```
 
 This deeplink will perform a search for a departure flight from OPO to BER airport, on June 1st, 2024, at 02:00AM ±2 and a return flight from BER to OPO, on June 2nd, 2024 at 03:00AM ±2. The search will bring flight offers in Business or First class.
 
 #### <a name="example-one-way"></a> Example: One-way Trip
 ```
-https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
+https://www.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01&departuretime=02:00&returnlocation=SDU
 ```
 
 This deeplink will perform a search for a flight from LBG (airport in Paris) to SDU, on June 1st, 2024 with departure time at 02:00AM ±2.
@@ -120,13 +118,13 @@ In this example, we are considering that the user has defined **LAX** as their p
 
 On the deeplink below the user is omitting the desired **departure location**. Therefore, they will be taken to the search results page, showing departure flights from LAX (preferred airport) to BER. The next page will show return flights, from BER back to LAX.
 ```
-https://eu2.concursolutions.com/goto/air-shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
+https://www.concursolutions.com/goto/air-shop?departuredate=2024-06-01&returnlocation=BER&returndate=2024-06-02
 ```
 
 In this next example the user omitted `returnlocation`. This will result in a search for a flight from LBG (airport in Paris) to LAX.
 
 ```
-https://eu2.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
+https://www.concursolutions.com/goto/air-shop?departurelocation=48.85694273527786,2.3501079080340315&departuredate=2024-06-01
 ```
 
 ## Car Search
@@ -136,12 +134,12 @@ Users can search for cars by requesting a pickup date, time and location, a drop
 #### URI Template
 
 ```
-https://{environment}.concursolutions.com/goto/car-shop?pickuplocation={pickuplocation}&pickupdate={pickupdate}&pickuptime={pickuptime}&dropofflocation={dropofflocation}&dropoffdate={dropoffdate}&dropofftime={dropofftime}
+https://www.concursolutions.com/goto/car-shop?pickuplocation={pickuplocation}&pickupdate={pickupdate}&pickuptime={pickuptime}&dropofflocation={dropofflocation}&dropoffdate={dropoffdate}&dropofftime={dropofftime}
 ```
 
 #### Example of Usage
 ```
-https://eu2.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2.3501079080340315&pickupdate=2024-06-01&pickuptime=12:00&dropofflocation=50.035467,8.562884&dropoffdate=2024-06-02&dropofftime=18:00
+https://www.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2.3501079080340315&pickupdate=2024-06-01&pickuptime=12:00&dropofflocation=50.035467,8.562884&dropoffdate=2024-06-02&dropofftime=18:00
 ```
 
 #### Query Parameters
@@ -170,12 +168,12 @@ Users are able to **omit** the unit or distance or both when they want to use de
 #### URI Template
 
 ```
-https://{environment}.concursolutions.com/goto/hotel-shop?checkindate={checkindate}&checkoutdate={checkoutdate}&location={location}&distance={distance}&unit={unit}
+https://www.concursolutions.com/goto/hotel-shop?checkindate={checkindate}&checkoutdate={checkoutdate}&location={location}&distance={distance}&unit={unit}
 ```
 
 #### Example of Usage
 ```
-https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutdate=2024-08-02&location=50.050686,8.565997&distance=15&unit=mi
+https://www.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutdate=2024-08-02&location=50.050686,8.565997&distance=15&unit=mi
 ```
 
 #### Query Parameters
@@ -200,14 +198,14 @@ Format: alpha-numeric string. Example: `1907825ad1f728ccafb22942d61a2715` for Ec
 
 #### <a name="example-one-way"></a> Example: Hotel Property ID location
 ```
-https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutdate=2024-11-03&location=708752&locationsource=hrs
+https://www.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutdate=2024-11-03&location=708752&locationsource=hrs
 ```
 
 This deeplink will perform a search for the hotel Travelodge LAX South in El Segundo (CA) and hotels nearby in the 5 mi default radius, with check-in date on November 2nd, 2024 and checkout date on November 3rd, 2024. It uses the Hotel Property ID from HRS as location.
 
 #### <a name="example-one-way"></a> Example: Concur Travel Internal Hotel ID location
 ```
-https://eu2.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutdate=2024-11-03&location=1907825ad1f728ccafb22942d61a2715
+https://www.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutdate=2024-11-03&location=1907825ad1f728ccafb22942d61a2715
 ```
 
 This deeplink will perform a search for the hotel Econo Lodge Inn & Suites in Arkansas and hotels nearby in the 5 mi default radius, with check-in date on November 2nd, 2024 and checkout date on November 3rd, 2024. It uses a Concur Travel Internal Hotel ID as location.
@@ -219,12 +217,12 @@ Users can search for train round-trips by informing a departure date, time and l
 #### URI Template
 
 ```
-https://{environment}.concursolutions.com/goto/rail-shop?departurelocation={departurelocation}&departuredate={departuredate}&departuretime={departuretime}&returnlocation={returnlocation}&returndate={returndate}&returntime={returntime}
+https://www.concursolutions.com/goto/rail-shop?departurelocation={departurelocation}&departuredate={departuredate}&departuretime={departuretime}&returnlocation={returnlocation}&returndate={returndate}&returntime={returntime}
 ```
 
 #### Example of Usage
 ```
-https://eu2.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departuretime=15:00&returndate=2024-06-13&returntime=07:00&departurelocation=41.378696,2.140457&returnlocation=41.380057,2.138956
+https://www.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departuretime=15:00&returndate=2024-06-13&returntime=07:00&departurelocation=41.378696,2.140457&returnlocation=41.380057,2.138956
 ```
 
 #### Query Parameters
@@ -272,17 +270,16 @@ The deeplink requires the trip uuid, which will be soon available in the PNR.
 #### URI Template
 
 ```
-https://{environment}.concursolutions.com/goto/trip/{tripID}
+https://www.concursolutions.com/goto/trip/{tripID}
 ```
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`environment`|`string`|-|**Required** <br>Specifies the environment, for example, 'US2' or 'EU2'.|
 |`tripID`|`string`|`UUID`|**Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deeplink URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly redirecting users to the corresponding itinerary.
 
 #### Example:
 ```
-https://eu2.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
+https://www.concursolutions.com/goto/trip/779a324d-6e1d-4fe8-8f98-9362be994766
 ```
