@@ -9,6 +9,10 @@ layout: reference
 
 The Financial Integration API provides clients and authorized partners access to each of the document types when the document is ready and available for import through the events on the topic `public.concur.financialintegration`. To subscribe to these events follow the steps described on the [Event Subscription Service v4](https://developer.concur.com/api-reference/ess/v4.event-subscription.html) page.
 
+## <a name="limitations"></a>Limitations
+
+Access to this documentation does not provide access to the subscription.
+
 ## <a name="scope-usage"></a>Scope Usage
 
 |Name|Description|
