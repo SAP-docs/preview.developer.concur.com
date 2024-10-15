@@ -23,4 +23,3 @@ Read the [Getting Started](https://developer.concur.com/api-reference/authentica
 | `spenddocs.receipts.write` <br> `spenddocs.receipts.writeonly` | Post receipt for the user | POST |
 | `spenddocs.receipts.read` | Retrieve Receipt and its representations either by Receipt Id or Image Id and company Id | GET |
 | `spenddocs.receipts.compliance.read` | Retrieve compliance representation of the receipt | GET |
-| `spenddocs.receipts.compliance.write` <br> `spenddocs.receipts.compliance.writeonly` | Put compliance representation of the receipt | PUT |
