@@ -11,7 +11,7 @@ The Base URI (also known as the Instance URL) is the domain where the SAP Concur
 
 There will be a different domain for each of the following locations:
 
-* Production in the North America data center, EMEA data center, China data center, and PSCC data center.
+* Production in the North America data center, EMEA data center, China data center, and CCPS data center.
 * Implementation (copy of the production environment not available for all clients) in the North America data center and EMEA data center.
 
 ### <a name="production"></a>Production
