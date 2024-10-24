@@ -10,7 +10,6 @@ This API is only available to partners who have been granted access by SAP Concu
 
 * Concur Expense Professional Edition
 * Concur Expense Standard Edition
-* 
 
 ## <a name="prerequisites"></a>Prerequisites
 
