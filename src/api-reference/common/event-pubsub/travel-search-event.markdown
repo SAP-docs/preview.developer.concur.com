@@ -27,8 +27,8 @@ Name|Type|Format|Description
 `correlationId`|`string`|`GUID`|Uniquely identifies the air search request.
 `eventType`|`string`|-|Identifies the search event type. Supported values: `travelSearchAir`
 `topic`|`string`|-|Topic for subscription. Supported values: `concur.travel.search`
-`subTopic`|`string`| -|Identifies a sub topic. Supported values: `airshop.v1.schedule`, `airshop.v1.price`
-`timeStamp`|`string`|`date/time`|Search event time in UTC.
+`subTopic`|`string`| -|Identifies a sub topic. Supported values: `airshop.v1.schedule`, `airshop.v1.price`, `null`
+`timeStamp`|`string`|`YYYY-MM-DDTHH:MM:SS.fZ`|Search event time in UTC.
 `facts`|`object`|[Air Search Facts](#schema-air-search-facts)|Facts for air search.
 
 ### <a name="schema-air-search-facts"></a>Air Search Facts
@@ -52,10 +52,10 @@ Name|Type|Format|Description
 ---|---|---|---
 `departures`|`array`|[City](#schema-city)|List of departure airports selected by the user. A user can select a city area/hub as point of departure, which will result in an array of multiple airports.
 `arrivals`|`array`|[City](#schema-city)|List of arrival airports selected by the user. A user can select a city area/hub as point of arrival, which will result in an array of multiple airports.
-`departureDate`|`string`|`YYYY-MM-DD`|Date traveler will depart from the point of departure, local time. Either the departure date/time, or the arrival date/time will be populated.
+`departureDate`|`string`|`MM/DD/YYYY`|Date traveler will depart from the point of departure, local time. Either the departure date/time, or the arrival date/time will be populated.
 `departureTime`|`string`|`HH:MM AM/PM`|Departure time, in local time.  Either the departure date/time, or the arrival date/time will be populated.
 `departureTimeWindow`|`integer`|-|Time window (+/-) around selected departure time, in hours. Either the departure date/time, or the arrival date/time will be populated.
-`arrivalDate`|`string`|`YYYY-MM-DD`|Date on which the traveler will arrive at the destination, in local time. Either the departure date/time, or the arrival date/time will be populated.
+`arrivalDate`|`string`|`MM/DD/YYYY`|Date on which the traveler will arrive at the destination, in local time. Either the departure date/time, or the arrival date/time will be populated.
 `arrivalTime`|`string`|`HH:MM AM/PM`|Time at which the traveler will arrive at the destination, in local time.  Either the departure date/time, or the arrival date/time will be populated.
 `arrivalTimeWindow`|`integer`|-|Time window (+/-) around selected arrival time, in hours. Either the departure date/time, or the arrival date/time will be populated.
 
@@ -68,15 +68,15 @@ Name|Type|Format|Description
 
 ### <a name="schema-hotel-request"></a>Hotel
 
-Name|Type|Format|Description
----|---|---|---
-`id`|`string`|`GUID`|Uniquely identifies the event.
-`correlationId`|`string`|`GUID`|Uniquely identifies the hotel search request.
-`eventType`|`string`|-|Identifies the search event type. Supported  values: `travelSearchHotel`
-`topic`|`string`|-|Topic for subscription. Supported values: `concur.travel.search`
-`subTopic`|`string`|-|Identifies sub-topic. Supported values: `hotelshop.v1.price`
-`timeStamp`|`string`|`date/time`|Search event time in UTC.
-`facts`|`object`|[Hotel Search Facts](#schema-hotel-search-facts)|Facts for hotel search.
+Name           |Type    |Format                                          |Description
+---------------|--------|------------------------------------------------|-----------------------------------------------------------------------
+`id`           |`string`|`GUID`                                          |Uniquely identifies the event.
+`correlationId`|`string`|`GUID`                                          |Uniquely identifies the hotel search request.
+`eventType`    |`string`|-                                               |Identifies the search event type. Supported  values: `travelSearchHotel`
+`topic`        |`string`|-                                               |Topic for subscription. Supported values: `concur.travel.search`
+`subTopic`     |`string`|-                                               |Identifies sub-topic. Supported values: `hotelshop.v1.price`, `null`
+`timeStamp`    |`string`|`YYYY-MM-DDTHH:MM:SS.fZ`                                     |Search event time in UTC.
+`facts`        |`object`|[Hotel Search Facts](#schema-hotel-search-facts)|Facts for hotel search.
 
 ### <a name="schema-hotel-search-facts"></a>Hotel Search Facts
 
@@ -104,51 +104,91 @@ Sample roundtrip air search
   "correlationId": "51AB4E74-1287-4B20-87FB-98A93CE4CEEB",
   "eventType": "travelSearchAir",
   "topic": "concur.travel.search",
-  "timeStamp": "2018-10-15T14:19:06.752Z",
+  "timeStamp": "2018-10-15T14:19:06.395349006Z",
   "data": null,
   "subtopic": null,
   "facts": {
-    "companyId": "",
-    "userId": "",
-    "arrangerUserId": "",
+    "companyId": "0af6e6ec-c0e6-427e-b397-a38d70276fb1",
+    "userId": "5040b878-da00-47c7-8676-e0f6c67885b5",
+    "arrangerUserId": "5040b878-da00-47c7-8676-e0f6c67885b5",
     "searchLegs": "RoundTrip",
-    "isGuestBooking": false,
-    "isFlexFaring": false,
+    "isGuestBooking": null,
+    "isFlexFaring": null,
     "segments": [
-    {
-     "departures": [
-          "LHR"
-       ],
-     "arrivals": [
-          "FRA"
-      ],
-     "departureDate": "1/15/2019",
-     "departureTime": "9:00 AM",
-     "departureTimeWindow": 3,
-     "arrivalDate": null,
-     "arrivalTime": null,
-     "arrivalTimeWindow": null
+      {
+        "departures": [
+          {
+            "cityName": "Las Vegas",
+            "cityIATACode": "LAS"
+          }
+        ],
+        "arrivals": [
+          {
+            "cityName": "Los Angeles",
+            "cityIATACode": "LAX"
+          }
+        ],
+        "departureDate": "01/15/2019",
+        "departureTime": "09:00 AM",
+        "departureTimeWindow": 3,
+        "arrivalDate": null,
+        "arrivalTime": null,
+        "arrivalTimeWindow": null
       },
-     {
-      "departures": [
-          "FRA"
-      ],
-      "arrivals": [
-         "LHR"
-       ],
-      "departureDate": "1/16/2019",
-      "departureTime": "3:00 PM",
-      "departureTimeWindow": 3,
-      "arrivalDate": null,
-      "arrivalTime": null,
-      "arrivalTimeWindow": null
-     }
+      {
+        "departures": [
+          {
+            "cityName": "Los Angeles",
+            "cityIATACode": "LAX"
+          }
+        ],
+        "arrivals": [
+          {
+            "cityName": "Las Vegas",
+            "cityIATACode": "LAS"
+          }
+        ],
+        "departureDate": "01/16/2019",
+        "departureTime": "03:00 PM",
+        "departureTimeWindow": 3,
+        "arrivalDate": null,
+        "arrivalTime": null,
+        "arrivalTimeWindow": null
+      }
     ],
   "numberOfTravelers": 1,
-  "classOfTrip": null,
+  "classOfTrip": "Y",
   "airCarriers": null
-  }
+  },
+  "groups":null,
+  "scopes":null
 }
 
 ```
 
+### <a name="sample-hotel-event"></a>Hotel
+
+```json
+{
+  "id": "a48e8dc1-86ad-40bc-87c3-23249936c079",
+  "correlationId": "66a89237-4681-4439-94a1-61d8a1ccd304",
+  "eventType": "travelSearchHotel",
+  "topic": "concur.travel.search",
+  "data": null,
+  "subTopic": null,
+  "timeStamp": "2024-10-28T13:41:19.671878713Z",
+  "facts": {
+    "companyId": "c49c6381-bac2-4a90-9738-cd358576d68a",
+    "userId": "a2ebdf99-4fad-414e-b60f-d963c4e7eed4",
+    "refPointLatitude": null,
+    "refPointLongitude": null,
+    "refPointName": null,
+    "radiusDistance": 5,
+    "distanceUnit": "MILE",
+    "checkInDate": "2025-01-27",
+    "checkOutDate": "2025-01-28"
+  },
+  "groups":null,
+  "scopes":null
+}
+```
