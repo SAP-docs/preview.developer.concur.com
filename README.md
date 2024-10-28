@@ -9,6 +9,14 @@ Changes merged to the `preview` repository (https://github.com/SAP-docs/preview.
 
 Changes merged to the `live` repository (https://github.com/SAP-docs/developer.concur.com) can be found here: [https://developer.concur.com/](http://developer.concur.com/)
 
+# Requirements
+
+For contributions, it's required that you have a GitHub account. For more information, see Signing up for a new GitHub account in the [GitHub documentation](https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github).
+
+# Contributing
+
+This repo only accepts contributions from SAP Concur employees who are responsible for the APIs documented here. If you have an issue with the documentation please follow the instructions in the Support section below.
+
 # Sitemap
 
 The Concur Developer Website found within the `/src` folder is organized into these areas:
