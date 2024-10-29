@@ -38,7 +38,7 @@ tools-support    Support resources for developers including release notes.
 
 # Availability
 
-[View Availability](https://uptimerobot.com/?ref=psp-header)
+[View Availability](https://stats.uptimerobot.com/P7BJ7ToVO)
 
 # Support
 
