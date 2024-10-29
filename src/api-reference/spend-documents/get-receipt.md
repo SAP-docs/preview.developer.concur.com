@@ -96,7 +96,7 @@ curl --location --request GET 'https://us.api.concursolutions.com/spend-document
     "origin": "mobile",
     "captureMethod": "cameraCapture",
     "provider": "user",
-    "feature": "cfdi",
+    "feature": "expenseit",
     "status": "processed",
     "compliance": {
       "status": "processed"

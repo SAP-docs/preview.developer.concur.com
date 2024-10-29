@@ -1,6 +1,6 @@
 ## Upload a New Receipt
 
-This endpoint facilitates the creation of a new receipt for '_simpleReceipt_'.
+This endpoint facilitates the creation of a new receipt for '_simpleReceipt_' .
 
 ### Scopes
 `spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to [Scope Usage](#./getting-started.md#scope-usage) for full details.
