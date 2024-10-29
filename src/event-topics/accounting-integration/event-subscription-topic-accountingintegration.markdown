@@ -10,7 +10,7 @@ layout: reference
 
 The Accounting Integration v4 API provides clients and authorized partners access to the configuration settings and the mappings between SAP Concur data and ERP data through the events on the topic `public.concur.spend.accountingintegration`. To subscribe to these events follow the steps described on the [Event Subscription Service v4](https://developer.concur.com/api-reference/ess/v4.event-subscription.html) page.
 
-> **Limitation**: This event subscription is only available to partners who have been granted access to Accounting Integration API.
+> **Limitation**: Access to this documentation does not provide access to the subscription.
 
 ## <a name="scope-usage"></a>Scope Usage
 
