@@ -27,12 +27,16 @@ You may need to request access from your SAP Concur representative if you do not
 
     App Scopes|Required For
     ---|---
+    `document.tax.compliance.read`|Document Tax Compliance Event
     `events.topic.read`	|All Topics
-    `travel.itinerary.read`|Concur Itinerary Event
-    `travelrequest.write`	|Concur Request Event
     `expense.report.read` |Concur Expense Event
     `expense.report.readwrite` |Concur Expense Event
-    `user.provision.read`	|Identity Change Event
+    `FISVC`|Ready for Integration Events
+    `identity.user.event.read`|Identity Change Event
+    `spend.user.event.read`|Spend Change Event
+    `travel.itinerary.read`|Concur Itinerary Event
+    `travelrequest.write`	|Concur Request Event
+    `travel.user.event.read`|Travel Change Event
     `user.provision.read`	|Concur User Provisioning Event
 
   The SAP Concur products that ESS supports are constantly evolving. Please refer to [the main Event Topics page](/event-topics/index.html) for a list of current available Event Topics.
