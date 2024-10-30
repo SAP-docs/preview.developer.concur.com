@@ -3,7 +3,7 @@ title: Spend Documents v4 - Get Receipt
 layout: reference
 ---
 
-# Get Receipt
+## Get Receipt
 
 There are two endpoints to retrieve the details of a specific receipt.
 

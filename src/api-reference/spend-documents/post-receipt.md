@@ -3,7 +3,7 @@ title: Spend Documents v4 - Post Receipt
 layout: reference
 ---
 
-# Upload a New Receipt
+## Upload a New Receipt
 
 This endpoint facilitates the creation of a new receipt for '_simpleReceipt_' .
 
