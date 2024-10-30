@@ -8,7 +8,7 @@ layout: reference
 This endpoint facilitates the creation of a new receipt for '_simpleReceipt_' .
 
 ### Scopes
-`spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to [Scope Usage](#./getting-started.md#scope-usage) for full details.
+`spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to [Scope Usage](/api-reference/spend-documents/v4.spend-documents.html#scope-usage) for full details.
 
 **URI Template:**  `/spend-documents/v4/receipts`
 
@@ -21,7 +21,7 @@ Name|Type|Format|Description
 `receipt` | `object` |-|**Required**. The receipt data in JSON format.
 `document` |`string` |-| The receipt document to be uploaded. Compatible formats are: PDF, JPEG, PNG, GIF, JPG.
 
-Refer to the [Receipt Schema](#./schema) for the structure of the receipt object.
+Refer to the [Receipt Schema](/api-reference/spend-documents/schema.html) for the structure of the receipt object.
 
 ### Response
 #### Success
