@@ -1,4 +1,9 @@
-## Get Receipt
+---
+title: Spend Documents v4 - Get Receipt
+layout: reference
+---
+
+# Get Receipt
 
 There are two endpoints to retrieve the details of a specific receipt.
 
@@ -158,7 +163,7 @@ Retrieves the receipt using the `companyId` and `imageId`.
 ### Scopes
 
 `spenddocs.receipts.read, spenddocs.compliance.read`  
-Refer to [Scope Usage](#./getting-started.md#scope-usage) for full details.
+Refer to [Scope Usage](#./getting-started.html#scope-usage) for full details.
 
 ### Request
 

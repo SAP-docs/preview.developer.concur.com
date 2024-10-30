@@ -1,9 +1,14 @@
-## Schema
+---
+title: Spend Documents v4 - Schema
+layout: reference
+---
+
+# Schema
 
 ### Receipt
 
-|Name|Type|Format| Description                                                                                       |
-|---|---|---|---------------------------------------------------------------------------------------------------|
+|Name|Type|Format|Description|
+|---|---|---|---|
 | `metadata`     | `object` |-| Receipt API schema for metadata, receipt-data, `enrichmentData` and document (& representations). |
 | `receiptData`  | `object` |-| Receipt API schema for receipt data.                                                              |
 
@@ -51,6 +56,7 @@
 | `taxes`| `array`  |-| The taxes applied on this transaction.|
 
 ### Amount
+
 | Name          | Type     | Format | Description                                      |
 |---------------|----------|--------|--------------------------------------------------|
 | `total`       | `string` | -      | Transaction Amount - Total, required for EReceipt |
@@ -60,8 +66,9 @@
 
 
 ### LineItems
-| Name                      | Type     | Format | Description                                                                 |
-|---------------------------|----------|--------|-----------------------------------------------------------------------------|
+
+|Name|Type|Format|Description|
+|---|---|---|---|
 | `itemId`                  | `string` | -      | Line Identifier                                                             |
 | `productCode`             | `string` | -      | Product Code of goods and services                                          |
 | `quantity`                | `string` | -      | Item Quantity                                                               |
@@ -78,8 +85,9 @@
 | `semanticsCode`           | `string` | -      | Indicates the charge category for the line item. Example: 'MOVIE', 'PARKING', 'OTHER' etc. |
 
 ### Tax
-| Name                | Type     | Format | Description                                                                 |
-|---------------------|----------|--------|-----------------------------------------------------------------------------|
+
+|Name|Type|Format|Description|
+|---|---|---|---|
 | `name`              | `string` | -      | Tax Name                                                                    |
 | `amount`            | `string` | -      | Amount, required for EReceipt                                               |
 | `rate`              | `number` | -      | Tax rate                                                                    |
@@ -101,6 +109,7 @@
 | `verificationCode`  | `string` | -      | Verification or Certificate Code     |
 
 ### Vendor
+
 | Name          | Type     | Format | Description                      |
 |---------------|----------|--------|----------------------------------|
 | `name`        | `string` | -      | Name, required for EReceipt      |
@@ -113,12 +122,14 @@
 | `phone`       | `string` | -      | Phone                            |
 
 ### PaymentType
-| Name                        | Type     | Format | Description                                                                 |
-|-----------------------------|----------|--------|-----------------------------------------------------------------------------|
+
+|Name|Type|Format|Description|
+|---|---|---|---|
 | `method`                    | `string` | -      | Payment type method, required for EReceipt                                  |
 | `creditCard.type`           | `string` | -      | Name of the card type ex: American Express, MasterCard, Discover etc.       |
 | `creditCard.lastFour`       | `string` | -      | Last 4 digits of credit card number if the payment method is credit card    |
 | `digitalWallet`             | `string` | -      | If the payment method is digitalWallet, type of digital wallet. ex: ApplePay, PayTM, Rupay, GooglePay etc. |
+
 ### Document Data
 
 |Name|Type|Format|Description|
