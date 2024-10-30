@@ -51,8 +51,8 @@ https://www.concursolutions.com?companyuuid=1abc2345-6789-123d-45e6-f7a8b91cd2ef
 
 #### Query Parameters
 
-|Name|Type|Format|Description|
-|---|---|---|---|
+|Name         |Type    |Format|Description|
+|-------------|--------|------|-----------|
 |`companyuuid`|`string`|`UUID`|(Optional) <br> The unique identifier of a company, to which the user belongs.|
 
 ## Flight Search
@@ -74,15 +74,15 @@ https://www.concursolutions.com/goto/air-shop?departurelocation=POA&departuredat
 
 #### Query Parameters
 
-|Name|Type|Format|Description|
-|---|---|---|---|
+|Name               |Type    |Format                                                                             |Description|
+|-------------------|--------|-----------------------------------------------------------------------------------|-----------|
 |`departurelocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-air)|**Required if `returnlocation` is not informed** <br>Airport where the departure flight will take place.|
-|`departuredate`|`string`|`YYYY-MM-DD`| **Required** <br>Departure flight date.|
-|`departuretime`|`string`|`hh:mm`| (Optional) <br> Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`.|
-|`returnlocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-air)|**Required if `departurelocation` is not informed** <br>Airport where the return flight will take place. <br> For one-way trips, this will be considered as the destination airport, see [Example: One-way trip](/api-guides/travel/.deeplink-integration.html#example-one-way). |
-|`returndate`|`string`|`YYYY-MM-DD`| (Optional) <br> Return flight date. |
-|`returntime`|`string`|`hh:mm`| (Optional) <br> Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`.|
-|`cabintype`|`string`|[Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)|(Optional) <br> The section of the aircraft that the user wants to travel in. |
+|`departuredate`    |`string`|`YYYY-MM-DD`                                                                       |**Required** <br>Departure flight date.|
+|`departuretime`    |`string`|`hh:mm`                                                                            |(Optional) <br> Departure flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`.|
+|`returnlocation`   |`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-air)|**Required if `departurelocation` is not informed** <br>Airport where the return flight will take place. <br> For one-way trips, this will be considered as the destination airport, see [Example: One-way trip](/api-guides/travel/.deeplink-integration.html#example-one-way).|
+|`returndate`       |`string`|`YYYY-MM-DD`                                                                       |(Optional) <br> Return flight date.|
+|`returntime`       |`string`|`hh:mm`                                                                            |(Optional) <br> Return flight time in 24-hour format. Minutes are disregarded: `16:50` becomes `16:00`.|
+|`cabintype`        |`string`|[Cabin Types](/api-guides/travel/deeplink-integration.html#cabin-types)            |(Optional) <br> The section of the aircraft that the user wants to travel in.|
 
 <a name="location-format-air"></a>**Location Format**
 
@@ -144,14 +144,14 @@ https://www.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2
 
 #### Query Parameters
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`pickuplocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-car)|**Required** <br>Location where the car will be picked up. |
-|`pickupdate`|`string`|`YYYY-MM-DD`|**Required** <br>Date when the car will be picked up.|
-|`pickuptime`|`string`|`hh:mm`|**Required** <br>Time when the car will be picked up. <br> Uses the 24-hour format.|
-|`dropofflocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-car) | (Optional) <br> Location where the car will be dropped off. <br>If it is not provided, it will default to `pickuplocation`. |
-|`dropoffdate`|`string`|`YYYY-MM-DD`|**Required** <br>Date when the car will be dropped off.|
-|`dropofftime`|`string`|`hh:mm`|**Required** <br>Time when the car will be dropped off. <br>Uses the 24-hour format.|
+|Name             |Type    |Format                                                                             |Description|
+|-----------------|--------|-----------------------------------------------------------------------------------|-----------|
+|`pickuplocation` |`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-car)|**Required** <br>Location where the car will be picked up.|
+|`pickupdate`     |`string`|`YYYY-MM-DD`                                                                       |**Required** <br>Date when the car will be picked up.|
+|`pickuptime`     |`string`|`hh:mm`                                                                            |**Required** <br>Time when the car will be picked up. <br> Uses the 24-hour format.|
+|`dropofflocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-car)|(Optional) <br> Location where the car will be dropped off. <br>If it is not provided, it will default to `pickuplocation`.|
+|`dropoffdate`    |`string`|`YYYY-MM-DD`                                                                       |**Required** <br>Date when the car will be dropped off.|
+|`dropofftime`    |`string`|`hh:mm`                                                                            |**Required** <br>Time when the car will be dropped off. <br>Uses the 24-hour format.|
 
 <a name="location-format-car"></a>**Location Format**
 
@@ -178,14 +178,14 @@ https://www.concursolutions.com/goto/hotel-shop?checkindate=2024-08-01&checkoutd
 
 #### Query Parameters
 
-|Name|Type|Format|Description|
-|---|---|---|---|
-|`checkindate`|`string`|`YYYY-MM-DD`|**Required** <br>Date when to check in to the hotel.|
-|`checkoutdate`|`string`|`YYYY-MM-DD`| **Required** <br>Date when to check out of the hotel.|
-|`location`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel)|**Required** <br>Location of the search center.|
-|`locationsource`|`string`|one of {`northstar`, `giata`, `leonardo`, `amadeus`, `sabre`, `galileo`, `cwt`, `expedia`, `hrs`, `booking.com`, `omnibees`}| **Required if location is a Hotel Property ID**. <br>Source of the Hotel Property ID. For geo-coordinates and SAP Concur Travel Internal Hotel ID, omit this query parameter.|
-|`distance`|`integer`|one of {`1`, `2`, `3`, `4`, `5`, `10`, `15`, `20`, `25`, `30`, `35`, `40`, `45`, `50`, `55`, `60`, `65`, `70`, `75`, `80`, `85`, `90`, `95`, `100`}| (Optional) <br> Distance around the `location`. <br>If not set, it will default to 5 mi `distance` and `radius` as search radius. |
-|`unit`|`string`|`km` or `mi`| (Optional) <br> Unit for the `distance`. <br>If not set, the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
+|Name            |Type     |Format                                                                                                                                             |Description|
+|----------------|---------|---------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+|`checkindate`   |`string` |`YYYY-MM-DD`                                                                                                                                       |**Required** <br>Date when to check in to the hotel.|
+|`checkoutdate`  |`string` |`YYYY-MM-DD`                                                                                                                                       |**Required** <br>Date when to check out of the hotel.|
+|`location`      |`string` |[Location Format](/api-guides/travel/deeplink-integration.html#location-format-hotel)                                                              |**Required** <br>Location of the search center.|
+|`locationsource`|`string` |one of {`northstar`, `giata`, `leonardo`, `amadeus`, `sabre`, `galileo`, `cwt`, `expedia`, `hrs`, `booking.com`, `omnibees`}                       |**Required if location is a Hotel Property ID**. <br>Source of the Hotel Property ID. For geo-coordinates and SAP Concur Travel Internal Hotel ID, omit this query parameter.|
+|`distance`      |`integer`|one of {`1`, `2`, `3`, `4`, `5`, `10`, `15`, `20`, `25`, `30`, `35`, `40`, `45`, `50`, `55`, `60`, `65`, `70`, `75`, `80`, `85`, `90`, `95`, `100`}|(Optional) <br> Distance around the `location`. <br>If not set, it will default to 5 mi `distance` and `radius` as search radius.|
+|`unit`          |`string` |`km` or `mi`                                                                                                                                       |(Optional) <br> Unit for the `distance`. <br>If not set, the value will be taken from users profile - under Profile Settings, System Settings, **mile/km**.|
 
 <a name="location-format-hotel"></a>**Location Format**
 
@@ -227,14 +227,14 @@ https://www.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 
 #### Query Parameters
 
-|Name|Type|Format|Description|
-|---|---|---|---|
+|Name               |Type    |Format                                                                              |Description|
+|-------------------|--------|------------------------------------------------------------------------------------|-----------|
 |`departurelocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail)|**Required** <br>Location where the train will depart from.|
-|`departuredate`|`string`|`YYYY-MM-DD`|**Required** <br>Date when the train will depart.|
-|`departuretime`|`string`|`hh:mm`|**Required** <br>Time when the train will depart. <br>Uses the 24-hour format.|
-|`returnlocation`| `string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail) | **Required** <br>Location where the train will return to. <br> For one-way trips, this will be considered as the destination location.|
-|`returndate`|`string`|`YYYY-MM-DD`|(Optional) <br> Date when the train will return.|
-|`returntime`|`string`|`hh:mm`|(Optional) <br> Time when the train will return. <br>Uses the 24-hour format.|
+|`departuredate`    |`string`|`YYYY-MM-DD`                                                                        |**Required** <br>Date when the train will depart.|
+|`departuretime`    |`string`|`hh:mm`                                                                             |**Required** <br>Time when the train will depart. <br>Uses the 24-hour format.|
+|`returnlocation`   |`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail)|**Required** <br>Location where the train will return to. <br> For one-way trips, this will be considered as the destination location.|
+|`returndate`       |`string`|`YYYY-MM-DD`                                                                        |(Optional) <br> Date when the train will return.|
+|`returntime`       |`string`|`hh:mm`                                                                             |(Optional) <br> Time when the train will return. <br>Uses the 24-hour format.|
 
 <a name="location-format-rail"></a>**Location Format**
 
@@ -245,14 +245,14 @@ Format: `{lat},{long}`, with no blank space in between. Example: `41.37891483977
 
 Possible scenarios:
 
-| #  |Issue|Error message|Possible solution|
-|---|---  |--- |--- |
-|1. |User doesn't have access to SAP Concur Travel|*"Sorry, you don't have the right permissions to shop travel"*|Contact your company admin to enable SAP Concur Travel for your user. This will only work if your company purchased SAP Concur Travel.|
-|2. |User is not setup for new SAP Concur Travel or this specific transportation type|*"Sorry, you don't have the right permissions to use this feature"*|Contact your company admin to enable new SAP Concur Travel for the transportation type, which is specified in the deeplink. For example, if a car deeplink isn't working, make sure to be eligible and enabled to use the new SAP Concur Travel car. Deeplinks are not supported in the legacy experience of SAP Concur Travel.|
-|3. |Invalid search input|*"The link you followed to start your travel search was not properly formatted"*|Make sure there are no typos in your deeplink. Check that the query parameter values are properly formatted, all required parameters are set and the dates are in the future.|
-|4. |Invalid Hotel Property ID |*"The property requested was not found"* |In a hotel deeplink check that the Hotel Property ID belongs to the specified `locationsource` and that there are no typos in the values. The Hotel Property ID needs to be exactly the same as defined in the source.|
-|5. |No search results|*"No offers found for your search criteria"*|Depending on the transportation type, try to extend the time intervals, date ranges or location radius of your search. If applicable, double check your geo-coordinates and choose them as close to the desired location as possible. Maybe the next airport is farther away from the specified geo-coordinates than the default 100km search radius in an air deeplink. Contact your travel admin to figure out if the required vendor is enabled for the route you are searching for. Maybe only a Spanish train vendor like Renfe is configured for your company, but the train deeplink is pointing to a connection in Germany e.g. Berlin to Munich. In case of a hotel deeplink with Hotel Property ID as location, make sure that the `locationsource` is set. Otherwise, the location will be treated as a SAP Concur Travel Internal Hotel ID.|
-|6. |General error following a deeplink|*"Sorry, something went wrong while we were getting your travel options"*|Try again later and make sure the deeplink is properly formatted as described in scenario 3 above and the dates are in the future.|
+| # |Issue                                                                       |Error message                                                                   |Possible solution|
+|---|----------------------------------------------------------------------------|--------------------------------------------------------------------------------|-----------------|
+|1. |User doesn't have access to SAP Concur Travel                                   |*"Sorry, you don't have the right permissions to shop travel"*                  |Contact your company admin to enable SAP Concur Travel for your user. This will only work if your company purchased SAP Concur Travel.|
+|2. |User is not setup for new SAP Concur Travel or this specific transportation type|*"Sorry, you don't have the right permissions to use this feature"*             |Contact your company admin to enable new SAP Concur Travel for the transportation type, which is specified in the deeplink. For example, if a car deeplink isn't working, make sure to be eligible and enabled to use the new SAP Concur Travel car. Deeplinks are not supported in the legacy experience of SAP Concur Travel.|
+|3. |Invalid search input                                                        |*"The link you followed to start your travel search was not properly formatted"*|Make sure there are no typos in your deeplink. Check that the query parameter values are properly formatted, all required parameters are set and the dates are in the future.|
+|4. |Invalid Hotel Property ID                                                   |*"The property requested was not found"*                                        |In a hotel deeplink check that the Hotel Property ID belongs to the specified `locationsource` and that there are no typos in the values. The Hotel Property ID needs to be exactly the same as defined in the source.|
+|5. |No search results                                                           |*"No offers found for your search criteria"*                                    |Depending on the transportation type, try to extend the time intervals, date ranges or location radius of your search. If applicable, double check your geo-coordinates and choose them as close to the desired location as possible. Maybe the next airport is farther away from the specified geo-coordinates than the default 100km search radius in an air deeplink. Contact your travel admin to figure out if the required vendor is enabled for the route you are searching for. Maybe only a Spanish train vendor like Renfe is configured for your company, but the train deeplink is pointing to a connection in Germany e.g. Berlin to Munich. In case of a hotel deeplink with Hotel Property ID as location, make sure that the `locationsource` is set. Otherwise, the location will be treated as a SAP Concur Travel Internal Hotel ID.|
+|6. |General error following a deeplink                                          |*"Sorry, something went wrong while we were getting your travel options"*        |Try again later and make sure the deeplink is properly formatted as described in scenario 3 above and the dates are in the future.|
 
 If the previous steps didn't solve the issue, go to the SAP Concur home page and start a search from there by entering the search criteria yourself.
 
@@ -273,8 +273,8 @@ The deeplink requires the trip uuid, which will be soon available in the PNR.
 https://www.concursolutions.com/goto/trip/{tripID}
 ```
 
-|Name|Type|Format|Description|
-|---|---|---|---|
+|Name    |Type    |Format|Description|
+|--------|--------|------|-----------|
 |`tripID`|`string`|`UUID`|**Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deeplink URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly redirecting users to the corresponding itinerary.
