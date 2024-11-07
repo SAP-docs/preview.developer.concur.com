@@ -253,7 +253,7 @@ This deeplink will redirect the user to the hotel search form to add a booking t
 https://www.concursolutions.com/goto/hotel-shop?tripid=a7f172cd-8587-48d5-8533-5ddb7ff5c26c&location=708752&locationsource=hrs
 ```
 
-This deeplink will perform a search for the hotel Travelodge LAX South in El Segundo (CA) and hotels nearby in the 5 mi default radius. It uses the Hotel Property ID from HRS as location. The check-in and check-out dates are taken from the corresponding trip with trip id `a7f172cd-8587-48d5-8533-5ddb7ff5c26c`. Either the trip contains air bookings, then the arrival date of the first flight will be used as check-in date for the hotel search and the departure date of the last flight will be used as check-out date, or the trip start and end dates will be used as check-in and check-out dates, respectively. The user will get directly to the search results.
+This deeplink will perform a search for the hotel Travelodge LAX South in El Segundo (CA) and hotels nearby in the 5 mi default radius. It uses the Hotel Property ID from HRS as location. The check-in and check-out dates are taken from the corresponding trip with trip ID `a7f172cd-8587-48d5-8533-5ddb7ff5c26c`. Either the trip contains air bookings, then the arrival date of the first flight will be used as check-in date for the hotel search and the departure date of the last flight will be used as check-out date, or the trip start and end dates will be used as check-in and check-out dates, respectively. The user will get directly to the search results.
 
 
 
@@ -317,12 +317,12 @@ The deeplink requires the trip uuid, which will be soon available in the PNR.
 #### URI Template
 
 ```
-https://www.concursolutions.com/goto/trip/{tripID}
+https://www.concursolutions.com/goto/trip/{tripid}
 ```
 
 |Name    |Type    |Format|Description|
 |--------|--------|------|-----------|
-|`tripID`|`string`|`UUID`|**Required** <br>Unique identifier of the trip, formatted as a UUID.|
+|`tripid`|`string`|`UUID`|**Required** <br>Unique identifier of the trip, formatted as a UUID.|
 
 This deeplink URL facilitates accessing detailed trip information in SAP Concur solutions through either SSO or username/password authentication when launched from third-party applications, seamlessly redirecting users to the corresponding itinerary.
 
