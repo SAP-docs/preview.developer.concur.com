@@ -574,7 +574,7 @@
 
 <p>Deeplink Integration allows users to perform a search in Concur Travel without having to manually fulfill the information in the UI. Search parameters like location and time are incorporated in the URL.</p>
 
-<p>In case of errors, the user is redirected to an error message page with a link to the SAP Concur home page from which a regular search can be started.</p>
+<p>In case of errors, the user is redirected to an error message page with a link to the Concur Travel home page from which a regular search can be started.</p>
 
 <h3 id="itinerary">Itinerary</h3>
 
@@ -582,7 +582,7 @@
 
 <p>The deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
 
-<p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the SAP Concur home page.</p>
+<p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur Travel home page.</p>
 
 <h3 id="single-sign-on-sso">Single Sign-On (SSO)</h3>
 
@@ -808,7 +808,7 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 
 <h4 id="uri-template-2">URI Template</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/hotel-shop?checkindate={checkindate}&amp;checkoutdate={checkoutdate}&amp;location={location}&amp;distance={distance}&amp;unit={unit}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/hotel-shop?checkindate={checkindate}&amp;checkoutdate={checkoutdate}&amp;location={location}&amp;locationsource={locationsource}&amp;distance={distance}&amp;unit={unit}
 </code></pre></div></div>
 
 <h4 id="example-of-usage-3">Example of Usage</h4>
@@ -874,7 +874,7 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
   <li><strong>Geographic Coordinates</strong>: latitude and longitude for a geopoint. 
 Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, with no blank space in between. Example: <code class="language-plaintext highlighter-rouge">48.85694273527786,2.3501079080340315</code> for Paris. With these coordinates, a search for hotels in a radius of <code class="language-plaintext highlighter-rouge">distance</code> <code class="language-plaintext highlighter-rouge">unit</code> is performed.</li>
   <li><strong>Concur Travel Internal Hotel ID</strong>: Concur Travel internal ID of a hotel.<br />
-Format: alpha-numeric string. Example: <code class="language-plaintext highlighter-rouge">1907825ad1f728ccafb22942d61a2715</code> for Econo Lodge Inn &amp; Suites in Arkansas. With this internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br />The internal hotel ID should only be used inside of Concur, for example, Concur MS Teams integration.</li>
+Format: alpha-numeric string. Example: <code class="language-plaintext highlighter-rouge">1907825ad1f728ccafb22942d61a2715</code> for Econo Lodge Inn &amp; Suites in Arkansas. With this internal ID, a search for hotels is performed and the hotel corresponding to the ID is highlighted at top of the search results. <br />The internal hotel ID should only be used inside of Concur Travel, for example, Concur Travel MS Teams integration.</li>
 </ul>
 
 <h4 id="-example-hotel-property-id-location"><a name="example-one-way"></a> Example: Hotel Property ID location</h4>
@@ -889,20 +889,93 @@ Format: alpha-numeric string. Example: <code class="language-plaintext highlight
 
 <p>This deeplink will perform a search for the hotel Econo Lodge Inn &amp; Suites in Arkansas and hotels nearby in the 5 mi default radius, with check-in date on November 2nd, 2024 and checkout date on November 3rd, 2024. It uses a Concur Travel Internal Hotel ID as location.</p>
 
+<h2 id="add-hotel-to-existing-trip">Add Hotel to existing Trip</h2>
+
+<p>Users are able to provide a trip ID in a hotel deeplink and omit the check-in and check-out dates. Then the hotel search and subsequent hotel booking will be part of the specified trip, instead of a separate new trip.
+If only a trip ID is provided without a specific location, the user will end up on the hotel search page with pre-filled search criteria based on the trip’s bookings.
+If in addition to the trip ID a specific location is provided, the user will directly get to the search results based on this location.
+The check-in and check-out dates are taken over from the arrival of the first air booking and the departure of the last air booking of the specified trip. In case of a one-way flight the check-out date is taken over from the trip end date. If the trip contains no air booking then the trip start and end dates are used.</p>
+
+<h4 id="uri-template-3">URI Template</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/hotel-shop?tripid={tripid}&amp;location={location}&amp;locationsource={locationsource}&amp;distance={distance}&amp;unit={unit}
+</code></pre></div></div>
+
+<h4 id="example-of-usage-4">Example of Usage</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/hotel-shop?tripid=9be19dda-bf33-4110-ac48-bf840878cd3c&amp;location=50.050686,8.565997&amp;distance=15&amp;unit=mi
+</code></pre></div></div>
+
+<h4 id="query-parameters-4">Query Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tripid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> <br />Unique identifier of the trip, formatted as a UUID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">location</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><a href="/api-guides/travel/deeplink-integration.html#location-format-hotel">Location Format</a></td>
+      <td>(Optional) <br />Location of the search center with default search radius of 5 mi.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locationsource</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>one of {<code class="language-plaintext highlighter-rouge">northstar</code>, <code class="language-plaintext highlighter-rouge">giata</code>, <code class="language-plaintext highlighter-rouge">leonardo</code>, <code class="language-plaintext highlighter-rouge">amadeus</code>, <code class="language-plaintext highlighter-rouge">sabre</code>, <code class="language-plaintext highlighter-rouge">galileo</code>, <code class="language-plaintext highlighter-rouge">cwt</code>, <code class="language-plaintext highlighter-rouge">expedia</code>, <code class="language-plaintext highlighter-rouge">hrs</code>, <code class="language-plaintext highlighter-rouge">booking.com</code>, <code class="language-plaintext highlighter-rouge">omnibees</code>}</td>
+      <td><strong>Required if location is provided and is a Hotel Property ID</strong>. <br />Source of the Hotel Property ID. For geo-coordinates and Concur Travel Internal Hotel ID, omit this query parameter.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">distance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>one of {<code class="language-plaintext highlighter-rouge">1</code>, <code class="language-plaintext highlighter-rouge">2</code>, <code class="language-plaintext highlighter-rouge">3</code>, <code class="language-plaintext highlighter-rouge">4</code>, <code class="language-plaintext highlighter-rouge">5</code>, <code class="language-plaintext highlighter-rouge">10</code>, <code class="language-plaintext highlighter-rouge">15</code>, <code class="language-plaintext highlighter-rouge">20</code>, <code class="language-plaintext highlighter-rouge">25</code>, <code class="language-plaintext highlighter-rouge">30</code>, <code class="language-plaintext highlighter-rouge">35</code>, <code class="language-plaintext highlighter-rouge">40</code>, <code class="language-plaintext highlighter-rouge">45</code>, <code class="language-plaintext highlighter-rouge">50</code>, <code class="language-plaintext highlighter-rouge">55</code>, <code class="language-plaintext highlighter-rouge">60</code>, <code class="language-plaintext highlighter-rouge">65</code>, <code class="language-plaintext highlighter-rouge">70</code>, <code class="language-plaintext highlighter-rouge">75</code>, <code class="language-plaintext highlighter-rouge">80</code>, <code class="language-plaintext highlighter-rouge">85</code>, <code class="language-plaintext highlighter-rouge">90</code>, <code class="language-plaintext highlighter-rouge">95</code>, <code class="language-plaintext highlighter-rouge">100</code>}</td>
+      <td>(Optional) <br /> Distance around the <code class="language-plaintext highlighter-rouge">location</code>. <br />If not set, it will default to 5 mi <code class="language-plaintext highlighter-rouge">distance</code> and <code class="language-plaintext highlighter-rouge">radius</code> as search radius.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">unit</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">km</code> or <code class="language-plaintext highlighter-rouge">mi</code></td>
+      <td>(Optional) <br /> Unit for the <code class="language-plaintext highlighter-rouge">distance</code>. <br />If not set, the value will be taken from users profile - under Profile Settings, System Settings, <strong>mile/km</strong>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="-example-only-trip-id"><a name="example-add-to-trip"></a> Example: Only trip ID</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/hotel-shop?tripid=a7f172cd-8587-48d5-8533-5ddb7ff5c26c
+</code></pre></div></div>
+
+<p>This deeplink will redirect the user to the hotel search form to add a booking to the trip with id <code class="language-plaintext highlighter-rouge">a7f172cd-8587-48d5-8533-5ddb7ff5c26c</code>. Search proposals based on the content of the trip are available in the search form.</p>
+
+<h4 id="-example-hotel-property-id-location-1"><a name="example-add-to-trip-hotel-property-id"></a> Example: Hotel Property ID location</h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/hotel-shop?tripid=a7f172cd-8587-48d5-8533-5ddb7ff5c26c&amp;location=708752&amp;locationsource=hrs
+</code></pre></div></div>
+
+<p>This deeplink will perform a search for the hotel Travelodge LAX South in El Segundo (CA) and hotels nearby in the 5 mi default radius. It uses the Hotel Property ID from HRS as location. The check-in and check-out dates are taken from the corresponding trip with trip ID <code class="language-plaintext highlighter-rouge">a7f172cd-8587-48d5-8533-5ddb7ff5c26c</code>. Either the trip contains air bookings, then the arrival date of the first flight will be used as check-in date for the hotel search and the departure date of the last flight will be used as check-out date, or the trip start and end dates will be used as check-in and check-out dates, respectively. The user will get directly to the search results.</p>
+
 <h2 id="train-search">Train Search</h2>
 
 <p>Users can search for train round-trips by informing a departure date, time and location, a return date, time and destination/return location. If searching for a train one-way trip, they must inform departure information and destination location; however, they shouldn’t provide a return date or time.</p>
 
-<h4 id="uri-template-3">URI Template</h4>
+<h4 id="uri-template-4">URI Template</h4>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/rail-shop?departurelocation={departurelocation}&amp;departuredate={departuredate}&amp;departuretime={departuretime}&amp;returnlocation={returnlocation}&amp;returndate={returndate}&amp;returntime={returntime}
 </code></pre></div></div>
 
-<h4 id="example-of-usage-4">Example of Usage</h4>
+<h4 id="example-of-usage-5">Example of Usage</h4>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&amp;departuretime=15:00&amp;returndate=2024-06-13&amp;returntime=07:00&amp;departurelocation=41.378696,2.140457&amp;returnlocation=41.380057,2.138956
 </code></pre></div></div>
 
-<h4 id="query-parameters-4">Query Parameters</h4>
+<h4 id="query-parameters-5">Query Parameters</h4>
 
 <table>
   <thead>
@@ -1013,7 +1086,7 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
   </tbody>
 </table>
 
-<p>If the previous steps didn’t solve the issue, go to the SAP Concur home page and start a search from there by entering the search criteria yourself.</p>
+<p>If the previous steps didn’t solve the issue, go to the Concur Travel home page and start a search from there by entering the search criteria yourself.</p>
 
 <h2 id="itinerary-1">Itinerary</h2>
 
@@ -1021,13 +1094,13 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
 
 <p>The deeplink only allows redirection to users authorized to view the itinerary. Authorized users are the traveler, a travel arranger, or an approver. An approver user will see the approver’s view of an itinerary, while the traveler and the arranger will see the traveler’s view of an itinerary.</p>
 
-<p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the SAP Concur home page.</p>
+<p>This integration streamlines the user experience, making trip management more efficient and user-friendly. In the event of any errors encountered during redirection, users will be seamlessly redirected to the Concur Travel home page.</p>
 
 <p>The deeplink requires the trip uuid, which will be soon available in the PNR.</p>
 
-<h4 id="uri-template-4">URI Template</h4>
+<h4 id="uri-template-5">URI Template</h4>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/trip/{tripID}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://www.concursolutions.com/goto/trip/{tripid}
 </code></pre></div></div>
 
 <table>
@@ -1041,7 +1114,7 @@ Format: <code class="language-plaintext highlighter-rouge">{lat},{long}</code>, 
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">tripID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">tripid</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td><strong>Required</strong> <br />Unique identifier of the trip, formatted as a UUID.</td>
