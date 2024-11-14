@@ -5,7 +5,7 @@ layout: reference
 
 # Deeplink Integration for Travel
 
-The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page (for a flight / car / hotel / train search), respectively the itinerary page (for an itinerary deeplink) in one click.
+The Deeplink Integration allows Concur Travel users to have direct access to the Shopping Results page (for a flight, car, hotel, or train search), respectively the itinerary page (for an itinerary deeplink) in one click.
 
 ## Prerequisites
 
@@ -211,11 +211,13 @@ https://www.concursolutions.com/goto/hotel-shop?checkindate=2024-11-02&checkoutd
 This deeplink will perform a search for the hotel Econo Lodge Inn & Suites in Arkansas and hotels nearby in the 5 mi default radius, with check-in date on November 2nd, 2024 and checkout date on November 3rd, 2024. It uses a Concur Travel Internal Hotel ID as location.
 
 
-## Add Hotel to existing Trip
+## Add Hotel to Existing Trip
 
 Users are able to provide a trip ID in a hotel deeplink and omit the check-in and check-out dates. Then the hotel search and subsequent hotel booking will be part of the specified trip, instead of a separate new trip.
 If only a trip ID is provided without a specific location, the user will end up on the hotel search page with pre-filled search criteria based on the trip's bookings.
+
 If in addition to the trip ID a specific location is provided, the user will directly get to the search results based on this location.
+
 The check-in and check-out dates are taken over from the arrival of the first air booking and the departure of the last air booking of the specified trip. In case of a one-way flight the check-out date is taken over from the trip end date. If the trip contains no air booking then the trip start and end dates are used.
 
 
@@ -254,8 +256,6 @@ https://www.concursolutions.com/goto/hotel-shop?tripid=a7f172cd-8587-48d5-8533-5
 ```
 
 This deeplink will perform a search for the hotel Travelodge LAX South in El Segundo (CA) and hotels nearby in the 5 mi default radius. It uses the Hotel Property ID from HRS as location. The check-in and check-out dates are taken from the corresponding trip with trip ID `a7f172cd-8587-48d5-8533-5ddb7ff5c26c`. Either the trip contains air bookings, then the arrival date of the first flight will be used as check-in date for the hotel search and the departure date of the last flight will be used as check-out date, or the trip start and end dates will be used as check-in and check-out dates, respectively. The user will get directly to the search results.
-
-
 
 ## Train Search
 
@@ -302,7 +302,6 @@ Possible scenarios:
 |6. |General error following a deeplink                                          |*"Sorry, something went wrong while we were getting your travel options"*        |Try again later and make sure the deeplink is properly formatted as described in scenario 3 above and the dates are in the future.|
 
 If the previous steps didn't solve the issue, go to the Concur Travel home page and start a search from there by entering the search criteria yourself.
-
 
 ## Itinerary
 
