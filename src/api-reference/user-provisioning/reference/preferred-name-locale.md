@@ -4,8 +4,9 @@ layout: reference
 ---
 
 # Preferred Name Locale
+
 Language Name|UI Language Code|Supported Locale|Display
---|--|--|--
+---|---|---|---
 Bulgarian|bg|bg_BG|Preferred Name + Family Name
 Chinese (Simplified)|zh-cn|zh_CN, zh_SG|Family Name + Preferred Name 
 Chinese (Traditional)|zh-tw|zh_TW, zh_HK|Family Name + Preferred Name
