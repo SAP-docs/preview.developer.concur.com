@@ -94,6 +94,8 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
 10. Done!
 
+>**Note:** After pushing (step 6), you can you get this message: “error: RPC failed RPC failed; HTTP 400 curl 22. The requested URL returned error: 400 | send-pack: unexpected disconnect while reading sideband packet”. So, run the `git config http.postBuffer 524288000` command to increase the buffer size. Then, repeat step 6 to push it again and continue with the steps to finish the pull merge.
+
 ## Selective pullmerges (optional)
 
 The workflow above is for keeping `developer.concur.com` completely in sync with `preview.concur.com`.  This is the recommended workflow, however it's possible that some commits made into `preview` may not need to go to `live`.  In those cases a slight variant of the workflow above can be used to selectively choose the commits to pull across.

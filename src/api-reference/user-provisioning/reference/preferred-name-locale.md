@@ -4,16 +4,17 @@ layout: reference
 ---
 
 # Preferred Name Locale
+
 Language Name|UI Language Code|Supported Locale|Display
---|--|--|--
+---|---|---|---
 Bulgarian|bg|bg_BG|Preferred Name + Family Name
-Chinese (Simplified)|zh-CN|zh_CN, zh_SG|Family Name + Preferred Name 
-Chinese (Traditional)|zh-TW|zh_TW, zh_HK|Family Name + Preferred Name
+Chinese (Simplified)|zh-cn|zh_CN, zh_SG|Family Name + Preferred Name 
+Chinese (Traditional)|zh-tw|zh_TW, zh_HK|Family Name + Preferred Name
 Croatian|hr|hr_HR|Preferred Name + Family Name
 Czech|cs|cs_CZ|Given Name + Family Name
 Danish|da|da_DK|Preferred Name + Family Name
 Dutch|nl|nl_NL, nl_BE|Preferred Name + Family Name
-English|en|en_US|en-US|Preferred Name + Family Name
+English|en|en_US, en-US|Preferred Name + Family Name
 English (UK)|en-gb|en_GB, en_CA, en_AU, en_IE, en_IN, en_NZ, en_ZA|Preferred Name + Family Name
 Finnish|fi|fi_FI|Preferred Name + Family Name
 French|fr|fr_FR, fr_BE, fr_LU, fr_CH|Given Name + Family Name
