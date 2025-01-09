@@ -6,8 +6,9 @@ layout: reference
 # User v1
 
 <div class="alert alert-danger">
-  <p><strong>This API has been deprecated for the US and EMEA data centers. This API is still available in China data centers.</strong></p>
+  <p><strong>This API has been decommissioned for the US and EMEA data centers. This API is still available in China data centers.</strong></p>
   <p>Deprecation Date: 11/10/2022</p>
+  <p>Decommission Date: 1/21/2025</p>
   <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
   <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
 </div>
