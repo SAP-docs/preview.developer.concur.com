@@ -281,7 +281,7 @@ Name | Type | Format | Description
 
 If the user must authenticate themselves, they have the same sign-in options available when signing in to the SAP Concur application:
 1. Username and password
-2. Single Sing-On (SSO)
+2. Single Single-On (SSO)
 3. One-time link sent to an email address
 
 Once the user is successfully authenticated and the user authorizes your application, the user will be redirected to the redirect_URI specified in the initial /authorize call with a temporary token appended.
