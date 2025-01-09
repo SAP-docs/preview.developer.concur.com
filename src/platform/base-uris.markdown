@@ -11,8 +11,8 @@ The Base URI (also known as the Instance URL) is the domain where the SAP Concur
 
 There will be a different domain for each of the following locations:
 
-* Production in the North America data center, EMEA data center, China data center, and CCPS data center.
-* Implementation (copy of the production environment not available for all clients) in the North America data center and EMEA data center.
+* Production in the North America data center, EMEA data center, APAC data center, China data center, CCPS data center, and Global Landing Zone.
+* Implementation (test entities in Production environments; not available for all clients) in the North America data center and EMEA data center.
 
 ### <a name="production"></a>Production
 
@@ -20,14 +20,17 @@ Customer entities are hosted in various locations based on the client location, 
 
 Data Center|Environment|Base URI|Description
 -----------|-----------|--------|-----------
-US2|Production|https://us2.api.concursolutions.com |Default for all API calls (Optionally request certs).
-US2|Production|https://www-us2.api.concursolutions.com |Default for all API calls (Does not request certs).
-EU2|Production|https://eu2.api.concursolutions.com |Default for all API calls (Optionally request certs).
-EU2|Production|https://www-eu2.api.concursolutions.com |Default for all API calls (Does not request certs).
-China|Production|https://cn.api.concurcdc.cn |Default for all API calls (Optionally request certs).
-China|Production|https://www-cn.api.concurcdc.cn |Default for all API calls (Does not request certs).
+APJ1|Production|https://apj1.api.concursolutions.com|Default for all API calls (Optionally request certs).
+APJ1|Production|https://www-apj1.api.concursolutions.com|Default for all API calls (does not request certs).
 CCPS|Production|https://usg.api.concursolutions.com |Default for all API calls (Optionally request certs).
 CCPS|Production|https://www-usg.api.concursolutions.com |Default for all API calls (Does not request certs).
+China|Production|https://cn.api.concurcdc.cn |Default for all API calls (Optionally request certs).
+China|Production|https://www-cn.api.concurcdc.cn |Default for all API calls (Does not request certs).
+EU2|Production|https://eu2.api.concursolutions.com |Default for all API calls (Optionally request certs).
+EU2|Production|https://www-eu2.api.concursolutions.com |Default for all API calls (Does not request certs).
+GLZ|Production|https://glz.api.concursolutions.com|Default for all API calls (Optionally request certs).
+US2|Production|https://us2.api.concursolutions.com |Default for all API calls (Optionally request certs).
+US2|Production|https://www-us2.api.concursolutions.com |Default for all API calls (Does not request certs).
 
 ### <a name="implementation"></a>Implementation
 

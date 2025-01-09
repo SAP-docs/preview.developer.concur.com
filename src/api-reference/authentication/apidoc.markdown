@@ -171,21 +171,29 @@ FOR APP CENTER AND SUPPLIER PARTNERS supporting all geolocations, storing the au
 
 ## Base URIs <a name="base_uri"></a>
 
-When making API calls, the appropriate base URI should be used. There are three different scenarios:
+When making API calls, the appropriate base URI should be used. The full list of available token geolocations is available on the [Base URIs](/platform/base-uris.html) page.
+
+There are three different scenarios:
+
 1. Obtaining a token for a user.
 2. Refreshing a token.
 3. Calling other APIs.
 
-The base URI for obtaining a token will leverage your application's geolocation.  The base URI for refreshing tokens and all other API calls will leverage the token's geolocation.
+The base URI for obtaining a token depends on the grant being performed. The base URI for refreshing tokens and all other API calls will leverage the token's geolocation.
 
 ### <a name="base_uri_obtain_token"></a>Base URIs for Obtaining a Token
-When your application is created, you will be provided with a client ID, secret and geolocation. When obtaining a token, your application should use the base URI for the geolocation in which your application exists.
+When obtaining a token, your application should use the base URI corresponding to the grant type being performed, as follows:
+
+Grant Type|URI
+---|---
+Authorization|Use the GLZ base URI
+Password|Use the base URI corresponding to the user’s geolocation
+Client Credentials|Use any Production base URI
+One Time Password|Use the base URI corresponding to the user’s geolocation
 
 There are two endpoints for each geolocation - one is the default (used for server-side calls) and the other should be used for client-side calls.
 
-The full list of available token geolocations is available on the [Base URIs](/platform/base-uris.html) page.
-
-> **When obtaining the token, the token's geolocation will be included in the response. The token's geolocation should be stored along with the token. The Developer's app will then be able to make subsequent calls using the token and the correct end points based on the token's GEO location.**
+> **When obtaining the token, the token's geolocation will be included in the response. The token's geolocation should be stored along with the token. Your application will then make subsequent calls using the token and the correct endpoints based on the token's geolocation.**
 
 ### Base URIs for All Other Calls
 When refreshing a token or when calling any other APIs, the token's geolocation should be used as the base URI.
@@ -246,9 +254,9 @@ This is the link to the SAP Concur JSON Web Key for Oauth2. [https://www-us.api.
 
 ## Authorization grant <a name="auth_grant"></a>
 
-The authorization grant is the regular 3-legged oauth2 grant and is defined in detail in [RFC6749 sec-4.1](https://tools.ietf.org/html/rfc6749#section-4.1). This grant requires the user to explicitly authenticate themselves and authorise the application initiating the grant.
+The authorization grant is the regular 3-legged oauth2 grant and is defined in detail in [RFC6749 sec-4.1](https://tools.ietf.org/html/rfc6749#section-4.1). This grant requires the user to authenticate themselves and authorize the application initiating the grant.
 
-The users *must be* able to authenticate themselves via an SAP Concur username & password. Users will be challenged to login by an Oauth2 HTML page.
+If the user is already authenticated and signed in to SAP Concur with an active session, they will not be prompted to sign in again.  If the user does not have an active session, they will be challenged to sign in to SAP Concur.
 
 **Who should use it**
 * 3rd party "partner" websites - or -
@@ -259,7 +267,7 @@ The users *must be* able to authenticate themselves via an SAP Concur username &
 
 **Grant details**
 
-> Note that the grant type must be accessed using the `www-` version of the API Gateway in order to avoid certificate issues with some browsers. (ex: https://www-us.api.concursolutions.com instead of https://us.api.concursolutions.com)
+> Note that the grant type must be accessed using the `www-` version of the API Gateway to avoid certificate issues with some browsers. (ex: https://www-us2.api.concursolutions.com instead of https://us2.api.concursolutions.com)
 
 `GET /oauth2/v0/authorize`
 
@@ -271,19 +279,22 @@ Name | Type | Format | Description
   `response_type`|`string` |-| `code`
   `state`|`string` |-|
 
-With this grant, the user has two authentication options:
+If the user must authenticate themselves, they have the same sign-in options available when signing in to the SAP Concur application:
 1. Username and password
-2. One-time link using a verified email address
+2. Single Sing-On (SSO)
+3. One-time link sent to an email address
 
-With both options, once the user is successfully authenticated and the user authorizes your application, the user will be redirected to the redirect_URI specified in the initial /authorize call with a temporary token appended.
+Once the user is successfully authenticated and the user authorizes your application, the user will be redirected to the redirect_URI specified in the initial /authorize call with a temporary token appended.
 
 `<redirect_uri>?geolocation=<token_geolocation>&code=<token>`
 
 *If the user is not successfully authenticated or does not authorize the scopes for your application, an error code and description will be appended to the redirect URI. Please refer to the [Response Codes](#response_codes) section for more information.*
 
-Your application must then exchange the temporary token for a long-lived token using the below.
+Your application must then exchange the temporary token for an access token using the GLZ base URI.
 
-`POST /oauth2/v0/token`
+**Note:** When a geolocation is sent to your application as a query parameter, that value can also be used to form a proper base URI, but it’s recommended that your application always use the GLZ base URI.
+
+`POST https://glz.api.concursolutions.com/oauth2/v0/token`
 
 Name | Type | Format | Description
 -----|------| ------ | -----------
