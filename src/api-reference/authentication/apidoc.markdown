@@ -187,7 +187,8 @@ When obtaining a token, your application should use the base URI corresponding t
 Grant Type|URI
 ---|---
 Authorization|Use the GLZ base URI
-Password|Use the base URI corresponding to the user’s geolocation
+Password (credtype = password)|Use the base URI corresponding to the user’s geolocation
+Password (credtype = authtoken)|Use the GLZ base URI
 Client Credentials|Use any Production base URI
 One Time Password|Use the base URI corresponding to the user’s geolocation
 
