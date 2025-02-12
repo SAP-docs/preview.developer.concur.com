@@ -98,6 +98,7 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `travelallowance.allowancedays.read` <a name="travelallowance-allowancedays-read"></a> |View the allowance days in an expense report|[Travel Allowance](/api-reference/expense/travelallowance/v4.travel-allowance-days-endpoints.html)
 `travelallowance.configuration.read` <a name="travelallowance-configuration-read"></a>|Read Travel Allowance configuration|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
 `travelallowance.itinerary.read` <a name="travelallowance-itinerary-read"></a> |Read Travel Allowance itinerary|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
+`travelallowance.itinerary.writeonly` <a name="travelallowance-itinerary-writeonly"></a>|Create Travel Allowance itinerary|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
 `travelallowance.itineraryresult.read` <a name="travelallowance-itineraryresult-read"></a>| Read Travel Allowance calculation results|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
 `travel.hotel.write` <a name="travel-hotel-write"> |Read and update hotel bookings|[Hotel Service Change Notification v4](/api-reference/direct-connects/hotel-service-4/v4.change-notification-get-started.html)
 `travel.itinerary.read` <a name="travel-itinerary-read"></a> |Read travel itinerary data|[Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html)
