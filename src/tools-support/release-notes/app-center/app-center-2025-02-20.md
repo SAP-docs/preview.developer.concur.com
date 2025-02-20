@@ -24,23 +24,20 @@ manage those expenses digitally.
 * Charge function
 * Ponta point function, etc.
 
-
 **ID Linking and Expense Report Linkage with Concur Expense**
 
-1. Link Concur Expense and au PAY account’s au ID
+1. Link Concur Expense and au PAY account’s au ID.  
+  a. Click the “Connect” button on the [SAP Concur App Center](https://www.concur.com/app-center/listings/67469d3f086846af79454d7b).  
+  b. Follow the on-screen instructions to log in to your au PAY account’s au ID to complete the account 
+linking.  
 
-a) Click the “Connect” button on the [SAP Concur App Center](https://www.concur.com/app-center/listings/67469d3f086846af79454d7b).
-b) Follow the on-screen instructions to log in to your au PAY account’s au ID to complete the account 
-linking.
-
-2. Linking expense reports procedure from au PAY
-
-a) Tap “Transaction History” on the au PAY app’s home screen.
-b) Tap “View Details” in the transaction history, then tap “Expense Reimbursement.”
-c) Add receipts and comments, then tap “Confirm.”
-d) Review the application details and tap “Link to Concur.”
-e) The Linking process is complete. Please submit your expense reimbursement application 
-through Concur Expense with the linked information.
+2. Linking expense reports procedure from au PAY.  
+  a. Tap “Transaction History” on the au PAY app’s home screen.  
+  b. Tap “View Details” in the transaction history, then tap “Expense Reimbursement.”  
+  c. Add receipts and comments, then tap “Confirm.”  
+  d. Review the application details and tap “Link to Concur.”  
+  e. The Linking process is complete. Please submit your expense reimbursement application 
+through Concur Expense with the linked information.  
 
 **Note:** 
 * The information sent from au PAY will be reflected on “Available Expenses” section in Concur 
