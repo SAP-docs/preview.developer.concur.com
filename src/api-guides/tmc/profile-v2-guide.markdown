@@ -31,9 +31,6 @@ Travel Profile applications by default have the following scopes registered:
 
  * openid
  * company.read
- * identity.user.ids.read
- * identity.user.core.read
- * identity.user.coresensitive.read
  * FOP
  * GHOST
  * TRVPRF
@@ -55,71 +52,6 @@ Host Location|Geolocation based on location of Company GUID|URL to use for Trave
 EU2|https://eu2.api.concursolutions.com/oauth2/v0/token|https://eu2.api.concursolutions.com/api/travelprofile/v2.0/profile
 US2|https://us2.api.concursolutions.com/oauth2/v0/token|https://us2.api.concursolutions.com/api/travelprofile/v2.0/profile
 CCPS|https://usg.api.concursolutions.com/oauth2/v0/token|https://usg.api.concursolutions.com/api/travelprofile/v2.0/profile
-
-## User Profile Web Service
-
-### Get User Information
-
-The [Identity v4.1](https://developer.concur.com/api-reference/profile/v4.1.identity.html) API service is built to read user’s core identity profile. 
-
-If you are still in transition from legacy Profile Sync to the Travel Profile API, it may be necessary to use the Identity V4.1 API to retrieve user’s UUID, login IDs or Email IDs – which the Travel Itinerary API uses as its matching fact for Travel Itinerary retrievals or updates.
-
-Use the following request parameters to filter your searches:
-
-#### Retrieve All Users
-###### Request
-```http
-GET https://us.api.concursolutions.com/profile/identity/v4.1/Users?count=100&attributes=active,id,userName,emails
-Accept: application/json
-Authorization: BEARER {token}
-```
-
-
-#### Retrieve All Active Users
-###### Request
-```http
-POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
-Accept: application/json
-Authorization: BEARER {token}
-```
-```json
-{
-  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
-  "filter": "active eq true",
-  "attributes": ["id","userName","active","emails"]
-}
-```
-
-#### Retrieve User Information by Primary Email ID
-###### Request
-```http
-POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
-Accept: application/json
-Authorization: BEARER {token}
-```
-```json
-{
-  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
-  "filter": "active eq true and emails[type eq \"work\" and value eq \"user@company.com\"]",
-  "attributes": ["id","userName","active","emails"]
-}
-```
-
-#### Retrieve User Information by Login ID
-###### Request
-```http
-POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search
-Accept: application/json
-Authorization: BEARER {token}
-```
-```json
-{
-  "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
-  "filter": "active eq true and userName eq \"U344778@company.com\"]",
-  "attributes": ["id","userName","active","emails"]
-}
-```
-
 
 ## Travel Profile v2.0 Web Service
 
