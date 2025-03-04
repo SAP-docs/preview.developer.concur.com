@@ -1,0 +1,24 @@
+@startuml hotel-modify
+
+participant "User" as user
+
+participant ConcurHotel as cHotel #Lightcyan
+participant "CHSSupplier" as supply #LightBlue
+
+user -> cHotel++: Check if hotel booking can be modified
+cHotel -> cHotel:  Determine if hotel booking supplier supports modify\n and booking has `isModifiable` true
+alt modify not supported
+     cHotel --> user--: Notify user that hotel cannot be modified
+end
+
+cHotel --> user--: Present modify option
+user -> cHotel++: Provide new dates for hotel booking
+cHotel -> supply++: Reshop (rate-details) for new dates for booked hotel and rate plan
+supply --> cHotel--: Return new rate details
+cHotel --> user--: Present new rate details
+user -> cHotel++: Review and confirm new rate details
+cHotel -> supply++: Modify hotel booking with new rate plan id and dates
+supply --> cHotel--: Return confirmation of modified hotel booking
+cHotel --> user--: Notify user that hotel booking has been modified
+
+@enduml
