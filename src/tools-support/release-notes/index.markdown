@@ -28,8 +28,8 @@ layout: reference
   
 ## Client Release Notes
 
-* [Professional Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC.htm)
-* [Standard Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC_CPS.htm)
+* [Professional Edition](https://help.sap.com/docs/SAP_CONCUR?task=whats_new_task#whats_new_task-professional-edition)
+* [Standard Edition](https://help.sap.com/docs/SAP_CONCUR?task=whats_new_task#whats_new_task-standard-edition)
 
 ## App Center Release Notes
 
