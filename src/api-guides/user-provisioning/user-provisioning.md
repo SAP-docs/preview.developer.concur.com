@@ -141,13 +141,13 @@ schemas:extension:spend:2.0:ApproverLimit|Supporting information for authorized 
 schemas:extension:travel:2.0:User|Supporting information for travel users.|-
 
 ## Sample Postman Collection
-A [sample postman collection](/api-guides/postman/concur-user-provisioning-postman-collection.zip) that has examples of use creation, updating identity, spend and travel profile information. 
+A [sample postman collection](/api-guides/postman/concur-user-provisioning-postman-collection.zip) with examples of use creation, updating identity, spend and travel profile information. 
 
 ## Helpful Hints
 
 ### Travel Extension Roles
 
-Group and Rule Classes are set up in advance during company set up and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes, (and individuals) by an Admin User in the UI at any time.
+Group and Rule Classes are set up in advance during company configuration and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes, (and individuals) by an Admin User in the UI at any time.
 
 Groups are generally related to how the software behaves and what part of the application a user can access (for example, reporting). A user can be a member of one or more Groups, though this is not required in provisioning. Every user is assigned a default "All" Group by default. Rule Class generally relates to what travel options the user has (for example, what fares they are able to see, what travel policies are enforced). An individual MUST be in one and only one Rule Class. This is the only field required to provision a user within the travel extension.
 

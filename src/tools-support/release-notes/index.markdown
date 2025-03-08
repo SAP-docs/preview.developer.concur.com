@@ -6,6 +6,7 @@ layout: reference
 
 ## Developer Platform Release Notes
 
+* [March 2025](./api/2025-03-06.html)
 * [February 2025](./api/2025-02-06.html)
 * [January 2025](./api/2025-01-09.html)
 * [December 2024](./api/2024-12-05.html)
@@ -27,8 +28,8 @@ layout: reference
   
 ## Client Release Notes
 
-* [Professional Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC.htm)
-* [Standard Edition](http://www.concurtraining.com/customers/tech_pubs/_RN_CCC_CPS.htm)
+* [Professional Edition](https://help.sap.com/docs/SAP_CONCUR?task=whats_new_task#whats_new_task-professional-edition)
+* [Standard Edition](https://help.sap.com/docs/SAP_CONCUR?task=whats_new_task#whats_new_task-standard-edition)
 
 ## App Center Release Notes
 

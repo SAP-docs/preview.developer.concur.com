@@ -6,7 +6,7 @@ nav_order: 2
 ---
 
 # Guide to the Travel Profile v2 API, TMC Edition
- Last Revised: April 08, 2021
+ Last Revised: Feb 26, 2025
 
 This endpoint provides travel profile information for a specified traveler. It replaces the previous version of travel profile synchronization known as XML Profile Sync or XML Sync. While XML Profile sync is internal to the Concur Travel
 offering, the travel profile APIs are publicly exposed and allows RESTful developed applications to pull and post information such as the traveler’s identity, contact information, rate preferences, discount codes by travel type, as well as custom fields. The 2.0 version of the API was originally released in late 2016. The updated 2.1 version of the API, specific to TMCs, was released in December 2019.
@@ -17,7 +17,7 @@ This guide is part of a collection designed for TMCs, to read the shared content
 
 User profile information:
 
----|User level tokens from ZZZ Company|Compay level tokens from ZZZ Company|Agency A’s company level token from ZZZ Company|Agency B’s company level token from ZZZ Company
+---|User level tokens from ZZZ Company|Company level tokens from ZZZ Company|Agency A’s company level token from ZZZ Company|Agency B’s company level token from ZZZ Company
 ---|---|---|---|---
 Travel Profile Summary|Unrestricted Agency A and Agency B data accessible|Unrestricted Agency A and Agency B data accessible|Agency A profiles only|Agency B profiles only
 Travel Profile POST|Unrestricted Agency A and Agency B data accessible|Unrestricted Agency A and Agency B data accessible|Agency A profile only|Agency B profile only
@@ -30,7 +30,6 @@ Form of Payment GET|Unrestricted Agency A and Agency B data accessible|Unrestric
 Travel Profile applications by default have the following scopes registered:
 
  * openid
- * user.read
  * company.read
  * FOP
  * GHOST
@@ -50,48 +49,9 @@ Itinerary (ITINER) and Receipts (receipts.read, receipts.write) scopes for DEV a
 
 Host Location|Geolocation based on location of Company GUID|URL to use for Travel Profile
 ------|-----|-----
-EMEA|https://emea.api.concursolutions.com/oauth2/v0/token|https://emea.api.Concursolutions.com/api/travelprofile/v2.0/profile
-US|https://us.api.concursolutions.com/oauth2/v0/token|https://us.api.Concursolutions.com/api/travelprofile/v2.0/profile
-CCPS|https://usg.api.Concursolutions.com/oauth2/v0/token|https://usg.api.Concursolutions.com/api/travelprofile/v2.0/profile
-
-## User Profile Web Service
-
-### Get User Information
-
-https://developer.concur.com/api-explorer/v3-0/Users.html
-
-If you are still in transition from legacy Profile Sync to the Travel Profile API, it may be necessary to use the User API to retrieve user’s login IDs or Email IDs – which the Travel Itinerary API v1.x Web Service uses as its matching fact for Travel Itinerary retrievals or updates.
-
-Use the following request parameters to filter your searches:
-
-#### Retrieve All Active Users
-
-GET
-
-```
-https://us.api.Concursolutions.com/users?offset=0&limit=100&isactive=true
-Authorization: Bearer {access_token}
-```
-
-#### Retrieve User Information by Primary Email ID
-
-GET
-
-```
-https://www.Concursolutions.com/api/v3.0/common/users?primaryEmail=dutchinw@yahoo.com&active=true HTTP/1.
-
-Authorization: Bearer {access_token}
-Content Type:
-```
-
-#### Retrieve User Information by Login ID
-
-GET
-
-```
-https://www.Concursolutions.com/api/v3.0/common/users?user=dutchinw10@sureware-connect.com&active=true HTTP/1.
-Authorization: Bearer {access_token}
-```
+EU2|https://eu2.api.concursolutions.com/oauth2/v0/token|https://eu2.api.concursolutions.com/api/travelprofile/v2.0/profile
+US2|https://us2.api.concursolutions.com/oauth2/v0/token|https://us2.api.concursolutions.com/api/travelprofile/v2.0/profile
+CCPS|https://usg.api.concursolutions.com/oauth2/v0/token|https://usg.api.concursolutions.com/api/travelprofile/v2.0/profile
 
 ## Travel Profile v2.0 Web Service
 
