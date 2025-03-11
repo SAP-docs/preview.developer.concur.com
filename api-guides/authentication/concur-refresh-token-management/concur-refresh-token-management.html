@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Call SAP Concur APIs Using A Multiple Use Bearer Token</title>
+  <title> SAP Concur Developer Center | Refresh Token Management Automation</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-guides/authentication/concur-calling-apis/concur-calling-apis.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-guides/authentication/concur-refresh-token-management/concur-refresh-token-management.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -547,23 +547,23 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="tutorial-3-call-sap-concur-apis-using-a-multiple-use-bearer-token">Tutorial 3: Call SAP Concur APIs Using A Multiple Use Bearer Token</h1>
+        <h1 id="tutorial-2-refresh-token-management-automation">Tutorial 2: Refresh Token Management Automation</h1>
 
-<p>Use a refresh token to get a multiple use bearer token to call an API.</p>
+<p>Uses timestamps and a json file to automatically manage refresh token expiration.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
-  <li>You have created a Refresh Token from an API call and managed refresh token expiration using the previous <a href="api-guides/authentication/concur-refresh-token-management.html">Refresh Token Management Automation tutorial</a>.</li>
+  <li>You have created a Refresh Token from an API call using the previous <a href="/api-guides/authentication/concur-get-refresh-token/concur-get-refresh-token.html">concur-get-refresh-token tutorial</a>.</li>
   <li>SAP Concur instance credentials</li>
   <li><a href="https://nodejs.org/">Node.js</a></li>
   <li><a href="https://github.com/">GitHub account</a></li>
   <li>IDE or text editor</li>
 </ul>
 
-<h2 id="you-will-learn">You Will Learn</h2>
+<h2 id="you-will-learn">You will learn</h2>
 
-<p>How to use a refresh token to get a multiple use bearer token to call an API.</p>
+<p>How to manage refresh token expiration using timestamps and a json file.</p>
 
 <h2 id="regenerate-your-company-request-token">Regenerate Your Company Request Token</h2>
 
@@ -571,7 +571,7 @@
   <li>Go to the <a href="https://www.concursolutions.com/nui/authadmin/companytokens"><strong>Company Request Token</strong></a> screen.</li>
   <li>Enter your <strong>App ID</strong> in the required field and click <strong>Submit</strong> to regenerate your company request token.</li>
   <li>Copy/paste the Company UUID and company request token fields to a text file.
-<img src="/api-guides/authentication/concur-calling-apis/img/company-request-token-created.png" alt="Confirmation screen showing the company request token successfully created." /></li>
+<img src="./img/company-request-token-created.png" alt="Confirmation screen showing the Company UUID and company request token successfully created." /></li>
   <li>Click <strong>OK</strong> after you have saved this information to a text file.</li>
 </ol>
 
@@ -579,51 +579,41 @@
 
 <ol>
   <li>Get the <a href="https://github.com/SAP-samples/concur-api-samplecode"><code class="language-plaintext highlighter-rouge">NodeJs sample code</code></a>.</li>
-  <li>Open <code class="language-plaintext highlighter-rouge">SampleCode/Tutorial_3/CallingAPIs.js</code> in your IDE or text editor.</li>
+  <li>Open <code class="language-plaintext highlighter-rouge">SampleCode/Tutorial_2/RefreshTokenManagement.js</code> in your IDE or text editor.</li>
 </ol>
 
 <h2 id="regenerate-your-credentials-file">Regenerate Your Credentials File</h2>
 
 <ol>
-  <li>Type <code class="language-plaintext highlighter-rouge">node CallingAPIs.js</code> in terminal to run the app to generate your <code class="language-plaintext highlighter-rouge">credentials.json</code> file. This generates messages in the terminal that show the credentials object.
-<img src="./img/run-concur-calling-apis-app-generate-file.png" alt="Image of terminal running" /></li>
-  <li>Fill in the empty fields in this file with the information in the credential object. You can use all of the information from your <code class="language-plaintext highlighter-rouge">credentials.json</code> file in the <a href="/api-guides/authentication/concur-refresh-token-management.html">Refresh Token Management Automation tutorial</a> except for the company request token.
-<img src="./img/credentials-json.png" alt="Image of the information in the credential object." /></li>
+  <li>Type <code class="language-plaintext highlighter-rouge">node RefreshTokenManagement.js</code> in terminal to run the app to generate your <code class="language-plaintext highlighter-rouge">credentials.json</code> file. This generates messages in the terminal that show the credentials object.
+<img src="./img/run-refresh-token-management-app.png" alt="Terminal showing the node RefreshTokenManagement.js command." />
+<img src="./img/run-refresh-token-management-app-generate-file.png" alt="Credentials object messages." /></li>
+  <li>Fill in the empty fields in this file with the information in the credential object. You can use all of the information from your <code class="language-plaintext highlighter-rouge">credentials.json</code> file in the previous <a href="/api-guides/authentication/concur-get-refresh-token/concur-get-refresh-token.html">concur-get-refresh-token tutorial</a> except for the company request token.
+<img src="./img/credentials-json.png" alt="Empty fields that need to be populated with credentials." /></li>
 </ol>
 
 <h2 id="regenerate-and-store-your-refresh-token-in-a-json-file">Regenerate and Store Your Refresh Token in a JSON File</h2>
 
 <ol>
   <li>Run the app again. Since the app does not have a stored valid refresh token, the app will not find a valid refresh token in <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.
-<img src="./img/no-stored-refresh-token-found.png" alt="Message in the terminal that show the credentials object." /></li>
-  <li>The app will call the Oauth2 token endpoint using your credentials and regenerate your refresh token.
-<img src="./img/regenerate-refresh-token.png" alt="Shows the regenerated refresh token" /></li>
+<img src="./img/run-refresh-token-management-app.png" alt="Terminal showing node RefreshTokenManagement.js." />
+<img src="./img/no-stored-refresh-token-found.png" alt="Response showing no valid refresh token." /></li>
+  <li>The app will call the Oauth2 /token endpoint using your credentials and regenerate your refresh token.
+<img src="./img/regenerate-refresh-token.png" alt="Response showing refresh token, private information grayed out." /></li>
   <li>If the API call is successful, the refresh token data is converted from JSON format into a refresh token object and stored in the file <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.
-<img src="./img/stored-refresh-token.png" alt="Refresh token successfully received." />
-<img src="./img/refresh-token-object-file.png" alt="RefreshTokenObjectFile showing credentials." /></li>
+<img src="./img/stored-refresh-token.png" alt="Refresh token received and written to file." />
+<img src="./img/refresh-token-object-file.png" alt="RefreshTokenObjectFile.json added." /></li>
 </ol>
 
 <h2 id="load-your-stored-refresh-token-from-a-json-file">Load Your Stored Refresh Token from a JSON File</h2>
 
 <ol>
-  <li>Run the app again. Since the app now has a valid refresh token, the app will successfully load and check the validity of the file <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.</li>
-  <li>Check for a successful validity check on the refresh token object loaded from <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>. If the refresh token object validity check is successful, the refresh token object will be stored in the app to make API calls.
-<img src="./img/loaded-refresh-token-valid.png" alt="Confirmation of valid refresh token." />
-<img src="./img/refresh-token-object-file.png" alt="RefreshTokenObjectFile showing credentials." /></li>
+  <li>Run the app again. Since the app now has a valid refresh token, the app will successfully load and check the validity of the file <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.
+<img src="./img/run-refresh-token-management-app.png" alt="Terminal showing node RefreshTokenManagement.js." /></li>
+  <li>Check for a successful validity check on the refresh token object loaded from <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>. If the refresh token object validity check is successful, the refresh token object will be stored in the app for use with future API calls.
+<img src="./img/loaded-refresh-token-valid.png" alt="Message that refresh token is valid, and will be used to make API calls." /></li>
 </ol>
 
-<h3 id="call-an-api-using-a-multiple-use-bearer-token">Call an API Using a Multiple Use Bearer Token</h3>
-
-<ol>
-  <li>The app will use the validated refresh token in the refresh token object to make an API call to get a bearer token.
-<img src="./img/refresh-token-get-bearer-token.png" alt="The refresh token has been validated." /></li>
-  <li>If the API call is successful, the bearer token data is converted from JSON format into a bearer token string.
-<img src="./img/bearer-token-conversion.png" alt="Bearer token shown as grayed out in image." /></li>
-  <li>The bearer token string is used to make the API call to the Profile from ID v4 endpoint.
-<img src="./img/bearer-token-call-api.png" alt="Grayed out bearer token string." /></li>
-  <li>If the API call is successful, the JSON response is displayed on the console.
-<img src="./img/successful-api-call.png" alt="Successful JSON response" /></li>
-</ol>
 
       </div>
       <!--/col-md-8-->
@@ -676,7 +666,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-guides/authentication/concur-calling-apis/concur-calling-apis.md">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-guides/authentication/concur-refresh-token-management/concur-refresh-token-management.md">Edit this page on GitHub</a>
     </p>
   </div>
 

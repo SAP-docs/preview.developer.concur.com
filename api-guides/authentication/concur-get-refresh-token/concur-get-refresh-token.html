@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Call SAP Concur APIs Using A Multiple Use Bearer Token</title>
+  <title> SAP Concur Developer Center | Create Tokens Required for SAP Concur API Access</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-guides/authentication/concur-calling-apis/concur-calling-apis.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-guides/authentication/concur-get-refresh-token/concur-get-refresh-token.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -547,14 +547,13 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="tutorial-3-call-sap-concur-apis-using-a-multiple-use-bearer-token">Tutorial 3: Call SAP Concur APIs Using A Multiple Use Bearer Token</h1>
+        <h1 id="tutorial-1-create-tokens-required-for-sap-concur-api-access">Tutorial 1: Create Tokens Required for SAP Concur API Access</h1>
 
-<p>Use a refresh token to get a multiple use bearer token to call an API.</p>
+<p>Create an app with a company request token to create a refresh token for API access.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
 <ul>
-  <li>You have created a Refresh Token from an API call and managed refresh token expiration using the previous <a href="api-guides/authentication/concur-refresh-token-management.html">Refresh Token Management Automation tutorial</a>.</li>
   <li>SAP Concur instance credentials</li>
   <li><a href="https://nodejs.org/">Node.js</a></li>
   <li><a href="https://github.com/">GitHub account</a></li>
@@ -563,67 +562,74 @@
 
 <h2 id="you-will-learn">You Will Learn</h2>
 
-<p>How to use a refresh token to get a multiple use bearer token to call an API.</p>
+<ul>
+  <li>How to create a new app.</li>
+  <li>How to generate your company request token from the app.</li>
+  <li>How to create your <code class="language-plaintext highlighter-rouge">credentials.json</code> file using information from the app and the company request token.</li>
+  <li>How to create a refresh token from an API call using the <code class="language-plaintext highlighter-rouge">credentials.json</code> file.</li>
+</ul>
 
-<h2 id="regenerate-your-company-request-token">Regenerate Your Company Request Token</h2>
+<h2 id="login-to-your-admin-panel">Login to Your Admin Panel</h2>
+
+<ol>
+  <li>Login to your <a href="https://www.concursolutions.com/nui/ocstool"><strong>Concur admin panel</strong></a>.</li>
+  <li>Enter your user ID and click <strong>Next</strong>.
+<img src="./img/sign-in-userid.png" alt="Sign in window where you add user id." /></li>
+  <li>Enter your password and click <strong>Sign In</strong>.
+<img src="./img/sign-in-password.png" alt="Sign in window where you add password." /></li>
+</ol>
+
+<h2 id="create-a-new-app">Create a New App</h2>
+
+<ol>
+  <li>Go to the <a href="https://www.concursolutions.com/nui/ocstool"><strong>OAuth 2.0 Application Management</strong></a> screen.</li>
+  <li>Click <strong>Create new app</strong>.
+<img src="./img/application-list.png" alt="Create new app button on right side of screen." /></li>
+  <li>Fill in all of the required fields and add all of the grants and scopes you have access to.
+<img src="./img/create-new-app.png" alt="New app request form." /></li>
+  <li>Click <strong>Submit</strong> when the form is completed.</li>
+  <li>Copy and paste your Client ID and Client Secret to a text file.
+<img src="./img/app-credentials-id-secret.png" alt="Confirmation screen showing the Client ID and Client Secret. " /></li>
+  <li>Click <strong>OK</strong> when completed.</li>
+</ol>
+
+<h2 id="generate-your-company-request-token">Generate Your Company Request Token</h2>
 
 <ol>
   <li>Go to the <a href="https://www.concursolutions.com/nui/authadmin/companytokens"><strong>Company Request Token</strong></a> screen.</li>
-  <li>Enter your <strong>App ID</strong> in the required field and click <strong>Submit</strong> to regenerate your company request token.</li>
+  <li>Enter your <strong>App ID</strong> in the required field and click <strong>Submit</strong> to generate your company request token.</li>
   <li>Copy/paste the Company UUID and company request token fields to a text file.
-<img src="/api-guides/authentication/concur-calling-apis/img/company-request-token-created.png" alt="Confirmation screen showing the company request token successfully created." /></li>
+<img src="./img/company-request-token-created.png" alt="Confirmation screen showing the company request token successfully created." /></li>
   <li>Click <strong>OK</strong> after you have saved this information to a text file.</li>
 </ol>
 
-<h2 id="setup-the-nodejs-app">Setup the NodeJs App</h2>
+<h2 id="setup-the-nodejs-app">Setup the Node.js App</h2>
 
 <ol>
-  <li>Get the <a href="https://github.com/SAP-samples/concur-api-samplecode"><code class="language-plaintext highlighter-rouge">NodeJs sample code</code></a>.</li>
-  <li>Open <code class="language-plaintext highlighter-rouge">SampleCode/Tutorial_3/CallingAPIs.js</code> in your IDE or text editor.</li>
+  <li>Get the <a href="https://github.com/SAP-samples/concur-api-samplecode">Node.js sample code</a>.</li>
+  <li>Open <code class="language-plaintext highlighter-rouge">SampleCode/Tutorial_1/GetRefreshToken.js</code> in your IDE or text editor.</li>
 </ol>
 
-<h2 id="regenerate-your-credentials-file">Regenerate Your Credentials File</h2>
+<h2 id="generate-your-credentials-file">Generate Your Credentials File</h2>
 
 <ol>
-  <li>Type <code class="language-plaintext highlighter-rouge">node CallingAPIs.js</code> in terminal to run the app to generate your <code class="language-plaintext highlighter-rouge">credentials.json</code> file. This generates messages in the terminal that show the credentials object.
-<img src="./img/run-concur-calling-apis-app-generate-file.png" alt="Image of terminal running" /></li>
-  <li>Fill in the empty fields in this file with the information in the credential object. You can use all of the information from your <code class="language-plaintext highlighter-rouge">credentials.json</code> file in the <a href="/api-guides/authentication/concur-refresh-token-management.html">Refresh Token Management Automation tutorial</a> except for the company request token.
-<img src="./img/credentials-json.png" alt="Image of the information in the credential object." /></li>
+  <li>Type <code class="language-plaintext highlighter-rouge">node GetRefreshToken.js</code> in terminal to run the app to generate your <code class="language-plaintext highlighter-rouge">credentials.json</code> file. This generates messages in the terminal that show the credentials object.
+<img src="./img/run-get-refresh-token-app.png" alt="Terminal showing the node GetRefreshToken.js command." />
+<img src="./img/run-get-refresh-token-app-generate-file.png" alt="Credentials object messages." /></li>
+  <li>Fill in the empty fields in this file with the information in the credential object.
+<img src="./img/credentials-json.png" alt="Empty fields that need to be populated with credentials." /></li>
 </ol>
 
-<h2 id="regenerate-and-store-your-refresh-token-in-a-json-file">Regenerate and Store Your Refresh Token in a JSON File</h2>
+<h2 id="generate-your-refresh-token">Generate Your Refresh Token</h2>
 
 <ol>
-  <li>Run the app again. Since the app does not have a stored valid refresh token, the app will not find a valid refresh token in <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.
-<img src="./img/no-stored-refresh-token-found.png" alt="Message in the terminal that show the credentials object." /></li>
-  <li>The app will call the Oauth2 token endpoint using your credentials and regenerate your refresh token.
-<img src="./img/regenerate-refresh-token.png" alt="Shows the regenerated refresh token" /></li>
-  <li>If the API call is successful, the refresh token data is converted from JSON format into a refresh token object and stored in the file <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.
-<img src="./img/stored-refresh-token.png" alt="Refresh token successfully received." />
-<img src="./img/refresh-token-object-file.png" alt="RefreshTokenObjectFile showing credentials." /></li>
+  <li>Run the app again. The app will call the Oauth2 /token endpoint using your credentials and generate your refresh token.</li>
+  <li>Check if your credentials were transferred from the JSON file to the credentials object.</li>
+  <li>Check for a successful validity check on the credentials object.</li>
+  <li>Check for a successful API call. The status code will be 2xx and the refresh token will be one of the refresh token object properties.
+<img src="./img/refresh-token-generated-debug.png" alt="Successful API call with private information grayed out." /></li>
 </ol>
 
-<h2 id="load-your-stored-refresh-token-from-a-json-file">Load Your Stored Refresh Token from a JSON File</h2>
-
-<ol>
-  <li>Run the app again. Since the app now has a valid refresh token, the app will successfully load and check the validity of the file <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>.</li>
-  <li>Check for a successful validity check on the refresh token object loaded from <code class="language-plaintext highlighter-rouge">refreshTokenObjectFile.json</code>. If the refresh token object validity check is successful, the refresh token object will be stored in the app to make API calls.
-<img src="./img/loaded-refresh-token-valid.png" alt="Confirmation of valid refresh token." />
-<img src="./img/refresh-token-object-file.png" alt="RefreshTokenObjectFile showing credentials." /></li>
-</ol>
-
-<h3 id="call-an-api-using-a-multiple-use-bearer-token">Call an API Using a Multiple Use Bearer Token</h3>
-
-<ol>
-  <li>The app will use the validated refresh token in the refresh token object to make an API call to get a bearer token.
-<img src="./img/refresh-token-get-bearer-token.png" alt="The refresh token has been validated." /></li>
-  <li>If the API call is successful, the bearer token data is converted from JSON format into a bearer token string.
-<img src="./img/bearer-token-conversion.png" alt="Bearer token shown as grayed out in image." /></li>
-  <li>The bearer token string is used to make the API call to the Profile from ID v4 endpoint.
-<img src="./img/bearer-token-call-api.png" alt="Grayed out bearer token string." /></li>
-  <li>If the API call is successful, the JSON response is displayed on the console.
-<img src="./img/successful-api-call.png" alt="Successful JSON response" /></li>
-</ol>
 
       </div>
       <!--/col-md-8-->
@@ -676,7 +682,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-guides/authentication/concur-calling-apis/concur-calling-apis.md">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-guides/authentication/concur-get-refresh-token/concur-get-refresh-token.md">Edit this page on GitHub</a>
     </p>
   </div>
 
