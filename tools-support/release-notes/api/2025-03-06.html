@@ -422,6 +422,43 @@
 
 <h2 id="new-this-month">New This Month</h2>
 
+<h3 id="now-avaialble-new-endpoint-for-access-token-requests-by-third-party-partners">Now Avaialble: New Endpoint for Access Token Requests by Third-Party Partners</h3>
+
+<p>All third-party partners making access token requests are required to use https://glz.api.concursolutions.com/oauth2/v0/token. This ensures that you receive the correct geolocation for your API calls. Ensure that you make the necessary adjustments to keep the service uninterrupted.</p>
+
+<h3 id="decomissioned-bulk-user-v31-api">Decomissioned: Bulk User v3.1 API</h3>
+
+<p>Effective Date: January 21, 2025</p>
+
+<p>The Bulk User v3.1 API has been officially decommissioned and is no longer supported. Clients are advised to transition to the <a href="/api-reference/user-provisioning/v4.user-provisioning.html">User Provisioning Service v4</a> or <a href="/api-reference/profile/v4.identity.html">Identity v4</a> APIs, which offer enhanced functionality, improved performance, and expanded capabilities to meet modern provisioning needs.</p>
+
+<h3 id="preview-reportcreated-event-for-concur-expense">Preview: reportCreated Event for Concur Expense</h3>
+
+<p><a href="https://developer.concur.com/event-topics/expense/v4.expense-events.html">Concur Expense Events</a> will be amended to include a <code class="language-plaintext highlighter-rouge">reportCreated</code> event.  This will be on the same <code class="language-plaintext highlighter-rouge">public.concur.expense.report</code> topic associated with this event group.  This event will be published upon any report creation whether through the product UI, <a href="https://developer.concur.com/api-reference/expense/expense-report/v4.reports.html#create-a-new-report">Create a New Report API</a>, or other automated sources, for example, Expense Assistant.</p>
+
+<h3 id="preview-support-of-hotel-date-modification-for-hotel-connectors">Preview: Support of Hotel Date Modification for Hotel Connectors</h3>
+
+<p>Hotel connectors will support the modification of check-in and check-out dates using the Hotel Service v4 Modify endpoint. This will allow users to change their dates of stay without having to cancel and rebook. When a user selects <strong>Change</strong>, we will send a rate-details request to the connector using the same <code class="language-plaintext highlighter-rouge">ratePlanId</code> as used in the original booking, together with the <code class="language-plaintext highlighter-rouge">confirmationCodes</code> associated with the original booking. The Hotel Connector will respond with the price details for the new dates so the user can review and accept. Once the user confirms the change request, we will invoke the modify endpoint.</p>
+
+<p>The support of modification is optional. If the modification is supported by the Hotel Connector, they must send back the following flag in the Reservation response indicating whether that booking can be modified:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ],
+ “isModifiable”:  true
+}
+</code></pre></div></div>
+
+<h3 id="preview-single-pnr-solution-for-the-hotel-connector-booking">Preview: Single PNR solution for the Hotel Connector Booking</h3>
+
+<p><strong>Overview</strong></p>
+
+<p>For bookings made through hotel connectors today, we create a new PNR in the appropriate GDS and adds a passive segment to that PNR with details of the hotel booking made by the Hotel Connector. The Hotel Connector also creates a PNR in the GDS with the active segment. This causes issues for the TMC and the Hotel Connector as SAP Concur platform PNR is in the SAP Concur standard format and any changes have to be made manually as no PNR synch is available.</p>
+
+<p>This Single PNR solution will result in only one PNR created for the Hotel Connector booking. The solution will allow us and the Hotel Connector to work in the PNR at the same time using lock/release. For GDS content, the Hotel Connector will add an active segment. For non-GDS content, the Hotel Connector  will add a passive segment.</p>
+
+<p><strong>API Details</strong></p>
+
+<p>The reservation/modify request will be sent with the SAP Concur platform PNR locator (<code class="language-plaintext highlighter-rouge">ConfirmationCodeType: CONCUR_GDS_REFERENCE</code>) to the Hotel Connector supplier. If the connector supports the single PNR solution the <code class="language-plaintext highlighter-rouge">ActiveSegmentInConcurPNR</code> flag will be added to the <code class="language-plaintext highlighter-rouge">HSV4 ReservationDetails</code> and will be handled in the reservation/modify response. If the booking is cancelled, we will forward the cancellation number in the cancel request to the Hotel Connector.</p>
+
 <h3 id="updated-preview-retrieve-expense-taxes-by-expense-id">Updated Preview: Retrieve Expense Taxes by Expense ID</h3>
 
 <p>The Expense Report Service API suite will be updated to include a mechanism to retrieve tax details for a specified expense entry.  These details will include individual tax amounts, tax authority specifics, and custom data.  Currently, only aggregate tax amounts are exposed by the Retrieve an Expense by ID API and its <code class="language-plaintext highlighter-rouge">expenseTaxSummary</code> element.</p>
@@ -431,6 +468,27 @@
 <p>Further documentation to be provided soon.</p>
 
 <h2 id="ongoing">Ongoing</h2>
+
+<h3 id="preview-v41-formfields-endpoint-for-spend-user">Preview: v4.1 FormFields Endpoint for Spend User</h3>
+
+<p><strong>Overview</strong></p>
+
+<p>The new v4.1 FormFields endpoint will replicate the functionality of the api/user/v1.0/FormFields API in a JSON response format. This update simplifies integration with modern applications, improves performance and enhances the developer experience.</p>
+
+<p><strong>Key Enhancements</strong></p>
+
+<ul>
+  <li>JSON Response Format – Replaces XML, enabling easier data parsing and integration with modern frameworks.</li>
+  <li>Simplified Integration – Enhances development efficiency, making debugging and maintenance more straightforward.</li>
+  <li>Backward Compatibility – Ensures a easy transition for systems currently using XML-based responses.</li>
+</ul>
+
+<p><strong>Impact &amp; Actions</strong></p>
+
+<ul>
+  <li>Developers will be able to work with JSON-formatted data, aligning with modern application architectures.</li>
+  <li>Existing integrations remain supported, but teams will be encouraged to update to JSON for optimal performance and maintainability.</li>
+</ul>
 
 <h3 id="now-available-verified-email-flag-management-in-sap-concur-profile-via-identity-41-and-ups-40-apis">Now Available: Verified Email Flag Management in SAP Concur Profile via Identity 4.1 and UPS 4.0 APIs</h3>
 
@@ -573,11 +631,6 @@ The feature now requires clients and partners to use the <code class="language-p
       <td><a href="/tools-support/release-notes/api/archive/2023-01-05.html">01/2023</a></td>
       <td>Move from the Travel Request External Validation Callout v1 to the Event Subscription Service (ESS)</td>
       <td>This callout was designed to work with the Concur Request v1 API that is in the process of being decommissioned. Users are strongly recommended to move to the Event Subscription Services (ESS) in order to subscribe to the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Request events</a>.</td>
-    </tr>
-    <tr>
-      <td><a href="/tools-support/release-notes/api/archive/2021-04-16.html#planned-deprecation-bulk-user">04/2021</a></td>
-      <td>Bulk User v3.1 API</td>
-      <td>We have deprecated the Bulk User v3.1 API for the US and EMEA data centers. This API is replaced by <a href="/api-reference/profile/v4.identity.html">Identity v4</a>. Decommission will follow. Bulk User v3.1 will remain available for China data centers.</td>
     </tr>
     <tr>
       <td><a href="/tools-support/release-notes/api/archive/2021-01-22.html#planned-list-deprecation">01/2021</a></td>
