@@ -145,56 +145,56 @@ Name | Type | Format | Description
 
 Name | Type | Format | Description
 -----|------|--------|------------
-`AllocationType`	|	`string`	|	-	|	The type of allocations for the expense. Supported values: `P` - partial allocation, `F` - full allocation, `N` - no allocation. Use the GET /expense/allocations function to get information about this entry's allocations.
-`ApprovedAmount`	|	`decimal`	|	-	|	The approved amount of the expense entry, in the report currency.
+`AllocationType`	|	`string`	|	-	|	The type of allocations for the expense. Supported values: `P` - partial allocation, `F` - full allocation, `N` - no allocation. Use the GET /expense/allocations function to get information about this entry's allocations. **(Read Only)**
+`ApprovedAmount`	|	`decimal`	|	-	|	The approved amount of the expense entry, in the report currency. **(Read Only)**
 `CompanyCardTransactionID`	|	`string`	|	-	|	The unique identifier for a company card transaction that is associated with this expense. Concur Expense uses the Credit Card Import job to import company card transactions. Use the GET CompanyCardTransactions function to get information about these card transactions. This element is null when there is no company card transaction associated with this expense.
 `Custom1 through Custom40`	|	`customField`	|	-	|	The details from the Custom fields. These fields may not have data, depending on the configuration.
 `Comment`	|	`string`	|	-	|	A comment that describes the expense entry. Maximum length: 500 characters.  Disclaimer: This field will always be empty on GET, even if the expense does have an associated comment.
 `Description`	|	`string`	|	-	|	The description of the expense. Maximum length: 64 characters
 `ElectronicReceiptID`	|	`string`	|	-	|	The unique identifier for an eReceipt that is associated with this expense. Use the GET eReceipts function to get information about this eReceipt. This element is null when there is no eReceipt associated with this expense.
 `EmployeeBankAccountID`	|	`string`	|	-	|	The unique identifier of an employee bank account that is associated with this expense. Typically, this element is used when Expense Pay reimburses the employee for this expense. Use the GET BankAccounts function to get information about this bank account.
-`ExchangeRate`	|	`decimal`	|	-	|	The currency conversion rate that converts the transaction amount that is in the transaction currency into the posted amount that is in the report currency. This element is typically not provided. If this element is empty for transactions in a currency different than the user's reimbursement currency, Expense will use the company's configured exchange rates to determine the posted amount for the transaction. If the system is not able to determine the exchange rate, a value of 1.0 will be used.
-`ExpenseID` |   `string`    |   `UUID`  |   The unique identifier of the expense entry that is being retrieved. Compatible for use with v4 endpoints.
+`ExchangeRate`	|	`decimal`	|	-	|	The currency conversion rate that converts the transaction amount that is in the transaction currency into the posted amount that is in the report currency. This element is typically not provided. If this element is empty for transactions in a currency different than the user's reimbursement currency, Expense will use the company's configured exchange rates to determine the posted amount for the transaction. If the system is not able to determine the exchange rate, a value of 1.0 will be used.  **(Read Only)**
+`ExpenseID` |   `string`    |   `UUID`  |   The unique identifier of the expense entry that is being retrieved. Compatible for use with v4 endpoints.  **(Read Only)**
 `ExpenseTypeCode`	|	`string`	|	-	|	**Required** The code for the expense type. Use GET /expense/expensegroupconfigurations to learn the expense type code for expense types that are active for this report's policy.
-`ExpenseTypeName`	|	`string`	|	-	|	The name of the expense type, localized to the user's language.
-`FormID`	|	`string`	|	-	|	The ID of the form used by this expense entry.
-`HasAppliedCashAdvance`	|	`boolean`	|	`true` / `false`	|	Whether the entry has a cash advance applied to it.
-`HasAttendees`	|	`boolean`	|	`true` / `false`	|	Indicates whether the expense has attendees. Use the GET /expense/entryattendeeassociations function to get information about this entry's attendees.
-`HasComments`	|	`boolean`	|	`true` / `false`	|	Whether or not the expense entry has comments.
-`HasExceptions`	|	`boolean`	|	`true` / `false`	|	Whether the expense has exceptions. Use the GET ExpenseEntryExceptions function to get information about this entry's exceptions.
-`HasImage`	|	`boolean`	|	`true` / `false`	|	Indicates whether there is an entry image attached to the entry. Use the GET Entry Images function to get this entry image.
-`HasItemizations`	|	`boolean`	|	`true` / `false`	|	Indicates whether the expense has itemizations. Use the GET /expense/itemizations function to get information about this entry's itemizations.
-`HasVAT`	|	`boolean`	|	`true` / `false`	|	Indicates whether the entry has VAT data.
-`ID`	|	`string`	|	-	|	The unique identifier of the resource. Compatible for use with v3 endpoints.
-`IsBillable	`|	`boolean`	|	`true` / `false`	|	Indicates whether the expense is billable.
-`IsImageRequired`	|	`boolean`	|	`true` / `false`	|	Indicates whether an entry image is required for the entry.
-`IsPaidByExpensePay`	|	`boolean`	|	`true` / `false`	|	Whether the entry is paid using the Expense Pay service. This element has a value if the report has reached the Processing Payment workflow step, because this is when Concur Expense determines whether it will be paid by Expense Pay.
+`ExpenseTypeName`	|	`string`	|	-	|	The name of the expense type, localized to the user's language.  **(Read Only)**
+`FormID`	|	`string`	|	-	|	The ID of the form used by this expense entry.  **(Read Only)**
+`HasAppliedCashAdvance`	|	`boolean`	|	`true` / `false`	|	Whether the entry has a cash advance applied to it.  **(Read Only)**
+`HasAttendees`	|	`boolean`	|	`true` / `false`	|	Indicates whether the expense has attendees. Use the GET /expense/entryattendeeassociations function to get information about this entry's attendees.  **(Read Only)**
+`HasComments`	|	`boolean`	|	`true` / `false`	|	Whether or not the expense entry has comments.  **(Read Only)**
+`HasExceptions`	|	`boolean`	|	`true` / `false`	|	Whether the expense has exceptions. Use the GET ExpenseEntryExceptions function to get information about this entry's exceptions.  **(Read Only)**
+`HasImage`	|	`boolean`	|	`true` / `false`	|	Indicates whether there is an entry image attached to the entry. Use the GET Entry Images function to get this entry image.  **(Read Only)**
+`HasItemizations`	|	`boolean`	|	`true` / `false`	|	Indicates whether the expense has itemizations. Use the GET /expense/itemizations function to get information about this entry's itemizations.  **(Read Only)**
+`HasVAT`	|	`boolean`	|	`true` / `false`	|	Indicates whether the entry has VAT data.  **(Read Only)**
+`ID`	|	`string`	|	-	|	The unique identifier of the resource. Compatible for use with v3 endpoints.  **(Read Only)**
+`IsBillable	`|	`boolean`	|	`true` / `false`	|	Indicates whether the expense is billable.  **(Read Only)**
+`IsImageRequired`	|	`boolean`	|	`true` / `false`	|	Indicates whether an entry image is required for the entry.  **(Read Only)**
+`IsPaidByExpensePay`	|	`boolean`	|	`true` / `false`	|	Whether the entry is paid using the Expense Pay service. This element has a value if the report has reached the Processing Payment workflow step, because this is when Concur Expense determines whether it will be paid by Expense Pay.  **(Read Only)**
 `IsPersonal`	|	`boolean`	|	`true` / `false`	|	Indicates whether the expense is personal (that is, non-reimbursable).
-`IsPersonalCardCharge	`|	`boolean`	|	`true` / `false`	|	Indicates whether the expense entry was imported from a personal card feed. Concur Expense uses the Yodlee API to import these card transactions.
+`IsPersonalCardCharge	`|	`boolean`	|	`true` / `false`	|	Indicates whether the expense entry was imported from a personal card feed. Concur Expense uses the Yodlee API to import these card transactions.  **(Read Only)**
 `Journey`	|	`journey`	|	-	|	Journey data. This element is used when the entry is a mileage expense. For expense types with an expense code that is either Company Car or Personal Car, the Journey child element is required. This element should not be used for expense types with an expense code that is neither Company Car nor Personal Car.
-`LastModified`	|	`dateTime`	|	-	|	The UTC date when the entry was last modified.
-`LocationCountry`	|	`string`	|	-	|	The 2-letter ISO 3166-1 country code where the expense was incurred.
+`LastModified`	|	`dateTime`	|	-	|	The UTC date when the entry was last modified.  **(Read Only)**
+`LocationCountry`	|	`string`	|	-	|	The 2-letter ISO 3166-1 country code where the expense was incurred.  **(Read Only)**
 `LocationID`	|	`string`	|	-	|	The unique identifier for the location where the expense was incurred. Use the GET /common/locations function to get information for this location.
-`LocationName`	|	`string`	|	-	|	The location where the expense was incurred, usually the city name.
+`LocationName`	|	`string`	|	-	|	The location where the expense was incurred, usually the city name.  **(Read Only)**
 `LocationSubdivision`	|	`string`	|	-	|	The ISO 3166-2:2007 country subdivision state, province, or other country subdivision where the expense was incurred.
 `OrgUnit1 through OrgUnit6`	|	`customField`	|	-	|	The details from the Org Unit fields. These fields may not have data, depending on the configuration.
 `PaymentTypeID`	|	`string`	|	-	|	**Required** The ID of the payment type for the entry. Use GET /expense/expensegroupconfigurations to learn the payment type ID for payment types that are active for this report's expense group. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because these two expense codes always use the Cash payment type.
-`PaymentTypeName`	|	`string`	|	-	|	The name of the payment type, localized to the user's language.
-`PostedAmount`	|	`decimal`	|	-	|	The amount of the expense entry, in the report currency.
-`ReceiptReceived`	|	`boolean`	|	`true` / `false`	|	Indicates whether this entry has been reviewed by a processor. Format: true or false
+`PaymentTypeName`	|	`string`	|	-	|	The name of the payment type, localized to the user's language.  **(Read Only)**
+`PostedAmount`	|	`decimal`	|	-	|	The amount of the expense entry, in the report currency.  **(Read Only)**
+`ReceiptReceived`	|	`boolean`	|	`true` / `false`	|	Indicates whether this entry has been reviewed by a processor. Format: true or false  **(Read Only)**
 `ReportID`	|	`string`	|	-	|	**Required** The report ID of the report where the entry will be added.
-`ReportOwnerID`	|	`string`	|	-	|	The login ID of the report owner. Use the GET User Information function to learn details about this user.
-`SpendCategoryCode`	|	`string`	|	-	|	The ID of the spending category that is specified for this expense entry.
-`SpendCategoryName`	|	`string`	|	-	|	The name of the spending category that is specified for this expense entry, localized to the user's language.
+`ReportOwnerID`	|	`string`	|	-	|	The login ID of the report owner. Use the GET User Information function to learn details about this user.  **(Read Only)**
+`SpendCategoryCode`	|	`string`	|	-	|	The ID of the spending category that is specified for this expense entry.  **(Read Only)**
+`SpendCategoryName`	|	`string`	|	-	|	The name of the spending category that is specified for this expense entry, localized to the user's language.  **(Read Only)**
 `TaxReceiptType`	|	`string`	|	-	|	The receipt type for this entry. Supported values: `T` - tax receipt, `R` - regular receipt, `N` - no receipt
 `TransactionAmount`	|	`decimal`	|	-	|	**Required** The amount of the expense entry, in the transaction currency paid to the vendor. This element should not be used for expense types with an expense code for Company Car or Personal Car.
 `TransactionCurrencyCode`	|	`string`	|	-	|	**Required** The 3-letter ISO 4217 currency code for the expense entry transaction amount. This is the currency in which the vendor was paid. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because for these two expense codes the currency is always the Report Currency. Updating an entry's TransactionCurrencyCode through an API call will not automatically update the ExchangeRate, both must explicitly be updated for the report to reflect the posted amount in the report's currency.
 `TransactionDate`	|	`dateTime`	|	`YYYY-MM-DD`	|	**Required** The date when the good or service associated with this expense entry was provided.
-`TripID`	|	`string`	|	-	|	The unique identifier of a trip in the Itinerary Service that includes a travel booking associated with this expense. Use GET ItineraryDetails to get information about this trip and the travel booking. This element is null when there is no trip associated with the expense.
-`URI`	|	`string`	|	-	|	The URI to the resource.
-`VendorDescription`	|	`string`	|	-	|	The name of the vendor for the expense entry. Maximum length: 64 characters
-`VendorListItemID`	|	`string`	|	-	|	The unique identifier for a vendor list item. Use the GET /common/lists function to get information about this list item.
-`VendorListItemName`	|	`string`	|	-	|	The name of an item from a vendor list.
+`TripID`	|	`string`	|	-	|	The unique identifier of a trip in the Itinerary Service that includes a travel booking associated with this expense. Use GET ItineraryDetails to get information about this trip and the travel booking. This element is null when there is no trip associated with the expense.  **(Read Only)**
+`URI`	|	`string`	|	-	|	The URI to the resource.  **(Read Only)**
+`VendorDescription`	|	`string`	|	-	|	The name of the vendor for the expense entry. Maximum length: 64 characters  **(Read Only)**
+`VendorListItemID`	|	`string`	|	-	|	The unique identifier for a vendor list item. Use the GET /common/lists function to get information about this list item. **(Read Only)**
+`VendorListItemName`	|	`string`	|	-	|	The name of an item from a vendor list. **(Read Only)**
 
 ### <a name="custom-field"></a>CustomField
 
