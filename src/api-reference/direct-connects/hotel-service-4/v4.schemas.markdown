@@ -22,6 +22,7 @@ Search by either location or exact property reference, if available.
 `includeDepositRequired`|`boolean`|`true` \ `false`|**Required** If `true`, properties where deposits are required are displayed.|
 `rateCategories`|[`RateCategory`](#schemaratecategory)|-|Special rate categories requested, if applicable.|
 `maxSearchResults`|`integer`|-|Maximum number of properties allowed to be included in search results.|
+`accessViaMobile`|`boolean`|`true` \ `false`| Indicates the request is coming from mobile device.|
 
 ## <a id="schemalocationsearch"></a> LocationSearch
 
@@ -45,6 +46,7 @@ Reference to location details for search.
 `numGuests`|`integer`|`int32`|Number of guests for accommodation.|
 `guestCountryCode`|`string`|`ISO ALPHA-2`|Two-character ISO code for country.|
 `searchSessionToken`|[`SearchSessionToken`](#schemasearchsessiontoken)|-|Session token to be generated and provided by server on initial search call that can be referenced back for future calls on the same session.|
+`accessViaMobile`|`boolean`|`true` \ `false`| Indicates the request is coming from mobile device.|
 
 ## <a id="schemaratedetailscritera"></a> RateDetailsCriteria
 
@@ -103,6 +105,7 @@ Hotel property object returned by hotel search.
 `position`|[`Geolocation`](#schemageolocation)|-|Geolocation of property.|
 `address`|[`Address`](#schemaaddress)|-|**Required** Address of property.|
 `leadRate`|[`LeadRate`](#schemaleadrate)|-|**Required** The lowest nightly rate averaged over the stay. Not required if `availabilityStatus` is `CLOSED_OUT` or `UNKNOWN`.|
+`totalPrice`|[`TotalPriceHotel`](#schematotalpricehotel)|-|Details about the total pricing associated with stay.
 `onRequest`|`boolean`|`true` / `false`|Indicates that the hotel can only be confirmed on request.|
 `availabilityStatus`|[`AvailabilityStatus`](#schemaavailabilitystatus)|-|**Required** Supported values: `AVAILABLE_FOR_SALE`, `CLOSED_OUT`, `UNKNOWN` |
 `preferenceRank`|[`PreferenceRank`](#schemapreferencerank)|-|Supported values: `PREFERRED`, `MORE_PREFERRED`, `MOST_PREFERRED`. This value will override any preferences set by company admins.|
@@ -113,6 +116,8 @@ Hotel property object returned by hotel search.
 `sustainabilityAwards`|[`SustainabilityAward`](#schemasustainabilityaward)|-|Award/Certification related to sustainability awarded to the hotel.|
 `emissionInfo`|[`EmissionInfo`](#schemasustainabilityaward)|-|Hotel Sustainability Index information.|
 `exactMatch`|`boolean`|`true` / `false`|Flag if true indicates that this hotel is an exact match for what was asked in search request.|
+`safetyScore`|[`SafetyScore`](#schemasafetyscore)|-|Hotel Safety Score information.|
+
 
 ## <a id="schemahotelrating"></a> HotelRating
 
@@ -388,13 +393,14 @@ Information about Point of Sale (POS), traveler, and user associated with the re
 `confirmationCodes`|[`ConfirmationCode`](#schemaconfirmationcode)|-|**Required**|
 `status`|[`ReservationStatus`](#schemareservationstatus)|-|**Required** Supported values: `RESERVED`, `CANCELLED`,`PENDING_CONFIRMATION`|
 `basicHotelProperty`|[`BasicHotelProperty`](#schemabasichotelproperty)|-|**Required**|
-`roomRate`|[`RoomRateDetails`](#schemaroomratedetails)|-|**Required**|
+`roomRate`|[`RoomRateDetails`](#schemaroomratedetails)|-|**Required** If status is `CANCELLED`, optional|
 `checkin`|`string`|`date`|**Required** Check in date as entered by traveler.|
 `checkout`|`string`|`date`|**Required** Check out date as entered by traveler.|
 `guests`|[`Guest`](#schemaguest)|-|**Required**|
 `roomDescription`|`string`|-|Room description information.|
 `comments`|`string`|-|Comments about special requests for the booking.|
 `isModifiable`|`boolean`|`true` / `false`|Whether or not this reservation can be modified.|
+`voucherUrl`|`string`|-|The URL to the voucher for this booking.|
 
 ## <a id="schemaconfirmationcode"></a> ConfirmationCode
 
@@ -460,6 +466,16 @@ The lowest nightly rate averaged over the stay.
 |---|---|---|---|
 `avgNightlyRate`|[`Price`](#schemaprice)|-|**Required** |
 `isTaxAndFeesInclusive`|`boolean`|`true` / `false`|Whether or not tax and fees are included.|
+
+## <a id="schematotalpricehotel"></a> TotalPriceHotel
+
+Details about the total pricing associated with stay.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`totalOverStay`|[`Price`](#schemaPrice)|-|**Required** |
+`isTaxInclusive`|`boolean`|`true` / `false`|Whether or not taxes are included.|
+`isFeesInclusive`|`boolean`|`true` / `false`|Whether or not fees are included.|
 
 ## <a id="schemahotelamenity"></a> HotelAmenity
 
@@ -574,6 +590,26 @@ The EmissionInfo provides a way to compare the environmental impact of different
 `measure` |[`Measure`](#schemameasure)|-|Specifies the type of emissions that are measured. Supported values: `CO2E`, `CO2`|
 `unitOfMeasure` |[`UnitOfMeasure`](#schemaunitofmeasure)|-|Specifies the units in which the emissions are measured. Supported values: `TONNES`, `KILOGRAMS`|
 
+## <a id="schemasafetyscore"></a> SafetyScore
+
+The Safety Score is composed of scores for various safety features of the hotel, such as nighttime safety, physical safes, etc.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`score`|`number`|-|**Required** Total safety score.|
+`detailsUrl`|`string`|-|URL with more details about the safety score.|
+`categories`|`array` of [`SafetyScoreCategory`](#schemasafetyscorecategory)|-|**Required** List of  safety score categories along with their corresponding score values.|
+
+
+## <a id="schemasafetyscorecategory"></a> SafetyScoreCategory
+
+Safety Score category is used to associate each type of safety score with its corresponding value.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`score`|`number`|-|**Required** Safety score for a specific category.|
+`type`|`string`|-|**Required** Identifies safety score category type. Supported values: `NIGHTTIME_SAFETY`,`PHYSICAL_SAFETY`,`BASIC_FREEDOMS`,`WOMENS_SAFETY`,`THEFT`,`HEALTH_AND_MEDICAL`,`LGBTQ_PLUS_SAFETY`.|
+
 ## <a id="schemalegalentity"></a> LegalEntity
 
 Provides details about the legal entity associated with this booking, if available.
@@ -641,7 +677,7 @@ Provides details about the legal entity associated with this booking, if availab
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`bookingId`|`string`|-|SAP Concur system id of existing booking that needs to be updated (Required for `oldBookings`)|
+`bookingId`|`string`|-|SAP Concur system id of an existing booking that needs to be updated, as obtained during a reservation request using the `bookingUuid`, see [`ReservationCriteria`](#schemareservationcriteria).(Required for `oldBookings`)|
 `confirmationCodes`|`array` of [`ConfirmationCode`](#schemaConfirmationCode)|-|**Required**|
 `status`|[`ReservationStatus`](#schemaReservationStatus)|-|**Required**|
 `basicHotelProperty`|[`BasicHotelProperty`](#schemaBasicHotelProperty)|-||

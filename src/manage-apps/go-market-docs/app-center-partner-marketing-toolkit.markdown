@@ -19,19 +19,6 @@ The [Go to Market page](./go-to-market.html), accessible from the Resources tab 
  - Marketing Your App​
  - Deploying Your App for Customers
 
-### <a name="marketing-office-hours"></a>Marketing Office Hours
-
-Join us for our monthly office hours.
-
-Learn best practices for marketing your app and interact directly with the App Center Marketing Team.
-
- * **Date:** Office hours take place the first Tuesday of each month.
- * **Time:** 8:30-9:00 AM PST
- * **Teams Link:** [Click to join](https://teams.microsoft.com/l/meetup-join/19%3ameeting_ZjJjMDc3ODUtZDBhMS00OWM1LTkwNGYtNDJlY2MyZTQ5NTk4%40thread.v2/0?context=%7b%22Tid%22%3a%2242f7676c-f455-423c-82f6-dc2d99791af7%22%2c%22Oid%22%3a%22ad5b4110-8e3b-470c-a3d2-bd81a599e694%22%7d)
-* **Meeting ID:** 311 402 232 989, Passcode: K2o2tu
-
-Or email us at [concur_AppCenterMarketing@sap.com](mailto:concur_AppCenterMarketing@sap.com).
-
 ## <a name="logo-and-brand-guidelines"></a>Logo and Brand Guidelines
 
 * Always use your company’s logo and proprietary design when creating your own communication and marketing materials.

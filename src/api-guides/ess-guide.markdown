@@ -35,7 +35,7 @@ You may need to request access from your SAP Concur representative if you do not
     `identity.user.event.read`|Identity Change Event
     `spend.user.event.read`|Spend Change Event
     `travel.itinerary.read`|Concur Itinerary Event
-    `travelrequest.write`	|Concur Request Event
+    `travelrequest.write`	|Concur Request Event, Concur Travel Search Event
     `travel.user.event.read`|Travel Change Event
     `user.provision.read`	|Concur User Provisioning Event
 

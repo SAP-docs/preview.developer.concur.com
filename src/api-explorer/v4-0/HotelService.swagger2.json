@@ -1262,6 +1262,9 @@
         "leadRate": {
           "$ref": "#/definitions/LeadRate"
         },
+        "totalPrice": {
+          "$ref": "#/definitions/TotalPriceHotel"
+        },
         "onRequest": {
           "description": "Indicates that the hotel can only be confirmed on request.",
           "example": true,
@@ -1299,6 +1302,9 @@
           "description": "Flag if true indicates that this hotel is an exact match for what was asked in search request.",
           "example": true,
           "type": "boolean"
+        },
+        "safetyScore": {
+           "$ref" : "#/definitions/SafetyScore"
         }
       },
       "required": [
@@ -1493,6 +1499,29 @@
         "avgNightlyRate"
       ],
       "type": "object"
+    },
+    "TotalPriceHotel":{
+      "description": "Details about total pricing associated with the stay",
+      "properties":{
+        "totalOverStay": {
+          "$ref": "#/definitions/Price"
+        },
+        "isTaxInclusive": {
+          "default": false,
+          "description": "Whether or not tax is included",
+          "example": false,
+          "type": "boolean"
+        },
+        "isFeesInclusive": {
+          "default": false,
+          "description": "Whether or not fees are included",
+          "example": false,
+          "type": "boolean"
+        }
+      },
+      "required":[
+        "totalOverStay"
+      ]
     },
     "LegalEntity": {
       "description": "Provides details about the legal entity associated with this booking if available",
@@ -1887,6 +1916,10 @@
         },
         "searchSessionToken": {
           "$ref": "#/definitions/SearchSessionToken"
+        },
+        "accessViaMobile": {
+          "description": "Indicates if the request is coming from mobile device",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2170,6 +2203,11 @@
           "example": true,
           "type": "boolean"
         },
+        "voucherUrl" : {
+            "description" : "The URL to the voucher for this booking",
+            "example" : "https://www.concur.com/voucher/voucher-id",
+            "type" : "string"
+        },
         "roomDescription": {
           "example": [
             "1 bedroom luxury suite",
@@ -2183,6 +2221,7 @@
           "type": "array"
         },
         "roomRate": {
+          "description": "Required for all statuses, except for CANCELLED",
           "$ref": "#/definitions/RoomRateDetails"
         },
         "status": {
@@ -2194,7 +2233,6 @@
         "confirmationCodes",
         "guests",
         "roomDescription",
-        "roomRate",
         "status"
       ],
       "type": "object"
@@ -2393,6 +2431,10 @@
         },
         "requestorInfo": {
           "$ref": "#/definitions/RequestorInfo"
+        },
+        "accessViaMobile": {
+          "description": "Indicates if the request is coming from mobile device",
+          "type": "boolean"
         }
       },
       "required": [
@@ -2586,6 +2628,44 @@
       "required": [
         "currencyCode",
         "totalBeforeTax"
+      ],
+      "type": "object"
+    },
+    "SafetyScore": {
+      "description": "Safety score of the hotel",
+      "properties": {
+        "score": {
+          "type": "number"
+        },
+        "detailsUrl": {
+          "description": "URL to get more details about the safety score",
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "$ref": "#/definitions/SafetyScoreCategory"
+        }   
+      },
+      "required": [
+        "score",
+        "categories"
+      ],
+      "type": "object"
+    },
+    "SafetyScoreCategory": {
+      "description": "Safety score category classification of the hotel",
+      "properties": {
+        "type": {
+          "type": "enum",
+          "enum": [ "NIGHTTIME_SAFETY", "PHYSICAL_SAFETY", "BASIC_FREEDOMS",  "WOMENS_SAFETY", "THEFT", "HEALTH_AND_MEDICAL", "LGBTQ_PLUS_SAFETY"]
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "category",
+        "score"
       ],
       "type": "object"
     }

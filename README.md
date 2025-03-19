@@ -36,13 +36,9 @@ swagger-ui       Supporting files for /api-explorer
 tools-support    Support resources for developers including release notes.
 ```
 
-# Availability
-
-[View Availability](https://stats.uptimerobot.com/P7BJ7ToVO)
-
 # Support
 
-If you are an existing Concur partner and require support assistance, please open a partner support case [here](https://na4.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi).
+If you are an existing Concur partner and require support assistance, please open a partner support case on the [Customer Login](https://na4.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi) page.
 
 # Site Build
 
