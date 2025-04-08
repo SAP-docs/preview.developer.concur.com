@@ -5,7 +5,7 @@ layout: reference
 
 # Expense Cash Advance Associations v4.0
 
-The Expense Cash Advance Associations v4 API can be used for operations related to associating and dissociating cash advances with an expense report.
+The Expense Cash Advance Associations v4 API can be used for operations related to associating and disassociating cash advances with an expense report.
 
 ## <a name="limitations"></a>Limitations
 
@@ -21,7 +21,7 @@ Access to this documentation does not provide access to the API.
 | Name                       | Description                                                              | Endpoint     |
 |----------------------------|--------------------------------------------------------------------------|--------------|
 | `expense.report.read`      | Read information about cash advances associated with a report.           | GET          |
-| `expense.report.readwrite` | Read and write information about cash advances associated with a report. | POST, DELETE |
+| `expense.report.readwrite` | Read and write information about cash advances associated with a report. | GET, POST, DELETE |
 
 ## Dependencies <a name="dependencies"></a>
 
@@ -41,19 +41,22 @@ Returns cash advance IDs associated with the specified report.
 
 `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
-GET /expensereports/v4/reports/{reportId}/cashAdvances
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/cashAdvances
 ```
 
-#### Parameters
+### Parameters
 
 | Name     | Type     | Format | Description                          |
 |----------|----------|--------|--------------------------------------|
 | reportId | `string` | path   | The unique identifier of the report. |
+
+### Payloads
+
+  * Request: None
+  * Response: [CashAdvancesResponse](#cash-advances-response-schema) 
 
 #### Headers
 
@@ -74,7 +77,7 @@ GET /expensereports/v4/reports/{reportId}/cashAdvances
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-### Example
+### Examples
 
 #### Request
 
@@ -105,26 +108,29 @@ curl --location --request GET 'https://us.api.concursolutions.com/expensereports
 
 ## Associate Cash Advances with Report
 
-Associates the specified cash advance(s) with the specified report.
+Associates the specified cash advance(s) with the specified report. Replaces all existing associated cash advanced of the report with the provided payload.
 
 ### Scopes
 
 `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
-POST /expensereports/v4/reports/{reportId}/cashAdvances
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/cashAdvances
 ```
 
-#### Parameters
+### Parameters
 
 | Name     | Type     | Format | Description                          |
 |----------|----------|--------|--------------------------------------|
 | reportId | `string` | path   | The unique identifier of the report. |
-| body     | `AssociateRequest`  | application/json  | The request body containing the cash advances to associate. |
+| body     | `CashAdvanceRequest`  | application/json  | The request body containing the cash advances to associate. |
+
+### Payloads
+
+  * Request: [CashAdvanceRequest](#cash-advances-post-schema) 
+  * Response: [CashAdvancePostResponse](#cash-advance-uri-schema)
 
 #### Headers
 
@@ -145,7 +151,7 @@ POST /expensereports/v4/reports/{reportId}/cashAdvances
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-### Example
+### Examples
 
 #### Request
 
@@ -180,20 +186,23 @@ Disassociate the specified cash advance(s) from the specified report.
 
 `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
 
-### Request
-
-#### URI Template
+### URI
 
 ```shell
-DELETE /expensereports/v4/reports/{reportId}/cashAdvances?cashAdvanceIds={cashAdvanceId}
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/cashAdvances?cashAdvanceIds={cashAdvanceId}
 ```
 
-#### Parameters
+### Parameters
 
 | Name     | Type           | Format | Description                          |
 |----------|----------------|--------|--------------------------------------|
 | reportId | `string`       | path   | The unique identifier of the report. |
 | cashAdvanceIds    | `List<String>` | query  | The unique identifier(s) of the cash advances to disassociate with the report |
+
+### Payloads
+
+  * Request: None
+  * Response: None
 
 #### Headers
 
@@ -214,7 +223,7 @@ DELETE /expensereports/v4/reports/{reportId}/cashAdvances?cashAdvanceIds={cashAd
 * [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
 * [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
 
-### Example
+### Examples
 
 #### Request
 
@@ -233,23 +242,28 @@ curl --request DELETE 'https://us.api.concursolutions.com/expensereports/v4/repo
 ```
 ## Schema <a name="schema"></a>
 
-### <a name="cash-advance-response-schema"></a> Cash Advance Response
+### <a name="cash-advance-response-schema"></a> CashAdvanceResponse
 
 | Name | Type   | Format | Description                          |
 |------|--------|--------|--------------------------------------|
 | id   | string | uuid   | The associated cash advance Id.      |
 
-### <a name="cash-advances-response-schema"></a> Cash Advances Response
+### <a name="cash-advances-response-schema"></a> CashAdvancesResponse
 
 | Name         | Type   | Format | Description                                      |
 |--------------|--------|--------|--------------------------------------------------|
-| cashAdvances | array  | -      | List of the associated cash advance objects.     |
+| cashAdvances | array  | [CashAdvanceResponse](#cash-advance-response-schema) | List of the associated cash advance objects.     |
 
-#### <a name="cash-advances-response-schema"></a> Cash Advances Response
+#### <a name="cash-advances-post-schema"></a> CashAdvanceRequest
 
 | Name         | Type   | Format | Description                                      |
 |--------------|--------|--------|--------------------------------------------------|
-| cashAdvances | array  | -      | List of the associated cash advance objects.     |
-| items        | object | -      | Refer to [Cash Advance Response](#cash-advance-response-schema) for details. |
+| cashAdvanceIds | array  | uuid    | List of the associated cash advance ids     |
+
+### <a name="cash-advance-uri-schema"></a> CashAdvancePostResponse
+
+| Name | Type   | Format | Description                          |
+|------|--------|--------|--------------------------------------|
+| uri   | string | -   | The href to retrieve the cash advance associations      |
 
 
