@@ -12,7 +12,6 @@ The following application programming interfaces (APIs) and other resources have
 * [Attendees v2](/api-reference/expense/attendees/v2.attendees.html)
 * [Attendee Types v1](/api-reference/expense/attendee-types/v1.attendee-types.html)
 * [Authorization (Pre-2017)](/api-reference/authentication/authorization-pre-2017.html)
-* [Bulk Users v3.1](/api-reference/authentication/get-users31.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
 * Direct Connect - Hotel Service v2
@@ -57,7 +56,6 @@ The following application programming interfaces (APIs) and other resources have
     * [Travel Profile v1 - User Notification](/api-reference/travel-profile/v1.notification-user-resource.html)
 * [Travel Request Validation](/api-reference/callouts/request-validation.html)
 * [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)
-* [User v1](/api-reference/user/index.html)
 * User Provisioning v4
   * [Spend User Retrieval v4](/api-reference/user-provisioning/spend/v4.spend-user-retrieval.html) 
 

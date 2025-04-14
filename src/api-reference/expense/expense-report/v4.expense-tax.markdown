@@ -1,0 +1,232 @@
+---
+title: Expense Tax v4
+layout: reference
+---
+# Expense Tax v4
+
+The Expense Tax v4 API can be used for operations related to the association of a tax with an expense on a report.
+
+## <a name="limitations"></a>Limitations
+
+Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name                          | Description                                                                                                                                                                                                                                     |Endpoint|
+------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----|
+`expense.report.read`         | Read information about tax details of an expense on a report.                                                                                                                                                                                   | GET |
+`expense.report.readwrite`    | Read information about tax details of an expense on a report. Note: this is a variance from how the `.readwrite` scope works with other Expense v4 APIs. Write access to tax details is specifically limited to `expense.report.tax.readwrite`. | GET |
+`expense.report.tax.readwrite`| Read and Write information about tax details of an expense on a report.                                                                                                                                                                         | GET |
+
+## Dependencies <a name="dependencies"></a>
+
+SAP Concur clients must purchase Concur Expense to use this API. User based API requires the use of the [Identity v4 API](/api-reference/profile/v4.identity.html). Please contact your SAP Concur representative for more information.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API only supports company level access tokens.
+
+## Retrieves Tax Details for a specific Expense on a specific Report <a name="tax-details-for-a-specific-expense"></a>
+
+Gets tax details for the specified expense on a specific report.
+
+### Scopes
+
+* `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.tax.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+/expensereports/v4/reports/{reportId}/expenses/{expenseId}/taxes
+```
+
+#### Parameters
+
+|Name|Type|Format| Description                                                                                                                                                     |
+|---|---|---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+`reportId`|`string`|-| **Required** The unique identifier of the report that is being read.                                                                                            |
+`expenseId`|`string`|-| **Required** The unique identifier of the expense that is being read.                                                                                           |
+
+
+### Payloads
+
+* Request: None
+* Response: [Expense Tax Details Response](#tax-details-response-schema)
+
+### Examples
+
+#### Requests
+
+```shell
+curl -X 'GET' \
+  'https://us.api.concursolutions.com/expensereports/v4/reports/28BA437223EE41A49F7B/expenses/51ADA86C8EB164488FE67180CCE16EDB/taxes' \
+  --header 'Authorization: Bearer {access_token}' \
+  --header 'Content-Type: application/json'
+```
+
+#### <a name="tax-details-response-schema"></a> Response
+
+```shell
+{
+"expenseTaxes": [
+    {
+      "customData": [
+        {
+          "id": "custom1",
+          "value": "custom1",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom2",
+          "value": "custom2",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom5",
+          "value": "custom5",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom6",
+          "value": "custom6",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom9",
+          "value": "custom9",
+          "isValid": true,
+          "listItemUrl": null
+        }
+      ],
+      "reclaimCode": null,
+      "reclaimTransactionAmount": null,
+      "taxAuthorityId": "D3216F5209D6694EBDD5CB52D0326D3B",
+      "taxAuthorityName": "Canada GST",
+      "taxCode": null,
+      "taxLabel": "GST",
+      "taxFormId": "C66F76E686904304A5A6F44C62239E24",
+      "taxRateTypeId": null,
+      "taxRateTypeName": null,
+      "taxReclaimConfigurationId": null,
+      "taxTransactionAmount": null,
+      "taxPostedAmount": null,
+      "taxReclaimPostedAmount": null
+    },
+    {
+      "customData": [
+        {
+          "id": "custom1",
+          "value": "custom1",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom2",
+          "value": "custom2",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom5",
+          "value": "custom5",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom6",
+          "value": "custom6",
+          "isValid": true,
+          "listItemUrl": null
+        },
+        {
+          "id": "custom9",
+          "value": "custom9",
+          "isValid": true,
+          "listItemUrl": null
+        }
+      ],
+      "reclaimCode": null,
+      "reclaimTransactionAmount": null,
+      "taxAuthorityId": "1CBBFDFE4E77CD478E9F09161A9DC777",
+      "taxAuthorityName": "Canada QST",
+      "taxCode": null,
+      "taxLabel": "QST",
+      "taxFormId": "C66F76E686904304A5A6F44C62239E24",
+      "taxRateTypeId": null,
+      "taxRateTypeName": null,
+      "taxReclaimConfigurationId": null,
+      "taxTransactionAmount": null,
+      "taxPostedAmount": null,
+      "taxReclaimPostedAmount": null
+    }
+  ]
+}
+```
+
+## Schema <a name="schema"></a>
+
+### <a name="expense-tax-details-schema"></a> Expense Tax Details Response
+
+| Name            | Type                                 | Format       | Description                           |
+|-----------------|--------------------------------------|--------------|---------------------------------------|
+|  `expenseTaxes` | [`ExpenseTaxes`](#expense-tax-schema) | -            | The list of tax data for the expense. |
+
+### <a name="expense-tax-schema"></a> Expense Tax
+
+| Name                        | Type                                              | Format | Description                                                                                                                                              |
+|-----------------------------|---------------------------------------------------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `customData`                | [`CustomData`](#expense-tax-custom-data-schema)   | -      | This is a set of data that the custom fields contain for the tax based on the configuration. This set might be empty if no custom fields are configured. |
+| `reclaimCode`               | `string`                                          | -      | The tax reclaim code.                                                                                                                                    |
+| `reclaimTransactionAmount`  | `decimal`                                         | -      | The tax reclaim transaction amount.                                                                                                                      |
+| `taxAuthorityId`            | `string`                                          | -      | **Required** The unique identifier of the tax authority. This also uniquely identifies a specific tax for an expense entry.                              |
+| `taxAuthorityName`          | `string`                                          | -      | The name of the tax authority.                                                                                                                           |
+| `taxCode`                   | `string`                                          | -      | The tax code.                                                                                                                                            |
+| `taxLabel`                  | `string`                                          | -      | The localized label of the tax authority.                                                                                                                |
+| `taxFormId`                 | `string`                                          | -      | The unique identifier of the tax form associated with the expense.                                                                                       |
+| `taxRateTypeId`             | `string`                                          | -      | The unique identifier of the tax rate type id.                                                                                                           |
+| `taxRateTypeName`           | `string`                                          | -      | The name of the tax rate type.                                                                                                                           |
+| `taxReclaimConfigurationId` | `string`                                          | -      | The unique identifier of the tax reclaim configuration id.                                                                                               |
+| `taxTransactionAmount`      | `decimal`                                         | -      | The tax transaction amount.                                                                                                                              |
+| `taxPostedAmount`           | `decimal`                                         | -      | The tax posted amount.                                                                                                                                   |
+| `taxReclaimPostedAmount`    | `decimal`                                         | -      | The tax reclaim posted amount.                                                                                                                           |
+
+
+### <a name="expense-tax-custom-data-schema"></a>Custom Data
+
+| Name          | Type      | Format         | Description                                                                                                                                                                                      |
+|---------------|-----------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`          | `string`  | -              | **Required** The unique identifier of the custom field. Examples: `custom1`, `orgUnit1`                                                                                                          |
+| `isValid`     | `boolean` | `true`/`false` | If `true`, the value returned is valid. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: `true` |
+| `value`       | `string`  | -              | The value of the custom field. This field can have values for all the supported data types such as `text`, `integer`, `boolean` and `listItemId`. Maximum length: 48 characters                  |
+| `listItemUrl` | `string`  | -              | href (string): The URL of the related HATEOAS link that you can use for subsequent calls.                                                                                                        |
+
+### <a name="error-message-schema"></a>Error Message
+
+| Name                 | Type                                          | Format      | Description                                                      |
+|----------------------|-----------------------------------------------|-------------|------------------------------------------------------------------|
+| `customResponseData` | `object`                                      | -           | The custom parameters related to error.                          |
+| `errorId`            | `string`                                      | -           | The unique identifier of the error associated with the response. |
+| `errorMessage`       | `string`                                      | -           | **Required** The detailed error message.                         |
+| `httpStatus`         | `string`                                      | -           | **Required** The HTTP response code and phrase for the response. |
+| `path`               | `string`                                      | -           | **Required** The URI of the attempted request.                   |
+| `timestamp`          | `string`                                      | `date-time` | **Required** The time when the error was captured.               |
+| `validationErrors`   | [`ValidationError`](#validation-error-schema) | -           | The validation error messages.                                   |
+
+### <a name="validation-errors-schema"></a>Validation Error
+
+| Name     | Type     | Format | Description                                   |
+|----------|----------|--------|-----------------------------------------------|
+| `id`     | `string` | -      | The ID of the validation error.               |
+| `message`| `string` | -      | The detailed message of the validation error. |
+| `source` | `string` | -      | The type of validation which failed.          |
