@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Hotel Modify Support For CHS</title>
+  <title> SAP Concur Developer Center | Single PNR Solution For CHS</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/direct-connects/hotel-service-4/v4.hotel-modify-booking.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/direct-connects/hotel-service-4/v4.single-pnr-solution.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -543,11 +543,11 @@
 
     
 
-    <li class="list-group-item list-toggle ">
+    <li class="list-group-item list-toggle active">
       <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-direct-connect-hotel-service-v4">
         Direct Connect - Hotel Service v4
       </a>
-      <ul id="collapse-direct-connect-hotel-service-v4" class="collapse ">
+      <ul id="collapse-direct-connect-hotel-service-v4" class="collapse in">
         
           <li >
             <a href="/api-reference/direct-connects/hotel-service-4/v4.getting-started.html">Getting Started</a>
@@ -561,7 +561,7 @@
             <a href="/api-reference/direct-connects/hotel-service-4/v4.change-notification-get-started.html">Hotel Service Change Notification</a>
           </li>
         
-          <li >
+          <li  class="active" >
             <a href="/api-reference/direct-connects/hotel-service-4/v4.single-pnr-solution.html">Single PNR Solution for CHS</a>
           </li>
         
@@ -1289,40 +1289,77 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="hotel-modify-support-for-chs">Hotel Modify Support For CHS</h1>
-
-<div id="attn-prerelease">
-  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
-</div>
+        <h1 id="single-pnr-solution-for-chs">Single PNR Solution For CHS</h1>
 
 <h2 id="overview">Overview</h2>
 
-<p>This document describes the workflow that will be used if a CHS supplier wants to implement support for modifying hotel booking. As of now, SAP Concur supports only modification of dates with possibility of changing other attributes in the future. The supplier can choose to support this feature by implementing the Hotel Service <a href="./v4.endpoints.html#modify-">v4 <code class="language-plaintext highlighter-rouge">modify</code> endpoint</a>.</p>
+<p>This document describes the design of the Single PNR (passenger name record) Solution for Hotel’s direct connect offering of the Custom Hotel Source (CHS) program.</p>
 
-<h2 id="workflow">Workflow</h2>
+<p>For bookings made using CHS today, if passives are enabled, we have two PNRs associated with each hotel booking. The SAP Concur platform creates and manages a PNR in the appropriate GDS for the trip and adds a passive segment to that PNR with details of the hotel booking made by the CHS supplier. The CHS supplier also creates a PNR in the GDS with the active segment. Duplication of PNRs not only causes sync and operational issues but also adds cost for each booking. Hence, in cooperation with CHS suppliers, we have come up with a solution where there is only one PNR created for the CHS hotel booking. This solution will be applicable to both GDS and non-GDS content booked through the CHS supplier.</p>
 
-<p>At a high-level, the workflow consists of:</p>
+<h3 id="solution">Solution</h3>
+
+<p>At a high-level, the solution consists of:</p>
 
 <ul>
-  <li>If <code class="language-plaintext highlighter-rouge">modify</code> is supported by CHS supplier and booking is marked as <code class="language-plaintext highlighter-rouge">modifiable</code>, user is provided with option to change dates for hotel booking and user updates the dates (checkin/checkout/both).</li>
-  <li>SAP Concur invokes <a href="./v4.endpoints.html#rate-details-"><code class="language-plaintext highlighter-rouge">rate-details</code></a>  (used as <code class="language-plaintext highlighter-rouge">reshop</code> request) using same <code class="language-plaintext highlighter-rouge">ratePlanId</code> as used in original booking along with <code class="language-plaintext highlighter-rouge">confirmationCodes</code> that provides all confirmation codes and pin associated with booking.</li>
-  <li>CHS supplier provides price details for the new dates based on confirmation codes and/or original <code class="language-plaintext highlighter-rouge">ratePlanId</code>. Hotel room/product is expected to be the same as original booking. Note that <code class="language-plaintext highlighter-rouge">ratePlanId</code> in response can be different from original booking.</li>
-  <li>SAP Concur UI presents change in cost and new pricing to user for review.</li>
-  <li>User accepts and confirms the change request.</li>
-  <li>SAP Concur invokes <a href="./v4.endpoints.html#modify-">modify</a> endpoint with new dates and <code class="language-plaintext highlighter-rouge">ratePlanId</code> from previous response along with confirmation codes and pin.</li>
-  <li>CHS supplier updates the booking with new dates and returns the updated booking details.</li>
+  <li>We pass an existing PNR locator or create a shell PNR (if hotel is first booking) to the Hotel Service v4 endpoint for hotel booking.</li>
+  <li>TMC/Supplier confirms the hotel booking with their source (GDS or direct-connect) and works on the PNR (segment, remarks, etc.) and releases it back to us. If source is GDS, supplier will create an active segment. If source is direct-connect, supplier will create a passive segment.</li>
+  <li>We take the PNR back and perform finishing.</li>
+  <li>If GDS booking (“active” segment added by supplier) - all post-booking operations like <code class="language-plaintext highlighter-rouge">Retrieve</code> and <code class="language-plaintext highlighter-rouge">Cancel</code> will be managed as <code class="language-plaintext highlighter-rouge">GDS</code> booking within the SAP Concur platform. That is, Hotel Service v4 read and cancel endpoints will not be used and instead we will work directly with GDS to read/cancel booking.</li>
+  <li>If the supplier supports <code class="language-plaintext highlighter-rouge">Modify</code> flow, we will use Hotel Service v4 endpoints to allow supplier to reshop and modify the booking.</li>
 </ul>
 
-<p>Below is the sequence diagram for the flow:</p>
-
-<p><img src="images/diagrams/hotel_modify.png" alt="" /></p>
-
-<h2 id="requirements-for-chs-supplier">Requirements for CHS Supplier</h2>
+<h2 id="requirements-from-tmcsupplier-for-this-solution">Requirements from TMC/Supplier for this Solution</h2>
 
 <ul>
-  <li>Supplier is expected to set <a href="./v4.schemas.html#-hotelbooking"><code class="language-plaintext highlighter-rouge">isModifiable</code></a> flag to <code class="language-plaintext highlighter-rouge">true</code> in the booking response if they support <code class="language-plaintext highlighter-rouge">modify</code> feature for a given booking.</li>
-  <li>Supplier will need to support <code class="language-plaintext highlighter-rouge">reshop</code> request via <a href="./v4.endpoints.html#rate-details-"><code class="language-plaintext highlighter-rouge">rate-details</code></a> providing detailed pricing for new dates on already booked hotel and rate-plan.</li>
-  <li>Supplier will need to support <code class="language-plaintext highlighter-rouge">modify</code> request via <a href="./v4.endpoints.html#modify-"><code class="language-plaintext highlighter-rouge">modify</code></a> endpoint to update the booking with new dates.</li>
+  <li>TMC/Supplier will use standard active and passive segment format as required by the SAP Concur platform.</li>
+  <li>TMC/Supplier will have option to manage their own passive segment or use our managed solution for passives. If they choose to manage their own passives, they will need to:
+    <ul>
+      <li>Disable passive segment creation for CHS bookings to avoid duplicate passive creation for non-GDS hotels.</li>
+      <li>Create new passive segment in the SAP Concur platform created PNR along with booking with their direct connect source (as detailed in the design).</li>
+      <li>Cancel passive segment as part of their <code class="language-plaintext highlighter-rouge">cancel</code> flow along with canceling the booking with their direct connect source.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="design">Design</h2>
+
+<h3 id="booking-flow">Booking flow</h3>
+
+<p><img src="images/diagrams/singlepnr/hotel_book.png" alt="" /></p>
+
+<p>The above sequence diagram shows the flow for booking a hotel using a CHS supplier that supports single PNR solution. Highlights of the flow are:</p>
+
+<ul>
+  <li>A CHS supplier will never create a GDS PNR with this solution. During a booking request, we look up the existing PNR associated with the Trip and travel config used or create a new shell PNR and associate it with the trip.</li>
+  <li>We obtain an internal lock on the PNR (for 60 secs) and send the hotel booking request to supplier with the PNR locator.</li>
+  <li>If the supplier is booking with GDS, they will use this PNR locator to add the active segment to the PNR. If rate to book belongs to direct connect (e.g. Booking.com/Expedia), supplier will book with that direct connect and add a passive segment to PNR referenced by this record locator.</li>
+  <li>Once booking is done, we will release the PNR lock making PNR available for further changes for example, adding Air/Car bookings, finishing, etc.</li>
+  <li>If the supplier takes longer than 55 secs, booking transaction will time out.</li>
+  <li>If the PNR lock times out, lock will be released automatically to allow further actions on this PNR. In order to prevent “Simultaneous access” errors for the user, it is necessary for supplier to honor this timeout and stop working on PNR after this.</li>
+  <li>Booking response from the supplier is expected to have <code class="language-plaintext highlighter-rouge">ActiveSegmentInConcurPNR</code> flag to indicate if the active segment was added to the SAP Concur platform PNR or not. This flag will be used to decide if we should treat this booking as GDS booking or direct-connect booking for post-booking functions.</li>
+</ul>
+
+<h3 id="cancel-flow">Cancel Flow</h3>
+
+<p>As mentioned earlier, if <code class="language-plaintext highlighter-rouge">ActiveSegmentInConcurPNR</code> is set to true, booking is treated as a GDS booking and we will manage cancel flow directly with GDS. Though, the CHS supplier will still be notified using the Hotel Service v4 <a href="./v4.endpoints.html#cancel-">cancel endpoint</a>. Note that invocation of <code class="language-plaintext highlighter-rouge">cancel endpoint</code> is only for notification to allow CHS supplier to perform any cancel related processing in their system and hotel booking with GDS should be already canceled at that time.</p>
+
+<p><img src="images/diagrams/singlepnr/hotel_cancel.png" alt="" /></p>
+
+<h4 id="gds-booking">GDS Booking</h4>
+
+<ul>
+  <li>User initiates a cancel request and we cancel the active segment/trip in GDS and update storage with <code class="language-plaintext highlighter-rouge">Canceled</code> status with cancellation number.</li>
+  <li>We send the <code class="language-plaintext highlighter-rouge">cancel</code> request to CHS supplier with cancel number. Note that this request is just acting as a notification to the CHS supplier as booking is already canceled in GDS.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">cancel</code> request can trigger any post-booking processing in CHS supplier system.</li>
+</ul>
+
+<h4 id="direct-connect-booking">Direct Connect Booking</h4>
+
+<ul>
+  <li>User initiates a cancel request and we forward this cancel request to the CHS supplier.</li>
+  <li>Supplier sends the cancel request to their direct connect source and also deletes any related passive segment if they created one for the booking.</li>
+  <li>Cancel response with cancellation number is returned to us which is then stored and displayed to user.</li>
 </ul>
 
 
@@ -1377,7 +1414,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/direct-connects/hotel-service-4/v4.hotel-modify-booking.md">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/direct-connects/hotel-service-4/v4.single-pnr-solution.md">Edit this page on GitHub</a>
     </p>
   </div>
 
