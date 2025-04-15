@@ -9,7 +9,7 @@ Use a refresh token to get a multiple use bearer token to call an API.
 
 ## Prerequisites
 
-* You have created a Refresh Token from an API call and managed refresh token expiration using the previous [Refresh Token Management Automation tutorial](api-guides/authentication/concur-refresh-token-management.html).
+* You have created a Refresh Token from an API call and managed refresh token expiration using the previous [Refresh Token Management Automation tutorial](api-guides/authentication/concur-refresh-token-management/concur-refresh-token-management.html).
 * SAP Concur instance credentials
 * [Node.js](https://nodejs.org/)
 * [GitHub account](https://github.com/)
@@ -36,7 +36,7 @@ How to use a refresh token to get a multiple use bearer token to call an API.
 
 1. Type `node CallingAPIs.js` in terminal to run the app to generate your `credentials.json` file. This generates messages in the terminal that show the credentials object.
 ![Image of terminal running](./img/run-concur-calling-apis-app-generate-file.png)
-1. Fill in the empty fields in this file with the information in the credential object. You can use all of the information from your `credentials.json` file in the [Refresh Token Management Automation tutorial](/api-guides/authentication/concur-refresh-token-management.html) except for the company request token.
+1. Fill in the empty fields in this file with the information in the credential object. You can use all of the information from your `credentials.json` file in the [Refresh Token Management Automation tutorial](api-guides/authentication/concur-refresh-token-management/concur-refresh-token-management.html) except for the company request token.
 ![Image of the information in the credential object.](./img/credentials-json.png)
 
 ## Regenerate and Store Your Refresh Token in a JSON File
