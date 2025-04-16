@@ -54,12 +54,14 @@ Italian (Switzerland)|it_CH
 Japanese (Japan)|ja_JP
 Korean (North Korea)|ko_KP
 Korean (South Korea)|ko_KR
+Malay (Malaysia)|ms_MY
 Norwegian (Norway)|no_NO
 Polish (Poland)|pl_PL
 Portuguese (Brazil)|pt_BR
 Romanian (Romania)|ro_RO
 Russian (Russian Federation)|ru_RU
 Slovak (Slovakia)|sk_SK
+Slovenian (Slovenia)|sl_SI
 Spanish (Argentina)|es_AR
 Spanish (Bolivia)|es_BO
 Spanish (Chile)|es_CL
@@ -82,4 +84,5 @@ Spanish (Venezuela)|es_VE
 Swedish (Sweden)|sv_SE
 Thai (Thailand)|th_TH
 Turkish (Turkey)|tr_TR
+Ukrainian (Ukraine)|uk_UA
 
