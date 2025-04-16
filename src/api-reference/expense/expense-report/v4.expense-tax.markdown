@@ -17,11 +17,11 @@ Access to this documentation does not provide access to the API.
 
 ## <a name="scope-usage"></a>Scope Usage
 
-Name                          | Description                                                                                                                                                                                                                                     |Endpoint|
-------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----|
-`expense.report.read`         | Read information about tax details of an expense on a report.                                                                                                                                                                                   | GET |
-`expense.report.readwrite`    | Read information about tax details of an expense on a report. Note: this is a variance from how the `.readwrite` scope works with other Expense v4 APIs. Write access to tax details is specifically limited to `expense.report.tax.readwrite`. | GET |
-`expense.report.tax.readwrite`| Read and Write information about tax details of an expense on a report.                                                                                                                                                                         | GET |
+Name                          | Description                                                                                                                                                                                                                                     | Endpoint  |
+------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------|
+`expense.report.read`         | Read information about tax details of an expense on a report.                                                                                                                                                                                   | GET       |
+`expense.report.readwrite`    | Read information about tax details of an expense on a report. Note: this is a variance from how the `.readwrite` scope works with other Expense v4 APIs. Write access to tax details is specifically limited to `expense.report.tax.readwrite`. | GET       |
+`expense.report.tax.readwrite`| Read and Write information about tax details of an expense on a report.                                                                                                                                                                         | GET/PATCH |
 
 ## Dependencies <a name="dependencies"></a>
 
@@ -174,6 +174,79 @@ curl -X 'GET' \
 }
 ```
 
+## Updates the Tax Details of a Specific Expense in a Submitted Report <a name="update-tax-in-expense-entry-in-a-submitted-report"></a>
+
+Updates the tax details and custom data of a specified expense on a submitted report. When calling this endpoint only Company JWT authentication is
+allowed. The fields that can be updated are `taxTransactionAmount`,  `reclaimTransactionAmount`, `reclaimCode`, `customData`, and`taxCode`.
+
+### Scopes
+
+* `expense.report.tax.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+/expensereports/v4/reports/{reportId}/expenses/{expenseId}/tax/{taxAuthorityId}
+```
+
+#### Parameters
+
+|Name|Type|Format| Description                                                                          |
+|---|---|---|--------------------------------------------------------------------------------------|
+`reportId`|`string`|-| **Required** The unique identifier of the report to which this expense entry belongs |
+`expenseId`|`string`|-| **Required** The unique identifier of the expense entry that is being patched.       |
+`taxAuthorityId`|`string`|-| **Required** The unique identifier of the tax associated with an expense entry.      |
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+  This is the Company or User access token.
+
+#### REST Design Specification
+
+PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:
+
+* [RFC 7386 Authorization - JSON Merge Patch](https://tools.ietf.org/html/rfc7386)
+
+### Payloads
+
+* Request: [Patch Expense Tax Schema](#update-report-expense-tax-schema)
+* Response: None
+
+### Examples
+
+#### Request
+
+```shell
+curl --location --request PATCH 'https://us.api.concursolutions.com/expensereports/v4/reports/52FE459784414104BA4D/expenses/A57E742BFA61994DABC964EE39677392/tax/11373416D4DC0640B6B2CDE372937C1A' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json' \
+--header 'Content-Type: text/plain' \
+--data-raw '{
+    "customData": [
+    {
+      "id": "custom1",
+      "value": "check"
+    }
+  ],
+    "reclaimTransactionAmount": 12,
+    "taxTransactionAmount": 25,
+    "reclaimCode": "RC7",
+    "taxCode": "TC7"
+}'
+```
+
+#### Response
+```shell
+204 No Content
+```
+
 ## Schema <a name="schema"></a>
 
 ### <a name="expense-tax-details-schema"></a> Expense Tax Details Response
@@ -210,6 +283,24 @@ curl -X 'GET' \
 | `isValid`     | `boolean` | `true`/`false` | If `true`, the value returned is valid. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: `true` |
 | `value`       | `string`  | -              | The value of the custom field. This field can have values for all the supported data types such as `text`, `integer`, `boolean` and `listItemId`. Maximum length: 48 characters                  |
 | `listItemUrl` | `string`  | -              | href (string): The URL of the related HATEOAS link that you can use for subsequent calls.                                                                                                        |
+
+#### <a name="update-expense-tax-custom-data-schema"></a>Update Custom Data
+
+| Name      | Type      | Format         | Description                                                                                                                                                                                          |
+|-----------|-----------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`      | `string`  | -              | **Required** The unique identifier of the custom field. Examples: `custom1`, `orgUnit1`                                                                                                              |
+| `isValid` | `boolean` | `true`/`false` | Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: `true` |
+| `value`   | `string`  | -              | The value of the custom field. This field can have values for all the supported data types such as `text`, `integer`, `boolean` and `listItemId`. Maximum length: 48 characters                      |
+
+### <a name="update-report-expense-tax-schema"></a>Update Report Expense Tax Schema
+
+| Name                       | Type                                                   | Format | Description                                                                                               |
+|----------------------------|--------------------------------------------------------|--------|-----------------------------------------------------------------------------------------------------------|
+| `customData`               | [`CustomData`](#update-expense-tax-custom-data-schema) | -      | The details from the `customData` fields. These fields may not have data, depending on the configuration. |
+| `taxTransactionAmount`     | `decimal`                                              | -      | The tax transaction amount.                                                                               |
+| `reclaimTransactionAmount` | `decimal`                                              | -      | The reclaim transaction amount.                                                                           |
+| `taxCode`                  | `string`                                               | -      | The tax code.                                                                                             |
+| `reclaimCode`              | `string`                                               | -      | The reclaim code.                                                                                         |
 
 ### <a name="error-message-schema"></a>Error Message
 
