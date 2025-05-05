@@ -21,7 +21,7 @@ When using SAML2 IdP-Initiated flow there is the caveat that IdP must support se
 {IdP_URI}?sp={concur_URI}&relayState=%2Fgoto%2Fair-shop%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 ```
 
-> Deeplink Integration is not available for mobile and currently it only supports flight / car / hotel / train search and itinerary lookup.
+> Deeplink Integration currently only supports flight / car / hotel / train search and itinerary lookup.
 
 ## Integration Details
 
