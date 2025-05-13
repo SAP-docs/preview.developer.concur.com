@@ -328,7 +328,7 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="concur-expense-event">Concur Expense Event</h1>
+        <h1 id="concur-expense-report-events">Concur Expense Report Events</h1>
 
 <h2 id="overview"><a name="overview"></a>Overview</h2>
 
@@ -365,11 +365,11 @@
 
 <h3 id="report-created-event"><a name="report-created-event"></a>Report Created Event</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">reportCreated</code> event is intended to be published when a new expense report has been created.</p>
+<p>The <code class="language-plaintext highlighter-rouge">reportCreated</code> event is published when a new expense report is created.</p>
 
 <h3 id="report-updated-event"><a name="report-updated-event"></a>Report Updated Event</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">reportUpdated</code> event is published when an expense report is updated.</p>
+<p>The <code class="language-plaintext highlighter-rouge">reportUpdated</code> event is published when a value in the expense report header is updated. This event is not published for the workflow status changes of the report.</p>
 
 <h3 id="report-deleted-event"><a name="report-deleted-event"></a>Report Deleted Event</h3>
 
@@ -377,9 +377,9 @@
 
 <h3 id="report-status-changed-event"><a name="status-changed-event"></a>Report Status Changed Event</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event is intended to publish a message whenever the status of an expense report changes as it traverses the approval workflow during its life cycle. Subscribers of the event are able to leverage the data in the message to perform synchronous or asynchronous actions depending on their business processes. For example, this could trigger an application to make API calls to Concur Expense or start of a process in a third party application.</p>
+<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event is published whenever the status of an expense report changes as it traverses the approval workflow during its life cycle. Subscribers of the event are able to leverage the data in the message to perform synchronous or asynchronous actions depending on their business processes. For example, this could trigger an application to make API calls to Concur Expense or start of a process in a third party application.</p>
 
-<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event will always be published for the following status changes without any additional configuration:</p>
+<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event will always be published for the following workflow status changes without any additional configuration:</p>
 
 <ul>
   <li>Whenever a report is submitted.</li>
@@ -404,7 +404,7 @@
 
 <h2 id="schema"><a name="schema"></a>Schema</h2>
 
-<h3 id="-report-created-event-schema"><a name="report-created-event-payload-schema"></a> Report Created Event Schema</h3>
+<h3 id="-event-schema-for-expense-report-events"><a name="expense-report-event-payload-schema"></a> Event Schema for Expense Report Events</h3>
 
 <table>
   <thead>
@@ -444,7 +444,7 @@
       <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">reportCreated</code> - Identifies the event type on the topic.</td>
+      <td><strong>Required</strong> Identifies the event type on the topic. Event Type: <code class="language-plaintext highlighter-rouge">reportCreated</code> / <code class="language-plaintext highlighter-rouge">reportUpdated</code> / <code class="language-plaintext highlighter-rouge">reportDeleted</code> / <code class="language-plaintext highlighter-rouge">statusChanged</code></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
@@ -461,7 +461,7 @@
   </tbody>
 </table>
 
-<h3 id="-report-created-facts-schema"><a name="report-created-event-payload-facts-schema"></a> Report Created Facts Schema</h3>
+<h3 id="-facts-schema-for-report-created"><a name="report-created-event-payload-facts-schema"></a> Facts Schema for Report Created</h3>
 
 <table>
   <thead>
@@ -501,7 +501,7 @@
       <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> This value identifies the method used to create the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
+      <td><strong>Required</strong> This value identifies the type of the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
@@ -518,64 +518,7 @@
   </tbody>
 </table>
 
-<h3 id="report-updated-event-schema">Report Updated Event Schema</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">id</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Randomly generated unique identifier of this event.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Unique identifier used for logging/traceability.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">route</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td>For internal use. This will be set to stable.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">topic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> Identifies the topic that the event belongs to <code class="language-plaintext highlighter-rouge">public.concur.expense.report</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">reportUpdated</code> - Identifies the event type on the topic.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td>RFC 3339</td>
-      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">facts</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Map</code></td>
-      <td><a href="#report-updated-event-payload-facts-schema">facts schema</a></td>
-      <td><strong>Required</strong> Key-value pairs providing the content of the event.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="report-updated-facts-schema"><a name="report-updated-event-payload-facts-schema"></a>Report Updated Facts Schema</h3>
+<h3 id="facts-schema-for-report-updated"><a name="report-updated-event-payload-facts-schema"></a>Facts Schema for Report Updated</h3>
 
 <table>
   <thead>
@@ -597,25 +540,25 @@
       <td><code class="language-plaintext highlighter-rouge">userId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td>The unique identifier of the report creator unless a delegate or proxy is involved. In these instances, it will be the user for which the report is being created (i.e., the report owner). <br />This value can be NULL when a system initiates the change action instead of a user. This would include API calls with a Company JWT. <br />Use Identity v4 API to retrieve user details.</td>
+      <td>The unique identifier of the report updater unless a delegate or proxy is involved. In these instances, it will be the user for which the report was updated (i.e., the report owner). <br />This value can be NULL when a system initiates the change action instead of a user. This would include API calls with a Company JWT. <br />Use Identity v4 API to retrieve user details.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">actingUserId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td>User unique identifier. If a delegate or expense proxy created the report on behalf of another user, then this will be populated with the identifier for that delegate or expense proxy user, else it will be NULL. <br />Use Identity v4 API to retrieve user details.</td>
+      <td>User unique identifier. If a delegate or expense proxy updated the report on behalf of another user, then this will be populated with the identifier for that delegate or expense proxy user, else it will be NULL. <br />Use Identity v4 API to retrieve user details.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
-      <td><strong>Required</strong> Unique identifier of the newly created expense report. Maximum characters: 20</td>
+      <td><strong>Required</strong> Unique identifier of the updated expense report. Maximum characters: 20</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> This value identifies the method used to create the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
+      <td><strong>Required</strong> This value identifies the type of the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
@@ -632,64 +575,7 @@
   </tbody>
 </table>
 
-<h3 id="report-deleted-event-schema">Report Deleted Event Schema</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">id</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Randomly generated unique identifier of this event.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Unique identifier used for logging/traceability.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">route</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td>For internal use. This will be set to stable.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">topic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> Identifies the topic that the event belongs to <code class="language-plaintext highlighter-rouge">public.concur.expense.report</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">reportDeleted</code> - Identifies the event type on the topic.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td>RFC 3339</td>
-      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">facts</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Map</code></td>
-      <td><a href="#report-deleted-event-payload-facts-schema">facts schema</a></td>
-      <td><strong>Required</strong> Key-value pairs providing the content of the event.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="report-deleted-facts-schema"><a name="report-deleted-event-payload-facts-schema"></a>Report Deleted Facts Schema</h3>
+<h3 id="facts-schema-for-report-deleted"><a name="report-deleted-event-payload-facts-schema"></a>Facts Schema for Report Deleted</h3>
 
 <table>
   <thead>
@@ -711,25 +597,25 @@
       <td><code class="language-plaintext highlighter-rouge">userId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td>The unique identifier of the report creator unless a delegate or proxy is involved. In these instances, it will be the user for which the report is being created (i.e., the report owner). <br />This value can be NULL when a system initiates the change action instead of a user. This would include API calls with a Company JWT. <br />Use Identity v4 API to retrieve user details.</td>
+      <td>The unique identifier of the report deleter unless a delegate or proxy is involved. In these instances, it will be the user for whose report is deleted (i.e., the report owner). <br />This value can be NULL when a system initiates the change action instead of a user. This would include API calls with a Company JWT. <br />Use Identity v4 API to retrieve user details.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">actingUserId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td>User unique identifier. If a delegate or expense proxy created the report on behalf of another user, then this will be populated with the identifier for that delegate or expense proxy user, else it will be NULL. <br />Use Identity v4 API to retrieve user details.</td>
+      <td>User unique identifier. If a delegate or expense proxy deleted the report on behalf of another user, then this will be populated with the identifier for that delegate or expense proxy user, else it will be NULL. <br />Use Identity v4 API to retrieve user details.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
-      <td><strong>Required</strong> Unique identifier of the newly created expense report. Maximum characters: 20</td>
+      <td><strong>Required</strong> Unique identifier of the deleted expense report. Maximum characters: 20</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> This value identifies the method used to create the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
+      <td><strong>Required</strong> This value identifies the type of the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
@@ -740,64 +626,7 @@
   </tbody>
 </table>
 
-<h3 id="report-status-changed-event-schema">Report Status Changed Event Schema</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">id</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Randomly generated unique identifier of this event.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Unique identifier used for logging/traceability.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">route</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td>For internal use. This will be set to stable.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">topic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> Identifies the topic that the event belongs to <code class="language-plaintext highlighter-rouge">public.concur.expense.report</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">statusChanged</code> - Identifies the event type on the topic.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td>RFC 3339</td>
-      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">facts</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Map</code></td>
-      <td><a href="#status-changed-event-payload-facts-schema">facts schema</a></td>
-      <td><strong>Required</strong> Key-value pairs providing the content of the event.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="report-status-changed-facts-schema"><a name="status-changed-event-payload-facts-schema"></a>Report Status Changed Facts Schema</h3>
+<h3 id="facts-schema-for-report-status-changed"><a name="status-changed-event-payload-facts-schema"></a>Facts Schema for Report Status Changed</h3>
 
 <table>
   <thead>
