@@ -7,7 +7,7 @@ This repo contains the documentation and support content for the Concur API deve
 
 Changes merged to the `preview` repository (https://github.com/SAP-docs/preview.developer.concur.com) can be found here: [https://preview.developer.concur.com/](http://preview.developer.concur.com/)
 
-Changes merged to the `live` repository (https://github.com/SAP-docs/developer.concur.com) can be found here: [https://developer.concur.com/](http://developer.concur.com/)
+Changes merged to the `live` repository (https://github.com/concur/developer.concur.com) can be found here: [https://developer.concur.com/](http://developer.concur.com/)
 
 # Requirements
 
