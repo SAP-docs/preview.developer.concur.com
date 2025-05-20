@@ -6,6 +6,7 @@ layout: reference
 
 ## Developer Platform Release Notes
 
+* [May 2025](./api/2025-05-05.html)
 * [April 2025](./api/2025-04-03.html)
 * [March 2025](./api/2025-03-06.html)
 * [February 2025](./api/2025-02-06.html)
