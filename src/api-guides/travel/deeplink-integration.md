@@ -9,7 +9,7 @@ The Deeplink Integration allows Concur Travel users to have direct access to the
 
 ## Prerequisites
 
-Users must have an account in Concur Travel and they need to authenticate or be logged in. Authentication methods supported are username / password and SSO SAML2.
+Users must have an account in Concur Travel and they need to authenticate or be logged in. Authentication methods supported are username, password, and SSO SAML2.
 
 The company must be part of the new Concur Travel.
 
@@ -21,7 +21,7 @@ When using SAML2 IdP-Initiated flow there is the caveat that IdP must support se
 {IdP_URI}?sp={concur_URI}&relayState=%2Fgoto%2Fair-shop%3Fdeparturedate%3D2023-11-10%26departureLocation%3DJFK%26returndate%3D2023-11-15%26returnlocation%3DLAX
 ```
 
-> Deeplink Integration is not available for mobile and currently it only supports flight / car / hotel / train search and itinerary lookup.
+> Deeplink Integration currently only supports flight, car, hotel, train search, and itinerary lookup.
 
 ## Integration Details
 
@@ -69,7 +69,7 @@ https://www.concursolutions.com/goto/air-shop?companyuuid=1abc2345-6789-123d-45e
 
 ## Flight Search
 
-Users can search for round-trip flights by entering a departure date, origin / departure airport, a return date and a destination / return airport. If searching for a one-way flight, they must enter the departure information and destination airport; however, they shouldn't provide a return date.
+Users can search for round-trip flights by entering a departure date, origin/departure airport, a return date and a destination/return airport. If searching for a one-way flight, they must enter the departure information and destination airport; however, they shouldn't provide a return date.
 
 Users are able to **omit one** of the airports (departure or return) when they want to departure from or return to their home airport. For this, they need to have a preferred departure airport configured in their Travel Profile — under Air Travel Preferences, set **Preferred Departure Airport**. Or, they can select an airport while following the deeplink. In case the departure airport is missing in the deeplink, they also have the option to save the selected airport to the profile.
 
