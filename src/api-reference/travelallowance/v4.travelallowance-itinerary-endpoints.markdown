@@ -3,10 +3,168 @@ title: Travel Allowance v4 - Itinerary
 layout: reference
 ---
 
+## <a name="create-itinerary-resource"></a>Travel Allowance Itinerary (Create)
+
+This endpoint creates an itinerary for a user based on its configuration and itinerary segments.
+
+#### Scopes
+
+`travelallowance.itinerary.writeonly` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+#### URI
+
+```shell
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries
+```
+
+#### Parameters
+
+| Name     | Type     | Format | Description                                        |
+|----------|----------|--------|----------------------------------------------------|
+| `userId` | `string` | uuid   | **Required** Unique identifier of a traveler(user) |
+
+#### Payloads
+
+* Request: [ItineraryCreateRequest](#schema-itinerarycreaterequest)
+* Response: [Itinerary](#schema-itinerary)
+
+#### Examples
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries
+Content-Type: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
+Accept-Language: en-US
+
+{
+  "assignment": {
+    "context": "EXPENSE_REPORT",
+    "contextId": "42B42F3CFA6D476B88B6"
+  },
+  "header": {
+    "configurationCode": "GERMAN_RATE_DOMESTIC",
+    "description": "Project at customer",
+    "hasNoLodging": false,
+    "overlapTypeCode": "TRIP_HOME",
+    "tripTypeCode": "CUSTOMER_FACING"
+  },
+  "segments": [
+    {
+      "address": {
+        "city": "Nuernberg",
+        "communityCode": "",
+        "countryCode": "DE",
+        "postalCode": "83263",
+        "street": "Mozartstr. 95"
+      },
+      "arrivalDate": "2023-11-01",
+      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalTime": "08:08",
+      "borderCrossingDate": "2023-11-01",
+      "borderCrossingTime": "08:08",
+      "departureDate": "2023-11-01",
+      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "departureTime": "08:08"
+    },
+    {
+      "address": {
+        "city": "",
+        "communityCode": "",
+        "countryCode": "",
+        "postalCode": "",
+        "street": ""
+      },
+      "arrivalDate": "2023-11-06",
+      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "arrivalTime": "10:00",
+      "borderCrossingDate": "2023-11-06",
+      "borderCrossingTime": "10:00",
+      "departureDate": "2023-11-06",
+      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "departureTime": "10:00"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "header": {
+    "configurationCode": "GERMAN_RATE_DOMESTIC",
+    "description": "Project at customer",
+    "hasNoLodging": false,
+    "id": 2703,
+    "overlapTypeCode": "TRIP_HOME",
+    "tripTypeCode": "CUSTOMER_FACING",
+    "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448"
+  },
+  "segments": [
+    {
+      "address": {
+        "city": "Nuernberg",
+        "communityCode": "",
+        "countryCode": "DE",
+        "postalCode": "83263",
+        "street": "Mozartstr. 95"
+      },
+      "arrivalDate": "2023-11-01",
+      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalTime": "08:08",
+      "borderCrossingDate": "2023-11-01",
+      "borderCrossingTime": "08:08",
+      "departureDate": "2023-11-01",
+      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "departureTime": "08:08"
+    },
+    {
+      "address": {
+        "city": "",
+        "communityCode": "",
+        "countryCode": "",
+        "postalCode": "",
+        "street": ""
+      },
+      "arrivalDate": "2023-11-06",
+      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "arrivalTime": "10:00",
+      "borderCrossingDate": "2023-11-06",
+      "borderCrossingTime": "10:00",
+      "departureDate": "2023-11-06",
+      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "departureTime": "10:00"
+    }
+  ],
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "self"
+    }
+  ]
+}
+```
+
+#### Response Header
+
+```shell
+Data:
+    Content-Type: application/json
+    Etag: "jVuvyo9fmtwtl8IeZGCpEyYAAAAAAAAA"
+```
 
 ## <a name="retrieve-itinerary-resources"></a>Travel Allowance Itineraries (Retrieve)
 
-This endpoint returns the itineraries of a user. This includes header information such as configuration code, overlap type code, trip type code, and the itinerary segments.
+This endpoint returns the itineraries of a user. This includes header information such as configuration code, overlap
+type code and trip type code and the itinerary segments.
 
 ### Scopes
 
@@ -20,21 +178,22 @@ https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries?context={c
 
 ### Parameters
 
-Name|Type|Format |Description                                 
----|---|---|---
- `userId`|`string` | uuid   | **Required** Unique identifier of a traveler(user).
- `context` |`string` | -  |This parameter isn't required. Possible values are `TRAVEL_REQUEST` and `EXPENSE_REPORT`.
- `contextId`|`string` | - |The unique identifier of a travel request or expense report. This parameter isn't required.
- `startDate`|`date` | [ISO 8601] `yyyy-MM-dd` | Start date of the selection interval. This parameter isn't required.
- `endDate`|`date`| [ISO 8601] `yyyy-MM-dd`| End date of the selection interval. This parameter isn't required.
- `pageId`|`string` | - | The ID of a page in case pagination is required to get all results.
- 
+ Name        | Type     | Format                  | Description                                                                                                         
+-------------|----------|-------------------------|---------------------------------------------------------------------------------------------------------------------
+ `userId`    | `string` | uuid                    | **Required** Unique identifier of a traveler(user)                                                                   
+ `context`   | `string` | -                       | Possible values are TRAVEL_REQUEST and EXPENSE_REPORT  
+ `contextId` | `string` | -                       | The unique identifier of a travel request or expense report                         
+ `startDate` | `date`   | [ISO 8601] `yyyy-MM-dd` | Start date of the selection interval                                                
+ `endDate`   | `date`   | [ISO 8601] `yyyy-MM-dd` | End date of the selection interval                                                 
+ `pageId`    | `string` | -                       | The ID of a page in case pagination is required to get all results                                                  
+
 ### Payloads
 
 * Request: None
-* Response: [Schema](#schema-collectionmodelofentitymodelofpaginationresultoflistofitinerary)
+* Response: [ItineraryCollection](#schema-collectionmodelofentitymodelofpaginationresultoflistofitinerary)
 
 ### Examples
+
 #### Request
 
 ```shell
@@ -52,7 +211,6 @@ Accept-Language: en-US
 Content-Type: application/json
 ```
 
-
 ```json
 {
   "content": [
@@ -60,22 +218,14 @@ Content-Type: application/json
       "header": {
         "configurationCode": "GERMAN_RATE_DOMESTIC",
         "description": "Project at customer",
-        "id": 2703,
-        "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448",
         "hasNoLodging": false,
+        "id": 2703,
         "overlapTypeCode": "TRIP_HOME",
         "tripTypeCode": "CUSTOMER_FACING",
+        "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448"
       },
       "segments": [
         {
-          "departureDate": "2023-11-01",
-          "departureTime": "08:08",
-          "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
-          "borderCrossingDate": "2023-11-01",
-          "borderCrossingTime": "08:08",
-          "arrivalDate": "2023-11-01",
-          "arrivalTime": "08:08",
-          "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
           "address": {
             "city": "Nuernberg",
             "communityCode": "",
@@ -83,6 +233,14 @@ Content-Type: application/json
             "postalCode": "83263",
             "street": "Mozartstr. 95"
           },
+          "arrivalDate": "2023-11-01",
+          "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+          "arrivalTime": "08:08",
+          "borderCrossingDate": "2023-11-01",
+          "borderCrossingTime": "08:08",
+          "departureDate": "2023-11-01",
+          "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+          "departureTime": "08:08"
         },
         {
           "address": {
@@ -92,20 +250,20 @@ Content-Type: application/json
             "postalCode": "",
             "street": ""
           },
-          "departureDate": "2023-11-06",
-          "departureTime": "10:00",
-          "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+          "arrivalDate": "2023-11-06",
+          "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+          "arrivalTime": "10:00",
           "borderCrossingDate": "2023-11-06",
           "borderCrossingTime": "10:00",
-          "arrivalDate": "2023-11-06",
-          "arrivalTime": "10:00",
-          "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40"
+          "departureDate": "2023-11-06",
+          "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+          "departureTime": "10:00"
         }
       ],
       "links": [
         {
-          "rel": "self",
-          "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703"
+          "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+          "rel": "self"
         }
       ]
     }
@@ -121,7 +279,8 @@ Content-Type: application/json
 
 ## <a name="retrieve-itinerary-resource"></a>Travel Allowance Itinerary (Retrieve)
 
-This endpoint returns a specific itinerary of a user. This includes header information such as configuration code, overlap type code, trip type code, and the itinerary segments. 
+This endpoint returns a specific itinerary of a user. This includes header information such as configuration code,
+overlap type code and trip type code and the itinerary segments.
 
 ### Scopes
 
@@ -135,17 +294,18 @@ https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itinerary
 
 ### Parameters
 
-Name|Type|Format |Description                                 
----|---|---|---
-`userId` | `string` | uuid   | **Required** Unique identifier of a traveler(user).
-`itineraryId`| `integer`| int64  | **Required** Unique identifier of an itinerary.
- 
+ Name          | Type      | Format | Description                                       
+---------------|-----------|--------|---------------------------------------------------
+ `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) 
+ `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary    
+
 ### Payloads
 
 * Request: None
-* Response: [Schema](#schema-itinerary)
+* Response: [Itinerary](#schema-itinerary)
 
 ### Examples
+
 #### Request
 
 ```shell
@@ -163,28 +323,19 @@ Accept-Language: en-US
 Content-Type: application/json
 ```
 
-
 ```json
 {
   "header": {
     "configurationCode": "GERMAN_RATE_DOMESTIC",
     "description": "Project at customer",
-    "id": 2703,
-    "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448",
     "hasNoLodging": false,
+    "id": 2703,
     "overlapTypeCode": "TRIP_HOME",
     "tripTypeCode": "CUSTOMER_FACING",
+    "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448"
   },
   "segments": [
     {
-      "departureDate": "2023-11-01",
-      "departureTime": "08:08",
-      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
-      "borderCrossingDate": "2023-11-01",
-      "borderCrossingTime": "08:08",
-      "arrivalDate": "2023-11-01",
-      "arrivalTime": "08:08",
-      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
       "address": {
         "city": "Nuernberg",
         "communityCode": "",
@@ -192,6 +343,14 @@ Content-Type: application/json
         "postalCode": "83263",
         "street": "Mozartstr. 95"
       },
+      "arrivalDate": "2023-11-01",
+      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalTime": "08:08",
+      "borderCrossingDate": "2023-11-01",
+      "borderCrossingTime": "08:08",
+      "departureDate": "2023-11-01",
+      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "departureTime": "08:08"
     },
     {
       "address": {
@@ -201,115 +360,1496 @@ Content-Type: application/json
         "postalCode": "",
         "street": ""
       },
-      "departureDate": "2023-11-06",
-      "departureTime": "10:00",
-      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalDate": "2023-11-06",
+      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "arrivalTime": "10:00",
       "borderCrossingDate": "2023-11-06",
       "borderCrossingTime": "10:00",
-      "arrivalDate": "2023-11-06",
-      "arrivalTime": "10:00",
-      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40"
+      "departureDate": "2023-11-06",
+      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "departureTime": "10:00"
     }
-  ],,
+  ],
   "links": [
     {
-      "rel": "self",
-      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703"
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "self"
     }
   ]
 }
 ```
 
 #### Response Header
+
 ```shell
 Data:
     Content-Type: application/json
     Etag: "jVuvyo9fmtwtl8IeZGCpEyYAAAAAAAAA"
 ```
 
-## <a name="retrieve-itinerary-assignment"></a>Travel Allowance Itinerary Assignments (Retrieve)
+## <a name="update-itinerary-resource"></a>Travel Allowance Itinerary (Update)
 
-This endpoint returns the assignments of a specific itinerary of a user. This includes the context of the itinerary and the assignment to a `contextId` per period. Unassigned periods are returned with empty strings as `contextId`.
+This endpoint updates an itinerary for a user.
 
-### Scopes
+#### Scopes
 
-`travelallowance.itinerary.read` - Refer to [Scope Usage]((./v4.get-started.html#scope-usage)) for full details.
+`travelallowance.itinerary.writeonly` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
 
-### URI
+#### URI
 
 ```shell
-https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itineraryId}/assignments
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itineraryId}
 ```
 
-### Parameters
+#### Parameters
 
-Name|Type|Format |Description                                 
----|---|---|---
-`userId`| `string` | uuid | **Required** Unique identifier of a traveler(user).
-`itineraryId`| `integer`| int64  | **Required** Unique identifier of an itinerary.
- 
-### Payloads
+| Name          | Type      | Format | Description                                        |
+|---------------|-----------|--------|----------------------------------------------------|
+| `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) |
+| `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary     |
 
-* Request: None
-* Response: [Schema](#schema-itineraryAssignment)
+#### Payloads
 
-### Examples
-#### Request
+* Request: [Itinerary](#schema-itinerary)
+* Response: [Itinerary](#schema-itinerary)
+
+#### Examples
+
+##### Request
 
 ```shell
-GET https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/assignments
-Accept: application/json
+PUT https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703
+Content-Type: application/json
 Authorization: Bearer {token}
 Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
 Accept-Language: en-US
+
+{
+  "header": {
+    "configurationCode": "GERMAN_RATE_DOMESTIC",
+    "description": "Project at customer",
+    "hasNoLodging": false,
+    "id": 2703,
+    "overlapTypeCode": "TRIP_HOME",
+    "tripTypeCode": "CUSTOMER_FACING",
+    "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448"
+  },
+  "segments": [
+    {
+      "address": {
+        "city": "Nuernberg",
+        "communityCode": "",
+        "countryCode": "DE",
+        "postalCode": "83263",
+        "street": "Mozartstr. 95"
+      },
+      "arrivalDate": "2023-11-01",
+      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalTime": "08:08",
+      "borderCrossingDate": "2023-11-01",
+      "borderCrossingTime": "08:08",
+      "departureDate": "2023-11-01",
+      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "departureTime": "08:08"
+    },
+    {
+      "address": {
+        "city": "",
+        "communityCode": "",
+        "countryCode": "",
+        "postalCode": "",
+        "street": ""
+      },
+      "arrivalDate": "2023-11-06",
+      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "arrivalTime": "10:00",
+      "borderCrossingDate": "2023-11-06",
+      "borderCrossingTime": "10:00",
+      "departureDate": "2023-11-06",
+      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "departureTime": "10:00"
+    }
+  ]
+}
 ```
 
-#### Response
+##### Response
 
 ```shell
 200 OK
 Content-Type: application/json
 ```
 
-
 ```json
 {
-  "context": "EXPENSE_REPORT",
-  "itineraryPeriodAssignmentList": [
+  "header": {
+    "configurationCode": "GERMAN_RATE_DOMESTIC",
+    "description": "Project at customer",
+    "hasNoLodging": false,
+    "id": 2703,
+    "overlapTypeCode": "TRIP_HOME",
+    "tripTypeCode": "CUSTOMER_FACING",
+    "userId": "5e029477-6582-48f3-91e8-bc34c7ed8448"
+  },
+  "segments": [
     {
-      "contextId": "42B42F3CFA6D476B88B6",
-      "period": {
-        "startDate": "2021-11-01",
-        "endDate": "2021-11-05"
-      }
+      "address": {
+        "city": "Nuernberg",
+        "communityCode": "",
+        "countryCode": "DE",
+        "postalCode": "83263",
+        "street": "Mozartstr. 95"
+      },
+      "arrivalDate": "2023-11-01",
+      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalTime": "08:08",
+      "borderCrossingDate": "2023-11-01",
+      "borderCrossingTime": "08:08",
+      "departureDate": "2023-11-01",
+      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "departureTime": "08:08"
     },
     {
-      "contextId": "",
-      "period": {
-        "startDate": "2021-11-06",
-        "endDate": "2021-11-06"
-      }
+      "address": {
+        "city": "",
+        "communityCode": "",
+        "countryCode": "",
+        "postalCode": "",
+        "street": ""
+      },
+      "arrivalDate": "2023-11-06",
+      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "arrivalTime": "10:00",
+      "borderCrossingDate": "2023-11-06",
+      "borderCrossingTime": "10:00",
+      "departureDate": "2023-11-06",
+      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "departureTime": "10:00"
     }
   ],
   "links": [
     {
-      "rel": "self",
-      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703"
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "self"
     }
   ]
 }
 ```
 
 #### Response Header
+
 ```shell
 Data:
     Content-Type: application/json
     Etag: "jVuvyo9fmtwtl8IeZGCpEyYAAAAAAAAA"
 ```
 
+## <a name="simulate-itinerary"></a>Travel Allowance Itinerary (Simulate)
+
+This endpoint returns the detailed calculation results for a simulated itinerary.
+These calculation results are divided in client and government amounts which are based on rates defined in the travel allowance configuration.
+The rates are determined by government and company policies and may differ depending on location and length of travel as well as partial days of travel, seasonal travel, and so on.
+
+#### Scopes
+
+`travelallowance.itinerary.read` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+#### URI
+
+```shell
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itinerarySimulation
+```
+
+#### Parameters
+
+| Name     | Type     | Format | Description                                        |
+|----------|----------|--------|----------------------------------------------------|
+| `userId` | `string` | uuid   | **Required** Unique identifier of a traveler(user) |
+
+#### Payloads
+
+* Request: [Itinerary Simulation Request](#schema-itinerarysimulationrequest)
+* Response: [Itinerary Result Detail](./v4.travelallowance-calculationresults-endpoints.markdown#schema-ItineraryResultDetails)
+
+#### Examples
+
+##### Request
+
+```shell
+POST https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itinerarySimulation
+Content-Type: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
+Accept-Language: en-US
+
+{
+"segments": [
+    {
+      "arrivalDate": "2023-11-01",
+      "arrivalLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "arrivalTime": "08:08",
+      "borderCrossingDate": "2023-11-01",
+      "borderCrossingTime": "08:08",
+      "departureDate": "2023-11-01",
+      "departureLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "departureTime": "08:08"
+    },
+    {
+      "arrivalDate": "2023-11-06",
+      "arrivalLocationNameId": "1e90f2ec-e1ba-4e42-a295-2083421f3a40",
+      "arrivalTime": "10:00",
+      "borderCrossingDate": "2023-11-06",
+      "borderCrossingTime": "10:00",
+      "departureDate": "2023-11-06",
+      "departureLocationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+      "departureTime": "10:00"
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "itineraryDerivedData": {
+    "startDate": "2023-11-01",
+    "startTime": "08:08:00",
+    "startDateUtc": "2023-11-01",
+    "startTimeUtc": "07:08:00",
+    "endDate": "2023-11-06",
+    "endTime": "10:00:00",
+    "endDateUtc": "2023-11-06",
+    "endTimeUtc": "09:00:00",
+    "numberOfDays": 6,
+    "domestic": true,
+    "homeCountry": "DE",
+    "paymentCurrency": "EUR",
+    "hasActualsConfigured": false
+  },
+  "itineraryRateCategoryTotals": [
+    {
+      "rateCategoryCode": "MEAL",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 112,
+      "clientAmountInPaymentCurrency": 112,
+      "benefitInKindAmountInPaymentCurrency": 0
+    },
+    {
+      "rateCategoryCode": "LODGING",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 100,
+      "clientAmountInPaymentCurrency": 50,
+      "benefitInKindAmountInPaymentCurrency": 0
+    },
+    {
+      "rateCategoryCode": "INCIDENTAL",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 0,
+      "clientAmountInPaymentCurrency": 0,
+      "benefitInKindAmountInPaymentCurrency": 0
+    }
+  ],
+  "dailyResultDetails": [
+    {
+      "date": "2023-11-01",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 34,
+      "clientAmountInPaymentCurrency": 24,
+      "benefitInKindAmountInPaymentCurrency": 0,
+      "dailyRateCategoryTotals": [
+        {
+          "rateCategoryCode": "MEAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 14,
+          "clientAmountInPaymentCurrency": 14,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "LODGING",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 20,
+          "clientAmountInPaymentCurrency": 10,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "INCIDENTAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        }
+      ],
+      "dailyRateTypeDetails": [
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "MEAL",
+            "rateCategoryCode": "MEAL",
+            "expenseTypeCode": "FXMLS",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-01",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-01",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 14,
+            "clientAmountInRateCurrency": 14,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 14,
+            "clientAmountInPaymentCurrency": 14,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 14,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 14,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 14,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 14,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 14,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 14,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 14,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 14,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        },
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "LODGING",
+            "rateCategoryCode": "LODGING",
+            "expenseTypeCode": "FXLDG",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-01",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-06",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 20,
+            "clientAmountInRateCurrency": 10,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 20,
+            "clientAmountInPaymentCurrency": 10,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 20,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 20,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 20,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 20,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 10,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 10,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 10,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 10,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2023-11-02",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 42.4,
+      "clientAmountInPaymentCurrency": 32.4,
+      "benefitInKindAmountInPaymentCurrency": 0,
+      "dailyRateCategoryTotals": [
+        {
+          "rateCategoryCode": "MEAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 22.4,
+          "clientAmountInPaymentCurrency": 22.4,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "LODGING",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 20,
+          "clientAmountInPaymentCurrency": 10,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "INCIDENTAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        }
+      ],
+      "dailyRateTypeDetails": [
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "MEAL",
+            "rateCategoryCode": "MEAL",
+            "expenseTypeCode": "FXMLS",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-02",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-02",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 22.4,
+            "clientAmountInRateCurrency": 22.4,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 22.4,
+            "clientAmountInPaymentCurrency": 22.4,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-02",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-02",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        },
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "LODGING",
+            "rateCategoryCode": "LODGING",
+            "expenseTypeCode": "FXLDG",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-02",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-06",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 20,
+            "clientAmountInRateCurrency": 10,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 20,
+            "clientAmountInPaymentCurrency": 10,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 20,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 20,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 20,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 20,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 10,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 10,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 10,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 10,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2023-11-03",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 42.4,
+      "clientAmountInPaymentCurrency": 32.4,
+      "benefitInKindAmountInPaymentCurrency": 0,
+      "dailyRateCategoryTotals": [
+        {
+          "rateCategoryCode": "MEAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 22.4,
+          "clientAmountInPaymentCurrency": 22.4,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "LODGING",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 20,
+          "clientAmountInPaymentCurrency": 10,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "INCIDENTAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        }
+      ],
+      "dailyRateTypeDetails": [
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "MEAL",
+            "rateCategoryCode": "MEAL",
+            "expenseTypeCode": "FXMLS",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-03",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-03",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 22.4,
+            "clientAmountInRateCurrency": 22.4,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 22.4,
+            "clientAmountInPaymentCurrency": 22.4,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-03",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-03",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        },
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "LODGING",
+            "rateCategoryCode": "LODGING",
+            "expenseTypeCode": "FXLDG",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-03",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-06",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 20,
+            "clientAmountInRateCurrency": 10,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 20,
+            "clientAmountInPaymentCurrency": 10,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 20,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 20,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 20,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 20,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 10,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 10,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 10,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 10,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2023-11-04",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 42.4,
+      "clientAmountInPaymentCurrency": 32.4,
+      "benefitInKindAmountInPaymentCurrency": 0,
+      "dailyRateCategoryTotals": [
+        {
+          "rateCategoryCode": "MEAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 22.4,
+          "clientAmountInPaymentCurrency": 22.4,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "LODGING",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 20,
+          "clientAmountInPaymentCurrency": 10,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "INCIDENTAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        }
+      ],
+      "dailyRateTypeDetails": [
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "MEAL",
+            "rateCategoryCode": "MEAL",
+            "expenseTypeCode": "FXMLS",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-04",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-04",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 22.4,
+            "clientAmountInRateCurrency": 22.4,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 22.4,
+            "clientAmountInPaymentCurrency": 22.4,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-04",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-04",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        },
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "LODGING",
+            "rateCategoryCode": "LODGING",
+            "expenseTypeCode": "FXLDG",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-04",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-06",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 20,
+            "clientAmountInRateCurrency": 10,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 20,
+            "clientAmountInPaymentCurrency": 10,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 20,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 20,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 20,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 20,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 10,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 10,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 10,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 10,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2023-11-05",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 42.4,
+      "clientAmountInPaymentCurrency": 32.4,
+      "benefitInKindAmountInPaymentCurrency": 0,
+      "dailyRateCategoryTotals": [
+        {
+          "rateCategoryCode": "MEAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 22.4,
+          "clientAmountInPaymentCurrency": 22.4,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "LODGING",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 20,
+          "clientAmountInPaymentCurrency": 10,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "INCIDENTAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        }
+      ],
+      "dailyRateTypeDetails": [
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "MEAL",
+            "rateCategoryCode": "MEAL",
+            "expenseTypeCode": "FXMLS",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-05",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-05",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 22.4,
+            "clientAmountInRateCurrency": 22.4,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 22.4,
+            "clientAmountInPaymentCurrency": 22.4,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-05",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 28,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 28,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 28,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-05",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 22.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        },
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "LODGING",
+            "rateCategoryCode": "LODGING",
+            "expenseTypeCode": "FXLDG",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-05",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-06",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 20,
+            "clientAmountInRateCurrency": 10,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 20,
+            "clientAmountInPaymentCurrency": 10,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 20,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 20,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 20,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 20,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 10,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 10,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 10,
+              "deductions": [],
+              "resultingAmountInRateCurrency": 10,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "date": "2023-11-06",
+      "paymentCurrency": "EUR",
+      "governmentAmountInPaymentCurrency": 8.4,
+      "clientAmountInPaymentCurrency": 8.4,
+      "benefitInKindAmountInPaymentCurrency": 0,
+      "dailyRateCategoryTotals": [
+        {
+          "rateCategoryCode": "MEAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 8.4,
+          "clientAmountInPaymentCurrency": 8.4,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "LODGING",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        },
+        {
+          "rateCategoryCode": "INCIDENTAL",
+          "paymentCurrency": "EUR",
+          "governmentAmountInPaymentCurrency": 0,
+          "clientAmountInPaymentCurrency": 0,
+          "benefitInKindAmountInPaymentCurrency": 0
+        }
+      ],
+      "dailyRateTypeDetails": [
+        {
+          "calculationDetailsSummary": {
+            "rateTypeCode": "MEAL",
+            "rateCategoryCode": "MEAL",
+            "expenseTypeCode": "FXMLS",
+            "location": {
+              "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+              "uNLocationCode": "DENUE",
+              "administrativeRegionId": null,
+              "subDivisionCode": "DE-BY",
+              "countryCode": "DE"
+            },
+            "governmentRateCurrency": "EUR",
+            "governmentConversionRate": 1,
+            "dateOfGovernmentConversionRate": "2023-11-06",
+            "clientRateCurrency": "EUR",
+            "clientConversionRate": 1,
+            "dateOfClientConversionRate": "2023-11-06",
+            "paymentCurrency": "EUR",
+            "governmentAmountInRateCurrency": 8.4,
+            "clientAmountInRateCurrency": 8.4,
+            "benefitInKindAmountInRateCurrency": 0,
+            "governmentAmountInPaymentCurrency": 8.4,
+            "clientAmountInPaymentCurrency": 8.4,
+            "benefitInKindAmountInPaymentCurrency": 0
+          },
+          "governmentCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 14,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 14,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 14,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-06",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 8.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ],
+          "clientCalculationDetails": [
+            {
+              "rates": [
+                {
+                  "rateAmountInRateCurrency": 14,
+                  "rateCurrency": "EUR"
+                }
+              ],
+              "rateCurrency": "EUR",
+              "rateAmountInRateCurrency": 14,
+              "adjustmentFactors": [],
+              "adjustedAmountInRateCurrency": 14,
+              "deductions": [
+                {
+                  "deductionCategoryCode": "BREAKFAST",
+                  "deductionTypeCode": "PROVIDED",
+                  "deductionCurrency": "EUR",
+                  "rateCurrency": "EUR",
+                  "conversionRate": 1,
+                  "dateOfConversionRate": "2023-11-06",
+                  "deductionAmountInDeductionCurrency": 5.6,
+                  "deductionAmountInRateCurrency": 5.6,
+                  "benefitInKindAmountInRateCurrency": 0
+                }
+              ],
+              "resultingAmountInRateCurrency": 8.4,
+              "location": {
+                "locationNameId": "0340871b-2d9b-9ef4-b66e-6b044ab0981e",
+                "uNLocationCode": "DENUE",
+                "administrativeRegionId": null,
+                "subDivisionCode": "DE-BY",
+                "countryCode": "DE"
+              },
+              "specialRulesApplied": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itinerarySimulation",
+      "rel": "self"
+    }
+  ]
+}
+```
+
+## <a name="delete-itinerary-resource"></a>Travel Allowance Itinerary (Delete)
+
+This endpoint deletes an itinerary for a user.
+
+#### Scopes
+
+`travelallowance.itinerary.writeonly` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+#### URI
+
+```shell
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itineraryId}
+```
+
+#### Parameters
+
+| Name          | Type      | Format | Description                                        |
+|---------------|-----------|--------|----------------------------------------------------|
+| `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) |
+| `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary     |
+
+#### Payloads
+
+* Request: None
+* Response: None
+
+#### Examples
+
+##### Request
+
+```shell
+DELETE https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/270
+Authorization: Bearer {token}
+Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
+Accept-Language: en-US
+```
+
+##### Response
+
+```shell
+204 No Content
+```
+
 ## <a name="retrieve-itinerary-dayProperty"></a>Travel Allowance Itinerary Day Properties (Retrieve)
 
-This endpoint returns the properties for each day of a specific itinerary of a user. This includes the deductions, lodging, meal type codes, and the location name ids per day.
+This endpoint returns the properties for each day of a specific itinerary of a user. This includes the deductions,
+lodging and meal type codes and the location name ids per day.
 
 ### Scopes
 
@@ -323,17 +1863,18 @@ https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraryies/{itinerar
 
 ### Parameters
 
- Name|Type|Format |Description                                 
----|---|---|---
-`userId`| `string` | uuid | **Required** Unique identifier of a traveler(user).
-`itineraryId`| `integer`| int64  | **Required** Unique identifier of an itinerary.
- 
+ Name          | Type      | Format | Description                                       
+---------------|-----------|--------|---------------------------------------------------
+ `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) 
+ `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary    
+
 ### Payloads
 
 * Request: None
-* Response: [Schema](#schema-itinerarydayproperties)
+* Response: [ItineraryDayProperties](#schema-itinerarydayproperties)
 
 ### Examples
+
 #### Request
 
 ```shell
@@ -351,28 +1892,216 @@ Accept-Language: en-US
 Content-Type: application/json
 ```
 
-
 ```json
 {
-  
   "content": [
     {
       "date": "2021-11-01",
       "deductions": [
         {
-          "deductiondeductionCategoryCode": "BREAKFAST",
+          "deductionCategoryCode": "BREAKFAST",
           "deductionTypeCode": ""
         },
         {
-          "deductiondeductionCategoryCode": "LUNCH",
+          "deductionCategoryCode": "LUNCH",
           "deductionTypeCode": ""
         },
         {
-          "deductiondeductionCategoryCode": "DINNER",
+          "deductionCategoryCode": "DINNER",
           "deductionTypeCode": ""
         },
         {
-          "deductiondeductionCategoryCode": "LODGING",
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-02",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-03",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-04",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-05",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    }
+  ],
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/dayProperties",
+      "rel": "self"
+    },
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "related"
+    }
+  ]
+}
+```
+
+#### Response Header
+
+```shell
+Data:
+    Content-Type: application/json
+    Etag: "jVuvyo9fmtwtl8IeZGCpEyYAAAAAAAAA"
+```
+
+## <a name="update-itinerary-dayProperties"></a>Travel Allowance Itinerary Day Properties (Update)
+
+This endpoint updates day properties of an itinerary.
+
+#### Scopes
+
+`travelallowance.itinerary.writeonly` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+#### URI
+
+```shell
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itineraryId}/dayProperties
+```
+
+#### Parameters
+
+| Name          | Type      | Format | Description                                        |
+|---------------|-----------|--------|----------------------------------------------------|
+| `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) |
+| `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary     |
+
+#### Payloads
+
+* Request: [ItineraryDayProperty](#schema-itinerarydayproperty)
+* Response: [ItineraryDayProperties](#schema-itinerarydayproperties)
+
+#### Examples
+
+##### Request
+
+```shell
+PUT https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/dayProperties
+Content-Type: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
+Accept-Language: en-US
+
+[
+    {
+      "date": "2021-11-01",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
           "deductionTypeCode": ""
         }
       ],
@@ -486,126 +2215,493 @@ Content-Type: application/json
       "lodgingTypeCode": "",
       "mealTypeCode": ""
     }
+  ]
+```
+
+##### Response
+
+```shell
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "content": [
+    {
+      "date": "2021-11-01",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-02",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-03",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-04",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    },
+    {
+      "date": "2021-11-05",
+      "deductions": [
+        {
+          "deductionCategoryCode": "BREAKFAST",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LUNCH",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "DINNER",
+          "deductionTypeCode": ""
+        },
+        {
+          "deductionCategoryCode": "LODGING",
+          "deductionTypeCode": ""
+        }
+      ],
+      "locationNameIds": [
+        "0340871b-2d9b-9ef4-b66e-6b044ab0981e"
+      ],
+      "lodgingTypeCode": "",
+      "mealTypeCode": ""
+    }
   ],
   "links": [
     {
-      "rel": "self",
-      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703"
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/dayProperties",
+      "rel": "self"
+    },
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "related"
+    }
+  ]
+}
+```
+
+## <a name="retrieve-itinerary-assignment"></a>Travel Allowance Itinerary Assignments (Retrieve)
+
+This endpoint returns the assignments of a specific itinerary of a user. This includes the context of the itinerary and
+the assignment to a contextId per period. Unassigned periods are returned with empty strings as contextId.
+
+### Scopes
+
+`travelallowance.itinerary.read` - Refer to [Scope Usage]((./v4.get-started.html#scope-usage)) for full details.
+
+### URI
+
+```shell
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itineraryId}/assignments
+```
+
+### Parameters
+
+ Name          | Type      | Format | Description                                       
+---------------|-----------|--------|---------------------------------------------------
+ `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) 
+ `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary    
+
+### Payloads
+
+* Request: None
+* Response: [ItineraryAssignment](#schema-itineraryAssignment)
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/assignments
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
+Accept-Language: en-US
+```
+
+#### Response
+
+```shell
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "context": "EXPENSE_REPORT",
+  "itineraryPeriodAssignments": [
+    {
+      "contextId": "42B42F3CFA6D476B88B6",
+      "period": {
+        "startDate": "2021-11-01",
+        "endDate": "2021-11-05"
+      }
+    },
+    {
+      "contextId": "",
+      "period": {
+        "startDate": "2021-11-06",
+        "endDate": "2021-11-06"
+      }
+    }
+  ],
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/assignments",
+      "rel": "self"
+    },
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "related"
     }
   ]
 }
 ```
 
 #### Response Header
+
 ```shell
 Data:
     Content-Type: application/json
     Etag: "jVuvyo9fmtwtl8IeZGCpEyYAAAAAAAAA"
 ```
 
+## <a name="update-itinerary-assignment"></a>Travel Allowance Itinerary Assignment (Update)
 
-## Schemas
+This endpoint updates the assignments of an itinerary.
 
-## <a name="schema-itinerarycollection"></a>Itinerary Collection
+#### Scopes
 
- Name|Type|Format |Description                                 
----|---|---|---
-`content` | `array`  |[`Itinerary`](#schema-itinerary)| Array of itinerary details.
-`links`| `array`  |[`Link`](#schema-link)| Array of links available for this list of itineraries.
+`travelallowance.itinerary.writeonly` - Refer to [Scope Usage](./v4.get-started.html#scope-usage) for full details.
+
+#### URI
+
+```shell
+https://{datacenterURI}/travelallowance/v4/users/{userId}/itineraries/{itineraryId}/assignments
+```
+
+#### Parameters
+
+| Name          | Type      | Format | Description                                        |
+|---------------|-----------|--------|----------------------------------------------------|
+| `userId`      | `string`  | uuid   | **Required** Unique identifier of a traveler(user) |
+| `itineraryId` | `integer` | int64  | **Required** Unique identifier of an itinerary     |
+
+#### Payloads
+
+* Request: [ItineraryAssignment](#schema-itineraryAssignment)
+* Response: [ItineraryAssignment](#schema-itineraryAssignment)
+
+#### Examples
+
+##### Request
+
+```shell
+PUT https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/assignments
+Content-Type: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 5f79e774-de18-4478-957f-403c91cb9acc
+Accept-Language: en-US
+
+{
+  "context": "EXPENSE_REPORT",
+  "itineraryPeriodAssignments": [
+    {
+      "contextId": "42B42F3CFA6D476B88B6",
+      "period": {
+        "startDate": "2021-11-01",
+        "endDate": "2021-11-05"
+      }
+    },
+    {
+      "contextId": "",
+      "period": {
+        "startDate": "2021-11-06",
+        "endDate": "2021-11-06"
+      }
+    }
+  ]
+}
+```
+
+##### Response
+
+```shell
+200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "context": "EXPENSE_REPORT",
+  "itineraryPeriodAssignments": [
+    {
+      "contextId": "42B42F3CFA6D476B88B6",
+      "period": {
+        "startDate": "2021-11-01",
+        "endDate": "2021-11-05"
+      }
+    },
+    {
+      "contextId": "",
+      "period": {
+        "startDate": "2021-11-06",
+        "endDate": "2021-11-06"
+      }
+    }
+  ],
+  "links": [
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703/assignments",
+      "rel": "self"
+    },
+    {
+      "href": "https://us.api.concursolutions.com/travelallowance/v4/users/5e029477-6582-48f3-91e8-bc34c7ed8448/itineraries/2703",
+      "rel": "related"
+    }
+  ]
+}
+```
+
+## Travel Allowance v4 - Endpoints - Schemas
+
+## <a name="schema-itinerarycreaterequest"></a>Itinerary Create Request
+
+| Name         | Type     | Format                                                                    | Description                                                    
+|--------------|----------|---------------------------------------------------------------------------|----------------------------------------------------------------
+| `assignmemt` | `object` | [`Itinerary Create Assignment`](#schema-itinerarycreateassignment)        | Context and ContextId the itineray should be assigned to.      
+| `header`     | `object` | [`Itinerary Create Request Header`](#schema-itinerarycreaterequestheader) | General data of the itinerary.                                 
+| `segments`   | `array`  | [`Itinerary Segment`](#schema-itinerarysegment)                           | List of segments of travel constructing the current itinerary. 
+
+## <a name="schema-itinerarycreateassignment"></a>Itinerary Create Assignment
+
+ Name        | Type     | Format | Description                                                                                         
+-------------|----------|--------|-----------------------------------------------------------------------------------------------------
+ `context`   | `enum`   | -      | The context of the itinerary. Supported values are: `TRAVEL_REQUEST`, `EXPENSE_REPORT`.             
+ `contextId` | `string` | -      | Context id to which current itinerary period is assigned. Empty string if the period is unassigned. 
+
+## <a name="schema-itinerarycreaterequestheader"></a>Itinerary Create Request Header
+
+| Name                | Type      | Format | Description                                                                                              
+|---------------------|-----------|--------|----------------------------------------------------------------------------------------------------------
+| `configurationCode` | `string`  | -      | The configuration code used to calculate the settlement for the itinerary.                               
+| `description`       | `string`  | -      | Description of the itinerary.                                                                            
+| `hasNoLodging`      | `boolean` | -      | Traveller indicates that the itinerary has no overnight stays, e.g. a truck driver is driving overnight. Should only be set for certain configurations (usually Germany) where you can combine two days of an itinerary into one day. 
+| `overlapTypeCode`   | `string`  | -      | Overlap type, can be used to handle different kinds of (overlapping) trips within a trip.                
+| `tripTypeCode`      | `string`  | -      | Trip type, can be used to apply different calculation rules or allowance rates.                          
+
+## <a name="schema-collectionmodelofentitymodelofpaginationresultoflistofitinerary"></a>Itinerary Collection
+
+ Name      | Type    | Format                           | Description                                            
+-----------|---------|----------------------------------|--------------------------------------------------------
+ `content` | `array` | [`Itinerary`](#schema-itinerary) | Array of itinerary details                             
+ `links`   | `array` | [`Link`](#schema-link)           | Array of links available for this list of itineraries. 
 
 ## <a name="schema-itinerary"></a>Itinerary
 
- Name|Type|Format |Description                                 
----|---|---|---
-`header`| `object`  |[`ItineraryHeader`](#schema-itineraryheader)   | General data of the itinerary.        
-`segmentList` | `array`|[`ItinerarySegment`](#schema-itinerarysegment) | List of segments of travel constructing the current itinerary. 
-`links`| `array`   |[`Link`](#schema-link) | Array of links available for this itinerary.                   
+ Name          | Type     | Format                                          | Description                                                    
+---------------|----------|-------------------------------------------------|----------------------------------------------------------------
+ `header`      | `object` | [`Itinerary Header`](#schema-itineraryheader)   |  General data of the itinerary.                                
+ `segmentList` | `array`  | [`Itinerary Segment`](#schema-itinerarysegment) | List of segments of travel constructing the current itinerary. 
+ `links`       | `array`  | [`Link`](#schema-link)                          | Array of links available for this itinerary.                   
 
 ## <a name="schema-itineraryheader"></a>Itinerary Header
 
- Name|Type|Format |Description                                 
----|---|---|---
-`configurationCode` | `string`  | - | The configuration code used to calculate the settlement for the itinerary. 
-`description` |`string` | - |Description of the itinerary.                
-`hasNoLodging` | `boolean` |`true/ false`| Traveler indicates that the itinerary has no overnight stays, e.g. a truck driver is driving overnight. 
-`id`| `integer` | int64 | Identification of the itinerary.                                                                         
-`overlapTypeCode` | `string`  | - | Overlap type, can be used to handle different kinds of (overlapping) trips within a trip. 
-`tripTypeCode`| `string`| -| Trip type, can be used to apply different calculation rules or allowance rates.         
-`userId`| `string` | uuid | Identification of the owner of the itinerary, i.e. the traveler.  
+ Name                | Type      | Format | Description                                                                                              
+---------------------|-----------|--------|----------------------------------------------------------------------------------------------------------
+ `configurationCode` | `string`  | -      | The configuration code used to calculate the settlement for the itinerary.                               
+ `description`       | `string`  | -      | Description of the itinerary.                                                                            
+ `hasNoLodging`      | `boolean` | -      | Traveller indicates that the itinerary has no overnight stays, e.g. a truck driver is driving overnight. Should only be set for certain configurations (usually Germany) where you can combine two days of an itinerary into one day. 
+ `id`                | `integer` | int64  | Identification of the itinerary.                                                                         
+ `overlapTypeCode`   | `string`  | -      | Overlap type, can be used to handle different kinds of (overlapping) trips within a trip.                
+ `tripTypeCode`      | `string`  | -      | Trip type, can be used to apply different calculation rules or allowance rates.                          
+ `userId`            | `string`  | uuid   | Identification of the owner of the itinerary, i.e. the traveller.                                        
 
 ## <a name="schema-itinerarysegment"></a>Itinerary Segment
 
-Name|Type|Format |Description                                 
----|---|---|---
-`address`| `object` |[`Address`](#schema-address) | Address of the professional activity at arrival location. Required to apply special calculations (e.g. German 3-month-rule).                                                        
-`arrivalDate`| `string` | [ISO 8601] `yyyy-MM-dd`| Date of arrival at the location. 
-`arrivalLocationNameId`| `string` | uuid | Id of the arrival location; is either departure location of the next itinerary segment or home/office when itinerary ends with the current segment.       
-`arrivalTime`| `string` | `HH:mm`| Time at the arrival location.                                              
-`borderCrossingDate`| `string` | [ISO 8601] `yyyy-MM-dd`| Date of border crossing.                              
-`borderCrossingTime` | `string` | `HH:mm` | Time of border crossing. 
-`departureDate`| `string` | [ISO 8601] `yyyy-MM-dd`| Date of departure from location.  
-`departureLocationNameId` | `string` | uuid | Id of the departure location; is either home/office when itinerary begins with the current segment or the arrival location of the last itinerary segment. 
-`departureTime`| `string` | `HH:mm` | Time at the departure location.                                   
+ Name                      | Type     | Format                       | Description                                                                                                                                               
+---------------------------|----------|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ `address`                 | `object` | [`Address`](#schema-address) | Address of the professional activity at arrival location. Required to apply special calculations (e.g. german 3-month-rule).                              
+ `arrivalDate`             | `string` | [ISO 8601] `yyyy-MM-dd`      | Date of arrival at the location.                                                                                                                          
+ `arrivalLocationNameId`   | `string` | uuid                         | Id of the arrival location; is either departure location of the next itinerary segment or home/office when itinerary ends with the current segment.       
+ `arrivalTime`             | `string` | HH:mm                        | Time at the arrival location.                                                                                                                             
+ `borderCrossingDate`      | `string` | [ISO 8601] `yyyy-MM-dd`      | Date of border crossing.                                                                                                                                  
+ `borderCrossingTime`      | `string` | HH:mm                        | Time of border crossing.                                                                                                                                  
+ `departureDate`           | `string` | [ISO 8601] `yyyy-MM-dd`      | Date of departure from location.                                                                                                                          
+ `departureLocationNameId` | `string` | uuid                         | Id of the departure location; is either home/office when itinerary begins with the current segment or the arrival location of the last itinerary segment. 
+ `departureTime`           | `string` | HH:mm                        | Time at the departure location.                                                                                                                           
+
+## <a name="schema-itinerarysimulationrequest"></a>Itinerary Simulation Request
+
+ Name          | Type     | Format                                                     | Description                                                    
+---------------|----------|------------------------------------------------------------|----------------------------------------------------------------
+ `segmentList` | `array`  | [`Itinerary Simulation Segment`](#schema-itineraryimulationsegment) | List of segments of travel constructing the current itinerary. 
+
+## <a name="schema-itineraryimulationsegment"></a>Itinerary Simulation Segment
+
+ Name                      | Type     | Format                       | Description                                                                                                                                               
+---------------------------|----------|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ `arrivalDate`             | `string` | [ISO 8601] `yyyy-MM-dd`      | Date of arrival at the location.                                                                                                                          
+ `arrivalLocationNameId`   | `string` | uuid                         | Id of the arrival location; is either departure location of the next itinerary segment or home/office when itinerary ends with the current segment.       
+ `arrivalTime`             | `string` | HH:mm                        | Time at the arrival location.                                                                                                                             
+ `borderCrossingDate`      | `string` | [ISO 8601] `yyyy-MM-dd`      | Date of border crossing.                                                                                                                                  
+ `borderCrossingTime`      | `string` | HH:mm                        | Time of border crossing.                                                                                                                                  
+ `departureDate`           | `string` | [ISO 8601] `yyyy-MM-dd`      | Date of departure from location.                                                                                                                          
+ `departureLocationNameId` | `string` | uuid                         | Id of the departure location; is either home/office when itinerary begins with the current segment or the arrival location of the last itinerary segment. 
+ `departureTime`           | `string` | HH:mm                        | Time at the departure location.                                                                                                                           
+
 
 ## <a name="schema-address"></a>Address
 
-Name|Type|Format |Description                                 
----|---|---|---
-`city`| `string` | Max length: 100, Min length: 0 | City of location.                            
-`communityCode`  | `string` | Max length: 20, Min length: 0  | Community code of location.                  
-`countryCode`| `string` | [ISO 3166-1] , length 2        | Country code of location. 
-`postalCode`| `string` | Max length: 20, Min length: 0  | Postal code of location.                     
-`street` | `string` | Max length: 200, Min length: 0 | Street of location.                          
+ Name            | Type     | Format                         | Description                 
+-----------------|----------|--------------------------------|-----------------------------
+ `city`          | `string` | Max length: 100, Min length: 0 | City of location.           
+ `communityCode` | `string` | Max length: 20, Min length: 0  | Community code of location. 
+ `countryCode`   | `string` | [ISO 3166-1] , length 2        | Country code of location.   
+ `postalCode`    | `string` | Max length: 20, Min length: 0  | Postal code of location.    
+ `street`        | `string` | Max length: 200, Min length: 0 | Street of location.         
 
 ## <a name="schema-itineraryAssignment"></a>Itinerary Assignment
 
-Name|Type|Format |Description                                 
----|---|---|---
-`context` | `enum`  | - | The context of the itinerary. Supported values are: `TRAVEL_REQUEST`, `EXPENSE_REPORT`. 
-`itineraryPeriodAssignments` | `array` | [`ItineraryPeriodAssignment`](#schema-itineraryperiodassignment) | List of periods for the current itinerary with their unique assignment to a given context. Unassigned periods are returned with empty strings as `contextId`.
-`links`| `array` |[`Link`](#schema-link)| Array of links available for this itinerary assignment.  
+ Name                         | Type    | Format                                                             | Description                                                                                                                                                 
+------------------------------|---------|--------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------
+ `context`                    | `enum`  | -                                                                  | The context of the itinerary. Supported values are: `TRAVEL_REQUEST`, `EXPENSE_REPORT`.                                                                     
+ `itineraryPeriodAssignments` | `array` | [`Itinerary Period Assignment`](#schema-itineraryperiodassignment) | List of periods for the current itinerary with their unique assignment to a given context. Unassigned periods are returned with empty strings as contextId. 
+ `links`                      | `array` | [`Link`](#schema-link)                                             | Array of links available for this itinerary assigment.                                                                                                      
 
 ## <a name="schema-itineraryperiodassignment"></a>Itinerary Period Assignment
 
-Name|Type|Format |Description                                 
----|---|---|---
-`contextId` | `string` | -  | Context id to which current itinerary period is assigned. Empty string if the period is unassigned.                            
-`period` | `object` |[`ItineraryPeriod`](#schema-itineraryperiod) | Period of time in which an itinerary is assigned to a `contextId`. 
+ Name        | Type     | Format                                        | Description                                                                                         
+-------------|----------|-----------------------------------------------|-----------------------------------------------------------------------------------------------------
+ `contextId` | `string` | -                                             | Context id to which current itinerary period is assigned. Empty string if the period is unassigned. 
+ `period`    | `object` | [`Itinerary Period`](#schema-itineraryperiod) | Period of time in which an itinerary is assigned to a context id.                                   
 
 ## <a name="schema-itineraryperiod"></a>Itinerary Period
 
-Name|Type|Format |Description                                 
----|---|---|---
-`endDate`   | `string` | [ISO 8601] `yyyy-MM-dd` | End date of the current itinerary period.   
-`startDate` | `string` | [ISO 8601] `yyyy-MM-dd` | Start date of the current itinerary period. 
+ Name        | Type     | Format                  | Description                                 
+-------------|----------|-------------------------|---------------------------------------------
+ `endDate`   | `string` | [ISO 8601] `yyyy-MM-dd` | End date of the current itinerary period.   
+ `startDate` | `string` | [ISO 8601] `yyyy-MM-dd` | Start date of the current itinerary period. 
 
 ## <a name="schema-itinerarydayproperties"></a>Itinerary Day Properties
 
-Name|Type|Format |Description                                 
----|---|---|---
-`content`| `array ` |[`Itinerary Day Property`](#schema-itinerarydayproperty)   | Array of itinerary day property.
-`links`| `array`  |[`Link`](#schema-link) | Array of links available for this itinerary day properties.      
+ Name      | Type     | Format                                                   | Description                                                 
+-----------|----------|----------------------------------------------------------|-------------------------------------------------------------
+ `content` | `array ` | [`Itinerary Day Property`](#schema-itinerarydayproperty) | Array of itinerary day property                             
+ `links`   | `array`  | [`Link`](#schema-link)                                   | Array of links available for this itinerary day properties. 
 
 ## <a name="schema-itinerarydayproperty"></a>Itinerary Day Property
 
-Name|Type|Format |Description                                 
----|---|---|---
-`date`| `string`| [ISO 8601] `yyyy-MM-dd`  | Date of the day within current itinerary. 
-`deductions` | `array`|[`ItineraryDeduction`](#schema-itinerarydeduction) | List of deduction categories relevant on date; each category can appear only once.                      
-`locationNameIds` | `array of strings` | - | List of location keys that the users stayed on this day. 
-`lodgingTypeCode`| `string` | - | Lodging type; can be used to pay a special lodging rate, e.g. sleeping in a dorm or a youth hostel. 
-`mealTypeCode` | `string` | - | Meal type; can be used to pay a special meal rate, e.g. eating in a canteen.   
- 
+ Name              | Type               | Format                                              | Description                                                                                             
+-------------------|--------------------|-----------------------------------------------------|---------------------------------------------------------------------------------------------------------
+ `date`            | `string`           | [ISO 8601] `yyyy-MM-dd`                             | Date of the day within current itinerary.                                                               
+ `deductions`      | `array`            | [`Itinerary Deduction`](#schema-itinerarydeduction) | List of deduction categories relevant on date; each category can appear only once.                      
+ `locationNameIds` | `array of strings` | -                                                   | List of location keys that the users stayed on this day.                                                
+ `lodgingTypeCode` | `string`           | -                                                   | Lodging type; can be used to pay a special lodging rate for e.g. sleeping in a hybel or a youth hostel. 
+ `mealTypeCode`    | `string`           | -                                                   | Meal type; can be used to pay a special meal rate for e.g. eating in a canteen.                         
+
 ## <a name="schema-itinerarydeduction"></a>Itinerary Deduction
 
-Name|Type|Format |Description                                 
----|---|---|---
-`deductionCategoryCode` | `string` | - | Category of deduction; it can be used to distinguish between breakfast, lunch, Lunch & dinner, night, for example.               
-`deductionTypeCode` | `string` | - | Type of deduction; it can be used to distinguish between full deduction or partial deduction for the given category, for example. 
+ Name                    | Type     | Format | Description                                                                                                              
+-------------------------|----------|--------|--------------------------------------------------------------------------------------------------------------------------
+ `deductionCategoryCode` | `string` | -      | Category of deduction; it can be used to distinguish between e.g. breakfast, lunch, Lunch & dinner, night.               
+ `deductionTypeCode`     | `string` | -      | Type of deduction; it can be used to distinguish e.g between full deduction or partial deduction for the given category. 
 
 ## <a name="schema-link"></a>Link
 
-Name|Type|Format |Description                                 
----|---|---|---
-`rel`| `string` | [RFC 5988]    | Relation type as defined by the server. There are registered relation types listed in RFC 5988 6.2.2. Initial Registry Contents including pagination relation types of next and self.
-`href` | `string` | [RFC 3986]    | The URL of the link. 
+ Name   | Type     | Format     | Description                                                                                                                                                                                    
+--------|----------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ `rel`  | `string` | [RFC 5988] | Relation type as defined by the server. There are registered relation types listed in RFC 5988 6.2.2. Initial Registry Contents including pagination relation types of next, self and related. 
+ `href` | `string` | [RFC 3986] | The URL of the link.                                                                                                                                                              
