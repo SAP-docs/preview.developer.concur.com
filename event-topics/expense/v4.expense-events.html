@@ -328,7 +328,7 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="concur-expense-event">Concur Expense Event</h1>
+        <h1 id="concur-expense-report-events">Concur Expense Report Events</h1>
 
 <h2 id="overview"><a name="overview"></a>Overview</h2>
 
@@ -365,13 +365,21 @@
 
 <h3 id="report-created-event"><a name="report-created-event"></a>Report Created Event</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">reportCreated</code> event is intended to be published when a new expense report has been created.</p>
+<p>The <code class="language-plaintext highlighter-rouge">reportCreated</code> event is published when a new expense report is created.</p>
+
+<h3 id="report-updated-event"><a name="report-updated-event"></a>Report Updated Event</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">reportUpdated</code> event is published when a value in the expense report header is updated. This event is not published for the workflow status changes of the report.</p>
+
+<h3 id="report-deleted-event"><a name="report-deleted-event"></a>Report Deleted Event</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">reportDeleted</code> event is published when an expense report is deleted.</p>
 
 <h3 id="report-status-changed-event"><a name="status-changed-event"></a>Report Status Changed Event</h3>
 
-<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event is intended to publish a message whenever the status of an expense report changes as it traverses the approval workflow during its life cycle. Subscribers of the event are able to leverage the data in the message to perform synchronous or asynchronous actions depending on their business processes. For example, this could trigger an application to make API calls to Concur Expense or start of a process in a third party application.</p>
+<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event is published whenever the status of an expense report changes as it traverses the approval workflow during its life cycle. Subscribers of the event are able to leverage the data in the message to perform synchronous or asynchronous actions depending on their business processes. For example, this could trigger an application to make API calls to Concur Expense or start of a process in a third party application.</p>
 
-<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event will always be published for the following status changes without any additional configuration:</p>
+<p>The <code class="language-plaintext highlighter-rouge">statusChanged</code> event will always be published for the following workflow status changes without any additional configuration:</p>
 
 <ul>
   <li>Whenever a report is submitted.</li>
@@ -396,7 +404,7 @@
 
 <h2 id="schema"><a name="schema"></a>Schema</h2>
 
-<h3 id="reportcreated-event-schema"><a name="report-created-event-payload-schema"></a>reportCreated Event Schema</h3>
+<h3 id="-event-schema-for-expense-report-events"><a name="expense-report-event-payload-schema"></a> Event Schema for Expense Report Events</h3>
 
 <table>
   <thead>
@@ -421,6 +429,12 @@
       <td><strong>Required</strong> Unique identifier used for logging/traceability.</td>
     </tr>
     <tr>
+      <td><code class="language-plaintext highlighter-rouge">route</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td>For internal use. This will be set to stable.</td>
+    </tr>
+    <tr>
       <td><code class="language-plaintext highlighter-rouge">topic</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
@@ -430,25 +444,13 @@
       <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">reportCreated</code> - Identifies the event type on the topic.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">subtopic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
-      <td><strong>Required</strong> Unique identifier of the expense report whose status has changed. Maximum characters: 20, which is also populated as <code class="language-plaintext highlighter-rouge">reportId</code>.</td>
+      <td><strong>Required</strong> Identifies the event type on the topic. Event Type: <code class="language-plaintext highlighter-rouge">reportCreated</code> / <code class="language-plaintext highlighter-rouge">reportUpdated</code> / <code class="language-plaintext highlighter-rouge">reportDeleted</code> / <code class="language-plaintext highlighter-rouge">statusChanged</code></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
       <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
       <td>RFC 3339</td>
       <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">route</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td>For internal use. This will be set to stable.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">facts</code></td>
@@ -459,7 +461,7 @@
   </tbody>
 </table>
 
-<h3 id="reportcreated-facts-schema"><a name="report-created-event-payload-facts-schema"></a>reportCreated Facts Schema</h3>
+<h3 id="-facts-schema-for-report-created"><a name="report-created-event-payload-facts-schema"></a> Facts Schema for Report Created</h3>
 
 <table>
   <thead>
@@ -475,7 +477,7 @@
       <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td><strong>Required</strong> Company unique identifier from profile service.</td>
+      <td><strong>Required</strong> Unique identifier of the company the report belongs to.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">userId</code></td>
@@ -499,13 +501,7 @@
       <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
       <td><code class="language-plaintext highlighter-rouge">String</code></td>
       <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> This value identifies the method used to create the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">href</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>RFC 3986</td>
-      <td>URI of the report resource that can be called via the Expense v4 API.</td>
+      <td><strong>Required</strong> This value identifies the type of the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
@@ -513,73 +509,16 @@
       <td>RFC 3339</td>
       <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
     </tr>
-  </tbody>
-</table>
-
-<h3 id="statuschanged-event-schema"><a name="status-changed-event-payload-schema"></a>statusChanged Event Schema</h3>
-
-<table>
-  <thead>
     <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Format</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">id</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Randomly generated unique identifier of this event.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">correlationId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
-      <td>RFC 4122</td>
-      <td><strong>Required</strong> Unique identifier used for logging/traceability.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">topic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
-      <td><strong>Required</strong> Identifies the topic that the event belongs to <code class="language-plaintext highlighter-rouge">public.concur.expense.report</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">eventType</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><strong>Required</strong> Event Type: <code class="language-plaintext highlighter-rouge">statusChanged</code> - Identifies the event type on the topic.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">subtopic</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
-      <td><strong>Required</strong> Unique identifier of the expense report whose status has changed. Maximum characters: 20, which is also populated as <code class="language-plaintext highlighter-rouge">reportId</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
-      <td>RFC 3339</td>
-      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">route</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td><code class="language-plaintext highlighter-rouge">String</code></td>
-      <td>For internal use. This will be set to stable.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">facts</code></td>
-      <td><code class="language-plaintext highlighter-rouge">Map</code></td>
-      <td><a href="#status-changed-event-payload-facts-schema">facts schema</a></td>
-      <td><strong>Required</strong> Key-value pairs providing the content of the event.</td>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>RFC 3986</td>
+      <td>URI of the report resource that can be called via the Expense v4 API.</td>
     </tr>
   </tbody>
 </table>
 
-<h3 id="statuschanged-facts-schema"><a name="status-changed-event-payload-facts-schema"></a>statusChanged Facts Schema</h3>
+<h3 id="facts-schema-for-report-updated"><a name="report-updated-event-payload-facts-schema"></a>Facts Schema for Report Updated</h3>
 
 <table>
   <thead>
@@ -595,7 +534,115 @@
       <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td><strong>Required</strong> Company unique identifier from profile service.</td>
+      <td><strong>Required</strong> Unique identifier of the company the report belongs to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td>The unique identifier of the report updater unless a delegate or proxy is involved. In these instances, it will be the user for which the report was updated (i.e., the report owner). <br />This value can be NULL when a system initiates the change action instead of a user. This would include API calls with a Company JWT. <br />Use Identity v4 API to retrieve user details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">actingUserId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td>User unique identifier. If a delegate or expense proxy updated the report on behalf of another user, then this will be populated with the identifier for that delegate or expense proxy user, else it will be NULL. <br />Use Identity v4 API to retrieve user details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
+      <td><strong>Required</strong> Unique identifier of the updated expense report. Maximum characters: 20</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
+      <td><strong>Required</strong> This value identifies the type of the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
+      <td>RFC 3339</td>
+      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">href</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>RFC 3986</td>
+      <td>URI of the report resource that can be called via the Expense v4 API.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="facts-schema-for-report-deleted"><a name="report-deleted-event-payload-facts-schema"></a>Facts Schema for Report Deleted</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td><strong>Required</strong> Unique identifier of the company the report belongs to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td>The unique identifier of the report deleter unless a delegate or proxy is involved. In these instances, it will be the user for whose report is deleted (i.e., the report owner). <br />This value can be NULL when a system initiates the change action instead of a user. This would include API calls with a Company JWT. <br />Use Identity v4 API to retrieve user details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">actingUserId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td>User unique identifier. If a delegate or expense proxy deleted the report on behalf of another user, then this will be populated with the identifier for that delegate or expense proxy user, else it will be NULL. <br />Use Identity v4 API to retrieve user details.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Alphanumeric</code></td>
+      <td><strong>Required</strong> Unique identifier of the deleted expense report. Maximum characters: 20</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportType</code></td>
+      <td><code class="language-plaintext highlighter-rouge">String</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Enum</code></td>
+      <td><strong>Required</strong> This value identifies the type of the report. Supported values: <br />Regular, <br />Reconciliation, <br />Statement, <br />AutoCreated</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lastModifiedDate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">timeStamp</code></td>
+      <td>RFC 3339</td>
+      <td><strong>Required</strong> Current system time (UTC) when the event notification is issued.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="facts-schema-for-report-status-changed"><a name="status-changed-event-payload-facts-schema"></a>Facts Schema for Report Status Changed</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td>RFC 4122</td>
+      <td><strong>Required</strong> Unique identifier of the company the report belongs to.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">userId</code></td>
@@ -697,35 +744,77 @@
       <td><code class="language-plaintext highlighter-rouge">stepInstances.assignedUserId</code></td>
       <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
       <td>RFC 4122</td>
-      <td><strong>Required</strong> Unique identifier of the User assigned to approve the report.</td>
+      <td><strong>Required</strong> Unique identifier of the user assigned to approve the report.</td>
     </tr>
   </tbody>
 </table>
 
-<h2 id="sample-events"><a name="sample-events"></a>Sample Events</h2>
-<h3 id="reportcreated"><a name="report-created-sample-events"></a>reportCreated</h3>
+<h2 id="sample-events">Sample Events</h2>
+
+<h3 id="report-created">Report Created</h3>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"86a38080-a73e-4474-a224-3618e47bd299"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7e38939d-33616-69ae-afc3-eadb1f40a114"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"route"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stable"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reportCreated"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-03-07T22:25:49.866Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1955b7ee-cd77-4f56-92fc-0aa40d776dc5"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1970-01-01T00:00:00.000Z"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Regular"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1955b7ee-cd77-4f56-92fc-0aa40d776dc5"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4E6593CB987D459C88FA"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-03-07T22:25:49.866Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1970-01-01T00:00:00.000Z"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us2.api.concursolutions.com/expensereports/v4/users/e496ce0f-2442-4923-ba4d-74f3d2529fdf/context/TRAVELER/reports/4E6593CB987D459C88FA"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"e496ce0f-2442-4923-ba4d-74f3d2529fdf"</span><span class="w">
+    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us2.api.concursolutions.com/expensereports/v4/users/bbd64e6f-d096-48e5-8dd8-b7b67de1a951/context/TRAVELER/reports/4E6593CB987D459C88FA"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="statuschanged"><a name="status-changed-sample-events"></a>statusChanged</h3>
+<h3 id="report-updated">Report Updated</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"route"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stable"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reportUpdated"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concur.expense.report"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1970-01-01T00:00:00.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Regular"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4E6593CB987D459C88FA"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1970-01-01T00:00:00.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us2.api.concursolutions.com/expensereports/v4/users/bbd64e6f-d096-48e5-8dd8-b7b67de1a951/context/TRAVELER/reports/4E6593CB987D459C88FA"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="report-deleted">Report Deleted</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"route"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stable"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reportDeleted"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concur.expense.report"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1970-01-01T00:00:00.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"reportType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Regular"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1F7597D8217649F7BA4F"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"lastModifiedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1970-01-01T00:00:00.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bbd64e6f-d096-48e5-8dd8-b7b67de1a951"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span></code></pre></div></div>
+<h3 id="report-status-changed">Report Status Changed</h3>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0490b3fb-04ad-4919-b299-afb9fa75e07c"</span><span class="p">,</span><span class="w">
@@ -734,7 +823,6 @@
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-18T23:11:51.034Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"facts"</span><span class="p">:{</span><span class="w">
     </span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_PEND"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
@@ -757,10 +845,11 @@
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"previousApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_RESU"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"actingUserId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/f2d07d5f-7a6f-44fa-98c7-c4b405bd6ca3/context/TRAVELER/reports/CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/expensereports/v4/users/f2d07d5f-7a6f-44fa-98c7-c4b405bd6ca3/context/TRAVELER/reports/CB899F7D9F73420A8D8B"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3eabdcbf-07df-4acd-99de-7f5aef0f673d"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7e38939d-62f1-4bb4-9eef-5ea71fcbb1d8"</span><span class="p">,</span><span class="w">
@@ -768,7 +857,6 @@
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-19T00:37:39.550Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_PECO"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
@@ -799,6 +887,7 @@
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"be3a6976-00e7-4b06-9c95-b4f2c3330ea6"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7e38939d-62f1-4bb4-9eef-5ea71fcbb1d8"</span><span class="p">,</span><span class="w">
@@ -806,7 +895,6 @@
   </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"statusChanged"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.expense.report"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-03-19T01:11:57.169Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"facts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"currentApprovalStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A_ACCO"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"reportId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CB899F7D9F73420A8D8B"</span><span class="p">,</span><span class="w">
