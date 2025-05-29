@@ -90,7 +90,7 @@ In case of success, HTTP status code `200 (OK) - RSA Public Key` is returned.
 
 #### Payload
 
-* [RSA Public Key](#rsapublickeydetail)
+* [RSA Public Key Response](#rsa-public-key-response)
 
 ### Example
 
@@ -153,7 +153,7 @@ Name|Type|Format|Description
 
 #### Payload
 
-* [Request Body](#credit-card-detokenizer-request)
+* [Credit Card Detokenizer Request](#credit-card-detokenizer-request)
 
 ### Response
 
@@ -173,7 +173,7 @@ In case of success, HTTP status code `200 (OK) - Encrypted Credit Card Data` is 
 * [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
 
 #### Payload
-* [Account Number](#creditcardnumber)
+* [Credit Card Number Response](#credit-card-number-response)
 
 ### Example
 
@@ -204,25 +204,25 @@ Content-Length: 1270
 
 ## Schemas <a name="schemas"></a>
 
+### <a name="rsa-public-key-response"></a>RSA Public Key Response
+
+Name|Type|Format|Description
+---|---|---|---
+`pubKey`|`string`|-|Base64 Encoded RSA public key of 2048 bits length.
+`version`|`long`|-|Version of RSA public key.
+
 ### Credit Card Detokenizer Request <a name="credit-card-detokenizer-request"></a>
 
 Name|Type|Format|Description
 ---|---|---|---
-`symmetricKey`|`string`|-|AES Symmetric Key wrapped with RSA public key. Note: Symmetric key has to be refreshed frequently in the caller side.
+`symmetricKey`|`string`|-|AES Symmetric Key (256 length with transformation: AES/GCM/NoPadding) which is wrapped with RSA public key (transformation: RSA/ECB/OAEPWithSHA-256AndMGF1Padding). Note: Symmetric key has to be refreshed frequently in the caller side.
 `version`|`long`|-|Version of RSA public key used for wrapping symmetric key.
 
-### CreditCardNumber <a name="creditcardnumber"></a>
+### Credit Card Number Response<a name="credit-card-number-response"></a>
 
 Name|Type|Format|Description
 ---|---|---|---
 `accountNumber`|`string`|-|This field would consists of 2 parts with colon as delimiter. First Part is Base64 Encoded IV value and Second Part is Based64 Encoded Encrypted credit card number.
-
-### <a name="rsapublickeydetail"></a>RSAPublicKeyDetail
-
-Name|Type|Format|Description
----|---|---|---
-`pubKey`|`string`|-|Base64 Encoded RSA public key.
-`version`|`long`|-|Version of RSA public key.
 
 ### <a name="error-response"></a>Error Response
 
@@ -230,6 +230,6 @@ Name|Type|Format|Description|Example
 ---|---|---|---|---
 `timestamp`|`string`|-|The time when the error was captured.|-
 `httpStatus`|`string`|-|The http response code and phrase for the response.|400 - Bad Request, 401 - Unauthorized, 403 - Forbidden, 404 - Not Found, 500 - Internal Server Error
-`errorMessage`|`string`|-|The detailed error message. | Bad request [creditCardGUID] received, Bad request [keyVersion] received, Bad request [symmetricKey] received, Company C2 does not exist
-`errorId`|`string`|-|The unique identifier of the error associated with the response.|BAD_REQUEST, COMPANY_C2_DOES_NOT_EXIST
+`errorMessage`|`string`|-|The detailed error message. | Bad request [creditCardGUID] received, Bad request [keyVersion] received, Bad request [symmetricKey] received
+`errorId`|`string`|-|The unique identifier of the error associated with the response.|BAD_REQUEST
 `path`|`string`|-|The URI of the attempted request.|-
