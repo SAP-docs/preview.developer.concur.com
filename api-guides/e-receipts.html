@@ -676,7 +676,7 @@
 
     <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/oauth2/v0/token</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">us.api.concursolutions.com</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">glz.api.concursolutions.com</span>
 </code></pre></div>    </div>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client_id={client_id}
 &amp;client_secret={client_secret}
@@ -737,12 +737,12 @@ Content-Type: application/json
 </ol>
 
 <blockquote>
-  <p><strong><em>NOTE:</em></strong>  the grant type must be accessed using the <code class="language-plaintext highlighter-rouge">www-</code> version of the API Gateway in order to avoid certificate issues with some browsers. (ex: https://www-us.api.concursolutions.com instead of https://us.api.concursolutions.com)</p>
+  <p><strong><em>NOTE:</em></strong>  the grant type must be accessed using the <code class="language-plaintext highlighter-rouge">www-</code> version of the API Gateway in order to avoid certificate issues with some browsers. (ex: https://www-glz.api.concursolutions.com instead of https://glz.api.concursolutions.com)</p>
 </blockquote>
 
 <p>Example:</p>
 <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">   </span><span class="nf">GET</span> <span class="nn">/oauth2/v0/authorize?client_id={your-app-clientId}&amp;redirect_uri={partner_redirect_URI}&amp;response_type=code</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="s">   Host: https://www-us.api.concursolutions.com</span>
+<span class="s">   Host: https://www-glz.api.concursolutions.com</span>
 </code></pre></div></div>
 
 <ol>
@@ -795,7 +795,7 @@ Content-Type: application/json
 
     <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/oauth2/v0/token</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">us.api.concursolutions.com</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">glz.api.concursolutions.com</span>
 </code></pre></div>    </div>
     <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>client_id={client_id}
 &amp;client_secret={client_secret}
@@ -995,7 +995,7 @@ Refer to <a href="https://developer.concur.com/api-reference/authentication/apid
 
 <p>You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user’s geolocation when you request the token for the first time, you should always make the API call using the <strong>default</strong> Base URI.</p>
 
-<p>For a user hosted on both the US data center and EU data center, please use the <strong>default</strong> Base URI <code class="language-plaintext highlighter-rouge">https://us.api.concursolutions.com</code>.</p>
+<p>For a user hosted on both the US data center and EU data center, please use the <strong>default</strong> Base URI <code class="language-plaintext highlighter-rouge">https://glz.api.concursolutions.com</code>.</p>
 
 <p>If you receive the error code 16 (“user lives elsewhere”) while calling the authentication service, the error message returns a new <code class="language-plaintext highlighter-rouge">geolocation</code>. Use this new ‘geolocation’ as the Base URI to call the Auth API again to get the token.</p>
 
@@ -1050,11 +1050,38 @@ Refer to <a href="https://developer.concur.com/api-reference/authentication/apid
 </ul>
 
 <p>The base URI for obtaining a token will use your application’s geolocation. The base URI for refreshing tokens and all other API calls will use the token’s geolocation.</p>
-
 <ul>
-  <li>US Production = <a href="https://us.api.concursolutions.com">https://us.api.concursolutions.com</a></li>
-  <li>EU Production = <a href="https://emea.api.concursolutions.com">https://emea.api.concursolutions.com</a></li>
+  <li>GLZ = <a href="https://glz.api.concursolutions.com">https://glz.api.concursolutions.com</a></li>
+  <li>US2 Production = <a href="https://us2.api.concursolutions.com">https://us2.api.concursolutions.com</a></li>
+  <li>EU2 Production = <a href="https://EU2.api.concursolutions.com">https://EU2.api.concursolutions.com</a></li>
 </ul>
+
+<p>When obtaining a token, your application should use the base URI corresponding to the grant type being performed, as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Grant Type</th>
+      <th>URI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Authorization</td>
+      <td>Use the GLZ base URI</td>
+    </tr>
+    <tr>
+      <td>Password (credtype = authtoken)</td>
+      <td>Use the GLZ base URI</td>
+    </tr>
+    <tr>
+      <td>One Time Password</td>
+      <td>Use the base URI corresponding to the user’s geolocation</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>When obtaining the token, the token’s geolocation will be included in the response. The token’s geolocation should be stored along with the token. Your application will then make subsequent calls using the token and the correct endpoints based on the token’s geolocation.</p>
 
 <p>The full list of available token geolocations is available on the <a href="https://developer.concur.com/platform/base-uris.html">Base URIs</a> page.</p>
 
