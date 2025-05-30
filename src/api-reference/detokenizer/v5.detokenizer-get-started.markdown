@@ -7,7 +7,10 @@ layout: reference
 
 # Detokenizer v5
 
-The Detokenizer service allows clients to retrieve the user's credit card number from Concur Expense in a secure way. The Detokenizer service returns the user's credit card number encrypted with a symmetric key that the client provides in the request. The client will be able to decrypt the user's credit card number using their symmetric key. V5 version of detokenizer service is FIPS compliant so that customers with IBCP card programs, can benefit with credit card detokenizer functionality in CCPS environment. The Detokenizer API ensures secure transmission of sensitive data (card number) to customers as part of the remittance file creation process running at caller applications like ICS and CWS, in which the full, unmasked credit card number is required for the correct application of payments.  
+The Detokenizer service allows clients to retrieve the user's credit card number from Concur Expense in a secure way. The Detokenizer service returns the user's credit card number encrypted with a symmetric key that the client provides in the request. The client will be able to decrypt the user's credit card number using their symmetric key. V5 version of detokenizer service is FIPS compliant so that customers with IBCP card programs, can benefit with credit card detokenizer functionality in CCPS environment. The Detokenizer API ensures secure transmission of sensitive data (card number) to customers as part of the remittance file creation process running at caller applications like ICS and CWS, in which the full, unmasked credit card number is required for the correct application of payments.
+
+## <a name="authentication"></a>Authentication
+ Authentication is done via company JWT with required scope creditcardaccount.read. The company JWT refers to the token belonging to the company whose data is being accessed. </br></br> If a company is accessing data on behalf of another company, then the calling company should invoke the detokenizer API using the JWT of the company that owns the card data. <br><br> Ex: If a company XYZ wants to call detokenizer api on behalf of another company ABC, then the company XYZ should access the api using ABC's company jwt.
 
 ## <a name="overview"></a>Overview
 
@@ -20,8 +23,8 @@ Credit Card Account Details|Retrieve credit card number via Detokenizer API.
 
 ## <a name="limitations"></a>Limitations
 
-This API is only for public use to support various SAP integration features or to the SAP Concur customer that has established corporate credit card accounts involved in the data (the “Customer Corporate Card Holder”). Such use must be in compliance with regulations and other industry standards, including but not limited to Payment Card Industry Data Security Standards (PCI DSS). Access to this documentation does not provide access to the API.
-
+This API is only for public use to support various SAP integration features or to the SAP Concur customer that has established corporate credit card accounts involved in the data (the “Customer Corporate Card Holder”). Such use must be in compliance with regulations and other industry standards, including but not limited to Payment Card Industry Data Security Standards (PCI DSS). Access to this documentation does not provide access to the API.</br></br>
+These APIs are available only in CCPS environment currently. Later, it will be available for other commercial environments also.
 ## <a name="process-flow"></a>Process Flow
 
 ![DetokenizerV5ProcessFlow](./v5.detokenizer-get-started-process-flow.png)
@@ -44,7 +47,8 @@ SAP Concur clients must purchase Concur Expense in order to use this API.
 
 ## Access Token Usage <a name="access-token-usage"></a>
 
-This API supports company level access tokens.
+This API supports company level access tokens. A Company access token (JWT) is required for these endpoints like mentioned in [Authentication](#authentication).
+
 
 ## <a name="RSAPublicKeyDetail-get"></a>Get RSA Public Key Detail
 
@@ -97,13 +101,13 @@ In case of success, HTTP status code `200 (OK) - RSA Public Key` is returned.
 #### Request
 
 ```shell
-GET https://us.api.concursolutions.com//detokenizer/v5/publickey
+GET https://usg.api.concursolutions.com/detokenizer/v5/publickey
 concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
 Authorization: Bearer JWT_TOKEN
 Accept: application/json
 ```
 
-#### Response
+#### Success Response
 
 ```shell
 HTTP/1.1 200 OK
@@ -119,6 +123,21 @@ Content-Length: 1270
 }
 ```
 
+#### Error Response
+```shell
+401 Unauthorized
+Content-Type: application/json
+```
+
+```json
+{
+    "timestamp": "2025-05-12T13:24:18.149+00:00",
+    "httpStatus": "401 - Unauthorized",
+    "errorMessage": "",
+    "errorId": "UNAUTHORIZED",
+    "path": "/detokenizer/v5/publickey"
+}
+```
 
 ## Get Credit Card Account Details <a name="get-credit-card-account-details"></a>
 
@@ -180,7 +199,7 @@ In case of success, HTTP status code `200 (OK) - Encrypted Credit Card Data` is 
 #### Request
 
 ```shell
-POST https://us.api.concursolutions.com//detokenizer/v5/creditcards/9D118EDC278B844DB7814072110AC4D9
+POST https://usg.api.concursolutions.com/detokenizer/v5/creditcards/9D118EDC278B844DB7814072110AC4D9
 concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
 Authorization: Bearer JWT_TOKEN
 Accept: application/json
@@ -201,6 +220,24 @@ Content-Length: 1270
   "accountNumber": "dPp0l3xtLvucH+md:EUjJp2eIWgIpjdHjTg0EhJjawdEek5M8gSrJBKHCOtY="
 }
 ```
+
+#### Error Response
+
+```shell
+400 Bad Request
+Content-Type: application/json
+```
+
+```json
+{
+    "timestamp": "2025-05-12T13:24:18.149+00:00",
+    "httpStatus": "400 - Bad Request",
+    "errorMessage": "Bad request [keyVersion] received.",
+    "errorId": "BAD_REQUEST",
+    "path": "/detokenizer/v5/creditcards/059fee21-a340-5043-8b72-583f5c2d10b0"
+}
+```
+
 
 ## Schemas <a name="schemas"></a>
 
