@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | SAP Concur Developer Center - API Release Notes, September 2024</title>
+  <title> SAP Concur Developer Center | SAP Concur Developer Center - API Release Notes, June 2025</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/tools-support/release-notes/api/2024-09-12.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/tools-support/release-notes/api/2025-06-04.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -250,7 +250,7 @@
       </a>
       <ul id="collapse-developer-platform-release-notes" class="collapse in">
         
-          <li >
+          <li  class="active" >
             <a href="/tools-support/release-notes/api/2025-06-04.html">June 2025</a>
           </li>
         
@@ -286,7 +286,7 @@
             <a href="/tools-support/release-notes/api/2024-10-03.html">October 2024</a>
           </li>
         
-          <li  class="active" >
+          <li >
             <a href="/tools-support/release-notes/api/2024-09-12.html">September 2024</a>
           </li>
         
@@ -429,73 +429,111 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="api-release-notes-september-2024">API Release Notes, September 2024</h1>
+        <h1 id="api-release-notes-june-2025">API Release Notes, June 2025</h1>
 
 <h2 id="new-this-month">New This Month</h2>
 
-<h3 id="now-available-expense-configuration-v4-api">Now Available: Expense Configuration v4 API</h3>
+<h3 id="preview-detokenizer-dtk-v5-api">Preview: Detokenizer (DTK) v5 API</h3>
 
-<p>Use the new Expense Configuration Service in GET operations for policies, payment types, and expense types. These operations allow for retrieval of all policies applicable to a user based on their <code class="language-plaintext highlighter-rouge">userId</code> or <code class="language-plaintext highlighter-rouge">policyId</code>, as specified. For more information, check out the <a href="/api-reference/expense/expense-config/v4.expense.config.html">Expense Configuration v4</a>.</p>
+<p>The FIPS Compliant v5 Credit Card Detokenization API will be set to launch within the CCPS environment for IBCP customers. This compliance-driven initiative aligns with the Federal Information Processor Standards (FIPS) to ensure robust protection of sensitive data, per U.S. federal requirements. For customers with entities in CCPS and IBCP card programs, the new Detokenizer (DTK) functionality will be integral to the payment file process.</p>
 
-<h3 id="preview-new-client-ssl-certificate-for-ess-webhookapiconcursolutionscom">Preview: New Client SSL Certificate for ESS webhook.api.concursolutions.com</h3>
+<blockquote>
+  <p><strong>Note:</strong> The current v4 API service will remain unchanged for other environments.</p>
+</blockquote>
 
 <p><strong>Overview</strong></p>
 
-<p>In an effort to ensure the ongoing security of our products and services, on October 22, 2024, ESS will be issuing a new webhook.api.concursolutions.com SSL certificate.</p>
+<p>The Detokenizer service ensures secure transmission of sensitive data (card number) to customers as part of the remittance file creation process running at caller applications like ICS and CWS, in which the full, unmasked credit card number is required for the correct application of payments.</p>
 
-<p>Any customer who has pinned this expiring certificate will need to update to the new certificate prior to the expiration date. If the pinned certificate is not updated prior, your organization and users will experience disruption to SAP Concur products and services. Customers who have not pinned the certificate do not need to take any action as the new certificate is updated automatically. Most customers do not pin the certificate.</p>
+<p><strong>API Details</strong></p>
 
-<blockquote>
-  <p>As an enhancement to our Security and Compliance program, this certificate will be updated on an annual basis</p>
-</blockquote>
+<p>There are two APIs which are developed as part of Detokenizer (DTK) v5 and they must be called in sequence.</p>
 
-<p><strong>Configuration / Feature Activation</strong></p>
+<p>The Detokenizer v5 API exposes the following resources and these must be called sequentially:</p>
 
-<p>Please consult with your IT department to check if this applies to you.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Resource</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>RSAPublicKey</td>
+      <td>Retrieves the RSA public Key via public key API</td>
+    </tr>
+    <tr>
+      <td>Credit Card Account Details</td>
+      <td>Retrieves the credit card number via Detokenizer API</td>
+    </tr>
+  </tbody>
+</table>
 
-<h3 id="preview-external-event-support-for-spend-and-travel-profile-changes">Preview: External Event Support for Spend and Travel Profile Changes</h3>
-
-<p>In October, we will release three external event topics to inform users when an users spend or travel profile is created, updated, or deleted within their company. After subscribing to the topic, users will be updated when a new identity is created with a URL to the identity. Update events will include the updated attributes included within the event and a URL to the identity to retrieve values.</p>
-
-<h3 id="preview-updates-to-travel-deep-links">Preview: Updates to Travel Deep Links</h3>
-
-<p>In October, Hotel Deep Link will support GDS and CHS hotel property IDS using the parameter <code class="language-plaintext highlighter-rouge">location</code> coupled with the content source (for example, SABRE, AMADEUS,CWT) using <code class="language-plaintext highlighter-rouge">locationsource</code>. The deep link user will land on the hotel shopping results with the requested hotel at the top of the list when the GDS is the content source. (CHS providers determine the hotel sort order)</p>
-
-<p>The user will be prompted to input the departure airport when the departure is excluded in the deep link and the home airport is not populated in the user profile. Users will have the option to save the airport to their profile. If the deep link contains the departure airport, we will use the airport in the deep link when displaying air shopping results. If the deep link is missing the departure airport and home airport is populated in the profile, then home airport will be used for the departure airport. The user will be prompted to input the destination airport if the destination airport is missing from the deep link.</p>
+<p>The first DTK v5 API will return the RSA public key and version of the RSA public key. The caller needs to wrap their symmetric key using this public key and this wrapped symmetric key needs to be passed to the second DTK v5 API along with the version earlier mentioned, and the mandatory credit card GUID received from client request to provide encrypted credit card account number.</p>
 
 <h2 id="ongoing">Ongoing</h2>
 
-<h3 id="preview-pgp-key-for-file-transfers-to-be-replaced">Preview: PGP Key for File Transfers to be Replaced</h3>
+<h3 id="preview-ssl-certificate-renewal-for-concursolutionscom-and-apiconcursolutionscom">Preview: SSL Certificate Renewal for *.concursolutions.com and *api.concursolutions.com</h3>
 
-<p>Files transferred to SAP Concur solutions must be encrypted with the SAP Concur public PGP key.</p>
+<p><strong>Updated with links to new certificates.</strong></p>
+
+<p>Starting in October 2025, DigiCert Global Root CA will be replaced by DigiCert Global Root G2. To ensure clients have adequate time to prepare for this Root certificate change, SAP Concur plans to renew the certificates for *.concursolutions.com and *api.concursolutions.com in March 2025.</p>
+
+<blockquote>
+  <p><strong>Note</strong>: The intermediate certificate and Root certificate for *.concursolutions.com and *.api.concursolutions.com will not change in March 2025. Only the end-entity certificate (leaf certificate) will be updated.</p>
+</blockquote>
+
+<p><strong>Availability Target Details</strong>: The intermediate certificate and Root certificate for *.concursolutions.com and *.api.concursolutions.com will not change in March 2025.</p>
+
+<p>SAP Concur plans to issue new certificates as follows:</p>
 
 <ul>
-  <li>A new PGP key, key ID 8C51C89E, will be available in the client’s root folder beginning on or before May 24, 2024. The file name will be concursolutions.asc.</li>
-  <li>The current key, key ID 9AFF10B5, will expire on September 4, 2024, and should no longer be used.</li>
+  <li>6PM PST on March 21, 2025 (*.concursolutions.com)</li>
+  <li>6PM PST March 27, 2025 (*.api.concursolutions.com)</li>
 </ul>
 
+<p>The current certificates will expire as follows:</p>
+
+<ul>
+  <li>23:59 GMT on May 13, 2025 (*.concursolutions.com)</li>
+  <li>23:59 GMT on August 2, 2025 (*.api.concursolutions.com)</li>
+</ul>
+
+<p>Clients who have not pinned the expiring certificate do not need to take any action as their expiring certificate will be renewed automatically. <strong>Most clients do not pin the certificate.</strong></p>
+
 <blockquote>
-  <p>More information about migrating from the legacy key (key ID D4D727C0) to the new key (key ID 8C51C89E), will be provided in the June 2024 release notes.</p>
+  <p><strong>Note</strong>: SAP ICS customers who follow the certificate handling processes described in the following note do not need to take any action:<a href="https://me.sap.com/notes/2914977">2914977 - FAQ: Concur Certificates, Authentication, and Connectivity</a>.</p>
 </blockquote>
 
-<p>The expiration date of the current key (key ID 9AFF10B5) cannot be changed. To ensure that file uploads continue to be processed after the key expires on September 4, 2024, clients must migrate to the new PGP key (key ID 8C51C89E) before the expiration date.</p>
+<p><strong>User Experience</strong></p>
 
-<p>If you are unable to migrate to the new key (key ID 8C51C89E) before September 4, 2024, you can manually upload files using the Import / Extract Monitor feature.</p>
+<p>Clients who have pinned an expiring certificate must update to the new certificate before the new certificate is issued at 6PM PST on March 20, 2025 (<em>.concursolutions.com) or at 6PM PST on March 27, 2025 (</em>.api.concursolutions.com).</p>
+
+<p>Clients who have pinned the certificate and who do not update it with the new certificate before it is renewed, will experience disruption to SAP Concur products and services.</p>
+
+<p><strong>Configuration / Feature Activation</strong></p>
 
 <blockquote>
-  <p>For more information about the Import / Extract Monitor feature, refer to the <a href="https://www.concurtraining.com/customers/tech_pubs/Docs/_Current/UG_Shr/Shr_UG_IE_Monitor.pdf">Shared: Import/Extract Monitor User Guide</a>.</p>
+  <p><strong>IMPORTANT!</strong> Certificate pinning is not recommended, and you do so at your own risk. To support security for SAP Concur solutions, security certificates are renewed regularly. Pinned certificates are not renewed automatically and, if a pinned certificate is not renewed before it expires, the pinned certificate can cause a disruption of service.</p>
 </blockquote>
 
-<p><strong>Admin Experience</strong></p>
+<p>To avoid disruption of service, clients who pin their security certificates must pin both the RSA and ECDSA certificates. Clients may obtain the new certificates from the following web pages:</p>
 
-<p>When it becomes available, an administrator with the required file transfer credentials can log into the file transfer site to retrieve the public PGP key, concursolutions.asc, from the root directory.</p>
+<p>*.concursolutions.com</p>
 
-<p><strong>Configuration</strong></p>
+<p><a href="https://assets.concur.com/concurtraining/cte/en-us/concursolutions-com-chain_RSA.pem">https://assets.concur.com/concurtraining/cte/en-us/concursolutions-com-chain_RSA.pem</a></p>
 
-<p>When it becomes available, your internal file transfer administrator can add the new key to their PGP keyring and start using it to encrypt files being transferred to SAP Concur. If you require assistance, please contact SAP Concur support.</p>
+<p><a href="https://assets.concur.com/concurtraining/cte/en-us/concursolutions-com-chain_ECDSA.pem">https://assets.concur.com/concurtraining/cte/en-us/concursolutions-com-chain_ECDSA.pem</a></p>
+
+<p>*.api.concursolutions.com</p>
+
+<p><a href="https://assets.concur.com/concurtraining/cte/en-us/api-concursolutions-com-chain_RSA.pem">https://assets.concur.com/concurtraining/cte/en-us/api-concursolutions-com-chain_RSA.pem</a></p>
+
+<p><a href="https://assets.concur.com/concurtraining/cte/en-us/api-concursolutions-com-chain_ECDSA.pem">https://assets.concur.com/concurtraining/cte/en-us/api-concursolutions-com-chain_ECDSA.pem</a></p>
 
 <blockquote>
-  <p>For more information, refer to the <a href="https://www.concurtraining.com/customers/tech_pubs/Docs/ConcurPremier/UG_Shr/Shr_UG_FileTransfer.pdf">Shared: File Transfer for Customers and Vendors User Guide</a>.</p>
+  <p><strong>Note</strong>:If you are not sure whether your *concursolutions.com certificate is pinned, consult with your IT department.</p>
 </blockquote>
 
 <h2 id="previews">Previews</h2>
@@ -511,6 +549,21 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td><a href="/tools-support/release-notes/api/2025-04-03.html">04/2025</a></td>
+      <td>New Fields Added to Financial Integration Services (FIS) v4 API</td>
+      <td>For customers of the Concur Expense Professional Edition using the Financial Integration Services (FIS) v4 API, additional fields will be included in the Expense report document payload and mileage fields will be added to the payroll document schema.</td>
+    </tr>
+    <tr>
+      <td><a href="/tools-support/release-notes/api/2025-04-03.html">04/2025</a></td>
+      <td>Expense v4 DELETE APIs for Reports v4 and Expenses v4</td>
+      <td>The Expense Report Service API suite will be updated to include APIs to delete unsubmitted reports and expenses.</td>
+    </tr>
+    <tr>
+      <td><a href="/tools-support/release-notes/api/2025-03-06.html">03/2025</a></td>
+      <td>Support of Hotel Date Modification for Hotel Connectors</td>
+      <td>Hotel connectors will support the modification of check-in and check-out dates using the Hotel Service v4 Modify endpoint. This will allow users to change their dates of stay without having to cancel and rebook.</td>
+    </tr>
     <tr>
       <td><a href="/tools-support/release-notes/api/2024-05-09.html">05/2024</a></td>
       <td>Retention Period for Credit Card Data Files</td>
@@ -538,34 +591,24 @@
   </thead>
   <tbody>
     <tr>
-      <td><a href="/tools/support/release-notes/api/2024-03-14.html">03/2024</a></td>
+      <td><a href="/tools-support/release-notes/api/2025-04-03.html">04/2025</a></td>
+      <td>Deprecation of Attendees v1, v1.1, and v2</td>
+      <td>Effective October 9, 2018, we have deprecated the Attendees v1, v1.1, and v2 APIs. Decommission will follow.</td>
+    </tr>
+    <tr>
+      <td><a href="/tools-support/release-notes/api/2024-03-14.html">03/2024</a></td>
       <td>Deprecation of Spend User Retrieval 4.0.</td>
       <td>The decommission of password provisioning via file import will occur in April 2025.</td>
     </tr>
     <tr>
-      <td><a href="/tools-support/release-notes/api/2023-06-02.html">06/2023</a></td>
+      <td><a href="/tools-support/release-notes/api/archive/2023-06-02.html">06/2023</a></td>
       <td>Deprecation of Launch External URL Callout v1</td>
       <td>The Launch External URL V1 API is deprecated as of June 16th, 2023. Decommission will follow.</td>
     </tr>
     <tr>
-      <td><a href="/tools-support/release-notes/api/2023-01-05.html">01/2023</a></td>
+      <td><a href="/tools-support/release-notes/api/archive/2023-01-05.html">01/2023</a></td>
       <td>Move from the Travel Request External Validation Callout v1 to the Event Subscription Service (ESS)</td>
       <td>This callout was designed to work with the Concur Request v1 API that is in the process of being decommissioned. Users are strongly recommended to move to the Event Subscription Services (ESS) in order to subscribe to the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Request events</a>.</td>
-    </tr>
-    <tr>
-      <td><a href="/tools-support/release-notes/api/archive/2022-11-10.html">11/2022</a></td>
-      <td>Deprecation of User v1</td>
-      <td>Effective November 10th, 2022, the User v1 API has been deprecated. This has been replaced by <a href="/api-reference/user-provisioning/v4.user-provisioning.html">User Provisioning Service v4</a>. Decommission has been extended and will conclude on May 31st, 2024.</td>
-    </tr>
-    <tr>
-      <td><a href="/tools-support/release-notes/api/archive/2022-11-10.html">11/2022</a></td>
-      <td>Deprecation of User v3</td>
-      <td>Effective November 10th, 2022, the User v1 API has been deprecated. This has been replaced by <a href="/api-reference/user-provisioning/v4.user-provisioning.html">User Provisioning Service v4</a>. Decommission has been extended and will conclude on May 31st, 2024.</td>
-    </tr>
-    <tr>
-      <td><a href="/tools-support/release-notes/api/archive/2021-04-16.html#planned-deprecation-bulk-user">04/2021</a></td>
-      <td>Bulk User v3.1 API</td>
-      <td>We have deprecated the Bulk User v3.1 API for the US and EMEA data centers. This API is replaced by <a href="/api-reference/profile/v4.identity.html">Identity v4</a>. Decommission will follow. Bulk User v3.1 will remain available for China data centers.</td>
     </tr>
     <tr>
       <td><a href="/tools-support/release-notes/api/archive/2021-01-22.html#planned-list-deprecation">01/2021</a></td>
@@ -631,7 +674,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/tools-support/release-notes/api/2024-09-12.md">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/tools-support/release-notes/api/2025-06-04.md">Edit this page on GitHub</a>
     </p>
   </div>
 
