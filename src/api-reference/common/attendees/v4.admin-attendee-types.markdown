@@ -1,0 +1,151 @@
+---
+title: Attendee Types v4
+layout: reference
+---
+
+# Attendee Types v4
+
+This API provides users with the capability to retrieve attendee types.
+
+## Scope Usage
+
+| Name                       | Description                                   | Verb           |
+|----------------------------|-----------------------------------------------|----------------|
+| `attendee.admin.read`      | Admin read only access to attendee types      | GET            |
+
+## Access Token Usage
+
+This API only supports company access tokens.
+
+## Retrieve Attendee Types
+
+Retrieves all attendee types and their related configuration information. To view all private attendee type details, the caller must have the Web Services Administrator, Expense Configuration Administrator, or Expense Configuration Administrator (Restricted) roles.
+
+### Scopes
+
+`attendee.admin.read` - Refer to [Scope Usage](#scope-usage)
+
+### URI
+
+```shell
+https://{datacenterUri}/v4/attendeetypes
+```
+
+### Parameters
+
+| Name            | Type   | Format | Description                                                                                                                                              |
+|-----------------|--------|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Accept-Language | string | -      | Language code. Default: Company defined default language                                                                                                 |
+
+### Payloads
+
+* Request: None
+* Response: [Attendee Types Response](#attendee-types-schema)
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us2.api.concursolutions.com/v4/attendeetypes
+Accept: application/json
+Accept-Language: en
+Authorization: Bearer ${ACCESS_TOKEN}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+[
+    {
+        "name": "Business Guest",
+        "code": "BUSGUEST",
+        "form": {
+            "name": "Business Guest Attendee Form",
+            "id": "7e5707ed-e78b-4e49-98ee-eabb0c27bfec"
+        },
+        "duplicateSearchFields": [
+            "title",
+            "company",
+            "ownerEmpName",
+            "firstName",
+            "lastName"
+        ],
+        "isPublic": true,
+        "isDeleted": false,
+        "allowManuallyEnteredAttendees": true,
+        "allowAttendeeCountEditing": true,
+        "id": "ed24a533-76f0-b84c-882d-2482a9686f5c",
+        "permitAdds": true,
+        "isActive": true,
+        "searchPreference": "DS",
+        "systemRecord": false
+    },
+    {
+        "name": "External Connector Peeps",
+        "code": "EXTCON",
+        "form": {
+            "name": "External Connector Attendee Form",
+            "id": "23t707ed-e78b-4e49-98ee-2gfb0c27bmjh"
+        },
+        "duplicateSearchFields": [
+            "title",
+            "company",
+            "ownerEmpName",
+            "firstName",
+            "lastName",
+            "custom1",
+            "custom2"
+        ],
+        "isPublic": true,
+        "externalConnectorId": "gWvidmKNPVEaOg$s66rqA62OJVXfvHBMs4sw",
+        "isDeleted": false,
+        "allowManuallyEnteredAttendees": true,
+        "allowAttendeeCountEditing": true,
+        "id": "ed24a533-76f0-b84c-882d-2482a9686f5c",
+        "permitAdds": false,
+        "isActive": false,
+        "searchPreference": "AO",
+        "systemRecord": true
+    }
+]
+```
+
+## Schema <a name="schema"></a>
+
+### <a name="attendee-types-schema"></a>Attendee Types
+
+| Name |  Type   |                 Format                 | Description            |
+|:----:|:-------:|:--------------------------------------:|:-----------------------|
+|  -   | `Array` | [Attendee Type](#attendee-type-schema) | The result collection. |
+
+### <a name="attendee-type-schema"></a>Attendee Type
+
+|              Name               |         Type         |     Format     | Description                                                                                                                                                           |
+|:-------------------------------:|:--------------------:|:--------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|   `allowAttendeeCountEditing`   |      `boolean`       | `true / false` | **Required** Determines whether users are allowed to edit the count for this attendee type. Format: true or false                                                     |
+| `allowManuallyEnteredAttendees` |      `boolean`       | `true / false` | **Required** Determines whether users are allowed to add attendees for this attendee type. Format: true or false                                                      |
+|             `code`              |       `string`       |       -        | **Required** A code that indicates the type of attendee. Examples: EMPLOYEE, SPOUSE, BUSGUEST. Maximum length: 8 characters                                           |
+|      `externalConnectorId`      |       `string`       |                | The unique identifier of the external connector data source for this attendee type. When this field is not configured, it is absent in the response body.                     |
+|     `duplicateSearchFields`     |       `Array`        |  Search Field  | **Required** The list of Attendee search field IDs used by the Add Attendee user interface to alert users that the attendee they want to add is a possible duplicate. |
+|             `form`              | [Form](#form-schema) |       -        | **Required** The form type configured. This determines available fields for attendees belonging to this attendee type.                                                |
+|              `id`               |       `string`       |     `uuid`     | **Required** The unique identifier of the resource.                                                                                                                   |
+|           `isDeleted`           |      `boolean`       | `true / false` | **Required** Indicates if this attendee type is deleted.                                                                                                              |
+|           `isPublic`            |      `boolean`       | `true / false` | **Required** Indicates if attendees belonging to this attendee type are visible across users, regardless of ownership.                                                |
+|             `name`              |       `string`       |       -        | **Required** The name for the attendee type. This name must be unique. Maximum length: 40 characters                                                                  |
+|          `permitAdds`           |      `boolean`       |       -        | **Required** Indicates if users are allowed to add new attendees of this attendee type                                                                                |
+|           `isActive`            |      `boolean`       |       -        | **Required** Indicates if this attendee type is active                                                                                                                |
+|       `searchPreference`        |       `string`       |       -        | **Required** The search preference for this attendee type: DS = Default Simple, DA = Default Advanced, AO = Advanced Only                                             |
+|         `systemRecord`          |      `boolean`       |       -        | **Required** Indicates if this attendee type is a system record                                                                                                       |
+
+### <a name="form-schema"></a>Form
+
+|  Name  |   Type   | Format | Description                                                                      |
+|:------:|:--------:|:------:|----------------------------------------------------------------------------------|
+| `name` | `string` |   -    | **Required** The name for this form. Maximum length: 64 characters               |
+|  `id`  | `string` | `uuid` | **Required** The unique identifier for the attendee form for this attendee type. |

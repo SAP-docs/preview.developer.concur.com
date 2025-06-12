@@ -1,0 +1,269 @@
+---
+title: Cash Advance Associations v4
+layout: reference
+---
+
+# Cash Advance Associations v4
+
+The Cash Advance Associations v4 API can be used for operations related to associating and disassociating cash advances with an expense report.
+
+## <a name="limitations"></a>Limitations
+
+Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+| Name                       | Description                                                              | Endpoint     |
+|----------------------------|--------------------------------------------------------------------------|--------------|
+| `expense.report.read`      | Read information about cash advances associated with a report.           | GET          |
+| `expense.report.readwrite` | Read and write information about cash advances associated with a report. | GET, POST, DELETE |
+
+## Dependencies <a name="dependencies"></a>
+
+SAP Concur clients must purchase the Concur Expense cash advance feature in order to use this API and use the [Cash Advance v4.1 APIs](/api-reference/cash-advance/v4-1.cash-advance.md) to create cash advances.
+
+Please contact your SAP Concur representative for more information.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports both company level and user level access tokens.
+
+## Get Cash Advance Associations
+
+Returns cash advance IDs associated with the specified report.
+
+### Scopes
+
+`expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/cashAdvances
+```
+
+### Parameters
+
+| Name     | Type     | Format | Description                          |
+|----------|----------|--------|--------------------------------------|
+| reportId | `string` | path   | The unique identifier of the report. |
+
+### Payloads
+
+  * Request: None
+  * Response: [CashAdvancesResponse](#cash-advances-response-schema) 
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+  This is the Company or User access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Examples
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/cashAdvances' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+```shell
+200 OK
+
+{
+  "cashAdvances": [
+    {
+      "id": "4a205b23-9d47-413f-9eeb-cd7245b75a6a"
+    },
+    {
+      "id": "75e1fbe2-7de8-467f-9f6f-67073908459b"
+    }
+  ]
+}
+```
+
+## Associate Cash Advances with a Report
+
+Associates the specified cash advance(s) with the specified report. Replaces all existing associated cash advance(s) of the report with the provided payload.
+
+Any invalid Cash Advance Ids will result in a failed action and no update will occur.
+
+### Scopes
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/cashAdvances
+```
+
+### Parameters
+
+| Name     | Type     | Format | Description                          |
+|----------|----------|--------|--------------------------------------|
+| reportId | `string` | path   | The unique identifier of the report. |
+| body     | `CashAdvanceRequest`  | application/json  | The request body containing the cash advances to associate. |
+
+### Payloads
+
+  * Request: [CashAdvanceRequest](#cash-advances-post-schema) 
+  * Response: [CashAdvancePostResponse](#cash-advance-uri-schema)
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+  This is the Company or User access token.
+
+### Response
+
+#### Status Codes
+
+* [201 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Examples
+
+#### Request
+
+```shell
+curl --location --request POST 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/cashAdvances' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "cashAdvanceIds": [
+    "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+  ]
+}'
+```
+
+### Response
+
+#### 201 Created
+
+```shell
+201 Created
+
+{
+  "uri": "https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/cashAdvances"
+}
+```
+
+## Disassociate Cash Advances with Report
+
+Disassociate the specified cash advance(s) from the specified report.
+
+### Scopes
+
+`expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/cashAdvances?cashAdvanceIds={cashAdvanceId}
+```
+
+### Parameters
+
+| Name     | Type           | Format | Description                          |
+|----------|----------------|--------|--------------------------------------|
+| reportId | `string`       | path   | The unique identifier of the report. |
+| cashAdvanceIds    | `List<String>` | query  | The unique identifier(s) of the cash advances to disassociate with the report |
+
+### Payloads
+
+  * Request: None
+  * Response: None
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+  This is the Company or User access token.
+
+### Response
+
+#### Status Codes
+
+* [204 OK](https://tools.ietf.org/html/rfc7231#section-6.3.2)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Examples
+
+#### Request
+
+```shell
+curl --request DELETE 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/cashAdvances?cashAdvanceIds=3fa85f64-5717-4562-b3fc-2c963f66afa6&cashAdvanceIds=75e1fbe2-7de8-467f-9f6f-67073908459b' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json' 
+```
+
+### Response
+
+#### 204 Created
+
+```shell
+204 No Content
+```
+## Schema <a name="schema"></a>
+
+### <a name="cash-advance-response-schema"></a> CashAdvanceResponse
+
+| Name | Type   | Format | Description                          |
+|------|--------|--------|--------------------------------------|
+| id   | string | uuid   | The associated cash advance Id.      |
+
+### <a name="cash-advances-response-schema"></a> CashAdvancesResponse
+
+| Name         | Type   | Format | Description                                      |
+|--------------|--------|--------|--------------------------------------------------|
+| cashAdvances | array  | [CashAdvanceResponse](#cash-advance-response-schema) | List of the associated cash advance objects.     |
+
+### <a name="cash-advances-post-schema"></a> CashAdvanceRequest
+
+| Name         | Type   | Format | Description                                      |
+|--------------|--------|--------|--------------------------------------------------|
+| cashAdvanceIds | array  | uuid    | List of the associated cash advance ids     |
+
+### <a name="cash-advance-uri-schema"></a> CashAdvancePostResponse
+
+| Name | Type   | Format | Description                          |
+|------|--------|--------|--------------------------------------|
+| uri   | string | -   | The href to retrieve the cash advance associations      |
+
+
