@@ -1,0 +1,280 @@
+---
+title: Detokenizer v5
+layout: reference
+---
+
+{% include prerelease.html %}
+
+# Detokenizer v5
+
+The Detokenizer API allows clients to retrieve the user's credit card number from Concur Expense in a secure way. It returns the user's credit card number encrypted with a symmetric key that the client provides in the request. The client will be able to decrypt the user's credit card number using their symmetric key. The detokenizer V5 version is FIPS compliant so that customers with IBCP card programs can benefit with credit card detokenizer functionality in CCPS environment. This API ensures secure transmission of sensitive data (card number) to customers as part of the remittance file creation process running at caller applications like ICS and CWS, in which the full, unmasked credit card number is required for the correct application of payments.
+
+## <a name="authentication"></a>Authentication
+ Authentication is done via company JWT with required scope `creditcardaccount.read`. The company JWT refers to the token belonging to the company whose data is being accessed. If a company is accessing data on behalf of another company, then the calling company should invoke the detokenizer API using the JWT of the company that owns the card data. For example, if a company XYZ wants to call the detokenizer API on behalf of another company ABC, then the company XYZ should access the API using ABC's company JWT.
+
+## <a name="overview"></a>Overview
+
+The detokenizer v5 API exposes the following resources and these have to be called sequentially: 
+
+Resource|Description
+---|---
+RSAPublicKey|Retrieve RSA public Key via publickey API.
+Credit Card Account Details|Retrieve credit card number via Detokenizer API.
+
+## <a name="limitations"></a>Limitations
+
+This API is only for public use to support various SAP integration features or to the SAP Concur customer that has established corporate credit card accounts involved in the data (the “Customer Corporate Card Holder”). Such use must be in compliance with regulations and other industry standards, including but not limited to Payment Card Industry Data Security Standards (PCI DSS). Access to this documentation does not provide access to the API.<br><br>
+These APIs are available only in CCPS environment currently. Later, it will be available for other commercial environments also.
+## <a name="process-flow"></a>Process Flow
+
+![DetokenizerV5ProcessFlow](./v5.detokenizer-get-started-process-flow.png)
+
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+
+
+## Scope Usage <a name="scope-usage"></a>
+
+Name|Description|Endpoint
+---|---|---
+`creditcardaccount.read`|Reads credit card data from Concur Expense.|POST
+
+## Dependencies <a name="dependencies"></a>
+
+SAP Concur clients must purchase Concur Expense in order to use this API.
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API supports company level access tokens. A Company access token (JWT) is required for these endpoints like mentioned in [Authentication](#authentication).
+
+
+## <a name="RSAPublicKeyDetail-get"></a>Get RSA Public Key Detail
+
+Endpoint to retrieve RSA public Key. Returns RSA Public key for caller to consume the other V5 API i.e. Get Credit Card Account Details. This key would be used by caller to wrap their own symmetric key which would be passed to Get Credit Card Account Details API.
+
+### Scopes
+
+`creditcardaccount.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+```shell
+GET https://{region}.api.concursolutions.com/detokenizer/v5/publickey
+```
+
+#### Parameters
+
+* None
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) : Header used for authorization. Should be specified in the format 'Bearer JWT_Token'. This is a Company JWT token.
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+
+#### Payload
+
+* None.
+
+### Response
+
+#### <a name="http-status-codes"></a>Status Codes
+
+In case of success, HTTP status code `200 (OK) - RSA Public Key` is returned.
+
+* [401 Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+
+#### Payload
+
+* [RSA Public Key Response](#rsa-public-key-response)
+
+### Example
+
+#### Request
+
+```shell
+GET https://usg.api.concursolutions.com/detokenizer/v5/publickey
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Authorization: Bearer JWT_TOKEN
+Accept: application/json
+```
+
+#### Success Response
+
+```shell
+HTTP/1.1 200 OK
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Content-Type: application/json
+Content-Length: 1270
+```
+
+```json
+{
+  "pubKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuPXJGJKBYiqRsPUrrxs7726KUQa+xiyaZ38CfvgPCUo6KV4WQRSAdudoY7Ut1VKA7tqjcFAV/OWVdqKYG32I4oyfGYGfacCXSSF+HQY6D8WrZg87mtNiZq0SrzQNESfd80ZpbKMEKSN23q7Pjub35YKfHWLn6JZXo+Y+YXW040ghCqNULFvG0EyY6WPalYCfQqV9231kJkyu5L0RLzjfqOLCfu4m+YHgo3FAEhFUrhYTDLMm7nnoGwQQA5Mf+Hcd84FMKIow0t7iv8fPox5uZS7o/RTCZfbGpCkyka5pF0NnkGXvLI5J8JCobO/IAm9DoElSClJznHZwZOtHcQb/gwIDAQAB",
+  "version": 5
+}
+```
+
+#### Error Response
+```shell
+401 Unauthorized
+Content-Type: application/json
+```
+
+```json
+{
+    "timestamp": "2025-05-12T13:24:18.149+00:00",
+    "httpStatus": "401 - Unauthorized",
+    "errorMessage": "",
+    "errorId": "UNAUTHORIZED",
+    "path": "/detokenizer/v5/publickey"
+}
+```
+
+## Get Credit Card Account Details <a name="get-credit-card-account-details"></a>
+
+Returns the credit card number associated with the credit card token by adhering to FIPS standards, with the credit card number encrypted with caller's symmetric key. Caller has to decrypt this Encrypted Credit Card Number using their symmetric key.
+
+### Prerequisite 
+
+* Publickey endpoint needs to be called and symmetricKey needs to be wrapped using same before making request to this API.
+
+
+### Scopes
+
+`creditcardaccount.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+```shell
+POST https://{region}.api.concursolutions.com/detokenizer/v5/creditcards/{creditCardGuid}
+```
+
+#### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`creditCardGuid`|`string`|-|Credit card GUID - Its a token which represent credit card number in concur expense.
+
+#### Headers
+
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) : Header used for authorization. Should be specified in the format 'Bearer JWT_Token'. This is a Company JWT token.
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+
+#### Payload
+
+* [Credit Card Detokenizer Request](#credit-card-detokenizer-request)
+
+### Response
+
+#### <a name="http-status-codes"></a>Status Codes
+
+In case of success, HTTP status code `200 (OK) - Encrypted Credit Card Data` is returned.
+
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://datatracker.ietf.org/doc/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+#### Headers
+
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+
+#### Payload
+* [Credit Card Number Response](#credit-card-number-response)
+
+### Example
+
+#### Request
+
+```shell
+POST https://usg.api.concursolutions.com/detokenizer/v5/creditcards/9D118EDC278B844DB7814072110AC4D9
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Authorization: Bearer JWT_TOKEN
+Accept: application/json
+Content-Type: application/json
+```
+
+```json
+{
+  "symmetricKey": "R7zgrcT6rpJjtGPXIBSODGDblzPnhQgQ+CKCcwyn7rE8j7FImmNhtETqihB0WQhm1+6v70tKzJsaAMLeucVBEEDcz2sOXgED9WmG6BzhiKgiIJgGcSRTR0QZvdY5LgyI67mhLUT87xsGtUv2ZNkKTR9xkWn3cPrD3tB4bDE296gIRXDLpSadcQAK8gNUfLsuv5c3dfRUdc+B4QdWw8E+hxXR682DIfnpJFSWwoGp9uIao7nJeunXuvkvKfGz0SU1DDu8T4FVlpHJpwuf4a/Kgi+rI/JY0UBOYaW7B5Ne+F7ohcu3Np7SOr2FsSzTAX1X4GH63EstBPtPQr1sTd2yYA==",
+  "keyVersion": 5
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Content-Type: application/json
+Content-Length: 1270
+```
+
+```json
+{
+  "accountNumber": "dPp0l3xtLvucH+md:EUjJp2eIWgIpjdHjTg0EhJjawdEek5M8gSrJBKHCOtY="
+}
+```
+
+#### Error Response
+
+```shell
+400 Bad Request
+Content-Type: application/json
+```
+
+```json
+{
+    "timestamp": "2025-05-12T13:24:18.149+00:00",
+    "httpStatus": "400 - Bad Request",
+    "errorMessage": "Bad request [keyVersion] received.",
+    "errorId": "BAD_REQUEST",
+    "path": "/detokenizer/v5/creditcards/059fee21-a340-5043-8b72-583f5c2d10b0"
+}
+```
+
+
+## Schemas <a name="schemas"></a>
+
+### <a name="rsa-public-key-response"></a>RSA Public Key Response
+
+Name|Type|Format|Description
+---|---|---|---
+`pubKey`|`string`|-|Base64 Encoded RSA public key of 2048 bits length.
+`version`|`long`|-|Version of RSA public key.
+
+### Credit Card Detokenizer Request <a name="credit-card-detokenizer-request"></a>
+
+Name|Type|Format|Description
+---|---|---|---
+`symmetricKey`|`string`|-|AES Symmetric Key (256 length with transformation: AES/GCM/NoPadding) which is wrapped with RSA public key (transformation: RSA/ECB/OAEPWithSHA-256AndMGF1Padding). Note: Symmetric key has to be refreshed frequently in the caller side.
+`keyVersion`|`long`|-|Version of RSA public key used for wrapping symmetric key.
+
+### Credit Card Number Response<a name="credit-card-number-response"></a>
+
+Name|Type|Format|Description
+---|---|---|---
+`accountNumber`|`string`|-|This field would consists of 2 parts with colon as delimiter. First Part is Base64 Encoded IV value and Second Part is Based64 Encoded Encrypted credit card number.
+
+### <a name="error-response"></a>Error Response
+
+Name|Type|Format|Description|Example 
+---|---|---|---|---
+`timestamp`|`string`|-|The time when the error was captured.|-
+`httpStatus`|`string`|-|The http response code and phrase for the response.|400 - Bad Request; 401 - Unauthorized; 403 - Forbidden; 404 - Not Found; 500 - Internal Server Error
+`errorMessage`|`string`|-|The detailed error message. | Bad request [creditCardGUID] received, Bad request [keyVersion] received, Bad request [symmetricKey] received; Unauthorized request; Forbidden request; Not Found; Internal server error. Please contact system administrator.
+`errorId`|`string`|-|The unique identifier of the error associated with the response.|BAD_REQUEST; UNAUTHORIZED; FORBIDDEN; NOT_FOUND; INTERNAL_SERVER_ERROR
+`path`|`string`|-|The URI of the attempted request.|-
