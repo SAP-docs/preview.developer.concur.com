@@ -33,6 +33,6 @@ The API Lifecycle & Deprecation Policy is part of our [API terms and conditions 
 Active|Deprecated|Decommissioned
 ---|---|---
 **API is live in production.**| **API is live in production.** | API is no longer available in production.
-**Documentation:** Available for review two weeks prior to launch. Posted on day of launch. | **Documentation:** Deprecated status indicated and posted on day of deprecation. | **Documentation:** N/A
+**Documentation:** Posted on day of launch, may be available for review earlier. | **Documentation:** Deprecated status indicated and posted on day of deprecation. | **Documentation:** N/A
 **Support:** Updated with bug fixes and new features are available. | **Support:** Updated with bug fixes for a minimum of 12 months. | **Support:** None.
-**Release Notes:** Notify two weeks prior to launch. Announce availability when in production.| **Release Notes:** Notify 30 days prior to deprecation. Announce when deprecated. Time period is at least 12 months in this status. | **Release Notes:** Notify 30 days prior to decommissioning.
+**Release Notes:** Announce availability when in production.| **Release Notes:** Announce when deprecated. Time period is at least 12 months in this status. | **Release Notes:** Notify 30 days prior to decommissioning.
