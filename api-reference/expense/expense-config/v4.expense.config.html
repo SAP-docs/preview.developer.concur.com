@@ -1346,6 +1346,16 @@
       <td>GET</td>
     </tr>
     <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.config.attendeetypes.restricted.read</code></td>
+      <td>Get a list of all attendee types applicable to a user.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expense.config.groups.restricted.read</code></td>
+      <td>Get group information applicable to a user/company.</td>
+      <td>GET</td>
+    </tr>
+    <tr>
       <td><code class="language-plaintext highlighter-rouge">user.read</code></td>
       <td>Get User Information, necessary for <code class="language-plaintext highlighter-rouge">userID</code>.</td>
       <td>GET</td>
@@ -1702,6 +1712,443 @@
 <span class="o">]</span>
 </code></pre></div></div>
 
+<h2 id="retrieve-a-list-of-attendee-types-">Retrieve a List of Attendee Types <a name="retrieve-attendee-types"></a></h2>
+
+<p>Retrieves a list of attendee types applicable to a user’s expense group</p>
+
+<h3 id="scopes-3">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.config.attendeetypes.restricted.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-6">Request</h3>
+
+<h4 id="uri-template-3">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenseconfig/v4/users/<span class="o">{</span>userID<span class="o">}</span>/attendeetypes
+</code></pre></div></div>
+
+<h4 id="parameters-3">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-3">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+</ul>
+
+<h3 id="response-6">Response</h3>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="payload-3">Payload</h4>
+
+<ul>
+  <li><a href="#attendee-type-schema">Attendee Type Response</a></li>
+</ul>
+
+<h3 id="example-3">Example</h3>
+
+<h4 id="request-7">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expenseconfig/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/attendeetypes'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="-response"><a name="attendee-type-schema"></a> Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"attendeeTypeCode"</span>: <span class="s2">"BUSGUEST"</span>,
+    <span class="s2">"attendeeTypeName"</span>: <span class="s2">"Business Guest"</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"attendeeTypeCode"</span>: <span class="s2">"SPOUSE"</span>,
+    <span class="s2">"attendeeTypeName"</span>: <span class="s2">"Spouse"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre></div></div>
+
+<h2 id="retrieve-an-expense-group-applicable-to-a-user-">Retrieve an Expense Group applicable to a user <a name="retrieve-user-expense-group"></a></h2>
+
+<p>Retrieves an expense group applicable to a user</p>
+
+<h3 id="scopes-4">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.config.groups.restricted.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-8">Request</h3>
+
+<h4 id="uri-template-4">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenseconfig/v4/users/<span class="o">{</span>userID<span class="o">}</span>/groupconfigs
+</code></pre></div></div>
+
+<h4 id="parameters-4">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userID</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">userID</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+</ul>
+
+<h3 id="response-7">Response</h3>
+
+<h4 id="status-codes-4">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="payload-4">Payload</h4>
+
+<ul>
+  <li><a href="#group-config-schema">Group Config Response</a></li>
+</ul>
+
+<h3 id="example-4">Example</h3>
+
+<h4 id="request-9">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expenseconfig/v4/users/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/groupconfigs'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="-response-1"><a name="group-config-schema"></a> Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">{</span>
+  <span class="s2">"hierarchyNodeId"</span>: <span class="s2">"40D435A25DAE45A093AF455A93702A02"</span>,
+  <span class="s2">"groupName"</span>: <span class="s2">"Global"</span>,
+  <span class="s2">"allowUserDigitalTaxInvoice"</span>: <span class="nb">true</span>,
+  <span class="s2">"allowUserRegisterYodlee"</span>: <span class="nb">true</span>,
+  <span class="s2">"attendeeListFormId"</span>: <span class="s2">"5717E29E031346ACB36502AE5E6852BA"</span>,
+  <span class="s2">"attendeeListFormName"</span>: <span class="s2">"Attendee List Default Form"</span>,
+  <span class="s2">"cashAdvance"</span>: <span class="o">{</span>
+    <span class="s2">"allowUserCarryBalance"</span>: <span class="nb">true</span>,
+    <span class="s2">"allowUserLinkMultiple"</span>: <span class="nb">true</span>,
+    <span class="s2">"allowUserUpdateExchangeRate"</span>: <span class="nb">true</span>,
+    <span class="s2">"name"</span>: <span class="s2">"Default Cash Advance Workflow"</span>,
+    <span class="s2">"workflowId"</span>: <span class="s2">"3A2AADC26EE84A1E9833C431FCBB16AC"</span>
+  <span class="o">}</span>,
+  <span class="s2">"policies"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"policyId"</span>: <span class="s2">"B3173DEE4434427293ED0286992452E3"</span>,
+      <span class="s2">"policyName"</span>: <span class="s2">"US Expense Policy"</span>,
+      <span class="s2">"isDefault"</span>: <span class="nb">true</span>,
+      <span class="s2">"isInheritable"</span>: <span class="nb">true</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"paymentTypes"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"paymentTypeId"</span>: <span class="s2">"CASH"</span>,
+      <span class="s2">"paymentTypeName"</span>: <span class="s2">"Cash"</span>,
+      <span class="s2">"isDefault"</span>: <span class="nb">true</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"attendeeTypes"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"attendeeTypeCode"</span>: <span class="s2">"SPOUSE"</span>,
+      <span class="s2">"attendeeTypeName"</span>: <span class="s2">"Spouse"</span>
+    <span class="o">}</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="retrieve-all-expense-groups-applicable-to-a-company-">Retrieve all Expense Groups applicable to a company <a name="retrieve-company-expense-groups"></a></h2>
+
+<p>Retrieves all expense groups applicable to a company</p>
+
+<h3 id="scopes-5">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.config.groups.restricted.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-10">Request</h3>
+
+<h4 id="uri-template-5">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenseconfig/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/groupconfigs
+</code></pre></div></div>
+
+<h4 id="parameters-5">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur Company. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">companyId</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-5">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+</ul>
+
+<h3 id="response-8">Response</h3>
+
+<h4 id="status-codes-5">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="payload-5">Payload</h4>
+
+<ul>
+  <li><a href="#group-schema">Group Response</a></li>
+</ul>
+
+<h3 id="example-5">Example</h3>
+
+<h4 id="request-11">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expenseconfig/v4/company/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/groupconfigs'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="-response-2"><a name="group-schema"></a> Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">{</span>
+  <span class="s2">"hierarchyNodeId"</span>: <span class="s2">"40D435A25DAE45A093AF455A93702A02"</span>,
+  <span class="s2">"groupName"</span>: <span class="s2">"Global"</span>,
+  <span class="s2">"allowUserDigitalTaxInvoice"</span>: <span class="nb">true</span>,
+  <span class="s2">"allowUserRegisterYodlee"</span>: <span class="nb">true</span>,
+  <span class="s2">"attendeeListFormId"</span>: <span class="s2">"5717E29E031346ACB36502AE5E6852BA"</span>,
+  <span class="s2">"attendeeListFormName"</span>: <span class="s2">"Attendee List Default Form"</span>,
+  <span class="s2">"cashAdvance"</span>: <span class="o">{</span>
+    <span class="s2">"allowUserCarryBalance"</span>: <span class="nb">true</span>,
+    <span class="s2">"allowUserLinkMultiple"</span>: <span class="nb">true</span>,
+    <span class="s2">"allowUserUpdateExchangeRate"</span>: <span class="nb">true</span>,
+    <span class="s2">"name"</span>: <span class="s2">"Default Cash Advance Workflow"</span>,
+    <span class="s2">"workflowId"</span>: <span class="s2">"3A2AADC26EE84A1E9833C431FCBB16AC"</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="retrieve-an-expense-group-by-id-">Retrieve an Expense Group by ID <a name="retrieve-company-expense-group-by-id"></a></h2>
+
+<p>Company level API to retrieve an expense group by Id, including policies, payment types and attendee types linked to the group</p>
+
+<h3 id="scopes-6">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">expense.config.groups.restricted.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-12">Request</h3>
+
+<h4 id="uri-template-6">URI Template</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://<span class="o">{</span>datacenterURI<span class="o">}</span>/expenseconfig/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/groupconfigs/<span class="o">{</span>hierarchyNodeId<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="parameters-6">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur Company. Use <a href="/api-reference/profile/v4.identity.html">Identity v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">companyId</code>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hierarchyNodeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of a node within the expense group hierarchy. Use <a href="#retrieve-company-expense-groups">Company Groups v4 API</a> to retrieve the <code class="language-plaintext highlighter-rouge">hierarchyNodeId</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">applicableConfigs</code></td>
+      <td>`string</td>
+      <td>-</td>
+      <td><strong>Optional</strong> Query parameter to include applicable configurations for the group. For example, applicableConfigs=attendeeTypes,paymentTypes,policies.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-6">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller. This is the Company or User access token.</li>
+</ul>
+
+<h3 id="response-9">Response</h3>
+
+<h4 id="status-codes-6">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">200 OK</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">404 Not Found</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="payload-6">Payload</h4>
+
+<ul>
+  <li><a href="#group-config-schema">Group Config Response</a></li>
+</ul>
+
+<h3 id="example-6">Example</h3>
+
+<h4 id="request-13">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://us.api.concursolutions.com/expenseconfig/v4/company/32C2FCC3-B2E8-4907-9672-5B3F49B1C643/groupconfigs/40D435A25DAE45A093AF455A93702A02?applicableConfigs=attendeeTypes,paymentTypes,policies'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span>
+</code></pre></div></div>
+
+<h4 id="-response-3"><a name="group-schema"></a> Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+
+<span class="o">{</span>
+  <span class="s2">"hierarchyNodeId"</span>: <span class="s2">"40D435A25DAE45A093AF455A93702A02"</span>,
+  <span class="s2">"groupName"</span>: <span class="s2">"Global"</span>,
+  <span class="s2">"allowUserDigitalTaxInvoice"</span>: <span class="nb">true</span>,
+  <span class="s2">"allowUserRegisterYodlee"</span>: <span class="nb">true</span>,
+  <span class="s2">"attendeeListFormId"</span>: <span class="s2">"5717E29E031346ACB36502AE5E6852BA"</span>,
+  <span class="s2">"attendeeListFormName"</span>: <span class="s2">"Attendee List Default Form"</span>,
+  <span class="s2">"cashAdvance"</span>: <span class="o">{</span>
+    <span class="s2">"allowUserCarryBalance"</span>: <span class="nb">true</span>,
+    <span class="s2">"allowUserLinkMultiple"</span>: <span class="nb">true</span>,
+    <span class="s2">"allowUserUpdateExchangeRate"</span>: <span class="nb">true</span>,
+    <span class="s2">"name"</span>: <span class="s2">"Default Cash Advance Workflow"</span>,
+    <span class="s2">"workflowId"</span>: <span class="s2">"3A2AADC26EE84A1E9833C431FCBB16AC"</span>
+  <span class="o">}</span>,
+  <span class="s2">"policies"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"policyId"</span>: <span class="s2">"B3173DEE4434427293ED0286992452E3"</span>,
+      <span class="s2">"policyName"</span>: <span class="s2">"US Expense Policy"</span>,
+      <span class="s2">"isDefault"</span>: <span class="nb">true</span>,
+      <span class="s2">"isInheritable"</span>: <span class="nb">true</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"paymentTypes"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"paymentTypeId"</span>: <span class="s2">"CASH"</span>,
+      <span class="s2">"paymentTypeName"</span>: <span class="s2">"Cash"</span>,
+      <span class="s2">"isDefault"</span>: <span class="nb">true</span>
+    <span class="o">}</span>
+  <span class="o">]</span>,
+  <span class="s2">"attendeeTypes"</span>: <span class="o">[</span>
+    <span class="o">{</span>
+      <span class="s2">"attendeeTypeCode"</span>: <span class="s2">"SPOUSE"</span>,
+      <span class="s2">"attendeeTypeName"</span>: <span class="s2">"Spouse"</span>
+    <span class="o">}</span>
+  <span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
 <h2 id="schema-">Schema <a name="schema"></a></h2>
 
 <h3 id="expense-policy"><a name="policy-schema"></a>Expense Policy</h3>
@@ -1829,6 +2276,210 @@
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
       <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
       <td><strong>Required</strong> Indicates whether this payment type is the default for user’s group.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-attendee-type"><a name="attendee-type-schema"></a> Attendee Type</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeTypeCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of an attendee type.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeTypeName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Name of an attendee type.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-group"><a name="group-schema"></a> Group</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hierarchyNodeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of a node within the expense group hierarchy.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">groupName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Name of an expense group.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserDigitalTaxInvoice</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to upload digital tax invoice (Allow Xml Receipt Import)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserRegisterYodlee</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to register Yodlee credit cards (Allow Personal Card Integration)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeListFormId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of an Attendee list form</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeListFormName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Attendee list form name</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cashAdvance</code></td>
+      <td><a href="#cash-advance-error-schema"><code class="language-plaintext highlighter-rouge">Cash Advance</code></a></td>
+      <td>-</td>
+      <td>Cash advance configuration</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-group-config"><a name="group-config-schema"></a> Group Config</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hierarchyNodeId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of a node within the expense group hierarchy.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">groupName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Name of an expense group.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserDigitalTaxInvoice</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to upload digital tax invoice (Allow Xml Receipt Import)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserRegisterYodlee</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to register Yodlee credit cards (Allow Personal Card Integration)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeListFormId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The unique identifier of an Attendee list form</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeListFormName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Attendee list form name</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cashAdvance</code></td>
+      <td><a href="#cash-advance-error-schema"><code class="language-plaintext highlighter-rouge">Cash Advance</code></a></td>
+      <td>-</td>
+      <td>Cash advance configuration</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">policies</code></td>
+      <td><a href="#policy-schema"><code class="language-plaintext highlighter-rouge">Expense Policy</code></a></td>
+      <td>-</td>
+      <td>List of Expense Policies applicable to the expense group</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">paymentTypes</code></td>
+      <td><a href="#payment-type-schema"><code class="language-plaintext highlighter-rouge">Payment Type</code></a></td>
+      <td>-</td>
+      <td>List of Payment Types applicable to the expense group</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">attendeeTypes</code></td>
+      <td><a href="#attendee-type-schema"><code class="language-plaintext highlighter-rouge">Attendee Type</code></a></td>
+      <td>-</td>
+      <td>List of Attendee Types applicable to the expense group</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-cash-advance"><a name="cash-advance-schema"></a> Cash Advance</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">workflowId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Unique identifier for the cash advance workflow. Null means there is no such workflow.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Name of the cash advance workflow</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserCarryBalance</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to carry a cash advance balance from one report to another.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserLinkMultiple</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to link multiple cash advances to one expense report.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowUserUpdateExchangeRate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Allow user to update the currency exchange rate for expense entries.</td>
     </tr>
   </tbody>
 </table>
