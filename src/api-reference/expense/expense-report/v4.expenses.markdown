@@ -6,9 +6,9 @@ layout: reference
 
 # Expenses v4
 
-The Expenses API can be used to read the expenses that belong to a specific expense report and modify an expense on an
-existing expense report. This API can be used to change attributes like transaction date, transaction amount, location,
-etc.
+The Expenses API can be used to read the expenses that belong to a specific expense report, modify an expense on an
+existing expense report and delete an expense on an unsubmitted report. This API can be used to change attributes like 
+transaction date, transaction amount, location, etc.
 
 ## Prior Versions
 
@@ -845,6 +845,68 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 ```
 
 #### <a name="patch-submitted-expense-response-schema"></a> Response
+
+```shell
+204 No Content
+```
+
+## Delete Expense <a name="Delete-expense"></a>
+
+Deletes the specified expense on a report specified by the unique report id.
+
+### Scopes
+
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI Template
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/expenses/{expenseId}
+```
+
+#### Parameters
+
+| Name            | Type     | Format | Description                                       |
+|-----------------|----------|--------|---------------------------------------------------|
+| `reportId`      | `string` | -      | **Required** The unique identifier of the report. |
+| `expenseId` | `string` | -      | **Required** The unique identifier of the expense entry that is being read.           |
+
+#### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+* [RFC 7232 If-Modified-Since](https://tools.ietf.org/html/rfc7232#section-3.3)
+* [RFC 7231 Accept-Encoding](https://tools.ietf.org/html/rfc7231#section-5.3.4)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+
+### Response
+
+#### Status Codes
+
+* [204 No Content](https://datatracker.ietf.org/doc/html/rfc7231#section-6.3.5)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [409 Conflict](https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Example
+
+#### Request
+
+```shell
+curl --location --request 'DELETE' \
+'https://us.api.concursolutions.com/expensereports/v4/reports/93B9D238A6864C019258/expenses/84FCBB92BD4E5342B849DAC29FD163A1' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
 
 ```shell
 204 No Content
