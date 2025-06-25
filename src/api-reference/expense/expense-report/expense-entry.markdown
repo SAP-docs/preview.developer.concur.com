@@ -115,7 +115,7 @@ Name | Type | Format | Description
 ## Delete an Expense Entry <a name="delete"></a>
 
 <div class="alert alert-danger">
-  <p><strong>The DELETE Expense is being deprecated.</strong></p>
+  <p><strong>The DELETE Expense has been deprecated.</strong></p>
   <p>Deprecation Date: 06/23/2025</p>
   <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest version.</p>
   <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
