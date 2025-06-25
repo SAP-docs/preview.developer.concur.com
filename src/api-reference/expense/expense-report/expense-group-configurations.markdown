@@ -5,6 +5,13 @@ layout: reference
 
 # Expense Group Configurations v3
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 06/26/2025</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest version.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 Retrieves the list of Expense Polices, Expense Types and Payment Types for the Expense Group the user specified in the OAuth access token is assigned to. Each Expense Policy contains a list of valid Expense Types. The Payment Types are associated with the user’s Expense Group and apply to all the returned policies. Only the payment types that are valid for the Post Expense Entry endpoint are returned.
 
 NOTE: The Concur Expense product is highly configurable, and each client may have a unique set of payment types. If a payment type is not included in the response, it is not available for use with this client.
