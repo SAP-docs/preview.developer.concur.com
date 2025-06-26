@@ -34,6 +34,7 @@ The following application programming interfaces (APIs) and other resources have
   * [Expense Entry Itemization](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)
 * [Expense Entry Attendee v2](/api-reference/expense/expense-report/v2.expense-entry-attendee.html)
 * [Expense Group Configuration v1.1](/api-reference/expense/expense-report/v1dot1.expense-group-configurations.html)
+* [Expense Group Configurations v3](/api-reference/expense/expense-report/expense-group-configurations.html)
 * Expense Report v1.1
   * [Expense Report Header](/api-reference/expense/expense-report/v1dot1.reports.html)
   * [Expense Reports List](/api-reference/expense/expense-report/v1dot1.reports-list.html)
