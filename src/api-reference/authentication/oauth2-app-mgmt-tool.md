@@ -22,7 +22,7 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 
 ## Limitations
 
-This tool is currently only available in the US (North America) and EMEA data centers. All other data centers can contact Client Web Services for assistance.
+This tool is currently only available in the US2 and EU2 data centers. All other data centers can contact Client Web Services for assistance.
 
 ## Using the Tool
 
