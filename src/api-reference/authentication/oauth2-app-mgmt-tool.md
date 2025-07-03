@@ -22,7 +22,7 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 
 ## Data Center Availability
 
-This tool is currently available in the US2, EU2, and APJ1 data centers. Please contact Client Web Services for any assistance needed.
+This tool is currently available in the US2, EU2, and APJ1 data centers.
 
 ## Using the Tool
 
