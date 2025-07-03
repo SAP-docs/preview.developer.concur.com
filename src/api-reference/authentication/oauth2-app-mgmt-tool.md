@@ -52,7 +52,6 @@ Field Name|	Definition|	Required|	Description
 `Application Type`|	Drop-down list|	Y |Specify the configuration of the App - Web Services (WS) Client or Integration with Concur Solutions (ICS) Client.
 `Allowed Grants`|	Selected Grants|	Y	|In order to obtain a token, the client application needs to call the OAuth2 endpoint using various grants depending on the authentication scenarios required. NOTE: For more information, refer to [Authorization Grants](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant).
 `Allowed Scopes`|	Selected Scopes|	Y	|Scopes limit access to the APIs required for your application. All scopes listed on the Developer Center are available in the tool. Scopes that are not listed can be requested. NOTE: For more information, refer to [Scopes](https://developer.concur.com/api-reference/authentication/scopes.html)
-SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is only enabled for SAP ICS client apps.
 
 Click **Submit**. The **App Credentials** page appears.
 
