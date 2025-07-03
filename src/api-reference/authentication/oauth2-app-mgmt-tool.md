@@ -18,7 +18,7 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 * Generate Client IDs (App IDs) and Client Secrets.
 *	Generate new Client Secrets for previously created apps.
 *	Search for and sort OAuth 2.0 applications.
-*	View information about previously created apps such as Client ID, app description, creation date.
+*	View information about previously created apps such as Client ID, App Name, App Description, Date Created, and Last Modified.
 
 ## Data Center Availability
 
