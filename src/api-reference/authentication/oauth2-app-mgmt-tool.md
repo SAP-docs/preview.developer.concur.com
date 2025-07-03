@@ -28,11 +28,11 @@ This tool is currently available in the US2, EU2, and APJ1 data centers. Please 
 
 When the tool is enabled, the Web Services Admin has a link to the OAuth 2.0 Application Management tool when they navigate to the **Administration** > **Company** > **Authentication Admin** page.
 
-![Product screen showing the Authentication Administration page](./tool-images/1_Oauth admin.png)
+![Product screen showing the Authentication Administration page](./tool-images/1-Oauth-admin.png)
 
 Clicking OAuth 2.0 Application Management opens the **Application List** page.
 
-![Product screen showing the Application List page](./tool-images/2_Application List.png)
+![Product screen showing the Application List page](./tool-images/2-Application-List.png)
 
 On the **Application List** page, is a list of previously created applications. Clicking the **Client ID** for an application opens the **App Details** page for that app.
 
@@ -40,7 +40,7 @@ On the **Application List** page, is a list of previously created applications. 
 
 Click **Create New App**.
 
-![Product screen showing the Create New App page](./tool-images/3_Create New app.png)
+![Product screen showing the Create New App page](./tool-images/3-Create-New-app.png)
 
 Populate the fields as indicated below.
 
@@ -55,7 +55,7 @@ Field Name|	Definition|	Required|	Description
 
 Click **Submit**. The **App Credentials** page appears.
 
-![Product screen showing the Create New App page](./tool-images/4_Client id and secret.png)
+![Product screen showing the Create New App page](./tool-images/4-Client-id-secret.png)
 
 The **App Credentials** page displays the **Client ID** and **Client Secret**. Before clicking **OK**, record the **Client ID** and **Client Secret**. They will be required to obtain a **Company Request Token**.
 
