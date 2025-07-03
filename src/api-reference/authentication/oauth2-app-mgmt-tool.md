@@ -20,9 +20,9 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 *	Search for and sort OAuth 2.0 applications.
 *	View information about previously created apps such as Client ID, app description, creation date.
 
-## Limitations
+## Data Center Availability
 
-This tool is currently only available in the US2 and EU2 data centers. All other data centers can contact Client Web Services for assistance.
+This tool is currently available in the US2, EU2, and APJ1 data centers.
 
 ## Using the Tool
 
