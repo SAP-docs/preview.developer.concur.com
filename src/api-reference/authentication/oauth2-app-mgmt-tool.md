@@ -47,8 +47,8 @@ Populate the fields as indicated below.
 Field Name|	Definition|	Required|	Description
 ---|---|---|---
 `App Name`|	String|	Y	|Name of the App. NOTE: Include Company, Partner, or Team Name
-`App Description`|	String|	Y |Provide the purpose of the App. This entitles to how you are intending to use the app.
-`App Stage`|	Drop-down list|	Y |Specify the current phase of the App - Development or Test or Production.
+`App Description`|	String|	Y |Provide the purpose of the App. Describe how you plan to use the app.
+`App Stage`|	Drop-down list|	Y |Specify the current phase of the App - Development, or Test, or Production.
 `Application Type`|	Drop-down list|	Y |Specify the configuration of the App - Web Services (WS) Client or Integration with Concur Solutions (ICS) Client.
 `Allowed Grants`|	Selected Grants|	Y	|In order to obtain a token, the client application needs to call the OAuth2 endpoint using various grants depending on the authentication scenarios required. NOTE: For more information, refer to [Authorization Grants](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant).
 `Allowed Scopes`|	Selected Scopes|	Y	|Scopes limit access to the APIs required for your application. All scopes listed on the Developer Center are available in the tool. Scopes that are not listed can be requested. NOTE: For more information, refer to [Scopes](https://developer.concur.com/api-reference/authentication/scopes.html)
