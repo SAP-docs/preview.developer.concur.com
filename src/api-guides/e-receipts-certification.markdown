@@ -1,4 +1,4 @@
-<img width="468" height="26" alt="image" src="https://github.com/user-attachments/assets/0f10e66e-bef9-49e6-a766-6f30df5290a8" />---
+---
 title: User App Certification Flow
 layout: reference
 ---
