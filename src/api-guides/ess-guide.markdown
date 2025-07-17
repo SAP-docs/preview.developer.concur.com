@@ -167,4 +167,6 @@ Verify that:
 
 Based on SAP Concur product activity, you should now begin to see events coming through to your webhook! Sample Event payloads can be found within the respective [Topic](/event-topics/).
 
+---
+### POSTMAN Sample Collection
 Download ESS API Postman JSON collection [here](/api-guides/postman/ESS%20API%20endpoints.postman_collection.zip).
