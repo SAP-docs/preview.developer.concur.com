@@ -190,7 +190,7 @@ The most effective way to promote a partner integration is to make **concise**, 
 
 During onboarding, the App Center team works with partners to ensure you have essential, correctly-branded marketing pieces. ​
 
-To edit or send additional marketing content, email the edited/new content to sapconcurpartners@sap.com and plan on a 10-day turnaround for the marketing content review process.
+To edit or send additional marketing content, email the edited/new content to [concur_AppCenterAlliance@sap.com](mailto:concur_AppCenterAlliance@sap.com) and plan on a 10-day turnaround for the marketing content review process.
 
 ### <a name="messaging-framework"></a>Messaging Framework
 
