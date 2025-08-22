@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Configuration Settings and Mappings between the SAP Concur data and the ERP data</title>
+  <title> SAP Concur Developer Center | Managing ERP Tax Data in SAP Concur</title>
 
 
 <!-- Meta -->
@@ -24,7 +24,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/accounting-integration/v4.accountingintegration-mappings.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/accounting-integration/v4.accountingintegration-taxData.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -1284,7 +1284,7 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="accounting-integration-v4---configuration-settings-and-mappings">Accounting Integration v4 - Configuration Settings and Mappings</h1>
+        <h1 id="accounting-integration-v4---manage-erp-tax-data">Accounting Integration v4 - Manage ERP Tax Data</h1>
 
 <div id="attn-prerelease">
   <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
@@ -1292,21 +1292,33 @@
 
 <p>Return to <a href="/api-reference/accounting-integration/v4.accountingintegration-get-started.html">Accounting Integration v4 - Getting Started</a></p>
 
-<h2 id="retrieve-configuration-settings-and-mappings"><a name="get-mappings"></a>Retrieve Configuration Settings and Mappings</h2>
+<h2 id="add-tax-data"><a name="post-taxData"></a>Add Tax Data</h2>
 
-<p>This endpoint allows users to retrieve configuration settings and mappings between SAP Concur data and the ERP data.</p>
+<p>This endpoint allows users to add ERP Tax data that is cached in the SAP Concur system. Upon
+receiving the data, the server will return immediately with a response payload containing the request current status and
+a link to check the request status progress, then process the request asynchronously.</p>
+
+<p>In addition, events will be published to notify the API consumers of important updates. For more information, please
+see <a href="/event-topics/event-subscription-topic-accountingintegration.html">Accounting Integration Events</a>.</p>
 
 <h3 id="limitations">Limitations</h3>
 
-<p>Access to this documentation does not provide access to the API.</p>
+<ul>
+  <li>Access to this documentation does not provide access to the API.</li>
+  <li>Adding Tax Data through this API will not automatically import those tax data into the SAP Concur system, it only caches the ERP
+data. Customers will need to add the tax data in the SAP Concur system via the provided UI screens.</li>
+  <li>The total request payload size should not exceed 4 MB.</li>
+  <li>Any given ERP record size should not exceed 200 KB.</li>
+  <li>This endpoint can be called once per second.</li>
+</ul>
 
 <h3 id="scopes">Scopes</h3>
 
-<p><code class="language-plaintext highlighter-rouge">spend.accountingintegration.read</code> - Refer to <a href="./v4.accountingintegration-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
+<p><code class="language-plaintext highlighter-rouge">spend.accountingintegration.write</code> - Refer to <a href="./v4.accountingintegration-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
 
 <h3 id="uri">URI</h3>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /accountingintegration/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/erps/<span class="o">{</span>erpId<span class="o">}</span>/mappings
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /accountingintegration/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/erps/<span class="o">{</span>erpId<span class="o">}</span>/taxData
 </code></pre></div></div>
 
 <h3 id="parameters">Parameters</h3>
@@ -1339,105 +1351,471 @@
 <h3 id="payloads">Payloads</h3>
 
 <ul>
-  <li>Request: None</li>
-  <li>Response: <a href="./v4.accountingintegration-schema.html#mappings-response">MappingsResponse</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
+  <li>Request: <a href="./v4.accountingintegration-schema.html#list-of-taxData">Add ERP Tax Data Request</a></li>
+  <li>Request: <a href="./v4.accountingintegration-schema.html#request-status">RequestStatus</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
 </ul>
 
 <h3 id="examples">Examples</h3>
 
-<h4 id="request">Request</h4>
+<h4 id="request-add-tax-data">Request: add tax data</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/mappings
-</code></pre></div></div>
-
-<h4 id="response">Response</h4>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
 </code></pre></div></div>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"erpId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"companyEdition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"STANDARD or PROFESSIONAL"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"ledger"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"expenseHierarchy"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"formTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"invoiceHierarchy"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"formTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nl">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"fileId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"paymentTypes"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"countryDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"France"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stateEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"patKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"transactionType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"liabilityAccountCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"postingDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REPORTCREATE"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"clearingAccountCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"creditCardVendorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"erpCreditCardAccount"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nl">"listMappings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"erpListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"concurListId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"fieldMappings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR-IDF"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Île-de-France"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
             </span><span class="p">{</span><span class="w">
-              </span><span class="nl">"formTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allocation"</span><span class="p">,</span><span class="w">
-              </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10% VAT"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
                 </span><span class="p">{</span><span class="w">
-                  </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-                  </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F10R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reduced VAT"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-01-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-12-31"</span><span class="w">
                 </span><span class="p">}</span><span class="w">
-              </span><span class="p">],</span><span class="w">
-              </span><span class="nl">"connectedLists"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.5%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Reduced VAT"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
                 </span><span class="p">{</span><span class="w">
-                  </span><span class="nl">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                    </span><span class="p">{</span><span class="w">
-                      </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-                      </span><span class="nl">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
-                    </span><span class="p">}</span><span class="w">
-                  </span><span class="p">]</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F5R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Reduced VAT"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.5</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-06-30"</span><span class="w">
                 </span><span class="p">}</span><span class="w">
               </span><span class="p">]</span><span class="w">
             </span><span class="p">}</span><span class="w">
           </span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nl">"invoiceLiabilityAccount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACCOUNTS_PAYABLE"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="nl">"billableField"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"formTypeCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allocation"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"alternateFieldId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"countryDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United States"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stateEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US-CA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"California"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7.25%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"State Sales Tax"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA7R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA State Tax"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">7.25</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-01-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-31"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US-NY"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New York"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.875%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NYC Sales Tax"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NY8R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NYC Tax"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.875</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-07-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-07-01"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PROCESSING"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3f1508be-9b55-400f-8bac-475015567a52"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"self"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="update-tax-data"><a name="put-taxData"></a>Update Tax Data</h2>
+
+<p>This endpoint allows users to replace ERP Tax data that is cached in the SAP Concur system. Upon
+receiving the data, the server will return immediately with a response payload containing the request current status and
+a link to check the request status progress, then process the request asynchronously.</p>
+
+<p><strong>Important Note:</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>This endpoint will always replace all the data in the cached SAP Concur system with the data provided in the request payload. 
+The isDeleted flag is always ignored 
+</code></pre></div></div>
+
+<p>In addition, events will be published to notify the API consumers of important updates. For more information, please
+see <a href="/event-topics/event-subscription-topic-accountingintegration.html">Accounting Integration Events</a>.</p>
+
+<h3 id="limitations-1">Limitations</h3>
+
+<ul>
+  <li>Access to this documentation does not provide access to the API.</li>
+  <li>Updating Tax Data through this API will not automatically import those tax data into the SAP Concur system, it only caches the ERP
+data. Customers will need to add the tax data in the SAP Concur system via the provided UI screens.</li>
+  <li>The total request payload size should not exceed 4 MB.</li>
+  <li>Any given ERP record size should not exceed 200 KB.</li>
+  <li>This endpoint can be called once per second.</li>
+</ul>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.accountingintegration.write</code> - Refer to <a href="./v4.accountingintegration-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-1">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /accountingintegration/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/erps/<span class="o">{</span>erpId<span class="o">}</span>/taxData
+</code></pre></div></div>
+
+<h3 id="parameters-1">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> Universally unique identifier of the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">erpId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> Universally unique identifier of the ERP for the integration.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payloads-1">Payloads</h3>
+
+<ul>
+  <li>Request: <a href="./v4.accountingintegration-schema.html#list-of-taxData">Update ERP Tax Data Request</a></li>
+  <li>Request: <a href="./v4.accountingintegration-schema.html#request-status">RequestStatus</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
+</ul>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request-delete-all-the-cached-tax-data-in-the-sap-concur-system">Request: delete all the cached tax data in the SAP Concur system</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"deleteAll"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+<h4 id="request-replace-tax-data">Request: replace tax data</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"countryDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"France"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stateEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR-IDF"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Île-de-France"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10% VAT"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F10R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reduced VAT"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-01-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-12-31"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.5%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Reduced VAT"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F5R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Reduced VAT"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.5</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-06-30"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"countryDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United States"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stateEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US-CA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"California"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7.25%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"State Sales Tax"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA7R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA State Tax"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">7.25</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-01-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-31"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US-NY"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New York"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.875%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NYC Sales Tax"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NY8R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NYC Tax"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.875</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-07-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-07-01"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PROCESSING"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3f1508be-9b55-400f-8bac-475015567a52"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"self"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="retrieve-tax-data"><a name="get-taxData"></a>Retrieve Tax Data</h2>
+
+<p>This endpoint’s purpose is to retrieve the ERP tax data that is cached in the SAP Concur system.</p>
+
+<h3 id="limitations-2">Limitations</h3>
+
+<ul>
+  <li>Navigate via the <code class="language-plaintext highlighter-rouge">links</code> attribute in the response payload to retrieve the next page, if the page size exceeds 1 MB.</li>
+</ul>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">spend.accountingintegration.read</code> - Refer to <a href="./v4.accountingintegration-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-2">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /accountingintegration/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/erps/<span class="o">{</span>erpId<span class="o">}</span>/taxData
+</code></pre></div></div>
+
+<h3 id="parameters-2">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> Universally unique identifier of the company.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">erpId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">UUID</code></td>
+      <td><strong>Required</strong> Universally unique identifier of the ERP for the integration.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payloads-2">Payloads</h3>
+
+<ul>
+  <li>Request: None</li>
+  <li>Response: <a href="./v4.accountingintegration-schema.html#list-of-taxData">List of Tax Data</a>, <a href="./v4.accountingintegration-schema.html#errorMessage">ErrorMessage</a></li>
+</ul>
+
+<h3 id="examples-2">Examples</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+</code></pre></div></div>
+
+<h4 id="response-2">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>200 OK
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"countryDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"France"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stateEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR-IDF"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Île-de-France"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10% VAT"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F10R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Reduced VAT"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-01-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-12-31"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.5%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Reduced VAT"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F5R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Reduced VAT"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">5.5</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2021-06-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-06-30"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"countryDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United States"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"stateEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US-CA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"California"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7.25%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"State Sales Tax"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA7R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA State Tax"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">7.25</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2020-01-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-12-31"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"stateCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US-NY"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"stateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New York"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"reclaimEntries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"reclaimCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8.875%"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NYC Sales Tax"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"reclaimDetails"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                  </span><span class="nl">"taxCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NY8R"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"taxRateDesc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NYC Tax"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"percentage"</span><span class="p">:</span><span class="w"> </span><span class="mf">8.875</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validFrom"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2019-07-01"</span><span class="p">,</span><span class="w">
+                  </span><span class="nl">"validTo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-07-01"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+              </span><span class="p">]</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"next"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData?next=string"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1492,7 +1870,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/accounting-integration/v4.accountingintegration-mappings.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/accounting-integration/v4.accountingintegration-taxData.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
