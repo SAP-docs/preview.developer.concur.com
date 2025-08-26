@@ -1310,7 +1310,20 @@
 
 <p>Below is the sequence diagram for the flow:</p>
 
-<p><img src="images/diagrams/hotel_modify.png" alt="" /></p>
+<p><img src="images/diagrams/hotel_modify.png" alt="Modify process" /></p>
+
+<h2 id="modify-recovery-process">Modify Recovery Process</h2>
+
+<p>In the case of a request timed out, SAP Concur will start a recovery process, in wich SAP Concur will try to confirm the status of the booking.
+Also if the supplier identifies that the modification cannot be confirmed in a timely manner, it can return a <code class="language-plaintext highlighter-rouge">PENDING_CONFIRMATION</code> status in the response to the <a href="./v4.endpoints.html#modify-">modify</a> request. In this case SAP Concur will also start a recovery process to confirm the status of the booking.</p>
+
+<p>In the process of recovery, SAP Concur will invoke the <a href="./v4.endpoints.html#read-">read</a> endpoint to get the state of the modified booking. If the returned booking have a <code class="language-plaintext highlighter-rouge">RESERVED</code> status and have the new dates requested by the user, then the booking is marked as confirmed. If the returned booking have a <code class="language-plaintext highlighter-rouge">PENDING_CONFIRMATION</code> status, SAP Concur will continue to invoke the <a href="./v4.endpoints.html#read-">read</a> endpoint until the endpoint return a booking with status <code class="language-plaintext highlighter-rouge">RESERVED</code> for a maximum of 1 day.
+If after 1 day the booking is still in <code class="language-plaintext highlighter-rouge">PENDING_CONFIRMATION</code> status, then SAP Concur will keep the booking status as Pending. When the user tries to view the booking, SAP Concur will call again the <a href="./v4.endpoints.html#read-">read</a> endpoint to sink the status of the booking with the supplier.
+If the returned booking have status of <code class="language-plaintext highlighter-rouge">RESERVED</code> but the dates of check-in and check-out are not the same as the dates requested by the user, then SAP Concur will consider the modification as failed and will notify the user about it.</p>
+
+<p>Below is the sequence diagram for the recovery flow:</p>
+
+<p><img src="images/diagrams/hotel_modify_recover.png" alt="Modify Recovery Process" /></p>
 
 <h2 id="requirements-for-chs-supplier">Requirements for CHS Supplier</h2>
 
@@ -1318,6 +1331,7 @@
   <li>Supplier is expected to set <a href="./v4.schemas.html#-hotelbooking"><code class="language-plaintext highlighter-rouge">isModifiable</code></a> flag to <code class="language-plaintext highlighter-rouge">true</code> in the booking response if they support <code class="language-plaintext highlighter-rouge">modify</code> feature for a given booking.</li>
   <li>Supplier will need to support <code class="language-plaintext highlighter-rouge">reshop</code> request via <a href="./v4.endpoints.html#rate-details-"><code class="language-plaintext highlighter-rouge">rate-details</code></a> providing detailed pricing for new dates on already booked hotel and rate-plan.</li>
   <li>Supplier will need to support <code class="language-plaintext highlighter-rouge">modify</code> request via <a href="./v4.endpoints.html#modify-"><code class="language-plaintext highlighter-rouge">modify</code></a> endpoint to update the booking with new dates.</li>
+  <li>Supplier is expected to set <code class="language-plaintext highlighter-rouge">status</code> to <code class="language-plaintext highlighter-rouge">PENDING_CONFIRMATION</code> in the response of <a href="./v4.endpoints.html#read-">read</a> endpoint if the modification is not confirmed.</li>
 </ul>
 
 
