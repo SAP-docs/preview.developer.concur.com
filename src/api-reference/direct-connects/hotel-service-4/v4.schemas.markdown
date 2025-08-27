@@ -61,6 +61,7 @@ Reference to location details for search.
 `numGuests`|`integer`|`int32`|Number of guests for accommodation.|
 `guestCountryCode`|`string`|`ISO ALPHA-2`|Two-character ISO code for country.|
 `searchSessionToken`|[`SearchSessionToken`](#schemasearchsessiontoken)|-|Session token to be generated and provided by server on initial search call that can be referenced back for future calls on the same session.|
+`reshopInfo`|[`ReshopInfo`](#schemareshopinfo)|-|Information related to reshopping, only available during modify (and not shopping) flow|
 
 ## <a id="schemahoteldetailscriteria"></a> HotelDetailsCriteria
 
@@ -252,6 +253,7 @@ Details about the total pricing associated with stay.
 `totalPrice`|[`TotalPrice`](#schematotalprice)|-|**Required** Details about total pricing associated with the stay.|
 `nightlyPrices`|[`NightlyPrice`](#schemanightlyprice)|-|Details about nightly price for a given date range.|
 `cancelPenalties`|[`CancelPenalties`](#schemacancelpenalties)|-|Information about cancellation penalties.|
+`highlightedRateText`|`string`|-|Informational text for highlighted rate|
 `rateDetailsCallRequired`|`boolean`|`true` / `false`|If `true`, this rate requires a call to [`RateDetails`](#rate-details-) before being booked. Default: false|
 
 ## <a id="schemaroomratedetails"></a> RoomRateDetails
@@ -301,7 +303,7 @@ Details about nightly price for a given date range.
 |---|---|---|---|
 `cancelDeadline`|`string`|`YYYY-MM-DDThh:mm:ssZhh:mm` or `YYYY-MM-DDThh:mm:ss` or `YYYY-MM-DD hh:mm:ss`| Date string in date-time notation as defined by RFC 3339 with time representing local time at property and corresponding timezone. Timezone can be skipped if not available and just provide date-time in local time. |
 `description`|`string`|-|-|
-`refundableStatus`|[`RefundableStatus`](#schemarefundablestatus)|-|**Required** Supported values: `FULLY_REFUNDABLE`, `PARTIALLY_REFUNDABLE`, `NON_REFUNDABLE` (previously `NON-REFUNDABLE` - which will be supported as well)|
+`refundableStatus`|[`RefundableStatus`](#schemarefundablestatus)|-|**Required** Supported values: `UNKNOWN`, `FULLY_REFUNDABLE`, `PARTIALLY_REFUNDABLE`, `NON_REFUNDABLE` (previously `NON-REFUNDABLE` - which will be supported as well).|
 `amountPercent`|[`AmountPercent`](#schemaamountpercent)|-||
 
 ## <a id="schemaamountpercent"></a> AmountPercent
@@ -385,7 +387,10 @@ Information about Point of Sale (POS), traveler, and user associated with the re
 `legalEntity`|[`LegalEntity`](#schemalegalentity)|-|Provides details about the legal entity associated with this booking, if available.|
 `threeDSecure`|[`ThreeDSecure`](#schemathreedsecure)|-|3D Secure Strong Customer Authentication payment verification parameters.|
 `tripUuid`|`string`|-|**Required** UUID that identifies the trip within the SAP Concur system.|
-`gdsRecordLocator`|[`GDSRecordLocator`](#schemagdsrecordlocator)|-|SAP Concur GDS record locator pointing to a PNR to use for this booking, either as an active segment or a passive segment. This will be only populated if using [Single PNR Solution](./v4.single-pnr-solution.html)|
+`gdsRecordLocator`|[`GDSRecordLocator`](#schemagdsrecordlocator)|-|SAP Concur GDS record locator pointing to a PNR to use for this booking, either as an active segment or a passive segment. This will be only populated if using 
+`hrefs`|`object`|-|Map of reference URLs. Each key represents a specific functionality (e.g., `changeNotificationV4`, `authV0`).The base URI varies depending on the datacenter where the service is running.<br>**Base URIs:**<br> `https://us2.api.concursolutions.com` <br> `https://eu2.api.concursolutions.com` <br> `https://apj1.api.concursolutions.com` <br>`https://integration.api.concursolutions.com`|
+» `changeNotificationV4`|`string`|`url`|**Required** Callback URL for the Change Notification API. Ex: `https://us2.api.concursolutions.com/travel/v4/trips/{TRIP_ID}/hotels/change-notification` The {TRIP_ID} should be replaced by the actual Trip ID.|
+» `authV0`|`string`|`url`|**Required** Authentication URL for the booking.|
 
 ## <a id="schemareservationdetails"></a> ReservationDetails
 
@@ -401,6 +406,7 @@ Information about Point of Sale (POS), traveler, and user associated with the re
 `roomDescription`|`string`|-|Room description information.|
 `comments`|`string`|-|Comments about special requests for the booking.|
 `isModifiable`|`boolean`|`true` / `false`|Whether or not this reservation can be modified.|
+`voucherUrl`|`string`|-|The URL to the voucher for this booking.|
 `activeSegmentInConcurPNR`|`boolean`|`true` / `false`|Whether or not this reservation was added to Concur PNR as active segment (true) or not. Required if using [Single PNR Solution](./v4.single-pnr-solution.html)|
 
 ## <a id="schemaconfirmationcode"></a> ConfirmationCode
@@ -800,7 +806,7 @@ Provides details about the legal entity associated with this booking, if availab
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-`RefundableStatus`|`string`|-|Supported values: `FULLY_REFUNDABLE`, `PARTIALLY_REFUNDABLE`, `NON_REFUNDABLE`|
+`RefundableStatus`|`string`|-|Supported values: `UNKNOWN`, `FULLY_REFUNDABLE`, `PARTIALLY_REFUNDABLE`, `NON_REFUNDABLE`|
 
 ## <a id="schemaamountpercent"></a> AmountPercent
 
@@ -875,4 +881,3 @@ Provides details about the legal entity associated with this booking, if availab
 `gdsName`|`string`|-|**Required** Name of the GDS (Global Distribution System) to be used for this booking (active or passive segment). Supported values: `SABRE`, `AMADEUS`, `TRAVELPORT`|
 `pcc`|`string`|-|**Required** Pseudo City Code or Office ID (OID) for the GDS account to be used for this booking (active or passive segment).|
 `recordLocator`|`string`|-|**Required** Record locator of the PNR where this booking should be created (active or passvie)|
-
