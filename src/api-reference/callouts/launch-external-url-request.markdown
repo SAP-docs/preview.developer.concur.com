@@ -2,6 +2,14 @@
 title: Launch an external URL request v1
 layout: reference
 ---
+
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 06/15/2023</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest version.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 # Launch External URL v1
 
 The SAP Concur platform will send a request with the information in an encoded query string when the user clicks the button.
