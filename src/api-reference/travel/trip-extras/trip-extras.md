@@ -5,7 +5,7 @@ layout: reference
 
 # Trip-Extras
 
-The Trips resource represents itineraries in the Concur Travel system.
+The Trips Extras resource represents booking content from external partners.
 
 ### Version
 
