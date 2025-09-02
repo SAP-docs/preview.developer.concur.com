@@ -1,0 +1,424 @@
+{
+  "definitions": {
+    "AlertRequest": {
+      "type": "object",
+      "properties": {
+        "extRef": {
+          "type": "string",
+          "description": "External reference ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Identifier for the target user"
+        },
+        "companyId": {
+          "type": "string",
+          "description": "Identifier for the user's company (only if company ID is not part of JWT)"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Alert content and context data",
+          "properties": {
+            "partnerProvider": {
+              "type": "string",
+              "description": "Partner name"
+            },
+            "partnerLogoUrl": {
+              "type": "string",
+              "description": "URL to partner logo"
+            },
+            "partnerAccessibilityTextPrompt": {
+              "type": "string",
+              "description": "Accessibility text for partner logo"
+            },
+            "packages": {
+              "type": "array",
+              "description": "Array of travel packages",
+              "items": {
+                "$ref": "#/definitions/Package"
+              }
+            }
+          }
+        },
+        "templateId": {
+          "type": "string",
+          "description": "Template identifier for rendering"
+        },
+        "msgType": {
+          "type": "string",
+          "description": "Message type"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Expiration timestamp"
+        }
+      },
+      "required": [
+        "extRef",
+        "userId",
+        "createdAt",
+        "metadata",
+        "templateId",
+        "msgType",
+        "expiresAt"
+      ]
+    },
+    "AlertResponse": {
+      "type": "object",
+      "properties": {
+        "alertId": {
+          "type": "string",
+          "description": "Unique identifier of the created alert"
+        },
+        "status": {
+          "type": "string",
+          "description": "Processing status (e.g., 'received', 'updated')"
+        },
+        "message": {
+          "type": "string",
+          "description": "Success message"
+        }
+      }
+    },
+    "Package": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "description": "Unique identifier for the package"
+        },
+        "packageTitle": {
+          "type": "string",
+          "description": "Package title/description"
+        },
+        "travel_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Travel date (YYYY-MM-DD format)"
+        },
+        "location": {
+          "$ref": "#/definitions/Location"
+        },
+        "variants": {
+          "type": "array",
+          "description": "Array of booking variants",
+          "items": {
+            "$ref": "#/definitions/Variant"
+          }
+        }
+      }
+    },
+    "Variant": {
+      "type": "object",
+      "properties": {
+        "variantId": {
+          "type": "string",
+          "description": "Unique identifier for the variant"
+        },
+        "variantTitle": {
+          "type": "string",
+          "description": "Variant title"
+        },
+        "variantDesc": {
+          "type": "string",
+          "description": "Variant description"
+        },
+        "variantProvider": {
+          "type": "string",
+          "description": "Provider name (optional for some variants)"
+        },
+        "variantLogoUrl": {
+          "type": "string",
+          "description": "URL to provider logo (optional for some variants)"
+        },
+        "variantAccessibilityTextPrompt": {
+          "type": "string",
+          "description": "Accessibility text for logo (optional for some variants)"
+        },
+        "variantStartDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Start date/time (optional for some variants)"
+        },
+        "variantEndDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "End date/time (optional for some variants)"
+        },
+        "price": {
+          "$ref": "#/definitions/Price"
+        },
+        "userActions": {
+          "$ref": "#/definitions/UserAction"
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "string",
+          "description": "Origin location code"
+        },
+        "destination": {
+          "type": "string",
+          "description": "Destination location code"
+        }
+      }
+    },
+    "Price": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Price amount"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Currency code (e.g., 'USD')"
+        }
+      }
+    },
+    "UserAction": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Action button label"
+        },
+        "href": {
+          "type": "string",
+          "description": "Action URL"
+        }
+      }
+    },
+    "ErrorMessage": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "Error code identifier"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "Detailed error message"
+        },
+        "details": {
+          "type": "object",
+          "description": "Optional field-specific information"
+        }
+      }
+    }
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "basePath": "/maestro/v4",
+  "x-sap-shortText": "Partner alert submission service",
+  "info": {
+    "contact": {
+      "email": "maestro@concur.com"
+    },
+    "version": "v4",
+    "description": "The Maestro API allows external partners to submit alert payloads to SAP Concur products. Partners can send notifications that will be displayed to users within the Concur ecosystem.",
+    "license": {
+      "name": "Concur",
+      "url": "https://developer.concur.com/Terms-of-Use.html"
+    },
+    "title": "Maestro",
+    "termsOfService": "http://us.api.concursolutions.com/terms"
+  },
+  "externalDocs": {
+    "description": "Maestro API Documentation",
+    "url": "https://developer.concur.com/api-reference/common/maestro/"
+  },
+  "x-servers": [
+    {
+      "url": "https://us.api.concursolutions.com/maestro/v4",
+      "description": "Production endpoint (US)"
+    },
+    {
+      "url": "https://eu.api.concursolutions.com/maestro/v4",
+      "description": "Production endpoint (EU)"
+    }
+  ],
+  "paths": {
+    "/alerts": {
+      "post": {
+        "operationId": "alerts.create",
+        "summary": "Submit Partner Alert",
+        "description": "Accepts alert payloads from external partners, validates and transforms the data, then persists the alert and triggers downstream processes.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Alert Request",
+            "description": "Alert payload",
+            "schema": {
+              "$ref": "#/definitions/AlertRequest"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AlertResponse"
+            },
+            "description": "Alert processed successfully"
+          }
+        },
+        "tags": [
+          "Alerts"
+        ]
+      },
+      "put": {
+        "operationId": "alerts.update",
+        "summary": "Edit Partner Alert",
+        "description": "Updates an existing alert with new payload data. Uses the same payload structure as the POST endpoint. The alert must exist and be associated with the requesting partner's company.",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "Alert Request",
+            "description": "Alert payload",
+            "schema": {
+              "$ref": "#/definitions/AlertRequest"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "503": {
+            "description": "Service Unavailable",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "504": {
+            "description": "Gateway Timeout",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "404": {
+            "description": "Alert doesn't exist or is not associated with your company",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
+            }
+          },
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AlertResponse"
+            },
+            "description": "Alert updated successfully"
+          }
+        },
+        "tags": [
+          "Alerts"
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "in": "header",
+      "name": "Authorization",
+      "type": "apiKey",
+      "description": "Bearer Company JWT Token"
+    }
+  },
+  "schemes": [
+    "https"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "swagger": "2.0"
+}

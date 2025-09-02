@@ -1,0 +1,103 @@
+---
+title: Maestro API
+layout: reference
+---
+
+{% include prerelease.html %}
+
+# Maestro API
+
+The Maestro API allows external partners to submit alert payloads to SAP Concur products. Partners can send notifications that will be displayed to users within the Concur ecosystem.
+
+## Overview
+
+Maestro provides a flexible framework for partners to deliver contextual alerts to Concur users. The API can be customized based on partner requirements and specific use cases.
+
+## Key Features
+
+- **Template-based Rendering**: Alerts are rendered using configurable templates that can be customized per partner
+- **Flexible Metadata**: Alert content and structure can vary based on the template and partner configuration
+- **Multi-partner Support**: Different partners can have unique alert formats and data structures
+- **Expiration Management**: Alerts can have configurable expiration times
+- **User Targeting**: Alerts can be targeted to specific users within a company
+
+## Scope Usage <a name="scope-usage"></a>
+
+|Name|Description|Endpoints|
+|---|---|---|
+|`maestro.alerts.writeonly`|Write-only access to submit and edit partner alerts.|POST, PUT|
+
+## Dependencies <a name="dependencies"></a>
+
+Partners must have:
+- Valid Company JWT tokens with appropriate scopes
+- Configured templates for alert rendering
+- Proper application registration in the SAP Concur ecosystem
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API requires Company JWT tokens for partner submissions.
+
+## Template and Partner Variations
+
+The Maestro API is designed to accommodate different partners and use cases through:
+
+### Template Configuration
+- Each partner can have custom templates that define how alerts are rendered
+- Templates control the visual presentation and data structure requirements
+- Template IDs are specified in the alert payload to ensure proper rendering
+
+### Partner-Specific Metadata
+- The `metadata` field structure can vary significantly between partners
+- Different partners may require different data fields, formats, and structures
+- Partners should refer to their specific integration documentation for metadata requirements
+
+### Common Alert Structure
+While metadata varies by partner, all alerts share these common fields:
+- `topic`: Categorizes the alert type
+- `extRef`: External reference for tracking
+- `userId`: Target user identifier
+- `companyId`: Company identifier
+- `title`: Alert title/subject
+- `applicationId`: Partner application identifier
+- `templateId`: Template for rendering
+- `msgType`: Message type classification
+- `expiresAt`: Optional expiration timestamp
+
+## Partner-Specific Documentation
+
+For detailed implementation guides, schema definitions, and examples specific to your integration, please refer to your partner-specific documentation:
+
+- [Groundspan Integration](groundspan.markdown) - Travel booking
+
+## API Endpoints
+
+### Submit Partner Alert
+
+```shell
+POST /maestro/v4/alerts
+```
+
+Accepts alert payloads from external partners, validates and transforms the data according to the specified template, then persists the alert and triggers downstream processes.
+
+### Update Partner Alert
+
+```shell
+PUT /maestro/v4/alerts
+```
+
+Updates an existing alert with new payload data, based on the `extRef` sent on the payload. Uses the same payload structure as the POST endpoint. The alert must exist and be associated with the requesting partner's company.
+
+#### Required Headers
+- `Content-Type`: `application/json`
+- `Authorization`: Bearer Company JWT Token
+
+#### Response Status Codes
+- `200 OK` - Alert processed successfully
+- `400 Bad Request` - Malformed JSON or missing required fields
+- `401 Unauthorized` - Missing or invalid JWT
+- `403 Forbidden` - Valid JWT but insufficient scope
+- `404 Not Found` - Resource doesn't exist or is not associated with your company
+- `500 Internal Server Error` - Server error
+- `503 Service Unavailable` - Service temporarily unavailable
+- `504 Gateway Timeout` - Upstream service timeout
