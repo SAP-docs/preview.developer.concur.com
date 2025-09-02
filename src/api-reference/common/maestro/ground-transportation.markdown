@@ -1,15 +1,15 @@
 ---
-title: Maestro v4 - Groundspan Integration
+title: Maestro v4 - Ground Transportation
 layout: reference
 ---
 
 {% include prerelease.html %}
 
-# Maestro v4 - Groundspan Integration
+# Maestro v4 - Ground Transportation
 
-This document provides specific implementation details for Groundspan's integration with the Maestro API. Groundspan uses Maestro to deliver travel booking alerts and compliance notifications to SAP Concur users.
+This document provides specific implementation details for ground transportation alerts using the Maestro API. Partners can use Maestro to deliver ground transportation booking alerts and notifications to SAP Concur users.
 
-For general Maestro API information, see the [Maestro API Overview](index.markdown).
+For general Maestro API information, see the [Maestro API Overview](v4.maestro.markdown).
 
 ## Scope Usage <a name="scope-usage"></a>
 
@@ -108,60 +108,13 @@ Authorization: Bearer {company-jwt-token}
   "companyId": "b7d12989-0489-471a-81cd-175f8b78afa5",
   "createdAt": "2025-08-19T10:00:00Z",
   "metadata": {
-    "partnerProvider": "groundspan",
-    "partnerLogoUrl": "https://groundspan.com/logo.png",
-    "partnerAccessibilityTextPrompt": "Groundspan logo",
+    "partnerProvider": "partner-name",
+    "partnerLogoUrl": "https://partner.example.com/logo.png",
+    "partnerAccessibilityTextPrompt": "Partner logo",
     "packages": [
       {
-        "packageId": "flight-20250801-sfo-cdg",
-        "packageTitle": "SFO to CDG  Aug 1",
-        "travelDate": "2025-08-01",
-        "location": {
-          "origin": "SFO",
-          "destination": "CDG"
-        },
-        "variants": [
-          {
-            "variantId": "ua57-econ-L",
-            "variantTitle": "United UA57  Economy (L)",
-            "variantDesc": "Nonstop 10h55m  1 checked bag  Changeable (fee)",
-            "variantProvider": "United Airlines",
-            "variantLogoUrl": "https://concur.com/img/ua.png",
-            "variantAccessibilityTextPrompt": "United Airlines logo",
-            "variantStartDate": "2025-08-01T10:00:00Z",
-            "variantEndDate": "2025-08-01T12:00:00Z",
-            "price": {
-              "amount": 450.0,
-              "currency": "USD"
-            },
-            "userActions": {
-              "label": "Book Economy",
-              "href": "https://concur.com/book/eco"
-            }
-          },
-          {
-            "variantId": "ua57-premW",
-            "variantTitle": "United UA57  Premium Economy (W)",
-            "variantDesc": "Extra legroom Priority boarding  Changeable (fee)",
-            "variantProvider": "United Airlines",
-            "variantLogoUrl": "https://concur.com/img/ua.png",
-            "variantAccessibilityTextPrompt": "United Airlines logo",
-            "variantStartDate": "2025-08-01T10:00:00Z",
-            "variantEndDate": "2025-08-01T12:00:00Z",
-            "price": {
-              "amount": 680.0,
-              "currency": "USD"
-            },
-            "userActions": {
-              "label": "Book Premium Economy",
-              "href": "https://concur.com/book/premium-eco"
-            }
-          }
-        ]
-      },
-      {
         "packageId": "car-20250801-downtown",
-        "packageTitle": "Downtown pickup Aug 17",
+        "packageTitle": "Downtown Car Rental - Aug 1",
         "travelDate": "2025-08-01",
         "location": {
           "origin": "Downtown Garage",
@@ -169,8 +122,8 @@ Authorization: Bearer {company-jwt-token}
         },
         "variants": [
           {
-            "variantId": "b4c3d2e1",
-            "variantTitle": "Enterprise  SUV",
+            "variantId": "enterprise-suv-001",
+            "variantTitle": "Enterprise SUV",
             "variantDesc": "Unlimited miles Standard SUV",
             "variantProvider": "Enterprise",
             "variantLogoUrl": "https://concur.com/img/enterprise.png",
@@ -183,40 +136,61 @@ Authorization: Bearer {company-jwt-token}
             },
             "userActions": {
               "label": "Reserve SUV",
-              "href": "https://concur.com/reserve/suv"
+              "href": "https://partner.example.com/reserve/suv"
+            }
+          },
+          {
+            "variantId": "hertz-compact-001",
+            "variantTitle": "Hertz Compact",
+            "variantDesc": "Economy car with good fuel efficiency",
+            "variantProvider": "Hertz",
+            "variantLogoUrl": "https://concur.com/img/hertz.png",
+            "variantAccessibilityTextPrompt": "Hertz logo",
+            "variantStartDate": "2025-08-01T10:00:00Z",
+            "variantEndDate": "2025-08-07T10:00:00Z",
+            "price": {
+              "amount": 180.0,
+              "currency": "USD"
+            },
+            "userActions": {
+              "label": "Reserve Compact",
+              "href": "https://partner.example.com/reserve/compact"
             }
           }
         ]
       },
       {
-        "packageId": "gs-20250920-generic-slot-01",
-        "packageTitle": "Ground Booking Offer",
+        "packageId": "ground-transport-20250920",
+        "packageTitle": "Ground Transportation Options",
         "travelDate": "2025-09-20",
         "location": {
-          "origin": "",
-          "destination": ""
+          "origin": "Airport",
+          "destination": "Downtown"
         },
         "variants": [
           {
-            "variantTitle": "Ground Booking Offer - CarRental offer",
-            "variantId": "11519e89-2c1d-47ec-bd93-7c4ace9c57e6",
-            "variantDesc": "Ground Transportation Offer",
-            "variantStartDate": "",
-            "variantEndDate": "",
-            "variantProvider": "",
-            "variantLogoUrl": "",
-            "variantAccessibilityTextPrompt": "",
-            "price": {},
+            "variantTitle": "Shuttle Service",
+            "variantId": "shuttle-001",
+            "variantDesc": "Shared shuttle service to downtown",
+            "variantStartDate": "2025-09-20T14:00:00Z",
+            "variantEndDate": "2025-09-20T15:00:00Z",
+            "variantProvider": "City Shuttle",
+            "variantLogoUrl": "https://concur.com/img/shuttle.png",
+            "variantAccessibilityTextPrompt": "Shuttle service logo",
+            "price": {
+              "amount": 25.0,
+              "currency": "USD"
+            },
             "userActions": {
-              "label": "Book Ground",
-              "href": "https://www.groundspan.com/bookingTool?offer=37JFKCoqa1VPzPWKecEmsFpXBmuQJgveDAqgR2LPxMb4iblJCyy10b2N6/1cWKlAb5GkpfmJSCsBwqWe1Km4Ng%3D%3D"
+              "label": "Book Shuttle",
+              "href": "https://partner.example.com/book/shuttle"
             }
           }
         ]
       }
     ]
   },
-  "templateId": "NOTIFY_TEMPLATE_ID",
+  "templateId": "GROUND_TRANSPORT_TEMPLATE",
   "msgType": "",
   "expiresAt": "2025-12-31T23:59:59Z"
 }
@@ -322,42 +296,42 @@ Authorization: Bearer {company-jwt-token}
   "companyId": "b7d12989-0489-471a-81cd-175f8b78afa5",
   "createdAt": "2025-08-19T10:00:00Z",
   "metadata": {
-    "partnerProvider": "groundspan",
-    "partnerLogoUrl": "https://groundspan.com/logo.png",
-    "partnerAccessibilityTextPrompt": "Groundspan logo",
+    "partnerProvider": "partner-name",
+    "partnerLogoUrl": "https://partner.example.com/logo.png",
+    "partnerAccessibilityTextPrompt": "Partner logo",
     "packages": [
       {
-        "packageId": "flight-20250801-sfo-cdg",
-        "packageTitle": "SFO to CDG  Aug 1",
+        "packageId": "car-20250801-downtown",
+        "packageTitle": "Updated: Downtown Car Rental - Aug 1",
         "travelDate": "2025-08-01",
         "location": {
-          "origin": "SFO",
-          "destination": "CDG"
+          "origin": "Downtown Garage",
+          "destination": ""
         },
         "variants": [
           {
-            "variantId": "ua57-econ-L",
-            "variantTitle": "United UA57  Economy (L)",
-            "variantDesc": "Nonstop 10h55m  1 checked bag  Changeable (fee)",
-            "variantProvider": "United Airlines",
-            "variantLogoUrl": "https://concur.com/img/ua.png",
-            "variantAccessibilityTextPrompt": "United Airlines logo",
+            "variantId": "enterprise-suv-001",
+            "variantTitle": "Enterprise SUV",
+            "variantDesc": "Unlimited miles Standard SUV - Updated pricing",
+            "variantProvider": "Enterprise",
+            "variantLogoUrl": "https://concur.com/img/enterprise.png",
+            "variantAccessibilityTextPrompt": "Enterprise logo",
             "variantStartDate": "2025-08-01T10:00:00Z",
-            "variantEndDate": "2025-08-01T12:00:00Z",
+            "variantEndDate": "2025-08-07T10:00:00Z",
             "price": {
-              "amount": 425.0,
+              "amount": 275.0,
               "currency": "USD"
             },
             "userActions": {
-              "label": "Book Economy",
-              "href": "https://concur.com/book/eco"
+              "label": "Reserve SUV",
+              "href": "https://partner.example.com/reserve/suv"
             }
           }
         ]
       }
     ]
   },
-  "templateId": "NOTIFY_TEMPLATE_ID",
+  "templateId": "GROUND_TRANSPORT_TEMPLATE",
   "msgType": "",
   "expiresAt": "2025-12-31T23:59:59Z"
 }
@@ -394,7 +368,7 @@ cache-control: no-cache, private
 |`createdAt`|`string`|`date-time`|**Required** Creation timestamp|
 |`metadata`|`object`|-|**Required** Alert content and context data|
 |`templateId`|`string`|-|**Required** Template identifier for rendering|
-|`msgType`|`string`|-|**Required** Message type (empty string for Groundspan)|
+|`msgType`|`string`|-|**Required** Message type (empty string for ground transportation)|
 |`expiresAt`|`string`|`date-time`|**Required** Expiration timestamp|
 
 ### <a name="schema-alert-response"></a>Alert Response
@@ -405,14 +379,14 @@ cache-control: no-cache, private
 |`status`|`string`|-|Processing status (e.g., "received")|
 |`message`|`string`|-|Success message|
 
-### <a name="schema-metadata-groundspan"></a>Metadata - Groundspan
+### <a name="schema-metadata-ground-transportation"></a>Metadata - Ground Transportation
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`partnerProvider`|`string`|-|Partner name (should be "groundspan")|
+|`partnerProvider`|`string`|-|Partner name|
 |`partnerLogoUrl`|`string`|-|URL to partner logo|
 |`partnerAccessibilityTextPrompt`|`string`|-|Accessibility text for partner logo|
-|`packages`|`array`|[`Package`](#schema-package)|-|Array of travel packages|
+|`packages`|`array`|[`Package`](#schema-package)|-|Array of ground transportation packages|
 
 ### <a name="schema-package"></a>Package
 
