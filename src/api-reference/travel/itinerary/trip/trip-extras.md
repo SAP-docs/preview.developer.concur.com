@@ -49,7 +49,7 @@ Content-Type: application/json
 | `userId`   | `string` | **Required**. UUID of the user for whom the trip extra is being appended    |
 | `booking`  | `object` | **Required**. Booking details (see below)                                  |
 
-#### Booking
+##### Booking
 
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
@@ -77,7 +77,7 @@ Vendor is the actual service provider fulfilling the reservation.
 | `phoneNumber`  | `string` | Phone number of the vendor  |
 | `email`        | `string` | Email address of the vendor |
 
-#### GroundBooking Details
+##### GroundBooking Details
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
@@ -146,7 +146,7 @@ Information about the vehicle assigned for the ground transportation.
 | `latitude` | `number` | **Required**            |
 | `longitude`| `number` | **Required**            |
 
-#### Price
+##### Price
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
@@ -156,7 +156,7 @@ Information about the vehicle assigned for the ground transportation.
 | `estimatedDuration`  | `string` | Estimated duration of the service in ISO 8601 duration format               |
 | `minimumDuration`    | `string` | Minimum duration of the service in ISO 8601 duration format                 |
 
-##### Example Payload
+#### Example Payload
 
 ```json
 {
