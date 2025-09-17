@@ -11,6 +11,13 @@ This document provides specific implementation details for ground transportation
 
 For general Maestro API information, see the [Maestro API Overview](v4.maestro.markdown).
 
+## Important Notes
+
+- All URLs (`partnerLogoUrl`, `variantLogoUrl`, `userActions.href`) must be from allowed domains: `groundspan.com`
+- Date fields should be in ISO 8601 format (e.g., `"2025-08-19T10:00:00Z"`)
+- The `msgType` field can be an empty string for ground transportation alerts
+- HTTPS is recommended for all URLs
+
 ## Scope Usage <a name="scope-usage"></a>
 
 |Name|Description|Endpoints|
@@ -108,12 +115,12 @@ Authorization: Bearer {company-jwt-token}
   "companyId": "b7d12989-0489-471a-81cd-175f8b78afa5",
   "createdAt": "2025-08-19T10:00:00Z",
   "metadata": {
-    "partnerProvider": "partner-name",
-    "partnerLogoUrl": "https://partner.example.com/logo.png",
-    "partnerAccessibilityTextPrompt": "Partner logo",
+    "partnerProvider": "Partner Name",
+    "partnerLogoUrl": "https://groundspan.com/img/logo.png",
+    "partnerAccessibilityTextPrompt": "Groundspan logo",
     "packages": [
       {
-        "packageId": "car-20250801-downtown",
+        "packageId": "gs-package-001",
         "packageTitle": "Downtown Car Rental - Aug 1",
         "travelDate": "2025-08-01",
         "location": {
@@ -126,7 +133,7 @@ Authorization: Bearer {company-jwt-token}
             "variantTitle": "Enterprise SUV",
             "variantDesc": "Unlimited miles Standard SUV",
             "variantProvider": "Enterprise",
-            "variantLogoUrl": "https://concur.com/img/enterprise.png",
+            "variantLogoUrl": "https://groundspan.com/img/enterprise.png",
             "variantAccessibilityTextPrompt": "Enterprise logo",
             "variantStartDate": "2025-08-01T10:00:00Z",
             "variantEndDate": "2025-08-07T10:00:00Z",
@@ -136,7 +143,7 @@ Authorization: Bearer {company-jwt-token}
             },
             "userActions": {
               "label": "Reserve SUV",
-              "href": "https://partner.example.com/reserve/suv"
+              "href": "https://groundspan.com/reserve/suv"
             }
           },
           {
@@ -144,7 +151,7 @@ Authorization: Bearer {company-jwt-token}
             "variantTitle": "Hertz Compact",
             "variantDesc": "Economy car with good fuel efficiency",
             "variantProvider": "Hertz",
-            "variantLogoUrl": "https://concur.com/img/hertz.png",
+            "variantLogoUrl": "https://groundspan.com/img/hertz.png",
             "variantAccessibilityTextPrompt": "Hertz logo",
             "variantStartDate": "2025-08-01T10:00:00Z",
             "variantEndDate": "2025-08-07T10:00:00Z",
@@ -154,7 +161,7 @@ Authorization: Bearer {company-jwt-token}
             },
             "userActions": {
               "label": "Reserve Compact",
-              "href": "https://partner.example.com/reserve/compact"
+              "href": "https://groundspan.com/reserve/compact"
             }
           }
         ]
@@ -174,8 +181,8 @@ Authorization: Bearer {company-jwt-token}
             "variantDesc": "Shared shuttle service to downtown",
             "variantStartDate": "2025-09-20T14:00:00Z",
             "variantEndDate": "2025-09-20T15:00:00Z",
-            "variantProvider": "City Shuttle",
-            "variantLogoUrl": "https://concur.com/img/shuttle.png",
+            "variantProvider": "Groundspan",
+            "variantLogoUrl": "https://groundspan.com/img/shuttle.png",
             "variantAccessibilityTextPrompt": "Shuttle service logo",
             "price": {
               "amount": 25.0,
@@ -183,14 +190,14 @@ Authorization: Bearer {company-jwt-token}
             },
             "userActions": {
               "label": "Book Shuttle",
-              "href": "https://partner.example.com/book/shuttle"
+              "href": "https://groundspan.com/book/shuttle"
             }
           }
         ]
       }
     ]
   },
-  "templateId": "GROUND_TRANSPORT_TEMPLATE",
+  "templateId": "NOTIFY_TEMPLATE_ID",
   "msgType": "",
   "expiresAt": "2025-12-31T23:59:59Z"
 }
@@ -296,12 +303,12 @@ Authorization: Bearer {company-jwt-token}
   "companyId": "b7d12989-0489-471a-81cd-175f8b78afa5",
   "createdAt": "2025-08-19T10:00:00Z",
   "metadata": {
-    "partnerProvider": "partner-name",
-    "partnerLogoUrl": "https://partner.example.com/logo.png",
-    "partnerAccessibilityTextPrompt": "Partner logo",
+    "partnerProvider": "Groundspan",
+    "partnerLogoUrl": "https://groundspan.com/img/logo.png",
+    "partnerAccessibilityTextPrompt": "Groundspan logo",
     "packages": [
       {
-        "packageId": "car-20250801-downtown",
+        "packageId": "gs-package-001",
         "packageTitle": "Updated: Downtown Car Rental - Aug 1",
         "travelDate": "2025-08-01",
         "location": {
@@ -324,14 +331,14 @@ Authorization: Bearer {company-jwt-token}
             },
             "userActions": {
               "label": "Reserve SUV",
-              "href": "https://partner.example.com/reserve/suv"
+              "href": "https://groundspan.com/reserve/suv"
             }
           }
         ]
       }
     ]
   },
-  "templateId": "GROUND_TRANSPORT_TEMPLATE",
+  "templateId": "NOTIFY_TEMPLATE_ID",
   "msgType": "",
   "expiresAt": "2025-12-31T23:59:59Z"
 }
@@ -364,12 +371,12 @@ cache-control: no-cache, private
 |---|---|---|---|
 |`extRef`|`string`|-|**Required** External reference ID for session tracking|
 |`userId`|`string`|-|**Required** Identifier for the target user|
-|`companyId`|`string`|-|**Required** Identifier for the user's company (only if company ID is not part of JWT)|
-|`createdAt`|`string`|`date-time`|**Required** Creation timestamp|
+|`companyId`|`string`|-|Optional - Identifier for the user's company (only if company ID is not part of JWT)|
+|`createdAt`|`string`|`date-time`|**Required** Creation timestamp in ISO 8601 format|
 |`metadata`|`object`|-|**Required** Alert content and context data|
 |`templateId`|`string`|-|**Required** Template identifier for rendering|
-|`msgType`|`string`|-|**Required** Message type (empty string for ground transportation)|
-|`expiresAt`|`string`|`date-time`|**Required** Expiration timestamp|
+|`msgType`|`string`|-|**Required** Message type (can be empty string for ground transportation)|
+|`expiresAt`|`string`|`date-time`|**Required** Expiration timestamp in ISO 8601 format|
 
 ### <a name="schema-alert-response"></a>Alert Response
 
@@ -383,56 +390,57 @@ cache-control: no-cache, private
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`partnerProvider`|`string`|-|Partner name|
-|`partnerLogoUrl`|`string`|-|URL to partner logo|
-|`partnerAccessibilityTextPrompt`|`string`|-|Accessibility text for partner logo|
-|`packages`|`array`|[`Package`](#schema-package)|-|Array of ground transportation packages|
+|`partnerProvider`|`string`|-|**Required** Partner provider name (e.g., "Groundspan")|
+|`partnerLogoUrl`|`string`|-|**Required** Partner logo URL (must be from groundspan.com or concur.com domain)|
+|`partnerAccessibilityTextPrompt`|`string`|-|**Required** Accessibility text for the partner logo|
+|`packages`|`array`|[`Package`](#schema-package)|**Required** Array of ground transportation packages|
 
 ### <a name="schema-package"></a>Package
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`packageId`|`string`|-|Unique identifier for the package|
-|`packageTitle`|`string`|-|Package title/description|
-|`travelDate`|`string`|`date`|Travel date (YYYY-MM-DD format)|
-|`location`|[`Location`](#schema-location)|-|Travel location information|
-|`variants`|`array`|[`Variant`](#schema-variant)|-|Array of booking variants|
+|`packageId`|`string`|-|**Required** Unique package identifier|
+|`packageTitle`|`string`|-|Optional - Package title/description|
+|`travelDate`|`string`|`date`|Optional - Travel date in ISO format|
+|`location`|[`Location`](#schema-location)|-|Optional - Location object with origin and destination|
+|`variants`|`array`|[`Variant`](#schema-variant)|Optional - Array of variant objects|
+|`offerData`|`array`|-|Optional - Array of offer data|
 
 ### <a name="schema-variant"></a>Variant
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`variantId`|`string`|-|Unique identifier for the variant|
-|`variantTitle`|`string`|-|Variant title|
-|`variantDesc`|`string`|-|Variant description|
-|`variantProvider`|`string`|-|Provider name (optional for some variants)|
-|`variantLogoUrl`|`string`|-|URL to provider logo (optional for some variants)|
-|`variantAccessibilityTextPrompt`|`string`|-|Accessibility text for logo (optional for some variants)|
-|`variantStartDate`|`string`|`date-time`|Start date/time (optional for some variants)|
-|`variantEndDate`|`string`|`date-time`|End date/time (optional for some variants)|
-|`price`|[`Price`](#schema-price)|-|Pricing information (optional for some variants)|
-|`userActions`|[`UserAction`](#schema-user-action)|-|Booking action|
+|`variantTitle`|`string`|-|**Required** Variant title|
+|`variantId`|`string`|-|**Required** Unique variant identifier|
+|`variantDesc`|`string`|-|**Required** Variant description|
+|`variantProvider`|`string`|-|**Required** Variant provider name|
+|`variantLogoUrl`|`string`|-|**Required** Variant logo URL (must be from groundspan.com or concur.com domain)|
+|`variantAccessibilityTextPrompt`|`string`|-|**Required** Accessibility text for the variant logo|
+|`variantStartDate`|`string`|`date-time`|Optional - Variant start date in ISO format|
+|`variantEndDate`|`string`|`date-time`|Optional - Variant end date in ISO format|
+|`price`|[`Price`](#schema-price)|-|Optional - Price object|
+|`userActions`|[`UserAction`](#schema-user-action)|-|**Required** User actions object|
 
 ### <a name="schema-location"></a>Location
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`origin`|`string`|-|Origin location code|
-|`destination`|`string`|-|Destination location code|
+|`origin`|`string`|-|**Required** Origin location (can be empty string)|
+|`destination`|`string`|-|**Required** Destination location (can be empty string)|
 
 ### <a name="schema-price"></a>Price
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`amount`|`number`|-|Price amount|
-|`currency`|`string`|-|Currency code (e.g., "USD")|
+|`amount`|`number`|-|**Required** Price amount|
+|`currency`|`string`|-|**Required** Currency code (can be empty string)|
 
 ### <a name="schema-user-action"></a>User Action
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`label`|`string`|-|Action button label|
-|`href`|`string`|-|Action URL|
+|`label`|`string`|-|**Required** Action button label|
+|`href`|`string`|-|**Required** Action URL (must be from groundspan.com or concur.com domain)|
 
 ### <a name="schema-error-message"></a>Error Message
 
