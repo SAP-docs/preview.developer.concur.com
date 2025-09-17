@@ -7,13 +7,11 @@ layout: reference
 
 # Maestro v4 - Ground Transportation
 
-This document provides specific implementation details for ground transportation alerts using the Maestro API. Partners can use Maestro to deliver ground transportation booking alerts and notifications to SAP Concur users.
-
-For general Maestro API information, see the [Maestro API Overview](v4.maestro.markdown).
+This document provides specific implementation details for ground transportation alerts using the [Maestro v4 API](/api-reference/common/maestro/v4.maestro.html). Partners can use Maestro to deliver ground transportation booking alerts and notifications to SAP Concur users. 
 
 ## Important Notes
 
-- All URLs (`partnerLogoUrl`, `variantLogoUrl`, `userActions.href`) must be from allowed domains: `groundspan.com`
+- All URLs (`partnerLogoUrl`, `variantLogoUrl`, `userActions.href`) must be from an allowed domain: `groundspan.com`
 - Date fields should be in ISO 8601 format (e.g., `"2025-08-19T10:00:00Z"`)
 - The `msgType` field can be an empty string for ground transportation alerts
 - HTTPS is recommended for all URLs
@@ -371,11 +369,11 @@ cache-control: no-cache, private
 |---|---|---|---|
 |`extRef`|`string`|-|**Required** External reference ID for session tracking|
 |`userId`|`string`|-|**Required** Identifier for the target user|
-|`companyId`|`string`|-|Optional - Identifier for the user's company (only if company ID is not part of JWT)|
+|`companyId`|`string`|-|Identifier for the user's company (only if company ID is not part of JWT)|
 |`createdAt`|`string`|`date-time`|**Required** Creation timestamp in ISO 8601 format|
 |`metadata`|`object`|-|**Required** Alert content and context data|
 |`templateId`|`string`|-|**Required** Template identifier for rendering|
-|`msgType`|`string`|-|**Required** Message type (can be empty string for ground transportation)|
+|`msgType`|`string`|-|**Required** Message type (can be an empty string for ground transportation)|
 |`expiresAt`|`string`|`date-time`|**Required** Expiration timestamp in ISO 8601 format|
 
 ### <a name="schema-alert-response"></a>Alert Response
@@ -400,11 +398,11 @@ cache-control: no-cache, private
 |Name|Type|Format|Description|
 |---|---|---|---|
 |`packageId`|`string`|-|**Required** Unique package identifier|
-|`packageTitle`|`string`|-|Optional - Package title/description|
-|`travelDate`|`string`|`date`|Optional - Travel date in ISO format|
-|`location`|[`Location`](#schema-location)|-|Optional - Location object with origin and destination|
-|`variants`|`array`|[`Variant`](#schema-variant)|Optional - Array of variant objects|
-|`offerData`|`array`|-|Optional - Array of offer data|
+|`packageTitle`|`string`|-|Package title/description|
+|`travelDate`|`string`|`date`|Travel date in ISO format|
+|`location`|[`Location`](#schema-location)|-|Location object with origin and destination|
+|`variants`|`array`|[`Variant`](#schema-variant)|Array of variant objects|
+|`offerData`|`array`|-|Array of offer data|
 
 ### <a name="schema-variant"></a>Variant
 
@@ -416,24 +414,24 @@ cache-control: no-cache, private
 |`variantProvider`|`string`|-|**Required** Variant provider name|
 |`variantLogoUrl`|`string`|-|**Required** Variant logo URL (must be from groundspan.com or concur.com domain)|
 |`variantAccessibilityTextPrompt`|`string`|-|**Required** Accessibility text for the variant logo|
-|`variantStartDate`|`string`|`date-time`|Optional - Variant start date in ISO format|
-|`variantEndDate`|`string`|`date-time`|Optional - Variant end date in ISO format|
-|`price`|[`Price`](#schema-price)|-|Optional - Price object|
+|`variantStartDate`|`string`|`date-time`|Variant start date in ISO format|
+|`variantEndDate`|`string`|`date-time`|Variant end date in ISO format|
+|`price`|[`Price`](#schema-price)|-|Price object|
 |`userActions`|[`UserAction`](#schema-user-action)|-|**Required** User actions object|
 
 ### <a name="schema-location"></a>Location
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`origin`|`string`|-|**Required** Origin location (can be empty string)|
-|`destination`|`string`|-|**Required** Destination location (can be empty string)|
+|`origin`|`string`|-|**Required** Origin location (can be an empty string)|
+|`destination`|`string`|-|**Required** Destination location (can be an empty string)|
 
 ### <a name="schema-price"></a>Price
 
 |Name|Type|Format|Description|
 |---|---|---|---|
 |`amount`|`number`|-|**Required** Price amount|
-|`currency`|`string`|-|**Required** Currency code (can be empty string)|
+|`currency`|`string`|-|**Required** Currency code (can be an empty string)|
 
 ### <a name="schema-user-action"></a>User Action
 
@@ -454,4 +452,4 @@ cache-control: no-cache, private
 |---|---|---|---|
 |`errorCode`|`string`|-|Error code identifier|
 |`errorMessage`|`string`|-|Detailed error message|
-|`details`|`object`|-|Optional field-specific information|
+|`details`|`object`|-|Field-specific information|
