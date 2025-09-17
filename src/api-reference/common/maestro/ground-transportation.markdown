@@ -13,7 +13,7 @@ For general Maestro API information, see the [Maestro API Overview](v4.maestro.m
 
 ## Important Notes
 
-- All URLs (`partnerLogoUrl`, `variantLogoUrl`, `userActions.href`) must be from allowed domains: `groundspan.com`
+- All URLs (`partnerLogoUrl`, `variantLogoUrl`, `userActions.href`) must be from allowed domain: `groundspan.com`
 - Date fields should be in ISO 8601 format (e.g., `"2025-08-19T10:00:00Z"`)
 - The `msgType` field can be an empty string for ground transportation alerts
 - HTTPS is recommended for all URLs
