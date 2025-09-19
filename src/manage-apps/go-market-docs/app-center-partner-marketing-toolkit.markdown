@@ -13,7 +13,7 @@ The toolkit and best practices found here will help us maximize your opportunity
 
 ## <a name="partner-resources"></a>Partner Resources
 
-The [Go to Market page](./go-to-market.html), accessible from the Resources tab of your Partner Place site or via direct link, is the home for documents and links to help partners with:​
+The [Go to Market page](/manage-apps/go-to-market.html), accessible from the Resources tab of your Partner Place site or via direct link, is the home for documents and links to help partners with:​
 
  - App Certification​
  - Marketing Your App​
