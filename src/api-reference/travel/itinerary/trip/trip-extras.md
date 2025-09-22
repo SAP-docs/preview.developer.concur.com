@@ -1,17 +1,13 @@
 ---
-title: Trip Extras
+title: Trip Extras v5
 layout: reference
 ---
 
+# Trip Extras v5
+
 {% include prerelease.html %}
 
-# Trip Extras
-
 The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners on a Concur trip.
-
-### Version
-
-1.0.0
 
 ## Limitations
 
@@ -19,7 +15,9 @@ Access to this documentation does not provide access to the API.
 
 ## URI
 
+```shell
 `/travel/v5/trips/{trip_uuid}/trip-extras`
+```
 
 ## Scope
 
@@ -48,19 +46,19 @@ Content-Type: application/json
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
 | `extRef`   | `string` | **Required**. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process |
-| `userId`   | `string` | **Required**. UUID of the user for whom the trip extra is being appended    |
-| `booking`  | `object` | **Required**. Booking details (see below)                                  |
+| `userId`   | `string` | **Required**. UUID of the user to whom the trip extra is being appended    |
+| `booking`  | `object` | **Required**. Find more details in the Booking section below |
 
-##### Booking
+#### Booking
 
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
 | `type`     | `string` | **Required**. Type of partner reservation (e.g., `ground`)                 |
-| `partner`  | `object` | **Required**. Partner details (see `Partner` below)                        |
-| `vendor`   | `object` | Vendor details (see `Vendor` section)                                      |
-| `details`  | `object` | **Required**. Booking details (see `GroundBooking Details` below)          |
+| `partner`  | `object` | **Required**. Find more details in the Partner section below |
+| `vendor`   | `object` | See more details in the Vendor section below  |
+| `details`  | `object` | **Required**. Find more booking information in the GroundBooking Details section below  |
 
-##### Partner
+#### Partner
 
 A partner is an aggregator or intermediary that provides access to one or more vendors.
 
@@ -69,7 +67,7 @@ A partner is an aggregator or intermediary that provides access to one or more v
 | `name`  | `string` | **Required**. Name of the partner |
 | `logo`  | `string` | URL to the partner logo image   |
 
-##### Vendor
+#### Vendor
 
 Vendor is the actual service provider fulfilling the reservation.
 
@@ -79,7 +77,7 @@ Vendor is the actual service provider fulfilling the reservation.
 | `phoneNumber`  | `string` | Phone number of the vendor  |
 | `email`        | `string` | Email address of the vendor |
 
-##### GroundBooking Details
+#### GroundBooking Details
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
@@ -88,13 +86,13 @@ Vendor is the actual service provider fulfilling the reservation.
 | `cancellationPolicy` | `string` | Cancellation policy information                                             |
 | `vendorConfirmation` | `string` | Confirmation number from vendor                                             |
 | `partnerConfirmation`| `string` | **Required**. Confirmation number from partner                              |
-| `vehicle`            | `object` | **Required**. Vehicle information (see `Vehicle` section)                   |
-| `pickup`             | `object` | **Required**. (see `Pickup` below)                                          |
-| `dropoff`            | `object` | (see `Stop` section)                                                        |
-| `stops`              | `array`  | A list of intermediate stops (see `Stop`)                                   |
-| `price`              | `object` | Pricing details (see `Price` below)                                         |
+| `vehicle`            | `object` | **Required**. Find more details in the Vehicle section below                    |
+| `pickup`             | `object` | **Required**. For more details, go to the Pickup section below                                         |
+| `dropoff`            | `object` | Find more details in the Stop section below                                                |
+| `stops`              | `array`  | A list of intermediate stops. See the Stop section below                                   |
+| `price`              | `object` | Get more details in the Price section below                                         |
 
-##### Vehicle
+#### Vehicle
 
 Information about the vehicle assigned for the ground transportation.
 
@@ -106,7 +104,7 @@ Information about the vehicle assigned for the ground transportation.
 | `seatingCapacity` | `integer`| Number of passengers the vehicle can seat     |
 | `luggageCapacity` | `integer`| Number of luggage pieces the vehicle can hold |
 
-##### Pickup
+#### Pickup
 
 | Field          | Type     | Description                                                                 |
 |----------------|----------|-----------------------------------------------------------------------------|
@@ -118,7 +116,7 @@ Information about the vehicle assigned for the ground transportation.
 | `geolocation`  | `object` | Geolocation coordinates of the pickup location (see `Geolocation` below)   |
 | `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby")      |
 
-##### Stop
+#### Stop
 
 | Field          | Type     | Description                                                                 |
 |----------------|----------|-----------------------------------------------------------------------------|
@@ -130,7 +128,7 @@ Information about the vehicle assigned for the ground transportation.
 | `geolocation`  | `object` | Geolocation coordinates of the pickup location (see `Geolocation` below)   |
 | `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby")      |
 
-##### Address
+#### Address
 
 | Field                    | Type     | Description                                                                 |
 |--------------------------|----------|-----------------------------------------------------------------------------|
@@ -141,14 +139,14 @@ Information about the vehicle assigned for the ground transportation.
 | `postalCode`             | `string` | **Required**                                                               |
 | `country`                | `string` | **Required**. Two-letter ISO 3166-1 alpha-2 country code                   |
 
-##### Geolocation
+#### Geolocation
 
 | Field      | Type     | Description             |
 |------------|----------|-------------------------|
 | `latitude` | `number` | **Required**            |
 | `longitude`| `number` | **Required**            |
 
-##### Price
+#### Price
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
@@ -240,7 +238,7 @@ Trip Extras API responds with **202 Accepted** and a JSON object containing the 
 }
 ```
 
-For possible errors, see the Error Responses section.
+Check out the Error Responses section for more details. 
 
 ---
 
@@ -283,7 +281,7 @@ Content-Type: application/json
 
 The API responds with 204 No Content when the cancellation has been successful.
 
-For possible errors, see the Error Responses section below.
+Check out the Error Responses section for more details.
 
 ---
 
