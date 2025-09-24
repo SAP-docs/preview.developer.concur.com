@@ -3,9 +3,9 @@ title: Trip Extras v5
 layout: reference
 ---
 
-# Trip Extras v5
-
 {% include prerelease.html %}
+
+# Trip Extras v5
 
 The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners on a Concur trip.
 
@@ -35,30 +35,30 @@ Authorization: Bearer {access_token}
 Content-Type: application/json
 ```
 
-#### Parameters
+## <a name="schema"></a> Schema
 
 | Name        | Type | Description              |
 |-------------|------|--------------------------|
 | `trip_uuid` | path | UUID of the trip         |
 
-### <a name="body"></a> Body
+### <a name="body-schema"></a> Body
 
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
 | `extRef`   | `string` | **Required**. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
 | `userId`   | `string` | **Required**. UUID of the user to whom the trip extra is being appended.    |
-| `booking`  | `object` | **Required**. Detailed information in [Booking](#booking). |
+| `booking`  | `object` | **Required**. Detailed information in [Booking](#booking-schema). |
 
-### <a name="booking"></a> Booking
+### <a name="booking-schema"></a> Booking
 
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
 | `type`     | `string` | **Required**. Type of partner reservation (e.g., `ground`.)                 |
-| `partner`  | `object` | **Required**. Detailed information in [Partner](#partner).|
-| `vendor`   | `object` | Detailed information in [Vendor](#vendor).  |
-| `details`  | `object` | **Required**. Detailed information in [GroundBooking Details](#groundbooking-details).  |
+| `partner`  | `object` | **Required**. Detailed information in [Partner](#partner-schema).|
+| `vendor`   | `object` | Detailed information in [Vendor](#vendor-schema).  |
+| `details`  | `object` | **Required**. Detailed information in [GroundBooking Details](#groundbooking-details-schema).  |
 
-### <a name="partner"></a> Partner
+### <a name="partner-schema"></a> Partner
 
 A partner is an aggregator or intermediary that provides access to one or more vendors.
 
@@ -67,7 +67,7 @@ A partner is an aggregator or intermediary that provides access to one or more v
 | `name`  | `string` | **Required**. Name of the partner. |
 | `logo`  | `string` | URL to the partner logo image.   |
 
-### <a name="vendor"></a> Vendor
+### <a name="vendor-schema"></a> Vendor
 
 Vendor is the actual service provider fulfilling the reservation.
 
@@ -77,7 +77,7 @@ Vendor is the actual service provider fulfilling the reservation.
 | `phoneNumber`  | `string` | Phone number of the vendor.  |
 | `email`        | `string` | Email address of the vendor. |
 
-### <a name="groundbooking-details"></a> GroundBooking Details
+### <a name="groundbooking-details-schema"></a> GroundBooking Details
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
@@ -86,13 +86,13 @@ Vendor is the actual service provider fulfilling the reservation.
 | `cancellationPolicy` | `string` | Cancellation policy information.                                             |
 | `vendorConfirmation` | `string` | Confirmation number from vendor.                                             |
 | `partnerConfirmation`| `string` | **Required**. Confirmation number from partner.                              |
-| `vehicle`            | `object` | **Required**. Detailed information in [Vehicle](#vehicle).                    |
-| `pickup`             | `object` | **Required**. Detailed information in [Pickup](#pickup).                                         |
-| `dropoff`            | `object` | Detailed information in [Stop](#stop).                                                |
-| `stops`              | `array`  | A list of intermediate stops. Detailed information in [Stop](#stop).                                   |
-| `price`              | `object` | Detailed information in [Price](#price).                                         |
+| `vehicle`            | `object` | **Required**. Detailed information in [Vehicle](#vehicle-schema).                    |
+| `pickup`             | `object` | **Required**. Detailed information in [Pickup](#pickup-schema).                                         |
+| `dropoff`            | `object` | Detailed information in [Stop](#stop-schema).                                                |
+| `stops`              | `array`  | A list of intermediate stops. Detailed information in [Stop](#stop-schema).                                   |
+| `price`              | `object` | Detailed information in [Price](#price-schema).                                         |
 
-### <a name="vehicle"></a> Vehicle
+### <a name="vehicle-schema"></a> Vehicle
 
 Information about the vehicle assigned for the ground transportation.
 
@@ -104,31 +104,31 @@ Information about the vehicle assigned for the ground transportation.
 | `seatingCapacity` | `integer`| Number of passengers the vehicle can seat.     |
 | `luggageCapacity` | `integer`| Number of luggage pieces the vehicle can hold. |
 
-### <a name="pickup"></a> Pickup
+### <a name="pickup-schema"></a> Pickup
 
 | Field          | Type     | Description                                                                 |
 |----------------|----------|-----------------------------------------------------------------------------|
 | `datetime`     | `string` | **Required**. Local date and time of pickup according to RFC 3339.          |
 | `datetimeUtc`  | `string` | **Required**. UTC date and time of pickup according to RFC 3339.            |
-| `address`      | `object` | **Required if no `iataCode` is informed**. Detailed information in  [Address](#address).           |
+| `address`      | `object` | **Required if no `iataCode` is informed**. Detailed information in  [Address](#address-schema).           |
 | `iataCode`     | `string` | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK"). |
 | `locationName` | `string` | Name of the pickup location.                                                |
-| `geolocation`  | `object` | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation).   |
+| `geolocation`  | `object` | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema).   |
 | `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby").      |
 
-### <a name="stop"></a> Stop
+### <a name="stop-schema"></a> Stop
 
 | Field          | Type     | Description                                                                 |
 |----------------|----------|-----------------------------------------------------------------------------|
 | `datetime`     | `string` | Local date and time of pickup according to RFC 3339.                        |
 | `datetimeUtc`  | `string` | UTC date and time of pickup according to RFC 3339.                          |
-| `address`      | `object` | **Required if no `iataCode` is informed**. Detailed information in [Address](#address).           |
+| `address`      | `object` | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).           |
 | `iataCode`     | `string` | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK"). |
 | `locationName` | `string` | Name of the pickup location.                                                |
-| `geolocation`  | `object` | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation).   |
+| `geolocation`  | `object` | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema).   |
 | `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby").      |
 
-### <a name="address"></a> Address
+### <a name="address-schema"></a> Address
 
 | Field                    | Type     | Description                                                                 |
 |--------------------------|----------|-----------------------------------------------------------------------------|
@@ -139,14 +139,14 @@ Information about the vehicle assigned for the ground transportation.
 | `postalCode`             | `string` | **Required**                                                               |
 | `country`                | `string` | **Required**. Two-letter ISO 3166-1 alpha-2 country code.                   |
 
-### <a name="geolocation"></a> Geolocation
+### <a name="geolocation-schema"></a> Geolocation
 
 | Field      | Type     | Description             |
 |------------|----------|-------------------------|
 | `latitude` | `number` | **Required**            |
 | `longitude`| `number` | **Required**            |
 
-### <a name="price"></a> Price
+### <a name="price-schema"></a> Price
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
@@ -254,19 +254,19 @@ Authorization: Bearer {access_token}
 Content-Type: application/json
 ```
 
-#### Parameters
+## <a name="schema"></a> Schema
 
 | Name           | Type | Description                                  |
 |----------------|------|----------------------------------------------|
 | `trip_uuid`    | path | UUID of the trip.                             |
 | `booking_uuid` | path | UUID of the trip extra booking to cancel.     |
 
-### Body
+### <a name="body-schema"></a> Body
 
 | Field     | Type     | Description                                  |
 |-----------|----------|----------------------------------------------|
-| `extRef`  | `string` | UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process |
-| `userId`  | `string` | **Required**. UUID of the user               |
+| `extRef`  | `string` | UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
+| `userId`  | `string` | **Required**. UUID of the user.               |
 
 ### Payload 
 
@@ -283,7 +283,7 @@ Content-Type: application/json
 
 The API responds with 204 No Content when the cancellation has been successful.
 
-## <a name="error-responses"></a>Error Responses
+### <a name="error-responses"></a>Error Responses
 
 Error responses include a JSON body with additional details about the error.
 
