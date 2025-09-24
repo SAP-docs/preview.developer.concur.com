@@ -16,7 +16,7 @@ Access to this documentation does not provide access to the API.
 ## URI
 
 ```shell
-`/travel/v5/trips/{trip_uuid}/trip-extras`
+/travel/v5/trips/{trip_uuid}/trip-extras
 ```
 
 ## <a name="scope-usage"></a>Scope Usage
