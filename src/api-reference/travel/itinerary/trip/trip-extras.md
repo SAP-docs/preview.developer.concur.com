@@ -9,7 +9,7 @@ layout: reference
 
 The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners on a Concur trip.
 
-## Limitations
+## <a name="limitations"></a>Limitations
 
 Access to this documentation does not provide access to the API.
 
@@ -19,7 +19,7 @@ Access to this documentation does not provide access to the API.
 `/travel/v5/trips/{trip_uuid}/trip-extras`
 ```
 
-## Scope
+## <a name="scope-usage"></a>Scope Usage
 
 To use this API, the OAuth token must include the following scopes: `travel.trips.read`; `travel.trips.booking.write`
 
@@ -41,122 +41,124 @@ Content-Type: application/json
 |-------------|------|--------------------------|
 | `trip_uuid` | path | UUID of the trip         |
 
-#### Body (JSON)
+### <a name="body"></a> Body
 
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
-| `extRef`   | `string` | **Required**. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process |
-| `userId`   | `string` | **Required**. UUID of the user to whom the trip extra is being appended    |
-| `booking`  | `object` | **Required**. Find more details in the Booking section below |
+| `extRef`   | `string` | **Required**. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
+| `userId`   | `string` | **Required**. UUID of the user to whom the trip extra is being appended.    |
+| `booking`  | `object` | **Required**. Detailed information in [Booking](#booking). |
 
-#### Booking
+### <a name="booking"></a> Booking
 
 | Field      | Type     | Description                                                                 |
 |------------|----------|-----------------------------------------------------------------------------|
-| `type`     | `string` | **Required**. Type of partner reservation (e.g., `ground`)                 |
-| `partner`  | `object` | **Required**. Find more details in the Partner section below |
-| `vendor`   | `object` | See more details in the Vendor section below  |
-| `details`  | `object` | **Required**. Find more booking information in the GroundBooking Details section below  |
+| `type`     | `string` | **Required**. Type of partner reservation (e.g., `ground`.)                 |
+| `partner`  | `object` | **Required**. Detailed information in [Partner](#partner).|
+| `vendor`   | `object` | Detailed information in [Vendor](#vendor).  |
+| `details`  | `object` | **Required**. Detailed information in [GroundBooking Details](#groundbooking-details).  |
 
-#### Partner
+### <a name="partner"></a> Partner
 
 A partner is an aggregator or intermediary that provides access to one or more vendors.
 
 | Field   | Type     | Description                     |
 |---------|----------|---------------------------------|
-| `name`  | `string` | **Required**. Name of the partner |
-| `logo`  | `string` | URL to the partner logo image   |
+| `name`  | `string` | **Required**. Name of the partner. |
+| `logo`  | `string` | URL to the partner logo image.   |
 
-#### Vendor
+### <a name="vendor"></a> Vendor
 
 Vendor is the actual service provider fulfilling the reservation.
 
 | Field          | Type     | Description                 |
 |----------------|----------|-----------------------------|
 | `name`         | `string` | **Required**                |
-| `phoneNumber`  | `string` | Phone number of the vendor  |
-| `email`        | `string` | Email address of the vendor |
+| `phoneNumber`  | `string` | Phone number of the vendor.  |
+| `email`        | `string` | Email address of the vendor. |
 
-#### GroundBooking Details
+### <a name="groundbooking-details"></a> GroundBooking Details
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
-| `url`                | `string` | URL to redirect user to the booking on partner page                         |
-| `termsAndConditions` | `string` | Terms and conditions for the booking                                        |
-| `cancellationPolicy` | `string` | Cancellation policy information                                             |
-| `vendorConfirmation` | `string` | Confirmation number from vendor                                             |
-| `partnerConfirmation`| `string` | **Required**. Confirmation number from partner                              |
-| `vehicle`            | `object` | **Required**. Find more details in the Vehicle section below                    |
-| `pickup`             | `object` | **Required**. For more details, go to the Pickup section below                                         |
-| `dropoff`            | `object` | Find more details in the Stop section below                                                |
-| `stops`              | `array`  | A list of intermediate stops. See the Stop section below                                   |
-| `price`              | `object` | Get more details in the Price section below                                         |
+| `url`                | `string` | URL to redirect user to the booking on the partner's page.                         |
+| `termsAndConditions` | `string` | Terms and conditions for the booking.                                       |
+| `cancellationPolicy` | `string` | Cancellation policy information.                                             |
+| `vendorConfirmation` | `string` | Confirmation number from vendor.                                             |
+| `partnerConfirmation`| `string` | **Required**. Confirmation number from partner.                              |
+| `vehicle`            | `object` | **Required**. Detailed information in [Vehicle](#vehicle).                    |
+| `pickup`             | `object` | **Required**. Detailed information in [Pickup](#pickup).                                         |
+| `dropoff`            | `object` | Detailed information in [Stop](#stop).                                                |
+| `stops`              | `array`  | A list of intermediate stops. Detailed information in [Stop](#stop).                                   |
+| `price`              | `object` | Detailed information in [Price](#price).                                         |
 
-#### Vehicle
+### <a name="vehicle"></a> Vehicle
 
 Information about the vehicle assigned for the ground transportation.
 
 | Field             | Type     | Description                                   |
 |-------------------|----------|-----------------------------------------------|
-| `model`           | `string` | **Required**. Vehicle model (e.g., "Toyota Camry") |
-| `acrissCode`      | `string` | ACRISS code for the vehicle (e.g., "FDMR")    |
-| `imageUrl`        | `string` | URL to an image of the vehicle                |
-| `seatingCapacity` | `integer`| Number of passengers the vehicle can seat     |
-| `luggageCapacity` | `integer`| Number of luggage pieces the vehicle can hold |
+| `model`           | `string` | **Required**. Vehicle model (e.g., "Toyota Camry"). |
+| `acrissCode`      | `string` | ACRISS code for the vehicle (e.g., "FDMR").    |
+| `imageUrl`        | `string` | URL to an image of the vehicle.                |
+| `seatingCapacity` | `integer`| Number of passengers the vehicle can seat.     |
+| `luggageCapacity` | `integer`| Number of luggage pieces the vehicle can hold. |
 
-#### Pickup
-
-| Field          | Type     | Description                                                                 |
-|----------------|----------|-----------------------------------------------------------------------------|
-| `datetime`     | `string` | **Required**. Local date and time of pickup according to RFC 3339          |
-| `datetimeUtc`  | `string` | **Required**. UTC date and time of pickup according to RFC 3339            |
-| `address`      | `object` | **Required if no `iataCode` is informed**. (see `Address` below)           |
-| `iataCode`     | `string` | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK") |
-| `locationName` | `string` | Name of the pickup location                                                |
-| `geolocation`  | `object` | Geolocation coordinates of the pickup location (see `Geolocation` below)   |
-| `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby")      |
-
-#### Stop
+### <a name="pickup"></a> Pickup
 
 | Field          | Type     | Description                                                                 |
 |----------------|----------|-----------------------------------------------------------------------------|
-| `datetime`     | `string` | Local date and time of pickup according to RFC 3339                        |
-| `datetimeUtc`  | `string` | UTC date and time of pickup according to RFC 3339                          |
-| `address`      | `object` | **Required if no `iataCode` is informed**. (see `Address` below)           |
-| `iataCode`     | `string` | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK") |
-| `locationName` | `string` | Name of the pickup location                                                |
-| `geolocation`  | `object` | Geolocation coordinates of the pickup location (see `Geolocation` below)   |
-| `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby")      |
+| `datetime`     | `string` | **Required**. Local date and time of pickup according to RFC 3339.          |
+| `datetimeUtc`  | `string` | **Required**. UTC date and time of pickup according to RFC 3339.            |
+| `address`      | `object` | **Required if no `iataCode` is informed**. Detailed information in  [Address](#address).           |
+| `iataCode`     | `string` | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK"). |
+| `locationName` | `string` | Name of the pickup location.                                                |
+| `geolocation`  | `object` | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation).   |
+| `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby").      |
 
-#### Address
+### <a name="stop"></a> Stop
+
+| Field          | Type     | Description                                                                 |
+|----------------|----------|-----------------------------------------------------------------------------|
+| `datetime`     | `string` | Local date and time of pickup according to RFC 3339.                        |
+| `datetimeUtc`  | `string` | UTC date and time of pickup according to RFC 3339.                          |
+| `address`      | `object` | **Required if no `iataCode` is informed**. Detailed information in [Address](#address).           |
+| `iataCode`     | `string` | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK"). |
+| `locationName` | `string` | Name of the pickup location.                                                |
+| `geolocation`  | `object` | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation).   |
+| `instructions` | `string` | Special instructions for the pickup (e.g., "Meet at the hotel lobby").      |
+
+### <a name="address"></a> Address
 
 | Field                    | Type     | Description                                                                 |
 |--------------------------|----------|-----------------------------------------------------------------------------|
-| `address1`               | `string` | **Required**. First line of the address. Also stands for thoroughfare name of the address - xNal standard |
-| `address2`               | `string` | Stands for premise name of the address on xNal standard                     |
-| `localityName`           | `string` | **Required**. City or locality name                                         |
-| `administrativeAreaName` | `string` | State, province or region                                                  |
+| `address1`               | `string` | **Required**. First line of the address. Also stands for thoroughfare name of the address - xNal standard. |
+| `address2`               | `string` | Stands for premise name of the address on xNal standard.                     |
+| `localityName`           | `string` | **Required**. City or locality name.                                         |
+| `administrativeAreaName` | `string` | State, province or region.                                                  |
 | `postalCode`             | `string` | **Required**                                                               |
-| `country`                | `string` | **Required**. Two-letter ISO 3166-1 alpha-2 country code                   |
+| `country`                | `string` | **Required**. Two-letter ISO 3166-1 alpha-2 country code.                   |
 
-#### Geolocation
+### <a name="geolocation"></a> Geolocation
 
 | Field      | Type     | Description             |
 |------------|----------|-------------------------|
 | `latitude` | `number` | **Required**            |
 | `longitude`| `number` | **Required**            |
 
-#### Price
+### <a name="price"></a> Price
 
 | Field                | Type     | Description                                                                 |
 |----------------------|----------|-----------------------------------------------------------------------------|
-| `totalAmount`        | `number` | **Required**. Cost of the vendor reservation including taxes and fees       |
-| `currency`           | `string` | **Required**. Currency in which the total amount is specified               |
-| `hourlyRate`         | `number` | Hourly rate for the service, if applicable                                  |
-| `estimatedDuration`  | `string` | Estimated duration of the service in ISO 8601 duration format               |
-| `minimumDuration`    | `string` | Minimum duration of the service in ISO 8601 duration format                 |
+| `totalAmount`        | `number` | **Required**. Cost of the vendor reservation including taxes and fees.       |
+| `currency`           | `string` | **Required**. Currency in which the total amount is specified.               |
+| `hourlyRate`         | `number` | Hourly rate for the service, if applicable.                                  |
+| `estimatedDuration`  | `string` | Estimated duration of the service in ISO 8601 duration format.               |
+| `minimumDuration`    | `string` | Minimum duration of the service in ISO 8601 duration format.                 |
 
-#### Example Payload
+### Payload 
+
+#### Example
 
 ```json
 {
@@ -230,7 +232,7 @@ Trip Extras API responds with **202 Accepted** and a JSON object containing the 
 
 | Field         | Type     | Description                            |
 |---------------|----------|----------------------------------------|
-| `bookingUuid` | `string` | UUID of the created trip extra booking |
+| `bookingUuid` | `string` | UUID of the created trip extra booking. |
 
 ```json
 {
@@ -238,9 +240,7 @@ Trip Extras API responds with **202 Accepted** and a JSON object containing the 
 }
 ```
 
-Check out the Error Responses section for more details. 
-
----
+Check out [Error Responses](#error-reponses). 
 
 ## Cancel Trip Extra Booking
 
@@ -258,17 +258,19 @@ Content-Type: application/json
 
 | Name           | Type | Description                                  |
 |----------------|------|----------------------------------------------|
-| `trip_uuid`    | path | UUID of the trip                             |
-| `booking_uuid` | path | UUID of the trip extra booking to cancel     |
+| `trip_uuid`    | path | UUID of the trip.                             |
+| `booking_uuid` | path | UUID of the trip extra booking to cancel.     |
 
-#### Body (JSON)
+### Body
 
 | Field     | Type     | Description                                  |
 |-----------|----------|----------------------------------------------|
 | `extRef`  | `string` | UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process |
 | `userId`  | `string` | **Required**. UUID of the user               |
 
-#### Example Payload
+### Payload 
+
+#### Example
 
 ```json
 {
@@ -281,11 +283,7 @@ Content-Type: application/json
 
 The API responds with 204 No Content when the cancellation has been successful.
 
-Check out the Error Responses section for more details.
-
----
-
-## Error Responses
+## <a name="error-responses"></a>Error Responses
 
 Error responses include a JSON body with additional details about the error.
 
@@ -295,9 +293,9 @@ Error responses include a JSON body with additional details about the error.
 | 401         | Invalid authorization             |
 | 500         | Internal Server Error             |
 
-### Body (JSON)
+### Body
 
-Example:
+#### Example
 
 ```json
 {
