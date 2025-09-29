@@ -11,11 +11,8 @@ Access to this documentation does not provide access to the API.
 
 ## <a name="products-editions"></a>Products and Editions
 
-Delete any unsupported products or editions.
-
 * Concur Travel Professional Edition
 * Concur Travel Standard Edition
-
 
 ## <a name="scope-usage"></a>Scope Usage
 
