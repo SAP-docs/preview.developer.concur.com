@@ -16,21 +16,29 @@ Access to this documentation does not provide access to the API.
 ## URI
 
 ```shell
-/travel/v5/trips/{trip_uuid}/trip-extras
+POST https://{region}.api.concursolutions.com/travel/v5/trips/{trip_uuid}/trip-extras
 ```
+
+### Parameters
+
+Name     | Type     | Format | Description                                                           |
+---------|----------|--------|-----------------------------------------------------------------------|
+`region` | `string` | -      | **Required**: Region of the trip. Supported values: `us`, `eu`, `apj1`|
+`id`     | `string` | -      | **Required** The trip ID.                                             |
+
 
 ## <a name="scope-usage"></a>Scope Usage
 
 To use this API, the OAuth token must include the following scopes: `travel.trips.read`; `travel.trips.booking.write`
 
-## Append Trip Extra Booking
+## Append Trip Extras Booking
 
-Append extra booking content to an existing trip.
+Append extras booking content to an existing trip.
 
 ### Request
 
 ```
-POST /travel/v5/trips/{trip_uuid}/trip-extras
+POST https://us.api.concursolutions.com/travel/v5/trips/{trip_uuid}/trip-extras
 Authorization: Bearer {access_token}
 Content-Type: application/json
 ```
@@ -242,14 +250,14 @@ Trip Extras API responds with **202 Accepted** and a JSON object containing the 
 
 Check out [Error Responses](#error-reponses). 
 
-## Cancel Trip Extra Booking
+## Cancel Trip Extras Booking
 
-Cancel a trip extra booking by UUID.
+Cancel a trip extras booking by UUID.
 
 ### Request
 
 ```
-POST /travel/v5/trips/{trip_uuid}/trip-extras/{booking_uuid}/cancel
+POST https://us.api.concursolutions.com/travel/v5/trips/{trip_uuid}/trip-extras/{booking_uuid}/cancel
 Authorization: Bearer {access_token}
 Content-Type: application/json
 ```
