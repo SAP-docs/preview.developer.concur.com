@@ -5,6 +5,8 @@ layout: reference
 
 {% include prerelease.html %}
 
+The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners.
+
 ## <a name="limitations"></a>Limitations
 
 Access to this documentation does not provide access to the API.
