@@ -25,10 +25,6 @@ Name                         | Description                                      
 `travel.trips.read`          | Read only access to trip information                     | Append Trip Extras Booking, Cancel Trip Extras Booking
 `travel.trips.booking.write` | Read and write access to add, modify and cancel bookings | Append Trip Extras Booking, Cancel Trip Extras Booking
 
-## <a name="dependencies"></a>Dependencies
-
-None.
-
 ## <a name="access-token-usage"></a>Access Token Usage
 
 This API supports only company level access tokens.
