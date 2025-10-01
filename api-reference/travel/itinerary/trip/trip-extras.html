@@ -1292,486 +1292,108 @@
   <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
 </div>
 
-<h1 id="trip-extras-v5">Trip Extras v5</h1>
-
-<p>The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners on a Concur trip.</p>
+<p>The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners.</p>
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
 <p>Access to this documentation does not provide access to the API.</p>
 
-<h2 id="uri">URI</h2>
+<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/travel/v5/trips/<span class="o">{</span>trip_uuid<span class="o">}</span>/trip-extras
-</code></pre></div></div>
+<ul>
+  <li>Concur Travel Professional Edition</li>
+  <li>Concur Travel Standard Edition</li>
+</ul>
 
 <h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
 
 <p>To use this API, the OAuth token must include the following scopes: <code class="language-plaintext highlighter-rouge">travel.trips.read</code>; <code class="language-plaintext highlighter-rouge">travel.trips.booking.write</code></p>
 
-<h2 id="append-trip-extra-booking">Append Trip Extra Booking</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Endpoint</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">travel.trips.read</code></td>
+      <td>Read only access to trip information</td>
+      <td>Append Trip Extras Booking, Cancel Trip Extras Booking</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">travel.trips.booking.write</code></td>
+      <td>Read and write access to add, modify and cancel bookings</td>
+      <td>Append Trip Extras Booking, Cancel Trip Extras Booking</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>Append extra booking content to an existing trip.</p>
+<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
 
-<h3 id="request">Request</h3>
+<p>None.</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /travel/v5/trips/{trip_uuid}/trip-extras
-Authorization: Bearer {access_token}
-Content-Type: application/json
+<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+
+<p>This API supports only company level access tokens.</p>
+
+<h2 id="append-trip-extras-booking"><a name="append-trip-extras-booking"></a>Append Trip Extras Booking</h2>
+
+<p>Append extras booking content to an existing trip.</p>
+
+<h3 id="scopes">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">travel.trips.read</code>, <code class="language-plaintext highlighter-rouge">travel.trips.booking.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/travel/v5/trips/<span class="o">{</span>trip_uuid<span class="o">}</span>/trip-extras
 </code></pre></div></div>
 
-<h2 id="-schema"><a name="schema"></a> Schema</h2>
+<h3 id="parameters">Parameters</h3>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">region</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>: Region of the trip. Supported values: <code class="language-plaintext highlighter-rouge">us2</code>, <code class="language-plaintext highlighter-rouge">eu2</code>, <code class="language-plaintext highlighter-rouge">apj1</code></td>
+    </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">trip_uuid</code></td>
-      <td>path</td>
-      <td>UUID of the trip</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The trip ID.</td>
     </tr>
   </tbody>
 </table>
 
-<h3 id="-body"><a name="body-schema"></a> Body</h3>
+<h3 id="payloads">Payloads</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">extRef</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. UUID of the user to whom the trip extra is being appended.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">booking</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required</strong>. Detailed information in <a href="#booking-schema">Booking</a>.</td>
-    </tr>
-  </tbody>
-</table>
+<ul>
+  <li>Request: <a href="#append-trip-extras-booking-request-schema">Append Trip Extras Booking Request</a></li>
+  <li>Response: <a href="#append-trip-extras-booking-response-schema">Append Trip Extras Booking Response</a></li>
+</ul>
 
-<h3 id="-booking"><a name="booking-schema"></a> Booking</h3>
+<h3 id="examples">Examples</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">type</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Type of partner reservation (e.g., <code class="language-plaintext highlighter-rouge">ground</code>.)</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">partner</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required</strong>. Detailed information in <a href="#partner-schema">Partner</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">vendor</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>Detailed information in <a href="#vendor-schema">Vendor</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">details</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required</strong>. Detailed information in <a href="#groundbooking-details-schema">GroundBooking Details</a>.</td>
-    </tr>
-  </tbody>
-</table>
+<h4 id="request">Request</h4>
 
-<h3 id="-partner"><a name="partner-schema"></a> Partner</h3>
-
-<p>A partner is an aggregator or intermediary that provides access to one or more vendors.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">name</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Name of the partner.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">logo</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>URL to the partner logo image.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-vendor"><a name="vendor-schema"></a> Vendor</h3>
-
-<p>Vendor is the actual service provider fulfilling the reservation.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">name</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">phoneNumber</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Phone number of the vendor.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">email</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Email address of the vendor.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-groundbooking-details"><a name="groundbooking-details-schema"></a> GroundBooking Details</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">url</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>URL to redirect user to the booking on the partner’s page.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">termsAndConditions</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Terms and conditions for the booking.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">cancellationPolicy</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Cancellation policy information.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">vendorConfirmation</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Confirmation number from vendor.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">partnerConfirmation</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Confirmation number from partner.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">vehicle</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required</strong>. Detailed information in <a href="#vehicle-schema">Vehicle</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">pickup</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required</strong>. Detailed information in <a href="#pickup-schema">Pickup</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">dropoff</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>Detailed information in <a href="#stop-schema">Stop</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">stops</code></td>
-      <td><code class="language-plaintext highlighter-rouge">array</code></td>
-      <td>A list of intermediate stops. Detailed information in <a href="#stop-schema">Stop</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">price</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>Detailed information in <a href="#price-schema">Price</a>.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-vehicle"><a name="vehicle-schema"></a> Vehicle</h3>
-
-<p>Information about the vehicle assigned for the ground transportation.</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">model</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Vehicle model (e.g., “Toyota Camry”).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">acrissCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>ACRISS code for the vehicle (e.g., “FDMR”).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">imageUrl</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>URL to an image of the vehicle.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">seatingCapacity</code></td>
-      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
-      <td>Number of passengers the vehicle can seat.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">luggageCapacity</code></td>
-      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
-      <td>Number of luggage pieces the vehicle can hold.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-pickup"><a name="pickup-schema"></a> Pickup</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">datetime</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Local date and time of pickup according to RFC 3339.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">datetimeUtc</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. UTC date and time of pickup according to RFC 3339.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">address</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">iataCode</code> is informed</strong>. Detailed information in  <a href="#address-schema">Address</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">iataCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">address</code> is informed</strong>. Airport code of the pickup location (e.g., “JFK”).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">locationName</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Name of the pickup location.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">geolocation</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>Geolocation coordinates of the pickup location. Detailed information in <a href="#geolocation-schema">Geolocation</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">instructions</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Special instructions for the pickup (e.g., “Meet at the hotel lobby”).</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-stop"><a name="stop-schema"></a> Stop</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">datetime</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Local date and time of pickup according to RFC 3339.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">datetimeUtc</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>UTC date and time of pickup according to RFC 3339.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">address</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">iataCode</code> is informed</strong>. Detailed information in <a href="#address-schema">Address</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">iataCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">address</code> is informed</strong>. Airport code of the pickup location (e.g., “JFK”).</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">locationName</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Name of the pickup location.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">geolocation</code></td>
-      <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td>Geolocation coordinates of the pickup location. Detailed information in <a href="#geolocation-schema">Geolocation</a>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">instructions</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Special instructions for the pickup (e.g., “Meet at the hotel lobby”).</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-address"><a name="address-schema"></a> Address</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">address1</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. First line of the address. Also stands for thoroughfare name of the address - xNal standard.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">address2</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Stands for premise name of the address on xNal standard.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">localityName</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. City or locality name.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">administrativeAreaName</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>State, province or region.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">country</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Two-letter ISO 3166-1 alpha-2 country code.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-geolocation"><a name="geolocation-schema"></a> Geolocation</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">latitude</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td><strong>Required</strong></td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">longitude</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td><strong>Required</strong></td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="-price"><a name="price-schema"></a> Price</h3>
-
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">totalAmount</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td><strong>Required</strong>. Cost of the vendor reservation including taxes and fees.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">currency</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong>. Currency in which the total amount is specified.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">hourlyRate</code></td>
-      <td><code class="language-plaintext highlighter-rouge">number</code></td>
-      <td>Hourly rate for the service, if applicable.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">estimatedDuration</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Estimated duration of the service in ISO 8601 duration format.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">minimumDuration</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Minimum duration of the service in ISO 8601 duration format.</td>
-    </tr>
-  </tbody>
-</table>
-
-<h3 id="payload">Payload</h3>
-
-<h4 id="example">Example</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras
+Authorization: Bearer <span class="o">{</span>access_token<span class="o">}</span>
+Content-Type: application/json
+</code></pre></div></div>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"extRef"</span><span class="p">:</span><span class="w"> </span><span class="s2">"48fb4cd3-2ef6-4479-bea1-7c92721b988c"</span><span class="p">,</span><span class="w">
@@ -1838,26 +1460,15 @@ Content-Type: application/json
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="response">Response</h3>
+<h4 id="response">Response</h4>
 
-<p>Trip Extras API responds with <strong>202 Accepted</strong> and a JSON object containing the UUID of the created trip extra booking; meanwhile, the booking is being processed.</p>
+<p>Trip Extras API responds with <strong>202 Accepted</strong> and a JSON object containing the UUID of the created trip extras booking; meanwhile, the booking is being processed.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">bookingUuid</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>UUID of the created trip extra booking.</td>
-    </tr>
-  </tbody>
-</table>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 202 Accepted
+Content-Type: application/json<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+Content-Length: 55
+Date: Mon, 29 Sep 2025 19:46:57 GMT
+</code></pre></div></div>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"bookingUuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abcdef12-3456-7890-abcd-ef1234567890"</span><span class="w">
@@ -1866,48 +1477,91 @@ Content-Type: application/json
 
 <p>Check out <a href="#error-reponses">Error Responses</a>.</p>
 
-<h2 id="cancel-trip-extra-booking">Cancel Trip Extra Booking</h2>
+<h2 id="cancel-trip-extras-booking"><a name="cancel-trip-extras-booking"></a>Cancel Trip Extras Booking</h2>
 
-<p>Cancel a trip extra booking by UUID.</p>
+<p>Cancel the extras booking.</p>
 
-<h3 id="request-1">Request</h3>
+<h3 id="scopes-1">Scopes</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /travel/v5/trips/{trip_uuid}/trip-extras/{booking_uuid}/cancel
-Authorization: Bearer {access_token}
-Content-Type: application/json
+<p><code class="language-plaintext highlighter-rouge">travel.trips.read</code>, <code class="language-plaintext highlighter-rouge">travel.trips.booking.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-1">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/travel/v5/trips/<span class="o">{</span>trip_uuid<span class="o">}</span>/trip-extras/<span class="o">{</span>booking_uuid<span class="o">}</span>/cancel
 </code></pre></div></div>
 
-<h2 id="-schema-1"><a name="schema"></a> Schema</h2>
+<h3 id="parameters-1">Parameters</h3>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td><code class="language-plaintext highlighter-rouge">region</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>: Region of the trip. Supported values: <code class="language-plaintext highlighter-rouge">us2</code>, <code class="language-plaintext highlighter-rouge">eu2</code>, <code class="language-plaintext highlighter-rouge">apj1</code></td>
+    </tr>
+    <tr>
       <td><code class="language-plaintext highlighter-rouge">trip_uuid</code></td>
-      <td>path</td>
-      <td>UUID of the trip.</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>GUID</td>
+      <td><strong>Required</strong> The trip ID.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">booking_uuid</code></td>
-      <td>path</td>
-      <td>UUID of the trip extra booking to cancel.</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>GUID</td>
+      <td><strong>Required</strong> The booking ID.</td>
     </tr>
   </tbody>
 </table>
 
-<h3 id="-body-1"><a name="body-schema"></a> Body</h3>
+<h3 id="payloads-1">Payloads</h3>
+
+<ul>
+  <li>Request: <a href="#cancel-trip-extras-booking-request-schema">Cancel Trip Extras Booking Request</a></li>
+  <li>Response: None</li>
+</ul>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras/86d4dd26-e032-4e02-982b-04032de329f6/cancel
+Authorization: Bearer <span class="o">{</span>access_token<span class="o">}</span>
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"extRef"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ea725b66-6256-4f78-abcb-1f34bcdaed0c"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5820764c-8a07-4da7-8eb0-5cac9a9ccb3b"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<p>The API responds with 204 No Content when the cancellation has been successful.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 204 No Content
+</code></pre></div></div>
+
+<h2 id="-schema"><a name="schema"></a> Schema</h2>
+
+<h3 id="append-trip-extras-booking-request"><a name="append-trip-extras-booking-request-schema"></a>Append Trip Extras Booking Request</h3>
 
 <table>
   <thead>
     <tr>
-      <th>Field</th>
+      <th>Name</th>
       <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
@@ -1915,70 +1569,562 @@ Content-Type: application/json
     <tr>
       <td><code class="language-plaintext highlighter-rouge">extRef</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>GUID</td>
+      <td><strong>Required</strong>. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>GUID</td>
+      <td><strong>Required</strong>. UUID of the user to whom the trip extras is being appended.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">booking</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#booking-schema">Booking Schema</a></td>
+      <td><strong>Required</strong>. Detailed information in <a href="#booking-schema">Booking</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-booking"><a name="booking-schema"></a> Booking</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Type of partner reservation (e.g., <code class="language-plaintext highlighter-rouge">ground</code>.)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">partner</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#partner-schema">Partner Schema</a></td>
+      <td><strong>Required</strong>. Detailed information in <a href="#partner-schema">Partner</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#vendor-schema">Vendor Schema</a></td>
+      <td>Detailed information in <a href="#vendor-schema">Vendor</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">details</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#groundbooking-details-schema">Details Schema</a></td>
+      <td><strong>Required</strong>. Detailed information in <a href="#groundbooking-details-schema">GroundBooking Details</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-partner"><a name="partner-schema"></a> Partner</h3>
+
+<p>A partner is an aggregator or intermediary that provides access to one or more vendors.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Name of the partner.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">logo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>URL to the partner logo image.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-vendor"><a name="vendor-schema"></a> Vendor</h3>
+
+<p>Vendor is the actual service provider fulfilling the reservation.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">name</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">phoneNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Phone number of the vendor.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">email</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Email address of the vendor.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-groundbooking-details"><a name="groundbooking-details-schema"></a> GroundBooking Details</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">url</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>URL to redirect user to the booking on the partner’s page.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">termsAndConditions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Terms and conditions for the booking.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cancellationPolicy</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Cancellation policy information.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vendorConfirmation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Confirmation number from vendor.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">partnerConfirmation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Confirmation number from partner.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vehicle</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#vehicle-schema">Vehicle Schema</a></td>
+      <td><strong>Required</strong>. Detailed information in <a href="#vehicle-schema">Vehicle</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pickup</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#pickup-schema">Pickup Schema</a></td>
+      <td><strong>Required</strong>. Detailed information in <a href="#pickup-schema">Pickup</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dropoff</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#stop-schema">Stop Schema</a></td>
+      <td>Detailed information in <a href="#stop-schema">Stop</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">stops</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#stop-schema">Stop Schema</a></td>
+      <td>A list of intermediate stops.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">price</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#price-schema">Price Schema</a></td>
+      <td>Detailed information in <a href="#price-schema">Price</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-vehicle"><a name="vehicle-schema"></a> Vehicle</h3>
+
+<p>Information about the vehicle assigned for the ground transportation.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">model</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Vehicle model (e.g., “Toyota Camry”).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">acrissCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>ACRISS code for the vehicle (e.g., “FDMR”).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">imageUrl</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>URL to an image of the vehicle.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">seatingCapacity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Number of passengers the vehicle can seat.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">luggageCapacity</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Number of luggage pieces the vehicle can hold.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-pickup"><a name="pickup-schema"></a> Pickup</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">datetime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Local date and time of pickup according to RFC 3339.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">datetimeUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. UTC date and time of pickup according to RFC 3339.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">address</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#address-schema">Address Schema</a></td>
+      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">iataCode</code> is informed</strong>. Detailed information in  <a href="#address-schema">Address</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">iataCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">address</code> is informed</strong>. Airport code of the pickup location (e.g., “JFK”).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locationName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Name of the pickup location.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">geolocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#geolocation-schema">Geolocation Schema</a></td>
+      <td>Geolocation coordinates of the pickup location. Detailed information in <a href="#geolocation-schema">Geolocation</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">instructions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Special instructions for the pickup (e.g., “Meet at the hotel lobby”).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-stop"><a name="stop-schema"></a> Stop</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">datetime</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Local date and time of pickup according to RFC 3339.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">datetimeUtc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>UTC date and time of pickup according to RFC 3339.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">address</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#address-schema">Address Schema</a></td>
+      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">iataCode</code> is informed</strong>. Detailed information in <a href="#address-schema">Address</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">iataCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required if no <code class="language-plaintext highlighter-rouge">address</code> is informed</strong>. Airport code of the pickup location (e.g., “JFK”).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locationName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Name of the pickup location.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">geolocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#geolocation-schema">Geolocation Schema</a></td>
+      <td>Geolocation coordinates of the pickup location. Detailed information in <a href="#geolocation-schema">Geolocation</a>.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">instructions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Special instructions for the pickup (e.g., “Meet at the hotel lobby”).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-address"><a name="address-schema"></a> Address</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">address1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. First line of the address. Also stands for thoroughfare name of the address - xNal standard.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">address2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Stands for premise name of the address on xNal standard.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">localityName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. City or locality name.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">administrativeAreaName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>State, province or region.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">country</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Two-letter ISO 3166-1 alpha-2 country code.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-geolocation"><a name="geolocation-schema"></a> Geolocation</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">latitude</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td>-</td>
+      <td><strong>Required</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">longitude</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td>-</td>
+      <td><strong>Required</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-price"><a name="price-schema"></a> Price</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">totalAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Cost of the vendor reservation including taxes and fees.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currency</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Currency in which the total amount is specified.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">hourlyRate</code></td>
+      <td><code class="language-plaintext highlighter-rouge">number</code></td>
+      <td>-</td>
+      <td>Hourly rate for the service, if applicable.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">estimatedDuration</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Estimated duration of the service in ISO 8601 duration format.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">minimumDuration</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Minimum duration of the service in ISO 8601 duration format.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="append-trip-extras-booking-response"><a name="append-trip-extras-booking-response-schema"></a>Append Trip Extras Booking Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bookingUuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>GUID</td>
+      <td>UUID of the created trip extras booking.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-cancel-trip-extras-booking-request"><a name="cancel-trip-extras-booking-request-schema"></a> Cancel Trip Extras Booking Request</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">extRef</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
       <td>UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">userId</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
       <td><strong>Required</strong>. UUID of the user.</td>
     </tr>
   </tbody>
 </table>
 
-<h3 id="payload-1">Payload</h3>
-
-<h4 id="example-1">Example</h4>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"extRef"</span><span class="p">:</span><span class="w"> </span><span class="s2">"48fb4cd3-2ef6-4479-bea1-7c92721b988c"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678-1234-5678-1234-567812345678"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h3 id="response-1">Response</h3>
-
-<p>The API responds with 204 No Content when the cancellation has been successful.</p>
-
-<h3 id="error-responses"><a name="error-responses"></a>Error Responses</h3>
+<h3 id="-error-schema"><a name="error-schema"></a> Error Schema</h3>
 
 <p>Error responses include a JSON body with additional details about the error.</p>
 
 <table>
   <thead>
     <tr>
-      <th>Status Code</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>400</td>
-      <td>Invalid request parameters</td>
+      <td><code class="language-plaintext highlighter-rouge">errorCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Code for the error</td>
     </tr>
     <tr>
-      <td>401</td>
-      <td>Invalid authorization</td>
-    </tr>
-    <tr>
-      <td>500</td>
-      <td>Internal Server Error</td>
+      <td><code class="language-plaintext highlighter-rouge">errorMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Message for the error</td>
     </tr>
   </tbody>
 </table>
-
-<h3 id="body">Body</h3>
-
-<h4 id="example-2">Example</h4>
-
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"badRequest"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The request is malformed, check the input."</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
 
       </div>
       <!--/col-md-8-->
