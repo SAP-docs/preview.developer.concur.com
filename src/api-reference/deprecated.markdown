@@ -52,6 +52,7 @@ The following application programming interfaces (APIs) and other resources have
   * [Post new list items](/api-reference/common/list-item/v1.list-resource-post.html)
 * [Lists v3](/api-reference/common/lists/v3.lists.html)
 * [List Item v3](/api-reference/common/list-item/v3.list-item.html)
+* [Locations v3](/api-reference/common/locations/v3.locations.html)
 * Profile v1
   * [Profile v1 - Getting Started](/api-reference/profile/v1.getting-started.html) 
   * [Profile v1 - Company](/api-reference/profile/v1.company.html)
