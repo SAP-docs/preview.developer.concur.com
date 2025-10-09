@@ -29,7 +29,7 @@ How to manage refresh token expiration using timestamps and a json file.
 
 ## Setup the NodeJs App
 
-1. Get the [`NodeJs sample code`](https://github.com/SAP-samples/concur-api-samplecode).
+1. Get the [`NodeJs sample code`](https://preview.developer.concur.com/api-guides/authentication/concur-refresh-token-management/RefreshTokenManagement.js).
 2. Open `SampleCode/Tutorial_2/RefreshTokenManagement.js` in your IDE or text editor.
 
 ## Regenerate Your Credentials File

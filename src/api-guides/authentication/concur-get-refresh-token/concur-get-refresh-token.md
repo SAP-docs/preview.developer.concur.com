@@ -51,7 +51,7 @@ Create an app with a company request token to create a refresh token for API acc
 
 ## Setup the Node.js App
 
-1. Get the [Node.js sample code](https://github.com/SAP-samples/concur-api-samplecode).
+1. Get the [Node.js sample code](https://preview.developer.concur.com/api-guides/authentication/concur-get-refresh-token/GetRefreshToken.js).
 2. Open `SampleCode/Tutorial_1/GetRefreshToken.js` in your IDE or text editor.
 
 ## Generate Your Credentials File
