@@ -29,8 +29,7 @@ How to use a refresh token to get a multiple use bearer token to call an API.
 
 ## Setup the NodeJs App
 
-1. Get the [NodeJs sample code](https://preview.developer.concur.com/api-guides/authentication/concur-calling-apis/CallingAPIs.js).
-2. Open `SampleCode/Tutorial_3/CallingAPIs.js` in your IDE or text editor.
+1. Open the [NodeJs sample code - CallingAPIs](https://preview.developer.concur.com/api-guides/authentication/concur-calling-apis/CallingAPIs.js) in your IDE or text editor.
 
 ## Regenerate Your Credentials File
 
