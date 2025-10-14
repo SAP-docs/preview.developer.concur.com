@@ -11,7 +11,7 @@ The Base URI (also known as the Instance URL) is the domain where the SAP Concur
 
 There will be a different domain for each of the following locations:
 
-* Production in the North America data center, EMEA data center, APAC data center, China data center, CCPS data center, and Global Landing Zone.
+* Production in the North America data center, EMEA data center, APAC data center, CCPS data center, and Global Landing Zone.
 * Implementation (test entities in Production environments; not available for all clients) in the North America data center and EMEA data center.
 
 ### <a name="production"></a>Production
@@ -24,8 +24,6 @@ APJ1|Production|https://apj1.api.concursolutions.com|Default for all API calls (
 APJ1|Production|https://www-apj1.api.concursolutions.com|Default for all API calls (does not request certs).
 CCPS|Production|https://usg.api.concursolutions.com |Default for all API calls (Optionally request certs).
 CCPS|Production|https://www-usg.api.concursolutions.com |Default for all API calls (Does not request certs).
-China|Production|https://cn.api.concurcdc.cn |Default for all API calls (Optionally request certs).
-China|Production|https://www-cn.api.concurcdc.cn |Default for all API calls (Does not request certs).
 EU2|Production|https://eu2.api.concursolutions.com |Default for all API calls (Optionally request certs).
 EU2|Production|https://www-eu2.api.concursolutions.com |Default for all API calls (Does not request certs).
 GLZ|Production|https://glz.api.concursolutions.com|Default for all API calls (Optionally request certs).
