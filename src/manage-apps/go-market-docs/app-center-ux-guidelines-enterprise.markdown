@@ -136,7 +136,7 @@ This section provides a summarized checklist of the required and recommended com
   * Must include your company branding and specific application brand, if applicable. (required)
 * The first page (at a minimum):
   * Must clearly indicate this is an integration with SAP Concur solutions. (required)
-  * Should include links to your terms and conditions.(strongly recommended)
+  * Should include links to your terms and conditions. (strongly recommended)
   * Should include links to your privacy policy. (required)
   * Should include links to your support and help options. (required)
   * Verification apps, should provide a link to the inquiry form. (strongly recommended)
