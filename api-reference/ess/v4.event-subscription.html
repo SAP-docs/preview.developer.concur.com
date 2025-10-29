@@ -1358,10 +1358,11 @@
 
 <h2 id="endpoint-requirements-">Endpoint Requirements <a name="endpoint-requirements"></a></h2>
 
-<p>ESS guarantees at least once event delivery. This is accomplished through the retry posting the event payload to the subscribers’ endpoint until the response indicates successful receipt. The expected maximum acknowledgment time for a request to the subscribers’ endpoint is 30 seconds. The service will attempt posting to the endpoint and then hold and retry until the subscriber endpoint responds with delivered or not accepted. The service will retry at least 3 days and skip to the next event after unsuccessful delivery.  We suggest that the subscriber consider following:</p>
+<p>ESS guarantees at least once event delivery. This is accomplished through the retry posting the event payload to the subscribers’ endpoint until the response indicates successful receipt. The expected maximum acknowledgment time for a request to the subscribers’ endpoint is 60 seconds. The service will attempt posting to the endpoint and then hold and retry until the subscriber endpoint responds with delivered or not accepted. The service will retry at least 3 days and skip to the next event after unsuccessful delivery.  We suggest that the subscriber considers the following:</p>
 
 <ul>
-  <li>Endpoint response time requirements depend on the topic throughput. Please review the topic documentation for throughput.</li>
+  <li>Expected maximum throughput is <em>directly</em> tied to the response time of the subscriber endpoint. If response time is too high, it’s possible that the subscriber falls behind on event delivery. Please review the topic documentation for throughput.</li>
+  <li>Even though we permit up to a maximum response time of 60 seconds before timing out &amp; retrying, that should not be considered a suggestion. In most cases, the subscriber endpoint response time will need to be measured in just a few seconds <em>at most</em> in order to keep up with event traffic.</li>
   <li>It is highly recommended to implement a queue behind the subscriber’ endpoint in order to keep response time as low as possible.</li>
   <li>The subscriber must maintain a reasonable uptime to support the requirements of the integration scenario.</li>
   <li>Your HTTPS server endpoint must be accessible from the public web with a non-self-signed certificate.  The certificate should be signed by a known Certificate Authority and should be reachable through DNS.</li>
@@ -1405,8 +1406,17 @@ NYp3hlsu0Q+oYeAwpDKyoWNLcV8pKaStVnP+3yn+/J3/oK4Rtqz/lKRrepxwTVRA
   <li>Requests will come from <code class="language-plaintext highlighter-rouge">us.api.concursolutions.com</code>, <code class="language-plaintext highlighter-rouge">emea.api.concursolutions.com</code>, or <code class="language-plaintext highlighter-rouge">cn.api.concursolutions.com</code>.</li>
   <li>Connection will always be established using a mutual TLS with <code class="language-plaintext highlighter-rouge">webhook.api.concursolutions.com</code> x509 certificate.</li>
   <li>Requests will always have a digital signature.</li>
-  <li>Requests will be re-tried when the subscriber responds with HTTP Response Code(s): 5xx, 401, 403, or 429.</li>
-  <li>Requests will not be re-tried when subscriber responds with HTTP Response Code(s):
+  <li>Requests <em>will</em> be re-tried when:
+    <ul>
+      <li>the subscriber endpoint responds with HTTP Response Code(s): 5xx, 401, 403, or 429.</li>
+      <li>any I/O error occurs during the HTTP request, regardless of the actual HTTP response from the subscriber endpoint.
+        <ul>
+          <li>examples include, but are not limited to: read timeout, connection refused, broken pipe/unexpected connection close, etc.</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Requests <em>will not</em> be re-tried when subscriber endopint responds with HTTP Response Code(s):
     <ul>
       <li>2xx – Indicates successful receipt of the event.</li>
       <li>4xx – Indicates posted event is unexpected or incorrectly formatted.</li>
