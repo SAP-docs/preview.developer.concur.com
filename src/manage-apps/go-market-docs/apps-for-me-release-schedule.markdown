@@ -22,15 +22,15 @@ Please send any questions to Concur_AppCenterMarketing@sap.com.
 
 Release Date|App Certification & App Center Listing Form Submission Deadline
 ---|---
-January 23, 2025|December 19, 2024
-February 20, 2025|January 23, 2025
-March 13, 2025|February 13, 2025
-April 24, 2025|March 27, 2025
-May 15, 2025|April 24, 2025
-June 26, 2025|May 29, 2025
-July 24, 2025|June 26, 2025
-August 21, 2025|July 24, 2025
-September 25, 2025|August 28, 2025
-October 23, 2025|September 25, 2025
-November 13, 2025|October 16, 2025
-December 11, 2025|November 13, 2025
+January 22, 2026|December 18, 2025
+February 19, 2026|January 22, 2026
+March 12, 2026|February 12, 2026
+April 23, 2025|March 26, 2026
+May 14, 2026|April 23, 2026
+June 25, 2026|May 28, 2026
+July 23, 2026|June 25, 2026
+August 20, 2026|July 23, 2026
+September 24, 2026|August 27, 2026
+October 22, 2026|September 24, 2026
+November 19, 2026|October 22, 2026
+December 10, 2026|November 12, 2026
