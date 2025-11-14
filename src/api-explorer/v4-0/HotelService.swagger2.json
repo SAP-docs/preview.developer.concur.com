@@ -1317,6 +1317,9 @@
         },
         "safetyScore": {
            "$ref" : "#/definitions/SafetyScore"
+        },
+        "acceptedPayments": {
+          "$ref": "#/definitions/PaymentCardType"
         }
       },
       "required": [
@@ -1991,6 +1994,7 @@
     },
     "RefundableStatus": {
       "enum": [
+        "UNKNOWN",
         "FULLY_REFUNDABLE",
         "PARTIALLY_REFUNDABLE",
         "NON_REFUNDABLE"
@@ -2019,6 +2023,20 @@
           "description": "UUID that identifies the traveler within Concur",
           "example": "123e4567-e89b-12d3-a456-426614174000",
           "type": "string"
+        },
+        "gdsName": {
+          "description": "Name of the GDS (Global Distribution System) to be used for this booking (active or passive segment). Supported values: SABRE, AMADEUS, TRAVELPORT",
+          "type": "string",
+          "enum": [
+            "SABRE",
+            "AMADEUS",
+            "TRAVELPORT"
+          ]
+        },
+        "pcc": {
+          "description": "Pseudo City Code or Office ID (OID) for the GDS account to be used for this booking (active or passive segment).",
+          "type": "string",
+          "example": "ABC123"
         }
       },
       "required": [
@@ -2074,6 +2092,9 @@
         },
         "hotelPropertyRef": {
           "$ref": "#/definitions/HotelPropertyRef"
+        },
+        "hrefs": {
+          "$ref": "#/definitions/ReservationCriteria_hrefs"
         },
         "legalEntity": {
           "$ref": "#/definitions/LegalEntity"
@@ -2175,6 +2196,26 @@
         "programCode"
       ],
       "type": "object"
+    },
+    "ReservationCriteria_hrefs": {
+      "description": "Collection of URLs related to the booking, such as the Change Notification callback endpoint.",
+      "type": "object",
+      "properties": {
+        "changeNotificationV4": {
+          "type": "string",
+          "description": "Callback URL for the Change Notification API. The base URI varies depending on the datacenter where the booking is processed. The {TRIP_ID} will be replaced by the actual Trip ID.",
+          "example": "https://{DATACENTER}.api.concursolutions.com/travel/v4/trips/{TRIP_ID}/hotels/change-notification"
+        },
+        "authV0":{
+          "type": "string",
+          "description": "Authentication URL for the booking.",
+          "example": "https://{DATACENTER}.api.concursolutions.com/oauth2/v0/token"
+        }
+      }, 
+      "required": [
+        "changeNotificationV4",
+        "authV0"
+      ]
     },
     "GDSRecordLocator": {
       "properties":{

@@ -68,7 +68,7 @@ Sequence|Expected Event|Concur Expense Payment Status|FIS Posting Document Statu
 5|ERP Sends Posting Feedback - Failed| Financial Posting Failed| Posting Failed| Posting Failed| POST Posting Feedback
 6| Processor Recalls Report for Posting Corrections| Not Paid| Posting Failed| Posting Failed| N/A
 7| Report is re-submitted with corrections and re-enters workflow (steps 1-4 repeat)| Submitted/Not Paid| Posting Failed| Posting Failed| N/A
-8| ERP Sends Posting Feedback – Success| Paid| Posting Success| Posting Success | POST Posting Feedback
+8| ERP Sends Posting Feedback – Success| Sent for Payment | Posting Success| Posting Success | POST Posting Feedback
 9| ERP Sends Payment Feedback (Optional)| Payment Confirmed| Payment Confirmed| Paid | POST Payment Confirmation
 
 ### <a name="invoice-matrix"></a>FI Sequence Flow Matrix - Invoice

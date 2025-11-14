@@ -33,6 +33,8 @@ Return to [Accounting Integration v4 - Getting Started](/api-reference/accountin
 |---|---|---|---|
 `SUPPORTS_RECEIPT_POSTING`|`string`|-|Pass this flag if ERP supports Expense receipts and Invoice images.|
 `SUPPORTS_LIABILITY_ACCOUNT`|`string`|-|Pass this flag if ERP supports Liability account.|
+`DISABLE_INVOICE_INTEGRATION`|`string`|-|Pass this flag if ERP does not supports Invoice Integration.|
+`ENABLE_TAX_INTEGRATION`|`string`|-|Pass this flag if ERP supports mapping Tax Codes and Reclaim Codes.|
 
 ### <a name="feature"></a>Feature
 
@@ -129,6 +131,49 @@ Please note that if no additional configuration is needed the list of configurat
 `name`|`string`|-| **Required** List name in the ERP.                              |
 `isDeleted`|`boolean`|`true`/`false`| **PATCH method** If `true`, this record is marked for deletion.|
 
+### <a name="list-of-taxData"></a>Update ERP Tax Data Request
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`data`|`array`|[`ERP Tax Data`](#erp-taxData)|List of the ERP Tax Data.|
+`links`|`array`|[`Links`](#links)|**GET method** The array of `href`s to retrieve the next page.|
+`deleteAll`|`boolean`|`true`/`false`|**PUT method** For PUT method, this field is always considered to be true and all data is replaced with the data provided.|
+
+### <a name="erp-taxData"></a>ERP Tax Data
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`countryCode`|`string`|ISO 3166-1 alpha-2|**Required** Two-letter country code for the tax data as specified in ISO 3166-1 alpha-2.|
+`countryName`|`string`|-|Country name for the tax data.|
+`stateEntries`|`array`|[`State Entries`](#state-entries)|**Required** List of state/province specific tax data. If the data is not state specific, this field will hold the country tax data.|
+
+
+### <a name="state-entries"></a>State Entries
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`stateCode`|`string`|-|ERP state/province code for the state/province specific tax data. If the data is not state specific, this field will be null.|
+`stateDesc`|`string`|-|Description for the ERP state/province specific tax data. If the data is not state specific, this field will be null.|
+`reclaimEntries`|`array`|[`Reclaim Entries`](#reclaim-entries) |**Required** List of ERP reclaim data for the state/province specific tax data or country tax data if not state/province specific.|
+
+### <a name="reclaim-entries"></a>Reclaim Entries
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`reclaimCode`|`string`|-|**Required** ERP reclaim code.|
+`reclaimDesc`|`string`|-|Description for the ERP reclaim rate.|
+`reclaimDetails`|`array`|[`Reclaim Details`](#reclaim-details)|**Required* Details of the ERP reclaim rate.|
+
+### <a name="reclaim-details"></a>Reclaim Details
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+`taxCode`|`string`|-|**Required** ERP tax code.|
+`taxRateDesc`|`string`|-|Description for the ERP tax rate.|
+`percentage`|`number`|-|The percentage of the ERP tax rate.|
+`validFrom`|`string`|-|**Required** The start date of the ERP tax rate in ISO-8601 simple date format(YYYY-MM-dd).|
+`validTo`|`string`|-|The end date of the ERP tax rate in ISO-8601 simple date format(YYYY-MM-dd).|
+
 ### <a name="list-of-vendor"></a>Update ERP Vendors Request
 
 |Name|Type|Format|Description|
@@ -208,6 +253,8 @@ Please note that if no additional configuration is needed the list of configurat
 `name`| `string` | - | Payment type name.|
 `creditCardVendorId`| `string` | - | Credit card vendor ID. |
 `currencyCode`| `string` | `ISO 4217` | 3-letter currency code.|
+`countryCode`|`string`|`ISO 3166`|2-letter country code.|
+`erpCreditCardAccount`|`string`|-|ERP Credit Card Account.|
 
 ### <a name="list-mapping"></a>ListMapping
 

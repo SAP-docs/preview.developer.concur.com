@@ -701,22 +701,18 @@ The sample quick expense item is now shown in the Available Expense list.
 Click following links to download the postman sample collection zip file or click the 'Run in Postman' button to fork the collection to your workspace or import the collection to Postman.
 
 * [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json.zip)   
-[![Run in Postman - Authentication API](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553?action=collection%2Ffork&collection-url=entityId%3D2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 * [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json.zip)   
-[![Run in Postman - General eReceipt](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa?action=collection%2Ffork&collection-url=entityId%3D2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 * [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json.zip)   
-[![Run in Postman - Grand Transportaion eReceipt](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-adc62397-c280-478c-bc35-a00c27b5db91?action=collection%2Ffork&collection-url=entityId%3D2623947-adc62397-c280-478c-bc35-a00c27b5db91%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 * [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json.zip)   
-[![Run in Postman - Quick Expense](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1?action=collection%2Ffork&collection-url=entityId%3D2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 
 ## <a name="creating-and-updating-an-app-center-listing"></a>Creating and Updating an App Center Listing
 
-You need to send the complete landing page content to [concur_appcentermarketing@sap.com](mailto:concur_appcentermarketing@sap.com) for review prior to scheduling the certification call with [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). This includes:
+You need to send the complete landing page content to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). The CPM and marketing team review and approve the listing documents and send the confirmation to your marketing team. You need the this approval prior to scheduling the final certification call with [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). This includes:
 
 * App Center Listing Form ([Download](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
 * Listing Images (Please follow the image specification in the App Center Listing Form.)
 
-The App Center Marketing team will review your content for clarity, ease of reading, and consistency with the SAP Concur brand guidelines. The App Center Marketing team will return it with any comments or suggestions. Please plan for a 10 to 14-day turnaround window for the review process.
+The CPM and marketing team will review your content for clarity, ease of reading, and consistency with the SAP Concur brand guidelines. The CPM and marketing team will return it with any comments or suggestions. Please plan for a 10 to 14-day turnaround window for the review process.
 
 Once your content is finalized, your listing will be queued for launch on an agreed upon date. Your app must be certified prior to launch.
 

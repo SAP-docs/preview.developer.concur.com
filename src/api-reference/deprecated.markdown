@@ -12,7 +12,11 @@ The following application programming interfaces (APIs) and other resources have
 * [Attendees v2](/api-reference/expense/attendees/v2.attendees.html)
 * [Attendees v3](/api-reference/expense/attendees/v3.attendees.html)
 * [Attendee Types v1](/api-reference/expense/attendee-types/v1.attendee-types.html)
+* [Attendee Types v3](/api-reference/expense/attendee-types/v3.attendee-types.html)
 * [Authorization (Pre-2017)](/api-reference/authentication/authorization-pre-2017.html)
+* Callouts
+  * [Launch an External URL-Expense v1](/api-reference/callouts/launch-external-url.html)
+  * [Launch External URL-Request v1](/api-reference/callouts/launch-external-url-request.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
 * Direct Connect - Hotel Service v2
@@ -41,7 +45,6 @@ The following application programming interfaces (APIs) and other resources have
   * [Expense Report Full Details](/api-reference/expense/expense-report/v1dot1.report-full-details.html)
 * [Report Details](/api-reference/expense/expense-report/expense-report-get.html)
 * [Expense Report v2](/api-reference/expense/expense-report/v2.reports.html)
-* [Launch an External URL v1](/api-reference/callouts/launch-external-url.html)
 * List Item Web Service v1
   * [List Item Web Service](/api-reference/common/list-item/v1.list-item.html)
   * [List Resource](/api-reference/common/list-item/v1.list-resource.html)
@@ -49,6 +52,7 @@ The following application programming interfaces (APIs) and other resources have
   * [Post new list items](/api-reference/common/list-item/v1.list-resource-post.html)
 * [Lists v3](/api-reference/common/lists/v3.lists.html)
 * [List Item v3](/api-reference/common/list-item/v3.list-item.html)
+* [Locations v3](/api-reference/common/locations/v3.locations.html)
 * Profile v1
   * [Profile v1 - Getting Started](/api-reference/profile/v1.getting-started.html) 
   * [Profile v1 - Company](/api-reference/profile/v1.company.html)

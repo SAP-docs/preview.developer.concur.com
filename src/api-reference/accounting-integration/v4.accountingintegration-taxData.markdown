@@ -1,0 +1,483 @@
+---
+title: Managing ERP Tax Data in SAP Concur
+layout: reference
+---
+
+# Accounting Integration v4 - Manage ERP Tax Data
+
+{% include prerelease.html %}
+
+Return to [Accounting Integration v4 - Getting Started](/api-reference/accounting-integration/v4.accountingintegration-get-started.html)
+
+## <a name="post-taxData"></a>Add Tax Data
+
+This endpoint allows users to add ERP Tax data that is cached in the SAP Concur system. Upon
+receiving the data, the server will return immediately with a response payload containing the request current status and
+a link to check the request status progress, then process the request asynchronously.
+
+In addition, events will be published to notify the API consumers of important updates. For more information, please
+see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+
+### Limitations
+
+* Access to this documentation does not provide access to the API.
+* Adding Tax Data through this API will not automatically import those tax data into the SAP Concur system, it only caches the ERP
+  data. Customers will need to add the tax data in the SAP Concur system via the provided UI screens.
+* The total request payload size should not exceed 4 MB.
+* Any given ERP record size should not exceed 200 KB.
+* This endpoint can be called once per second.
+
+### Scopes
+
+`spend.accountingintegration.write` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+POST /accountingintegration/v4/companies/{companyId}/erps/{erpId}/taxData
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: [Add ERP Tax Data Request](./v4.accountingintegration-schema.html#list-of-taxData)
+* Request: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
+
+### Examples
+
+#### Request: add tax data
+
+```shell
+POST /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+```
+
+```json
+{
+  "data": [
+    {
+      "countryCode": "FR",
+      "countryDesc": "France",
+      "stateEntries": [
+        {
+          "stateCode": "FR-IDF",
+          "stateDesc": "Île-de-France",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "10%",
+              "reclaimDesc": "10% VAT",
+              "reclaimDetails": [
+                {
+                  "taxCode": "F10R",
+                  "taxRateDesc": "Reduced VAT",
+                  "percentage": 10,
+                  "validFrom": "2022-01-01",
+                  "validTo": "2025-12-31"
+                }
+              ]
+            },
+            {
+              "reclaimCode": "5.5%",
+              "reclaimDesc": "Super Reduced VAT",
+              "reclaimDetails": [
+                {
+                  "taxCode": "F5R",
+                  "taxRateDesc": "Super Reduced VAT",
+                  "percentage": 5.5,
+                  "validFrom": "2021-06-01",
+                  "validTo": "2024-06-30"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "countryCode": "US",
+      "countryDesc": "United States",
+      "stateEntries": [
+        {
+          "stateCode": "US-CA",
+          "stateDesc": "California",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "7.25%",
+              "reclaimDesc": "State Sales Tax",
+              "reclaimDetails": [
+                {
+                  "taxCode": "CA7R",
+                  "taxRateDesc": "CA State Tax",
+                  "percentage": 7.25,
+                  "validFrom": "2020-01-01",
+                  "validTo": "2023-12-31"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateCode": "US-NY",
+          "stateDesc": "New York",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "8.875%",
+              "reclaimDesc": "NYC Sales Tax",
+              "reclaimDetails": [
+                {
+                  "taxCode": "NY8R",
+                  "taxRateDesc": "NYC Tax",
+                  "percentage": 8.875,
+                  "validFrom": "2019-07-01",
+                  "validTo": "2024-07-01"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Response
+
+```shell
+202 Accepted
+```
+
+```json
+{
+  "status": "PROCESSING",
+  "requestId": "3f1508be-9b55-400f-8bac-475015567a52",
+  "links": {
+    "errors": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"
+    },
+    "self": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"
+    }
+  }
+}
+```
+
+## <a name="put-taxData"></a>Update Tax Data
+
+This endpoint allows users to replace ERP Tax data that is cached in the SAP Concur system. Upon
+receiving the data, the server will return immediately with a response payload containing the request current status and
+a link to check the request status progress, then process the request asynchronously.
+
+**Important Note:**
+
+```text 
+This endpoint will always replace all the data in the cached SAP Concur system with the data provided in the request payload. 
+The isDeleted flag is always ignored 
+```
+
+In addition, events will be published to notify the API consumers of important updates. For more information, please
+see [Accounting Integration Events](/event-topics/event-subscription-topic-accountingintegration.html).
+
+### Limitations
+
+
+* Access to this documentation does not provide access to the API.
+* Updating Tax Data through this API will not automatically import those tax data into the SAP Concur system, it only caches the ERP
+  data. Customers will need to add the tax data in the SAP Concur system via the provided UI screens.
+* The total request payload size should not exceed 4 MB.
+* Any given ERP record size should not exceed 200 KB.
+* This endpoint can be called once per second.
+
+### Scopes
+
+`spend.accountingintegration.write` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+PUT /accountingintegration/v4/companies/{companyId}/erps/{erpId}/taxData
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: [Update ERP Tax Data Request](./v4.accountingintegration-schema.html#list-of-taxData)
+* Request: [RequestStatus](./v4.accountingintegration-schema.html#request-status), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
+
+### Examples
+
+#### Request: delete all the cached tax data in the SAP Concur system
+
+```shell
+PUT /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+```
+
+```json
+{
+  "deleteAll": true
+}
+```
+#### Request: replace tax data
+
+```shell
+PUT /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+```
+
+```json
+{
+  "data": [
+    {
+      "countryCode": "FR",
+      "countryDesc": "France",
+      "stateEntries": [
+        {
+          "stateCode": "FR-IDF",
+          "stateDesc": "Île-de-France",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "10%",
+              "reclaimDesc": "10% VAT",
+              "reclaimDetails": [
+                {
+                  "taxCode": "F10R",
+                  "taxRateDesc": "Reduced VAT",
+                  "percentage": 10,
+                  "validFrom": "2022-01-01",
+                  "validTo": "2025-12-31"
+                }
+              ]
+            },
+            {
+              "reclaimCode": "5.5%",
+              "reclaimDesc": "Super Reduced VAT",
+              "reclaimDetails": [
+                {
+                  "taxCode": "F5R",
+                  "taxRateDesc": "Super Reduced VAT",
+                  "percentage": 5.5,
+                  "validFrom": "2021-06-01",
+                  "validTo": "2024-06-30"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "countryCode": "US",
+      "countryDesc": "United States",
+      "stateEntries": [
+        {
+          "stateCode": "US-CA",
+          "stateDesc": "California",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "7.25%",
+              "reclaimDesc": "State Sales Tax",
+              "reclaimDetails": [
+                {
+                  "taxCode": "CA7R",
+                  "taxRateDesc": "CA State Tax",
+                  "percentage": 7.25,
+                  "validFrom": "2020-01-01",
+                  "validTo": "2023-12-31"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateCode": "US-NY",
+          "stateDesc": "New York",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "8.875%",
+              "reclaimDesc": "NYC Sales Tax",
+              "reclaimDetails": [
+                {
+                  "taxCode": "NY8R",
+                  "taxRateDesc": "NYC Tax",
+                  "percentage": 8.875,
+                  "validFrom": "2019-07-01",
+                  "validTo": "2024-07-01"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+#### Response
+
+```shell
+202 Accepted
+```
+
+```json
+{
+  "status": "PROCESSING",
+  "requestId": "3f1508be-9b55-400f-8bac-475015567a52",
+  "links": {
+    "errors": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52/errors"
+    },
+    "self": {
+      "href": "/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/requests/3f1508be-9b55-400f-8bac-475015567a52"
+    }
+  }
+}
+```
+
+## <a name="get-taxData"></a>Retrieve Tax Data
+
+This endpoint's purpose is to retrieve the ERP tax data that is cached in the SAP Concur system.
+
+### Limitations
+
+* Navigate via the `links` attribute in the response payload to retrieve the next page, if the page size exceeds 1 MB.
+
+### Scopes
+
+`spend.accountingintegration.read` - Refer to [Scope Usage](./v4.accountingintegration-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+GET /accountingintegration/v4/companies/{companyId}/erps/{erpId}/taxData
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`UUID`|**Required** Universally unique identifier of the company.
+`erpId`|`string`|`UUID`|**Required** Universally unique identifier of the ERP for the integration.
+
+### Payloads
+
+* Request: None
+* Response: [List of Tax Data](./v4.accountingintegration-schema.html#list-of-taxData), [ErrorMessage](./v4.accountingintegration-schema.html#errorMessage)
+
+### Examples
+
+#### Request
+
+```shell
+GET /accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData
+```
+
+#### Response
+
+```shell
+200 OK
+```
+
+```json
+{
+  "data": [
+    {
+      "countryCode": "FR",
+      "countryDesc": "France",
+      "stateEntries": [
+        {
+          "stateCode": "FR-IDF",
+          "stateDesc": "Île-de-France",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "10%",
+              "reclaimDesc": "10% VAT",
+              "reclaimDetails": [
+                {
+                  "taxCode": "F10R",
+                  "taxRateDesc": "Reduced VAT",
+                  "percentage": 10,
+                  "validFrom": "2022-01-01",
+                  "validTo": "2025-12-31"
+                }
+              ]
+            },
+            {
+              "reclaimCode": "5.5%",
+              "reclaimDesc": "Super Reduced VAT",
+              "reclaimDetails": [
+                {
+                  "taxCode": "F5R",
+                  "taxRateDesc": "Super Reduced VAT",
+                  "percentage": 5.5,
+                  "validFrom": "2021-06-01",
+                  "validTo": "2024-06-30"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "countryCode": "US",
+      "countryDesc": "United States",
+      "stateEntries": [
+        {
+          "stateCode": "US-CA",
+          "stateDesc": "California",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "7.25%",
+              "reclaimDesc": "State Sales Tax",
+              "reclaimDetails": [
+                {
+                  "taxCode": "CA7R",
+                  "taxRateDesc": "CA State Tax",
+                  "percentage": 7.25,
+                  "validFrom": "2020-01-01",
+                  "validTo": "2023-12-31"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stateCode": "US-NY",
+          "stateDesc": "New York",
+          "reclaimEntries": [
+            {
+              "reclaimCode": "8.875%",
+              "reclaimDesc": "NYC Sales Tax",
+              "reclaimDetails": [
+                {
+                  "taxCode": "NY8R",
+                  "taxRateDesc": "NYC Tax",
+                  "percentage": 8.875,
+                  "validFrom": "2019-07-01",
+                  "validTo": "2024-07-01"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "links": {
+    "next": {
+      "href": "/accountingintegration/v4/companies/09ac834c-46d6-49ff-9653-551d69072d56/erps/2fcffbce-a381-4169-a954-c0395eefd6f6/taxData?next=string"
+    }
+  }
+}
+```
