@@ -6,14 +6,13 @@ layout: reference
 
 The SAP Concur OAuth2 framework is a very simple way to implement a Unified Token Authentication mechanism within your application. Here is a four step guide to helping you get up to speed and making calls to a SAP Concur API. 
 
-Sample code that demonstrates how to obtain your refresh token, automate its management, and use it to get an access token to call an API can be found at our [sample code GitHub repository](https://github.com/SAP-samples/concur-api-sample-code). We also have tutorials available so you can try this yourself, [Call SAP Concur APIs in NodeJS](https://developers.sap.com/group.sap-concur-call-apis-nodejs.html).
+Sample code that demonstrates how to obtain your refresh token, automate its management, and use it to get an access token to call an API can be found at our [sample code GitHub repository](https://github.com/SAP-samples/concur-api-sample-code). We also have tutorials available so you can try this yourself in the [Integration Guides](/api-guides/) section of the site.
 
 ## Obtain Your Application clientID and clientSecret <a name="obtain-clientID"></a>
 Before you can obtain an `accessToken`, you need to register an application with SAP Concur. You can do this by contacting your Partner Enablement Manager or Partner Account Manager. Once you have registered an application, you will receive a `clientId`, `clientSecret` and `geolocation`. The `clientId` is a unique UUID4 identifier for your application, and the `clientSecret` is your application's password. You will be using this credential to obtain tokens either for the application itself, or on behalf of a user. The `geolocation` is your default base URI for initiating all new connections.
 
 ## Obtaining an Access Token <a name="obtain-accessToken"></a>
 In order for an application to call a SAP Concur API, you need to obtain an `accessToken` on behalf of either a User, Company or Application. There are multiple ways of obtaining an `accessToken` through the various grants ([Password](/api-reference/authentication/apidoc.html#password_grant), [Authorization](/api-reference/authentication/apidoc.html#auth_grant), [Client Credentials](/api-reference/authentication/apidoc.html#client_credentials), [One-time Password](/api-reference/authentication/apidoc.html#otp_grant)) .
-
 
 This section provides a quick start guide for generating an access token. If you are developing an application to be certified for the App Center or as a TripLink supplier, please refer to the [certification documentation](/manage-apps/app-certification.html) for the grant types your application must support.
 

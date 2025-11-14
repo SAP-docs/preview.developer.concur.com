@@ -82,7 +82,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
-   Host: us.api.concursolutions.com
+   Host: glz.api.concursolutions.com
    ```
    ```
    client_id={client_id}
@@ -135,12 +135,12 @@ Depending on the connection flow, a grant will be selected for authentication. T
 
 2. Your app will make a call to the authorization service.
 
-> **_NOTE:_**  the grant type must be accessed using the `www-` version of the API Gateway in order to avoid certificate issues with some browsers. (ex: https://www-us.api.concursolutions.com instead of https://us.api.concursolutions.com)
+> **_NOTE:_**  the grant type must be accessed using the `www-` version of the API Gateway in order to avoid certificate issues with some browsers. (ex: https://www-glz.api.concursolutions.com instead of https://glz.api.concursolutions.com)
 
    Example: 
    ```http
    GET /oauth2/v0/authorize?client_id={your-app-clientId}&redirect_uri={partner_redirect_URI}&response_type=code HTTP/1.1
-   Host: https://www-us.api.concursolutions.com
+   Host: https://www-glz.api.concursolutions.com
    ```
 
 3. The authorization service will prompt the user with two options: **Username** or **Send a link to my email**
@@ -179,7 +179,7 @@ Depending on the connection flow, a grant will be selected for authentication. T
    ```http
    POST /oauth2/v0/token HTTP/1.1
    Content-Type: application/x-www-form-urlencoded
-   Host: us.api.concursolutions.com
+   Host: glz.api.concursolutions.com
    ```
    ```
    client_id={client_id}
@@ -358,7 +358,7 @@ A client’s SAP Concur account may reside one of our many data centers. During 
 
 You will need to be aware of the geolocation where the user exists and make the call to the APIs correctly. As you do not know the user's geolocation when you request the token for the first time, you should always make the API call using the **default** Base URI.
 
-For a user hosted on both the US data center and EU data center, please use the **default** Base URI `https://us.api.concursolutions.com`.
+For a user hosted on both the US data center and EU data center, please use the **default** Base URI `https://glz.api.concursolutions.com`.
 
 If you receive the error code 16 ("user lives elsewhere") while calling the authentication service, the error message returns a new `geolocation`. Use this new 'geolocation' as the Base URI to call the Auth API again to get the token.
 
@@ -411,9 +411,19 @@ When making API calls, the appropriate base URI should be used. There are three 
 * Calling other APIs.
 
 The base URI for obtaining a token will use your application’s geolocation. The base URI for refreshing tokens and all other API calls will use the token’s geolocation.
+* GLZ = <https://glz.api.concursolutions.com>
+* US2 Production = <https://us2.api.concursolutions.com>
+* EU2 Production = <https://EU2.api.concursolutions.com>
 
-* US Production = <https://us.api.concursolutions.com>
-* EU Production = <https://emea.api.concursolutions.com>
+When obtaining a token, your application should use the base URI corresponding to the grant type being performed, as follows:
+
+| Grant Type	| URI |
+|-|-|
+|Authorization|	Use the GLZ base URI|
+|Password (credtype = authtoken)|	Use the GLZ base URI
+|One Time Password|	Use the base URI corresponding to the user’s geolocation|
+
+When obtaining the token, the token’s geolocation will be included in the response. The token’s geolocation should be stored along with the token. Your application will then make subsequent calls using the token and the correct endpoints based on the token’s geolocation.
 
 The full list of available token geolocations is available on the [Base URIs](https://developer.concur.com/platform/base-uris.html) page.
 
@@ -691,22 +701,18 @@ The sample quick expense item is now shown in the Available Expense list.
 Click following links to download the postman sample collection zip file or click the 'Run in Postman' button to fork the collection to your workspace or import the collection to Postman.
 
 * [Authentication API Postman Collection](/api-guides/postman/auth-api-samples-postman-collection.json.zip)   
-[![Run in Postman - Authentication API](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553?action=collection%2Ffork&collection-url=entityId%3D2623947-1f08de2e-55ea-4d9f-8af2-5eb5feea8553%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 * [General eReceipt Postman Collection](/api-guides/postman/general-ereceipt-samples-postman-collection.json.zip)   
-[![Run in Postman - General eReceipt](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa?action=collection%2Ffork&collection-url=entityId%3D2623947-9f48740a-806f-43d7-89de-49cd4d90f2fa%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 * [Ground Transportation eReceipt Postman Collection](/api-guides/postman/ground-transportation-ereceipt-samples-postman-collection.json.zip)   
-[![Run in Postman - Grand Transportaion eReceipt](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-adc62397-c280-478c-bc35-a00c27b5db91?action=collection%2Ffork&collection-url=entityId%3D2623947-adc62397-c280-478c-bc35-a00c27b5db91%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 * [Quick Expense Postman Collection](/api-guides/postman/quick-expense-samples-postman-collection.json.zip)   
-[![Run in Postman - Quick Expense](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1?action=collection%2Ffork&collection-url=entityId%3D2623947-5bce9efe-3ace-43dc-a930-62c4ec95fcd1%26entityType%3Dcollection%26workspaceId%3Dc715a4cd-a1cd-4378-8a96-61814a68e3ef)
 
 ## <a name="creating-and-updating-an-app-center-listing"></a>Creating and Updating an App Center Listing
 
-You need to send the complete landing page content to [concur_appcentermarketing@sap.com](mailto:concur_appcentermarketing@sap.com) for review prior to scheduling the certification call with [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). This includes:
+You need to send the complete landing page content to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). The CPM and marketing team review and approve the listing documents and send the confirmation to your marketing team. You need the this approval prior to scheduling the final certification call with [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). This includes:
 
 * App Center Listing Form ([Download](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
 * Listing Images (Please follow the image specification in the App Center Listing Form.)
 
-The App Center Marketing team will review your content for clarity, ease of reading, and consistency with the SAP Concur brand guidelines. The App Center Marketing team will return it with any comments or suggestions. Please plan for a 10 to 14-day turnaround window for the review process.
+The CPM and marketing team will review your content for clarity, ease of reading, and consistency with the SAP Concur brand guidelines. The CPM and marketing team will return it with any comments or suggestions. Please plan for a 10 to 14-day turnaround window for the review process.
 
 Once your content is finalized, your listing will be queued for launch on an agreed upon date. Your app must be certified prior to launch.
 

@@ -27,12 +27,16 @@ You may need to request access from your SAP Concur representative if you do not
 
     App Scopes|Required For
     ---|---
+    `document.tax.compliance.read`|Document Tax Compliance Event
     `events.topic.read`	|All Topics
-    `travel.itinerary.read`|Concur Itinerary Event
-    `travelrequest.write`	|Concur Request Event
     `expense.report.read` |Concur Expense Event
     `expense.report.readwrite` |Concur Expense Event
-    `user.provision.read`	|Identity Change Event
+    `FISVC`|Ready for Integration Events
+    `identity.user.event.read`|Identity Change Event
+    `spend.user.event.read`|Spend Change Event
+    `travel.itinerary.read`|Concur Itinerary Event
+    `travelrequest.write`	|Concur Request Event, Concur Travel Search Event
+    `travel.user.event.read`|Travel Change Event
     `user.provision.read`	|Concur User Provisioning Event
 
   The SAP Concur products that ESS supports are constantly evolving. Please refer to [the main Event Topics page](/event-topics/index.html) for a list of current available Event Topics.
@@ -163,8 +167,6 @@ Verify that:
 
 Based on SAP Concur product activity, you should now begin to see events coming through to your webhook! Sample Event payloads can be found within the respective [Topic](/event-topics/).
 
-Click the button below to download the ESS API collection in Postman.
-
-[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/31374415-d70ee8d6-46cb-40db-b3b9-fc54524f8b45?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D31374415-d70ee8d6-46cb-40db-b3b9-fc54524f8b45%26entityType%3Dcollection%26workspaceId%3D2a9e2e42-656a-474c-b78a-1b6be9959a2e)
-
-Or you may download the [JSON collection](/api-guides/postman/ESS%20API%20endpoints.postman_collection.zip).
+---
+### POSTMAN Sample Collection
+Download ESS API Postman JSON collection [here](/api-guides/postman/ESS%20API%20endpoints.postman_collection.zip).

@@ -38,7 +38,7 @@ GET /events/v4/topics
 To create a subscription you need to:
 
 * Know and have the sufficient access to the topic by having the correct scopes.
-* Get your receiving endpoint running, see the [endpoint requirements](/api-reference/common/ess/getting-started.html#endpoint-requirements).   
+* Get your receiving endpoint running, see the [endpoint requirements](/api-reference/ess/v4.event-subscription.html#endpoint-requirements-).   
 * Come up with unique name (id) of your subscription. Subscription names are globally unique, and you will get an error if the name is already in use.
 * Set filter to `.*` (regexp syntax), you can use it later to filter out unwanted types of events.
 

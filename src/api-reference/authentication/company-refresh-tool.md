@@ -36,11 +36,10 @@ The SAP Concur administrator must have the correct user role to access the Compa
 
 * Clients with Client Web Services who have requested access to the self-service tool for application management can generate a Client ID using the [OAuth 2.0 Application Management tool](./oauth2-app-mgmt-tool.html).
 * Clients who are using an integration between SAP Concur and another SAP product can get the App ID from the respective [integration setup guide](https://www.concurtraining.com/customers/tech_pubs/Integration/_CCC_SAP_Integrations.htm).
-* Clients who do not have Client Web Services or an SAP cross-product integration can contact SAP Concur support to obtain an App ID as needed.
 
     ![Product screen showing the Company Request dialog](./tool-images/refresh-token-submit.png)
 
-4. Click **Submit**. The **Company Request Token Successfully Created** dialog appears, displaying the **Company UUID** and the **Company Request Token**. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
+1. Click **Submit**. The **Company Request Token Successfully Created** dialog appears, displaying the **Company UUID** and the **Company Request Token**. Before clicking **OK**, record the **Company UUID** and the **Company Request Token**.
 
     ![Product screen showing the Company Request Token Successfully Created dialog](./tool-images/refresh-token-created.png)
 

@@ -3,7 +3,7 @@ title: SAP Concur App Center - User Connection Release Schedule
 layout: reference
 ---
 
-Last Update Jan 2024
+Last Update December 2024
 
 ## Listing Requirements
 
@@ -20,18 +20,17 @@ This table includes deadlines for submitting your Application Certification and 
 
 Please send any questions to Concur_AppCenterMarketing@sap.com.
 
-
 Release Date|App Certification & App Center Listing Form Submission Deadline
 ---|---
-January 19, 2024|December 22, 2023
-February 16, 2024|January 16, 2024
-March 15, 2024|February 16, 2024
-April 19, 2024|March 22, 2024
-May 17, 2024|April 19, 2024
-June 21, 2024|May 24, 2024
-July 19, 2024|June 21, 2024
-August 16, 2024|July 19, 2024
-September 20, 2024|August 23, 2024
-October 18, 2024|September 20, 2024
-November 15, 2024|October 18, 2024
-December 13, 2024|November 15, 2024
+January 22, 2026|December 18, 2025
+February 19, 2026|January 22, 2026
+March 12, 2026|February 12, 2026
+April 23, 2025|March 26, 2026
+May 14, 2026|April 23, 2026
+June 25, 2026|May 28, 2026
+July 23, 2026|June 25, 2026
+August 20, 2026|July 23, 2026
+September 24, 2026|August 27, 2026
+October 22, 2026|September 24, 2026
+November 19, 2026|October 22, 2026
+December 10, 2026|November 12, 2026
