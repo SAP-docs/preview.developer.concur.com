@@ -85,7 +85,7 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
 7. Navigate to https://github.com/SAP-docs/developer.concur.com.  Github should be showing a message indicating that `<your branch name>` had recent edits, along with a button to `Compare & pull request`.  Click the button to generate a PR and get it approved.
 
-8. Merge the PR (once approved) and delete the branch using the GitHub web UI
+8. Merge the PR (once approved) and delete the branch using the GitHub web UI.
 
 9. Delete the local branch on your laptop
 
