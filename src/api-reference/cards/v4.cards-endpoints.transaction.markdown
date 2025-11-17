@@ -226,3 +226,149 @@ Content-Type: application/json
   }
 ]
 ```
+
+## <a name="get-transactions-for-user"></a>Retrieve Card Transactions by User
+
+Endpoint to retrieve credit card transactions of a user. This includes corporate and business cards only. Personal card data is not exposed.
+
+By default only basic transaction data is returned. It is recommended to only request required options for optimal performance. It is possible to request multiple options in one call.
+
+### Scopes
+
+`cards.transaction.read` - Refer to [Scope Usage](./v4.cards-get-started.html#scope-usage) for full details.
+
+### URI
+
+```shell
+GET https://{datacenterURI}/cards/v4/users/{userId}/transactions
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`userId`|`string`|-|**Required** The unique identifier of the SAP Concur user.
+`status`|`array `|`string`|Filter transactions by status. Allowed values: `UN - Unassigned from Report`, `AS - Assigned to Report`
+`transactionDateFrom`|`date`|ISO 8601 YYYY-MM-DD|Filter transactions from this transaction date (inclusive). Defaults to 24 months ago; cannot be earlier than 24 months in the past.
+`transactionDateTo`|`date`|ISO 8601 YYYY-MM-DD|Filter transactions up to this transaction date (inclusive).
+`pageSize`|`integer`|-|Page size (max limit: 100); default: 100
+`pageToken`|`string`|-|Next page token as returned in a previous request.
+`sort`|`string`|-|Sort criteria. Allowed values: `transactionDate`, `lastModified`; default: `transactionDate`
+`order`|`string`|-|Sort order (`ASC - Ascending` or `DESC - Descending`); default: `DESC`
+`includeAddendumFor`|`array `|`string`| Option to additionally fetch addendum data. Allowed values: `*` / `all`, `carRental`, `fleet`, `lodging`, `purchase`, `travel`; default behavior: no addendum data is returned.
+`includeAddendumDetailsFor`|`array `|`string`| Option to additionally fetch addendum detail data. Allowed values: `*` / `all`, `fleet`, `lodging`, `purchase`, `travel`; default behavior: no addendum detail data is returned.
+
+
+### Payload
+
+* Request: none
+* Response: [Transaction List Response](./v4.cards-endpoints.schemas.html#schema-transaction-list-response)
+
+###  Headers
+
+* `concur-correlationid` is a specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122).
+
+###  HTTP Status Codes
+
+* 200 OK
+* 400 Bad Request
+* 401 Unauthorized
+* 403 Forbidden
+* 404 Not Found
+* 500 Internal Server Error
+* 503 Service Unavailable
+
+To learn more about response HTTP status codes for this API see [HTTP Status Codes](./v4.cards-endpoints.schemas.html#http-status-codes).
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/cards/v4/users/e48fda91-15c8-4670-afe5-6c76501813c9/transactions
+Accept: application/json
+Authorization: Bearer {token}
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+```
+
+#### Response
+
+```json
+{
+  "transactions": [
+    {
+      "type": "RPE",
+      "transactionAmount": {
+        "currencyCode": "USD",
+        "value": 405.1
+      },
+      "postedAmount": {
+        "currencyCode": "USD",
+        "value": 405.1
+      },
+      "transactionDate": "2018-08-17",
+      "postedDate": "2018-08-19",
+      "billedAmount": {
+        "currencyCode": "USD",
+        "value": 405.1
+      },
+      "description": "ACME Hotels,123-456-7890,Seattle",
+      "description2": null,
+      "description3": null,
+      "description4": null,
+      "description5": null,
+      "referenceNumber": "gWp859SqAX97DsIVt5aoZmSNh4y8iH6qc",
+      "processorReferenceNumber": null,
+      "acquirerReferenceNumber": null,
+      "merchantReferenceNumber": null,
+      "customerVatNumber": "",
+      "totalTaxAmount": null,
+      "taxes": [],
+      "statement": {
+        "referenceNumber": null,
+        "billingDate": null
+      },
+      "id": "d1c555dc",
+      "companyId": "5c381619-4980-4eac-bf63-d229ce0be23b",
+      "account": {
+        "id": "C2593B6F67E44F4587A812CDD4105FF7",
+        "lastSegment": "4801",
+        "paymentType": {
+          "id": "1024"
+        },
+        "cardProductType": "CORP"
+      },
+      "billingAccount": null,
+      "administrativeData": {
+        "status": "UN",
+        "processType": "REG",
+        "receiptImageId": null,
+        "integrationPartner": "BATCH",
+        "addendumType": null,
+        "lastModified": "2025-08-15T18:23:34.487+00:00",
+        "hasRichData": false,
+        "isDeletable": false
+      },
+      "merchant": {
+        "name": "ACME Corporation",
+        "categoryCode": "7011",
+        "vatNumber": "",
+        "address": {
+          "city": "Seattle",
+          "countryCode": "US",
+          "state": "WA",
+          "streetAddress": "1 Hotel Way",
+          "zip": "90001"
+        }
+      }
+    }
+  ],
+  "paging": {
+    "totalElements": 1,
+    "nextPageToken": null,
+    "page": 1,
+    "pageSize": 1,
+    "totalPages": 1
+  }
+}
+```
