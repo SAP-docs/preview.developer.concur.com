@@ -1,7 +1,7 @@
 # New Document
 
 ---
-ORCHESTRATED GET for User
+ORCHESTRATED GET for User Search
 #
 Draft
 layout: reference
@@ -9,11 +9,11 @@ layout: reference
 
 {EAC Only}
 
-The ORCHESTRATED GET API provides a single, streamlined endpoint that retrieves a user’s identity, spend, and travel attributes all at once—eliminating the need to manage multiple integrations. This reduces engineering effort, improves performance, and ensures more consistent data across your workflows. With one unified call, you get faster insights and a simpler, more reliable path to powering your customer experiences.
+The ORCHESTRATED GET API provides a single, streamlined endpoint that retrieves multiple users identity and spend attributes all at once—eliminating the need to manage multiple integrations. This reduces engineering effort, improves performance, and ensures more consistent data across your workflows. With one unified call, you get faster insights and a simpler, more reliable path to powering your customer experiences.
 
 ## <a name="limitations"></a>Limitations
 
-Access to this documentation does not provide access to the API. Data Freshness Notice -These APIs are not intended for real-time data retrieval. The data returned may be delayed and should not be expected to reflect live/current state. These endpoints are suitable for use cases that don't require immediate data freshness.
+Data Freshness Notice -These APIs are not intended for real-time data retrieval. The data returned may be delayed and should not be expected to reflect live/current state. These endpoints are suitable for use cases that don't require immediate data freshness.
 ### <a name="schema-one"></a>Multi-Valued Attribute Limitations
 #### Important Note: 
 The following operations are NOT supported within multi-valued attributes:
@@ -34,16 +34,16 @@ emails[type eq "work" AND value ne "test@company.com"]
 * Maximum count per request is 1000
 * The latency of search requests may vary based on filter complexity and result set size
 * The search endpoint does not support sorting of results
-* Due to indexing latency, search data and results may be up to 120 seconds behind real-time updates
-* For EAC- Travel Attributes are not retrievable
+* Due to indexing latency, search data and results may be up to a few minutes behind real-time updates
 
 
-## <a name="process-flow"></a>Process Flow
+
+
 
 
 ## <a name="products-editions"></a>Products and Editions
 
-Delete any unsupported products or editions.
+
 
 * Concur Expense Professional Edition
 * Concur Expense Standard Edition
@@ -58,19 +58,22 @@ Delete any unsupported products or editions.
 
 
 
-user.profile.search.read |Read and filter user profiles in Orchestrated GET Search API |https://us.api.concursolutions.com/profile/v4/Users/.search
+user.profile.search.read |Read and filter user profiles in Orchestrated GET Search API 
 
-## <a name="dependencies"></a>Dependencies
+## <a name="scope-usage"></a>URI
+```shell
+https://{datacenterURI}/profile/v4/Users/.search
+```
 
-Any other APIs that are required by the core process flow as documented in the diagram (Company Profile, User, List Item, other common APIs). Should include why they are required. Can include previous versions of this API if necessary.
 
 ## <a name="access-token-usage"></a>Access Token Usage
 
 All SCIM User Search requests must be using Company JWT authentication with required scope ( user.profile.search.read) and the results are scoped to the company associated with the JWT.
 
-## <a name="create-resource"></a>Endpoint Name 1 (Retrieve, Create, Replace, Update, Delete)
 
-Description for the endpoint here.
+## <a name="create-resource"></a>/Users/.search (Retrieve/Filter Users)
+
+Retrieve users by filtering on identity/spend user attributes based on [SCIM RFC 7644](https://datatracker.ietf.org/doc/html/rfc7644) 
 
 ### Scopes
 
@@ -118,7 +121,7 @@ Name|Type|Format|Description
 `urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:manager.value`|`string`||Manager UUID
 `urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:terminationDate`|`dateTime`||Termination Date
 
-### <a name="schema-one"></a>Spend Extension Fields
+### <a name="schema-one"></a>Spend User Extension Fields
 Name|Type|Format|Description
 ---|---|---|---
 `urn:ietf:params:scim:schemas:extension:spend:2.0:User:country`|`string`|-|Spend Country Code
@@ -187,7 +190,7 @@ curl -X POST "https://us.api.concursolutions.com/profile/v4/Users/.search" \
 ```
 
 ## <a name="schema"></a>Pagination
-The SCIM User Search endpoint supports cursor-based pagination. Use the count parameter to specify the number of results per page and the cursor parameter to navigate through pages.
+The SCIM User Search endpoint supports [cursor-based pagination](https://datatracker.ietf.org/doc/rfc9865/) . Use the count parameter to specify the number of results per page and the cursor parameter to navigate through pages.
 
 ### <a name="schema-one"></a>SCIM Filter Operators
 
@@ -371,40 +374,26 @@ Find users with verified work emails from specific domain
 ```shell
 "emails[type eq \"work\" and verified eq true and value ew \"@company.com\"]"
 ```
-### <a name="schema-one"></a>Complex Multi-Attribute Scenarios
-#### Employee Search Scenarios
 
-Find users with specific custom field values
+
+
+### <a name="schema-error"></a>Error Sample
 
 ```shell
-"urn:ietf:params:scim:schemas:extension:spend:2.0:User:customData[id eq \"custom1\" and value eq \"VIP\"]"
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:Error",
+    "urn:ietf:params:scim:api:messages:concur:2.0:Error"
+  ],
+  "status": "400",
+  "urn:ietf:params:scim:api:messages:concur:2.0:Error": {
+    "messages": [
+      {
+        "code": "INVALID_INPUT",
+        "message": "Invalid attribute path [:test]",
+        "type": "error"
+      }
+    ]
+  }
+}
 ```
-Find users with verified work emails from specific domain
-```shell
-"emails[type eq \"work\" and verified eq true and value ew \"@company.com\"]"
-```
-### <a name="schema-two"></a>Enterprise Extension Fields
-
-Name|Type|Format|Description
----|---|---|---
-`orderDetailsId`|`string`|-|A description for the key.
-`aKeyForEnum`|`number`|`enum`|The value must be one of these: `1`, `2` or `3`.
-
-
-
-### <a name="schema-two"></a>Spend Extension Fields
-
-Name|Type|Format|Description
----|---|---|---
-`orderDetailsId`|`string`|-|A description for the key.
-`aKeyForEnum`|`number`|`enum`|The value must be one of these: `1`, `2` or `3`.
-
-### <a name="schema-error"></a>Error
-
-Name|Type|Format|Description
----|---|---|---
-`errorCode`|`string`|-|**Required** Machine readable code associated with the error which is static and never localized. Examples: `dateTimeMissing`, `OutOfMem` and `invalidUser`. These could also be UUID4 (`a1d7bb3bb19348b0858687acc9e303ec`), number (`123456`) or a URI (`https://example.com/errors/invaliduser`) which ideally provides additional information when dereferenced. Whatever form is chosen it's worth noting contextual strings are helpful to developers reading the code.
-`errorMessage`|`string`|-|**Required** Message associated with the error.
-`dataPath`|`string`|-|Relative data path.
-`schemaPath`|`string`|-|Relative schema path.
-`errors`|`array`|[`error`](#schema-error)|An array of errors. Note: this points to this schema as errors can nest.
