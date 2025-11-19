@@ -21,13 +21,14 @@ Partners must have completed the migration to the Expense V4 APIs.
 
 ## SAP Concur Expense Configuration
 
-•	VAT must be configured for the supported VAT countries.
+* VAT must be configured for the supported VAT countries.
 
-•	Configure Expense Workflow with the Pending External Validation step.
+* Configure Expense Workflow with the Pending External Validation step.
 
 ### Scope Usage
 
 * [events.topic.read](/api-reference/ess/v4.event-subscription.html)
+
 * [expense.report.readwrite](/event-topics/expense/v4.expense-events.html#scope-usage)
 
 ## Development Environment
@@ -37,6 +38,7 @@ SAP Concur Certification Project Manager will prepare the development environmen
 ### Sandboxes and Accounts
 
 * You will have a sandbox on each of following SAP Concur data centers: US2 and EU2.
+
 * You will have 3 test accounts on each of following SAP Concur data centers: US2 and EU2.
 
 ### Development App
@@ -46,7 +48,9 @@ A development app will be created for you by your assigned Certification Project
 ### Production App
 
 * Once you complete the development app certification walkthrough, you will be provided with a production app `client_id` and `client_secret`.
+
 * You need to send the production app’s connect URL (redirect URL) to your Certification Project Manager before starting the development and testing of the production app.
+
 * The Certification Project Manager will provide you the deep link (URL) to the production app listing in the App Center. You will be able to access the app listing for development and testing purposes only. After your production app meets all the certification requirements and completes certification, the App Center marketing team will release it in the App Center and users in the allowed regions/countries will have access.
 
 ### App Center Flow - Connecting from SAP Concur App Center
@@ -62,6 +66,7 @@ Prior to connecting customers with the integration, you must create a subscripti
 For more information:
 
 * [Event Subscription Service](/api-reference/ess/v4.event-subscription.html)
+
 * [Concur Expense Report Events](/event-topics/expense/v4.expense-events.html#sample-events)
 
 ### Prerequisite
@@ -430,7 +435,9 @@ Host: us2.api.concursolutions.com
 
 **Response**
 
-200 OK image
+```
+200 OK
+```
 
 **Step 4**: GET Expense Entry Tax
 
@@ -507,21 +514,23 @@ Also, the administrator should be aware that some of the tasks described in this
 
 ### Procedure
 
-**Step 1**: Copy/Modify the workflow that will be used for the integration. Add a Pending External Validation step to the workflow as the last step. **Note:** Updates to an Expense Entry Tax data can only be made while an Expense Report is on a Pending External Validation step.
+**Step 1**: Copy/Modify the workflow that will be used for the integration. Add a Pending External Validation step to the workflow as the last step. 
 
-**Step Name**: Pending Tax Validation
-**Role**: External System
-**Initial Status**: Pending External Validation
-**Approval Actions**: Approve, Send Back to Employee
-**Step Code**: <unique identity for your integration, e.g. VAT>
+>NOTE: Updates to an Expense Entry Tax data can only be made while an Expense Report is on a Pending External Validation step.
 
-Image Workflows 1
-Image Workflows 1
+Step Name: Pending Tax Validation
+Role: External System
+Initial Status: Pending External Validation
+Approval Actions: Approve, Send Back to Employee
+Step Code: <unique identity for your integration, e.g. VAT>
 
+![Modify Workflow Step](./images-bi-direction-tax-integration/modify-workflow-1.png)
+
+![Workflows List](./images-bi-direction-tax-integration/workflows-list-2.png)
 
 **Step 2**: Apply Workflow to the Expense Policy.
 
-**Note:** To add existing customers to your Event Subscription, the App must be disconnected and reconnected. New customers connecting will automatically be added to your Event Subscription.
+> NOTE: To add existing customers to your Event Subscription, the App must be disconnected and reconnected. New customers connecting will automatically be added to your Event Subscription.
 
 ## SAP Concur Expense Tax Configuration
 
@@ -537,82 +546,81 @@ Also, the administrator should be aware that some of the tasks described in this
 
 ### Procedure
 
-**Step 1**: Navigate to the Tax Administration page. Click **New** to Create a Tax Configuration.
+**Step 1**: Navigate to the Tax Administration page. To Create a Tax Configuration, click **New**.
 
-Image - tax administration 1
+![Expense Tax Administration Page - Step 1](./images-bi-direction-tax-integration/tax-rate-create-3.png)
 
 **Step 2**: As an example, create a Tax Configuration
 
-**Tax Authority Name**: France VAT
-**Country/Region**: France
-**Tax Name**: FRVAT
+Tax Authority Name: France VAT
+Country/Region: France
+Tax Name: FRVAT
 
-Image - tax administration 2
+![Tax Configuration Example](./images-bi-direction-tax-integration/tax-rate-create-example-4.png)
 
 Click **Next**. 
 
 **Step 3**: Create the following for the Tax Rate:
 
-**Tax Rate Type Name**: EXT
-**Calculation Method**: Percentage
+Tax Rate Type Name: EXT
+Calculation Method: Percentage
 
-Image - tax administration 3
+![Creating a Tax Rate](./images-bi-direction-tax-integration/tax-rate-add-type-5.png)
 
 Click **Save**, then **Next**.
 
 **Step 4**: Add a Tax Rate
 
-**Rate Type**: EXT
-**Effective Date**: <Start Date of Integration>
+Rate Type: EXT
+Effective Date: <Start Date of Integration>
  
-Image - tax administration 4
+![Adding a Tax Rate](./images-bi-direction-tax-integration/tax-rate-config-6.png)
 
 Click **Save**, then **Done**.
 
-**Step 5**: Navigate to the Tax & Reclaim Groups Tab. Create a New Tax Reclaim Group.
+**Step 5**: Navigate to the Tax & Reclaim Groups Tab. Create a Tax Reclaim Group.
 
-Image - tax administration 5
+![Creating a Tax Reclaim Group](./images-bi-direction-tax-integration/tax-reclaim-tab-7.png)
 
 **Step 6**: For example, create a New Tax Reclaim Group for the France VAT.
 
-**Group Name**: All (Partner Name)
-**Effective Date**: <Start Date of Integration>
+Group Name: All (Partner Name)
+Effective Date: <Start Date of Integration>
 
-Image - tax administration 6
+![Creating a Tax Reclaim Group](./images-bi-direction-tax-integration/tax-reclaim-create-group-8.png)
 
 Click **Next**.
 
 **Step 7**:	Select All Expense Types.
 
-Image - tax administration 7
+![Selecting All Expense Types](./images-bi-direction-tax-integration/tax-reclaim-expense-types-9.png)
 
 Click **Next**.
 
 **Step 8**: Use the Default Tax Rate configuration (do not add a Tax Code)
 
-Image - tax administration 8
+![Default Tax Rate](./images-bi-direction-tax-integration/tax-reclaim-default-tax-rate-10.png)
 
 Click **Next**.
 
 **Step 9**: Use the Default Reclaim Rates configuration.
 
-
-Image - tax administration 9
+![Default Reclaim Rates Configuration](images-bi-direction-tax-integration/tax-reclaim-default-reclaim-rate-11.png)
 
 Click **Next**, then **Done**.
 
-**Step 10**: Navigate to the Employee Related Configurations Tab. Create a New Configuration. For example, France.
+**Step 10**: Navigate to the Employee Related Configurations tab. Create a New Configuration. For example, France.
 
-**Configuration**: France
-**Tax Data on User Form**: Hidden
+Configuration: France
+Tax Data on User Form: Hidden
 
-Image - tax administration 10
+![Employee-Related Configurations Tab](images-bi-direction-tax-integration/tax-admin-employee-12.png)
 
 Click **Save**.
 
 **Step 11**: Assign the configuration to France.
 
-Image - tax administration 11
+![Country Configurationalt](images-bi-direction-tax-integration/tax-admin-country-france-13.png)
 
 Click **Save**, then **Done**.
 
@@ -624,9 +632,8 @@ User creates and submits an Expense Report
 
 * Prior to Tax Update
 
-Image - tax administration 12a
+![Prior to Tax Update Example](images-bi-direction-tax-integration/expense-tax-update-14.png)
 
 * After Tax Update
 
-Image - tax administration 12b
-
+![After Tax Update Example](images-bi-direction-tax-integration/expense-tax-update-after-15.png)
