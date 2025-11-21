@@ -60,7 +60,7 @@ Name|Description|Endpoint
 
 All SCIM User Search requests must be using Company JWT authentication with required scope ( user.profile.search.read) and the results are scoped to the company associated with the JWT.
 
-## <a name="create-resource"></a>Retrieve/Filter Users: `/Users/.search` 
+## <a name="create-resource"></a>Retrieve/Filter Users: /Users/.search 
 
 Retrieve users by filtering on identity/spend user attributes based on [SCIM RFC 7644](https://datatracker.ietf.org/doc/html/rfc7644). 
 
