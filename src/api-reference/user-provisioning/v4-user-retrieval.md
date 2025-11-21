@@ -23,8 +23,6 @@ The following operations are NOT supported within multi-valued attributes.
 
 Complex filtering inside multi-valued attributes is not supported, as follows: 
 
-* Find users with specific custom field values
-
 ```shell
 // NOT SUPPORTED - NOT within multi-valued attribute
 emails[type eq "work" AND NOT (value sw "test.com")]
@@ -216,7 +214,9 @@ Operator Name|Operator Description
 `or`|Logical OR. At least one combined expression must be true.
 `not`|Logical NOT. The expression is true if the filtered expression is false.
 
-### <a name="use-cases-by-operator-schema-one"></a>Use Cases by operator
+### <a name="use-cases-by-operator-schema-one"></a>Use Cases by Operator
+
+Below are example filters for search request payloads, organized by common use cases.
 
 ####  1. Equal To (eq)
 
@@ -235,7 +235,7 @@ Operator Name|Operator Description
 * Find users with verified work email
 
 ```shell
-""emails[type eq \"work\" and verified eq true]""
+"emails[type eq \"work\" and verified eq true]"
 ```
 
 #### 2. Not Equal To (ne)
@@ -243,13 +243,13 @@ Operator Name|Operator Description
 * Find users not in a specific department
 
 ```shell
-""urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department ne \"Sales\""
+"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department ne \"Sales\""
 ```
 
 * Find inactive users
 
 ```shell
-""active ne true""
+"active ne true"
 ```
 
 #### 3. Contains (co)
@@ -281,7 +281,7 @@ Operator Name|Operator Description
 
 ```shell
 "emails.value ew \"@company.com\""
-"emails[value ew \"@company.com\"]
+"emails[value ew \"@company.com\"]"
 ```
 
 * Find users with work email addresses ending with specific domain
