@@ -1,0 +1,738 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "version" : "4.0",
+    "description" : "Retrieve user profiles.",
+    "title" : "User Retrieval"
+  },
+    "servers" : [ {
+    "url" : "https://{region}.api.concursolutions.com/profile/v4",
+    "description" : "User Retrieval V4 API URL",
+    "variables" : {
+      "region" : {
+        "description" : "The region of the API endpoint",
+        "default" : "us2",
+        "enum" : [ "us2", "eu2", "apj1" ]
+      }
+    }
+  } ],
+  "paths" : {
+    "/Users/.search/" : {
+      "post" : {
+        "tags" : [ "User Retrieval" ],
+        "summary" : "Retrieve Users via SCIM Filter",
+        "description" : "Retrieve Users based on specific criteria",
+        "responses" : {
+          "200" : {
+            "description" : "A Search Response",
+            "content" : {
+              "application/scim+json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody" : {
+          "description" : "Search Request",
+          "required" : true,
+          "content" : {
+            "application/scim+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "security" : [ {
+    "BearerAuth" : [ ]
+  } ],
+  "components" : {
+    "schemas" : {
+      "SearchRequest" : {
+        "type" : "object",
+        "required" : [ "schemas" ],
+        "properties" : {
+          "schemas" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "urn:ietf:params:scim:api:messages:2.0:SearchRequest" ]
+            }
+          },
+          "attributes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "description" : "A multi-valued list of attributes to return in the response"
+          },
+          "excludedAttributes" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            },
+            "description" : "A multi-valued list of attributes to exclude from the response"
+          },
+          "filter" : {
+            "type" : "string",
+            "description" : "The SCIM filter string to request a subset of resources"
+          },
+          "count" : {
+            "type" : "integer",
+            "minimum" : 0,
+            "maximum" : 1000,
+            "default" : 100,
+            "description" : "The desired maximum number of search results per page"
+          },
+          "cursor" : {
+            "type" : "string",
+            "description" : "The string value of the nextCursor attribute from a previous result page. The cursor value MUST be empty or omitted for the first request of a cursor-paginated query."
+          }
+        }
+      },
+      "SearchResponse" : {
+        "type" : "object",
+        "required" : [ "schemas", "totalResults", "itemsPerPage" ],
+        "properties" : {
+          "schemas" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "urn:ietf:params:scim:api:messages:2.0:ListResponse" ]
+            }
+          },
+          "totalResults" : {
+            "type" : "integer",
+            "minimum" : 0,
+            "description" : "The total number of results returned by the list or query operation"
+          },
+          "itemsPerPage" : {
+            "type" : "integer",
+            "minimum" : 0,
+            "description" : "The number of resources returned in a list response page. REQUIRED when partial results are returned due to pagination."
+          },
+          "Resources" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/User"
+            },
+            "description" : "A multi-valued list of user profiles"
+          },
+          "nextCursor" : {
+            "type" : "string",
+            "description" : "The cursor string to retrieve the next page of results. REQUIRED only when the next page is available, omitted from a response only to indicate that there are no more result pages."
+          }
+        }
+      },
+      "User" : {
+        "type" : "object",
+        "properties" : {
+          "entitlements" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "Expense", "Invoice", "Locate", "Request", "Travel", "Analytics", "Unified Analytics" ]
+            },
+            "description" : "The features enabled for the user"
+          },
+          "emergencyContacts" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "country" : {
+                  "type" : "string",
+                  "description" : "A two-letter country code defined in ISO 3166-1 alpha-2"
+                },
+                "phones" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "description" : "Phone numbers of the contact"
+                },
+                "relationship" : {
+                  "type" : "string",
+                  "enum" : [ "Spouse", "Brother", "Parent", "Sister", "Life Partner", "Other" ],
+                  "description" : "Emergency contact relationship."
+                },
+                "name" : {
+                  "type" : "string",
+                  "description" : "Contact name."
+                },
+                "postalCode" : {
+                  "type" : "string",
+                  "description" : "The zip code or postal code."
+                },
+                "region" : {
+                  "type" : "string",
+                  "description" : "The state or region."
+                },
+                "locality" : {
+                  "type" : "string",
+                  "description" : "The city or locality."
+                },
+                "streetAddress" : {
+                  "type" : "string",
+                  "description" : "The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information.  This attribute MAY contain newlines."
+                },
+                "emails" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "description" : "Emails of the contact"
+                }
+              },
+              "description" : "Emergency Contact information for the User."
+            },
+            "description" : "Emergency Contact information for the User."
+          },
+          "urn:ietf:params:scim:schemas:extension:sap:2.0:User" : {
+            "type" : "object",
+            "properties" : {
+              "userUuid" : {
+                "type" : "string",
+                "description" : "User's SAP Global ID (This is not Concur User UUID)"
+              }
+            }
+          },
+          "preferredLanguage" : {
+            "type" : "string",
+            "description" : "Indicates the User's preferred written or spoken language.  Generally used for selecting a localized user interface"
+          },
+          "localeOverrides" : {
+            "type" : "object",
+            "properties" : {
+              "preferenceCurrencySymbolLocation" : {
+                "type" : "string",
+                "enum" : [ "BeforeAmount", "AfterAmount" ],
+                "description" : "preferred currency symbol location for the user"
+              },
+              "preferenceNumberFormat" : {
+                "type" : "string",
+                "enum" : [ "1,000.00", "1.000,00", "1 000,00", "1'000.00", "1'000,00" ],
+                "description" : "preferred number format for the user"
+              },
+              "preferenceDistance" : {
+                "type" : "string",
+                "enum" : [ "mile", "km" ],
+                "description" : "preferred distance metric"
+              },
+              "preferenceNegativeCurrencyFormat" : {
+                "type" : "string",
+                "enum" : [ "-100", "(100)" ],
+                "description" : "preferred negative currency format for the user"
+              },
+              "preferenceEndDayViewHour" : {
+                "type" : "integer",
+                "description" : "preferred hour setting for the end of day, 0-23"
+              },
+              "displayNameFormat" : {
+                "type" : "object",
+                "properties" : {
+                  "withNickName" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    },
+                    "description" : "preferred name format template for when nickName is defined"
+                  },
+                  "withoutNickName" : {
+                    "type" : "array",
+                    "items" : {
+                      "type" : "string"
+                    },
+                    "description" : "preferred name format template for when nickName is not defined"
+                  }
+                },
+                "description" : "templates containing arrays of name field keys used for formatting users' names"
+              },
+              "preferenceHourMinuteSeparator" : {
+                "type" : "string",
+                "enum" : [ ":", "." ],
+                "description" : "preferred separator between hour and minute"
+              },
+              "preferenceFirstDayOfWeek" : {
+                "type" : "string",
+                "enum" : [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" ],
+                "description" : "preferred first day of the week for the user"
+              },
+              "preferenceDateFormat" : {
+                "type" : "string",
+                "enum" : [ "mm/dd/yyyy", "mm.dd.yyyy", "mm-dd-yyyy", "dd/mm/yyyy", "dd.mm.yyyy", "dd-mm-yyyy", "yyyy/mm/dd", "yyyy.mm.dd", "yyyy-mm-dd" ],
+                "description" : "preferred date format for the user"
+              },
+              "preferenceNegativeNumberFormat" : {
+                "type" : "string",
+                "enum" : [ "-100", "(100)" ],
+                "description" : "preferred negative number format for the user"
+              },
+              "preference24Hour" : {
+                "type" : "string",
+                "enum" : [ "H:mm AM/PM", "hh:mm" ],
+                "description" : "preferred time format for the user"
+              },
+              "preferenceStartDayViewHour" : {
+                "type" : "integer",
+                "description" : "preferred hour setting for the start of day, 0-23"
+              },
+              "preferenceDefaultCalView" : {
+                "type" : "string",
+                "enum" : [ "day", "week", "month" ],
+                "description" : "preferred default calendar view for the user"
+              }
+            },
+            "description" : "Support for users who want to override locale settings"
+          },
+          "timezone" : {
+            "type" : "string",
+            "description" : "The User's time zone in the 'Olson' time zone database format, e.g., 'America/Los_Angeles'."
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "The name of the User, suitable for display to end-users."
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "Unique identifier for the user - a uuid"
+          },
+          "dateOfBirth" : {
+            "type" : "string",
+            "description" : "The user's date of birth, in YYYY-MM-DD format"
+          },
+          "name" : {
+            "type" : "object",
+            "properties" : {
+              "middleInitial" : {
+                "type" : "string",
+                "description" : "middle initial, if the user has a middle name"
+              },
+              "honorificPrefix" : {
+                "type" : "string",
+                "description" : "The honorific prefix(es) of the User, or title in most Western languages (e.g., 'Ms.' given the full name 'Ms. Barbara J Jensen, III')."
+              },
+              "familyName" : {
+                "type" : "string",
+                "description" : "The family name of the User, or last name in most Western languages (e.g., 'Jensen' given the full name 'Ms. Barbara J Jensen, III')."
+              },
+              "middleName" : {
+                "type" : "string",
+                "description" : "The middle name(s) of the User (e.g., 'Jane' given the full name 'Ms. Barbara J Jensen, III')."
+              },
+              "givenName" : {
+                "type" : "string",
+                "description" : "The given name of the User, or first name in most Western languages (e.g., 'Barbara' given the full name 'Ms. Barbara J Jensen, III')."
+              },
+              "familyNamePrefix" : {
+                "type" : "string",
+                "description" : "The family name prefix of the User (e.g. 'van' given the full name 'Vincent van Gogh')"
+              },
+              "formatted" : {
+                "type" : "string",
+                "description" : "The full name, formatted for display (e.g., 'Jensen, Barbara Jane')."
+              },
+              "honorificSuffix" : {
+                "type" : "string",
+                "description" : "The honorific suffix(es) of the User, or suffix in most Western languages (e.g., 'III' given the full name 'Ms. Barbara J Jensen, III')."
+              },
+              "academicTitle" : {
+                "type" : "string",
+                "enum" : [ "Dr.", "Doctor", "Prof.", "Professor", "Prof. Dr.", "Professor Doctor", "B.A.", "Bachelor of Arts", "MBA", "Master of Business Administration", "Ph.D", "Doctor of Philosophy" ],
+                "description" : "Title signifying level of academic achievement"
+              },
+              "legalName" : {
+                "type" : "string",
+                "description" : "The legal name of the User (e.g., 'Jane' given the full name 'Ms. Barbara J Jensen, III')."
+              }
+            },
+            "description" : "The user's name"
+          },
+          "locale" : {
+            "type" : "string",
+            "description" : "Used to indicate the User's default location for purposes of localizing items such as currency, date time format, or numerical representations."
+          },
+          "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User" : {
+            "type" : "object",
+            "properties" : {
+              "department" : {
+                "type" : "string",
+                "description" : "Client supplied department name"
+              },
+              "startDate" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "Start Date, in YYYY-MM-DD'T'hh:mm:ss'Z' format. Date range is from 1900-01-01 to 2079-06-06."
+              },
+              "companyId" : {
+                "type" : "string",
+                "description" : "Concur ID of the company"
+              },
+              "leavesOfAbsence" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "startDate" : {
+                      "type" : "string",
+                      "description" : "First date of the leave of absence"
+                    },
+                    "endDate" : {
+                      "type" : "string",
+                      "description" : "Last date of the leave of absence"
+                    },
+                    "type" : {
+                      "type" : "string",
+                      "enum" : [ "voluntary", "mandatory" ],
+                      "description" : "Type of the leave of absence"
+                    }
+                  },
+                  "description" : "Leaves of absence for the user"
+                },
+                "description" : "Leaves of absence for the user"
+              },
+              "division" : {
+                "type" : "string",
+                "description" : "Client supplied division name"
+              },
+              "employeeNumber" : {
+                "type" : "string",
+                "description" : "Client supplied employee's number within the company, unique for the company"
+              },
+              "manager" : {
+                "type" : "object",
+                "properties" : {
+                  "value" : {
+                    "type" : "string",
+                    "description" : "The referenced user's UUID"
+                  },
+                  "$ref" : {
+                    "type" : "string",
+                    "description" : "The URI of the SCIM resource representing the referenced user."
+                  },
+                  "displayName" : {
+                    "type" : "string",
+                    "description" : "The referenced user's display name"
+                  },
+                  "employeeNumber" : {
+                    "type" : "string",
+                    "description" : "The referenced user's employee number"
+                  }
+                },
+                "description" : "The manager of this user"
+              },
+              "organization" : {
+                "type" : "string",
+                "description" : "Company name"
+              },
+              "costCenter" : {
+                "type" : "string",
+                "description" : "employee cost center for product"
+              },
+              "terminationDate" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "Termination Date, in YYYY-MM-DD'T'hh:mm:ss'Z' format. If the employee is terminated, this can also be used to calculate the data retention period. Date range is from 1900-01-01 to 2079-06-06."
+              }
+            }
+          },
+          "userName" : {
+            "type" : "string",
+            "description" : "The name that can be used to login to CTE"
+          },
+          "addresses" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "streetAddress" : {
+                  "type" : "string",
+                  "description" : "The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information.  This attribute MAY contain newlines."
+                },
+                "locality" : {
+                  "type" : "string",
+                  "description" : "The city or locality."
+                },
+                "region" : {
+                  "type" : "string",
+                  "description" : "The state or region."
+                },
+                "country" : {
+                  "type" : "string",
+                  "description" : "A two-letter country code defined in ISO 3166-1 alpha-2"
+                },
+                "postalCode" : {
+                  "type" : "string",
+                  "description" : "The zip code or postal code."
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "work", "home", "other", "billing", "bank", "shipping" ],
+                  "description" : "A label indicating the function of the address, e.g., 'work' or 'home'."
+                }
+              },
+              "description" : "Physical mailing addresses for the User."
+            },
+            "description" : "Physical mailing addresses for the User."
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "user's job title in the company"
+          },
+          "meta" : {
+            "type" : "object",
+            "properties" : {
+              "created" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "Timestamp of creation"
+              },
+              "lastModified" : {
+                "type" : "string",
+                "format" : "date-time",
+                "description" : "Timestamp of change"
+              },
+              "resourceType" : {
+                "type" : "string",
+                "description" : "Type of schema"
+              },
+              "version" : {
+                "type" : "integer",
+                "description" : "Number of changes"
+              },
+              "location" : {
+                "type" : "string",
+                "description" : "URL of resource"
+              }
+            },
+            "description" : "Read only information about the User"
+          },
+          "urn:ietf:params:scim:schemas:extension:spend:2.0:User" : {
+            "type" : "object",
+            "properties" : {
+              "reimbursementCurrency" : {
+                "type" : "string",
+                "description" : "Valid three digit or letter currency code in the list of system reimbursement currencies"
+              },
+              "reimbursementType" : {
+                "type" : "object",
+                "enum" : [ "OTHER", "CONCUR_PAY", "ADP_PAYROLL", "ACCOUNTS_PAYABLE" ],
+                "description" : "The reimbursement type for the user"
+              },
+              "country" : {
+                "type" : "string",
+                "description" : "Valid ISO 3166 country code"
+              },
+              "customData" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "href" : {
+                      "type" : "string",
+                      "description" : "The list service endpoint to fetch the specific item information."
+                    },
+                    "id" : {
+                      "type" : "string",
+                      "description" : "custom1 - custom22, orgUnit1 - orgUnit6"
+                    },
+                    "syncGuid" : {
+                      "type" : "string",
+                      "description" : "The sync_guid value of the custom field"
+                    },
+                    "value" : {
+                      "type" : "string",
+                      "description" : "Value of the custom field - For list = List Item Code"
+                    }
+                  },
+                  "description" : "The Custom Data associated with this user"
+                },
+                "description" : "The Custom Data associated with this user"
+              },
+              "biManager" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "displayName" : {
+                      "type" : "string",
+                      "description" : "The username for the user"
+                    },
+                    "employeeNumber" : {
+                      "type" : "string",
+                      "description" : "The employee number for the user"
+                    },
+                    "$ref" : {
+                      "type" : "string",
+                      "description" : "The URI reference for the user"
+                    },
+                    "value" : {
+                      "type" : "object",
+                      "description" : "The internal UUID identifier for the user"
+                    }
+                  },
+                  "description" : "The UUID of the Reporting Manager"
+                },
+                "description" : "The UUID of the Reporting Manager"
+              },
+              "officeLocationCountry" : {
+                "type" : "string",
+                "description" : "Country/Region. Valid ISO 3166 country code of office location. Length: 2 characters"
+              },
+              "officeLocationStateProvince" : {
+                "type" : "string",
+                "description" : "Valid ISO sub country code of office location. Example: WA. Length: 2 characters"
+              },
+              "cashAdvanceAccountCode" : {
+                "type" : "string",
+                "description" : "Valid cash advance account code"
+              },
+              "testEmployee" : {
+                "type" : "boolean",
+                "description" : "A Boolean value indicating whether the User is a test user. Can't be modified after the user is created. Can only be set at creation."
+              },
+              "ledgerCode" : {
+                "type" : "string",
+                "description" : "Ledger code to associate with the user"
+              },
+              "locale" : {
+                "type" : "string",
+                "description" : "Valid locale from the list of configured locales as defined in [RFC5646]"
+              },
+              "officeLocationCity" : {
+                "type" : "string",
+                "description" : "City of office location. Example: Redmond"
+              },
+              "stateProvince" : {
+                "type" : "string",
+                "description" : "Valid ISO sub country code"
+              },
+              "nonEmployee" : {
+                "type" : "boolean",
+                "description" : "A Boolean value indicating whether the User is a NonEmployee"
+              },
+              "budgetCountryCode" : {
+                "type" : "string",
+                "description" : "Valid ISO 3166 country code for Budget"
+              },
+              "biHierarchy" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "object",
+                  "properties" : {
+                    "code" : {
+                      "type" : "string",
+                      "description" : "The long code of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                    },
+                    "href" : {
+                      "type" : "string",
+                      "description" : "The URI to the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                    },
+                    "syncGuid" : {
+                      "type" : "string",
+                      "description" : "The sync guid of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                    }
+                  },
+                  "description" : "The object containing the long code and the sync guid of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+                },
+                "description" : "The object containing the long code and the sync guid of the last list item in Reporting Hierarchy. This is only for UAC(Unified Analytics of Concur)."
+              }
+            }
+          },
+          "emails" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "value" : {
+                  "type" : "string",
+                  "description" : "Email address value"
+                },
+                "verified" : {
+                  "type" : "boolean",
+                  "description" : "flag to note which email has been verified by the user."
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "work", "home", "work2", "other", "other2" ],
+                  "description" : "A label indicating the function of the address, e.g., 'work' or 'home'."
+                },
+                "notifications" : {
+                  "type" : "boolean",
+                  "description" : "Notifications opt-in for emails"
+                }
+              },
+              "description" : "Email addresses for the user."
+            },
+            "description" : "Email addresses for the user."
+          },
+          "active" : {
+            "type" : "boolean",
+            "description" : "A Boolean value indicating whether the User is active."
+          },
+          "nickName" : {
+            "type" : "string",
+            "description" : "The casual way to address the user in real life, e.g., 'Bob' or 'Bobby' instead of 'Robert'.  This attribute SHOULD NOT be used to represent a User's username (e.g., 'bjensen' or 'mpepperidge')."
+          },
+          "phoneNumbers" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "issuingCountry" : {
+                  "type" : "string",
+                  "description" : "Issuing country for mobile devices (type=mobile); two-letter code per ISO 3166-1 alpha-2"
+                },
+                "primary" : {
+                  "type" : "boolean",
+                  "description" : "Primary device for mobile devices (type=mobile)"
+                },
+                "value" : {
+                  "type" : "string",
+                  "description" : "Phone number value"
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "work", "home", "mobile", "fax", "pager", "other", "work2" ],
+                  "description" : "A label indicating the phone number's function, e.g., 'work', 'home'."
+                },
+                "notifications" : {
+                  "type" : "boolean",
+                  "description" : "LNA Opt-in for mobile devices (type=mobile)"
+                },
+                "workExtension" : {
+                  "type" : "string",
+                  "description" : "Extension for work phone (type=work)"
+                },
+                "display" : {
+                  "type" : "string",
+                  "description" : "Phone number canonicalized to RFC3966 format"
+                }
+              },
+              "description" : "Phone numbers for the user"
+            },
+            "description" : "Phone numbers for the user"
+          },
+          "externalId" : {
+            "type" : "string",
+            "description" : "User identifier from the provisioning client"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "BearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT",
+        "description" : "Bearer token authentication. Use format: Bearer <token>"
+      }
+    }
+  },
+  "x-sap-shortText" : "Provides user profile retrieval"
+}
