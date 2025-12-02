@@ -60,10 +60,6 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
 1. Go to your `pullmerge` copy of the `developer.concur.com` repository
 
-        cd ~/pullmerges/developer.concur.com
-
-* Mac Users
-
         cd pullmerges/developer.concur.com
 
 2. Ensure you're on `main` branch, and it's up to date
