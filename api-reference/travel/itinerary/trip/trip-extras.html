@@ -1317,12 +1317,12 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">travel.trips.read</code></td>
       <td>Read only access to trip information</td>
-      <td>Append Trip Extras Booking, Cancel Trip Extras Booking</td>
+      <td>Append Trip Extras Booking, Update Trip Extras Booking, Cancel Trip Extras Booking</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">travel.trips.booking.write</code></td>
       <td>Read and write access to add, modify and cancel bookings</td>
-      <td>Append Trip Extras Booking, Cancel Trip Extras Booking</td>
+      <td>Append Trip Extras Booking, Update Trip Extras Booking, Cancel Trip Extras Booking</td>
     </tr>
   </tbody>
 </table>
@@ -1374,8 +1374,8 @@
 <h3 id="payloads">Payloads</h3>
 
 <ul>
-  <li>Request: <a href="#append-trip-extras-booking-request-schema">Append Trip Extras Booking Request</a></li>
-  <li>Response: <a href="#append-trip-extras-booking-response-schema">Append Trip Extras Booking Response</a></li>
+  <li>Request: <a href="#update-append-trip-extras-booking-request-schema">Update or Append Trip Extras Booking Request</a></li>
+  <li>Response: <a href="#update-append-trip-extras-booking-response-schema">Update or Append Trip Extras Booking Response</a></li>
 </ul>
 
 <h3 id="examples">Examples</h3>
@@ -1390,8 +1390,13 @@ Content-Type: application/json
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"extRef"</span><span class="p">:</span><span class="w"> </span><span class="s2">"48fb4cd3-2ef6-4479-bea1-7c92721b988c"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678-1234-5678-1234-567812345678"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"initiator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"booking"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ground"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-25 18:00:00.000"</span><span class="p">,</span><span class="w">
+        </span><span class="p">},</span><span class="w">
         </span><span class="nl">"partner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Partner Name"</span><span class="p">,</span><span class="w">
             </span><span class="nl">"logo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/partner-logo.jpg"</span><span class="w">
@@ -1467,11 +1472,11 @@ Date: Mon, 29 Sep 2025 19:46:57 GMT
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>Check out <a href="#error-reponses">Error Responses</a>.</p>
+<p>Check out <a href="#error-schema">Error Responses</a>.</p>
 
-<h2 id="cancel-trip-extras-booking"><a name="cancel-trip-extras-booking"></a>Cancel Trip Extras Booking</h2>
+<h2 id="update-trip-extras-booking"><a name="update-trip-extras-booking"></a>Update Trip Extras Booking</h2>
 
-<p>Cancel the extras booking.</p>
+<p>Update an existing extras booking content to an existing trip.</p>
 
 <h3 id="scopes-1">Scopes</h3>
 
@@ -1479,10 +1484,159 @@ Date: Mon, 29 Sep 2025 19:46:57 GMT
 
 <h3 id="uri-1">URI</h3>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/travel/v5/trips/<span class="o">{</span>trip_uuid<span class="o">}</span>/trip-extras/<span class="o">{</span>booking_uuid<span class="o">}</span>/cancel
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/travel/v5/trips/<span class="o">{</span>trip_uuid<span class="o">}</span>/trip-extras/<span class="o">{</span>booking_uuid<span class="o">}</span>
 </code></pre></div></div>
 
 <h3 id="parameters-1">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">region</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>: Region of the trip. Supported values: <code class="language-plaintext highlighter-rouge">us2</code>, <code class="language-plaintext highlighter-rouge">eu2</code>, <code class="language-plaintext highlighter-rouge">apj1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">trip_uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>: The trip ID.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">booking_uuid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>: The booking ID.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payloads-1">Payloads</h3>
+
+<ul>
+  <li>Request: <a href="#update-append-trip-extras-booking-request-schema">Update or Append Trip Extras Booking Request</a></li>
+  <li>Response: <a href="#update-append-trip-extras-booking-response-schema">Update or Append Trip Extras Booking Response</a></li>
+</ul>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request-1">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras/abcdef12-3456-7890-abcd-ef1234567890
+Authorization: Bearer <span class="o">{</span>access_token<span class="o">}</span>
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"extRef"</span><span class="p">:</span><span class="w"> </span><span class="s2">"48fb4cd3-2ef6-4479-bea1-7c92721b988c"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"userId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345678-1234-5678-1234-567812345678"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"initiator"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"booking"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ground"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-25 18:00:00.000"</span><span class="p">,</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"partner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Partner Name"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"logo"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/partner-logo.jpg"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"vendor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Vendor Name"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"phoneNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1-800-555-1212"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foo@bar.com"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://partner-url.com"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"termsAndConditions"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Terms and conditions apply."</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"cancellationPolicy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Free cancellation up to 24 hours before pickup."</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"vendorConfirmation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ABC123456"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"partnerConfirmation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XYZ789012"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"vehicle"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Luxury Sedan"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"acrissCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FDMR"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"imageUrl"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/vehicle-image.jpg"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"seatingCapacity"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"luggageCapacity"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"pickup"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"datetime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-25T16:30:00"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"datetimeUtc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-25T20:30:00Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"locationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Marriott Hotel"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"address1"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123 Main St"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"localityName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"New York"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"postalCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10017"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"geolocation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">40.7128</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-74.006</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"dropoff"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"datetime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-25T18:00:00"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"datetimeUtc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-07-25T22:00:00Z"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"locationName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JFK Airport"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"iataCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JFK"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"stops"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"iataCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LGA"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"price"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"totalAmount"</span><span class="p">:</span><span class="w"> </span><span class="mf">135.96</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"hourlyRate"</span><span class="p">:</span><span class="w"> </span><span class="mf">45.00</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"estimatedDuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT3H30M"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"minimumDuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PT45M"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-1">Response</h4>
+
+<p>Trip Extras API responds with <strong>202 Accepted</strong> and a JSON object containing the UUID of the updated trip extras booking; meanwhile, the booking is being processed.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 202 Accepted
+Content-Type: application/json<span class="p">;</span> <span class="nv">charset</span><span class="o">=</span>utf-8
+Content-Length: 55
+Date: Mon, 29 Sep 2025 19:46:57 GMT
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"bookingUuid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"abcdef12-3456-7890-abcd-ef1234567890"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Check out <a href="#error-schema">Error Responses</a>.</p>
+
+<h2 id="cancel-trip-extras-booking"><a name="cancel-trip-extras-booking"></a>Cancel Trip Extras Booking</h2>
+
+<p>Cancel the extras booking.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">travel.trips.read</code>, <code class="language-plaintext highlighter-rouge">travel.trips.booking.write</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-2">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/travel/v5/trips/<span class="o">{</span>trip_uuid<span class="o">}</span>/trip-extras/<span class="o">{</span>booking_uuid<span class="o">}</span>/cancel
+</code></pre></div></div>
+
+<h3 id="parameters-2">Parameters</h3>
 
 <table>
   <thead>
@@ -1515,16 +1669,16 @@ Date: Mon, 29 Sep 2025 19:46:57 GMT
   </tbody>
 </table>
 
-<h3 id="payloads-1">Payloads</h3>
+<h3 id="payloads-2">Payloads</h3>
 
 <ul>
   <li>Request: <a href="#cancel-trip-extras-booking-request-schema">Cancel Trip Extras Booking Request</a></li>
   <li>Response: None</li>
 </ul>
 
-<h3 id="examples-1">Examples</h3>
+<h3 id="examples-2">Examples</h3>
 
-<h4 id="request-1">Request</h4>
+<h4 id="request-2">Request</h4>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras/86d4dd26-e032-4e02-982b-04032de329f6/cancel
 Authorization: Bearer <span class="o">{</span>access_token<span class="o">}</span>
@@ -1537,7 +1691,7 @@ Content-Type: application/json
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="response-1">Response</h4>
+<h4 id="response-2">Response</h4>
 
 <p>The API responds with 204 No Content when the cancellation has been successful.</p>
 
@@ -1546,7 +1700,7 @@ Content-Type: application/json
 
 <h2 id="-schema"><a name="schema"></a> Schema</h2>
 
-<h3 id="append-trip-extras-booking-request"><a name="append-trip-extras-booking-request-schema"></a>Append Trip Extras Booking Request</h3>
+<h3 id="update-or-append-trip-extras-booking-request"><a name="update-append-trip-extras-booking-request-schema"></a>Update or Append Trip Extras Booking Request</h3>
 
 <table>
   <thead>
@@ -1569,6 +1723,12 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>GUID</td>
       <td><strong>Required</strong>. UUID of the user to whom the trip extras is being appended.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">initiator</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Enum: <code class="language-plaintext highlighter-rouge">"user"</code> <code class="language-plaintext highlighter-rouge">"agent"</code> <code class="language-plaintext highlighter-rouge">"supplier"</code></td>
+      <td><strong>Required</strong>. Type of initiator. Indicates who initiated the booking request.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">booking</code></td>
@@ -1598,6 +1758,12 @@ Content-Type: application/json
       <td><strong>Required</strong>. Type of partner reservation (e.g., <code class="language-plaintext highlighter-rouge">ground</code>.)</td>
     </tr>
     <tr>
+      <td><code class="language-plaintext highlighter-rouge">metadata</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#metadata-schema">Metadata Schema</a></td>
+      <td><strong>Required</strong>. Detailed information in <a href="#metadata-schema">Metadata</a>.</td>
+    </tr>
+    <tr>
       <td><code class="language-plaintext highlighter-rouge">partner</code></td>
       <td><code class="language-plaintext highlighter-rouge">object</code></td>
       <td><a href="#partner-schema">Partner Schema</a></td>
@@ -1614,6 +1780,35 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">object</code></td>
       <td><a href="#groundbooking-details-schema">Details Schema</a></td>
       <td><strong>Required</strong>. Detailed information in <a href="#groundbooking-details-schema">GroundBooking Details</a>.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="-metadata"><a name="metadata-schema"></a> Metadata</h3>
+
+<p>Additional metadata related to the booking.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">version</code></td>
+      <td><code class="language-plaintext highlighter-rouge">int</code></td>
+      <td>-</td>
+      <td><strong>Required</strong>. Version of the booking. Changes with an older version are stale.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string&lt;date-time&gt;</code></td>
+      <td>-</td>
+      <td>Timestamp of the changes in ISO 8601 format.</td>
     </tr>
   </tbody>
 </table>
@@ -1958,7 +2153,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong></td>
+      <td>-</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">country</code></td>
@@ -2041,7 +2236,7 @@ Content-Type: application/json
   </tbody>
 </table>
 
-<h3 id="append-trip-extras-booking-response"><a name="append-trip-extras-booking-response-schema"></a>Append Trip Extras Booking Response</h3>
+<h3 id="update-or-append-trip-extras-booking-response"><a name="update-append-trip-extras-booking-response-schema"></a>Update or Append Trip Extras Booking Response</h3>
 
 <table>
   <thead>
@@ -2057,7 +2252,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">bookingUuid</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>GUID</td>
-      <td>UUID of the created trip extras booking.</td>
+      <td>UUID of the created or updated trip extras booking.</td>
     </tr>
   </tbody>
 </table>
