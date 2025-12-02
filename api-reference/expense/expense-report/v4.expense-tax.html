@@ -1323,7 +1323,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">expense.report.tax.readwrite</code></td>
       <td>Read and Write information about tax details of an expense on a report.</td>
-      <td>GET</td>
+      <td>GET/PATCH</td>
     </tr>
   </tbody>
 </table>
@@ -1499,6 +1499,109 @@
 <span class="o">}</span>
 </code></pre></div></div>
 
+<h2 id="updates-the-tax-details-of-a-specific-expense-in-a-submitted-report-">Updates the Tax Details of a Specific Expense in a Submitted Report <a name="update-tax-in-expense-entry-in-a-submitted-report"></a></h2>
+
+<p>Updates the tax details and custom data of a specified expense on a submitted report. When calling this endpoint only Company JWT authentication is
+allowed. The fields that can be updated are <code class="language-plaintext highlighter-rouge">taxTransactionAmount</code>,  <code class="language-plaintext highlighter-rouge">reclaimTransactionAmount</code>, <code class="language-plaintext highlighter-rouge">reclaimCode</code>, <code class="language-plaintext highlighter-rouge">customData</code>, and<code class="language-plaintext highlighter-rouge">taxCode</code>.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">expense.report.tax.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</li>
+</ul>
+
+<h3 id="uri-1">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/expensereports/v4/reports/<span class="o">{</span>reportId<span class="o">}</span>/expenses/<span class="o">{</span>expenseId<span class="o">}</span>/tax/<span class="o">{</span>taxAuthorityId<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reportId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the report to which this expense entry belongs</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">expenseId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the expense entry that is being patched.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxAuthorityId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the tax associated with an expense entry.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.5">RFC 7231 Accept-Language</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.2.2">RFC 7231 Content-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7232#section-3.3">RFC 7232 If-Modified-Since</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.4">RFC 7231 Accept-Encoding</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> - Bearer Token that identifies the caller.
+This is the Company or User access token.</li>
+</ul>
+
+<h4 id="rest-design-specification">REST Design Specification</h4>
+
+<p>PATCH operations in Expense Reports v4 conform to the JSON Merge Patch specification:</p>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7386">RFC 7386 Authorization - JSON Merge Patch</a></li>
+</ul>
+
+<h3 id="payloads-1">Payloads</h3>
+
+<ul>
+  <li>Request: <a href="#update-report-expense-tax-schema">Patch Expense Tax Schema</a></li>
+  <li>Response: None</li>
+</ul>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PATCH <span class="s1">'https://us.api.concursolutions.com/expensereports/v4/reports/52FE459784414104BA4D/expenses/A57E742BFA61994DABC964EE39677392/tax/11373416D4DC0640B6B2CDE372937C1A'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: text/plain'</span> <span class="se">\</span>
+<span class="nt">--data-raw</span> <span class="s1">'{
+    "customData": [
+    {
+      "id": "custom1",
+      "value": "check"
+    }
+  ],
+    "reclaimTransactionAmount": 12,
+    "taxTransactionAmount": 25,
+    "reclaimCode": "RC7",
+    "taxCode": "TC7"
+}'</span>
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>204 No Content
+</code></pre></div></div>
+
 <h2 id="schema-">Schema <a name="schema"></a></h2>
 
 <h3 id="-expense-tax-details-response"><a name="expense-tax-details-schema"></a> Expense Tax Details Response</h3>
@@ -1656,6 +1759,84 @@
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
       <td>href (string): The URL of the related HATEOAS link that you can use for subsequent calls.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="update-custom-data"><a name="update-expense-tax-custom-data-schema"></a>Update Custom Data</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the custom field. Examples: <code class="language-plaintext highlighter-rouge">custom1</code>, <code class="language-plaintext highlighter-rouge">orgUnit1</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isValid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true</code>/<code class="language-plaintext highlighter-rouge">false</code></td>
+      <td>Whether the value returned is valid or not. This value is returned for custom fields of all data types and is specifically evaluated for list items to represent the current status. Default: <code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The value of the custom field. This field can have values for all the supported data types such as <code class="language-plaintext highlighter-rouge">text</code>, <code class="language-plaintext highlighter-rouge">integer</code>, <code class="language-plaintext highlighter-rouge">boolean</code> and <code class="language-plaintext highlighter-rouge">listItemId</code>. Maximum length: 48 characters</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="update-report-expense-tax-schema"><a name="update-report-expense-tax-schema"></a>Update Report Expense Tax Schema</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">customData</code></td>
+      <td><a href="#update-expense-tax-custom-data-schema"><code class="language-plaintext highlighter-rouge">CustomData</code></a></td>
+      <td>-</td>
+      <td>The details from the <code class="language-plaintext highlighter-rouge">customData</code> fields. These fields may not have data, depending on the configuration.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxTransactionAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">decimal</code></td>
+      <td>-</td>
+      <td>The tax transaction amount.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reclaimTransactionAmount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">decimal</code></td>
+      <td>-</td>
+      <td>The reclaim transaction amount.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The tax code.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">reclaimCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The reclaim code.</td>
     </tr>
   </tbody>
 </table>
