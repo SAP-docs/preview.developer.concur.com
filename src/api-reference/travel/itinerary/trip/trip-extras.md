@@ -52,8 +52,8 @@ Name        | Type     | Format | Description
 
 ### Payloads
 
-  * Request: [Append Trip Extras Booking Request](#update-append-trip-extras-booking-request-schema)
-  * Response: [Append Trip Extras Booking Response](#update-append-trip-extras-booking-response-schema)
+  * Request: [Update or Append Trip Extras Booking Request](#update-append-trip-extras-booking-request-schema)
+  * Response: [Update or Append Trip Extras Booking Response](#update-append-trip-extras-booking-response-schema)
 
 ### Examples
 
@@ -153,7 +153,7 @@ Date: Mon, 29 Sep 2025 19:46:57 GMT
 }
 ```
 
-Check out [Error Responses](#error-reponses).
+Check out [Error Responses](#error-schema).
 
 ## <a name="update-trip-extras-booking"></a>Update Trip Extras Booking
 
@@ -179,8 +179,8 @@ Name        | Type     | Format | Description
 
 ### Payloads
 
-  * Request: [Update Trip Extras Booking Request](#update-append-trip-extras-booking-request-schema)
-  * Response: [Update Trip Extras Booking Response](#update-append-trip-extras-booking-response-schema)
+  * Request: [Update or Append Trip Extras Booking Request](#update-append-trip-extras-booking-request-schema)
+  * Response: [Update or Append Trip Extras Booking Response](#update-append-trip-extras-booking-response-schema)
 
 ### Examples
 
@@ -280,7 +280,7 @@ Date: Mon, 29 Sep 2025 19:46:57 GMT
 }
 ```
 
-Check out [Error Responses](#error-reponses).
+Check out [Error Responses](#error-schema).
 
 ## <a name="cancel-trip-extras-booking"></a>Cancel Trip Extras Booking
 
@@ -466,7 +466,7 @@ Information about the vehicle assigned for the ground transportation.
 
 | Name          | Type     | Format | Description                             |
 |---------------|----------|--------|-----------------------------------------|
-| `bookingUuid` | `string` | GUID   | UUID of the created or update trip extras booking.|
+| `bookingUuid` | `string` | GUID   | UUID of the created or updated trip extras booking.|
 
 
 ### <a name="cancel-trip-extras-booking-request-schema"></a> Cancel Trip Extras Booking Request
