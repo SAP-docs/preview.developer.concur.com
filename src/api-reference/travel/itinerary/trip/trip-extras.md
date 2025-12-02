@@ -442,7 +442,7 @@ Information about the vehicle assigned for the ground transportation.
 | `address2`               | `string` | -      | Stands for premise name of the address on xNal standard.                                                   |
 | `localityName`           | `string` | -      | **Required**. City or locality name.                                                                       |
 | `administrativeAreaName` | `string` | -      | State, province or region.                                                                                 |
-| `postalCode`             | `string` | -      | **Required**                                                                                               |
+| `postalCode`             | `string` | -      | -                                                                                                          |
 | `country`                | `string` | -      | **Required**. Two-letter ISO 3166-1 alpha-2 country code.                                                  |
 
 ### <a name="geolocation-schema"></a> Geolocation
