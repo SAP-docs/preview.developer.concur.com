@@ -350,7 +350,7 @@ HTTP/1.1 204 No Content
 | Name       | Type     |Format| Description                                                                 |
 |------------|----------|-|----------------------------------------------------------------------------|
 | `type`     | `string` |-|**Required**. Type of partner reservation (e.g., `ground`.)                 |
-| `metadata` | `object` |[Metadata Schema](#metadata-schema)|**Required**. Additional metadata related to the booking. |
+| `metadata` | `object` |[Metadata Schema](#metadata-schema)|**Required**. Detailed information in [Metadata](#metadata-schema). |
 | `partner`  | `object` |[Partner Schema](#partner-schema)|**Required**. Detailed information in [Partner](#partner-schema).|
 | `vendor`   | `object` |[Vendor Schema](#vendor-schema)|Detailed information in [Vendor](#vendor-schema).  |
 | `details`  | `object` |[Details Schema](#groundbooking-details-schema)|**Required**. Detailed information in [GroundBooking Details](#groundbooking-details-schema).  |
