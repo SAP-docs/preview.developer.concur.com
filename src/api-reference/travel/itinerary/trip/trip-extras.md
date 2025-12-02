@@ -69,8 +69,13 @@ Content-Type: application/json
 {
     "extRef": "48fb4cd3-2ef6-4479-bea1-7c92721b988c",
     "userId": "12345678-1234-5678-1234-567812345678",
+    "initiator": "agent",
     "booking": {
         "type": "ground",
+        "metadata": {
+            "version": 2,
+            "timestamp": "2025-07-25 18:00:00.000",
+        },
         "partner": {
             "name": "Partner Name",
             "logo": "https://example.com/partner-logo.jpg"
@@ -174,8 +179,8 @@ Name        | Type     | Format | Description
 
 ### Payloads
 
-  * Request: [Update or Append Trip Extras Booking Request](#update-append-trip-extras-booking-request-schema)
-  * Response: [Update or Append Trip Extras Booking Response](#update-append-trip-extras-booking-response-schema)
+  * Request: [Update Trip Extras Booking Request](#update-append-trip-extras-booking-request-schema)
+  * Response: [Update Trip Extras Booking Response](#update-append-trip-extras-booking-response-schema)
 
 ### Examples
 
@@ -191,8 +196,13 @@ Content-Type: application/json
 {
     "extRef": "48fb4cd3-2ef6-4479-bea1-7c92721b988c",
     "userId": "12345678-1234-5678-1234-567812345678",
+    "initiator": "agent",
     "booking": {
         "type": "ground",
+        "metadata": {
+            "version": 2,
+            "timestamp": "2025-07-25 18:00:00.000",
+        },
         "partner": {
             "name": "Partner Name",
             "logo": "https://example.com/partner-logo.jpg"
@@ -332,6 +342,7 @@ HTTP/1.1 204 No Content
 |------------|----------|-|----------------------------------------------------------------------------|
 | `extRef`   | `string` |GUID| **Required**. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
 | `userId`   | `string` |GUID| **Required**. UUID of the user to whom the trip extras is being appended.    |
+| `initiator`   | `string` |Enum: `"user"` `"agent"` `"supplier"`| **Required**. Type of initiator. Indicates who initiated the booking request.    |
 | `booking`  | `object` |[Booking Schema](#booking-schema)| **Required**. Detailed information in [Booking](#booking-schema). |
 
 ### <a name="booking-schema"></a> Booking
@@ -339,9 +350,19 @@ HTTP/1.1 204 No Content
 | Name       | Type     |Format| Description                                                                 |
 |------------|----------|-|----------------------------------------------------------------------------|
 | `type`     | `string` |-|**Required**. Type of partner reservation (e.g., `ground`.)                 |
+| `metadata` | `object` |[Metadata Schema](#metadata-schema)|**Required**. Additional metadata related to the booking. |
 | `partner`  | `object` |[Partner Schema](#partner-schema)|**Required**. Detailed information in [Partner](#partner-schema).|
 | `vendor`   | `object` |[Vendor Schema](#vendor-schema)|Detailed information in [Vendor](#vendor-schema).  |
 | `details`  | `object` |[Details Schema](#groundbooking-details-schema)|**Required**. Detailed information in [GroundBooking Details](#groundbooking-details-schema).  |
+
+### <a name="metadata-schema"></a> Metadata
+
+Additional metadata related to the booking.
+
+| Name   | Type     | Format | Description                        |
+|--------|----------|--------|------------------------------------|
+| `version` | `int` | -      | **Required**. Version of the booking. Changes with an older version are stale. |
+| `timestamp` | `string<date-time>` | -      | Timestamp of the changes in ISO 8601 format. |
 
 ### <a name="partner-schema"></a> Partner
 
