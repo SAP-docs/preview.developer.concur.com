@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Cards v4 - Getting Started</title>
+  <title> SAP Concur Developer Center | Cards v4 - Credit Card Transaction</title>
 
 
 <!-- Meta -->
@@ -28,7 +28,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/cards/v4.cards-get-started.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/cards/v4.cards-endpoints.transaction-new.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -398,13 +398,13 @@
 
     
 
-    <li class="list-group-item list-toggle active">
+    <li class="list-group-item list-toggle ">
       <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-cards-v4">
         Cards v4
       </a>
-      <ul id="collapse-cards-v4" class="collapse in">
+      <ul id="collapse-cards-v4" class="collapse ">
         
-          <li  class="active" >
+          <li >
             <a href="/api-reference/cards/v4.cards-get-started.html">Getting Started</a>
           </li>
         
@@ -1284,96 +1284,451 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="cards-v4---getting-started">Cards v4 - Getting Started</h1>
+        <h1 id="cards-v4---credit-card-transaction">Cards v4 - Credit Card Transaction</h1>
 
-<p>Cards v4 API provides certified partner financial networks, issuing banks, and fin-tech partners with an automated path for mutual clients to make self-service connections between the partner and Concur Expense. This path enables the partner to subsequently submit Credit Card Account and Transaction data to Concur Expense in near real time. This API is only available to <strong>partners</strong> who have been granted access and are creating a certified application. It is not intended to be accessed by clients directly.</p>
+<h2 id="create-card-transactions-bulk"><a name="transaction-bulk-create"></a>Create Card Transactions (Bulk)</h2>
 
-<h2 id="overview"><a name="overview"></a>Overview</h2>
+<p>Endpoint to create credit card transactions as bulk operation. Assuming that the request is properly authorized and the schema validation passes, the API immediately returns <code class="language-plaintext highlighter-rouge">202 (Request Accepted)</code> and performs the actual processing asynchronously.</p>
 
-<p>The Cards v4 API exposes the following resources:</p>
+<h3 id="scopes">Scopes</h3>
 
-<table>
-  <thead>
-    <tr>
-      <th>Resource</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Account</td>
-      <td>Partners can create Accounts via bulk API.</td>
-    </tr>
-    <tr>
-      <td>Transaction</td>
-      <td>Partners can create Transactions via bulk API.</td>
-    </tr>
-    <tr>
-      <td>Bulk Request</td>
-      <td>Partners can retrieve the details of a Bulk Request.</td>
-    </tr>
-  </tbody>
-</table>
+<p><code class="language-plaintext highlighter-rouge">cards.transaction.writeonly</code> - Refer to <a href="./v4.cards-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
 
-<h2 id="limitations"><a name="limitations"></a>Limitations</h2>
+<h3 id="uri">URI</h3>
 
-<p>Access to this documentation does not provide access to the API.</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>datacenterURI<span class="o">}</span>/cards/v4/companies/<span class="o">{</span>companyId<span class="o">}</span>/transactions/bulk
+</code></pre></div></div>
 
-<p>Cards v4 APIs are available in all data centers except CCPS and only to partners who have been granted access.</p>
-
-<p>Maximum number of accounts / transactions per call is 1000.</p>
-
-<p>Notification of bulk request completion via <a href="/api-reference/ess/v4.event-subscription.html">Event Subscription Service</a> is already depicted in the process flow diagram but not yet available.</p>
-
-<h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
-
-<p><img src="./v4.cards-get-started-process-flow.png" alt="CardsV4ProcessFlow" /></p>
-
-<h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
-
-<ul>
-  <li>Concur Expense Professional Edition</li>
-  <li>Concur Expense Standard Edition</li>
-</ul>
-
-<h2 id="scope-usage"><a name="scope-usage"></a>Scope Usage</h2>
+<h3 id="parameters">Parameters</h3>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
       <th>Description</th>
-      <th>Endpoint</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">cards.account.writeonly</code></td>
-      <td>Write Credit Card Account</td>
-      <td>POST</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">cards.transaction.writeonly</code></td>
-      <td>Write Credit Card Transaction</td>
-      <td>POST</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">cards.bulkrequest.read</code></td>
-      <td>Read Bulk Request details</td>
-      <td>GET</td>
+      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur company.</td>
     </tr>
   </tbody>
 </table>
 
-<h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
+<h3 id="payloads">Payloads</h3>
 
-<p>SAP Concur clients must purchase Concur Expense in order to use this API. Please contact your SAP Concur representative for more information.</p>
+<ul>
+  <li>Request: <a href="./v4.cards-endpoints.schemas.html#schema-create-transaction-list">Create Transaction List</a></li>
+  <li>Response: <a href="./v4.cards-endpoints.schemas.html#schema-bulkapi-response">Bulk API Response</a></li>
+</ul>
 
-<p>The Identity v4 API can be used to retrieve the <code class="language-plaintext highlighter-rouge">userId</code> and <code class="language-plaintext highlighter-rouge">companyId</code>.</p>
+<p>Notes:</p>
+<ul>
+  <li>This API can only be used for creating new transactions. If the same <code class="language-plaintext highlighter-rouge">externalId</code> is sent a second time, it will be ignored with an error during processing.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">externalId</code> is a unique identifier for a card transaction as defined by an external system (outside the SAP Concur platform). It must not contain the primary account number (PAN). It may contain the same value as <code class="language-plaintext highlighter-rouge">referenceNumber</code> as long as it is unique.</li>
+  <li>A transaction contains a reference to an account using the account <code class="language-plaintext highlighter-rouge">externalId</code>. Referenced accounts need to be created via Card Accounts (Bulk) API.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">authorizationExternalId</code> can be used to reference a posted transaction to a preceding authorization. In this case the authorization will be overwritten by the posted transaction.</li>
+  <li>A transaction can only contain one type of addendum data (car rental, fleet, lodging, purchase, or travel) at the same time.</li>
+</ul>
 
-<h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
+<h3 id="headers">Headers</h3>
 
-<p>This API supports company level access tokens.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a>.</li>
+</ul>
+
+<h3 id="http-status-codes">HTTP Status Codes</h3>
+
+<p>In case of success, HTTP status code <code class="language-plaintext highlighter-rouge">202 (Request Accepted)</code> is returned.
+In case of a bad request, HTTP status code <code class="language-plaintext highlighter-rouge">400 (Bad Request)</code> is returned along with an error code describing the cause. Possible error codes are: <code class="language-plaintext highlighter-rouge">invalidRequest</code>, <code class="language-plaintext highlighter-rouge">invalidJson</code>. For <code class="language-plaintext highlighter-rouge">invalidRequest</code> the error response usually contains a detailed error list.</p>
+
+<p>To learn more about response HTTP status codes for this API see <a href="./v4.cards-endpoints.schemas.html#http-status-codes">HTTP Status Codes</a>.</p>
+
+<h3 id="examples">Examples</h3>
+
+<h4 id="valid-request">Valid Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/transactions/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"transactions"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"externalId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59edf00e-6e0a-46c4-bf59-c233000c5b98"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"billedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.10</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Hotels,123-456-7890,Seattle"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"externalId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1047ecc3-bc47-4b2f-bcf5-6c8e13291338"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"lodging"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"charges"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+            </span><span class="nl">"amount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">19.90</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INTNT"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"checkInDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-08-14"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"checkOutDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-08-17"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dailyRoomRate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">120</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"folioNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"F344145-51VD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"guestName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DOE,JOHN"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lodgingAddress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Vancouver"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BC"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"streetAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">"433 Hotel Street"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v6b 6l9"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"numberOfRoomNights"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"numberOfRooms"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"totalLodgingAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">360</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"totalNonRoomChargeAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">19.90</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"totalTaxAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">25.2</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"merchant"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Seattle"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"streetAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Hotel Way"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"90001"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"categoryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7011"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"doingBusinessAs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Hotels"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME34393"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Corporation"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"postedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.10</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"postedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-19"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"referenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gWp859SqAX97DsIVt5aoZmSNh4y8iH6qc"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.10</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-17"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transactionDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-17T09:15:23.000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RPE"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="success-response">Success Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>202 Accepted
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/bulkrequests/55e45023-813f-46a2-b83c-1a0b0b7bdda6"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"rel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"self"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"55e45023-813f-46a2-b83c-1a0b0b7bdda6"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="invalid-request">Invalid Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/cards/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/transactions/bulk
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"transactions"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"externalId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"59edf00e-6e0a-46c4-bf59-c233000c5b98"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"externalId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1047ecc3-bc47-4b2f-bcf5-6c8e13291338-this-is-too-long-must-only-be-50-chars-max"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"merchant"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Corporation"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"postedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-19"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.10</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-17"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XXX"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="error-response">Error Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>400 Bad Request
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalidRequest"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The request contains errors"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/v4/companies/1700f4bc-4166-4516-bffe-91d7ae423189/transactions/bulk"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalidEnum"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Value is not one of the allowed values"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transactions[0].type"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"missingRequiredField"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Missing required field"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transactions[0].postedAmount"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"errorCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalidFieldSize"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"size must be between 1 and 50"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dataPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"transactions[0].externalId"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="retrieve-card-transactions-by-user"><a name="get-transactions-for-user"></a>Retrieve Card Transactions by User</h2>
+
+<p>Endpoint to retrieve credit card transactions of a user. Only cleared card transactions received via file feed, or bespoke API integration are supported; Card transactions received via the Yodlee integration (including personal card transactions) are not exposed.</p>
+
+<p>By default only basic transaction data is returned. It is recommended to only request required options for optimal performance. It is possible to request multiple options in one call.</p>
+
+<p>This endpoint supports user level access tokens only.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">cards.transaction.read</code> - Refer to <a href="./v4.cards-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-1">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/cards/v4/users/<span class="o">{</span>userId<span class="o">}</span>/transactions
+</code></pre></div></div>
+
+<h3 id="parameters-1">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter transactions by status. Allowed values: <code class="language-plaintext highlighter-rouge">UN - Unassigned from Report</code>, <code class="language-plaintext highlighter-rouge">AS - Assigned to Report</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionDateFrom</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td>ISO 8601 YYYY-MM-DD</td>
+      <td>Filter transactions from this transaction date (inclusive). Defaults to 24 months ago; cannot be earlier than 24 months in the past.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionDateTo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td>ISO 8601 YYYY-MM-DD</td>
+      <td>Filter transactions up to this transaction date (inclusive).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pageSize</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Page size (max limit: 100); default: 100</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pageToken</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Next page token as returned in a previous request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sort</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Sort criteria. Allowed values: <code class="language-plaintext highlighter-rouge">transactionDate</code>, <code class="language-plaintext highlighter-rouge">lastModified</code>; default: <code class="language-plaintext highlighter-rouge">transactionDate</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">order</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Sort order (<code class="language-plaintext highlighter-rouge">ASC - Ascending</code> or <code class="language-plaintext highlighter-rouge">DESC - Descending</code>); default: <code class="language-plaintext highlighter-rouge">DESC</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">includeAddendumFor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Option to additionally fetch addendum data. Allowed values: <code class="language-plaintext highlighter-rouge">*</code> / <code class="language-plaintext highlighter-rouge">all</code>, <code class="language-plaintext highlighter-rouge">carRental</code>, <code class="language-plaintext highlighter-rouge">fleet</code>, <code class="language-plaintext highlighter-rouge">lodging</code>, <code class="language-plaintext highlighter-rouge">purchase</code>, <code class="language-plaintext highlighter-rouge">travel</code>; default behavior: no addendum data is returned.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">includeAddendumDetailsFor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Option to additionally fetch addendum detail data. Allowed values: <code class="language-plaintext highlighter-rouge">*</code> / <code class="language-plaintext highlighter-rouge">all</code>, <code class="language-plaintext highlighter-rouge">fleet</code>, <code class="language-plaintext highlighter-rouge">lodging</code>, <code class="language-plaintext highlighter-rouge">purchase</code>, <code class="language-plaintext highlighter-rouge">travel</code>; default behavior: no addendum detail data is returned.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payload">Payload</h3>
+
+<ul>
+  <li>Request: none</li>
+  <li>Response: <a href="./v4.cards-endpoints.schemas.html#schema-transaction-list-response">Transaction List Response</a></li>
+</ul>
+
+<h3 id="headers-1">Headers</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a>.</li>
+</ul>
+
+<h3 id="http-status-codes-1">HTTP Status Codes</h3>
+
+<ul>
+  <li>200 OK</li>
+  <li>400 Bad Request</li>
+  <li>401 Unauthorized</li>
+  <li>403 Forbidden</li>
+  <li>404 Not Found</li>
+  <li>500 Internal Server Error</li>
+  <li>503 Service Unavailable</li>
+</ul>
+
+<p>To learn more about response HTTP status codes for this API see <a href="./v4.cards-endpoints.schemas.html#http-status-codes">HTTP Status Codes</a>.</p>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/cards/v4/users/e48fda91-15c8-4670-afe5-6c76501813c9/transactions
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"transactions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RPE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"postedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-17"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"postedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-19"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"billedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Hotels,123-456-7890,Seattle"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description2"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description3"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description4"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description5"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"referenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gWp859SqAX97DsIVt5aoZmSNh4y8iH6qc"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"processorReferenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"acquirerReferenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"merchantReferenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"customerVatNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"totalTaxAmount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"taxes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="nl">"statement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"referenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"billingDate"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d1c555dc"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c381619-4980-4eac-bf63-d229ce0be23b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C2593B6F67E44F4587A812CDD4105FF7"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastSegment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4801"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"paymentType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1024"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"cardProductType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CORP"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"billingAccount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"administrativeData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UN"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"processType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REG"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"receiptImageId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"integrationPartner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BATCH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"addendumType"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastModified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-08-15T18:23:34.487+00:00"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"hasRichData"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isDeletable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"merchant"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Corporation"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"categoryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7011"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"vatNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Seattle"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"streetAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Hotel Way"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"90001"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"paging"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"totalElements"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nextPageToken"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pageSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"totalPages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
       </div>
       <!--/col-md-8-->
@@ -1426,7 +1781,7 @@
       <a href="/terms-of-use-2021.html">Terms of Use</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/cards/v4.cards-get-started.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/cards/v4.cards-endpoints.transaction-new.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
