@@ -72,7 +72,7 @@ Name|Type|Format|Description
 
 Name|Type|Format|Description
 ---|---|---|---
-`account`|`object`|[`Transaction Account Reference`](#schema-create-transaction-accountreference)|**Required** Reference to the card account this transaction belongs to.
+`account`|`object`|[`Transaction Account Reference`](#schema-transaction-accountreference)|**Required** Reference to the card account this transaction belongs to.
 `acquirerReferenceNumber`|`string`|-|Acquirer reference number.
 `authorizationExternalId`|`string`|-|External ID of the referenced (pre-)authorization.
 `billedAmount`|`object`|[`Amount`](#schema-amount)|Billed amount.
@@ -103,84 +103,11 @@ Name|Type|Format|Description
 `travel`|`object`|[`Travel`](#schema-travel)|Travel addendum data.
 `type`|`enum`|-|**Required** Type of the transaction. Supported values: `ANF - Annual Fees`, `CAV - Cash Advance`, `CCF - Cash and Check Fees`, `RPE - Regular Transaction`, `FNC - Finance Charges`, `NSF - Insufficient Funds Check Fees`, `LAF - Late Fees`, `CHG - Other Bank Charges and Fees`, `PAY - Payment`
 
-## <a name="schema-transaction-list-response"></a>Transaction List Response
-
-Name|Type|Format|Description
----|---|---|---
-`transactions`|`array`|[`Transaction`](#schema-transaction)|**Required** Array of transactions. (Maximum number of items: 100)
-`paging`|`object`|[`Paging`](#schema-paging)|**Required** Paging details
-
-## <a name="schema-transaction"></a>Transaction
-
-Name|Type|Format|Description
----|---|---|---
-`account`|`object`|[`Transaction Account Reference`](#schema-transaction-accountreference)|**Required** Reference to the card account this transaction belongs to.
-`accountCodes`|`array`|[`Transaction Account Code`](#schema-transaction-accountcode)|Account codes of the transaction (accountCode1 - accountCode10).
-`acquirerReferenceNumber`|`string`|-|Acquirer reference number.
-`administrativeData`|`object`|[`Transaction Administrative Data`](#schema-transaction-administrativedata)|Administrative (internal) data
-`authorizationReferenceNumber`|`string`|-|Authorization Reference Number
-`billedAmount`|`object`|[`Amount`](#schema-amount)|Billed amount.
-`billingAccount`|`object`|[`Transaction Account Reference`](#schema-transaction-accountreference)|Account to which the transaction is billed to, relevant for example in case of Lodge scenarios.
-`carRental`|`object`|[`Car Rental`](#schema-carrental)|Car rental addendum data.
-`companyId`|`string`|-|**Required** SAP Concur company ID.
-`customerVatNumber`|`string`|-|Customer VAT number.
-`description`|`string`|-|Description of the transaction.
-`description2`|`string`|-|Description2 of the transaction.
-`description3`|`string`|-|Description3 of the transaction.
-`description4`|`string`|-|Description4 of the transaction.
-`description5`|`string`|-|Description5 of the transaction.
-`fleet`|`object`|[`Fleet`](#schema-fleet)|Fleet addendum data.
-`id`|`string`|-|**Required** Concur internal transaction ID. Unique identifier for the card transaction as defined by SAP Concur. 
-`lodging`|`object`|[`Lodging`](#schema-lodging)|Lodging addendum data.
-`merchant`|`object`|[`Merchant`](#schema-merchant)|**Required** Merchant details.
-`merchantReferenceNumber`|`string`|-|Merchant reference number.
-`postedAmount`|`object`|[`Amount`](#schema-amount)|**Required** Posted amount.
-`postedDate`|`date`|ISO 8601 `YYYY-MM-DD`|**Required** Posted date.
-`processorReferenceNumber`|`string`|-|Processor reference number.
-`purchase`|`object`|[`Purchase`](#schema-purchase)|Purchase addendum data.
-`referenceNumber`|`string`|-|Transaction reference number for display purposes.
-`statement`|`object`|[`Statement`](#schema-statement)|Statement this transactions belongs to.
-`taxes`|`array`|[`Transaction Tax`](#schema-transaction-tax)|Taxes incurred for the transaction.
-`totalTaxAmount`|`object`|[`Amount`](#schema-amount)|Total tax amount.
-`transactionAmount`|`object`|[`Amount`](#schema-amount)|**Required** Transaction amount.
-`transactionDate`|`date`|ISO 8601 `YYYY-MM-DD`|**Required** Transaction date.
-`transactionDateTime`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnn`|Timestamp when the transaction happened.
-`travel`|`object`|[`Travel`](#schema-travel)|Travel addendum data.
-`type`|`enum`|-|**Required** Type of the transaction. Supported values: `ANF - Annual Fees`, `CAV - Cash Advance`, `CCF - Cash and Check Fees`, `RPE - Regular Transaction`, `FNC - Finance Charges`, `NSF - Insufficient Funds Check Fees`, `LAF - Late Fees`, `CHG - Other Bank Charges and Fees`, `PAY - Payment`
-
-## <a name="schema-create-transaction-accountreference"></a>Create Transaction Account Reference
-
-Name|Type|Format|Description
----|---|---|---
-`externalId`|`string`|-|**Required** Unique identifier (token) of the referenced billing account as defined by an external system (outside the SAP Concur platform). Must not contain primary account number (PAN).
-
 ## <a name="schema-transaction-accountreference"></a>Transaction Account Reference
 
 Name|Type|Format|Description
 ---|---|---|---
-`cardProductType`|`string`|-|**Required** Card product type. Supported values: `CORP - Corporate Card`, `BUSN - Business Card`
-`id`|`string`|-|**Required** Concur internal account ID. Unique identifier (token) for the card account as defined by SAP Concur. Does not contain primary account number (PAN).
-`lastSegment`|`string`|-|Last four digits of the card account.
-`paymentType`|`object`|[`Payment Type Reference`](#schema-paymenttypereference)|Payment Type of the card account.
-
-## <a name="schema-paymenttypereference"></a>Payment Type Reference
-
-Name|Type|Format|Description
----|---|---|---
-`id`|`string`|-|**Required** Concur internal payment type ID.
-
-## <a name="schema-transaction-administrativedata"></a>Transaction Administrative Data
-
-Name|Type|Format|Description
----|---|---|---
-`addendumType`|`string`|-|In case the transaction has addendum data, specifies which kind of addendum data are available. Supported values: `TRVL - Travel`, `LODG - Lodging`, `FLET - Fleet`, `CAR - Car Rental`, `PRCH - Purchase`
-`hasRichData`|`boolean`|-|**Required** Indicates whether the transaction enough (addendum) data for being classified as "rich".
-`integrationPartner`|`string`|-|**Required** Integration partner through which this transaction was imported. Supported values: `BATCH - File-based integration`, `AMEX_OPEN - American Express Business Card integration`, `API - API-based integration`
-`isDeletable`|`boolean`|-|**Required** Indicates whether the transaction can be deleted/hidden by the end user.
-`lastModified`|`timestamp`|RFC 3339 `YYYY-MM-DDThh:mm:ss.nnnZ`|**Required** Last Modified timestamp
-`processType`|`string`|-|**Required** Process type. Supported values: `CBS - Company Bill Statements`, `CR - Central Reconciliation`, `REG - Regular Expense Processing`
-`receiptImageId`|`string`|-|ID of the receipt image
-`status`|`string`|-|Transaction Status. Supported values: `UN - Unassigned`, `AS - Assigned to Report`
+`externalId`|`string`|-|**Required** Unique identifier (token) of the referenced billing account as defined by an external system (outside the SAP Concur platform). Must not contain primary account number (PAN).
 
 ## <a name="schema-carrental"></a>Car Rental
 
@@ -224,12 +151,12 @@ Name|Type|Format|Description
 ---|---|---|---
 `discountAmount`|`object`|[`Amount`](#schema-amount)|Discount Amount.
 `driverId`|`string`|-|Driver ID.
-`fuelType`|`enum`|-|Fuel type. Only **Required** for *create* scenario. Supported values (validated for *create* case only): `ALCOHOL - Alcohol-based Fuel`, `AUTOGAS - Autogas (LPG)`, `AVIATION - Aviation/Jet Fuel`, `BIOBLEND - Biodiesel-blended Fuel`, `BIOFUEL - Biodiesel Fuel`, `CLNDIESEL - Clean Diesel`, `DIESEL - Diesel Fuel`, `GASOLINE - Gasoline`, `MARINE - Marine Fuel`, `NATURAL - Natural Gas`, `OTHER - Other Fuel`, `UNDEF - Undefined Fuel Type`
+`fuelType`|`enum`|-|**Required** Fuel type. Supported values: `ALCOHOL - Alcohol-based Fuel`, `AUTOGAS - Autogas (LPG)`, `AVIATION - Aviation/Jet Fuel`, `BIOBLEND - Biodiesel-blended Fuel`, `BIOFUEL - Biodiesel Fuel`, `CLNDIESEL - Clean Diesel`, `DIESEL - Diesel Fuel`, `GASOLINE - Gasoline`, `MARINE - Marine Fuel`, `NATURAL - Natural Gas`, `OTHER - Other Fuel`, `UNDEF - Undefined Fuel Type`
 `items`|`array`|[`Fleet Detail`](#schema-fleet-detail)|Fleet items.
 `odometer`|`string`|-|Odometer reading.
-`productType`|`enum`|-|Product type. . Only **Required** for *create* scenario. Supported values (validated for *create* case only): `CARACC - Automotive Accessories`, `GLASS - Automotive Glass`, `AVIACC - Aviation Accessories`, `AVIFOOD - Aviation Food/Beverage`, `AVIMAINT - Aviation Maintenance`, `BATTERIES - Batteries`, `BEVERAGE - Beverage`, `BRAKE - Brakes and Brake Services`, `WASH - Car Wash`, `SMOKE - Cigarettes/Tobacco`, `FEE - Fees`, `FOOD - Food`, `AVIATION - General Aviation`, `HEALTH - Health/Beauty`, `LABOR - Labor`, `MISC - Miscellaneous Product`, `OIL - Motor Oil`, `PARTS - Parts`, `REPAIR - Repair`, `SERVICE - Services`, `TIRES - Tires`, `TBA - Tires Batteries Accessories`, `TOW - Towing`, `UNDEF - Undefined Product Type`
+`productType`|`enum`|-|**Required** Product type. Supported values: `CARACC - Automotive Accessories`, `GLASS - Automotive Glass`, `AVIACC - Aviation Accessories`, `AVIFOOD - Aviation Food/Beverage`, `AVIMAINT - Aviation Maintenance`, `BATTERIES - Batteries`, `BEVERAGE - Beverage`, `BRAKE - Brakes and Brake Services`, `WASH - Car Wash`, `SMOKE - Cigarettes/Tobacco`, `FEE - Fees`, `FOOD - Food`, `AVIATION - General Aviation`, `HEALTH - Health/Beauty`, `LABOR - Labor`, `MISC - Miscellaneous Product`, `OIL - Motor Oil`, `PARTS - Parts`, `REPAIR - Repair`, `SERVICE - Services`, `TIRES - Tires`, `TBA - Tires Batteries Accessories`, `TOW - Towing`, `UNDEF - Undefined Product Type`
 `quantity`|`object`|[`Fleet Quantity`](#schema-fleet-quantity)|Quantity.
-`serviceType`|`enum`|-|Service type. . Only **Required** for *create* scenario. Supported values (validated for *create* case only): `FULL - Full-service`, `NFUEL - Only non-fuel products purchased`, `SELF - Self-service`, `UNDEF - Undefined Service Type`
+`serviceType`|`enum`|-|**Required** Service type. Supported values: `FULL - Full-service`, `NFUEL - Only non-fuel products purchased`, `SELF - Self-service`, `UNDEF - Undefined Service Type`
 `totalAmount`|`object`|[`Amount`](#schema-amount)|Total amount.
 `unitAmount`|`object`|[`Amount`](#schema-amount)|Price per unit of measure.
 `vehicleNumber`|`string`|-|Vehicle Number.
@@ -321,7 +248,6 @@ Name|Type|Format|Description
 `doingBusinessAs`|`string`|-|Name of the business the merchant is doing (preferred for display purposes over merchant name).
 `id`|`string`|-|Merchant identifier.
 `name`|`string`|-|**Required** Merchant name.
-`standardCategoryCode`|`string`|-|Standardized Merchant Category Code. Relevant for *read* scenario only.
 `vatNumber`|`string`|-|Merchant's VAT number.
 
 ## <a name="schema-purchase"></a>Purchase
@@ -444,16 +370,6 @@ Name|Type|Format|Description
 `isOrigin`|`boolean`|-|Indicates if this is the first leg of travel on the ticket.
 `serviceClass`|`string`|-|Class of Service Code. Preferred values: `A = First Discount`, `B = Coach Discount`, `C = Business Class`, `D = Bus Discounted`, `E = Shuttle`, `F = First Class`, `H = Coach Discount`, `J = Bus Premium`, `K = Thrift`, `L = Thrift Discount`, `M = Coach Discount`, `P = First Premium`, `Q = Coach Discount`, `R = Supersonic`, `S = Standard Class`, `T = Coach Discount`, `U = Shuttle`, `V = Thrift Discount`, `W = Coach Premium`, `Y = Coach`
 `travelLegNumber`|`integer`|-|Order in which the leg is to be traveled.
-
-## <a name="schema-paging"></a>Paging
-
-Name|Type|Format|Description
----|---|---|---
-`nextPageToken`|`string`|-|Page token as returned in a previous request.
-`page`|`integer`|-|Current page (starting with 1).
-`pageSize`|`integer`|-|Page size.
-`totalElements`|`integer`|-|Number of total elements across all pages.
-`totalPages`|`integer`|-|Total number of pages.
 
 # <a name="schemas-bulkrequest"></a>Bulk Request Schemas
 
