@@ -397,6 +397,151 @@ curl --location --request PATCH 'https://us.api.concursolutions.com/expenserepor
 204 No Content
 ```
 
+## Get Report Form Fields <a name="get-report-form-fields"></a>
+
+Returns the configured form fields for the specified report. Use this endpoint to retrieve the metadata for each field defined on the report form (labels, control types, data types, access and required flags, etc.).
+
+### Scopes
+
+* `expense.report.read` - Refer to [Scope Usage](#scope-usage) for full details.
+* `expense.report.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+https://{datacenterURI}/expensereports/v4/reports/{reportId}/formFields
+```
+
+### Parameters
+
+| Name     | Type     | Format | Description                                        |
+|----------|----------|--------|----------------------------------------------------|
+| reportId | `string` | path   | **Required**  The unique identifier of the report. |
+| policyId | `string` | query  | The unique identifier of the applicable policy.    |
+
+### Payloads
+
+  * Request: None
+  * Response: [Report Form Fields Response Schema](#report-form-fields-response-schema)
+
+### Headers
+
+* [RFC 7231 Accept-Language](https://tools.ietf.org/html/rfc7231#section-5.3.5)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Content-Encoding](https://tools.ietf.org/html/rfc7231#section-3.1.2.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2) - Bearer Token that identifies the caller.
+This is the Company or User access token.
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1)
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1)
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1)
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3)
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4)
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+
+### Examples
+
+#### Request
+
+```shell
+curl --location --request GET 'https://us.api.concursolutions.com/expensereports/v4/reports/764428DD6A664AF0BFCB/formFields' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Content-Type: application/json'
+```
+
+#### Response
+
+```shell
+200 OK
+
+[
+  {
+    "parentFieldId": null,
+    "controlType": "Edit",
+    "dataType": "String",
+    "defaultValue": null,
+    "fieldAccess": "RW",
+    "fieldId": "Name",
+    "formFieldId": "073AAC230F95415E916057E7CE4255F6",
+    "fieldName": "Report Name",
+    "fieldSequence": 1,
+    "hasLineSeparator": false,
+    "isCopyDownSource": true,
+    "listId": null,
+    "listLevel": null,
+    "isExternalList": false,
+    "maximumLength": 40,
+    "isRequired": true,
+    "tooltip": null,
+    "validationExpression": null,
+    "validationMessage": null,
+    "itemizationCopyDownAction": "None",
+    "requiredForAutoSave": true,
+    "referenceLink": null,
+    "targetFieldSettings": null
+  },
+  {
+    "parentFieldId": null,
+    "controlType": "Edit",
+    "dataType": "String",
+    "defaultValue": null,
+    "fieldAccess": "RO",
+    "fieldId": "ReportId",
+    "formFieldId": "FE4E49DD5CF143528EAD66AF0628AB43",
+    "fieldName": "Report ID",
+    "fieldSequence": 2,
+    "hasLineSeparator": false,
+    "isCopyDownSource": false,
+    "listId": null,
+    "listLevel": null,
+    "isExternalList": false,
+    "maximumLength": 32,
+    "isRequired": true,
+    "tooltip": null,
+    "validationExpression": null,
+    "validationMessage": null,
+    "itemizationCopyDownAction": null,
+    "requiredForAutoSave": false,
+    "referenceLink": null,
+    "targetFieldSettings": null
+  },
+  ...
+  ...
+  ...
+  {
+    "parentFieldId": null,
+    "controlType": "Edit",
+    "dataType": "Date",
+    "defaultValue": null,
+    "fieldAccess": "RO",
+    "fieldId": "CardProgramEndDate",
+    "formFieldId": "0BB7311E3E017049AEB604BD9653C672",
+    "fieldName": "Statement Period - End Date",
+    "fieldSequence": 92,
+    "hasLineSeparator": false,
+    "isCopyDownSource": false,
+    "listId": null,
+    "listLevel": null,
+    "isExternalList": false,
+    "maximumLength": null,
+    "isRequired": false,
+    "tooltip": null,
+    "validationExpression": null,
+    "validationMessage": null,
+    "itemizationCopyDownAction": null,
+    "requiredForAutoSave": false,
+    "referenceLink": null,
+    "targetFieldSettings": null
+  }
+]
+```
+
+## Get Reports To Approve
+
 ## Update Submitted Report <a name="update-submitted-report"></a>
 
 Updates the report header in a submitted expense report. When calling this endpoint only Company JWT authentication is 
@@ -758,6 +903,40 @@ curl --location --request GET https://integration.api.concursolutions.com/expens
 | `taxConfigId`                         | `string`                            | -                                                                   | The The tax config ID of the report.                                                                                                                                                                                                          |
 | `totalAmountPaidEmployee`             | `string`                            | -                                                                   | The amount reimbursed to the employee.                                                                                                                                                                                                        |
 | `userId`                              | `string`                            | -                                                                   | **Required** The unique identifier of the Concur user who is the report owner.                                                                                                                                                                |
+
+### <a name="report-form-fields-response-schema"></a>Report Form Fields Response
+
+| Name | Type | Format | Description |
+|------|------|--------|-------------|
+| `formFields` | array | [FormField](#form-field-schema) | List of configured form fields for the report. |
+
+### <a name="form-field-schema"></a>FormField
+
+| Name | Type | Format | Description |
+|------|------|--------|-------------|
+| `parentFieldId` | `string` | - | For connected list, the form field of the previous segment. Blank for simple list or non-list items. |
+| `controlType` | `string` | - | The control type for the form field. (Required) |
+| `dataType` | `string` | - | The data type for the form field. (Required) |
+| `defaultValue` | `CustomField` | - | The source or content of the default value for the form field. |
+| `fieldAccess` | `string` | - | The supplied user’s access to the form field. Allowable values: `HD` = hidden, `RO` = read-only, `RW` = read-write. (Required)
+| `fieldId` | `string` | - | The field id. (Required)
+| `formFieldId` | `string` | - | The unique identifier of the form field. |
+| `fieldName` | `string` | - | The label (name) of the form field. |
+| `fieldSequence` | `integer` | - | The field location in the numerical order of the form fields on the form. |
+| `hasLineSeparator` | `boolean` | `true`/`false` | Indicates whether the form field has a line separator. |
+| `isCopyDownSource` | `boolean` | `true`/`false` | Indicates whether the form field is a copy down source for other fields. |
+| `listId` | `string` | - | The unique identifier of the source list to be used for this form field. |
+| `listLevel` | `integer` | - | For connected list, the hierarchical position of this field in the list. Blank for simple list or non-list items. |
+| `isExternalList` | `boolean` | `true`/`false` | Indicates whether the form field is configured as an external list (uses fetch list connector). (Required)
+| `maximumLength` | `integer` | - | The maximum length allowed for the form field. |
+| `isRequired` | `boolean` | `true`/`false` | Whether a value is required for the form field. |
+| `tooltip` | `string` | - | The tool tip value of the form field. |
+| `validationExpression` | `string` | - | The validation expression (regular expression) associated with the form field. |
+| `validationMessage` | `string` | - | The failure message for the form field validation. |
+| `itemizationCopyDownAction` | `string` | - | Itemization copy down action (e.g. `ConfiguredCopyDown`, `None`, `ParentExpense`). |
+| `requiredForAutoSave` | `boolean` | `true`/`false` | Indicates if this field is required to be populated to perform a save even if other required fields are missing. (Required)
+| `referenceLink` | `string` | - | The URL of the related HATEOAS link that you can use for subsequent calls. |
+| `targetFieldSettings` | array | `List<TargetFieldSetting>` | Target field settings applicable for dependent or target fields. |
 
 ### <a name="create-report-schema"></a>NewReport
 
