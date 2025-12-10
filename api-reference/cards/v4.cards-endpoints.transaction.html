@@ -1520,6 +1520,218 @@ Content-Type: application/json
 </span><span class="p">]</span><span class="w">
 </span></code></pre></div></div>
 
+<h2 id="retrieve-card-transactions-by-user"><a name="get-transactions-for-user"></a>Retrieve Card Transactions by User</h2>
+
+<p>Endpoint to retrieve credit card transactions of a user. Only cleared card transactions received via file feed, or bespoke API integration are supported; Card transactions received via the Yodlee integration (including personal card transactions) are not exposed.</p>
+
+<p>By default only basic transaction data is returned. It is recommended to only request required options for optimal performance. It is possible to request multiple options in one call.</p>
+
+<p>This endpoint supports user level access tokens only.</p>
+
+<h3 id="scopes-1">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">cards.transaction.read</code> - Refer to <a href="./v4.cards-get-started.html#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="uri-1">URI</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://<span class="o">{</span>datacenterURI<span class="o">}</span>/cards/v4/users/<span class="o">{</span>userId<span class="o">}</span>/transactions
+</code></pre></div></div>
+
+<h3 id="parameters-1">Parameters</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> The unique identifier of the SAP Concur user.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Filter transactions by status. Allowed values: <code class="language-plaintext highlighter-rouge">UN - Unassigned from Report</code>, <code class="language-plaintext highlighter-rouge">AS - Assigned to Report</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionDateFrom</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td>ISO 8601 YYYY-MM-DD</td>
+      <td>Filter transactions from this transaction date (inclusive). Defaults to 24 months ago; cannot be earlier than 24 months in the past.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">transactionDateTo</code></td>
+      <td><code class="language-plaintext highlighter-rouge">date</code></td>
+      <td>ISO 8601 YYYY-MM-DD</td>
+      <td>Filter transactions up to this transaction date (inclusive).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pageSize</code></td>
+      <td><code class="language-plaintext highlighter-rouge">integer</code></td>
+      <td>-</td>
+      <td>Page size (max limit: 100); default: 100</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pageToken</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Next page token as returned in a previous request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sort</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Sort criteria. Allowed values: <code class="language-plaintext highlighter-rouge">transactionDate</code>, <code class="language-plaintext highlighter-rouge">lastModified</code>; default: <code class="language-plaintext highlighter-rouge">transactionDate</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">order</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Sort order (<code class="language-plaintext highlighter-rouge">ASC - Ascending</code> or <code class="language-plaintext highlighter-rouge">DESC - Descending</code>); default: <code class="language-plaintext highlighter-rouge">DESC</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">includeAddendumFor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Option to additionally fetch addendum data. Allowed values: <code class="language-plaintext highlighter-rouge">*</code> / <code class="language-plaintext highlighter-rouge">all</code>, <code class="language-plaintext highlighter-rouge">carRental</code>, <code class="language-plaintext highlighter-rouge">fleet</code>, <code class="language-plaintext highlighter-rouge">lodging</code>, <code class="language-plaintext highlighter-rouge">purchase</code>, <code class="language-plaintext highlighter-rouge">travel</code>; default behavior: no addendum data is returned.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">includeAddendumDetailsFor</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array </code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>Option to additionally fetch addendum detail data. Allowed values: <code class="language-plaintext highlighter-rouge">*</code> / <code class="language-plaintext highlighter-rouge">all</code>, <code class="language-plaintext highlighter-rouge">fleet</code>, <code class="language-plaintext highlighter-rouge">lodging</code>, <code class="language-plaintext highlighter-rouge">purchase</code>, <code class="language-plaintext highlighter-rouge">travel</code>; default behavior: no addendum detail data is returned.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="payload">Payload</h3>
+
+<ul>
+  <li>Request: none</li>
+  <li>Response: <a href="./v4.cards-endpoints.schemas.html#schema-transaction-list-response">Transaction List Response</a></li>
+</ul>
+
+<h3 id="headers-1">Headers</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a>.</li>
+</ul>
+
+<h3 id="http-status-codes-1">HTTP Status Codes</h3>
+
+<ul>
+  <li>200 OK</li>
+  <li>400 Bad Request</li>
+  <li>401 Unauthorized</li>
+  <li>403 Forbidden</li>
+  <li>404 Not Found</li>
+  <li>500 Internal Server Error</li>
+  <li>503 Service Unavailable</li>
+</ul>
+
+<p>To learn more about response HTTP status codes for this API see <a href="./v4.cards-endpoints.schemas.html#http-status-codes">HTTP Status Codes</a>.</p>
+
+<h3 id="examples-1">Examples</h3>
+
+<h4 id="request">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/cards/v4/users/e48fda91-15c8-4670-afe5-6c76501813c9/transactions
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>token<span class="o">}</span>
+Concur-CorrelationId: 90f23ece-cb6c-476f-818d-1412bdb23749
+</code></pre></div></div>
+
+<h4 id="response">Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"transactions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RPE"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"transactionAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"postedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"transactionDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-17"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"postedDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-19"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"billedAmount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"currencyCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"USD"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="mf">405.1</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Hotels,123-456-7890,Seattle"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description2"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description3"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description4"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"description5"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"referenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gWp859SqAX97DsIVt5aoZmSNh4y8iH6qc"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"processorReferenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"acquirerReferenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"merchantReferenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"customerVatNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"totalTaxAmount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"taxes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+      </span><span class="nl">"statement"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"referenceNumber"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"billingDate"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2018-08-31"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d1c555dc"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5c381619-4980-4eac-bf63-d229ce0be23b"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"account"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C2593B6F67E44F4587A812CDD4105FF7"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastSegment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4801"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"paymentType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"IBCP"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"cardProductType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CORP"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"billingAccount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"administrativeData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UN"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"processType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"REG"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"receiptImageId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"integrationPartner"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BATCH"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"addendumType"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"lastModified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-08-15T18:23:34.487+00:00"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"hasRichData"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"isDeletable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"merchant"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Corporation"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"categoryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"7011"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"doingBusinessAs"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ACME Hotels"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3321329401"</span><span class="w">
+        </span><span class="nl">"vatNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"address"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Seattle"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"countryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WA"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"streetAddress"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1 Hotel Way"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"zip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"90001"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nl">"paging"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"totalElements"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"nextPageToken"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pageSize"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"totalPages"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
       </div>
       <!--/col-md-8-->
       
