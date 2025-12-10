@@ -1,5 +1,5 @@
 ---
-title: Scim
+title: SCIM
 layout: reference
 reference-type: swagger
 ---
