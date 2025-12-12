@@ -83,7 +83,8 @@ Content-Type: application/json
         "vendor": {
             "name": "Vendor Name",
             "phoneNumber": "1-800-555-1212",
-            "email": "foo@bar.com"
+            "email": "foo@bar.com",
+            "code": "VEND123"
         },
         "details": {
             "url": "https://partner-url.com",
@@ -96,7 +97,8 @@ Content-Type: application/json
                 "acrissCode": "FDMR",
                 "imageUrl": "https://example.com/vehicle-image.jpg",
                 "seatingCapacity": 4,
-                "luggageCapacity": 2
+                "luggageCapacity": 2,
+                "category": "F"
             },
             "pickup": {
                 "datetime": "2025-07-25T16:30:00",
@@ -129,7 +131,62 @@ Content-Type: application/json
                 "currency": "USD",
                 "hourlyRate": 45.00,
                 "estimatedDuration": "PT3H30M",
-                "minimumDuration": "PT45M"
+                "minimumDuration": "PT45M",
+                "costToCustomer": 150.00,
+                "breakdowns": [
+                    {
+                        "amount": 120.00,
+                        "currency": "USD",
+                        "type": "FEE"
+                    }
+                ],
+                "penalties": [
+                    {
+                        "amount": 120.00,
+                        "currency": "USD",
+                        "type": "FEE"
+                    }
+                ],
+                "refunds": [
+                    {
+                        "amount": 120.00,
+                        "currency": "USD",
+                        "type": "FEE"
+                    }
+                ]
+            }
+            "rateType": {
+                "code": "CORPORATE",
+                "name": "Corporate rate"
+            },
+            "rulesAndRegulations": [
+                "No smoking in the vehicle."
+            ],
+            "payment": {
+                "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                "amount": {
+                    "value": 150.00,
+                    "currency": "USD"
+                },
+                "fopType": "unsupportedExternal",
+                "partnerType": "ON_ACCOUNT",
+                "accountBillingType": "AGENCY_INVOICE",
+                "virtualType": "CONFERMA",
+                "externalType": "Corporate Card",
+                "last4digits": "1234"
+            },
+            "passengers": [
+                {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "id": 1,
+                    "preferredLanguage": "en"
+                }
+            ],
+            "status": {
+                "bookingDateTime": "2025-07-20T14:00:00Z",
+                "bookingStatus": "BOOKED",
+                "cancellationDateTime": "2025-07-20T14:00:00Z"
             }
         }
     }
@@ -210,7 +267,8 @@ Content-Type: application/json
         "vendor": {
             "name": "Vendor Name",
             "phoneNumber": "1-800-555-1212",
-            "email": "foo@bar.com"
+            "email": "foo@bar.com",
+            "code": "VEND123"
         },
         "details": {
             "url": "https://partner-url.com",
@@ -223,7 +281,8 @@ Content-Type: application/json
                 "acrissCode": "FDMR",
                 "imageUrl": "https://example.com/vehicle-image.jpg",
                 "seatingCapacity": 4,
-                "luggageCapacity": 2
+                "luggageCapacity": 2,
+                "category": "F"
             },
             "pickup": {
                 "datetime": "2025-07-25T16:30:00",
@@ -256,7 +315,62 @@ Content-Type: application/json
                 "currency": "USD",
                 "hourlyRate": 45.00,
                 "estimatedDuration": "PT3H30M",
-                "minimumDuration": "PT45M"
+                "minimumDuration": "PT45M",
+                "costToCustomer": 150.00,
+                "breakdowns": [
+                    {
+                        "amount": 120.00,
+                        "currency": "USD",
+                        "type": "FEE"
+                    }
+                ],
+                "penalties": [
+                    {
+                        "amount": 120.00,
+                        "currency": "USD",
+                        "type": "FEE"
+                    }
+                ],
+                "refunds": [
+                    {
+                        "amount": 120.00,
+                        "currency": "USD",
+                        "type": "FEE"
+                    }
+                ]
+            }
+            "rateType": {
+                "code": "CORPORATE",
+                "name": "Corporate rate"
+            },
+            "rulesAndRegulations": [
+                "No smoking in the vehicle."
+            ],
+            "payment": {
+                "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                "amount": {
+                    "value": 150.00,
+                    "currency": "USD"
+                },
+                "fopType": "unsupportedExternal",
+                "partnerType": "ON_ACCOUNT",
+                "accountBillingType": "AGENCY_INVOICE",
+                "virtualType": "CONFERMA",
+                "externalType": "Corporate Card",
+                "last4digits": "1234"
+            },
+            "passengers": [
+                {
+                    "firstName": "John",
+                    "lastName": "Doe",
+                    "id": 1,
+                    "preferredLanguage": "en"
+                }
+            ],
+            "status": {
+                "bookingDateTime": "2025-07-20T14:00:00Z",
+                "bookingStatus": "BOOKED",
+                "cancellationDateTime": "2025-07-20T14:00:00Z"
             }
         }
     }
@@ -382,12 +496,13 @@ Vendor is the actual service provider fulfilling the reservation.
 | `name`        | `string` | -      | **Required**                 |
 | `phoneNumber` | `string` | -      | Phone number of the vendor.  |
 | `email`       | `string` | -      | Email address of the vendor. |
+| `code`        | `string` | -      | Code of the vendor company.  |
 
 ### <a name="groundbooking-details-schema"></a> GroundBooking Details
 
 | Name                  | Type     | Format                            | Description                                                       |
 |-----------------------|----------|-----------------------------------|-------------------------------------------------------------------|
-| `url`                 | `string` | -                                 | URL to redirect user to the booking on the partner's page.        |
+| `url`                 | `string` | -                                 | **Required**. URL to redirect user to the booking on the partner's page.|
 | `termsAndConditions`  | `string` | -                                 | Terms and conditions for the booking.                             |
 | `cancellationPolicy`  | `string` | -                                 | Cancellation policy information.                                  |
 | `vendorConfirmation`  | `string` | -                                 | Confirmation number from vendor.                                  |
@@ -396,7 +511,12 @@ Vendor is the actual service provider fulfilling the reservation.
 | `pickup`              | `object` | [Pickup Schema](#pickup-schema)   | **Required**. Detailed information in [Pickup](#pickup-schema).   |
 | `dropoff`             | `object` | [Stop Schema](#stop-schema)       | Detailed information in [Stop](#stop-schema).                     |
 | `stops`               | `array`  | [Stop Schema](#stop-schema)       | A list of intermediate stops.                                     |
-| `price`               | `object` | [Price Schema](#price-schema)     | Detailed information in [Price](#price-schema).                   |
+| `price`               | `object` | [Price Schema](#price-schema)     | **Required**. Detailed information in [Price](#price-schema).     |
+| `rateType`            | `object` | [Rate Type Schema](#rate-type-schema) | Rate type associated with the ground booking. Detailed information in [Rate Type](#rate-type-schema).|
+| `rulesAndRegulations` | `array`  | `string`                          | List of raw text describing provider rules and regulations.       |
+| `payment`             | `object` | [Payment Schema](#payment-schema) | Monetary payment made toward a booking. Detailed information in [Payment](#payment-schema).|
+| `passengers`          | `array`  | [Passenger Schema](#passenger-schema) | Passengers who are part of this reservation. Detailed information in [Passenger](#passenger-schema).|
+| `status`              | `object` | [Status Schema](#status-schema)       | Status information for the booking. Detailed information in [Status](#status-schema).|
 
 ### <a name="vehicle-schema"></a> Vehicle
 
@@ -405,33 +525,34 @@ Information about the vehicle assigned for the ground transportation.
 | Name              | Type      | Format | Description                                         |
 |-------------------|-----------|--------|-----------------------------------------------------|
 | `model`           | `string`  | -      | **Required**. Vehicle model (e.g., "Toyota Camry"). |
-| `acrissCode`      | `string`  | -      | ACRISS code for the vehicle (e.g., "FDMR").         |
+| `acrissCode`      | `string`  | `^[A-Z0-9]{4}$` | ACRISS code for the vehicle (e.g., "FDMR").|
 | `imageUrl`        | `string`  | -      | URL to an image of the vehicle.                     |
 | `seatingCapacity` | `integer` | -      | Number of passengers the vehicle can seat.          |
 | `luggageCapacity` | `integer` | -      | Number of luggage pieces the vehicle can hold.      |
+| `category`        | `string`  | -      | First letter from ACRISS code (e.g., "F").          |
 
 ### <a name="pickup-schema"></a> Pickup
 
 | Name           | Type     | Format                            | Description                                                                                                 |
 |----------------|----------|-----------------------------------|-------------------------------------------------------------------------------------------------------------|
-| `datetime`     | `string` | -                                 | **Required**. Local date and time of pickup according to RFC 3339.                                          |
-| `datetimeUtc`  | `string` | -                                 | **Required**. UTC date and time of pickup according to RFC 3339.                                            |
+| `datetime`     | `string` | `string<date-time>`               | **Required**. Local date and time of pickup according to RFC 3339.                                          |
+| `datetimeUtc`  | `string` | `string<date-time>`               | **Required**. UTC date and time of pickup according to RFC 3339.                                            |
 | `address`      | `object` | [Address Schema](#address-schema) | **Required if no `iataCode` is informed**. Detailed information in  [Address](#address-schema).             |
-| `iataCode`     | `string` | -                                 | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK").                |
+| `iataCode`     | `string` | `^[A-Z]{3}$`                        | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK").              |
 | `locationName` | `string` | -                                 | Name of the pickup location.                                                                                |
-| `geolocation`  | `object` | [Geolocation Schema](#geolocation-schema)| Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema). |
+| `geolocation`  | `object` | [Geolocation Schema](#geolocation-schema)| Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema).|
 | `instructions` | `string` | -                                 | Special instructions for the pickup (e.g., "Meet at the hotel lobby").                                      |
 
 ### <a name="stop-schema"></a> Stop
 
-| Name           | Type     | Format | Description                                                                 |
+| Name           | Type     | Format | Description                                                          |
 |----------------|----------|-|-----------------------------------------------------------------------------|
-| `datetime`     | `string` |-| Local date and time of pickup according to RFC 3339.                        |
-| `datetimeUtc`  | `string` |-| UTC date and time of pickup according to RFC 3339.                          |
-| `address`      | `object` |[Address Schema](#address-schema)| **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).           |
-| `iataCode`     | `string` |-| **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK"). |
+| `datetime`     | `string` |`string<date-time>`| Local date and time of pickup according to RFC 3339.      |
+| `datetimeUtc`  | `string` |`string<date-time>`| UTC date and time of pickup according to RFC 3339.        |
+| `address`      | `object` |[Address Schema](#address-schema)| **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).|
+| `iataCode`     | `string` |`^[A-Z]{3}$`| **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK").|
 | `locationName` | `string` |-| Name of the pickup location.                                                |
-| `geolocation`  | `object` |[Geolocation Schema](#geolocation-schema)| Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema).   |
+| `geolocation`  | `object` |[Geolocation Schema](#geolocation-schema)| Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema).|
 | `instructions` | `string` |-| Special instructions for the pickup (e.g., "Meet at the hotel lobby").      |
 
 ### <a name="address-schema"></a> Address
@@ -442,8 +563,8 @@ Information about the vehicle assigned for the ground transportation.
 | `address2`               | `string` | -      | Stands for premise name of the address on xNal standard.                                                   |
 | `localityName`           | `string` | -      | **Required**. City or locality name.                                                                       |
 | `administrativeAreaName` | `string` | -      | State, province or region.                                                                                 |
-| `postalCode`             | `string` | -      | -                                                                                                          |
-| `country`                | `string` | -      | **Required**. Two-letter ISO 3166-1 alpha-2 country code.                                                  |
+| `postalCode`             | `string` | -      | **Required**. Postal Code                                                                                  |
+| `country`                | `string` |`^[A-Z]{2}$` | **Required**. Two-letter ISO 3166-1 alpha-2 country code.                                             |
 
 ### <a name="geolocation-schema"></a> Geolocation
 
@@ -461,6 +582,60 @@ Information about the vehicle assigned for the ground transportation.
 | `hourlyRate`        | `number` | -      | Hourly rate for the service, if applicable.                            |
 | `estimatedDuration` | `string` | -      | Estimated duration of the service in ISO 8601 duration format.         |
 | `minimumDuration`   | `string` | -      | Minimum duration of the service in ISO 8601 duration format.           |
+| `costToCustomer`    | `number` | -      | The total cost incurred by the customer.                               |
+| `breakdowns`        | `array`  | [Price Breakdown Schema](#price-breakdown-schema) | Breakdown of the price amount describing booked product amount, fee amount, taxes amount. Detailed information in [Price Breakdown](#price-breakdown-schema).|
+| `penalties`         | `array`  | [Price Breakdown Schema](#price-breakdown-schema) | Breakdown of penalties. Detailed information in [Price Breakdown](#price-breakdown-schema).|
+| `refunds`           | `array`  | [Price Breakdown Schema](#price-breakdown-schema) | Breakdown of refunds. Detailed information in [Price Breakdown](#price-breakdown-schema).|
+
+### <a name="price-breakdown-schema"></a> Price Breakdown
+
+| Name        | Type     | Format | Description                                      |
+|-------------|----------|--------|--------------------------------------------------|
+| `amount`    | `number` | -      | **Required**. Monetary amount for this component.|
+| `currency`  | `string` | -      | **Required**. ISO 4217 currency code.            |
+| `type`      | `string` | -      | **Required**. Type of the breakdown item.        |
+
+### <a name="rate-type-schema"></a> Rate Type
+
+| Name   | Type     | Format | Description                    |
+|--------|----------|--------|--------------------------------|
+| `code` | `string` | -      | **Required**. Rate type code.  |
+| `name` | `string` | -      | **Required**. Rate type name.  |
+
+### <a name="payment-schema"></a> Payment
+| Name               | Type     | Format | Description                                               |
+|--------------------|----------|--------|-----------------------------------------------------------|
+| `id`               | `string` | GUID   | **Required**. Payment identifier.                         |
+| `amount`           | `object` | [Amount Schema](#amount-schema) | **Required**. Monetary amount with currency code (ISO 4217). Detailed information in [Amount](#amount-schema).|
+| `fopType`         | `string` | Enum: `"ghost"` `"personal"` `"virtual"` `"partner"` `"accountbilling"` `"unsupportedExternal"` | **Required**. Form of payment type. Use one of the enumerated internal types when the booking's form of payment is supported and mapped. Use 'unsupportedExternal' ONLY when the booking originated externally with an unsupported / unmapped payment type; when 'unsupportedExternal' is used, the original external payment label MUST be provided in 'externalType'.|
+| `partnerType`     | `string` | Enum: `"ON_ACCOUNT"` | Type of partner form of payment used.        |
+| `accountBillingType` | `string` | Enum: `"AGENCY_INVOICE"` `"DIRECTBILL_ACCOUNT"` `"DIRECTBILL_EVOUCHER"`| Account billing form of payment type.|
+| `virtualType`     | `string` | `"CONFERMA"` `"MASTERCARD"` `"UNKNOWN"` | Virtual card type used.   |
+| `externalType`    | `string` | -      | **Required if fopType='unsupportedExternal'** Original external form of payment type label as received from an external booking source. Required when fopType='unsupportedExternal'. Optional for other fopType values when the booking originated externally and the external value could be mapped to an internal supported type (in those cases both fopType and externalType may appear).|
+| `last4digits`     | `string` | `^[0-9]{4}$` | Last four digits of card used (if applicable).       |
+
+### <a name="amount-schema"></a> Amount
+
+| Name      | Type     | Format | Description                             |
+|-----------|----------|--------|-----------------------------------------|
+| `value`   | `number` | -      | **Required**. Numeric amount value.     |
+| `currency`| `string` | -      | **Required**. Currency code (ISO 4217). |
+
+### <a name="passenger-schema"></a> Passenger
+
+| Name              | Type     | Format | Description                                 |
+|-------------------|----------|--------|---------------------------------------------|
+| `firstName`       | `string` | -      | **Required**. First name of the passenger.  |
+| `lastName`        | `string` | -      | **Required**. Last name of the passenger.   |
+| `id`              | `integer` | -      | Person ID                                  |
+| `preferredLanguage` | `string` | -      | The preferred language of the person.     |
+
+### <a name="status-schema"></a> Status
+| Name                 | Type     | Format | Description                                         |
+|----------------------|----------|--------|-----------------------------------------------------|
+| `bookingDateTime`    | `string` | `string<date-time>`      | The date and time the booking occurred on an itinerary.|
+| `bookingStatus`      | `string` | Enum: `"BOOKED"` `"CANCELLED"` | **Required**. Current status of the booking.|
+| `cancellationDateTime` | `string` | `string<date-time>`     | The date and time the booking was last cancelled.|
 
 ### <a name="update-append-trip-extras-booking-response-schema"></a>Update or Append Trip Extras Booking Response
 
