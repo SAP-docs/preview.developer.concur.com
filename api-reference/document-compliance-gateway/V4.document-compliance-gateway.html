@@ -1286,9 +1286,9 @@
 
         <h1 id="document-compliance-gateway-v4">Document Compliance Gateway v4</h1>
 
-<p>Document Compliance Gateway v4 API is designed to manage the transmission of the compliance document  to the validating vendor. Vendors can implement the API to read the compliance document sent to the SAP Concur system by the end user from an approved email, validate the compliance document against government records, and return the validation result. In addition, the vendor can read and parse the compliance document file to provide tax relevant data for creating expense entry.</p>
+<p>The Document Compliance Gateway v4 API is designed to manage the transmission of compliance documents between SAP Concur and validating vendors. Vendors can implement the API to exchange compliance documents with the SAP Concur system, validate those documents against relevant authoritative or regulatory sources, and return the validation results. Vendors can also read and parse the compliance document file to provide tax-related data for creating expense entries.</p>
 
-<p>The API supports an improved and efficient process for compliance document validation. The end user gets the compliance document validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The API also uses the data from the compliance document file to initiate the expense line item, saving the need for the user to manually type the information.</p>
+<p>The API supports a streamlined and efficient process for compliance document validation. End users receive validation results prior to expense creation, helping to prevent unnecessary processing as well as the return and resubmission of expense reports. In addition, the API uses data extracted from the compliance document file to initiate the expense line item, reducing the need for manual data entry.</p>
 
 <h2 id="prior-versions">Prior Versions</h2>
 
@@ -1296,7 +1296,7 @@
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
-<p>Access to this documentation does not provide access to the API. The API will be deployed to US2 &amp; EU2 data centers.</p>
+<p>Access to this documentation does not provide access to the API.</p>
 
 <h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
 
@@ -1393,7 +1393,7 @@
 <ul>
   <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in.</li>
   <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>.</li>
-  <li>Once you have the token use the following curl command to POST invoice details:</li>
+  <li>Once you have the token use the following curl command to post invoice details:</li>
 </ul>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> GET <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
@@ -1447,7 +1447,7 @@
 
 <h4 id="request-1">Request</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us2.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
 Authorization: Bearer &lt;JWT Token&gt;
 concur-correlationid: <span class="s2">"Test-FlOW"</span>
 </code></pre></div></div>
@@ -1459,7 +1459,7 @@ Content-Type: XML
 
 <h4 id="put-api-call">PUT API CALL</h4>
 
-<p><code class="language-plaintext highlighter-rouge">Provide the compliance document validation result and parsed tax relevant data from the compliance document.</code></p>
+<p><code class="language-plaintext highlighter-rouge">Provide the compliance document and/or validation result and parsed tax relevant data from the compliance document.</code></p>
 
 <h3 id="scopes-1">Scopes</h3>
 
@@ -1509,13 +1509,22 @@ Content-Type: XML
   <li>
     <p><strong><a href="#DigitalTaxDocument-Schema">digitalTaxDocument</a></strong> - A digitalTaxDocument file in JSON format that is <strong>required</strong>.</p>
   </li>
-  <li>
-    <p><strong>displayedVersion</strong> - A multipart compliant document in human-readable PDF format.</p>
+  <li><strong>displayedVersion</strong> - A multipart compliant document in human-readable PDF format.
     <ul>
       <li>If the end user only uploads the XML file, the partner will receive the event with <em>isDisplayVersionRequired</em> <em>= true</em>.
         <ul>
           <li>In such scenarios, If the xml file is valid and processed, the partner needs to convert the XML file into PDF format and upload it in the <strong>displayedVersion</strong> field <strong>mandatorily</strong>.</li>
           <li>If the XML file is invalid or has failed, uploading the displayedVersion is <strong>optional</strong> .</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><strong>complianceDocument</strong> - A multipart compliant e-document containing the structured e-invoice data.
+    <ul>
+      <li>The partner will receive the event with <em>isComplianceDocRequired</em> <em>= true</em>.
+        <ul>
+          <li>In such scenarios, if the partner is able to fetch the compliance document from the official authorities (<a href="#DigitalTaxDocument-Schema">status</a>: <em>processed</em>), it must be provided in the <strong>complianceDocument</strong> field as a multipart attachment.</li>
+          <li>If the partner is not able to fetch the compliance document from the official authorities (<a href="#DigitalTaxDocument-Schema">status</a>: <em>failed</em>), uploading the complianceDocument is <strong>optional</strong>.</li>
         </ul>
       </li>
     </ul>
@@ -1527,7 +1536,7 @@ Content-Type: XML
 <ul>
   <li>The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in.</li>
   <li>To get a token or to refresh a token, use the curl command(s)specified <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">here</a>. It is recommended to have a valid token and scope to make the post call to the API.</li>
-  <li>Once you have the token, use the following curl command to POST invoice details:</li>
+  <li>Once you have the token, use the following curl command to post invoice details:</li>
 </ul>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">--location</span> <span class="nt">--request</span> PUT <span class="s1">'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}'</span> <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span>
@@ -1582,7 +1591,7 @@ Content-Type: XML
 
 <h4 id="request-3">Request</h4>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://us2.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
 Authorization: Bearer &lt;JWT Token&gt;
 concur-correlationid: <span class="s2">"Test-FlOW"</span>
 digitalTaxDocument:
@@ -1659,7 +1668,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">status</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>“enum”: [“processed, failed”]</td>
-      <td><strong>Required</strong> - Status of the CFDI document.</td>
+      <td><strong>Required</strong> - Status of the compliance document.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">documentData</code></td>
@@ -1704,7 +1713,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">uuid</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong> - Document UUID - field present in compliance document.</td>
+      <td><strong>Required</strong> - Document UUID - field present in compliance document/Government doc unique id.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">grossAmount</code></td>
@@ -1715,14 +1724,14 @@ Content-Type: application/json
     <tr>
       <td><code class="language-plaintext highlighter-rouge">currency</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>“enum”: [“INR”,”MXN”,”USD”]</td>
-      <td><strong>Required</strong> - Currency used to express amounts (According to the ISO 4217 codes)(MXN).</td>
+      <td>“enum”: [“INR”,”MXN”,”USD”,..]</td>
+      <td><strong>Required</strong> - Currency used to express amounts (According to the ISO 4217 codes).</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">exchangeRate</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td><strong>Required</strong> - Exchange Rate according to currency used. Mandatory id currency &lt;&gt; MXN.</td>
+      <td><strong>Required</strong> - Exchange Rate according to currency used.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">netAmount</code></td>
@@ -1745,8 +1754,8 @@ Content-Type: application/json
     <tr>
       <td><code class="language-plaintext highlighter-rouge">formatVersion</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>“enum”: [“3.3, 4.0”]</td>
-      <td>Version of the CFDI document.</td>
+      <td>“enum”: [“4.0”,..]</td>
+      <td>Version of the compliance document.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">buyer</code></td>
@@ -1758,7 +1767,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">number</code></td>
       <td><code class="language-plaintext highlighter-rouge">string</code></td>
       <td>-</td>
-      <td>Number of the receipt.</td>
+      <td>Number/Supplier Document Id of the receipt.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">code</code></td>
@@ -1800,7 +1809,7 @@ Content-Type: application/json
       <td><code class="language-plaintext highlighter-rouge">lineItems</code></td>
       <td><code class="language-plaintext highlighter-rouge">array</code></td>
       <td><a href="#lineitem-schema">LineItem schema </a></td>
-      <td>Line items present in the CFDI compliance document.</td>
+      <td>Line items present in the compliance document.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">verificationCode</code></td>
