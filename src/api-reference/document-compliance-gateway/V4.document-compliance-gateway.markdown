@@ -5,9 +5,9 @@ layout: reference
 
 # Document Compliance Gateway v4
 
-Document Compliance Gateway v4 API is designed to manage the transmission of the compliance document  to the validating vendor. Vendors can implement the API to read the compliance document sent to the SAP Concur system by the end user from an approved email, validate the compliance document against government records, and return the validation result. In addition, the vendor can read and parse the compliance document file to provide tax relevant data for creating expense entry.
+The Document Compliance Gateway v4 API is designed to manage the transmission of compliance documents between SAP Concur and validating vendors. Vendors can implement the API to exchange compliance documents with the SAP Concur system, validate those documents against relevant authoritative or regulatory sources, and return the validation results. Vendors can also read and parse the compliance document file to provide tax-related data for creating expense entries.
 
-The API supports an improved and efficient process for compliance document validation. The end user gets the compliance document validation result prior to expense creation preventing the unnecessary process, as well as, return and resubmission of the expense reports. The API also uses the data from the compliance document file to initiate the expense line item, saving the need for the user to manually type the information.
+The API supports a streamlined and efficient process for compliance document validation. End users receive validation results prior to expense creation, helping to prevent unnecessary processing as well as the return and resubmission of expense reports. In addition, the API uses data extracted from the compliance document file to initiate the expense line item, reducing the need for manual data entry.
 
 ## Prior Versions
 
@@ -15,7 +15,7 @@ No prior API version available
 
 ##  <a name="limitations"></a>Limitations
 
-Access to this documentation does not provide access to the API. The API will be deployed to US2 & EU2 data centers.
+Access to this documentation does not provide access to the API.
 
 ## <a name="process-flow"></a>Process Flow
 
@@ -76,7 +76,7 @@ Name|Type|Format|Description
 
 * The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which data center the JWT will work in.
 * To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html).
-* Once you have the token use the following curl command to POST invoice details:
+* Once you have the token use the following curl command to post invoice details:
 
 ```sh
 curl --location --request GET 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
@@ -102,7 +102,7 @@ Code|Description
 #### Request
 
 ```shell
-GET https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+GET https://us2.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
 Authorization: Bearer <JWT Token>
 concur-correlationid: "Test-FlOW"
 ```
@@ -115,7 +115,7 @@ Content-Type: XML
 
 #### PUT API CALL
 
-`Provide the compliance document validation result and parsed tax relevant data from the compliance document.`
+`Provide the compliance document and/or validation result and parsed tax relevant data from the compliance document.`
 
 ### Scopes
 
@@ -152,11 +152,16 @@ Name|Type|Format|Description
        * In such scenarios, If the xml file is valid and processed, the partner needs to convert the XML file into PDF format and upload it in the **displayedVersion** field **mandatorily**.
        * If the XML file is invalid or has failed, uploading the displayedVersion is **optional** .
 
+* **complianceDocument** - A multipart compliant e-document containing the structured e-invoice data.
+  * The partner will receive the event with _isComplianceDocRequired_ _= true_.
+    * In such scenarios, if the partner is able to fetch the compliance document from the official authorities ([status](#DigitalTaxDocument-Schema): _processed_), it must be provided in the **complianceDocument** field as a multipart attachment.
+    * If the partner is not able to fetch the compliance document from the official authorities ([status](#DigitalTaxDocument-Schema): _failed_), uploading the complianceDocument is **optional**.
+
 #### Notes
 
 * The company JWT is data center specific. The auth service (/token endpoint) that signs the JWT determines which DC the JWT will work in.
 * To get a token or to refresh a token, use the curl command(s)specified [here](https://developer.concur.com/api-reference/authentication/getting-started.html). It is recommended to have a valid token and scope to make the post call to the API.
-* Once you have the token, use the following curl command to POST invoice details:
+* Once you have the token, use the following curl command to post invoice details:
 
 ```sh
 curl --location --request PUT 'https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}' -H 'Authorization: Bearer <JWT token>'
@@ -183,7 +188,7 @@ Code|Description
 #### Request
 
 ```shell
-POST https://integration.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
+PUT https://us2.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/c92565ca-78c7-47be-a730-1d33ef35cdac
 Authorization: Bearer <JWT Token>
 concur-correlationid: "Test-FlOW"
 digitalTaxDocument:
@@ -250,7 +255,7 @@ Content-Type: application/json
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-|`status`| `string` | "enum": ["processed, failed"]| **Required** - Status of the CFDI document.| 
+|`status`| `string` | "enum": ["processed, failed"]| **Required** - Status of the compliance document.| 
 |`documentData` | `object` | [DocumentData Schema ](#DocumentData-Schema) | **Required** - Document details and Tax Token info (Can be null for failed status). |     
 | `code` | `string` | optional | Response code provided by partner.|     
 | `description`  | `string` | optional| Comment/description provided by partner. | 
@@ -260,23 +265,23 @@ Content-Type: application/json
 |Name|Type|Format|Description|
 |---|---|---|---|  
 | `issueDateTime` | `string` | YYYY-MM-DDTHH:mm:ssZ | **Required** - Date and time when the document was created in the local timezone where it was issued.| 
-| `uuid`| `string` | - |**Required** - Document UUID - field present in compliance document.|                         
+| `uuid`| `string` | - |**Required** - Document UUID - field present in compliance document/Government doc unique id.|                         
 | `grossAmount` | `number` | - | **Required** - Sum of amounts before discounts and taxes. |
-| `currency` | `string` | "enum": ["INR","MXN","USD"]| **Required** - Currency used to express amounts (According to the ISO 4217 codes)(MXN).|
-| `exchangeRate` | `string` | - | **Required** - Exchange Rate according to currency used. Mandatory id currency <> MXN.|                                   
+| `currency` | `string` | "enum": ["INR","MXN","USD",..]| **Required** - Currency used to express amounts (According to the ISO 4217 codes).|
+| `exchangeRate` | `string` | - | **Required** - Exchange Rate according to currency used.|                                   
 | `netAmount`| `number` | - | **Required** - Gross Amount – Discounts + VAT Taxes – Withholding Taxes.|                                
 | `paymentMethod`| `string` | - | **Required** - Specify the code of payment method - PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.|   
 | `vendor` | `object` | [Vendor schema ](#vendor-schema) | **Required** - details of the vendor.|
-| `formatVersion` | `string` | "enum": ["3.3, 4.0"]| Version of the CFDI document.|                          
+| `formatVersion` | `string` | "enum": ["4.0",..]| Version of the compliance document.|                          
 | `buyer`| `object` | [Buyer schema ](#buyer-schema)| Details of the buyer.|
-| `number`| `string` | -  | Number of the receipt.| 
+| `number`| `string` | -  | Number/Supplier Document Id of the receipt.| 
 | `code` | `string` | -  | Prefix of receipt, an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.) |                                           
 | `documentPostalCode`| `string` | - | Postal code of place of receipt issue.|     
 | `paymentType` | `string` | "enum": ["01, 02, 03"] | Means of payment (01 (Cash), 02 (Cheque), 03 (Bank Transfer/Digital Wallet)).|                                     
 | `discount` | `number` | - | Total amount of applicable discounts before taxes.| 
 | `totalSalesTax`| `number` | - | Sum of all sales tax amounts of line items.|                   
 | `totalWithholdingTax`| `number` | - | Sum of all withhold tax amounts of line items.|          
-| `lineItems`  | `array`  | [LineItem schema ](#lineitem-schema) | Line items present in the CFDI compliance document.| 
+| `lineItems`  | `array`  | [LineItem schema ](#lineitem-schema) | Line items present in the compliance document.| 
 | `verificationCode` | `string` | - | Company's certificate used to generate digital signature.|  
 | `comments`| `string` | - | Comment/description.|                                              
 
