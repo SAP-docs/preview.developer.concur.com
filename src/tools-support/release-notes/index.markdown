@@ -6,7 +6,6 @@ layout: reference
 
 ## Developer Platform Release Notes
 
-* [January 2026](./api/2026-01-12.html)
 * [December 2025](./api/2025-12-04.html)
 * [November 2025](./api/2025-11-11.html)
 * [October 2025](./api/2025-10-02.html)
@@ -19,7 +18,18 @@ layout: reference
 * [March 2025](./api/2025-03-06.html)
 * [February 2025](./api/2025-02-06.html)
 * [January 2025](./api/2025-01-09.html)
-* [2024 Release Notes](./api/archive/2024-archive-dev.html)
+* [December 2024](./api/2024-12-05.html)
+* [November 2024](./api/2024-11-07.html)
+* [October 2024](./api/2024-10-03.html)
+* [September 2024](./api/2024-09-12.html)
+* [August 2024](./api/2024-08-08.html)
+* [July 2024](./api/2024-07-10.html)
+* [June 2024](./api/2024-06-06.html)
+* [May 2024](./api/2024-05-09.html)
+* [April 2024](./api/2024-04-04.html)
+* [March 2024](./api/2024-03-14.html)
+* [February 2024](./api/2024-02-08.html)
+* [January 2024](./api/2024-01-11.html)
 * [2023 Release Notes](./api/archive/2023-archive-dev.html)
 * [2022 Release Notes](./api/archive/2022-archive-dev.html)
 * [2021 Release Notes](./api/archive/2021-archive-dev.html)
