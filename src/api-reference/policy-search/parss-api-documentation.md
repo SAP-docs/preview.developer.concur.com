@@ -2,19 +2,20 @@
 title: PARSS v4
 layout: reference
 ---
-# Policy And Rule Search Service (PARSS) API Documentation
+# Policy and Rule Search Service (PARSS) v4
 
 {% include prerelease.html %}
 
-The Policy And Rule Search Service (PARSS) provides APIs for searching policies and rules, managing metadata, and auditing user interactions. It allows client applications to query for policy information, retrieve related documents, and track user search history.
+The Policy and Rule Search Service (PARSS) provides APIs for searching policies and rules, managing metadata, and auditing user interactions. It allows client applications to query for policy information, retrieve related documents, and track user search history.
 
 ## <a name="limitations"></a>Limitations
 
-Access to this documentation does not provide access to the API. This API is for internal SAP Concur use. Authentication is required for all endpoints, using either mTLS, JWT, or OAuth2 as specified for each endpoint.
+Access to this documentation does not provide access to the API. This API is intended for internal SAP Concur use only. Authentication is required for all endpoints, using either mTLS, JWT, or OAuth2 as specified for each endpoint.
 
 ### Data Center URIs
 
 The `{datacenterURI}` placeholder in all endpoint URIs should be replaced with your specific data center endpoint:
+
 * US2: `us2.api.concursolutions.com`
 * EU2: `eu2.api.concursolutions.com`
 * APJ1: `apj1.api.concursolutions.com`
@@ -47,9 +48,6 @@ This API may interact with other internal services for policy data, document sto
 ## <a name="access-token-usage"></a>Access Token Usage
 
 Endpoints secured with `JWT` require a user-specific bearer token. Endpoints secured with `ClientCredentialsAuth` use a company-level OAuth2 token. Endpoints secured with `x509` use mutual TLS for service-to-service authentication.
-
----
-
 
 ## PARSS Metadata
 
@@ -84,7 +82,6 @@ This endpoint supports pagination using `$top` and `$skip` parameters. The maxim
 
 ### Payloads
 
-
 * Request: None
 * Response: [MetadataAPIResponse](#schema-MetadataAPIResponse) or [ErrorResponse](#schema-errorresponse)
 
@@ -99,6 +96,7 @@ This endpoint supports pagination using `$top` and `$skip` parameters. The maxim
 | `500 Internal Server Error` | Server error occurred while processing the request                |
 
 ### Examples
+
 #### Request
 
 ```shell
@@ -198,6 +196,7 @@ https://{datacenterURI}/dg/v4/documents/{fileName}/download
 ### File Name Encoding
 
 File names containing special characters must be URL-encoded. Examples:
+
 * `policy document.pdf` → `policy%20document.pdf`
 
 
@@ -212,14 +211,13 @@ File names containing special characters must be URL-encoded. Examples:
 | `404 Not Found`             | Document with specified file name does not exist                       |
 | `500 Internal Server Error` | Server error occurred while retrieving the document                    |
 
-
 ### Payloads
-
 
 * Request: None
 * Response: `binary` or [ErrorResponse](#schema-errorresponse)
 
 ### Examples
+
 #### Request
 
 ```shell
@@ -229,6 +227,7 @@ concur-correlationid: 123e4567-e89b-12d3-a456-426614174000
 concur-route: route-identifier
 ``` 
 #### Response
+
 #### Success Response
 
 ```shell
@@ -241,10 +240,10 @@ Date: Wed, 15 Jan 2025 10:35:00 GMT
 
 [Binary PDF content]
 
-
 #### Response
 
 The response will be the binary content of the requested document. The response includes:
+
 * `Content-Type` header indicating the document's MIME type (e.g., `application/pdf`, `application/json`, `text/plain`)
 * `Content-Disposition` header set to `attachment` to trigger download
 * `Content-Length` header indicating file size in bytes
@@ -267,6 +266,7 @@ Date: Wed, 15 Jan 2025 10:35:00 GMT
 ```
 
 #### Error Response - Invalid Encoding
+
 ```shell
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -316,6 +316,7 @@ https://{datacenterURI}/dg/v4/documents/{fileName}/preview
 ### File Name Encoding
 
 File names containing special characters must be URL-encoded. Examples:
+
 * `policy document.pdf` → `policy%20document.pdf`
 
 ### Payloads
@@ -324,6 +325,7 @@ File names containing special characters must be URL-encoded. Examples:
 * Response: `binary` or [ErrorResponse](#schema-errorresponse)
 
 ### Examples
+
 #### Request
 
 ```shell
@@ -335,6 +337,7 @@ concur-route: route-identifier
 ### Response
 
 The response will be the binary content of the requested document for preview purposes. The response includes:
+
 * `Content-Type` header indicating the document's MIME type (e.g., `application/pdf`, `image/png`, `text/html`)
 * `Content-Disposition` header set to `inline` to display in browser instead of downloading
 * `Content-Length` header indicating file size in bytes
@@ -351,7 +354,9 @@ Content-Length: 1048576
 Date: Wed, 15 Jan 2025 10:40:00 GMT
 Cache-Control: private, max-age=3600
 ```
+
 [Binary PDF content - actual file bytes]
+
 ### Error Response - File Not Found
 
 ```shell
@@ -369,6 +374,7 @@ Date: Wed, 15 Jan 2025 10:40:00 GMT
 ```
 
 ### Error Response - Unsupported Format
+
 ```shell
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -382,7 +388,9 @@ Date: Wed, 15 Jan 2025 10:40:00 GMT
   }
 }
 ```
+
 ### Error Response - Insufficient Permissions
+
 ```shell
 HTTP/1.1 403 Forbidden
 Content-Type: application/json
@@ -396,7 +404,6 @@ Date: Wed, 15 Jan 2025 10:40:00 GMT
   }
 }
 ```
-
 
 ## <a name="schema"></a>Schema
 
@@ -434,6 +441,7 @@ Date: Wed, 15 Jan 2025 10:40:00 GMT
 | `value`     | `array`  | `string` | **Required** Values associated with the metadata key.          |
 
 ### <a name="schema-ErrorResponse"></a>ErrorResponse
+
 
  Name    | Type     | Format                 | Description                        
 ---------|----------|------------------------|------------------------------------
