@@ -9,7 +9,7 @@ layout: reference
 This document provides detailed information regarding the APIs and scopes that are used for the  Groundspan -Trip Extras features.
 
 ## Data Scope
-![Image showing groundspan terms and conditions that will](/api-guides/images/groundspan-trip-extras-terms_and_conditions.png)
+![Image showing groundspan terms and conditions that will](../images/groundspan-trip-extras-terms_and_conditions.png)
 
 ### Grants read and write access to Event Topics  
 This toggle allows Groundspan to subscribe to booking events and read the details of the booking (air + hotel). Groundspan uses this data to return personalized offers based on the traveler’s trip details.
