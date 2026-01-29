@@ -461,22 +461,22 @@ HTTP/1.1 204 No Content
 
 ### <a name="booking-schema"></a> Booking
 
-| Name             | Type     | Format                                          | Description                                                                                   |
-| ---------------- | -------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `type`           | `string` | -                                               | **Required**. Type of partner reservation (e.g., `ground`.)                                   |
-| `groundMetadata` | `object` | [Metadata Schema](#metadata-schema)             | **Required**. Detailed information in [Metadata](#metadata-schema).                           |
-| `partner`        | `object` | [Partner Schema](#partner-schema)               | **Required**. Detailed information in [Partner](#partner-schema).                             |
-| `vendor`         | `object` | [Vendor Schema](#vendor-schema)                 | Detailed information in [Vendor](#vendor-schema).                                             |
-| `details`        | `object` | [Details Schema](#groundbooking-details-schema) | **Required**. Detailed information in [GroundBooking Details](#groundbooking-details-schema). |
+| Name       | Type     | Format                                          | Description                                                                                   |
+| ---------- | -------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `type`     | `string` | -                                               | **Required**. Type of partner reservation (e.g., `ground`.)                                   |
+| `metadata` | `object` | [Metadata Schema](#metadata-schema)             | **Required**. Detailed information in [Metadata](#metadata-schema).                           |
+| `partner`  | `object` | [Partner Schema](#partner-schema)               | **Required**. Detailed information in [Partner](#partner-schema).                             |
+| `vendor`   | `object` | [Vendor Schema](#vendor-schema)                 | Detailed information in [Vendor](#vendor-schema).                                             |
+| `details`  | `object` | [Details Schema](#groundbooking-details-schema) | **Required**. Detailed information in [GroundBooking Details](#groundbooking-details-schema). |
 
 ### <a name="metadata-schema"></a> Ground Metadata
 
 Additional ground metadata related to the booking.
 
-| Name        | Type                | Format | Description                                                                                                |
-| ----------- | ------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
+| Name        | Type                | Format | Description                                                                                                     |
+| ----------- | ------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
 | `version`   | `int`               | -      | **Required**. Version of the booking. Changes with an older version are stale. Must be greater than or equal 1. |
-| `timestamp` | `string<date-time>` | -      | Timestamp of the changes in ISO 8601 format.                                                               |
+| `timestamp` | `string<date-time>` | -      | Timestamp of the changes in ISO 8601 format.                                                                    |
 
 ### <a name="partner-schema"></a> Partner
 
