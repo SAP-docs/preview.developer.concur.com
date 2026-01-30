@@ -40,7 +40,7 @@ Groundspan uses the customers profile data to create a traveler profile in Groun
 | Identity Change Event | The Identity Change Event API delivers event notifications when user identity data changes within the SAP Concur platform. It publishes events for user profile creation, updates, and deletions, allowing subscribed systems to stay synchronized with identity and profile changes in near real time. | https://developer.concur.com/event-topics/profile/v4.identity-events.html |
 
 ### User Profile Data  
-Groundspan uses the identity v4 identity API to retrieve the user name, traveler’s name, phone numbers, email addresses, and standard profile fields. The traveler’s name, phone numbers and email addresses are used to create the booking. Standard profile fields are used for UDF mapping when required by the company. The company ID is used to ensure the correct Groundspan discount code is applied to the travelers booking if the company has multiple discount codes. 
+Groundspan uses the identity v4 identity API to retrieve the user name, traveler’s name, phone numbers, email addresses, and standard profile fields. The traveler’s name, phone numbers and email addresses are used to create the booking. Standard profile fields are used for UDF mapping when required by the company. The travel config ID is used to ensure the correct Groundspan discount code is applied to the travelers booking if the company has multiple discount codes.  
 
 ### Read user core data 
 
