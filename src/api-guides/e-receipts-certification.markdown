@@ -17,7 +17,7 @@ Once you sign the partnership agreement with the SAP Concur Business Development
 
 4. You develop and test the Development App in your development environment.
 
-5. You send an email to the CPM to schedule the Development App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](/user-app-certification-calendar.pdf).
+5. You send an email to the CPM to schedule the Development App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](/api-guides/user-app-certification-calendar.pdf).
 
 6. The CPM conducts the Development App certification walkthrough on the scheduled date. If your app fails in the Development App certification walkthrough, you'll need to fix the issues and goes back to step 6 to reschedule the certification walkthrough. Please refer to the [Certification Check List](#certification-check-list) for the certification requirements. 
 
@@ -29,7 +29,7 @@ Once you sign the partnership agreement with the SAP Concur Business Development
 
 10. The CPM and marketing team review and approve the listing documents, and send the confirmation to your marketing team. You need this approval before moving to step 12. 
 
-11. You email the CPM to schedule the Production App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](/user-app-certification-calendar.pdf).
+11. You email the CPM to schedule the Production App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](/api-guides/user-app-certification-calendar.pdf).
 
 12. The CPM conducts the Production App certification walkthrough on the scheduled date. If your app fails in the Production App certification walkthrough, you'll need to fix the issues and goes back to step 12 to schedule the next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
 
