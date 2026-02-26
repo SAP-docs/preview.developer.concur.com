@@ -152,7 +152,7 @@ https://www.concursolutions.com/goto/car-shop?pickuplocation={pickuplocation}&pi
 
 #### Example of Usage
 ```
-https://www.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2.3501079080340315&pickupdate=2024-06-01&pickuptime=12:00&dropofflocation=50.035467,8.562884&dropoffdate=2024-06-02&dropofftime=18:00
+https://www.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2.3501079080340315&pickupdate=2024-06-01&pickuptime=12:00:00&dropofflocation=50.035467,8.562884&dropoffdate=2024-06-02&dropofftime=18:00:00
 ```
 
 #### Query Parameters
@@ -161,10 +161,10 @@ https://www.concursolutions.com/goto/car-shop?pickuplocation=48.85694273527786,2
 |-----------------|--------|-----------------------------------------------------------------------------------|-----------|
 |`pickuplocation` |`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-car)|**Required** <br>Location where the car will be picked up.|
 |`pickupdate`     |`string`|`YYYY-MM-DD`                                                                       |**Required** <br>Date when the car will be picked up.|
-|`pickuptime`     |`string`|`hh:mm`                                                                            |**Required** <br>Time when the car will be picked up. <br> Uses the 24-hour format.|
+|`pickuptime`     |`string`|`hh:mm:ss`                                                                         |**Required** <br>Time when the car will be picked up. <br> Uses the 24-hour format.|
 |`dropofflocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-car)|(Optional) <br> Location where the car will be dropped off. <br>If it is not provided, it will default to `pickuplocation`.|
 |`dropoffdate`    |`string`|`YYYY-MM-DD`                                                                       |**Required** <br>Date when the car will be dropped off.|
-|`dropofftime`    |`string`|`hh:mm`                                                                            |**Required** <br>Time when the car will be dropped off. <br>Uses the 24-hour format.|
+|`dropofftime`    |`string`|`hh:mm:ss`                                                                         |**Required** <br>Time when the car will be dropped off. <br>Uses the 24-hour format.|
 |`companyuuid`    |`string`|`UUID`                                                                             |(Optional) <br> The unique identifier of a company, to which the user belongs. Used for SSO, see [Single Sing-On](/api-guides/travel/deeplink-integration.html#single-sign-on).|
 
 <a name="location-format-car"></a>**Location Format**
@@ -285,7 +285,7 @@ https://www.concursolutions.com/goto/rail-shop?departurelocation={departurelocat
 
 #### Example of Usage
 ```
-https://www.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departuretime=15:00&returndate=2024-06-13&returntime=07:00&departurelocation=41.378696,2.140457&returnlocation=41.380057,2.138956
+https://www.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departuretime=15:00:00&returndate=2024-06-13&returntime=07:00:00&departurelocation=41.378696,2.140457&returnlocation=41.380057,2.138956
 ```
 
 #### Query Parameters
@@ -294,10 +294,10 @@ https://www.concursolutions.com/goto/rail-shop?departuredate=2024-06-12&departur
 |-------------------|--------|------------------------------------------------------------------------------------|-----------|
 |`departurelocation`|`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail)|**Required** <br>Location where the train will depart from.|
 |`departuredate`    |`string`|`YYYY-MM-DD`                                                                        |**Required** <br>Date when the train will depart.|
-|`departuretime`    |`string`|`hh:mm`                                                                             |**Required** <br>Time when the train will depart. <br>Uses the 24-hour format.|
+|`departuretime`    |`string`|`hh:mm:ss`                                                                          |**Required** <br>Time when the train will depart. <br>Uses the 24-hour format.|
 |`returnlocation`   |`string`|[Location Format](/api-guides/travel/deeplink-integration.html#location-format-rail)|**Required** <br>Location where the train will return to. <br> For one-way trips, this will be considered as the destination location.|
 |`returndate`       |`string`|`YYYY-MM-DD`                                                                        |(Optional) <br> Date when the train will return.|
-|`returntime`       |`string`|`hh:mm`                                                                             |(Optional) <br> Time when the train will return. <br>Uses the 24-hour format.|
+|`returntime`       |`string`|`hh:mm:ss`                                                                          |(Optional) <br> Time when the train will return. <br>Uses the 24-hour format.|
 |`companyuuid`      |`string`|`UUID`                                                                              |(Optional) <br> The unique identifier of a company, to which the user belongs. Used for SSO, see [Single Sing-On](/api-guides/travel/deeplink-integration.html#single-sign-on).|
 
 <a name="location-format-rail"></a>**Location Format**
