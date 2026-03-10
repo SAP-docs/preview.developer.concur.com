@@ -4,7 +4,11 @@ layout: reference
 ---
 # Travel Request v4 - Participant Resources
 
-## <a name="get-request-participants"></a>Get the list of Participants for a given Request
+Manage participants and child requests attached to a Budget Request.
+
+## <a name="get-request-participants"></a>Get participants for a Budget Request
+
+This endpoint will enable to retrieve the list of participants of a Budget Request, as well as the child Requests for each of the participants.
 
 ### Scopes
 
@@ -41,9 +45,9 @@ To learn more about response HTTP status codes for this API see [Travel Request 
 
 #### Payload
 
-List of [Parent Request Participant](./v4.endpoints.schemas.html#schema-parentrequestparticipant)
+[ParentRequestParticipant](./v4.endpoints.schemas.html#schema-parentrequestparticipant)
 
-### Example
+### Example - One participant with two Child Requests and One participant without Child Request
 
 #### HTTP Request
 
@@ -73,7 +77,12 @@ Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
         "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
         "id": "A1B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4",
         "template": "https://us.api.concursolutions.com/travelrequest/v4/requests/{id}"
-      }
+      },
+      {
+        "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+        "id": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
+        "template": "https://us.api.concursolutions.com/travelrequest/v4/requests/{id}"
+      },
     ]
   },
   {
@@ -81,24 +90,14 @@ Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
       "href": "https://us.api.concursolutions.com/profile/v1/users/72efb2ae-5a0e-59ca-b037-1e73b6c59286",
       "id": "72efb2ae-5a0e-59ca-b037-1e73b6c59286",
       "template": "https://us.api.concursolutions.com/profile/v1/users/{id}"
-    },
-    "requests": [
-      {
-        "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
-        "id": "B2C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5",
-        "template": "https://us.api.concursolutions.com/travelrequest/v4/requests/{id}"
-      },
-      {
-        "href": "https://us.api.concursolutions.com/travelrequest/v4/requests/C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
-        "id": "C3D4E5F6A1B2C3D4E5F6A1B2C3D4E5F6",
-        "template": "https://us.api.concursolutions.com/travelrequest/v4/requests/{id}"
-      }
-    ]
+    }
   }
 ]
 ```
 
-## <a name="patch-request-participants"></a>Manage Participants of a given Request
+## <a name="patch-request-participants"></a>Manage participants of a budget request
+
+This endpoint will enable to manage participants (add or remove them) from a Budget Request.
 
 ### Scopes
 
@@ -117,7 +116,7 @@ PATCH {datacenter}/travelrequest/v4/requests/{requestUuid}/participants
 Name|Type|Format|Description
 ---|---|---|---
 `requestUuid`|`string`|[RFC 4122]|**Required** The unique identifier of the Request.
-`userId`|`string`|-|The unique identifier of the user patching the participants list. **Required** when connecting with a Company token. If empty, a 400 `missingRequiredParam` error.
+`userId`|`string`|-|The unique identifier of the user updating the participants list. **Required** when connecting with a Company token. If empty, a 400 `missingRequiredParam` error.
 
 #### Headers
 
@@ -137,7 +136,7 @@ To learn more about response HTTP status codes for this API see [Travel Request 
 
 None.
 
-### Example
+### Example 1 - adding a participant to a Budget Request
 
 #### HTTP Request
 
@@ -153,13 +152,38 @@ Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
 {
   "value": [
     {
-      "id": "56B8B8A0-99FD-4FA9-8DE9-A57F3EE3C2FD"
-    },
-    {
-      "@deleted": true,
-      "id": "A1B2C3D4-E5F6-A1B2-C3D4-E5F6A1B2C3D4"
+      "id": "8422A66-A9B0-1424-5802-0D9BCD4351D3"
     }
   ]
+}
+```
+
+#### HTTP Response
+
+```shell
+204 No Content
+```
+### Example 2 - removing a participant to a Budget Request
+
+#### HTTP Request
+
+```shell
+PATCH https://us.api.concursolutions.com/travelrequest/v4/requests/224AF3CDCC2A5244A37C72FA5770C6F2/participants
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {token}
+Content-Type: application/merge-patch+json
+Concur-CorrelationId: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+```
+
+```json
+{
+  "value": [
+   {
+    "id": "8422A66-A9B0-1424-5802-0D9BCD4351D3",
+    "@deleted": true
+   }
+ ]
 }
 ```
 
