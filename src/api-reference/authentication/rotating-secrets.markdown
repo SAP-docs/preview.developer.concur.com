@@ -5,13 +5,11 @@ layout: reference
 
 {% include prerelease.html %}
 
-# Rotating Secrets for an App
+# Managing App Secrets <a name="managing_app_secrets"></a>
 
-## Managing App Secrets <a name="managing_app_secrets"></a>
+Applications can use the `https://us.api.concursolutions.com/app-mgmt/v4/:appID/secrets`endpoint to manage apps, as follows. 
 
-To Retrieve, Create, Rotate or Delete App Secrets, applications can use the https://us.api.concursolutions.com/app-mgmt/v4/:appID/secrets endpoint with the following methods. 
-
-|**Note:** All methods require an App JWT for Authorization (Bearer {token}). To generrate your App JWT, follow the instructions in the [Authentication](https://developer.concur.com/api-reference/authentication/getting-started.html) section.  
+>**Note:** All methods require an App JWT for Authorization (Bearer {token}). To generrate your App JWT, follow the instructions in the [Authentication](https://developer.concur.com/api-reference/authentication/getting-started.html) section.  
 
 ### Retrieve a list of secrets for a given App ID
 
@@ -90,9 +88,9 @@ HTTP Status Code|Description
 404|Not Found `(app or secret not found)`
 500|Server Error `(error updating app secret status)`
 
-### Patch the status of the secrets for a given App ID to be updated to active or inactive state
+### Update or Rotate Secret Status
 
-This method can be used to rotate a secret. 
+PATCH: Update the status of secrets for a given App ID to active or inactive. Also use this method to rotate a secret.
  
 ```shell
 PATCH https://us.api.concursolutions.com/app-mgmt/v4/:AppID/secrets/:secretID
