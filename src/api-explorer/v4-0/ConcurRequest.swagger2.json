@@ -2705,6 +2705,177 @@
           }
         }
       }
+    },
+    "/v4/requests/{requestUuid}/participants": {
+      "get": {
+        "tags": [
+          "Request Resource"
+        ],
+        "summary": "Get participants for parent request",
+        "operationId": "getParticipants",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "concur-correlationid",
+            "in": "header",
+            "description": "Client generated request identifier passed through all requests",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ParentRequestParticipant"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad param: invalid Guid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid or non existent authorization HTTP header",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Request Resource"
+        ],
+        "summary": "Manage participants of a parent request",
+        "operationId": "manageParticipants",
+        "consumes": [
+          "application/merge-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "concur-correlationid",
+            "in": "header",
+            "description": "Client generated request identifier passed through all requests",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The list of participants to add or delete from the Request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestParticipantsForPatch"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad param: invalid Guid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid or non existent authorization HTTP header",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -4082,6 +4253,17 @@
         "type": {
           "description": "The type of the Request, inherited from the Request policy type",
           "$ref": "#/definitions/RequestType"
+        },
+        "isParentRequest": {
+          "type": "boolean",
+          "description": "Whether the request type is of Parent type"
+        },
+        "parentRequest": {
+          "$ref": "#/definitions/ResourceLink"
+        },
+        "parentRequestId": {
+          "type": "string",
+          "description": "The short Id ParentRequest"
         }
       }
     },
@@ -4432,6 +4614,10 @@
           "description": "Name of the Request policy",
           "minLength": 1,
           "maxLength": 2147483647
+        },
+        "allowParticipants": {
+          "type": "boolean",
+          "description": "Whether this policy can add participants."
         }
       }
     },
@@ -4794,6 +4980,49 @@
     "WorkflowAction": {
       "type": "string",
       "description": "Comment when the workflow action is ‘sendback’."
+    },
+    "ParentRequestParticipant": {
+      "type": "object",
+      "properties": {
+        "participant": {
+          "description": "Participant of the parent request",
+          "$ref": "#/definitions/ResourceLink"
+        },
+        "requests": {
+          "type": "array",
+          "description": "Child requests from participant associated with the parent request",
+          "items": {
+            "$ref": "#/definitions/ResourceLink"
+          }
+        }
+      }
+    },
+    "RequestParticipantsForPatch": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestParticipantForPatch"
+          }
+        }
+      },
+      "description": "The list of Participants to add/delete from the Request"
+    },
+    "RequestParticipantForPatch": {
+      "type": "object",
+      "properties": {
+        "@deleted": {
+          "type": "boolean",
+          "description": "Whether this Participant should be added or deleted (if absent or false => added)"
+        },
+        "id": {
+          "type": "string",
+          "description": "The UUID of the Participant",
+          "format": "uuid"
+        }
+      },
+      "description": "A Participant to add/delete from the Request"
     }
   }
 }
