@@ -11,7 +11,7 @@ Applications can use the `https://us.api.concursolutions.com/app-mgmt/v4/:appID/
 
 All methods require an App JWT for Authorization (Bearer {token}). To generrate your App JWT, follow the instructions in the [Authentication](https://developer.concur.com/api-reference/authentication/getting-started.html) section.  
 
-### Retrieve a list of secrets for a given App ID
+### Retrieve a List of Secrets for a Given App ID
 
 ```shell
 GET https://us.api.concursolutions.com/app-mgmt/v4/:appID/secrets
@@ -63,7 +63,7 @@ The response body contains all the secrets for the provided AppID:
 ]
 ```
 
-### Create a new Secret for a given App ID
+### Create a New Secret for a Given App ID
 
 ```shell
 POST https://us.api.concursolutions.com/app-mgmt/v4/:appID/secrets
@@ -117,7 +117,7 @@ Operation: SCIM/PATCH format
  
 The IDs in this sample are dummy data, not part of the actual Concur App.
 
-**Making a newly created App Secret active**
+**Making a Newly Created App Secret Active**
 
 ```shell
 PATCH /app-mgmt/v4/0c5c13e9-c2e3-4dcd-8bcc-86d7da7fbf6d/secrets/4b9e7205-08b1-48d1-aee8-8f5797d06475
@@ -149,7 +149,7 @@ HTTP Status Code|Description
 404|Not Found `(app or secret not found)`
 500|Server Error `(error updating app secret status)` 
  
-### Delete a secret associated with this App ID
+### Delete a Secret Associated with the App ID
  
 ```shell
 DELETE https://us.api.concursolutions.com/app-mgmt/v4/:appID/secrets/:secret
