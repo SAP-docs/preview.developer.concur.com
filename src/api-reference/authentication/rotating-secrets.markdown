@@ -9,7 +9,7 @@ layout: reference
 
 Applications can use the `https://us.api.concursolutions.com/app-mgmt/v4/:appID/secrets`endpoint to manage app secrets, as follows. 
 
->**Note:** All methods require an App JWT for Authorization (Bearer {token}). To generrate your App JWT, follow the instructions in the [Authentication](https://developer.concur.com/api-reference/authentication/getting-started.html) section.  
+All methods require an App JWT for Authorization (Bearer {token}). To generrate your App JWT, follow the instructions in the [Authentication](https://developer.concur.com/api-reference/authentication/getting-started.html) section.  
 
 ### Retrieve a list of secrets for a given App ID
 
