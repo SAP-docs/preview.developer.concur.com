@@ -922,12 +922,12 @@ The SAP Concur API monthly updates can be found in the [Developer Platform Relea
 
 The SAP Concur product related update can be found in the [Client Shared Release Notes](http://www.concurtraining.com/customers/tech_pubs/RN_shared_planned/_client_shared_RN_all.htm).
 
-**eReceipt Troubleshooting**
+## eReceipt Troubleshooting
 
-* Why are my eReceipts not appearing in Available Expenses?
+**Why are my eReceipts not appearing in Available Expenses?**
 
 A Travel Reservation Expense Type mapping may not be mapped to Expense Type. Documentation can be found in the SAP Help Portal [Mapping the Travel Reservations to Expense Types](https://help.sap.com/docs/CONCUR_EXPENSE/bb83754b1c5541808d50c09901e11475/6026d140ae4e460eb792bc7adabd3df9.html).
 
-* How does Smart Matching work?
+**How does Smart Matching work?**
 
 Documentation can be found in the SAP Help Portal [Smart Matching Functionality](https://help.sap.com/docs/SAP_CONCUR/c0b2fe7fba814d30a6a687dc7f6a9f61/cffb087857b14a42b7e86b83b0ac749a.html) and for example at [Combine and Separate Transactions](https://help.sap.com/docs/CONCUR_EXPENSE/cd24ad794821491e8f65f76f61dffcc6/0e706d0613cc4ab1a1a65afff996ee93.html?locale=en-US).
