@@ -54,27 +54,27 @@ The authentication methods below is available to obtain an access_token. Passwor
 
 **Example of App Listing:**
 
-   ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts-enterprise/step-1.png)
+    ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts-enterprise/step-1.png)
 
-2. After the admin user clicks the “Connect” button, the admin user will see a prompt with the terms & conditions. Admin user agrees to the terms and conditions and clicks the “I Agree” button.
+1. After the admin user clicks the “Connect” button, the admin user will see a prompt with the terms & conditions. Admin user agrees to the terms and conditions and clicks the “I Agree” button.
 
-   ![Screenshot of App Listing Terms and Conditions](/assets/img/api-guides/e-receipts-enterprise/step-2.png)
+    ![Screenshot of App Listing Terms and Conditions](/assets/img/api-guides/e-receipts-enterprise/step-2.png)
 
-3.	The authorization service will redirect the admin user to your app’s [landing page](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#landing-pages). Please follow the [App Center Design Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) to create a web page that listens for an HTTP GET request. The [Guideline Checklist](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html#guideline-checklist) provides a list of required and recommended components of your landing page design. Please make sure all the required options are checked before scheduling the certification walkthrough.
+1.	The authorization service will redirect the admin user to your app’s [landing page](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#landing-pages). Please follow the [App Center Design Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) to create a web page that listens for an HTTP GET request. The [Guideline Checklist](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html#guideline-checklist) provides a list of required and recommended components of your landing page design. Please make sure all the required options are checked before scheduling the certification walkthrough.
 
-4.	Your landing page should allow an admin user to log in/authenticate.
+1.	Your landing page should allow an admin user to log in/authenticate.
 
-   ![Screenshot of Login Page](/assets/img/api-guides/e-receipts-enterprise/step-4.png)
+    ![Screenshot of Login Page](/assets/img/api-guides/e-receipts-enterprise/step-4.png)
 
-5. The redirect URI will contain id and requestToken parameters. Example: `https://{partner-redirect-URI}?id=e693e3d8-00f5-4e8d-9b87-9b42896e01bd&requestToken=at-si86uekvgga2qj2i1bfj89juqgn&userId=715810de-a259-4f7d-bad7-35badc9980bb`
+1. The redirect URI will contain id and requestToken parameters. Example: `https://{partner-redirect-URI}?id=e693e3d8-00f5-4e8d-9b87-9b42896e01bd&requestToken=at-si86uekvgga2qj2i1bfj89juqgn&userId=715810de-a259-4f7d-bad7-35badc9980bb`
 
-6. When your application receives the redirect call, parse the URI for the id and requestToken.
+1. When your application receives the redirect call, parse the URI for the id and requestToken.
 
-7. Use `id` as the `username` parameter value and `requestToken` as the `password` parameter value on a post request to the SAP Concur authorization service to obtain the official OAuth2 `access_token` and `refresh_token` for the company using the [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware).
+1. Use `id` as the `username` parameter value and `requestToken` as the `password` parameter value on a post request to the SAP Concur authorization service to obtain the official OAuth2 `access_token` and `refresh_token` for the company using the [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware).
 
-   * There are two credential types allowed with password grant, `password` and `authtoken`. For the App Center partner, please use the `authtoken` credential type for the connections from the App Center.
-   * Do not post the request to the authorization service before confirming user identification in their App.
-   * Please refer [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant-) for the post body description.
+    * There are two credential types allowed with password grant, `password` and `authtoken`. For the App Center partner, please use the `authtoken` credential type for the connections from the App Center.
+    * Do not post the request to the authorization service before confirming user identification in their App.
+    * Please refer [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant-) for the post body description.
 
 
    **Example of Password Grant**
@@ -114,18 +114,21 @@ The authentication methods below is available to obtain an access_token. Passwor
    }
    ```
 
-8. An `access_token` is valid for only one hour. The access_token should be cache in memory and discarded after use.
+1. An `access_token` is valid for only one hour. The access_token should be cache in memory and discarded after use.
 
-9. After admin user has successfully completed the login process, store the following with company’s profile in your database:
+1. After admin user has successfully completed the login process, store the following with company’s profile in your database:
 
     * `refresh_token`: (36 characters including dashes) valid for six months from the day and time issued.
+
     * `refresh_expires_in`: expiration date & time in Epoch time format, please convert to UTC format.
+    
     * `geolocation`: to be used as the base URI when making API calls on behalf of the user.
+
     * `id`: (36 characters including dashes) The company `uuid` used for identity the connected company.
 
-10. Confirm visually to the admin user that their partner app account has been successfully linked with their SAP Concur company.
+1. Confirm visually to the admin user that their partner app account has been successfully linked with their SAP Concur company.
 
-11. You now can use the `access_token` for making API calls.
+1. You now can use the `access_token` for making API calls.
 
 ## Token Management
 
@@ -137,9 +140,11 @@ The authentication methods below is available to obtain an access_token. Passwor
 
 3.	The below elements are returned with the new `access_token`, replace previously stored values for the company in your database:
 
-   * `refresh_token` (replace)
-   * `refresh_expires_in` (replace)
-   * `geolocation` (replace)
+    * `refresh_token` (replace)
+
+    * `refresh_expires_in` (replace)
+
+    * `geolocation` (replace)
 
 4.	If a company’s integration is idle for six months the `refresh_token` will expire and the company’s partner account and SAP Concur account will be de-linked. To prevent this from happening, build a scheduled job that scans your database for expiration dates and refreshes tokens X days prior to expiration. Refer [Refreshing a Token](https://developer.concur.com/api-reference/authentication/apidoc.html#refreshing-a-token-) API for the post body description and example.
 
@@ -149,13 +154,15 @@ There are two endpoints that may be used to GET user data:
 
    * [Identity](https://developer.concur.com/api-reference/profile/v4.1.identity.html) – `firstname`, `lastname`, email address, and *mobile number
 
->**_Note_:** An employee’s mobile number may not be present.
+>**Note:** An employee’s mobile number may not be present.
 
    * [Spend User Data](https://developer.concur.com/api-reference/user-provisioning/spend/v4.1.spend-user-retrieval.html) - data pertaining to SAP Concur Expense Data
 
 ### Linking User Accounts
 
-Consult with the customer which employee’s will be invited to utilize the integration. Common method for inviting employees to create or link an account (if employee has an existing account) is via an email invitation. If an employee does not have an existing account, invite employee to create an account. Ensure that employee’s is link to the company’s account. If an employee has an existing account, link the existing account to the company’s account. **Recommendation:** Provide a dashboard to company to manage employee’s utilizing the integration.
+Consult with the customer which employee’s will be invited to utilize the integration. Common method for inviting employees to create or link an account (if employee has an existing account) is via an email invitation. If an employee does not have an existing account, invite employee to create an account. Ensure that employee’s is link to the company’s account. If an employee has an existing account, link the existing account to the company’s account. 
+
+**Recommendation:** Provide a dashboard to company to manage employee’s utilizing the integration.
 
 ### Getting All Active Users
 
