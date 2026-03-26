@@ -50,9 +50,7 @@ The authentication methods below is available to obtain an access_token. Passwor
 
 [Company Level Authentication](https://developer.concur.com/api-reference/authentication/company-auth.html) allows a company admin user to establish a connection from App Center. The admin user needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you would be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. The instructions to connect/authenticate via password grant are:
 
-1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. 
-
-**Example of App Listing:**
+1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. Example of App Listing:
 
     ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts-enterprise/step-1.png)
 
