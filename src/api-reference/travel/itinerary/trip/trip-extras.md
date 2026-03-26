@@ -396,19 +396,20 @@ Vendor is the actual service provider fulfilling the reservation.
 
 ### <a name="groundbooking-details-schema"></a> GroundBooking Details
 
-| Name                  | Type     | Format                            | Description                                                                                 |
-| --------------------- | -------- | --------------------------------- | ------------------------------------------------------------------------------------------- |
-| `url`                 | `string` | `uri`                             | **Required**. URL to redirect user to the booking on the partner's page.                    |
-| `partnerConfirmation` | `string` | -                                 | **Required**. Confirmation number from partner.                                             |
-| `vehicle`             | `object` | [Vehicle Schema](#vehicle-schema) | **Required**. Detailed information in [Vehicle](#vehicle-schema).                           |
-| `pickup`              | `object` | [Pickup Schema](#pickup-schema)   | **Required**. Detailed information in [Pickup](#pickup-schema).                             |
-| `price`               | `object` | [Price Schema](#price-schema)     | **Required**. Detailed information in [Price](#price-schema).                               |
-| `cancellationPolicy`  | `string` | -                                 | Cancellation policy information.                                                            |
-| `dropoff`             | `object` | [Stop Schema](#stop-schema)       | Detailed information in [Stop](#stop-schema).                                               |
-| `payment`             | `object` | [Payment Schema](#payment-schema) | Monetary payment made toward a booking. Detailed information in [Payment](#payment-schema). |
-| `stops`               | `array`  | [Stop Schema](#stop-schema)       | A list of intermediate stops.                                                               |
-| `termsAndConditions`  | `string` | -                                 | Terms and conditions for the booking.                                                       |
-| `vendorConfirmation`  | `string` | -                                 | Confirmation number from vendor.                                                            |
+| Name                  | Type     | Format                            | Description                                                                                                |
+| --------------------- | -------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `url`                 | `string` | `uri`                             | **Required**. URL to redirect user to the booking on the partner's page.                                   |
+| `partnerConfirmation` | `string` | -                                 | **Required**. Confirmation number from partner.                                                            |
+| `vehicle`             | `object` | [Vehicle Schema](#vehicle-schema) | **Required**. Detailed information in [Vehicle](#vehicle-schema).                                          |
+| `pickup`              | `object` | [Pickup Schema](#pickup-schema)   | **Required**. Detailed information in [Pickup](#pickup-schema).                                            |
+| `price`               | `object` | [Price Schema](#price-schema)     | **Required**. Detailed information in [Price](#price-schema).                                              |
+| `cancellationPolicy`  | `string` | -                                 | Cancellation policy information.                                                                           |
+| `dropoff`             | `object` | [Stop Schema](#stop-schema)       | Detailed information in [Stop](#stop-schema).                                                              |
+| `payment`             | `object` | [Payment Schema](#payment-schema) | Monetary payment made toward a booking. Detailed information in [Payment](#payment-schema).                |
+| `stops`               | `array`  | [Stop Schema](#stop-schema)       | A list of intermediate stops.                                                                              |
+| `meetingInstructions` | `string` | -                                 | Special instructions from the vendor to the user (e.g., "Meet the driver holding a sign with your name."). |
+| `termsAndConditions`  | `string` | -                                 | Terms and conditions for the booking.                                                                      |
+| `vendorConfirmation`  | `string` | -                                 | Confirmation number from vendor.                                                                           |
 
 ### <a name="vehicle-schema"></a> Vehicle
 
@@ -426,29 +427,27 @@ Information about the vehicle assigned for the ground transportation.
 
 A stop with required datetime fields. Extends [Stop](#stop-schema).
 
-| Name                 | Type     | Format                                    | Description                                                                                                 |
-| -------------------- | -------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `datetime`           | `string` | `string<date-time>`                       | **Required**. Local date and time of pickup according to RFC 3339.                                          |
-| `datetimeUtc`        | `string` | `string<date-time>`                       | **Required**. UTC date and time of pickup according to RFC 3339.                                            |
-| `address`            | `object` | [Address Schema](#address-schema)         | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).              |
-| `iataCode`           | `string` | `^[A-Z]{3}$`                              | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK").                |
-| `geolocation`        | `object` | [Geolocation Schema](#geolocation-schema) | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema). |
-| `instructions`       | `string` | -                                         | Special instructions from the user to the vendor.                                                           |
-| `locationName`       | `string` | -                                         | Name of the pickup location.                                                                                |
-| `vendorInstructions` | `string` | -                                         | Special instructions from the vendor to the user.                                                           |
+| Name           | Type     | Format                                    | Description                                                                                                 |
+| -------------- | -------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `datetime`     | `string` | `string<date-time>`                       | **Required**. Local date and time of pickup according to RFC 3339.                                          |
+| `datetimeUtc`  | `string` | `string<date-time>`                       | **Required**. UTC date and time of pickup according to RFC 3339.                                            |
+| `address`      | `object` | [Address Schema](#address-schema)         | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).              |
+| `iataCode`     | `string` | `^[A-Z]{3}$`                              | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK").                |
+| `geolocation`  | `object` | [Geolocation Schema](#geolocation-schema) | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema). |
+| `instructions` | `string` | -                                         | Special instructions from the user to the vendor.                                                           |
+| `locationName` | `string` | -                                         | Name of the pickup location.                                                                                |
 
 ### <a name="stop-schema"></a> Stop
 
-| Name                 | Type     | Format                                    | Description                                                                                          |
-| -------------------- | -------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `address`            | `object` | [Address Schema](#address-schema)         | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).       |
-| `datetime`           | `string` | `string<date-time>`                       | Local date and time according to RFC 3339.                                                           |
-| `datetimeUtc`        | `string` | `string<date-time>`                       | UTC date and time according to RFC 3339.                                                             |
-| `geolocation`        | `object` | [Geolocation Schema](#geolocation-schema) | Geolocation coordinates of the location. Detailed information in [Geolocation](#geolocation-schema). |
-| `iataCode`           | `string` | `^[A-Z]{3}$`                              | **Required if no `address` is informed**. Airport code of the location (e.g., "JFK").                |
-| `instructions`       | `string` | -                                         | Special instructions from the user to the vendor.                                                    |
-| `locationName`       | `string` | -                                         | Name of the location, such as a hotel or restaurant.                                                 |
-| `vendorInstructions` | `string` | -                                         | Special instructions from the vendor to the user.                                                    |
+| Name           | Type     | Format                                    | Description                                                                                          |
+| -------------- | -------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `address`      | `object` | [Address Schema](#address-schema)         | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).       |
+| `datetime`     | `string` | `string<date-time>`                       | Local date and time according to RFC 3339.                                                           |
+| `datetimeUtc`  | `string` | `string<date-time>`                       | UTC date and time according to RFC 3339.                                                             |
+| `geolocation`  | `object` | [Geolocation Schema](#geolocation-schema) | Geolocation coordinates of the location. Detailed information in [Geolocation](#geolocation-schema). |
+| `iataCode`     | `string` | `^[A-Z]{3}$`                              | **Required if no `address` is informed**. Airport code of the location (e.g., "JFK").                |
+| `instructions` | `string` | -                                         | Special instructions from the user to the vendor.                                                    |
+| `locationName` | `string` | -                                         | Name of the location, such as a hotel or restaurant.                                                 |
 
 ### <a name="address-schema"></a> Address
 
