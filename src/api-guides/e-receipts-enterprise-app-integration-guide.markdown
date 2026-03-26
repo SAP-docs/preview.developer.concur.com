@@ -27,7 +27,7 @@ SAP Concur Certification Project Manager will prepare the development environmen
 ### Sandboxes and Accounts
 
 * You will have a sandbox on each of following SAP Concur data centers: US2, EU2.
-* Three initial test accounts on each of following SAP Concur data centers: US2, EU2. Additional accounts may be created. For further information, see [Manager Users](https://help.sap.com/docs/CONCUR_EXPENSE/85f3db6f3c5945fe8414a08fc5f9e3fc/bb4e99add95a497ab6fe4451cca1b39f.html).
+* Three initial test accounts on each of following SAP Concur data centers: US2, EU2. Additional accounts may be created. For further information, see [Managing Users](https://help.sap.com/docs/CONCUR_EXPENSE/85f3db6f3c5945fe8414a08fc5f9e3fc/bb4e99add95a497ab6fe4451cca1b39f.html).
 
 ### Development App
 
@@ -50,7 +50,9 @@ The authentication methods below is available to obtain an access_token. Passwor
 
 [Company Level Authentication](https://developer.concur.com/api-reference/authentication/company-auth.html) allows a company admin user to establish a connection from App Center. The admin user needs to login via their SAP Concur credentials to access the app in the App Center. In the development and testing phase, you would be provided with the app listing solely for the purpose of development and testing. This app listing will be accessed via a deep link. This deep link will be provided to you before you start development. The instructions to connect/authenticate via password grant are:
 
-1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. App Listing Example:
+1. A logged in user clicks the connect button on the app listing in the App Center and authorizes your app to post data. 
+
+**Example of App Listing:**
 
    ![Example of App Center Listing Page](/assets/img/api-guides/e-receipts-enterprise/step-1.png)
 
@@ -58,7 +60,7 @@ The authentication methods below is available to obtain an access_token. Passwor
 
    ![Screenshot of App Listing Terms and Conditions](/assets/img/api-guides/e-receipts-enterprise/step-2.png)
 
-3.	The authorization service will redirect the admin user to your app’s [landing page](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#landing-pages). Please follow the [App Center Design Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) to create a web page that listens for an HTTP GET request. The[Guideline Checklist](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html#guideline-checklist) provides a list of required and recommended components of your landing page design. Please make sure all the required options are checked before scheduling the certification walkthrough.
+3.	The authorization service will redirect the admin user to your app’s [landing page](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#landing-pages). Please follow the [App Center Design Guidelines](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) to create a web page that listens for an HTTP GET request. The [Guideline Checklist](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html#guideline-checklist) provides a list of required and recommended components of your landing page design. Please make sure all the required options are checked before scheduling the certification walkthrough.
 
 4.	Your landing page should allow an admin user to log in/authenticate.
 
@@ -75,7 +77,7 @@ The authentication methods below is available to obtain an access_token. Passwor
    * Please refer [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant-) for the post body description.
 
 
-   **Example : Password Grant**
+   **Example of Password Grant**
 
    **Request**
 
@@ -141,8 +143,6 @@ The authentication methods below is available to obtain an access_token. Passwor
 
 4.	If a company’s integration is idle for six months the `refresh_token` will expire and the company’s partner account and SAP Concur account will be de-linked. To prevent this from happening, build a scheduled job that scans your database for expiration dates and refreshes tokens X days prior to expiration. Refer [Refreshing a Token](https://developer.concur.com/api-reference/authentication/apidoc.html#refreshing-a-token-) API for the post body description and example.
 
-5.	Watch this section of the video [SAP Concur Integration 3 of 5 ; API Tokens](https://youtu.be/ikCU1235QJA?t=300), which explains the difference between refresh and access tokens and how to refresh the access token.
-
 ## Roster Sync
 
 There are two endpoints that may be used to GET user data:
@@ -163,17 +163,18 @@ Consult with the customer which employee’s will be invited to utilize the inte
 2.	Using Identity V4.1, POST a search for active users
 3.	Store the user’s `id` (User `UUID`) value associated with the user’s account 
 
-   **Example: Authorization Grant – Request An Access Token**
+**Example: Authorization Grant – Request An Access Token**
 
-   **Request**
+**Request**
 
-  ```http
-   POST /profile/identity/v4.1/Users/.search HTTP/1.1
-   Authorization: Bearer {{token}}
-   Content-Type: application/json
-   Host: us2.api.concursolutions.com
-  ```
-  ```json
+```http
+POST /profile/identity/v4.1/Users/.search HTTP/1.1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Host: us2.api.concursolutions.com
+```
+
+```json
 { 
   "schemas": [ "urn:ietf:params:scim:api:messages:concur:2.0:SearchRequest" ],
   "filter": "active eq true",
@@ -550,10 +551,10 @@ Host: us2.api.concursolutions.com
 
 ## Posting eReceipts
 
-For information on getting started with R[eceipts v4](https://developer.concur.com/api-reference/receipts/get-started.html).
+For information on getting started with [Receipts v4](https://developer.concur.com/api-reference/receipts/get-started.html).
 
 * You should select General eReceipt type or Grand Transportation eReceipt type from the [Supported Receipt type](https://developer.concur.com/api-reference/receipts/supported-receipt-types.html) list and retrieve the list [schemas](https://developer.concur.com/api-reference/receipts/get-started.html) for the selected receipt types.
-* To ensure that you are using the correct endpoint URLs, the safest practice is to check the service index before every request. [Get service Index](https://developer.concur.com/api-reference/receipts/endpoints.html#endpoint-service-index).
+* To ensure that you are using the correct endpoint URLs, the safest practice is to check the service index before every request. [Get Service Index](https://developer.concur.com/api-reference/receipts/endpoints.html#endpoint-service-index).
 * We generate a standard receipt if you do not provide a receipt image.
 * We can display your app logo in standard generated receipts (size 100x100 px). Please send your company logo image file (.png) to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com).
 * If your app currently generates a receipt image in .png, .jpg, .tif, .pdf, or other image file, you can include it in your post. Follow the requirement of [supported image formats](https://developer.concur.com/api-reference/receipts/endpoints.html#definitions-of-resources) if you are posting the eReceipts with images.
@@ -706,7 +707,7 @@ Content-Disposition: form-data; name="receipt"
 4.	You should store the concur-correlationid and the Location link from the response headers even for successful responses, this will facilitate support efforts in case of a missing receipt from the user’s SAP Concur account.
 5.	The [Ground Transportation](https://developer.concur.com/api-reference/receipts/supported-receipt-types.html#ground-transport-receipt) eReceipt Schema includes all forms of non-aerial transportation and all [Receipt Core Definition](https://developer.concur.com/api-reference/receipts/supported-receipt-types.html#receipt-core-definitions). 
 
-Refer to the [Grand Transportation eReceipt](https://developer.concur.com/api-reference/receipts/sample-receipts.html#ground-transport) POST example.
+Refer to the [Ground Transportation eReceipt](https://developer.concur.com/api-reference/receipts/sample-receipts.html#ground-transport) POST example.
 
 #### Response Codes
 
@@ -725,7 +726,7 @@ The Quick Expense API can be used to create an expense with basic information su
 3.	Post the quick expense using the [Quick Expense](https://developer.concur.com/api-reference/expense/quick-expense/v4.quick-expense.html#create-a-quick-expense-) endpoint.
 4.	You should store the concur-correlationid from the response headers and the quickExpenseIdUri from the response body. This will facilitate support efforts in case of a missing quick expense from user’s SAP Concur account.
 5.	The [Quick Expense Schema](https://developer.concur.com/api-reference/expense/quick-expense/v4.quick-expense.html#schema-) includes required fields of expenseTypeId, transactionAmount, and transactionDate.
-6.	The supported `expenseTypeId` value can be retrieved from [Expense Group Configurations v3.0](https://developer.concur.com/api-reference/expense/expense-report/expense-group-configurations.html). The frequently used `expenseTypeId` values are listed below:
+6.	The supported `expenseTypeId` value can be retrieved from [Expense Configuration Service](https://hub.sap.com/api/ConcurExpenseExpenseConfigurationService/overview). The frequently used `expenseTypeId` values are listed below:
 
 `expenseTypeId`|Description
 ---|---
@@ -889,9 +890,11 @@ Example:
 This response is also for cases where the JWT does not include the scope required to fulfill the request.
 
 **Error 404**
+
 The receipt(s) you requested could not be found. Check that the receipt and/or user ID are correct.
 
 **Error 500/503**
+
 Error 500 is an internal server error. If you receive an error 500 while posting an eReceipt, you should retry the API at least 3 times. If you still encounter an error 500 after retrying, please log a support ticket.
 
 **Error Logging**
@@ -908,7 +911,7 @@ You should send your questions to [PlatformCertification@sap.com](mailto:Platfor
 
 There will be a one-week certification time window per month. You should send your certification walkthrough request to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) one month before the certification date you would like schedule. We will reply with a meeting invitation within 5 business days.
 
-Please find your certification date time based on the [certification calendar](https://developer.concur.com/api-guides/user-app-certification-calender.pdf).
+Please find your certification date time based on the [certification calendar](https://developer.concur.com/api-guides/app-certification-calendar.pdf).
 
 **How do I log a support case?**
 
