@@ -72,9 +72,9 @@ The authentication methods below is available to obtain an access_token. Passwor
 
 1. Use `id` as the `username` parameter value and `requestToken` as the `password` parameter value on a post request to the SAP Concur authorization service to obtain the official OAuth2 `access_token` and `refresh_token` for the company using the [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant) while [being geo aware](https://developer.concur.com/api-guides/e-receipts.html#being-geo-aware).
 
-   * There are two credential types allowed with password grant, `password` and `authtoken`. For the App Center partner, please use the `authtoken` credential type for the connections from the App Center.
-   * Do not post the request to the authorization service before confirming user identification in their App.
-   * Please refer [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant-) for the post body description.
+    * There are two credential types allowed with password grant, `password` and `authtoken`. For the App Center partner, please use the `authtoken` credential type for the connections from the App Center.
+    * Do not post the request to the authorization service before confirming user identification in their App.
+    * Please refer [password grant](https://developer.concur.com/api-reference/authentication/apidoc.html#password-grant-) for the post body description.
 
 
    **Example of Password Grant**
