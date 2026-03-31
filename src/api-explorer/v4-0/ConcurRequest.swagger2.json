@@ -3,7 +3,7 @@
   "info": {
     "description": "Request as a Service",
     "version": "4.0",
-    "title": "Concur Request API Documentation"
+    "title": "Request"
   },
   "host": "us.api.concursolutions.com",
   "basePath": "/travelrequest/v4",
@@ -2705,6 +2705,177 @@
           }
         }
       }
+    },
+    "/v4/requests/{requestUuid}/participants": {
+      "get": {
+        "tags": [
+          "Request Resource"
+        ],
+        "summary": "Get participants for a Budget Request",
+        "operationId": "getParticipants",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "concur-correlationid",
+            "in": "header",
+            "description": "Client generated request identifier passed through all requests",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ParentRequestParticipant"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad param: invalid Guid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid or non existent authorization HTTP header",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Request Resource"
+        ],
+        "summary": "Manage participants of a Budget Request",
+        "operationId": "manageParticipants",
+        "consumes": [
+          "application/merge-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "requestUuid",
+            "in": "path",
+            "description": "The unique identifier of the Request",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "The unique identifier of the user",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "concur-correlationid",
+            "in": "header",
+            "description": "Client generated request identifier passed through all requests",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The list of participants to add or delete from the Request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RequestParticipantsForPatch"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad param: invalid Guid",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid or non existent authorization HTTP header",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "403": {
+            "description": "You do not have permission to perform this operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "An unexpected error has prevented the operation",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "503": {
+            "description": "The service is currently unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -3838,6 +4009,48 @@
         }
       }
     },
+    "ParentRequestParticipant": {
+      "type": "object",
+      "properties": {
+        "participant": {
+          "description": "A Participant of the Budget Request",
+          "$ref": "#/definitions/ResourceLink"
+        },
+        "requests": {
+          "type": "array",
+          "description": "The list of Child Requests from the Participant associated to the Budget Request",
+          "items": {
+            "$ref": "#/definitions/ResourceLink"
+          }
+        }
+      }
+    },
+    "RequestParticipantsForPatch": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestParticipantForPatch"
+          }
+        }
+      },
+      "description": "The list of Participants to be added or deleted from the Budget Request"
+    },
+    "RequestParticipantForPatch": {
+      "type": "object",
+      "properties": {
+        "@deleted": {
+          "type": "boolean",
+          "description": "Whether the Participant should be added or deleted from the Budget Request. If false or not provided then the Participant is added"
+        },
+        "id": {
+          "type": "string",
+          "description": "The Participant unique identifier"
+        }
+      },
+      "description": "A Participant to be added or removed from the Budget Request"
+    },
     "Request": {
       "type": "object",
       "properties": {
@@ -4082,6 +4295,17 @@
         "type": {
           "description": "The type of the Request, inherited from the Request policy type",
           "$ref": "#/definitions/RequestType"
+        },
+        "isParentRequest": {
+          "type": "boolean",
+          "description": "Indicates whether this Request is a Budget Request"
+        },
+        "parentRequest": {
+          "$ref": "#/definitions/ResourceLink"
+        },
+        "parentRequestId": {
+          "type": "string",
+          "description": "Required if a Child Request is created, corresponds to the unique identifier of the Budget Request the Child Request will be linked to"
         }
       }
     },
@@ -4432,6 +4656,10 @@
           "description": "Name of the Request policy",
           "minLength": 1,
           "maxLength": 2147483647
+        },
+        "allowParticipants": {
+          "type": "boolean",
+          "description": "Whether this policy can add participants (policy is a Budget Request)"
         }
       }
     },
