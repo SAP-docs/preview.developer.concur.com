@@ -1,0 +1,536 @@
+---
+title: Travel Request v4 - Endpoints - Schemas
+layout: reference
+---
+# Travel Request v4 - Endpoints - Schemas
+
+## <a name="schema-request"></a>Request
+
+Name|Type|Format|Description
+---|---|---|---
+`approvalLimitDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date by which the Request must be approved. This element appears only when integrated with Concur Travel.
+`approvalStatus`|`object`|[`Approval Status`](#schema-approvalstatus)|The approval status of the Request.
+`approved`|`boolean`|`true / false`|Indicates whether this Request is approved.
+`approver`|`object`|[`Employee`](#schema-employee)|The approver to whom the Request was sent.
+`allocationFormId`|`string`|-|The unique identifier of the allocation form.
+`authorizedDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|For approved Request, the date at which the approval process was completed.
+`businessPurpose`|`string`|-|The business purpose of the Request.
+`canceledPostApproval`|`boolean`|-|Indicates whether this Request was `canceledPostApproval`.
+`cashAdvances`|`object`|[`ResourceLink`](#schema-resourcelink)|The list of cash advances for this Request.
+`closed`|`boolean`|`true / false`|Indicates whether this Request is closed.
+`comment`|`string`|-|The last comment attached to this Request.
+`comments`|`object`|[`ResourceLink`](#schema-resourcelink)|The list of comments for this Request.
+`creationDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date the Request was created.
+`custom1` to `custom20`|`object`|[`CustomField`](#schema-customfield)|The details from the Custom fields. These fields may not have data, depending on the configuration.
+`endDate`|`date`|[ISO 8601] `yyyy-MM-dd`|The end date of the Request.
+`endTime`|`time`|`HH:mm`|The end time of the Request.
+`everSentBack`|`boolean`|`true / false`|Indicates whether the Request has ever been sent back to the employee.
+`exceptions`|`object`|[`ResourceLink`](#schema-resourcelink)|The list of exceptions that have been raised to this Request.
+`expenses`|`array`|[`ResourceLink`](#schema-resourcelink)|Expected expenses attached to this Request.
+`extensionOf`|`object`|[`ExtensionOf`](#schema-extensionof)|The Request for which this Request is an extension of, or addendum to.
+`eventRequest`|`object`|[`ResourceLink`](#schema-resourcelink)|The parent Event Request to which this child Request is related.
+`highestExceptionLevel`|`string`|-|The highest level of exception contained in this Request. Supported values: `WARNING`, `ERROR`, and `NONE`
+`href`|`string`|[RFC 3986]|Hyperlink to the resource for this Request.
+`id`|`string`|-|The unique identifier of the Request.
+`isParentRequest`|`boolean`|`true / false`|Indicates whether this Request is a Budget Request.
+`lastModified`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date the Request was last modified.
+`mainDestination`|`object`|[`Location`](#location)|The main destination of the Request.
+`name`|`string`|-|The name of the Request.
+`owner`|`object`|[`Employee`](#schema-employee)|The employee who owns the Request.
+`pendingApproval`|`boolean`|`true / false`|Indicates whether this Request is pending approval.
+`pnr`|`string`|-|The value of the pnr provided within the agency proposals by the travel agency.
+`policy`|`object`|[`ResourceLink`](#schema-resourcelink)|The policy that applies to the Request.
+`parentRequestId`|`string`|-|Required if a Child Request is created, corresponds to the unique identifier of the Budget Request the Child Request will be linked to.
+`parentRequest`|`object`|[`ResourceLink`](#schema-resourcelink)|If the Request is a Child Request, reference to the corresponding Budget Request.
+`requestId`|`string`|4 to 6 alphanumeric characters|The public key of the Request (unique per customer).
+`startDate`|`date`|[ISO 8601] `yyyy-MM-dd`|The start date of the Request.
+`startTime`|`time`|`HH:mm`|The start time of the Request.
+`submitDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date the Request was submitted (last submit date in case of recall).
+`totalApprovedAmount`|`object`|[`Amount`](#amount)|The total amount of approved expected expenses in the Request, expressed in the reimbursement currency of the employee at the time they created the Request.
+`totalPostedAmount`|`object`|[`Amount`](#amount)|The total amount of the Request, expressed in the reimbursement currency of the employee at the time they created the Request.
+`totalRemainingAmount`|`object`|[`Amount`](#amount)|The total amount not included in an Expense report, expressed in the reimbursement currency of the employee at the time they created the Request.
+`travelAgency`|`object`|[`ResourceLink`](#schema-resourcelink)|The travel agency office that is managing the trip associated to this Request.
+`operations`|`array`|[`Link`](#schema-link)|Links to operations available for the Request, depends on the current workflow status.
+`type`|`object`|[`RequestType`](#schema-requesttype)|The type of the Request, inherited from the Request Policy Type.
+
+## <a name="schema-amount"></a>Amount
+
+Name|Type|Format|Description
+---|---|---|---
+`value`|`number`|-|**Required** The amount in the defined currency.
+`currency`|`string`|[ISO 4217:2015]|**Required** The 3-letter ISO 4217 code for the currency in which the amount is expressed. Max length 3 characters.
+
+## <a name="schema-approvalstatus"></a>Approval Status
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The code for the approval status of the Request. Supported values: `NOT_SUBMITTED`, `SUBMITTED`, `APPROVED`, `CANCELED`, or `SENTBACK`
+`name`|`string`|-|The approval status of the Request in the current user's language.
+
+## <a name="schema-cashadvance"></a>Cash Advance
+
+Name|Type|Format|Description
+---|---|---|---
+`amountRequested`|`object`|[`Amount`](#schema-amount)|The amount of the cash advance in the Request, expressed in the currency of the requested cash advance. <br>For the Cash Advance detail endpoint only, the Amount schema will contain an additional `amount` field for feature parity purpose with the new planned Cash Advance API part of the cash advance service. The `value` field will be soon deprecated, it is highly recommended to rely on the `amount` field in that case.
+`approvalStatus`|`object`|[`Cash Advance Approval Status`](#schema-cashadvance-approvalstatus)|The approval status of the cash advance.
+`cashAdvanceId`|`string`|-|The unique identifier of the cash advance.
+`comment`|`string`|-|The last comment related to this cash advance.
+`exchangeRate`|`object`|[`Exchange Rate`](#schema-exchangerate)|The exchange rate that applies to the cash advance.
+`issueDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS`|The date the cash advance was issued.
+`requestDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS`|The date the cash advance was submitted (last submit date in case of recall).
+
+## <a name="schema-cashadvance-approvalstatus"></a>Cash Advance Approval Status
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The code for the approval status of the cash advance. Supported values: `C_PEND`, `C_APPR`, `C_COMP`, `C_FILE`, `C_ISSU`, `C_NISU`, `C_NOTF`, `C_PECA`, or `C_REJE`
+`name`|`string`|-|The approval status of the cash advance in the current user's language.
+
+## <a name="schema-comments"></a>Comments
+
+Name|Type|Format|Description
+---|---|---|---
+`author`|`object`|[`Employee`](#schema-employee)|The employee who has created the comment in the expected expense.
+`creationDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS`|Creation date of the comment.
+`isLatest`|`boolean`|`true / false`|If `true`, the comment has been edited since the last workflow transition.
+`value`|`string`|-|The value of the comment.
+
+## <a name="schema-customfield"></a>CustomField
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The short code for the list item. For non-list fields, this value will be blank.
+`value`|`string`|-|The value of the non-list item. For list fields, this is the unique id of the list item.
+`href`|`string`|-|The link to get this list item on the list service. Empty for non-list items.
+
+## <a name="schema-employee"></a>Employee
+
+Name|Type|Format|Description
+---|---|---|---
+`firstName`|`string`|-|The first name of the employee.
+`id`|`string`|[RFC 4122]|Unique identifier of the related object.
+`lastName`|`string`|-|The last name of the employee.
+`middleInitial`|`string`|-|The middle initial of the employee.
+
+## <a name="schema-exceptions"></a>Exceptions
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The system exception code defined for the exception. Example: `BADCODE`
+`isBlocking`|`boolean`|`true / false`|Defines whether the exception will prevent the Request from being submitted.
+`level`|`integer`|-|The numeric level associated with the exception. Example: `99`
+`message`|`string`|-|The user facing message defined for the exception.
+`source`|`array`|[`Exception source`](#schema-exceptionsource)|The source that has raised the exception.
+`parameters`|`map`|`missingFields`: array of missing field labels<br>`missingFieldsIds`: array of missing field ids|For missing fields exceptions, additional values giving more label and ids of the missing fields. Example : ```parameters : {  "missingFields" : ["Request Name", "Purpose"], "missingFieldsIds" : [ "Name", "Purpose" ] }```
+
+## <a name="schema-exceptionsource"></a>Exception Source
+
+Name|Type|Format|Description
+---|---|---|---
+`href`|`string`|[RFC 3986]|Hyperlink to the resource.
+`id`|`string`|[RFC 4122]|Unique identifier of the source.
+`type`|`string`|-|Defines the type of the source. Supported values: `ALLOCATION`, `CASH_ADVANCE`, `EXPENSE`, and `HEADER`
+
+## <a name="schema-extensionof"></a>Extension Of
+
+Name|Type|Format|Description
+---|---|---|---
+`requestId`|`string`|4 to 6 alphanumeric characters|The public key of the Request (unique per customer).
+`id`|`string`|-|Unique identifier of the Request.
+`href`|`string`|[RFC 3986]|Hyperlink to the resource.
+`template`|`string`|-|Hyperlink template to the resource.
+
+## <a name="schema-link"></a>Link
+
+Name|Type|Format|Description
+---|---|---|---
+`rel`|`string`|[RFC 5988]|Relation type as defined by the server. There are registered relation types listed in RFC 5988 6.2.2. Initial Registry Contents including pagination relation types of next, prev, first and last.
+`href`|`string`|[RFC 3986]|Hyperlink to the resource.
+
+## <a name="schema-listofrequest"></a>List of Request
+
+Name|Type|Format|Description
+---|---|---|---
+`data`|`array`|[`Request`](#schema-request)|List of Requests in the page requested.
+`operations`|`array`|[Link](#schema-link)|Links to next, prev, first and last pages.
+
+## <a name="schema-requestpolicylist"></a>List of Request Policies
+
+Name|Type|Format|Description
+---|---|---|---
+-|`array`|[`Request Policy`](#schema-requestpolicy)|List of active Requests policies for a given user.
+
+## <a name="schema-location"></a>Location
+
+Name|Type|Format|Description
+---|---|---|---
+`city`|`string`|-|**Required for all city location type (not airport, or rail station - except for STD location type)** The city name of the location. <br>Note: STD location type for rail is considered as a city location type, `city` and `countryCode` fields are required in that case.
+`countryCode`|`string`|[ISO 3166-1]|**Required if `city` or `name` is used** The ISO 3166-1 country code. Max length 2 characters.
+`countrySubDivisionCode`|`string`|[ISO 3166-2]|The ISO 3166-2 country sub code.
+`iataCode`|`string`|-|**Required if `air` is used** The IATA code of an airport location.
+`id`|`string`|-|The id of the location.
+`latitude`|`number`|-|The latitude of the location.
+`locationCode`|`string`|-|**Required if `rail` is used with RAIL_xx locationType** The code of the location. Optional for segments based on city locations, will be required in case of duplicate locations within database. If provided (with `city` and `countryCode` still required), it will be considered first, and if not found then `city` and `countryCode` will be considered.
+`locationType`|`string`|-|**Required if `rail` is used** The type of the location.
+`longitude`|`number`|-|The longitude of the location.
+`name`|`string`|-|The name of the location. Always provide the `countryCode` value in addition to the `name`.
+
+Below are the different node expected in the POST endpoints by location type (City, Rail station, or Airport) - example for `endLocation` field:
+
+Airport
+```json
+"endLocation": {
+       "iataCode": "SOV"
+}
+```
+
+City
+```json
+"endLocation": {
+       "city": "Oslo",
+       "countryCode": "NO",
+       "locationCode": "NOOSL"
+}
+```
+
+Rail station (`locationCode` exists, `locationType` depends of rail provider)
+```json
+"endLocation": {
+       "locationCode": "FRMSC",
+       "locationType": "RAIL_2C"
+}
+```
+Location types for Rail :
+
+Location Type|Railway company
+---|---
+`RAIL_0Z`|Swiss Federal Railways
+`RAIL_2A`|Deutsche Bahn AG
+`RAIL_2C`|SNCF
+`RAIL_2H`|Thalys International
+`RAIL_2R`|VIA Rail Canada Inc.
+`RAIL_2V`|Amtrak
+`RAIL_9F`|Eurostar International Limited
+`RAIL_XH`|China Railway
+`RAIL_Z0`|UK Rail
+`STD`|Standard locations
+
+
+## <a name="schema-payment-type"></a>PaymentType
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The payment code of the defined expense.
+`name`|`string`|-|The payment name of the defined expense.
+`id`|`string`|-|**Required** The payment key of the defined expense.
+
+## <a name="schema-resourcelink"></a>ResourceLink
+
+Name|Type|Format|Description
+---|---|---|---
+`href`|`string`|[RFC 3986]|Hyperlink to the resource.
+`id`|`string`|[RFC 4122]|Unique identifier of the related object.
+`template`|`string`|-|Hyperlink template to the resource.
+
+## <a name="schema-requestpolicy"></a>Request Policy
+
+Name|Type|Format|Description
+---|---|---|---
+`href`|`string`|[RFC 3986]|Hyperlink to the resource for this Request policy.
+`id`|`string`|-|The Request policy unique identifier.
+`name`|`string`|-|The name of the Request policy.
+`allowParticipants`|`boolean`|`true / false`|Whether this policy can add participants (policy is a Budget Request).
+
+## <a name="schema-parentrequestparticipant"></a>Budget Request Participant
+
+Name|Type|Format|Description
+---|---|---|---
+`participant`|`object`|[`ResourceLink`](#schema-resourcelink)|Participant of the Budget Request.
+`requests`|`array`|[`ResourceLink`](#schema-resourcelink)|The list of Child Requests from the Participant associated to the Budget Request.
+
+## <a name="schema-requestparticipantsforpatch"></a>Request Participants For Patch
+
+Name|Type|Format|Description
+---|---|---|---
+`value`|`array`|[`Request Participant For Patch`](#schema-requestparticipantforpatch)|The list of participants to be added or removed from the Budget Request.
+
+## <a name="schema-requestparticipantforpatch"></a>Request Participant For Patch
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|[RFC 4122]|**Required** The Participant unique identifier.
+`@deleted`|`boolean`|`true / false`|Whether the Participant should be added or deleted from the Budget Request. If false or not provided then the participant is added.
+
+## <a name="schema-requesttype"></a>Request Type
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The code of the type inherited from the Request Policy type. Possible values: `Authorization`, `Cash Advance`, `Travel`.
+`label`|`string`|-|The label of the type inherited from the Request Policy Type.
+
+## <a name="schema-expected-expense"></a>Expected Expense
+
+Name|Type|Format|Description
+---|---|---|---
+`allocations`|`object`|[`Allocation`](#schema-allocation)|The details of the allocations for this expected expense.
+`approvedAmount`|`object`|[`Amount`](#schema-amount)|The approved amount of the expected expense entry, in the transaction currency of the Request.
+`budgetAccrualDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|The date to determine which budgets are affected.
+`businessPurpose`|`string`|-|The business purpose of the Request entry.
+`comments`|`object`|[`ResourceLink`](#schema-resourcelink)|The list of comments for this expected expense.
+`custom1` to `custom40`|`object`|[`CustomField`](#schema-customfield)|The details from the Custom fields. These fields may not have data, depending on the configuration.
+`exchangeRate`|`object`|[`Exchange Rate`](#schema-exchangerate)|The exchange rate that applies to the entry.
+`expenseType`|`object`|[`Expense Type`](#schema-expensetype)|The expense type of the entry. **Required** for expected expenses, automatically set for segments depending on the `SegmentType` code.
+`href`|`string`|[RFC 3986]|Hyperlink to the resource for this Request entry.
+`id`|`string`|-|The unique identifier of the expected expense entry.
+`isPaymentCardRelated`|`boolean`|`true / false`|Indicates if the expected expense entry has the `Is Payment Card Related` field enabled. Value is `true` when the end user has selected this field for this expected expense entry.
+`lastComment`|`string`|-|The last comment (most recent) of the expected expense entry.
+`lastModifiedDate`|`timestamp`|[RFC 3339]|The date when this expected expense was last modified.
+`location`|`object`|[`Location`](#schema-location)|The location of the expected expense entry.
+`orgUnit1` to `orgUnit6`|`object`|[`Amount`](#amount)|The details from the Custom fields. These fields may not have data, depending on the configuration.
+`postedAmount`|`object`|[`Amount`](#schema-amount)|The posted amount of the expected expense entry, in the transaction currency of the Request.
+`parentRequest`|`object`|[`ResourceLink`](#schema-resourcelink)|The parent Request of the expected expense.
+`paymentType`|`object`|[`PaymentType`](#schema-payment-type)|Represents the payment type applied to the expected expense.
+`remainingAmount`|`object`|[`Amount`](#schema-amount)|The remaining amount of the expected expense entry, in the transaction currency of the Request.
+`source`|`enum`|-|The source that created the expected expense. Supported values: `CASH_ADVANCE` or `TRAVEL_ALLOWANCE`. This field will be empty in any other case
+`transactionAmount`|`object`|[`Amount`](#schema-amount)|**Required** The amount of the expected expense entry, in the transaction currency paid to the vendor.
+`transactionDate`|`timestamp`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|**Required** The date of the transaction.
+`travelAllowance`|`object`|[`Travel Allowance`](#schema-travelallowance)|The Travel allowance.
+`tripData`|`object`|[`Trip Data`](#schema-tripdata)|The description of the trip.
+`vendor`|`object`|[`Vendor`](#schema-vendor)|The vendor of the expected expense entry.
+
+## <a name="schema-allocation"></a>Allocation
+
+Name|Type|Format|Description
+---|---|---|---
+`allocationAmount`|`object`|[`Amount`](#schema-amount)|The amount of the allocation calculated with the percentage value multiplied by the transaction amount on the expected expense. This amount is given in the transaction's currency and rounded to eight digits after the decimal point.
+`approvedAmount`|`object`|[`Amount`](#schema-amount)|The amount of the allocation calculated with the percentage value multiplied by the approved amount on the expected expense. This amount is given in the user's currency and rounded to eight digits after the decimal point.
+`allocationId`|`string`|-|The unique allocation identifier.
+`custom1` to `custom20`|`object`|[`CustomField`](#schema-customfield)|The details from the Custom fields. These fields may not have data, depending on the configuration.
+`expenseId`|`string`|-|The unique identifier of the expected expense associated with the allocation.
+`percentEdited`|`boolean`|`true / false`|Whether the allocation percent has been edited.
+`percentage`|`number`|-|The percentage of the total expected expense that this allocation represents.
+`postedAmount`|`object`|[`Amount`](#amount)|The amount of the allocation calculated with the percentage value multiplied by the posted amount on the expected expense. This amount is given in the user's currency and rounded to eight digits after the decimal point.
+`systemAllocation`|`boolean`|`true / false`|Whether the allocation is a system allocation, usually hidden from the user. If displayed to the user, should be read-only.
+
+## <a name="schema-exchangerate"></a>Exchange Rate
+
+Name|Type|Format|Description
+---|---|---|---
+`operation`|`string`|-|Exchange rate operation. Supported values: `MULTIPLY`, `DIVIDE`
+`value`|`number`|-|Exchange rate value.
+
+## <a name="schema-expensetype"></a>Expense Type
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|-|**Required** Unique identifier of the expense type.
+`name`|`string`|-|Name of the expense type.
+
+## <a name="schema-listitemfield"></a>List Item Field
+
+Name|Type|Format|Description
+---|---|---|---
+`code`|`string`|-|The short code of the list item.
+`value`|`string`|-|Unique identifier of the list item.
+`href`|`string`|[RFC 3986]|Hyperlink to the resource for the list item.
+
+## <a name="schema-segmentleg"></a>Segment Leg
+
+Name|Type|Format|Description
+---|---|---|---
+`cardProgram`|`string`|-|The value of the card program provided in the segment leg.
+`cardValidity`|`string`|-|The value of the card validity provided in the segment leg.
+`class`|`list`|[`List Item Field`](#schema-listitemfield)|The booking class of the segment leg.
+`classOfService`|`string`|-|The class of service of the segment leg. For example, in the case of an air segment, this field would contain the one-letter booking code: `Y` for economy class, or `F` for first class.
+`comment`|`string`|-|Contains the last comment saved in this segment leg.
+`custom1` to `custom40`|`object`|[`CustomField`](#schema-customfield)|The details from the Custom fields. These fields may not have data, depending on the configuration.
+`endDate`|`date`|[ISO 8601] `YYYY-MM-DD`|The date of the end of this segment leg. It represents the arrival date of `AIRFR` and `TRAIN` segments, check out date for `HOTEL`, or drop off for `CARRT`.
+`endLocation`|`object`|[`ResourceLink`](#schema-resourcelink)|The location where this segment leg arrives. For example, the arrival location for an air segment.
+`endLocationDetail`|`string`|-|Details about the end location. This would contain details about the name of a hotel, or some details about a car rental agency for example.
+`endTime`|`time`|`HH:mm`|The time for the end of this segment leg.
+`id`|`string`|-|The unique identifier of the segment leg.
+`flightNumber`|`string`|-|The value of the flight number provided in the Air segment leg.
+`returnLeg`|`boolean`|`true / false`|Indicates whether this leg is the return leg of a round trip. In case of a `ROUND_TRIP`, if there is no return leg defined, the second segment leg will be considered as the return leg.
+`startDate`|`date`|[ISO 8601] `YYYY-MM-DD`|The date of the beginning of this segment leg.
+`startLocation`|`object`|[`ResourceLink`](#schema-resourcelink)|The start location of this segment leg. This would be the departure location for an air segment for example.
+`startLocationDetail`|`string`|-|Details about the start location. This would contain details about the name of a hotel, or some details about a car rental agency for example.
+`startTime`|`time`|`HH:mm`|The time for the beginning of this segment leg.
+`serviceName`|`string`|-|The value of the service name provided in the segment leg.
+`segmentLocator`|`string`|-|This is the identifier for Concur Travel segments (if applicable).
+`travelExceptionReasonCodes`|`string`|-|This is the Travel Exception Reason Code for Concur Travel segments (if applicable). If multiple Travel Exception Reason Code are assigned to a same Concur Travel segment, codes will be separated with a coma.
+`vendorName`|`string`|-|Contains the vendor description of the segment leg.
+
+## <a name="schema-segmenttype"></a>Segment Type
+
+Name|Type|Format|Description
+---|---|---|---
+`category`|`enum`|-|Describes the category of this segment type. Supported values: `REQ_SEG_AIRFR`, `REQ_SEG_CARRT`, `REQ_SEG_HOTEL`, `REQ_SEG_LIMOF`, `REQ_SEG_RAILF`, `REQ_SEG_TAXIF`, `REQ_SEG_MISC`, `REQ_SEG_PARKG`, `REQ_SEG_DININ`, `REQ_SEG_EVENT`
+`code`|`string`|-|**Required** The code of the segment type. Supported values: `AIRFR`, `CARRT`, `HOTEL`, `LIMOF`, `RAILF`, `TAXIF`, `MISC`, `PARKG`, `DININ`, `EVENT` or custom codes
+
+It can be `REQ_SEG_AIRFR` / `AIRFR` for a regular air segment, or `REQ_SEG_AIRFR` / `10325` for a custom air segment (`10325` is a random example).
+
+Example:
+
+```json
+{
+  "category": "REQ_SEG_AIRFR",
+  "code": "AIRFR"
+}
+```
+
+## <a name="schema-travelagency"></a>Travel Agency
+
+Name|Type|Format|Description
+---|---|---|---
+`emailAddress`|`string`|-|The travel agency email address.
+`id`|`string`|-|The travel agency unique identifier.
+`name`|`string`|-|The travel agency office name.
+`proposalType`|`string`|-|The travel agency proposal type.
+`customerAccountCode`|`string`|-|The code of the customer account configured within the Travel Agency Office admin page. Available only if proposalType is `AEBT` or `API`.
+`customerAccountName`|`string`|-|The name of the customer account configured within the Travel Agency Office admin page. Available only if proposalType is `AEBT` or `API`.
+
+## <a name="schema-travelallowance"></a>Travel Allowance
+
+Name|Type|Format|Description
+---|---|---|---
+`dailyTravelAllowanceId`|`string`|-|The fixed daily travel allowance id associated with the expected expense.
+
+## <a name="schema-tripdata"></a>Trip Data
+
+Name|Type|Format|Description
+---|---|---|---
+`agencyBooked`|`boolean`|`true / false`|If `true`, this travel is (or has to be) handled by a travel agency.
+`legs`|`list`|[`Segment Leg`](#schema-segmentleg)|The list of the legs of the travel.
+`tripType`|`string`|-|Indicates the type of this trip. Supported values: `ONE_WAY`, `ROUND_TRIP`, or `MULTI_STOPS`. If not provided, will be detected from the given legs.
+`segmentType`|`object`|[`Segment Type`](#schema-segmenttype)|**Required** The type of the segment.
+`selfBooked`|`boolean`|`true / false`|If `true`, this travel has been reserved by Concur Travel, or if Concur Travel has retrieved the trip information in the GDS.
+
+## <a name="schema-vendor"></a>Vendor
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|-|The vendor identifier of the entry.
+`name`|`string`|-|The vendor description of the entry.
+
+## <a name="schema-agencyproposals"></a>Agency proposals
+
+Name|Type|Format|Description
+---|---|---|---
+`agencyProposalType`|`string`|-|The agency proposal type value. Supported value: `API`. If not provided, will be set by default to `API`.
+`importDate`|`timestamp`|[RFC 3339] Format: `YYYY-MM-DDThh:mm:ss.SSS'Z`|**Read only** The date of the import.
+`proposalUuid`|`string`|-|**Read only** The unique identifier of one proposal for a Request.
+`providerMessageId`|`string`|-|**Required** Free text, max length 32 characters. The unique identifier of the client’s batch of proposal. All proposals of a given batch should have the same value. Posting a set of proposals with a different value will remove all proposals previously posted and start a new batch of proposals, replacing the previous batch.
+`proposalBatchSize`|`integer`|-|**Required** Size of the client’s batch of proposal. <br>Note: If this value is greater than 1, the Request will not be sent back to the traveler as long as the expected number of proposals (respective proposalOrder) are not integrated into the Request.
+`proposalOrder`|`integer`|-|**Required** Sequence order of the proposal for the request. Up to 3 proposals can be submitted with values `1`, `2`, `3`.
+`booked`|`boolean`|`true / false`|**Required** `true` if this trip is pre-booked by a travel agency. It will pre-select this proposal within the agency proposal comparison screen.
+`approvalLimitDate`|[RFC 3339] `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`|Limit approval date of the proposal. Past this date, the proposal will not be viable any more. <br>Note: Offset MUST be in form YYYY-MM-DDThh:mm:ss.
+`status`|`string`|-|The agency proposal status value. Supported value: `PROPOSAL`. If not provided, will be set by default to `PROPOSAL`.
+`proposal`|`boolean`|`true / false`|**Read only** `true` by default corresponding to the `PROPOSAL` status.
+`comments`|`string`|-|Free text.
+`itineraryLocator`|`string`|-|The unique identifier for ConcurTravel itinerary. Not provided if this is not a Concur Travel itinerary. Max length 32 characters.
+`selected`|`boolean`|`true / false`|**Read only** Value becomes `true` when that proposal is selected by the user.
+`totalPostedAmount`|`object`|[`Amount`](#schema-amount)|**Required** The total amount for that proposal. Sum of the Agency Proposal segments amounts, with currency conversion in case they have prices in different currencies.
+`policyCompliant`|`boolean`|`true / false`|Whether the Agency Proposal is policy compliant or not. `true` if proposal is in policy; `false` if proposal is out of policy.
+`agencyProposalEntries`|`array`|[`Agency proposal entry`](#schema-agencyproposalentry)|Minimum required: 1.
+
+## <a name="schema-agencyproposalentry"></a>Agency proposal entry
+
+Name|Type|Format|Description
+---|---|---|---
+`proposalEntryUuid`|`string`|-|**Read only** The unique identifier of one entry in a proposal for a request.
+`comments`|`string`|-|**Read only** Concatenate the comments of underlying segments.
+`transactionDate`|`timestamp`|[RFC 3339] Format: `YYYY-MM-DDThh:mm:ss.SSS'Z`|**Read only** The date of the transaction (local time).
+`transactionAmount`|`object`|[`Amount`](#schema-amount)|The amount of this entry.
+`exchangeRate`|`object`|[`Exchange Rate`](#schema-exchangerate)|**Read only** The exchange rate that applies to this entry.
+`agencyProposalSegment`|`array`|[`Agency proposal segment`](#schema-agencyproposalsegment)|Minimum required: 1.
+
+## <a name="schema-agencyproposalsegment"></a>Agency proposal segment
+
+Name|Type|Format|Description
+---|---|---|---
+`proposalSegmentUuid`|`string`|-|**Read only** The unique identifier of one segment in a proposal for a request.
+`pnr`|`string`|-|**Required** The personal number of reservation (e.g. `OYY5T`).
+`booked`|`boolean`|`true / false`|**Required** `true` if this trip is (or has to be) handled by a travel agency.
+`policyCompliant`|`boolean`|`true / false`|Whether the Agency Proposal segment is policy compliant or not. `true` if segment is policy compliant; `false` if segment is out of policy. If no value is provided, the policy compliancy information will not be displayed within the proposal comparison screen.
+`comments`|`string`|-|Free text.
+`startDate`|`date`|`yyyy-MM-dd`|**Required** The date of the beginning of this segment.
+`startTime`|`time`|`HH:mm`|The local time of the beginning of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
+`endDate`|`date`|`yyyy-MM-dd`|**Required** The date of the ending of this segment.
+`endTime`|`time`|`HH:mm`|The local time of the ending of this segment. <br> **Required** if this field set as mandator for the corresponding segment.
+`vendorName`|`string`|-|**Required** The vendor name for this segment. Max length 64 characters.
+`confirmationNumber`|`string`|-|The record locator or confirmation number for the flight from the airline. Max length 32 characters.
+`proposalSegmentType`|`string`|-|**Required** Supported values: `AIR`, `RAIL`, `CAR`, `HOTEL`, `MISC`
+`segmentTypeCode`|`object`|[`Segment Type`](#schema-segmenttype)|**Read only** The type of the segment. Supported values: `AIRFR`, `CARRT`, `HOTEL`, `RAILF`, `MISC`
+
+For a given segment along with the common fields above should be included the specific fields for the segment type considered.
+If `proposalSegmentType` is `AIR` then include fields of [`Agency proposal air segment`](#schema-agencyproposalairsegment)
+If `proposalSegmentType` is `RAIL` then include fields of [`Agency proposal rail segment`](#schema-agencyproposalrailsegment)
+If `proposalSegmentType` is `CAR` then include fields of [`Agency proposal car segment`](#schema-agencyproposalcarsegment)
+If `proposalSegmentType` is `HOTEL` then include fields of [`Agency proposal hotel segment`](#schema-agencyproposalhotelsegment)
+If `proposalSegmentType` is `MISC` then include fields of [`Agency proposal misc segment`](#schema-agencyproposalmiscsegment)
+
+## <a name="schema-agencyproposalairsegment"></a>Agency proposal air segment
+
+Name|Type|Format|Description
+---|---|---|---
+`classOfService`|`string`|-|**Required** The class of the air segment (e.g. `Business`). Will be displayed as information within the proposal comparison screen. Max Length: 32 characters.
+`classListItem`|`object`|[`ResourceLink`](#schema-resourcelink)|The unique identifier of the class of service list item for the segment. It will populate the "Class" list field of the air segment form. If the "Class" List field of the air segment form is mandatory, then this field becomes **Request** within the proposal payload.
+`duration`|`integer`|-|**Required** The duration of the booked flight in minutes. Must be greater than 0 (e.g. `120` for a two hours flight).
+`flightNumber`|`string`|-|**Required** The flight number for the booking (e.g. `AF029`)
+`seatNumber`|`string`|-|The number of the seat (e.g. `24D`)
+`aircraft`|`string`|-|The code of the aircraft type.
+`departureTerminal`|`string`|-|The departure terminal for the air segment leg (e.g. `2B`)
+`arrivalTerminal`|`string`|-|The arrival terminal for the air segment leg.
+`startLocation`|`object`|[`Location`](#schema-location)|**Required** The start location of the air segment leg (Air location schema).
+`endLocation`|`object`|[`Location`](#schema-location)|**Required** The end location of the air segment leg (Air location schema).
+
+## <a name="schema-agencyproposalrailsegment"></a>Agency proposal rail segment
+
+Name|Type|Format|Description
+---|---|---|---
+`classOfService`|`string`|-|**Required** The class of the segment leg (e.g. `Economy`). Will be displayed as information within the proposal comparison screen. Max Length: 32 characters.
+`classListItem`|`object`|[`ResourceLink`](#schema-resourcelink)|The unique identifier of the class of service list item for the air segment. It will populate the "Class" list field of the rail segment form. If the "Class" List field of the rail segment form is mandatory, then this field becomes **Request** within the proposal payload.
+`duration`|`integer`|-|**Required** The duration of the booked train in minutes. Must be greater than 0. Must be greater than 0 (e.g. `120` for a two hours ride).
+`trainNumber`|`string`|-|**Required** The train number for the booking (e.g. `1578`)
+`wagonNumber`|`string`|-|The number of the wagon (e.g. `8`).
+`seatNumber`|`string`|-|The number of the seat (e.g. `24D`).
+`startRailStation`|`string`|-|The code for the departure station of the ride. See `locationCode` in [`Location`](#schema-location).
+`startRailStationName`|`string`|-|The name of the departure station of the ride.
+`startLocation`|`object`|[`Location`](#schema-location)|**Required** The start location of the rail segment leg (Rail location schema).
+`endRailStation`|`string`|-|The code for the arrival station of the ride. See `locationCode` in [`Location`](#schema-location).
+`endRailStationName`|`string`|-|The name of the arrival station of the ride.
+`endLocation`|`object`|[`Location`](#schema-location)|**Required** The end location of the rail segment leg (Rail location schema).
+
+## <a name="schema-agencyproposalcarsegment"></a>Agency proposal car segment
+
+Name|Type|Format|Description
+---|---|---|---
+`airConditioning`|`boolean`|`true / false`|Indicates if car has an air conditioner.
+`carEquipment`|`string`|-|Any special equipment required by the renter (e.g. `GPS`).
+`classOfService`|`string`|-|The class of the segment leg (e.g. `Eco/Compact`). Will be displayed as information within the proposal comparison screen. Max Length: 32 characters.
+`classListItem`|`object`|[`ResourceLink`](#schema-resourcelink)|The unique identifier of the class of service of the car segment. It will populate the "Class" list field of the car segment form. If the "Class" List field of the car segment form is mandatory, then this field becomes **Request** within the proposal payload.
+`transmissionPreference`|`string`|-|The character code that indicates if the car has auto-transmission. Supported values `A` for Auto or `M` for Manual.
+`dropOffCollectionPhoneNumber`|`string`|-|The phone number for the drop-off address when the rental service offers drop-off.
+`endLocation`|`object`|[`Location`](#schema-location)|**Required** The end location of the car segment leg (city location schema).
+`pickupDeliveryPhoneNumber`|`string`|-|The phone number for the pickup address when the rental service offers pickup.
+`startLocation`|`object`|[`Location`](#schema-location)|**Required** The start location of the car segment leg (city location schema).
+`startLocationDetail`|`string`|-|Additional details about the start location.
+`endLocationDetail`|`string`|-|Additional details about the end location.
+
+## <a name="schema-agencyproposalhotelsegment"></a>Agency proposal hotel segment
+
+Name|Type|Format|Description
+---|---|---|---
+`name`|`string`|-|**Required** The hotel name for the booking.
+`roomDescription`|`string`|-|The room description for the booking. Max Length: 2000 characters.
+`providerPhone`|`string`|-|The phone number for the booking.
+`location`|`object`|[`Location`](#schema-location)|**Required** The location of the hotel segment leg (city location schema).
+`locationDetail`|`string`|-|Additional details about the location.
+`address`|`string`|-|The address of the booking.
+`postalCode`|`string`|-|The address postal code of the booking.
+
+## <a name="schema-agencyproposalmiscsegment"></a>Agency proposal misc segment
+
+Name|Type|Format|Description
+---|---|---|---
+`name`|`string`|-|**Required** The name for the booking (e.g. `Ferry`, `Bus`).
