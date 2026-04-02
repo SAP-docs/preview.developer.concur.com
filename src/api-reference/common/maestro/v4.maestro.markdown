@@ -88,6 +88,29 @@ PUT /maestro/v4/alerts
 
 Updates an existing alert with new payload data, based on the `extRef` sent on the payload. Uses the same payload structure as the POST endpoint. The alert must exist and be associated with the requesting partner's company.
 
+### Generate Partner Signed Message
+
+```shell
+POST /maestro/v4/partner/signed-message
+```
+
+Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.
+
+**Required Query Parameters:**
+- `tripId` - Concur Trip ID for context validation
+
+**Authentication:** User JWT Token
+
+### Retrieve Public Keys (JWKS)
+
+```shell
+GET /maestro/v4/jwks
+```
+
+Authenticated endpoint for partners to retrieve Concur's public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.
+
+**Authentication:** Company JWT Token
+
 #### Required Headers
 - `Content-Type`: `application/json`
 - `Authorization`: Bearer Company JWT Token
@@ -101,3 +124,71 @@ Updates an existing alert with new payload data, based on the `extRef` sent on t
 - `500 Internal Server Error` - Server error
 - `503 Service Unavailable` - Service temporarily unavailable
 - `504 Gateway Timeout` - Upstream service timeout
+
+## Partner Authorization Endpoints
+
+The following endpoints support secure partner integrations by providing signed message generation and public key retrieval for signature verification.
+
+### Generate Partner Signed Message
+
+```shell
+POST /maestro/v4/partner/signed-message?tripId={tripId}
+```
+
+Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.
+
+#### Required Headers
+- `Content-Type`: `application/json`
+- `Authorization`: Bearer User JWT Token
+
+#### Required Query Parameters
+- `tripId`: Concur Trip ID for context validation
+
+#### Response Status Codes
+- `200 OK` - Signed message generated successfully
+- `400 Bad Request` - Invalid or missing parameters
+- `401 Unauthorized` - User JWT validation failed
+- `403 Forbidden` - Valid user JWT but user not entitled to offer
+- `500 Internal Server Error` - Message generation failed
+
+#### Response Example
+
+```json
+{
+  "signedMessage": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNvbmN1ci1rZXktMSJ9.eyJpc3MiOiJjb25jdXJzb2x1dGlvbnMuY29tIiwiYXVkIjoiZ3JvdW5kc3Bhbi5jb20iLCJpYXQiOjE2NDI3ODU2MDAsImV4cCI6MTY0Mjc4NTcyMCwianRpIjoidXVpZC0xMjM0IiwidXNlcklkIjoiMTcxYTY2MDctYzk0ZS00MGE3LWE3YzktZGFjMDI5OGMyODE3IiwidHJpcElkIjoidHJpcC11dWlkLTQ1NiJ9..."
+}
+```
+
+### Retrieve Public Keys (JWKS)
+
+```shell
+GET /maestro/v4/jwks
+```
+
+Authenticated endpoint for partners to retrieve Concur's public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.
+
+#### Required Headers
+- `Authorization`: Bearer Company JWT Token
+
+#### Response Status Codes
+- `200 OK` - JWKs response with public keys for signature verification
+- `401 Unauthorized` - Company JWT validation failed or missing
+- `403 Forbidden` - Valid company JWT but not authorized for key access
+- `500 Internal Server Error` - Key retrieval failures
+
+#### Response Example
+
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "concur-key-1",
+      "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+      "e": "AQAB",
+      "alg": "RS256"
+    }
+  ]
+}
+```
