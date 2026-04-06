@@ -20,7 +20,8 @@ This document provides specific implementation details for ground transportation
 
 |Name|Description|Endpoints|
 |---|---|---|
-|`maestro.alerts.writeonly`|Write-only access to submit and edit partner alerts.|POST, PUT|
+|`maestro.alerts.writeonly`|Write-only access to submit and edit partner alerts.|POST, PUT (alerts)|
+|`maestro.partner.read`|Access for partner authorization JWKs|
 
 ## Dependencies <a name="dependencies"></a>
 
@@ -361,6 +362,176 @@ cache-control: no-cache, private
 }
 ```
 
+## Generate Partner Signed Message <a name="generate-partner-signed-message"></a>
+
+Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.
+
+### Scopes
+
+`maestro.partner.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+POST /maestro/v4/partner/signed-message?tripId={tripId}
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`tripId`|`string`|**Required** Concur Trip ID for context validation|
+|`Content-Type`|`string`|**Required** Must be `application/json`|
+|`Authorization`|`string`|**Required** Bearer User JWT Token|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) - Signed message generated successfully
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Invalid or missing parameters
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - User JWT validation failed
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) - Valid user JWT but user not entitled to offer
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1) - Message generation failed
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Partner Signed Message Response](#schema-partner-signed-message-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/maestro/v4/partner/signed-message?tripId=trip-uuid-456
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {user-jwt-token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 450
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "signedMessage": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNvbmN1ci1rZXktMSJ9.eyJpc3MiOiJjb25jdXJzb2x1dGlvbnMuY29tIiwiYXVkIjoiZ3JvdW5kc3Bhbi5jb20iLCJpYXQiOjE2NDI3ODU2MDAsImV4cCI6MTY0Mjc4NTcyMCwianRpIjoidXVpZC0xMjM0IiwidXNlcklkIjoiMTcxYTY2MDctYzk0ZS00MGE3LWE3YzktZGFjMDI5OGMyODE3IiwidHJpcElkIjoidHJpcC11dWlkLTQ1NiJ9..."
+}
+```
+
+## Retrieve Public Keys (JWKS) <a name="retrieve-public-keys"></a>
+
+Authenticated endpoint for partners to retrieve Concur's public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.
+
+### Scopes
+
+`maestro.partner.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET /maestro/v4/jwks
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Authorization`|`string`|**Required** Bearer Company JWT Token|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) - JWKs response with public keys for signature verification
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - Company JWT validation failed or missing
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) - Valid company JWT but not authorized for key access
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1) - Key retrieval failures
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [JWKS Response](#schema-jwks-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/maestro/v4/jwks
+Accept: application/json
+Authorization: Bearer {company-jwt-token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 650
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "concur-key-1",
+      "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+      "e": "AQAB",
+      "alg": "RS256"
+    }
+  ]
+}
+```
+
 ## Schema <a name="schema"></a>
 
 ### <a name="schema-alert-request"></a>Alert Request
@@ -453,3 +624,26 @@ cache-control: no-cache, private
 |`errorCode`|`string`|-|Error code identifier|
 |`errorMessage`|`string`|-|Detailed error message|
 |`details`|`object`|-|Field-specific information|
+
+### <a name="schema-partner-signed-message-response"></a>Partner Signed Message Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`signedMessage`|`string`|-|**Required** RS256-signed JWT token containing user and trip context|
+
+### <a name="schema-jwks-response"></a>JWKS Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`keys`|`array`|[`JWK`](#schema-jwk)|**Required** Array of JSON Web Keys for signature verification|
+
+### <a name="schema-jwk"></a>JWK (JSON Web Key)
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`kty`|`string`|-|**Required** Key type (RSA)|
+|`use`|`string`|-|**Required** Key usage (sig for signature)|
+|`kid`|`string`|-|**Required** Key identifier for rotation support|
+|`n`|`string`|-|**Required** RSA public key modulus|
+|`e`|`string`|-|**Required** RSA public key exponent|
+|`alg`|`string`|-|**Required** Algorithm (RS256)|
