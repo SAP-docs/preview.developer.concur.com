@@ -229,6 +229,63 @@
                     "Alerts"
                 ]
             }
+        },
+        "/jwks": {
+            "get": {
+                "operationId": "GetJWKS",
+                "summary": "Retrieve public keys for signature verification",
+                "description": "Authenticated endpoint for partners to retrieve Concur's public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.",
+                "responses": {
+                    "200": {
+                        "description": "JWKs response with public keys for signature verification",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JWKSResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Company JWT validation failed or missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - Valid company JWT but not authorized for key access",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error - Key retrieval failures",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorMessage"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": [
+                    "Partner Authorization"
+                ],
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -508,6 +565,67 @@
                         "type": "object",
                         "description": "Optional field-specific information"
                     }
+                }
+            },
+            "JWKSResponse": {
+                "type": "object",
+                "description": "Response schema for JWKs endpoint containing public keys for signature verification",
+                "properties": {
+                    "keys": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "kty": {
+                                    "type": "string",
+                                    "description": "Key type (RSA)"
+                                },
+                                "use": {
+                                    "type": "string",
+                                    "description": "Key usage (sig for signature)"
+                                },
+                                "kid": {
+                                    "type": "string",
+                                    "description": "Key identifier for rotation support"
+                                },
+                                "n": {
+                                    "type": "string",
+                                    "description": "RSA public key modulus"
+                                },
+                                "e": {
+                                    "type": "string",
+                                    "description": "RSA public key exponent"
+                                },
+                                "alg": {
+                                    "type": "string",
+                                    "description": "Signing algorithm (RS256)"
+                                }
+                            },
+                            "required": [
+                                "kty",
+                                "use",
+                                "kid",
+                                "n",
+                                "e",
+                                "alg"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "keys"
+                ],
+                "example": {
+                    "keys": [
+                        {
+                            "kty": "RSA",
+                            "use": "sig",
+                            "kid": "concur-key-1",
+                            "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAt...",
+                            "e": "AQAB",
+                            "alg": "RS256"
+                        }
+                    ]
                 }
             }
         }
