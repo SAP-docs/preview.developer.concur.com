@@ -1324,7 +1324,12 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">maestro.alerts.writeonly</code></td>
       <td>Write-only access to submit and edit partner alerts.</td>
-      <td>POST, PUT</td>
+      <td>POST, PUT (alerts)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">maestro.partner.read</code></td>
+      <td>Access for partner authorization JWKs</td>
+      <td> </td>
     </tr>
   </tbody>
 </table>
@@ -1715,6 +1720,218 @@ cache-control: no-cache, private
   </span><span class="nl">"alertId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"A123456"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"updated"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alert updated successfully"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="generate-partner-signed-message-">Generate Partner Signed Message <a name="generate-partner-signed-message"></a></h2>
+
+<p>Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.</p>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">maestro.partner.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-4">Request</h3>
+
+<h4 id="uri-2">URI</h4>
+
+<h5 id="template-2">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /maestro/v4/partner/signed-message?tripId<span class="o">={</span>tripId<span class="o">}</span>
+</code></pre></div></div>
+
+<h5 id="parameters-2">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tripId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> Concur Trip ID for context validation</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Content-Type</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> Must be <code class="language-plaintext highlighter-rouge">application/json</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Authorization</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> Bearer User JWT Token</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h3 id="response-4">Response</h3>
+
+<h4 id="status-codes-2">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a> - Signed message generated successfully</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a> - Invalid or missing parameters</li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a> - User JWT validation failed</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a> - Valid user JWT but user not entitled to offer</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a> - Message generation failed</li>
+</ul>
+
+<h4 id="headers-5">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload-4">Payload</h4>
+
+<ul>
+  <li><a href="#schema-partner-signed-message-response">Partner Signed Message Response</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://us.api.concursolutions.com/maestro/v4/partner/signed-message?tripId<span class="o">=</span>trip-uuid-456
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer <span class="o">{</span>user-jwt-token<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="response-5">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 450
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"signedMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJSUzI1NiIsImtpZCI6ImNvbmN1ci1rZXktMSJ9.eyJpc3MiOiJjb25jdXJzb2x1dGlvbnMuY29tIiwiYXVkIjoiZ3JvdW5kc3Bhbi5jb20iLCJpYXQiOjE2NDI3ODU2MDAsImV4cCI6MTY0Mjc4NTcyMCwianRpIjoidXVpZC0xMjM0IiwidXNlcklkIjoiMTcxYTY2MDctYzk0ZS00MGE3LWE3YzktZGFjMDI5OGMyODE3IiwidHJpcElkIjoidHJpcC11dWlkLTQ1NiJ9..."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="retrieve-public-keys-jwks-">Retrieve Public Keys (JWKS) <a name="retrieve-public-keys"></a></h2>
+
+<p>Authenticated endpoint for partners to retrieve Concur’s public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.</p>
+
+<h3 id="scopes-3">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">maestro.partner.readwrite</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-6">Request</h3>
+
+<h4 id="uri-3">URI</h4>
+
+<h5 id="template-3">Template</h5>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /maestro/v4/jwks
+</code></pre></div></div>
+
+<h5 id="parameters-3">Parameters</h5>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Authorization</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><strong>Required</strong> Bearer Company JWT Token</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-6">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-5.3.2">RFC 7231 Accept</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a></li>
+</ul>
+
+<h3 id="response-6">Response</h3>
+
+<h4 id="status-codes-3">Status Codes</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">200 OK</a> - JWKs response with public keys for signature verification</li>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-3.1">401 Unauthorized</a> - Company JWT validation failed or missing</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a> - Valid company JWT but not authorized for key access</li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a> - Key retrieval failures</li>
+</ul>
+
+<h4 id="headers-7">Headers</h4>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a Concur specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.2">RFC 7231 Date</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7234#section-5.2">RFC 7234 Cache-Control</a></li>
+</ul>
+
+<h4 id="payload-5">Payload</h4>
+
+<ul>
+  <li><a href="#schema-jwks-response">JWKS Response</a></li>
+  <li><a href="#schema-error-message">Error Message</a></li>
+</ul>
+
+<h3 id="example-3">Example</h3>
+
+<h4 id="request-7">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET https://us.api.concursolutions.com/maestro/v4/jwks
+Accept: application/json
+Authorization: Bearer <span class="o">{</span>company-jwt-token<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="response-7">Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 650
+content-type: application/json<span class="p">;</span><span class="nv">charset</span><span class="o">=</span>UTF-8
+<span class="nb">date</span>: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"kty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RSA"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"use"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sig"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"kid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concur-key-1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"n"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"e"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AQAB"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS256"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -2112,6 +2329,99 @@ cache-control: no-cache, private
       <td><code class="language-plaintext highlighter-rouge">object</code></td>
       <td>-</td>
       <td>Field-specific information</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="partner-signed-message-response"><a name="schema-partner-signed-message-response"></a>Partner Signed Message Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">signedMessage</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> RS256-signed JWT token containing user and trip context</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="jwks-response"><a name="schema-jwks-response"></a>JWKS Response</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">keys</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-jwk"><code class="language-plaintext highlighter-rouge">JWK</code></a></td>
+      <td><strong>Required</strong> Array of JSON Web Keys for signature verification</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="jwk-json-web-key"><a name="schema-jwk"></a>JWK (JSON Web Key)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">kty</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Key type (RSA)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">use</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Key usage (sig for signature)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">kid</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Key identifier for rotation support</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">n</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> RSA public key modulus</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">e</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> RSA public key exponent</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alg</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td><strong>Required</strong> Algorithm (RS256)</td>
     </tr>
   </tbody>
 </table>

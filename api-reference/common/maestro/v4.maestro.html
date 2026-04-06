@@ -1403,6 +1403,29 @@
 
 <p>Updates an existing alert with new payload data, based on the <code class="language-plaintext highlighter-rouge">extRef</code> sent on the payload. Uses the same payload structure as the POST endpoint. The alert must exist and be associated with the requesting partner’s company.</p>
 
+<h3 id="generate-partner-signed-message">Generate Partner Signed Message</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /maestro/v4/partner/signed-message
+</code></pre></div></div>
+
+<p>Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.</p>
+
+<p><strong>Required Query Parameters:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tripId</code> - Concur Trip ID for context validation</li>
+</ul>
+
+<p><strong>Authentication:</strong> User JWT Token</p>
+
+<h3 id="retrieve-public-keys-jwks">Retrieve Public Keys (JWKS)</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /maestro/v4/jwks
+</code></pre></div></div>
+
+<p>Authenticated endpoint for partners to retrieve Concur’s public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.</p>
+
+<p><strong>Authentication:</strong> Company JWT Token</p>
+
 <h4 id="required-headers">Required Headers</h4>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">Content-Type</code>: <code class="language-plaintext highlighter-rouge">application/json</code></li>
@@ -1420,6 +1443,80 @@
   <li><code class="language-plaintext highlighter-rouge">503 Service Unavailable</code> - Service temporarily unavailable</li>
   <li><code class="language-plaintext highlighter-rouge">504 Gateway Timeout</code> - Upstream service timeout</li>
 </ul>
+
+<h2 id="partner-authorization-endpoints">Partner Authorization Endpoints</h2>
+
+<p>The following endpoints support secure partner integrations by providing signed message generation and public key retrieval for signature verification.</p>
+
+<h3 id="generate-partner-signed-message-1">Generate Partner Signed Message</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST /maestro/v4/partner/signed-message?tripId<span class="o">={</span>tripId<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.</p>
+
+<h4 id="required-headers-1">Required Headers</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Content-Type</code>: <code class="language-plaintext highlighter-rouge">application/json</code></li>
+  <li><code class="language-plaintext highlighter-rouge">Authorization</code>: Bearer User JWT Token</li>
+</ul>
+
+<h4 id="required-query-parameters">Required Query Parameters</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">tripId</code>: Concur Trip ID for context validation</li>
+</ul>
+
+<h4 id="response-status-codes-1">Response Status Codes</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">200 OK</code> - Signed message generated successfully</li>
+  <li><code class="language-plaintext highlighter-rouge">400 Bad Request</code> - Invalid or missing parameters</li>
+  <li><code class="language-plaintext highlighter-rouge">401 Unauthorized</code> - User JWT validation failed</li>
+  <li><code class="language-plaintext highlighter-rouge">403 Forbidden</code> - Valid user JWT but user not entitled to offer</li>
+  <li><code class="language-plaintext highlighter-rouge">500 Internal Server Error</code> - Message generation failed</li>
+</ul>
+
+<h4 id="response-example">Response Example</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"signedMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJSUzI1NiIsImtpZCI6ImNvbmN1ci1rZXktMSJ9.eyJpc3MiOiJjb25jdXJzb2x1dGlvbnMuY29tIiwiYXVkIjoiZ3JvdW5kc3Bhbi5jb20iLCJpYXQiOjE2NDI3ODU2MDAsImV4cCI6MTY0Mjc4NTcyMCwianRpIjoidXVpZC0xMjM0IiwidXNlcklkIjoiMTcxYTY2MDctYzk0ZS00MGE3LWE3YzktZGFjMDI5OGMyODE3IiwidHJpcElkIjoidHJpcC11dWlkLTQ1NiJ9..."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="retrieve-public-keys-jwks-1">Retrieve Public Keys (JWKS)</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET /maestro/v4/jwks
+</code></pre></div></div>
+
+<p>Authenticated endpoint for partners to retrieve Concur’s public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.</p>
+
+<h4 id="required-headers-2">Required Headers</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Authorization</code>: Bearer Company JWT Token</li>
+</ul>
+
+<h4 id="response-status-codes-2">Response Status Codes</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">200 OK</code> - JWKs response with public keys for signature verification</li>
+  <li><code class="language-plaintext highlighter-rouge">401 Unauthorized</code> - Company JWT validation failed or missing</li>
+  <li><code class="language-plaintext highlighter-rouge">403 Forbidden</code> - Valid company JWT but not authorized for key access</li>
+  <li><code class="language-plaintext highlighter-rouge">500 Internal Server Error</code> - Key retrieval failures</li>
+</ul>
+
+<h4 id="response-example-1">Response Example</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"keys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"kty"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RSA"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"use"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sig"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"kid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"concur-key-1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"n"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"e"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AQAB"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"alg"</span><span class="p">:</span><span class="w"> </span><span class="s2">"RS256"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
       </div>
       <!--/col-md-8-->
