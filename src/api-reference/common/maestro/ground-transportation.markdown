@@ -21,7 +21,7 @@ This document provides specific implementation details for ground transportation
 |Name|Description|Endpoints|
 |---|---|---|
 |`maestro.alerts.writeonly`|Write-only access to submit and edit partner alerts.|POST, PUT (alerts)|
-|`maestro.partner.read`|Access for partner authorization jwks|
+|`maestro.partner.read`|Access for partner authorization JWKs|
 
 ## Dependencies <a name="dependencies"></a>
 
