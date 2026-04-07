@@ -789,7 +789,7 @@ You should send your questions to [PlatformCertification@sap.com](mailto:Platfor
 
 There will be a one week certification time window per month. You should send your certification walkthrough request to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com) one month before the certification date you would like schedule. We will reply with a meeting invitation within 5 business days.
 
-Please find your certification date time based on the [certification calendar](user-app-certification-calender.pdf).
+Please find your certification date time based on the [certification calendar](/api-guides/app-certification-calendar.pdf).
 
 ### How do I log a support case?
 
