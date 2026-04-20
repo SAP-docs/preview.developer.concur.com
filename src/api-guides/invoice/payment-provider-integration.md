@@ -88,7 +88,7 @@ Editable By:      This depends on the customer configuration
 
 ### <a name="Overview-Scopes-and-Obtaining-Invoices-pending-payment"></a>Overview Scopes and Obtaining Invoices pending payment
 
-[Overview, Scopes, an Obtaining Invoices pending payment](/api-reference/invoice/v1.invoice-pay.html)
+[Overview, Scopes, an Obtaining Invoices pending payment](/api-reference/invoice/v4.invoice-pay.html)
 
 ### <a name="Discounts"></a>Discounts on invoices
 
