@@ -1,4 +1,4 @@
----
+﻿---
 title: Attendees v1.1
 layout: reference
 redirect_from:
@@ -6,9 +6,11 @@ redirect_from:
 ---
 
 # Attendees v1.1
-
-{% include deprecation-alert.html %}
-
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 Creates or updates one or more attendee records for the specified expense entry. Attendees are additional people that benefitted from this expense.
 
 **Attendee External ID Considerations**
