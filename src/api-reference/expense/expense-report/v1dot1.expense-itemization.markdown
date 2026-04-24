@@ -9,7 +9,13 @@ redirect_from:
 
 # Expense Entry Itemization v1.1
 
-{% include deprecation-alert.html deprecation_date="05/19/2016" unsupported_date="11/19/2016" content=deprecation_content %}
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 05/19/2016</p>
+  <p>Unsupported Date: 11/19/2016</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 
 Expense Entry Itemizations are children of an expense entry that subdivide the expense. A common use case for itemizations is on a hotel bill, which can have separate itemizations for room rate, room tax, and services such as laundry or minibar.
 

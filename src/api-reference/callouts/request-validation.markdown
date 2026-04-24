@@ -1,12 +1,14 @@
----
+﻿---
 title: Travel Request Validation
 layout: reference
 ---
 
 # Travel Request Validation
-
-{% include deprecation-alert.html %}
-
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 Requests in the SAP Concur platform can be validated in an external system by using a combination of callouts and web services.  
 
 This guide provides a step by step overview of how to set up and use the external validation functionality for Requests. This guide does not provide instruction on the process of programming the application connector, but provides an overview of the required functionality.
