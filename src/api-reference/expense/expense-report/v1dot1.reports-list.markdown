@@ -1,4 +1,4 @@
----
+﻿---
 title: Expense Reports List v1.1
 layout: reference
 
@@ -7,9 +7,11 @@ redirect_from:
 ---
 
 # Expense Reports List v1.1
-
-{% include deprecation-alert.html %}
-
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 ## Get list of expense reports
 
 Retrieves a list of reports. This endpoint can be used to view reports for one user, or to view recent reports for the entire company. If you get reports for one user, you can view reports owned by the user specified in the OAuth access token. If you choose to get all the reports for the company, you must use the LastModified date query string to view reports for a 24 hour period. You can provide an optional View to target search results. If no view or date string is provided, the web service will return all Recent reports for the specified user. If the `LastModified` query string is provided, the results do not filter based on the specified user. This endpoint can support frequent requests, where the developer tracks the previous date/time that the endpoint was called, and uses that as the date/time for the next request.

@@ -1,15 +1,18 @@
----
+﻿---
 title: Attendee Types
 layout: reference
 reference-type: swagger
 ---
 
-{% capture deprecation_content %}
-* POST `/expense/attendeetypes`
-* DELETE `/expense/attendeetypes/{id}`
-{% endcapture %}
-
-{% include deprecation-alert.html deprecation_date="05/19/2016" unsupported_date="11/19/2016" content=deprecation_content %}
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 05/19/2016</p>
+  <p>Unsupported Date: 11/19/2016</p>
+  <p>* POST `/expense/attendeetypes`
+* DELETE `/expense/attendeetypes/{id}`</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 
 
 {% swagger /api-explorer/v3-0/AttendeeTypes.swagger2.json %}

@@ -1,4 +1,4 @@
----
+﻿---
 title: Pre-2017 Authorization (Deprecated)
 layout: reference
 redirect_from:
@@ -7,15 +7,15 @@ redirect_from:
 
 # Pre-2017 Authorization (Deprecated)
 
-{% capture deprecation_content %}
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 02/04/2017</p>
+  <p>If you are a new partner or an existing one creating a new app, please refer to the [new authentication version documentation](/api-reference/authentication/getting-started.html).
 
-If you are a new partner or an existing one creating a new app, please refer to the [new authentication version documentation](/api-reference/authentication/getting-started.html).
-
-Please contact your Partner Enablement representative before starting any new development to ensure a smooth and successful certification process.
-
-{% endcapture %}
-
-{% include deprecation-alert.html deprecation_date="02/04/2017" content=deprecation_content %}
+Please contact your Partner Enablement representative before starting any new development to ensure a smooth and successful certification process.</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 
 ## Access tokens <a name="access-tokens"></a>
 An access token is a long-lived token used to make API calls.
