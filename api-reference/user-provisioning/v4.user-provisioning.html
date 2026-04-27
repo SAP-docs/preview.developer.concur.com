@@ -1420,6 +1420,271 @@
 
 <p>This API supports company-level access tokens.</p>
 
+<h2 id="ups-api-best-practices"><a name="best-practices"></a>UPS API Best Practices</h2>
+
+<p>The following guidelines outline the best practices for working with the SAP Concur User Provisioning APIs.</p>
+
+<h3 id="key-recommendations">Key Recommendations</h3>
+
+<ul>
+  <li>Use the <code class="language-plaintext highlighter-rouge">/Bulk/</code> endpoint for batch operations (up to 100 operations per request) and <code class="language-plaintext highlighter-rouge">/Users/</code> for single-user operations.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">PATCH</code> operations instead of <code class="language-plaintext highlighter-rouge">PUT</code> for regular user updates to minimize error rates.</li>
+  <li>Track provision completion using the <code class="language-plaintext highlighter-rouge">provisionId</code> returned in the response, either via polling (with exponential backoff) or webhook notifications.</li>
+  <li>Pre-validate data before submission — most failures are caused by data validation issues.</li>
+  <li>When identity extensions fail, retry the entire operation after fixing the issue. When spend/travel extensions fail, retry only those extensions via a subsequent <code class="language-plaintext highlighter-rouge">PATCH</code> request.</li>
+  <li>There is a 240-minute provision request timeout; please reach out to us with the <code class="language-plaintext highlighter-rouge">provisionId</code> if requests remain pending for an extended period.</li>
+</ul>
+
+<h3 id="when-to-use-each-endpoint">When to Use Each Endpoint</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Recommended Endpoint</th>
+      <th># of Operations per request</th>
+      <th>Processing Type</th>
+      <th>Tracking</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Creating/updating multiple users, Initial data load, Real-time HR Sync</td>
+      <td><code class="language-plaintext highlighter-rouge">POST /Bulk/</code></td>
+      <td>1 - 100</td>
+      <td>Asynchronous</td>
+      <td>provisionId</td>
+    </tr>
+    <tr>
+      <td>Single user operations</td>
+      <td><code class="language-plaintext highlighter-rouge">POST /Users/</code>, <code class="language-plaintext highlighter-rouge">[PUT or PATCH or DELETE] /Users/{userId}/</code></td>
+      <td>1</td>
+      <td>Asynchronous</td>
+      <td>provisionId</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><strong>Note:</strong> The <code class="language-plaintext highlighter-rouge">/Bulk/</code> endpoint is invoked via the <code class="language-plaintext highlighter-rouge">POST</code> HTTP method. However, each operation within the request payload can specify its own method (<code class="language-plaintext highlighter-rouge">POST</code>, <code class="language-plaintext highlighter-rouge">PUT</code>, <code class="language-plaintext highlighter-rouge">PATCH</code>, or <code class="language-plaintext highlighter-rouge">DELETE</code>) as per the <a href="https://datatracker.ietf.org/doc/html/rfc7644#section-3.7">SCIM RFC</a>.</p>
+</blockquote>
+
+<h3 id="operations-best-practices">Operations Best Practices</h3>
+
+<p>For regular user updates, use <code class="language-plaintext highlighter-rouge">PATCH</code> operations rather than <code class="language-plaintext highlighter-rouge">PUT</code> (full replace), whether for single user requests or bulk operations. This is the approach used by our large enterprise customers handling thousands of daily updates.</p>
+
+<h4 id="for-bulk-updates-hr-sync-daily-changes">For bulk updates (HR sync, daily changes)</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">POST /Bulk/
+</span></code></pre></div></div>
+
+<p>Payload:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:BulkRequest"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PATCH"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/user-uuid-1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"bulkId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"update-emp001"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w"> </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"userName"</span><span class="p">,</span><span class="w"> </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user0001@example.com"</span><span class="p">},</span><span class="w">
+          </span><span class="p">{</span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w"> </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department"</span><span class="p">,</span><span class="w"> </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Engineering"</span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PATCH"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/user-uuid-2"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"bulkId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"update-emp002"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="p">],</span><span class="w">
+        </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w"> </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"active"</span><span class="p">,</span><span class="w"> </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="for-single-user-updates">For single user updates</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">PATCH /Users/{userId}/
+</span></code></pre></div></div>
+
+<p>Payload:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"schemas"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"urn:ietf:params:scim:api:messages:2.0:PatchOp"</span><span class="p">],</span><span class="w">
+  </span><span class="nl">"Operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w"> </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"name.givenName"</span><span class="p">,</span><span class="w"> </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jonathan"</span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="nl">"op"</span><span class="p">:</span><span class="w"> </span><span class="s2">"replace"</span><span class="p">,</span><span class="w"> </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"title"</span><span class="p">,</span><span class="w"> </span><span class="nl">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Director"</span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="tracking-completion">Tracking Completion</h3>
+
+<p>After submitting a provision request (via <code class="language-plaintext highlighter-rouge">/Users/</code> or <code class="language-plaintext highlighter-rouge">/Bulk/</code>), you receive a <code class="language-plaintext highlighter-rouge">provisionId</code> in the response. Use one of the following approaches to know when the operation completes:</p>
+
+<ul>
+  <li><strong>Polling:</strong> Call <code class="language-plaintext highlighter-rouge">GET /provisions/{provisionId}/status/</code> at regular intervals until the operation completes.
+    <ul>
+      <li>Use intervals of <strong>5+ seconds</strong> with exponential backoff.</li>
+      <li>Always check the <code class="language-plaintext highlighter-rouge">completed</code> field to track completion, then <code class="language-plaintext highlighter-rouge">status</code> field to check the outcome.</li>
+    </ul>
+  </li>
+  <li><strong>Webhook Notifications</strong> <em>(alternative to polling)</em>: Subscribe to provisioning events via the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Event Subscription Service</a>.
+    <ul>
+      <li>When a provision completes, you receive a notification with the <code class="language-plaintext highlighter-rouge">provisionId</code> and status.</li>
+      <li>Allows you to fetch results immediately <strong>without polling</strong>.</li>
+      <li>Refer <a href="/event-topics/user-provisioning/v4.user-provisioning-events.html">this page</a> for the event schema.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="handling-failures">Handling Failures</h3>
+
+<h4 id="getting-provision-request-status">Getting Provision Request Status</h4>
+
+<p>Track completion using the status endpoint to determine if the request completed successfully or if there were any failures (polling strategy):</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET /provisions/{provisionId}/status/
+</span></code></pre></div></div>
+
+<p>To retrieve detailed failure information (whether detected via polling or webhook notifications), request the operation-level results:</p>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET /provisions/{provisionId}/status/?attributes=operations&amp;count=100
+</span></code></pre></div></div>
+
+<p>If using <strong>webhooks</strong>, once you receive a completion notification, check the detailed status if any failures occurred. In case of <strong>polling strategy</strong>, if the provision status indicates the failure, call the status endpoint with <code class="language-plaintext highlighter-rouge">?attributes=operations</code> to get operation level failure details.</p>
+
+<h4 id="understanding-failures">Understanding Failures</h4>
+
+<p>Check for failures by examining the <code class="language-plaintext highlighter-rouge">status</code> and <code class="language-plaintext highlighter-rouge">operationsCount</code> fields in the status response:</p>
+
+<p>When <code class="language-plaintext highlighter-rouge">status.completed</code> is <code class="language-plaintext highlighter-rouge">true</code> but <code class="language-plaintext highlighter-rouge">status.success</code> is <code class="language-plaintext highlighter-rouge">false</code>, it indicates a failure. Compare the <code class="language-plaintext highlighter-rouge">operationsCount</code> fields to determine how many operations succeeded and how many failed:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2f3ed639-a1d4-5083-c966-17d2e2b746e6"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"completed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="nl">"operationsCount"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"success"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="getting-failure-details">Getting Failure Details</h4>
+
+<div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">GET /provisions/{provisionId}/status/?attributes=operations
+</span></code></pre></div></div>
+
+<h4 id="operation-level-failures">Operation-Level Failures</h4>
+
+<p>Each operation in the provision status response includes its own <code class="language-plaintext highlighter-rouge">status</code> object. If an operation failed, the <code class="language-plaintext highlighter-rouge">status.success</code> will be <code class="language-plaintext highlighter-rouge">false</code> and an <code class="language-plaintext highlighter-rouge">error</code> object will provide details:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2f3ed639-a1d4-5083-c966-17d2e2b746e6"</span><span class="p">,</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="nl">"operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"completed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"a51882ef-f002-4c0f-960d-e3e1d23c851b"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="err">...</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="extension-level-failures">Extension-Level Failures</h4>
+
+<p>If an extension failed, the <code class="language-plaintext highlighter-rouge">extensions</code> object in the operation response will include details for each extension. Each extension reports its own <code class="language-plaintext highlighter-rouge">status</code> and any associated <code class="language-plaintext highlighter-rouge">error</code> information if it failed:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2f3ed639-a1d4-5083-c966-17d2e2b746e6"</span><span class="p">,</span><span class="w">
+  </span><span class="err">...</span><span class="w">
+  </span><span class="nl">"operations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="err">...</span><span class="w">
+      </span><span class="nl">"extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:User"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"completed"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nl">"messages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INVALID_VALUE"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid 'urn:ietf:params:scim:schemas:extension:spend:2.0:User:reimbursementCurrency' Size"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"schemaPath"</span><span class="p">:</span><span class="w"> </span><span class="s2">"urn:ietf:params:scim:schemas:extension:spend:2.0:User:reimbursementCurrency"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"error"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Use <code class="language-plaintext highlighter-rouge">/swagger</code> endpoint to retrieve the schema for error codes and messages at each level (provision, operation, extension).</p>
+
+<h4 id="extension-failure-retry-strategy">Extension Failure Retry Strategy</h4>
+
+<p><strong>Identity extensions failed:</strong></p>
+<ul>
+  <li>Other extensions DO NOT process if identity extension fails.</li>
+  <li>The same operation can be retried after fixing the identity issue.</li>
+</ul>
+
+<p><strong>Spend / Travel extensions failed:</strong></p>
+<ul>
+  <li>Identity extensions would have been processed successfully.</li>
+  <li>The spend/travel extensions can be retried independently after fixing the issue with a <code class="language-plaintext highlighter-rouge">PATCH</code> operation in subsequent requests.</li>
+</ul>
+
+<h3 id="reducing-failure-rates">Reducing Failure Rates</h3>
+
+<ol>
+  <li>Pre-validate data before submission. You can use <code class="language-plaintext highlighter-rouge">/Schemas</code> endpoint to retrieve the schemas for validation.</li>
+  <li>Classify errors as either retryable (transient) or permanent (data-related) and retry accordingly.</li>
+  <li>Correct data issues when encountering validation errors. Most failures are caused by data validation issues.</li>
+  <li>Retry transient failures using exponential backoff.</li>
+</ol>
+
+<h3 id="handling-long-pending-provision-requests">Handling Long Pending Provision Requests</h3>
+
+<p>Currently the timeout for each provision request is 240 minutes. The provision request is marked as failure by the system if it exceeds the timeout.</p>
+
+<p>If you have a provision request that is pending for a long time, please reach out to us with the <code class="language-plaintext highlighter-rouge">provisionId</code> for investigation. The operation can be retried after the timeout based on the failure scenarios mentioned above.</p>
+
+<blockquote>
+  <p><strong>Note:</strong> We have plans to reduce this timeout under 60 minutes.</p>
+</blockquote>
+
 <h2 id="events"><a name="event-usage"></a>Events</h2>
 
 <p>UPS supports post event notification when the provisioning process is complete. Using the <a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">Event Subscription Service</a> allows users to be notified through web services when certain actions take place in connected companies with the <code class="language-plaintext highlighter-rouge">provisionCompleted</code> event.</p>
