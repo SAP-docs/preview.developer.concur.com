@@ -395,7 +395,7 @@ etc.
 ### <a name="listing-process"></a>App Center Listing Creation and Update Process
 
 1. Send your completed content to your Certification Project Manager for review. This includes your:
-	* **App Center listing form** ([link](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
+	* **App Center listing form** ([link](/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
 		* Tip: Make sure to pay attention to the character limits and be sure your long description includes a call to action
 	* **Listing images**
 		* Tip: Size requirements are at the bottom of the listing form

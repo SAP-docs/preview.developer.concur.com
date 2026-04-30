@@ -837,7 +837,7 @@ Click the following links to download the postman sample collection zip file or 
 You need to send the complete landing page content to [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). The CPM and marketing team review and approve the listing documents and send the confirmation to your marketing team. You need this approval prior to scheduling the final certification call with [PlatformCertification@sap.com](mailto:PlatformCertification@sap.com). 
 
 This includes:
-* App Center Listing Form ([Download](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
+* App Center Listing Form ([Download](/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
 * Listing Images (Please follow the image specification in the App Center Listing Form.)
 
 The CPM and marketing team will review your content for clarity, ease of reading, and consistency with the SAP Concur brand guidelines. The CPM and marketing team will return it with any comments or suggestions. Please plan for a 10 to 14-day turnaround window for the review process.
