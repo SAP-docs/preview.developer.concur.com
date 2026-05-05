@@ -1027,6 +1027,10 @@
           </li>
         
           <li >
+            <a href="/api-reference/request/v4.endpoints.participant-resources.html">Request Participants</a>
+          </li>
+        
+          <li >
             <a href="/api-reference/request/v4.endpoints.policy-resources.html">Request Policy</a>
           </li>
         
@@ -1293,7 +1297,11 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="travel-request-v4---endpoints---schemas">Travel Request v4 - Endpoints - Schemas</h1>
+        <div id="attn-prerelease">
+  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
+</div>
+
+<h1 id="travel-request-v4---endpoints---schemas">Travel Request v4 - Endpoints - Schemas</h1>
 
 <h2 id="request"><a name="schema-request"></a>Request</h2>
 
@@ -1322,7 +1330,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">approved</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates whether this Request is approved.</td>
     </tr>
     <tr>
@@ -1364,7 +1372,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">closed</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates whether this Request is closed.</td>
     </tr>
     <tr>
@@ -1406,7 +1414,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">everSentBack</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates whether the Request has ever been sent back to the employee.</td>
     </tr>
     <tr>
@@ -1452,6 +1460,12 @@
       <td>The unique identifier of the Request.</td>
     </tr>
     <tr>
+      <td><code class="language-plaintext highlighter-rouge">isParentRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
+      <td>Indicates whether this Request is a Budget Request.</td>
+    </tr>
+    <tr>
       <td><code class="language-plaintext highlighter-rouge">lastModified</code></td>
       <td><code class="language-plaintext highlighter-rouge">timestamp</code></td>
       <td>[RFC 3339] <code class="language-plaintext highlighter-rouge">yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</code></td>
@@ -1478,7 +1492,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">pendingApproval</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates whether this Request is pending approval.</td>
     </tr>
     <tr>
@@ -1492,6 +1506,18 @@
       <td><code class="language-plaintext highlighter-rouge">object</code></td>
       <td><a href="#schema-resourcelink"><code class="language-plaintext highlighter-rouge">ResourceLink</code></a></td>
       <td>The policy that applies to the Request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">parentRequestId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Required if a Child Request is created, corresponds to the unique identifier of the Budget Request the Child Request will be linked to.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">parentRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-resourcelink"><code class="language-plaintext highlighter-rouge">ResourceLink</code></a></td>
+      <td>If the Request is a Child Request, reference to the corresponding Budget Request.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">requestId</code></td>
@@ -1721,7 +1747,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">isLatest</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>If <code class="language-plaintext highlighter-rouge">true</code>, the comment has been edited since the last workflow transition.</td>
     </tr>
     <tr>
@@ -1826,7 +1852,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">isBlocking</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Defines whether the exception will prevent the Request from being submitted.</td>
     </tr>
     <tr>
@@ -2249,6 +2275,87 @@
       <td>-</td>
       <td>The name of the Request policy.</td>
     </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">allowParticipants</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
+      <td>Whether this policy can add participants (policy is a Budget Request).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="budget-request-participant"><a name="schema-parentrequestparticipant"></a>Budget Request Participant</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">participant</code></td>
+      <td><code class="language-plaintext highlighter-rouge">object</code></td>
+      <td><a href="#schema-resourcelink"><code class="language-plaintext highlighter-rouge">ResourceLink</code></a></td>
+      <td>Participant of the Budget Request.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">requests</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-resourcelink"><code class="language-plaintext highlighter-rouge">ResourceLink</code></a></td>
+      <td>The list of Child Requests from the Participant associated to the Budget Request.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="request-participants-for-patch"><a name="schema-requestparticipantsforpatch"></a>Request Participants For Patch</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">value</code></td>
+      <td><code class="language-plaintext highlighter-rouge">array</code></td>
+      <td><a href="#schema-requestparticipantforpatch"><code class="language-plaintext highlighter-rouge">Request Participant For Patch</code></a></td>
+      <td>The list of participants to be added or removed from the Budget Request.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="request-participant-for-patch"><a name="schema-requestparticipantforpatch"></a>Request Participant For Patch</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">id</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>[RFC 4122]</td>
+      <td><strong>Required</strong> The Participant unique identifier.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@deleted</code></td>
+      <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
+      <td>Whether the Participant should be added or deleted from the Budget Request. If false or not provided then the participant is added.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -2354,7 +2461,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">isPaymentCardRelated</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates if the expected expense entry has the <code class="language-plaintext highlighter-rouge">Is Payment Card Related</code> field enabled. Value is <code class="language-plaintext highlighter-rouge">true</code> when the end user has selected this field for this expected expense entry.</td>
     </tr>
     <tr>
@@ -2489,7 +2596,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">percentEdited</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Whether the allocation percent has been edited.</td>
     </tr>
     <tr>
@@ -2507,7 +2614,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">systemAllocation</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Whether the allocation is a system allocation, usually hidden from the user. If displayed to the user, should be read-only.</td>
     </tr>
   </tbody>
@@ -2687,7 +2794,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">returnLeg</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates whether this leg is the return leg of a round trip. In case of a <code class="language-plaintext highlighter-rouge">ROUND_TRIP</code>, if there is no return leg defined, the second segment leg will be considered as the return leg.</td>
     </tr>
     <tr>
@@ -2865,7 +2972,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">agencyBooked</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>If <code class="language-plaintext highlighter-rouge">true</code>, this travel is (or has to be) handled by a travel agency.</td>
     </tr>
     <tr>
@@ -2889,7 +2996,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">selfBooked</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>If <code class="language-plaintext highlighter-rouge">true</code>, this travel has been reserved by Concur Travel, or if Concur Travel has retrieved the trip information in the GDS.</td>
     </tr>
   </tbody>
@@ -2973,7 +3080,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">booked</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td><strong>Required</strong> <code class="language-plaintext highlighter-rouge">true</code> if this trip is pre-booked by a travel agency. It will pre-select this proposal within the agency proposal comparison screen.</td>
     </tr>
     <tr>
@@ -2991,7 +3098,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">proposal</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td><strong>Read only</strong> <code class="language-plaintext highlighter-rouge">true</code> by default corresponding to the <code class="language-plaintext highlighter-rouge">PROPOSAL</code> status.</td>
     </tr>
     <tr>
@@ -3009,7 +3116,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">selected</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td><strong>Read only</strong> Value becomes <code class="language-plaintext highlighter-rouge">true</code> when that proposal is selected by the user.</td>
     </tr>
     <tr>
@@ -3021,7 +3128,7 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">policyCompliant</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Whether the Agency Proposal is policy compliant or not. <code class="language-plaintext highlighter-rouge">true</code> if proposal is in policy; <code class="language-plaintext highlighter-rouge">false</code> if proposal is out of policy.</td>
     </tr>
     <tr>
@@ -3111,13 +3218,13 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">booked</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td><strong>Required</strong> <code class="language-plaintext highlighter-rouge">true</code> if this trip is (or has to be) handled by a travel agency.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">policyCompliant</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Whether the Agency Proposal segment is policy compliant or not. <code class="language-plaintext highlighter-rouge">true</code> if segment is policy compliant; <code class="language-plaintext highlighter-rouge">false</code> if segment is out of policy. If no value is provided, the policy compliancy information will not be displayed within the proposal comparison screen.</td>
     </tr>
     <tr>
@@ -3361,7 +3468,7 @@ If <code class="language-plaintext highlighter-rouge">proposalSegmentType</code>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">airConditioning</code></td>
       <td><code class="language-plaintext highlighter-rouge">boolean</code></td>
-      <td>-</td>
+      <td><code class="language-plaintext highlighter-rouge">true / false</code></td>
       <td>Indicates if car has an air conditioner.</td>
     </tr>
     <tr>
