@@ -1432,11 +1432,10 @@
 
 <ul>
   <li>Use the <code class="language-plaintext highlighter-rouge">/Bulk/</code> endpoint for batch operations (up to 100 operations per request) and <code class="language-plaintext highlighter-rouge">/Users/</code> for single-user operations.</li>
-  <li>Use <code class="language-plaintext highlighter-rouge">PATCH</code> operations instead of <code class="language-plaintext highlighter-rouge">PUT</code> for regular user updates to minimize error rates.</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">PATCH</code> operations instead of <code class="language-plaintext highlighter-rouge">PUT</code> for regular user updates to minimize data loss risk.</li>
   <li>Track provision completion using the <code class="language-plaintext highlighter-rouge">provisionId</code> returned in the response, either via polling (with exponential backoff) or webhook notifications.</li>
   <li>Pre-validate data before submission — most failures are caused by data validation issues.</li>
   <li>When identity extensions fail, retry the entire operation after fixing the issue. When spend/travel extensions fail, retry only those extensions via a subsequent <code class="language-plaintext highlighter-rouge">PATCH</code> request.</li>
-  <li>There is a 240-minute provision request timeout; please reach out to us with the <code class="language-plaintext highlighter-rouge">provisionId</code> if requests remain pending for an extended period.</li>
 </ul>
 
 <h3 id="when-to-use-each-endpoint">When to Use Each Endpoint</h3>
@@ -1475,7 +1474,7 @@
 
 <h3 id="operations-best-practices">Operations Best Practices</h3>
 
-<p>For regular user updates, use <code class="language-plaintext highlighter-rouge">PATCH</code> operations rather than <code class="language-plaintext highlighter-rouge">PUT</code> (full replace), whether for single user requests or bulk operations. This is the approach used by our large enterprise customers handling thousands of daily updates.</p>
+<p>Use <code class="language-plaintext highlighter-rouge">PUT</code> only for initial user creation (or intentional full replacement of a user). Use <code class="language-plaintext highlighter-rouge">PATCH</code> for <strong>ALL</strong> incremental user updates. Reissuing <code class="language-plaintext highlighter-rouge">PUT</code> overwrites the user and removes all previous edits. This is critical: large enterprise customers handling thousands of daily updates exclusively use <code class="language-plaintext highlighter-rouge">PATCH</code> to avoid unintended data loss.</p>
 
 <h4 id="for-bulk-updates-hr-sync-daily-changes">For bulk updates (HR sync, daily changes)</h4>
 
@@ -1681,13 +1680,7 @@
 
 <h3 id="handling-long-pending-provision-requests">Handling Long Pending Provision Requests</h3>
 
-<p>Currently the timeout for each provision request is 240 minutes. The provision request is marked as failure by the system if it exceeds the timeout.</p>
-
-<p>If you have a provision request that is pending for a long time, please reach out to us with the <code class="language-plaintext highlighter-rouge">provisionId</code> for investigation. The operation can be retried after the timeout based on the failure scenarios mentioned above.</p>
-
-<blockquote>
-  <p><strong>Note:</strong> We have plans to reduce this timeout under 60 minutes.</p>
-</blockquote>
+<p>Currently the timeout for each provision request is <strong>120 minutes</strong> (60 minutes in CCPS environments). The provision request is marked as failure by the system if it exceeds the timeout. The operation can be retried after the timeout based on the failure scenarios mentioned above.</p>
 
 <h2 id="events"><a name="event-usage"></a>Events</h2>
 
