@@ -155,7 +155,7 @@ Name | Type | Format | Description
 `AllocationType`	|	`string`	|	-	|	**READ ONLY** The type of allocations for the expense. Supported values: `P` - partial allocation, `F` - full allocation, `N` - no allocation. Use the GET /expense/allocations function to get information about this entry's allocations. 
 `ApprovedAmount`	|	`decimal`	|	-	|	**READ ONLY** The approved amount of the expense entry, in the report currency. 
 `CompanyCardTransactionID`	|	`string`	|	-	|	The unique identifier for a company card transaction that is associated with this expense. Concur Expense uses the Credit Card Import job to import company card transactions. Use the GET CompanyCardTransactions function to get information about these card transactions. This element is null when there is no company card transaction associated with this expense.
-`Custom1 through Custom40`	|	`customField`	|	-	|	The details from the Custom fields. These fields may not have data, depending on the configuration.
+`Custom1 through Custom40`	|	`customField`	|	-	|	The details from the Custom fields. These fields may not contain data unless they are explicitly added to the expense form configuration. 
 `Comment`	|	`string`	|	-	|	A comment that describes the expense entry. Maximum length: 500 characters.  Disclaimer: This field will always be empty on GET, even if the expense does have an associated comment.
 `Description`	|	`string`	|	-	|	The description of the expense. Maximum length: 64 characters
 `ElectronicReceiptID`	|	`string`	|	-	|	The unique identifier for an eReceipt that is associated with this expense. Use the GET eReceipts function to get information about this eReceipt. This element is null when there is no eReceipt associated with this expense.
@@ -184,7 +184,7 @@ Name | Type | Format | Description
 `LocationID`	|	`string`	|	-	|	The unique identifier for the location where the expense was incurred. Use the GET /common/locations function to get information for this location.
 `LocationName`	|	`string`	|	-	|	**READ ONLY** The location where the expense was incurred, usually the city name.  
 `LocationSubdivision`	|	`string`	|	-	|	The ISO 3166-2:2007 country subdivision state, province, or other country subdivision where the expense was incurred.
-`OrgUnit1 through OrgUnit6`	|	`customField`	|	-	|	The details from the Org Unit fields. These fields may not have data, depending on the configuration.
+`OrgUnit1 through OrgUnit6`	|	`customField`	|	-	|	The details from the Org Unit fields. These fields may not contain data unless they are explicitly added to the expense form configuration. 
 `PaymentTypeID`	|	`string`	|	-	|	**Required** The ID of the payment type for the entry. Use GET /expense/expensegroupconfigurations to learn the payment type ID for payment types that are active for this report's expense group. For expense types with an expense code that uses a transaction amount instead of a distance, this element is required. This element should not be used for expense types with an expense code for Company Car or Personal Car, because these two expense codes always use the Cash payment type.
 `PaymentTypeName`	|	`string`	|	-	|	**READ ONLY** The name of the payment type, localized to the user's language.  
 `PostedAmount`	|	`decimal`	|	-	|	**READ ONLY** The amount of the expense entry, in the report currency.  
