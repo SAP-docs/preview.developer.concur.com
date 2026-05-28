@@ -104,7 +104,7 @@ Please refer to the section applicable to you in the step below on how to obtain
 ### Web Service Customers
 
 > [!NOTE]
-> [Since May 2026](tools-support/release-notes/api/2026-05-04.html) this step is not required for customers that running thier own applications in integration scenarios. For all subscriptions created using app id with `AllowedPrincipals` configured to a specific company UUID (instead of *), the company UUID will be automatically populated into the subscription. 
+> [Since May 2026](/tools-support/release-notes/api/2026-05-04.html) this step is not required for customers that running thier own applications in integration scenarios. For all subscriptions created using app id with `AllowedPrincipals` configured to a specific company UUID (instead of *), the company UUID will be automatically populated into the subscription. 
 
 You need to connect your SAP Concur company/entity to Concur app, which will automatically then update your newly created event subscription with your SAP Concur Company UUID.
 
