@@ -332,7 +332,8 @@ Content-Type: application/json
 ```json
 {
   "extRef": "ea725b66-6256-4f78-abcb-1f34bcdaed0c",
-  "userId": "5820764c-8a07-4da7-8eb0-5cac9a9ccb3b"
+  "userId": "5820764c-8a07-4da7-8eb0-5cac9a9ccb3b",
+  "initiator": "user"
 }
 ```
 
@@ -493,10 +494,11 @@ A stop with required datetime fields. Extends [Stop](#stop-schema).
 
 ### <a name="cancel-trip-extras-booking-request-schema"></a> Cancel Trip Extras Booking Request
 
-| Name     | Type     | Format | Description                                                                                                                                                         |
-| -------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `extRef` | `string` | -      | UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
-| `userId` | `string` | -      | **Required**. UUID of the user.                                                                                                                                     |
+| Name        | Type     | Format | Description                                                                                                                                                         |
+| ----------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `extRef`    | `string` | -      | UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
+| `userId`    | `string` | -      | **Required**. UUID of the user.                                                                                                                                     |
+| `initiator` | `string` | Enum: `"user"` `"agent"` | **Required**. Type of initiator. Indicates who initiated the cancellation request. |
 
 ### <a name="error-schema"></a> Error Schema
 
