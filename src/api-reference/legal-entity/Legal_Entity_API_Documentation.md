@@ -8,6 +8,8 @@ The Legal Entity API allows you to manage legal entity profiles within your comp
 
 **API Version:** v4.1
 
+**Products and Editions:** Professional, Standard
+
 ---
 
 ## Authentication
@@ -17,6 +19,17 @@ All Legal Entity API endpoints require authentication using an API key passed in
 ```
 Authorization: Bearer {access_token}
 ```
+
+---
+
+## Scopes
+
+The Legal Entity API requires specific OAuth 2.0 scopes based on the operation:
+
+| Scope | Endpoints | Operations |
+|-------|-----------|------------|
+| `company.legalentity.read` | GET `/LegalEntities/{id}`<br>POST `/LegalEntities/.search` | Read legal entity details<br>Search legal entities |
+| `company.legalentity.writeonly` | POST `/LegalEntities`<br>PUT `/LegalEntities/{id}`<br>PATCH `/LegalEntities/{id}` | Create legal entities<br>Replace legal entities<br>Update legal entities |
 
 ---
 
@@ -605,22 +618,3 @@ PATCH /LegalEntities/{id}
 - **[Identity v4.1 Users API](https://developer.concur.com/api-reference/profile/v4.1.identity.html)** - Manage user identity profiles with legal entity references
 - **[Company API](https://developer.concur.com/api-reference/profile/v4.company.html)** - Manage company-level settings
 
----
-
-## Support
-
-For questions or issues with the Legal Entity API:
-
-- **Email:** profile@concur.com
-- **Developer Portal:** [https://developer.concur.com](https://developer.concur.com)
-- **Terms of Service:** [https://developer.concur.com/Terms-of-Use.html](https://developer.concur.com/Terms-of-Use.html)
-
----
-
-## Changelog
-
-### v4.1 (Current)
-- Initial release of Legal Entity API
-- Support for CRUD operations on legal entity profiles
-- Advanced search with SCIM filtering
-- Cursor-based pagination support
