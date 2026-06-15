@@ -75,7 +75,7 @@ For the above checks on your App, you need to ask your SAP Concur representative
     * `public.concur.user.provisioning`
 * “endpoint” – Webhook where Concur Events are required to be delivered.
 
->Note : Please refer to this [page](/event-topics/index.html) for a list of all our current available Event Topics.
+>Note: Please refer to this [page](/event-topics/index.html) for a list of all our current available Event Topics.
 
 On receiving a success message for the PUT API call, the Event Subscription(s) is successfully created.
 
@@ -103,7 +103,9 @@ Please refer to the section applicable to you in the step below on how to obtain
 
 ### Web Service Customers
 
-You need to connect your SAP Concur company/entity to your own app, which will automatically then update your newly created event subscription with your SAP Concur Company UUID.
+>Note: [Since May 2026](/tools-support/release-notes/api/2026-05-04.html) this step is not required for customers running their own applications in integration scenarios. For all subscriptions created using app ID with `AllowedPrincipals` configured to a specific company UUID (instead of *), the company UUID will be automatically populated into the subscription. 
+
+You need to connect your SAP Concur company/entity to Concur app, which will automatically then update your newly created event subscription with your SAP Concur Company UUID.
 
 This connection is achieved via the Authentication Admin tool within your entity and then making an API request to exchange the Request token for an Access Token that is valid only for your entity (i.e., company-level token/JWT).
 
