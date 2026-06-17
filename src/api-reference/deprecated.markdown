@@ -17,6 +17,7 @@ The following application programming interfaces (APIs) and other resources have
 * Callouts
   * [Launch an External URL-Expense v1](/api-reference/callouts/launch-external-url.html)
   * [Launch External URL-Request v1](/api-reference/callouts/launch-external-url-request.html)
+* [Company Card Transactions v1.1](/api-reference/expense/expense-report/company-card-transaction-resource.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
 * Direct Connect - Hotel Service v2
