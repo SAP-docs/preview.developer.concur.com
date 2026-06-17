@@ -9,9 +9,9 @@ layout: reference
 
 ### Global WiFi
 
-![Global WiFi logo](./app-center-GlobalWiFi-logo.png)
-
 Global WiFi is a worldwide mobile Wi-Fi rental. Using cloud-native tech, it enables secure, high-speed 5G unlimited connectivity in most countries with a single device.
+
+![Global WiFi logo](./app-center-GlobalWiFi-logo.png)
 
 **Benefit of Integration with SAP Concur**
 
