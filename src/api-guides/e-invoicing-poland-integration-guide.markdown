@@ -79,7 +79,7 @@ The expectation is to receive a response from partners in real time upon raising
 ### <a name="generate-app-id"></a>1. Generate AppID (Client ID)
 
 Clients who have Client Web Services can generate Client IDs (App IDs) and Client Secrets as described in:
-[SAP Concur Developer Center | OAuth 2.0 Application Management Tool](https://developer.concur.com/api-reference/authentication/apidoc.html)
+[OAuth 2.0 Application Management Tool](/api-reference/authentication/apidoc.html)
 
 Specify the following scopes when creating a new app:
 
@@ -93,7 +93,7 @@ This provides a `ClientID` and `clientSecret`.
 
 A Company Request Token is required to request an Access/Refresh Token (JSON web token or JWT) for connecting to APIs in the SAP Concur platform.
 
-[SAP Concur Developer Center | Company Request Token Self-Service Tool](https://developer.concur.com/api-reference/authentication/company-auth.html)
+[Company Request Token Self-Service Tool](/api-reference/authentication/company-auth.html)
 
 *This activity can be performed by the Concur customer admin and does not require action from the integration partner.*
 
@@ -102,10 +102,12 @@ A Company Request Token is required to request an Access/Refresh Token (JSON web
 *This activity must be performed by the integration partner.*
 
 The partner must subscribe to the event with an endpoint to receive event notifications. Steps to subscribe to events are detailed here:
-[SAP Concur Developer Center | Event Subscription Service v4](https://developer.concur.com/api-reference/ess/v4.event-subscription.html)
+[Event Subscription Service v4](/api-reference/ess/v4.event-subscription.html)
 
 The details of the specific event are described here:
-[SAP Concur Developer Center | Document Tax Compliance Event](https://developer.concur.com/api-reference/document-compliance-gateway/v4.document-tax-compliance-event.html)
+[Document Tax Compliance Event](/event-topics/expense/v4.document-compliance-events.html)
+
+
 
 *Steps to be performed by the integration partner for event subscription:*
 
@@ -186,7 +188,7 @@ For Poland, the `complianceCountryCode` is `PL`. The event is enhanced to includ
 
 ### <a name="document-compliance-gateway-api"></a>4. Implement Document Compliance Gateway API to Accept XML Document and Token Data
 
-**API Details:** [SAP Concur Developer Center | Document Compliance Gateway v4](https://developer.concur.com/api-reference/document-compliance-gateway/v4.document-compliance-gateway.html)
+**API Details:** [Document Compliance Gateway v4](/api-reference/document-compliance-gateway/V4.document-compliance-gateway.html)
 
 The API accepts an XML document in addition to tokenized data. The e-invoice retrieved from the KSeF portal should be sent as an XML document.
 
