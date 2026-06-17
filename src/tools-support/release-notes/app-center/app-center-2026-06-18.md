@@ -7,17 +7,17 @@ layout: reference
 
 ## User Connection Apps Now Available
 
-### GLOBAL WiFi
+### Global WiFi
 
-![GLOBAL WiFi logo](./app-center-GlobalWiFi-logo.png)
+![Global WiFi logo](./app-center-GlobalWiFi-logo.png)
 
-GLOBAL WiFi is a worldwide mobile Wi-Fi rental. Using cloud-native tech, it enables secure, high-speed 5G unlimited connectivity in most countries with a single device.
+Global WiFi is a worldwide mobile Wi-Fi rental. Using cloud-native tech, it enables secure, high-speed 5G unlimited connectivity in most countries with a single device.
 
 **Benefit of Integration with SAP Concur**
 
-GLOBAL WiFi automatically uploads receipts to your SAP Concur expense reports, simplifying expense tracking and reducing administrative workload for international travel.
+Global WiFi automatically uploads receipts to your SAP Concur expense reports, simplifying expense tracking and reducing administrative workload for international travel.
 
-**Why Choose GLOBAL WiFi**
+**Why Choose Global WiFi**
 
 * No setup required: Automatically connects to the best local network
 
