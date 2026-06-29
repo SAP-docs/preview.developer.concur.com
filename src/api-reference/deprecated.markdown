@@ -17,7 +17,9 @@ The following application programming interfaces (APIs) and other resources have
 * Callouts
   * [Launch an External URL-Expense v1](/api-reference/callouts/launch-external-url.html)
   * [Launch External URL-Request v1](/api-reference/callouts/launch-external-url-request.html)
-* [Company Card Transactions v1.1](/api-reference/expense/expense-report/company-card-transaction-resource.html)
+* [Company Card Transactions v1.1](/api-reference/expense/expense-report/
+
+company-card-transaction-resource.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
 * Direct Connect - Hotel Service v2
@@ -66,7 +68,6 @@ The following application programming interfaces (APIs) and other resources have
     * [Travel Profile v1 - Company Notification](/api-reference/travel-profile/v1.notification-company-resource.html)
     * [Travel Profile v1 - User Notification](/api-reference/travel-profile/v1.notification-user-resource.html)
 * [Travel Request Validation](/api-reference/callouts/request-validation.html)
-* [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)
 * User Provisioning v4
   * [Spend User Retrieval v4](/api-reference/user-provisioning/spend/v4.spend-user-retrieval.html) 
 
