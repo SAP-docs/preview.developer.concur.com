@@ -14,9 +14,6 @@ The following application programming interfaces (APIs) and other resources have
 * [Attendee Types v1](/api-reference/expense/attendee-types/v1.attendee-types.html)
 * [Attendee Types v3](/api-reference/expense/attendee-types/v3.attendee-types.html)
 * [Authorization (Pre-2017)](/api-reference/authentication/authorization-pre-2017.html)
-* Callouts
-  * [Launch an External URL-Expense v1](/api-reference/callouts/launch-external-url.html)
-  * [Launch External URL-Request v1](/api-reference/callouts/launch-external-url-request.html)
 * [Company Card Transactions v1.1](/api-reference/expense/expense-report/company-card-transaction-resource.html)
 * Direct Connect - Ground Transportation v1
   * [Update reservation with Travel](/api-reference/direct-connects/ground-transportation/update-reservation-travel.html)
@@ -55,20 +52,15 @@ The following application programming interfaces (APIs) and other resources have
 * [List Item v3](/api-reference/common/list-item/v3.list-item.html)
 * [Locations v3](/api-reference/common/locations/v3.locations.html)
 * Profile v1
-  * [Profile v1 - Getting Started](/api-reference/profile/v1.getting-started.html) 
+  * [Profile v1 - Getting Started](/api-reference/profile/v1.getting-started.html)
   * [Profile v1 - Company](/api-reference/profile/v1.company.html)
   * [Profile v1 - User](/api-reference/profile/v1.user.html)
-* Request v3
-  * [Request v3 Reference](/api-reference/request/v3.request.html)
-  * [Request v3 Explorer](/api-explorer/v3-0/Requests.html)
-  * [Request v3.1 Explorer](/api-explorer/v3-1/Requests.html)
-  * Travel Profile v1
-    * [Travel Profile v1 - Company Notification](/api-reference/travel-profile/v1.notification-company-resource.html)
-    * [Travel Profile v1 - User Notification](/api-reference/travel-profile/v1.notification-user-resource.html)
+* Travel Profile v1
+  * [Travel Profile v1 - Company Notification](/api-reference/travel-profile/v1.notification-company-resource.html)
+  * [Travel Profile v1 - User Notification](/api-reference/travel-profile/v1.notification-user-resource.html)
 * [Travel Request Validation](/api-reference/callouts/request-validation.html)
-* [Trip Approval v1](/api-reference/travel/trip-approval/v1.trip-approval-resource.html)
 * User Provisioning v4
-  * [Spend User Retrieval v4](/api-reference/user-provisioning/spend/v4.spend-user-retrieval.html) 
+  * [Spend User Retrieval v4](/api-reference/user-provisioning/spend/v4.spend-user-retrieval.html)
 
 * Resources
   * [Videos](/tools-support/videos/index.html)
