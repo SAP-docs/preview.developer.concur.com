@@ -13,7 +13,7 @@ Bellevue WA, 98004
 +1 (425) 590-5000
 +1 (800) 401-8412
 
-[See other office locations](https://www.concur.com/en-us/contact/offices)
+[See SAP's worldwide office locations](https://www.sap.com/about/company/office-locations.html)
 
 ## Contact support
 
