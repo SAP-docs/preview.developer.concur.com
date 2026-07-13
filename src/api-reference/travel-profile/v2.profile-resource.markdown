@@ -669,29 +669,156 @@ This error message occurs, when the XML is not formatted in such a way that it c
 
 ### <a name="standard-error-codes"></a>Standard Error Codes
 
-The codes and types of messages that can be returned on updates and creates:
+## Error Code Categories
 
-CODE|Message Type|Notes|Example
----|---|---|---
-S001|Success|Process completed successfully.|Success, no errors or warnings reported.
-E001|No Access|No access to user data.|-
-E002|Required Field Missing|The field noted is required for updates or creates, no changes were made.|-
-W001|Invalid Regex|The given data does not match the expected regex.|-
-W002|Invalid Length|The given data is too long or too short.|-
-W003|Not Found In Company|The given user was not found in the company.|-
-W004|Duplicate Entry|The given data is duplicated and not allowed.|-
-W005|Duplicate LoginId|The given `LoginID` is duplicated.|-
-W006|Out of Range|The given data is out of range.|-
-W007|Field is Required|The given field cannot be cleared.|-
-W009|Invalid Account Number|Account number check failed due to length, Luhn, etc.|-
-W010|Invalid Vendor Code|Vendor code given is invalid.|-
-W011|Cannot Change|The given field cannot be altered.|-
-W012|Primary Cell Number Error|Data violates one primary cell phone requirement.|-
-W013|Invalid Custom Field|The data provided is invalid for the custom field.|-
-W014|Invalid Date Range|The data provided is outside of acceptable date range.|-
-W015|Invalid GUID|The GUID is invalid.|-
-W016|Too Many Items|There are too many items in the given list.|-
-W017|No Access to VendorCode|The user lacks access to the given vendor code.|-
+### Success Codes
+| Code | Type | Description |
+|------|------|-------------|
+| S001 | Success | Process completed successfully with no errors or warnings |
+
+---
+
+### Error Codes (E-series)
+
+| Code | Message Type | Description | Trigger Condition | Resolution |
+|------|-------------|-------------|-------------------|------------|
+| **E001** | No Access | No access to user data | User lacks permission to view or modify the requested profile | Verify OAuth token has correct scopes. Check user has appropriate role/permissions for the target profile. |
+| **E002** | Required Field Missing | Required field is missing | A mandatory field was not provided during create or update | Review API schema for required fields. Common required fields: FirstName, LastName, LoginID (for creates). Check field requirements based on company configuration. |
+| **E004** | Decryption Error | Failed to decrypt sensitive data | System cannot decrypt stored sensitive data (credit card numbers, visa numbers) | Contact SAP Concur support. This indicates a cryptographic key issue or data corruption. API consumers cannot resolve this directly. |
+| **E007** | Invalid Modified By UUID | ModifiedByUUID is invalid | The ModifiedByUUID field contains an invalid or non-existent user UUID | Provide a valid UUID for the user making the modification. This field tracks audit history. |
+| **E101** | Restricted Territory | Contains country or region where product/service is unavailable | Address contains an embargoed country code or restricted territory (state/province) | Remove or change the address to a non-restricted location. Check Concur's list of supported countries/territories. Common triggers: sanctioned countries, restricted regions. |
+| **E111** | Core Profile Creation Failed | Failed to create user profile in core system | Core identity system rejected profile creation | Review error details in response. Common causes: duplicate LoginID, invalid company UUID, core system validation failures. |
+
+---
+
+### Warning Codes (W-series)
+
+| Code | Message Type | Description | Trigger Condition | Validation Logic | Resolution |
+|------|-------------|-------------|-------------------|------------------|------------|
+| **W001** | Invalid Regex | Data does not match expected regex pattern | Field value fails regex validation | Varies by field - see field-specific validation rules | Review field format requirements. Common fields: phone numbers, email addresses, custom fields. |
+| **W002** | Invalid Length | Data is too long or too short | Field value exceeds max length or is below min length | Length constraints vary by field | Check API schema for field length limits. Trim whitespace. Split data across multiple fields if needed. |
+| **W003** | Not Found In Company | User not found in the company | Specified user UUID or LoginID does not exist in company | User lookup by UUID or LoginID returns no results | Verify user exists in company. Check spelling of LoginID. Ensure UUID is correct. |
+| **W004** | Duplicate Entry | Data is duplicated and not allowed | Attempting to create duplicate entry where uniqueness is required | Depends on field - e.g., loyalty program membership numbers must be unique within user profile | Remove duplicate entry or update existing entry instead of creating new one. |
+| **W005** | Duplicate LoginID | LoginID is already in use | Attempting to create or update user with a LoginID that already exists | LoginID must be unique across company | Choose a different LoginID. To reassign, first delete/deactivate the existing user with that LoginID. |
+| **W006** | Out of Range | Data value is outside acceptable range | Numeric value, date, or enumerated value is outside allowed range | Varies by field - e.g., birth year must be between 1900-current year; codes must match valid enum values | Check field constraints in API schema. Use valid enum values. Ensure dates are realistic and within business rules. |
+| **W007** | Field is Required | Field cannot be cleared | Attempting to clear/null a field that is required by company configuration | Field is marked as required in company configuration but update attempts to clear it | Provide a non-empty value. Check company field configuration. Some fields become required based on company settings even if optional in base API. |
+| **W009** | Invalid Account Number | Account number validation failed | Credit card or loyalty program account number fails validation | Luhn algorithm check (for credit cards), length validation, format validation | Verify account number is correct. Check for typos. Ensure proper digit count. For credit cards, must pass Luhn checksum. |
+| **W010** | Invalid Vendor Code | Vendor code is invalid | Credit card, loyalty program, or car preference vendor code does not exist in company configuration | Vendor code lookup fails in company's configured vendor list | Use a valid vendor code from the company's vendor list. Contact admin to add vendor if needed. Common vendors: VI (Visa), CA (MasterCard), AX (Amex), airlines (AA, UA, DL), hotels (HH, HY, MC), car rental (ZE, ZR, ZL). |
+| **W011** | Cannot Change | Field cannot be modified | Attempting to modify a read-only or system-controlled field | Field is marked as non-editable in system configuration or locked by business rules | Do not attempt to modify this field. Common examples: system-generated IDs, verified/locked fields, calculated fields. |
+| **W012** | Primary Cell Number Error | Violation of primary cell phone requirement | Multiple cell phones marked as primary, or no primary when required | Count of `"Primary": true` cell phones must equal exactly 1 | Mark exactly one cell phone as primary. Ensure all others have `"Primary": false`. |
+| **W013** | Invalid Custom Field | Custom field data is invalid | Custom field value violates configured validation rules for that field | Custom validation rules vary by field configuration - may include regex, value lists, data type constraints | Check company's custom field configuration. Ensure data type matches (text, number, date, list). For list fields, use valid list values. |
+| **W014** | Invalid Date Range | Date is outside acceptable range | Date value is outside allowed date range for the field | Range validation depends on field - e.g., passport expiration must be in future; birth date must be in past | Provide a date within the valid range. Check if date must be future/past. Verify date format is correct (YYYY-MM-DD). |
+| **W015** | Invalid GUID | GUID/UUID is malformed | Field expecting UUID contains invalid UUID format | Must match UUID format: 8-4-4-4-12 hexadecimal pattern | Provide a properly formatted UUID. Common fields: CustomFields, UserUUID, CompanyUUID. |
+| **W016** | Too Many Items | Collection exceeds maximum allowed items | Array/collection exceeds maximum item count | Item count limits vary by collection - e.g., max credit cards, max loyalty programs, max addresses | Reduce number of items. Remove obsolete entries before adding new ones. Check API schema for collection limits. |
+| **W017** | No Access to VendorCode | User lacks access to vendor code | User or company lacks access to specified vendor code | Vendor code access validation checks company entitlements and user permissions | Contact admin to grant access to vendor. Verify company has contract/integration with vendor. |
+| **W018** | Invalid Data or Multiple Constraint Violation | Data is invalid or violates business rules | **Multiple scenarios**: <br/>• Cell phone number contains invalid characters (only digits, dashes, parentheses, spaces allowed)<br/>• Multiple cell phones marked as primary<br/>• CreditCards data provided without CreditCardsUpdateMode<br/>• Multiple default cards for same travel type (IsDefaultAir, IsDefaultCar, IsDefaultHotel, IsDefaultRail)<br/>• Duplicate credit card entries<br/>• Invalid ticket type for unused tickets | Varies by specific field/scenario | **Phone**: Use only digits, spaces, dashes, parentheses<br/>**Cards**: Set CreditCardsUpdateMode, mark only one default per type, avoid duplicates<br/>**Tickets**: Use valid ticket type from allowed list |
+| **W019** | Cannot Change Verified Email | Verified email cannot be modified | Attempting to change an email address that has been verified | Email has verified status flag set to true | Cannot modify verified emails. User must verify the new email address through standard email verification flow. |
+| **W020** | Invalid Email Format | Email address format is invalid | Email fails regex validation | Must match pattern: `^[\p{Alphabetic}\p{digit}!.#$%&'*+\-/=?^_`{&#124;}~]+@[\p{Alphabetic}\p{digit}]+([-.][\p{Alphabetic}\p{digit}]+)*$` (Unicode-aware) | Provide valid email format: `localpart@domain`. Local part allows alphanumeric and special chars: ! . # $ % & ' * + - / = ? ^ _ ` { &#124; } ~. Domain must be alphanumeric with optional dashes/dots. |
+| **W021** | Backup Manager Lookup Failed | Cannot find specified vacation backup manager | VacationBackupManager UUID lookup failed | UUID must reference an existing active user in the company | Verify backup manager UUID is correct. Ensure backup manager user exists and is active in company. |
+| **W022** | Southwest Unused Tickets Deprecated | Southwest-specific unused tickets section is deprecated | Data sent to deprecated `southwestUnusedTickets` field | Detects data in legacy Southwest-specific section | Use the standard `UnusedTickets` element for all airlines including Southwest. Data sent to old section is ignored. |
+| **W023** | Emergency Contact Phone Invalid | Emergency contact phone number fails validation | Emergency contact phone number does not match required pattern | Must match regex: `^[^\p{C}]{0,60}$` (no control characters, max 60 chars) | Remove control characters from phone number. Limit to 60 characters. Use standard phone number format. Applies to both primary and secondary emergency contact phones. |
+| **W024** | Telephone Number Invalid | Telephone/phone number fails validation | Phone number (Telephones array) does not match required pattern | Must match regex: `^[^\p{C}]{0,60}$` (no control characters, max 60 chars) | Remove control characters (\p{C}) from phone number. Limit to 60 characters. Control characters include null bytes, special formatting codes, etc. |
+| **W033** | Rule Class Not Found | Rule class name not found in company | Specified RuleClass name does not exist in company configuration | Case-insensitive lookup of rule class name fails in company's configured rule classes | Use a valid rule class name configured for the company. Check spelling and capitalization. Contact admin if rule class needs to be created. |
+
+---
+
+## Phone Number Validation Details
+
+### Regex Pattern: `^[^\p{C}]{0,60}$`
+
+**Explanation:**
+- `^` - Start of string
+- `[^\p{C}]` - Any character EXCEPT Unicode control characters
+- `{0,60}` - Between 0 and 60 characters
+- `$` - End of string
+
+**Unicode Control Characters (\p{C}) include:**
+- Null bytes (`\0`)
+- Control codes (0x00-0x1F, 0x7F-0x9F)
+- Line separators
+- Paragraph separators
+- Format characters
+
+**Valid Phone Examples:**
+- `+1 (555) 123-4567`
+- `555-1234`
+- `+44 20 7123 4567`
+- `1234567890`
+
+**Invalid Phone Examples:**
+- `555\n1234` (contains newline control character)
+- `555\t1234` (contains tab control character)
+- `555\x001234` (contains null byte)
+- Phone numbers over 60 characters
+
+**Applies to:**
+- W023: Emergency contact phone numbers
+- W024: Regular telephone numbers (Telephones array)
+- W018: Cell phone numbers (with additional restrictions: digits, dashes, parentheses, spaces only)
+
+---
+
+## Email Validation Details
+
+### Regex Pattern (W020)
+```
+^[\p{Alphabetic}\p{digit}!.#$%&'*+\-/=?^_`{|}~]+@[\p{Alphabetic}\p{digit}]+([-.][\p{Alphabetic}\p{digit}]+)*$
+```
+
+**Explanation:**
+- **Local part** (before @): Unicode letters, digits, and special characters: `! . # $ % & ' * + - / = ? ^ _ ` { | } ~`
+- **Domain part** (after @): Unicode letters, digits, with optional dashes and dots
+- Supports international (Unicode) email addresses
+
+**Valid Email Examples:**
+- `john.doe@example.com`
+- `user+tag@company.co.uk`
+- `test_user123@example.org`
+- `müller@büro.de` (Unicode)
+
+**Invalid Email Examples:**
+- `@example.com` (missing local part)
+- `user@` (missing domain)
+- `user name@example.com` (space not allowed)
+- `user@.example.com` (domain cannot start with dot)
+
+---
+
+## Common Validation Scenarios
+
+### Credit Card Validation (W009)
+Credit card account numbers undergo multiple validations:
+1. **Length check**: Typically 13-19 digits depending on card type
+2. **Luhn algorithm**: Checksum validation (modulo-10)
+3. **Format validation**: Must be numeric
+4. **Vendor code validation**: Must match valid card type (W010)
+
+### Custom Field Validation (W013)
+Custom fields have company-specific validation rules:
+- **Data Type**: Text, Number, Date, List
+- **List Values**: Must match configured list values exactly
+- **Regex Patterns**: May have custom regex validation
+- **Length Limits**: May have custom length constraints
+- **Required Status**: May be required based on company config
+
+### Date Range Validation
+- Validate dates client-side for logical ranges
+- Passport expiration: Must be in future
+- Birth date: Must be in past, reasonable age range
+- Travel dates: Must be logical sequence
+- Use ISO 8601 format (YYYY-MM-DD)
+
+### Message Types
+- `Success`: Operation completed successfully (S001)
+- `Error`: Operation failed, no changes made (E-series)
+- `Warning`: Operation completed with issues, partial success possible (W-series)
+
+### Error Recovery:
+- **E-series errors**: Operation failed completely - fix error and retry entire request
+- **W-series warnings**: Operation may have partially succeeded - check response data and retry only failed parts
+- Parse `Field` property to identify exact location of validation failure
+
+---
 
 If incorrect API credentials are provided, the service will return the standard response, e.g. 403 Forbidden.
 In some cases, the API will return additional information when producing a 400, Bad Request, response. It may contain the following codes in the response's body:
