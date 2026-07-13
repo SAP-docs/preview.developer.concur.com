@@ -3837,134 +3837,409 @@
 
 <h3 id="standard-error-codes"><a name="standard-error-codes"></a>Standard Error Codes</h3>
 
-<p>The codes and types of messages that can be returned on updates and creates:</p>
+<h2 id="error-code-categories">Error Code Categories</h2>
+
+<h3 id="success-codes">Success Codes</h3>
+<p>| Code | Type | Description |
+|——|——|————-|
+| S001 | Success | Process completed successfully with no errors or warnings |</p>
+
+<hr />
+
+<h3 id="error-codes-e-series">Error Codes (E-series)</h3>
 
 <table>
   <thead>
     <tr>
-      <th>CODE</th>
+      <th>Code</th>
       <th>Message Type</th>
-      <th>Notes</th>
-      <th>Example</th>
+      <th>Description</th>
+      <th>Trigger Condition</th>
+      <th>Resolution</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>S001</td>
-      <td>Success</td>
-      <td>Process completed successfully.</td>
-      <td>Success, no errors or warnings reported.</td>
-    </tr>
-    <tr>
-      <td>E001</td>
+      <td><strong>E001</strong></td>
       <td>No Access</td>
-      <td>No access to user data.</td>
-      <td>-</td>
+      <td>No access to user data</td>
+      <td>User lacks permission to view or modify the requested profile</td>
+      <td>Verify OAuth token has correct scopes. Check user has appropriate role/permissions for the target profile.</td>
     </tr>
     <tr>
-      <td>E002</td>
+      <td><strong>E002</strong></td>
       <td>Required Field Missing</td>
-      <td>The field noted is required for updates or creates, no changes were made.</td>
-      <td>-</td>
+      <td>Required field is missing</td>
+      <td>A mandatory field was not provided during create or update</td>
+      <td>Review API schema for required fields. Common required fields: FirstName, LastName, LoginID (for creates). Check field requirements based on company configuration.</td>
     </tr>
     <tr>
-      <td>W001</td>
-      <td>Invalid Regex</td>
-      <td>The given data does not match the expected regex.</td>
-      <td>-</td>
+      <td><strong>E004</strong></td>
+      <td>Decryption Error</td>
+      <td>Failed to decrypt sensitive data</td>
+      <td>System cannot decrypt stored sensitive data (credit card numbers, visa numbers)</td>
+      <td>Contact SAP Concur support. This indicates a cryptographic key issue or data corruption. API consumers cannot resolve this directly.</td>
     </tr>
     <tr>
-      <td>W002</td>
-      <td>Invalid Length</td>
-      <td>The given data is too long or too short.</td>
-      <td>-</td>
+      <td><strong>E007</strong></td>
+      <td>Invalid Modified By UUID</td>
+      <td>ModifiedByUUID is invalid</td>
+      <td>The ModifiedByUUID field contains an invalid or non-existent user UUID</td>
+      <td>Provide a valid UUID for the user making the modification. This field tracks audit history.</td>
     </tr>
     <tr>
-      <td>W003</td>
-      <td>Not Found In Company</td>
-      <td>The given user was not found in the company.</td>
-      <td>-</td>
+      <td><strong>E101</strong></td>
+      <td>Restricted Territory</td>
+      <td>Contains country or region where product/service is unavailable</td>
+      <td>Address contains an embargoed country code or restricted territory (state/province)</td>
+      <td>Remove or change the address to a non-restricted location. Check Concur’s list of supported countries/territories. Common triggers: sanctioned countries, restricted regions.</td>
     </tr>
     <tr>
-      <td>W004</td>
-      <td>Duplicate Entry</td>
-      <td>The given data is duplicated and not allowed.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W005</td>
-      <td>Duplicate LoginId</td>
-      <td>The given <code class="language-plaintext highlighter-rouge">LoginID</code> is duplicated.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W006</td>
-      <td>Out of Range</td>
-      <td>The given data is out of range.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W007</td>
-      <td>Field is Required</td>
-      <td>The given field cannot be cleared.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W009</td>
-      <td>Invalid Account Number</td>
-      <td>Account number check failed due to length, Luhn, etc.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W010</td>
-      <td>Invalid Vendor Code</td>
-      <td>Vendor code given is invalid.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W011</td>
-      <td>Cannot Change</td>
-      <td>The given field cannot be altered.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W012</td>
-      <td>Primary Cell Number Error</td>
-      <td>Data violates one primary cell phone requirement.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W013</td>
-      <td>Invalid Custom Field</td>
-      <td>The data provided is invalid for the custom field.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W014</td>
-      <td>Invalid Date Range</td>
-      <td>The data provided is outside of acceptable date range.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W015</td>
-      <td>Invalid GUID</td>
-      <td>The GUID is invalid.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W016</td>
-      <td>Too Many Items</td>
-      <td>There are too many items in the given list.</td>
-      <td>-</td>
-    </tr>
-    <tr>
-      <td>W017</td>
-      <td>No Access to VendorCode</td>
-      <td>The user lacks access to the given vendor code.</td>
-      <td>-</td>
+      <td><strong>E111</strong></td>
+      <td>Core Profile Creation Failed</td>
+      <td>Failed to create user profile in core system</td>
+      <td>Core identity system rejected profile creation</td>
+      <td>Review error details in response. Common causes: duplicate LoginID, invalid company UUID, core system validation failures.</td>
     </tr>
   </tbody>
 </table>
+
+<hr />
+
+<h3 id="warning-codes-w-series">Warning Codes (W-series)</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Message Type</th>
+      <th>Description</th>
+      <th>Trigger Condition</th>
+      <th>Validation Logic</th>
+      <th>Resolution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>W001</strong></td>
+      <td>Invalid Regex</td>
+      <td>Data does not match expected regex pattern</td>
+      <td>Field value fails regex validation</td>
+      <td>Varies by field - see field-specific validation rules</td>
+      <td>Review field format requirements. Common fields: phone numbers, email addresses, custom fields.</td>
+    </tr>
+    <tr>
+      <td><strong>W002</strong></td>
+      <td>Invalid Length</td>
+      <td>Data is too long or too short</td>
+      <td>Field value exceeds max length or is below min length</td>
+      <td>Length constraints vary by field</td>
+      <td>Check API schema for field length limits. Trim whitespace. Split data across multiple fields if needed.</td>
+    </tr>
+    <tr>
+      <td><strong>W003</strong></td>
+      <td>Not Found In Company</td>
+      <td>User not found in the company</td>
+      <td>Specified user UUID or LoginID does not exist in company</td>
+      <td>User lookup by UUID or LoginID returns no results</td>
+      <td>Verify user exists in company. Check spelling of LoginID. Ensure UUID is correct.</td>
+    </tr>
+    <tr>
+      <td><strong>W004</strong></td>
+      <td>Duplicate Entry</td>
+      <td>Data is duplicated and not allowed</td>
+      <td>Attempting to create duplicate entry where uniqueness is required</td>
+      <td>Depends on field - e.g., loyalty program membership numbers must be unique within user profile</td>
+      <td>Remove duplicate entry or update existing entry instead of creating new one.</td>
+    </tr>
+    <tr>
+      <td><strong>W005</strong></td>
+      <td>Duplicate LoginID</td>
+      <td>LoginID is already in use</td>
+      <td>Attempting to create or update user with a LoginID that already exists</td>
+      <td>LoginID must be unique across company</td>
+      <td>Choose a different LoginID. To reassign, first delete/deactivate the existing user with that LoginID.</td>
+    </tr>
+    <tr>
+      <td><strong>W006</strong></td>
+      <td>Out of Range</td>
+      <td>Data value is outside acceptable range</td>
+      <td>Numeric value, date, or enumerated value is outside allowed range</td>
+      <td>Varies by field - e.g., birth year must be between 1900-current year; codes must match valid enum values</td>
+      <td>Check field constraints in API schema. Use valid enum values. Ensure dates are realistic and within business rules.</td>
+    </tr>
+    <tr>
+      <td><strong>W007</strong></td>
+      <td>Field is Required</td>
+      <td>Field cannot be cleared</td>
+      <td>Attempting to clear/null a field that is required by company configuration</td>
+      <td>Field is marked as required in company configuration but update attempts to clear it</td>
+      <td>Provide a non-empty value. Check company field configuration. Some fields become required based on company settings even if optional in base API.</td>
+    </tr>
+    <tr>
+      <td><strong>W009</strong></td>
+      <td>Invalid Account Number</td>
+      <td>Account number validation failed</td>
+      <td>Credit card or loyalty program account number fails validation</td>
+      <td>Luhn algorithm check (for credit cards), length validation, format validation</td>
+      <td>Verify account number is correct. Check for typos. Ensure proper digit count. For credit cards, must pass Luhn checksum.</td>
+    </tr>
+    <tr>
+      <td><strong>W010</strong></td>
+      <td>Invalid Vendor Code</td>
+      <td>Vendor code is invalid</td>
+      <td>Credit card, loyalty program, or car preference vendor code does not exist in company configuration</td>
+      <td>Vendor code lookup fails in company’s configured vendor list</td>
+      <td>Use a valid vendor code from the company’s vendor list. Contact admin to add vendor if needed. Common vendors: VI (Visa), CA (MasterCard), AX (Amex), airlines (AA, UA, DL), hotels (HH, HY, MC), car rental (ZE, ZR, ZL).</td>
+    </tr>
+    <tr>
+      <td><strong>W011</strong></td>
+      <td>Cannot Change</td>
+      <td>Field cannot be modified</td>
+      <td>Attempting to modify a read-only or system-controlled field</td>
+      <td>Field is marked as non-editable in system configuration or locked by business rules</td>
+      <td>Do not attempt to modify this field. Common examples: system-generated IDs, verified/locked fields, calculated fields.</td>
+    </tr>
+    <tr>
+      <td><strong>W012</strong></td>
+      <td>Primary Cell Number Error</td>
+      <td>Violation of primary cell phone requirement</td>
+      <td>Multiple cell phones marked as primary, or no primary when required</td>
+      <td>Count of <code class="language-plaintext highlighter-rouge">"Primary": true</code> cell phones must equal exactly 1</td>
+      <td>Mark exactly one cell phone as primary. Ensure all others have <code class="language-plaintext highlighter-rouge">"Primary": false</code>.</td>
+    </tr>
+    <tr>
+      <td><strong>W013</strong></td>
+      <td>Invalid Custom Field</td>
+      <td>Custom field data is invalid</td>
+      <td>Custom field value violates configured validation rules for that field</td>
+      <td>Custom validation rules vary by field configuration - may include regex, value lists, data type constraints</td>
+      <td>Check company’s custom field configuration. Ensure data type matches (text, number, date, list). For list fields, use valid list values.</td>
+    </tr>
+    <tr>
+      <td><strong>W014</strong></td>
+      <td>Invalid Date Range</td>
+      <td>Date is outside acceptable range</td>
+      <td>Date value is outside allowed date range for the field</td>
+      <td>Range validation depends on field - e.g., passport expiration must be in future; birth date must be in past</td>
+      <td>Provide a date within the valid range. Check if date must be future/past. Verify date format is correct (YYYY-MM-DD).</td>
+    </tr>
+    <tr>
+      <td><strong>W015</strong></td>
+      <td>Invalid GUID</td>
+      <td>GUID/UUID is malformed</td>
+      <td>Field expecting UUID contains invalid UUID format</td>
+      <td>Must match UUID format: 8-4-4-4-12 hexadecimal pattern</td>
+      <td>Provide a properly formatted UUID. Common fields: CustomFields, UserUUID, CompanyUUID.</td>
+    </tr>
+    <tr>
+      <td><strong>W016</strong></td>
+      <td>Too Many Items</td>
+      <td>Collection exceeds maximum allowed items</td>
+      <td>Array/collection exceeds maximum item count</td>
+      <td>Item count limits vary by collection - e.g., max credit cards, max loyalty programs, max addresses</td>
+      <td>Reduce number of items. Remove obsolete entries before adding new ones. Check API schema for collection limits.</td>
+    </tr>
+    <tr>
+      <td><strong>W017</strong></td>
+      <td>No Access to VendorCode</td>
+      <td>User lacks access to vendor code</td>
+      <td>User or company lacks access to specified vendor code</td>
+      <td>Vendor code access validation checks company entitlements and user permissions</td>
+      <td>Contact admin to grant access to vendor. Verify company has contract/integration with vendor.</td>
+    </tr>
+    <tr>
+      <td><strong>W018</strong></td>
+      <td>Invalid Data or Multiple Constraint Violation</td>
+      <td>Data is invalid or violates business rules</td>
+      <td><strong>Multiple scenarios</strong>: <br />• Cell phone number contains invalid characters (only digits, dashes, parentheses, spaces allowed)<br />• Multiple cell phones marked as primary<br />• Multiple default cards for same travel type (IsDefaultAir, IsDefaultCar, IsDefaultHotel, IsDefaultRail)<br />• Duplicate credit card entries<br />• Invalid ticket type for unused tickets</td>
+      <td>Varies by specific field/scenario</td>
+      <td><strong>Phone</strong>: Use only digits, spaces, dashes, parentheses<br /><strong>Tickets</strong>: Use valid ticket type from allowed list</td>
+    </tr>
+    <tr>
+      <td><strong>W019</strong></td>
+      <td>Cannot Change Verified Email</td>
+      <td>Verified email cannot be modified</td>
+      <td>Attempting to change an email address that has been verified</td>
+      <td>Email has verified status flag set to true</td>
+      <td>Cannot modify verified emails. User must verify the new email address through standard email verification flow.</td>
+    </tr>
+    <tr>
+      <td><strong>W020</strong></td>
+      <td>Invalid Email Format</td>
+      <td>Email address format is invalid</td>
+      <td>Email fails regex validation</td>
+      <td>Must match pattern: <code class="language-plaintext highlighter-rouge">^[\p{Alphabetic}\p{digit}!.#$%&amp;'*+\-/=?^_</code>{|}~]+@[\p{Alphabetic}\p{digit}]+([-.][\p{Alphabetic}\p{digit}]+)*$<code class="language-plaintext highlighter-rouge"> (Unicode-aware) | Provide valid email format: </code>localpart@domain<code class="language-plaintext highlighter-rouge">. Local part allows alphanumeric and special chars: ! . # $ % &amp; ' * + - / = ? ^ _ </code> { | } ~. Domain must be alphanumeric with optional dashes/dots.</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td><strong>W022</strong></td>
+      <td>Southwest Unused Tickets Deprecated</td>
+      <td>Southwest-specific unused tickets section is deprecated</td>
+      <td>Data sent to deprecated <code class="language-plaintext highlighter-rouge">southwestUnusedTickets</code> field</td>
+      <td>Detects data in legacy Southwest-specific section</td>
+      <td>Use the standard <code class="language-plaintext highlighter-rouge">UnusedTickets</code> element for all airlines including Southwest. Data sent to old section is ignored.</td>
+    </tr>
+    <tr>
+      <td><strong>W023</strong></td>
+      <td>Emergency Contact Phone Invalid</td>
+      <td>Emergency contact phone number fails validation</td>
+      <td>Emergency contact phone number does not match required pattern</td>
+      <td>Must match regex: <code class="language-plaintext highlighter-rouge">^[^\p{C}]{0,60}$</code> (no control characters, max 60 chars)</td>
+      <td>Remove control characters from phone number. Limit to 60 characters. Use standard phone number format. Applies to both primary and secondary emergency contact phones.</td>
+    </tr>
+    <tr>
+      <td><strong>W024</strong></td>
+      <td>Telephone Number Invalid</td>
+      <td>Telephone/phone number fails validation</td>
+      <td>Phone number (Telephones array) does not match required pattern</td>
+      <td>Must match regex: <code class="language-plaintext highlighter-rouge">^[^\p{C}]{0,60}$</code> (no control characters, max 60 chars)</td>
+      <td>Remove control characters (\p{C}) from phone number. Limit to 60 characters. Control characters include null bytes, special formatting codes, etc.</td>
+    </tr>
+    <tr>
+      <td><strong>W033</strong></td>
+      <td>Rule Class Not Found</td>
+      <td>Rule class name not found in company</td>
+      <td>Specified RuleClass name does not exist in company configuration</td>
+      <td>Case-insensitive lookup of rule class name fails in company’s configured rule classes</td>
+      <td>Use a valid rule class name configured for the company. Check spelling and capitalization. Contact admin if rule class needs to be created.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="phone-number-validation-details">Phone Number Validation Details</h2>
+
+<h3 id="regex-pattern-pc060">Regex Pattern: <code class="language-plaintext highlighter-rouge">^[^\p{C}]{0,60}$</code></h3>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">^</code> - Start of string</li>
+  <li><code class="language-plaintext highlighter-rouge">[^\p{C}]</code> - Any character EXCEPT Unicode control characters</li>
+  <li><code class="language-plaintext highlighter-rouge">{0,60}</code> - Between 0 and 60 characters</li>
+  <li><code class="language-plaintext highlighter-rouge">$</code> - End of string</li>
+</ul>
+
+<p><strong>Unicode Control Characters (\p{C}) include:</strong></p>
+<ul>
+  <li>Null bytes (<code class="language-plaintext highlighter-rouge">\0</code>)</li>
+  <li>Control codes (0x00-0x1F, 0x7F-0x9F)</li>
+  <li>Line separators</li>
+  <li>Paragraph separators</li>
+  <li>Format characters</li>
+</ul>
+
+<p><strong>Valid Phone Examples:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">+1 (555) 123-4567</code></li>
+  <li><code class="language-plaintext highlighter-rouge">555-1234</code></li>
+  <li><code class="language-plaintext highlighter-rouge">+44 20 7123 4567</code></li>
+  <li><code class="language-plaintext highlighter-rouge">1234567890</code></li>
+</ul>
+
+<p><strong>Invalid Phone Examples:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">555\n1234</code> (contains newline control character)</li>
+  <li><code class="language-plaintext highlighter-rouge">555\t1234</code> (contains tab control character)</li>
+  <li><code class="language-plaintext highlighter-rouge">555\x001234</code> (contains null byte)</li>
+  <li>Phone numbers over 60 characters</li>
+</ul>
+
+<p><strong>Applies to:</strong></p>
+<ul>
+  <li>W023: Emergency contact phone numbers</li>
+  <li>W024: Regular telephone numbers (Telephones array)</li>
+  <li>W018: Cell phone numbers (with additional restrictions: digits, dashes, parentheses, spaces only)</li>
+</ul>
+
+<hr />
+
+<h2 id="email-validation-details">Email Validation Details</h2>
+
+<h3 id="regex-pattern-w020">Regex Pattern (W020)</h3>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^[\p{Alphabetic}\p{digit}!.#$%&amp;'*+\-/=?^_`{|}~]+@[\p{Alphabetic}\p{digit}]+([-.][\p{Alphabetic}\p{digit}]+)*$
+</code></pre></div></div>
+
+<p><strong>Explanation:</strong></p>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Local part</strong> (before @): Unicode letters, digits, and special characters: <code class="language-plaintext highlighter-rouge">! . # $ % &amp; ' * + - / = ? ^ _ </code> {</td>
+          <td>} ~`</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><strong>Domain part</strong> (after @): Unicode letters, digits, with optional dashes and dots</li>
+  <li>Supports international (Unicode) email addresses</li>
+</ul>
+
+<p><strong>Valid Email Examples:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">john.doe@example.com</code></li>
+  <li><code class="language-plaintext highlighter-rouge">user+tag@company.co.uk</code></li>
+  <li><code class="language-plaintext highlighter-rouge">test_user123@example.org</code></li>
+  <li><code class="language-plaintext highlighter-rouge">müller@büro.de</code> (Unicode)</li>
+</ul>
+
+<p><strong>Invalid Email Examples:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">@example.com</code> (missing local part)</li>
+  <li><code class="language-plaintext highlighter-rouge">user@</code> (missing domain)</li>
+  <li><code class="language-plaintext highlighter-rouge">user name@example.com</code> (space not allowed)</li>
+  <li><code class="language-plaintext highlighter-rouge">user@.example.com</code> (domain cannot start with dot)</li>
+</ul>
+
+<hr />
+
+<h2 id="common-validation-scenarios">Common Validation Scenarios</h2>
+
+<h3 id="credit-card-validation-w009">Credit Card Validation (W009)</h3>
+<p>Credit card account numbers undergo multiple validations:</p>
+<ol>
+  <li><strong>Length check</strong>: Typically 13-19 digits depending on card type</li>
+  <li><strong>Luhn algorithm</strong>: Checksum validation (modulo-10)</li>
+  <li><strong>Format validation</strong>: Must be numeric</li>
+  <li><strong>Vendor code validation</strong>: Must match valid card type (W010)</li>
+</ol>
+
+<h3 id="custom-field-validation-w013">Custom Field Validation (W013)</h3>
+<p>Custom fields have company-specific validation rules:</p>
+<ul>
+  <li><strong>Data Type</strong>: Text, Number, Date, List</li>
+  <li><strong>List Values</strong>: Must match configured list values exactly</li>
+  <li><strong>Regex Patterns</strong>: May have custom regex validation</li>
+  <li><strong>Length Limits</strong>: May have custom length constraints</li>
+  <li><strong>Required Status</strong>: May be required based on company config</li>
+</ul>
+
+<h3 id="date-range-validation">Date Range Validation</h3>
+<ul>
+  <li>Validate dates client-side for logical ranges</li>
+  <li>Passport expiration: Must be in future</li>
+  <li>Birth date: Must be in past, reasonable age range</li>
+  <li>Travel dates: Must be logical sequence</li>
+  <li>Use ISO 8601 format (YYYY-MM-DD)</li>
+</ul>
+
+<h3 id="message-types">Message Types</h3>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Success</code>: Operation completed successfully (S001)</li>
+  <li><code class="language-plaintext highlighter-rouge">Error</code>: Operation failed, no changes made (E-series)</li>
+  <li><code class="language-plaintext highlighter-rouge">Warning</code>: Operation completed with issues, partial success possible (W-series)</li>
+</ul>
+
+<h3 id="error-recovery">Error Recovery:</h3>
+<ul>
+  <li><strong>E-series errors</strong>: Operation failed completely - fix error and retry entire request</li>
+  <li><strong>W-series warnings</strong>: Operation may have partially succeeded - check response data and retry only failed parts</li>
+  <li>Parse <code class="language-plaintext highlighter-rouge">Field</code> property to identify exact location of validation failure</li>
+</ul>
+
+<hr />
 
 <p>If incorrect API credentials are provided, the service will return the standard response, e.g. 403 Forbidden.
 In some cases, the API will return additional information when producing a 400, Bad Request, response. It may contain the following codes in the response’s body:</p>
