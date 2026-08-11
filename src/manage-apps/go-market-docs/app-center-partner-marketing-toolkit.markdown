@@ -28,12 +28,12 @@ The [Go to Market page](/manage-apps/go-to-market.html), accessible from the Res
 Acceptable|Branding|Notes
 :---:|---|---
 &#9989;|We are an SAP Concur partner.|-
-&#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner.png)|-
-&#9989;|![SAP Concur Partner App Center Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner-app-center.png)|Download the font treatment [here](https://developer.concur.com/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#font-treatment-download-links). Make sure to follow the [Font Treatment brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf) for use. ​
-Specific cases only|![SAP Concur logo](./app-center-marketing-toolkit-sap-concur-logo-blue.png)|Partners may use the SAP Concur logo only in specific situations, such as your integration or connection landing page UI or in a list of all of your partnerships. You must follow brand guidelines and submit content for review.
-&#10060;|![Do Not Use SAP Logo](./app-center-partner-marketing-toolkit-logo-brand-sap-logo.png)|Partners are **not** permitted to use the SAP corporate logo.
-&#10060;|![Do Not Use Concur Logo](./app-center-partner-marketing-toolkit-logo-brand-concur-logo.png)|Do **not** use an outdated “Concur” logo when creating materials.
-&#10060;|![](./app-center-partner-marketing-toolkit-logo-brand-sap-concur-logo.png)|Do not use the outdated blue and gold SAP Concur logo when creating materials.
+&#9989;|![SAP Concur Partner App Center Logo](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner.png)|-
+&#9989;|![SAP Concur Partner App Center Logo](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-logo-brand-sap-concur-partner-app-center.png)|Download the font treatment [here](/manage-apps/go-market-docs/app-center-partner-marketing-toolkit.html#font-treatment-download-links). Make sure to follow the [Font Treatment brand guidelines](/manage-apps/go-market-docs/sap-concur-partner-guidelines-addendum.pdf) for use. ​
+Specific cases only|![SAP Concur logo](./partner-marketing-toolkit-images/app-center-marketing-toolkit-sap-concur-logo-blue.png)|Partners may use the SAP Concur logo only in specific situations, such as your integration or connection landing page UI or in a list of all of your partnerships. You must follow brand guidelines and submit content for review.
+&#10060;|![Do Not Use SAP Logo](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-logo-brand-sap-logo.png)|Partners are **not** permitted to use the SAP corporate logo.
+&#10060;|![Do Not Use Concur Logo](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-logo-brand-concur-logo.png)|Do **not** use an outdated “Concur” logo when creating materials.
+&#10060;|![](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-logo-brand-sap-concur-logo.png)|Do not use the outdated blue and gold SAP Concur logo when creating materials.
 
 ### <a name="communicating-your-partnership"></a>Communicating Your Partnership
 
@@ -109,7 +109,7 @@ than 579 pixels.
 
 Acceptable|Branding
 :---:|---
-&#9989;|![Minimum Size Image Print](./app-center-partner-marketing-toolkit-minimum-size.png)
+&#9989;|![Minimum Size Image Print](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-minimum-size.png)
 
 #### <a name="font-treatment-using-trademark-symbols"></a>Using Registered Trademark
 
@@ -121,7 +121,7 @@ Do not position any text, graphic element, or other visual marks inside the defi
 
 Acceptable|Branding
 :---:|---
-&#9989;|![Clear Space](./app-center-partner-marketing-toolkit-clear-space-partner.png)
+&#9989;|![Clear Space](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-clear-space-partner.png)
 
 #### <a name="font-treatment-color-specification"></a>Color Specification
 
@@ -133,8 +133,8 @@ Against dark backgrounds, use the font treatment in SAP white. If printing in bl
 
 Acceptable|Branding
 :---:|---
-&#9989;|![SAP Blue 11 Image](./app-center-partner-marketing-toolkit-color-sap-blue-11.png)
-&#9989;|![SAP Blue 7 Image](./app-center-partner-marketing-toolkit-color-sap-blue-7.png)
+&#9989;|![SAP Blue 11 Image](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-color-sap-blue-11.png)
+&#9989;|![SAP Blue 7 Image](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-color-sap-blue-7.png)
 
 ### <a name="sap-concur-logos"></a>SAP Concur Logos
 
@@ -157,11 +157,11 @@ Always maintain the logo’s aspect ratio when scaling.
 
 The clear space surrounding the logo should measure 1/2x the height of the anvil in the SAP Concur sub-brand lockup.
 
-![Clear space image](./app-center-partner-marketing-toolkit-sap-concur-logo-clear-space.png)
+![Clear space image](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-sap-concur-logo-clear-space.png)
 
 In print, the SAP Concur sub-brand lockup can be reproduced down to 0.92" (23.4 mm) wide. For digital applications, the logo can be reduced to 92 pixels wide.
 
-![Logo width image](./app-center-partner-marketing-toolkit-sap-concur-logo-width.png)
+![Logo width image](./partner-marketing-toolkit-images/app-center-partner-marketing-toolkit-sap-concur-logo-width.png)
 
 #### <a name="sap-concur-logos-available"></a>Available Logos
 
@@ -171,13 +171,13 @@ For logo files, please email your Certification Project Manager or [PlatformCert
 
 Acceptable|Branding
 :---:|---
-&#9989; (Certain cases and with SAP Concur approval only.)|![Full logo image](./app-center-marketing-toolkit-five-logo.png)
+&#9989; (Certain cases and with SAP Concur approval only.)|![Full logo image](./partner-marketing-toolkit-images/app-center-marketing-toolkit-five-logo.png)
 
 #### <a name="sap-concur-logos-available-app-icon"></a>App Icon
 
 Acceptable|Branding
 :---|---
-&#9989; (Certain cases and with SAP Concur approval only. App icon to be used only when the full logo will not fit the intended space.) |![App Icon](./app-center-marketing-toolkit-sap-concur-icon.png)
+&#9989; (Certain cases and with SAP Concur approval only. App icon to be used only when the full logo will not fit the intended space.) |![App Icon](./partner-marketing-toolkit-images/app-center-marketing-toolkit-sap-concur-icon.png)
 
 ## <a name="marketing-content-best-practices"></a>Marketing Content Best Practices
 
@@ -238,7 +238,7 @@ Work with Certification Project Manager to approve your landing page content, an
 
 #### <a name="Connection Page"></a>Connection Page
 
-The Connect page that customers use to enable the integration should follow our UX Guidelines for [Enterprise](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-enterprise.html#guideline-checklist-landing-page) and [User Connection](https://developer.concur.com/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) apps. 
+The Connect page that customers use to enable the integration should follow our UX Guidelines for [Enterprise](/manage-apps/go-market-docs/app-center-ux-guidelines-enterprise.html#guideline-checklist-landing-page) and [User Connection](/manage-apps/go-market-docs/app-center-ux-guidelines-consumer.html) apps. 
 
 ### <a name="success-stories"></a> Partner Success Stories
 97% of B2B customers surveyed by Demand Gen Reports claimed that testimonials and peer recommendations are the most reliable type of content. We couldn’t agree more! Our case studies are used for client engagements, incorporated into campaigns, and distributed throughout various channels company-wide.​
@@ -395,7 +395,7 @@ etc.
 ### <a name="listing-process"></a>App Center Listing Creation and Update Process
 
 1. Send your completed content to your Certification Project Manager for review. This includes your:
-	* **App Center listing form** ([link](/manage-apps/go-market-docs/app-center-partner-listing-form.docx))
+	* **App Center listing form** ([link](/manage-apps/go-market-docs/app-center-partner-listing-form-v2.docx))
 		* Tip: Make sure to pay attention to the character limits and be sure your long description includes a call to action
 	* **Listing images**
 		* Tip: Size requirements are at the bottom of the listing form
@@ -406,7 +406,7 @@ etc.
 	* Please plan for a 10 to 14-day turnaround window for the review process.
 3. Once your content is finalized, your listing will be queued for launch on an agreed-upon date. 
 	* Your app must be certified prior to launch. 
-	* User Connection apps are launched on the [SAP Concur release dates](https://developer.concur.com/manage-apps/go-market-docs/apps-for-me-release-schedule.html).
+	* User Connection apps are launched on the [SAP Concur release dates](/manage-apps/go-market-docs/apps-for-me-release-schedule.html).
 
 ### <a name="approval-process"></a>Approval Process
 
