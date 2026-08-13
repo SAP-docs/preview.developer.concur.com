@@ -99,6 +99,15 @@
             "description": "Filter meetings starting before this date (ISO 8601)"
           },
           {
+            "name": "countAttendees",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, each returned meeting includes an `attendeesCount` field. Adds one count query per meeting; off by default."
+          },
+          {
             "$ref": "#/components/parameters/Limit"
           },
           {
@@ -201,6 +210,17 @@
         "operationId": "getMeeting",
         "summary": "Get full meeting details (metadata + settings + discounts)",
         "description": "Retrieve all information about a specific meeting. For partial data, use the /metadata, /settings, or /discounts sub-resource endpoints.",
+        "parameters": [
+          {
+            "name": "countAttendees",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, the returned meeting includes an `attendeesCount` field."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Meeting details",
@@ -1015,6 +1035,56 @@
           }
         }
       }
+    },
+    "/companies/{companyId}/form-data": {
+      "parameters": [
+        {
+          "name": "companyId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": "Company UUID"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "FormData"
+        ],
+        "operationId": "getCompanyFormData",
+        "summary": "Get company-level form data for meeting creation",
+        "description": "Retrieve the travel configs and their rule classes for a company. Used to populate\nthe travel-config and rule-class dropdowns when creating or editing a meeting.\nThe caller's JWT must belong to the same `companyId`.\n",
+        "responses": {
+          "200": {
+            "description": "Company form data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyFormDataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1161,6 +1231,17 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Attendee categories configured for this meeting.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategory"
+            }
+          },
+          "attendeesCount": {
+            "type": "integer",
+            "description": "Number of attendees on this meeting. Present only when the request set `countAttendees=true`."
           }
         }
       },
@@ -1239,6 +1320,13 @@
           "partnerMeetingId": {
             "type": "string",
             "description": "Meeting ID in partner system"
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Attendee categories to configure for this meeting.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategoryWrite"
+            }
           }
         }
       },
@@ -1314,6 +1402,13 @@
               "concurLoginId": {
                 "type": "string"
               }
+            }
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Replace the meeting's attendee categories.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategoryWrite"
             }
           }
         }
@@ -1411,6 +1506,13 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Attendee categories configured for this meeting.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategory"
+            }
           }
         }
       },
@@ -1758,6 +1860,11 @@
           "lastUpdatedOnUtc": {
             "type": "string",
             "format": "date-time"
+          },
+          "attendeeCategory": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to the attendee category ID."
           }
         }
       },
@@ -1799,6 +1906,11 @@
           "partnerAttendeeId": {
             "type": "string",
             "description": "Attendee ID in partner system (e.g., Cvent registrant ID)"
+          },
+          "attendeeCategory": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to the attendee category ID."
           }
         }
       },
@@ -1986,6 +2098,106 @@
                 }
               }
             }
+          }
+        }
+      },
+      "AttendeeCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the attendee category"
+          },
+          "ruleClass": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelConfig": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fopConfig": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AttendeeCategoryWrite": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "ruleClass",
+          "travelConfig",
+          "fopConfig"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Present for updates; omit to create a new category."
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the attendee category."
+          },
+          "ruleClass": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelConfig": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fopConfig": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CompanyFormDataResponse": {
+        "type": "object",
+        "properties": {
+          "travelConfigs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelConfigResponse"
+            }
+          }
+        }
+      },
+      "TravelConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Travel config UUID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the travel config"
+          },
+          "ruleClasses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleClass"
+            }
+          }
+        }
+      },
+      "RuleClass": {
+        "type": "object",
+        "properties": {
+          "ruleClassUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ruleClassName": {
+            "type": "string"
           }
         }
       }
