@@ -1,0 +1,243 @@
+---
+title: Meetings v4 Endpoints
+layout: reference
+---
+
+{% include prerelease.html %}
+
+This page documents the endpoints, payloads, and schemas for the Meetings API v4. See [Meetings v4](/api-reference/travel/v4.meetings-get-started.html) for the overview, scopes, authentication, and base URIs.
+
+All meeting-scoped endpoints accept an optional `companyId` query parameter (UUID). When omitted, the company is resolved from the token; when supplied it must match the token's company.
+
+## <a name="list-meetings"></a>List Meetings
+
+Retrieves meetings for the caller's company.
+
+### Scopes
+
+`meetings.read` — Refer to [Scope Usage](/api-reference/travel/v4.meetings-get-started.html#scope-usage).
+
+### URI
+
+```shell
+GET https://{datacenterURI}/meetings/v4/meetings?companyId={companyId}
+```
+
+### Parameters
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`uuid`|Company identifier. Optional; must match the token's company when supplied.
+`limit`|`integer`|-|Maximum number of results per page.
+`offset`|`integer`|-|Number of results to skip for pagination.
+
+### Examples
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/meetings/v4/meetings?companyId=62ec4e74-3238-41a2-9233-c1cc901c2daa
+Accept: application/json
+Authorization: Bearer {token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200 OK
+Content-Type: application/json
+```
+
+```json
+{
+  "meetings": [
+    {
+      "id": "5036ada6-25e8-4e96-9d28-59788b1cdd67",
+      "name": "Q3 Sales Kickoff",
+      "status": "active",
+      "locationName": "Grand Hotel",
+      "airport": "SFO",
+      "startDateTime": "2026-09-01T09:00:00Z",
+      "endDateTime": "2026-09-03T17:00:00Z",
+      "timeZone": "America/Los_Angeles"
+    }
+  ],
+  "pagination": { "limit": 25, "offset": 0, "total": 1 }
+}
+```
+
+## <a name="create-meeting"></a>Create Meeting
+
+Creates a meeting in the caller's company. The response includes the generated `id`.
+
+### Scopes
+
+`meetings.write`
+
+### URI
+
+```shell
+POST https://{datacenterURI}/meetings/v4/meetings
+```
+
+### Payloads
+
+* Request: [MeetingCreate](#schema-meetingcreate)
+* Response: Meeting id and status
+
+### Examples
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/meetings/v4/meetings
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "companyId": "62ec4e74-3238-41a2-9233-c1cc901c2daa",
+  "name": "Q3 Sales Kickoff",
+  "locationName": "Grand Hotel",
+  "airport": "SFO",
+  "startDateTime": "2026-09-01T09:00:00Z",
+  "endDateTime": "2026-09-03T17:00:00Z",
+  "timeZone": "America/Los_Angeles",
+  "travelConfigId": "0b2f...",
+  "partnerMeetingId": "CVENT-12345"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 201 Created
+Content-Type: application/json
+```
+
+```json
+{ "id": "5036ada6-25e8-4e96-9d28-59788b1cdd67", "status": "active" }
+```
+
+## <a name="get-meeting"></a>Get, Update, and Delete a Meeting
+
+* `GET /meetings/{meetingId}` (`meetings.read`) — full meeting details (metadata + settings + discounts).
+* `PATCH /meetings/{meetingId}` (`meetings.write`) — partial update using JSON Merge Patch (`Content-Type: application/merge-patch+json`).
+* `DELETE /meetings/{meetingId}` (`meetings.write`) — soft-delete the meeting.
+
+Related read-only sub-resources: `GET /meetings/{meetingId}/metadata`, `/settings`, `/discounts`, and `/history`.
+
+### PATCH Example
+
+```shell
+PATCH https://us.api.concursolutions.com/meetings/v4/meetings/5036ada6-25e8-4e96-9d28-59788b1cdd67
+Content-Type: application/merge-patch+json
+Authorization: Bearer {token}
+```
+
+```json
+{ "name": "Q3 Sales Kickoff (Updated)" }
+```
+
+## <a name="attendees"></a>Attendees
+
+* `GET /meetings/{meetingId}/attendees` (`meetings.read`) — list attendees.
+* `POST /meetings/{meetingId}/attendees` (`meetings.write`) — add a single attendee.
+* `POST /meetings/{meetingId}/attendees/bulk` (`meetings.write`) — add multiple attendees; returns **`207 Multi-Status`** with per-item results.
+* `GET /meetings/{meetingId}/attendees/{attendeeId}` (`meetings.read`) — get an attendee.
+* `PATCH /meetings/{meetingId}/attendees/{attendeeId}` (`meetings.write`) — partial update (JSON Merge Patch).
+* `DELETE /meetings/{meetingId}/attendees/{attendeeId}` (`meetings.write`) — remove an attendee.
+* `POST /meetings/{meetingId}/attendees/{attendeeId}/login-url` (`meetings.write`) — generate a one-time login URL for a non-employee attendee.
+
+### Bulk Add Example
+
+The bulk endpoint takes a JSON body with an `attendees` array. An empty or missing array returns `400`.
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/meetings/v4/meetings/{meetingId}/attendees/bulk
+Content-Type: application/json
+Authorization: Bearer {token}
+```
+
+```json
+{
+  "attendees": [
+    { "email": "jane@example.com", "firstName": "Jane", "lastName": "Doe", "profileType": "nonEmployee" },
+    { "email": "john@example.com", "firstName": "John", "lastName": "Roe", "profileType": "employee" }
+  ]
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 207 Multi-Status
+Content-Type: application/json
+```
+
+```json
+{
+  "totalRequested": 2,
+  "successful": 2,
+  "failed": 0,
+  "results": [
+    { "index": 0, "status": 201, "id": "17eeba90-d260-4bf6-8814-7f6336acf0e4" },
+    { "index": 1, "status": 201, "id": "820a1325-d80c-4d80-adfa-ae6b322bc009" }
+  ]
+}
+```
+
+## <a name="schema"></a>Schema
+
+### <a name="schema-meetingcreate"></a>MeetingCreate
+
+Name|Type|Format|Description
+---|---|---|---
+`companyId`|`string`|`uuid`|**Required** Company that owns the meeting.
+`name`|`string`|-|**Required** Meeting name.
+`description`|`string`|-|Meeting description.
+`locationName`|`string`|-|**Required** Location name.
+`airport`|`string`|-|**Required** Nearest airport IATA code.
+`startDateTime`|`string`|`date-time`|**Required** Meeting start (ISO 8601).
+`endDateTime`|`string`|`date-time`|**Required** Meeting end (ISO 8601).
+`timeZone`|`string`|-|**Required** IANA time zone (e.g., `America/Los_Angeles`).
+`travelConfigId`|`string`|`uuid`|**Required** Travel configuration identifier.
+`billingCode`|`string`|-|Billing code.
+`partnerMeetingId`|`string`|-|Meeting ID in the partner system (e.g., Cvent event ID).
+
+### <a name="schema-attendeecreate"></a>AttendeeCreate
+
+Name|Type|Format|Description
+---|---|---|---
+`email`|`string`|`email`|**Required** Attendee email.
+`firstName`|`string`|-|**Required** Attendee first name.
+`lastName`|`string`|-|**Required** Attendee last name.
+`profileType`|`string`|`enum`|**Required** One of `employee`, `nonEmployee`.
+`concurUuid`|`string`|`uuid`|Concur user profile UUID, if known.
+`concurLoginId`|`string`|-|Concur login ID / email, if known.
+`partnerAttendeeId`|`string`|-|Attendee ID in the partner system.
+
+### <a name="schema-attendee"></a>Attendee
+
+Name|Type|Format|Description
+---|---|---|---
+`id`|`string`|`uuid`|Attendee identifier.
+`meetingId`|`string`|`uuid`|Parent meeting identifier.
+`profileType`|`string`|`enum`|One of `employee`, `nonEmployee`.
+`email`|`string`|`email`|Attendee email.
+`firstName`|`string`|-|Attendee first name.
+`lastName`|`string`|-|Attendee last name.
+`bookingStatus`|`string`|`enum`|One of `pending`, `booked`, `cancelled`.
+`tripId`|`string`|`uuid`|Associated trip identifier, if booked.
+`partnerAttendeeId`|`string`|-|Attendee ID in the partner system.
+
+### <a name="schema-error"></a>Error
+
+Name|Type|Format|Description
+---|---|---|---
+`errors`|`array`|[`error`](#schema-error)|**Required** Array of error objects.
+`errorCode`|`string`|-|**Required** Machine-readable, non-localized code (e.g., `ATTENDEE_NOT_FOUND`, `VALIDATION_ERROR`, `FORBIDDEN`).
+`errorMessage`|`string`|-|**Required** Human-readable message for logging and diagnostics.
