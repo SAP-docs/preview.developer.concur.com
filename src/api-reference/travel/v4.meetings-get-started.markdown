@@ -15,9 +15,31 @@ The Meetings API lets you create and manage meetings and their attendees within 
 
 ## <a name="process-flow"></a>Process Flow
 
-The most common partner flow is: create a meeting, add its attendees (individually or in bulk), then read or update the meeting and attendees as needed.
+The most common partner flow is: obtain an access token, create a meeting, add its attendees (individually or in bulk), then read or update the meeting and attendees as needed. Removing attendees and deleting the meeting are optional end-of-lifecycle steps.
 
->insert sample diagram here
+> **Note to tech writers:** basic flow below (Mermaid). Please restyle to the dev-portal diagram standard.
+
+```mermaid
+flowchart TD
+    A([Start]) --> B[Obtain OAuth 2.0 token<br/>password grant → Bearer JWT<br/><i>prerequisite: OAuth token endpoint</i>]
+    B --> C[POST /meetings<br/>scope: meetings.write<br/>→ returns meetingId]
+    C --> D{Add attendees}
+    D -->|one| E[POST /meetings/&#123;meetingId&#125;/attendees<br/>scope: meetings.write]
+    D -->|many| F[POST /meetings/&#123;meetingId&#125;/attendees/bulk<br/>scope: meetings.write → 207 Multi-Status]
+    E --> G[GET meeting / attendees<br/>scope: meetings.read]
+    F --> G
+    G --> H{Updates needed?}
+    H -->|yes| I[PATCH meeting / attendee<br/>merge-patch+json · scope: meetings.write]
+    I --> G
+    H -->|no| J{End of lifecycle?}
+    J -->|remove attendee| K[DELETE /meetings/&#123;meetingId&#125;/attendees/&#123;attendeeId&#125;]
+    J -->|delete meeting| L[DELETE /meetings/&#123;meetingId&#125;<br/>soft delete]
+    K --> M([End])
+    L --> M
+    J -->|no| M
+```
+
+**Prerequisite calls (other APIs):** the OAuth 2.0 token endpoint is required before any Meetings API call to obtain the Bearer token. No other cross-API prerequisites are required for the core flow.
 
 ## <a name="products-editions"></a>Products and Editions
 
