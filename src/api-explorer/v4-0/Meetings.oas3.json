@@ -1,0 +1,2298 @@
+{
+  "openapi": "3.0.3",
+  "x-sap-shortText": "Manage Concur meetings and their attendees, including third-party partner meeting integration",
+  "info": {
+    "title": "Concur Meetings API",
+    "version": "v4",
+    "description": "API for managing meetings and attendees within SAP Concur.\n\nSupports two primary use cases:\n1. **Concur Meetings** – Meetings created directly within Concur via Meetings Admin UI or Joule\n2. **Third-Party Meetings** – Meetings created by external partners (e.g., Cvent) via API integration\n\nThis is the partner-facing edition of the spec. Internal-only operations are not included.\n",
+    "termsOfService": "https://developer.concur.com/Terms-of-Use.html"
+  },
+  "servers": [
+    {
+      "url": "https://us.api.concursolutions.com/meetings/v4",
+      "description": "US Production"
+    },
+    {
+      "url": "https://emea.api.concursolutions.com/meetings/v4",
+      "description": "EMEA Production"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Meetings",
+      "description": "Meeting management operations"
+    },
+    {
+      "name": "Attendees",
+      "description": "Attendee management operations"
+    },
+    {
+      "name": "Authentication",
+      "description": "Non-employee attendee authentication"
+    }
+  ],
+  "paths": {
+    "/meetings": {
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "listMeetings",
+        "summary": "List all meetings",
+        "description": "Retrieve all meetings for a company with optional filtering. Use `attendeeId` with date params for meeting match.",
+        "parameters": [
+          {
+            "name": "companyId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Company UUID. Required — scopes listing to this company."
+          },
+          {
+            "name": "attendeeId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Filter meetings where this user is an attendee. Used for meeting match when combined with startDateFrom/startDateTo and status=active."
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "cancelled",
+                "completed"
+              ]
+            },
+            "description": "Filter by meeting status"
+          },
+          {
+            "name": "startDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter meetings starting from this date (ISO 8601)"
+          },
+          {
+            "name": "startDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Filter meetings starting before this date (ISO 8601)"
+          },
+          {
+            "name": "countAttendees",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, each returned meeting includes an `attendeesCount` field. Adds one count query per meeting; off by default."
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of meetings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "meetings": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Meeting"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "createMeeting",
+        "summary": "Create a new meeting",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeetingCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Meeting created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeetingCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "getMeeting",
+        "summary": "Get full meeting details (metadata + settings + discounts)",
+        "description": "Retrieve all information about a specific meeting. For partial data, use the /metadata, /settings, or /discounts sub-resource endpoints.",
+        "parameters": [
+          {
+            "name": "countAttendees",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, the returned meeting includes an `attendeesCount` field."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Meeting details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meeting"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "updateMeeting",
+        "summary": "Update a meeting",
+        "description": "Update an existing meeting using partial-merge semantics per RFC 7396 — fields omitted from the body retain their existing values.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/merge-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeetingUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Meeting updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Meeting"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "deleteMeeting",
+        "summary": "Delete a meeting (soft delete)",
+        "description": "Soft-delete a meeting by setting status to cancelled. Only allowed for meetings with no bookings.",
+        "responses": {
+          "204": {
+            "description": "Meeting deleted"
+          },
+          "400": {
+            "description": "Meeting has existing bookings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "errors": [
+                    {
+                      "errorCode": "HAS_BOOKINGS",
+                      "errorMessage": "Cannot delete meeting with existing bookings"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/metadata": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "getMeetingMetadata",
+        "summary": "Get meeting metadata only",
+        "description": "Retrieve core meeting information, excluding advance settings and discounts.",
+        "responses": {
+          "200": {
+            "description": "Meeting metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeetingMetadata"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/settings": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "getMeetingSettings",
+        "summary": "Get advance settings only",
+        "description": "Retrieve only the advance settings for a specific meeting.",
+        "responses": {
+          "200": {
+            "description": "Meeting advance settings",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeetingSettingsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/discounts": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "getMeetingDiscounts",
+        "summary": "Get discounts only",
+        "description": "Retrieve only the discounts for a specific meeting, with optional filtering by travel type.",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "air",
+                "car",
+                "hotel",
+                "rail"
+              ]
+            },
+            "description": "Filter by travel type"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Meeting discounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeetingDiscountsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/history": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Meetings"
+        ],
+        "operationId": "listMeetingHistory",
+        "summary": "List meeting history",
+        "description": "Returns audit history rows for a meeting and its child entities, newest first.\nA single PUT on a meeting can produce up to three rows: METADATA (the meeting record),\nSETTINGS, and one DISCOUNT row per affected discount. Attendee history is emitted\nby the attendee endpoints. Use `entityType` to narrow the result set.\n",
+        "parameters": [
+          {
+            "name": "entityType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "METADATA",
+                "SETTINGS",
+                "DISCOUNT",
+                "ATTENDEE"
+              ]
+            },
+            "description": "Restrict to a single child-entity type. Same vocabulary as the response's `sourceEntityType`."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "nextToken",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Opaque pagination token returned by a previous call."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "History page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HistoryListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/attendees": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Attendees"
+        ],
+        "operationId": "listAttendees",
+        "summary": "List meeting attendees",
+        "description": "Retrieve all attendees for a specific meeting.",
+        "parameters": [
+          {
+            "name": "bookingStatus",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "booked",
+                "cancelled"
+              ]
+            },
+            "description": "Filter by booking status"
+          },
+          {
+            "name": "profileType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "employee",
+                "nonEmployee"
+              ]
+            },
+            "description": "Filter by profile type"
+          },
+          {
+            "$ref": "#/components/parameters/Limit"
+          },
+          {
+            "$ref": "#/components/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of attendees",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "attendees": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Attendee"
+                      }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/Pagination"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Attendees"
+        ],
+        "operationId": "addAttendee",
+        "summary": "Add single attendee",
+        "description": "Add a single attendee to a meeting.\n\n**Profile Resolution Logic:**\n1. If `concurUuid` is provided, use the existing profile (validates against `concurLoginId` if both provided)\n2. If not, attempt to match by `email` within the company\n3. If no match found and `profileType` is `nonEmployee`, create a Sponsored Guest profile with type \"Meeting Traveler\"\n4. If no match found and `profileType` is `employee`, return an error\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttendeeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Attendee added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AttendeeCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          },
+          "409": {
+            "description": "Duplicate attendee",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "errors": [
+                    {
+                      "errorCode": "DUPLICATE_ATTENDEE",
+                      "errorMessage": "Attendee with this email already exists for this meeting"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/attendees/bulk": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        }
+      ],
+      "post": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Attendees"
+        ],
+        "operationId": "addAttendeesBulk",
+        "summary": "Add multiple attendees",
+        "description": "Add multiple attendees to a meeting in a single request. Returns HTTP 207 Multi-Status: the `results[]` array carries per-item success or error; check `results[i].status` for each.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "attendees"
+                ],
+                "properties": {
+                  "attendees": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/AttendeeCreate"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "207": {
+            "description": "Multi-status response — per-item success or error in results[]",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkAttendeeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/MeetingNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/attendees/{attendeeId}": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        },
+        {
+          "$ref": "#/components/parameters/AttendeeId"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "Attendees"
+        ],
+        "operationId": "getAttendee",
+        "summary": "Get attendee details",
+        "description": "Retrieve details for a specific attendee.",
+        "responses": {
+          "200": {
+            "description": "Attendee details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Attendee"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/AttendeeNotFound"
+          }
+        }
+      },
+      "patch": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Attendees"
+        ],
+        "operationId": "updateAttendee",
+        "summary": "Update attendee",
+        "description": "Update attendee information using partial-merge semantics per RFC 7396 — fields omitted from the body retain their existing values.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/merge-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AttendeeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Attendee updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Attendee"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/AttendeeNotFound"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Attendees"
+        ],
+        "operationId": "removeAttendee",
+        "summary": "Remove attendee",
+        "description": "Remove an attendee from a meeting.",
+        "parameters": [
+          {
+            "name": "deleteProfile",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "If true and attendee is a non-employee with no other associations, delete their profile"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Attendee removed"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/AttendeeNotFound"
+          }
+        }
+      }
+    },
+    "/meetings/{meetingId}/attendees/{attendeeId}/login-url": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/MeetingId"
+        },
+        {
+          "$ref": "#/components/parameters/AttendeeId"
+        }
+      ],
+      "post": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.write"
+            ]
+          }
+        ],
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "generateLoginUrl",
+        "summary": "Generate OTP login URL for a non-employee attendee",
+        "description": "Generate an OTP-based login URL that partners render as the \"Book Travel\" link for non-employee attendees.\nThe partner passes their OAuth credentials as form parameters. The Meetings API validates the request\nand proxies the credentials to the Auth service OTP endpoint (which internally uses CTE credentials to generate the OTP).\n\n**Validation performed:**\n1. Attendee exists and is a Sponsored Guest of type \"Meeting Traveler\"\n2. Attendee belongs to the specified meeting\n3. Meeting belongs to the calling partner's company\n4. Partner is listed as the `thirdPartyPartnerId` for the meeting\n\n**Note (documented deviation):** `client_id` and `client_secret` are sent as form-encoded parameters\n(`application/x-www-form-urlencoded`) in addition to the standard `Authorization: Bearer` header.\nSee Q7 deviation in the API Design Review Checklist for the defense-in-depth rationale: this endpoint\nmints a one-time login URL that authenticates a non-employee meeting attendee into Concur Travel, and\nre-authenticating the partner with the same credentials they used at the OAuth token endpoint is a\ndeliberate additional check.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "client_id",
+                  "client_secret"
+                ],
+                "properties": {
+                  "client_id": {
+                    "type": "string",
+                    "description": "Partner's AppCenter client ID"
+                  },
+                  "client_secret": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "Partner's AppCenter client secret"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OTP login URL generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUrlResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Attendee is not a Meeting Traveler or partner is not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "examples": {
+                  "notMeetingTraveler": {
+                    "value": {
+                      "errors": [
+                        {
+                          "errorCode": "NOT_MEETING_TRAVELER",
+                          "errorMessage": "Attendee is not a Sponsored Guest of type \"Meeting Traveler\""
+                        }
+                      ]
+                    }
+                  },
+                  "partnerNotAuthorized": {
+                    "value": {
+                      "errors": [
+                        {
+                          "errorCode": "PARTNER_NOT_AUTHORIZED",
+                          "errorMessage": "Partner is not listed as the third-party vendor for this meeting"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/AttendeeNotFound"
+          },
+          "502": {
+            "description": "OTP generation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                },
+                "example": {
+                  "errors": [
+                    {
+                      "errorCode": "OTP_GENERATION_FAILED",
+                      "errorMessage": "Upstream OTP endpoint returned an error"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/companies/{companyId}/form-data": {
+      "parameters": [
+        {
+          "name": "companyId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": "Company UUID"
+        }
+      ],
+      "get": {
+        "security": [
+          {
+            "oauth2": [
+              "meetings.read"
+            ]
+          }
+        ],
+        "tags": [
+          "FormData"
+        ],
+        "operationId": "getCompanyFormData",
+        "summary": "Get company-level form data for meeting creation",
+        "description": "Retrieve the travel configs and their rule classes for a company. Used to populate\nthe travel-config and rule-class dropdowns when creating or editing a meeting.\nThe caller's JWT must belong to the same `companyId`.\n",
+        "responses": {
+          "200": {
+            "description": "Company form data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyFormDataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://www.concursolutions.com/oauth2/v0/token",
+            "scopes": {
+              "meetings.read": "Read meetings, attendees, history",
+              "meetings.write": "Create / update / delete meetings, attendees, login URLs"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "MeetingId": {
+        "name": "meetingId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Meeting identifier"
+      },
+      "AttendeeId": {
+        "name": "attendeeId",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Attendee identifier"
+      },
+      "Limit": {
+        "name": "limit",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 20,
+          "minimum": 1,
+          "maximum": 100
+        },
+        "description": "Number of results per page"
+      },
+      "Offset": {
+        "name": "offset",
+        "in": "query",
+        "schema": {
+          "type": "integer",
+          "default": 0,
+          "minimum": 0
+        },
+        "description": "Pagination offset"
+      }
+    },
+    "schemas": {
+      "Meeting": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ]
+          },
+          "locationName": {
+            "type": "string"
+          },
+          "airport": {
+            "type": "string",
+            "description": "Nearest airport IATA code"
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "IANA time zone identifier (e.g., America/Los_Angeles)"
+          },
+          "travelConfigId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alwaysUseUserTravelConfig": {
+            "type": "boolean",
+            "default": false
+          },
+          "billingCode": {
+            "type": "string"
+          },
+          "barLevel1Star": {
+            "type": "string"
+          },
+          "thirdPartyPartnerId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Third-party partner identifier (UUID)"
+          },
+          "advanceSettings": {
+            "$ref": "#/components/schemas/AdvanceSettings"
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Discount"
+            }
+          },
+          "partnerMeetingId": {
+            "type": "string",
+            "description": "Meeting ID in partner system (e.g., Cvent event ID)"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Attendee categories configured for this meeting.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategory"
+            }
+          },
+          "attendeesCount": {
+            "type": "integer",
+            "description": "Number of attendees on this meeting. Present only when the request set `countAttendees=true`."
+          }
+        }
+      },
+      "MeetingCreate": {
+        "type": "object",
+        "required": [
+          "companyId",
+          "name",
+          "locationName",
+          "airport",
+          "startDateTime",
+          "endDateTime",
+          "timeZone",
+          "travelConfigId"
+        ],
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Company UUID. Required for POST (identifies which company the meeting belongs to)."
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "locationName": {
+            "type": "string"
+          },
+          "airport": {
+            "type": "string",
+            "description": "Nearest airport IATA code"
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "IANA time zone identifier (e.g., America/Los_Angeles)"
+          },
+          "travelConfigId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alwaysUseUserTravelConfig": {
+            "type": "boolean",
+            "default": false
+          },
+          "billingCode": {
+            "type": "string"
+          },
+          "barLevel1Star": {
+            "type": "string"
+          },
+          "thirdPartyPartnerId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "advanceSettings": {
+            "$ref": "#/components/schemas/AdvanceSettings"
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountCreate"
+            }
+          },
+          "partnerMeetingId": {
+            "type": "string",
+            "description": "Meeting ID in partner system"
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Attendee categories to configure for this meeting.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategoryWrite"
+            }
+          }
+        }
+      },
+      "MeetingUpdate": {
+        "type": "object",
+        "description": "Partial update payload for PUT /v4/meetings/{meetingId}. All fields are optional;\nomitted fields keep their existing values. Format constraints (UUID, ISO-8601 datetime\nwith timezone) are still enforced when a field is supplied.\n",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "locationName": {
+            "type": "string"
+          },
+          "airport": {
+            "type": "string",
+            "description": "Nearest airport IATA code"
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "IANA time zone identifier (e.g., America/Los_Angeles)"
+          },
+          "travelConfigId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alwaysUseUserTravelConfig": {
+            "type": "boolean"
+          },
+          "billingCode": {
+            "type": "string"
+          },
+          "barLevel1Star": {
+            "type": "string"
+          },
+          "thirdPartyPartnerId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "advanceSettings": {
+            "$ref": "#/components/schemas/AdvanceSettings"
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DiscountCreate"
+            }
+          },
+          "partnerMeetingId": {
+            "type": "string",
+            "description": "Meeting ID in partner system"
+          },
+          "owner": {
+            "type": "object",
+            "description": "Meeting owner identification",
+            "properties": {
+              "concurUuid": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "concurLoginId": {
+                "type": "string"
+              }
+            }
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Replace the meeting's attendee categories.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategoryWrite"
+            }
+          }
+        }
+      },
+      "MeetingCreateResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Meeting"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "deepLinkTemplate": {
+                "type": "string",
+                "description": "URL template for attendee booking deep links"
+              }
+            }
+          }
+        ]
+      },
+      "MeetingMetadata": {
+        "type": "object",
+        "description": "Core meeting fields excluding advanceSettings and discounts.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "cancelled",
+              "completed"
+            ]
+          },
+          "locationName": {
+            "type": "string"
+          },
+          "airport": {
+            "type": "string",
+            "description": "Nearest airport IATA code"
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "IANA time zone identifier (e.g., America/Los_Angeles)"
+          },
+          "travelConfigId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "alwaysUseUserTravelConfig": {
+            "type": "boolean",
+            "default": false
+          },
+          "billingCode": {
+            "type": "string"
+          },
+          "barLevel1Star": {
+            "type": "string"
+          },
+          "thirdPartyPartnerId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Third-party partner identifier (UUID)"
+          },
+          "partnerMeetingId": {
+            "type": "string",
+            "description": "Meeting ID in partner system (e.g., Cvent event ID)"
+          },
+          "createdBy": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attendeeCategories": {
+            "type": "array",
+            "description": "Attendee categories configured for this meeting.",
+            "items": {
+              "$ref": "#/components/schemas/AttendeeCategory"
+            }
+          }
+        }
+      },
+      "MeetingSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "meetingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "advanceSettings": {
+            "$ref": "#/components/schemas/AdvanceSettings"
+          }
+        }
+      },
+      "MeetingDiscountsResponse": {
+        "type": "object",
+        "properties": {
+          "meetingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "discounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Discount"
+            }
+          }
+        }
+      },
+      "HistoryItem": {
+        "type": "object",
+        "properties": {
+          "historyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "meetingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sourceEntityType": {
+            "type": "string",
+            "enum": [
+              "METADATA",
+              "SETTINGS",
+              "DISCOUNT",
+              "ATTENDEE"
+            ]
+          },
+          "sourceEntityId": {
+            "type": "string",
+            "description": "For METADATA/SETTINGS this is the meetingId; for DISCOUNT/ATTENDEE the child entity ID."
+          },
+          "version": {
+            "type": "integer",
+            "description": "Monotonically increasing per (meetingId, sourceEntityType, sourceEntityId)."
+          },
+          "changeAction": {
+            "type": "string",
+            "enum": [
+              "CREATE",
+              "UPDATE",
+              "DELETE"
+            ]
+          },
+          "changedBy": {
+            "type": "string",
+            "description": "User UUID for JWT-authenticated callers; cert CN for mTLS."
+          },
+          "changedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "For CREATE: per-field `{ \"<field>\": { \"after\": <value> } }` map of the created entity.\nFor DELETE: per-field `{ \"<field>\": { \"before\": <value> } }` map of the deleted entity.\nFor UPDATE: per-field `{ \"<field>\": { \"before\": <old>, \"after\": <new> } }` for fields that actually changed.\n"
+          }
+        }
+      },
+      "HistoryListResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HistoryItem"
+            }
+          },
+          "nextToken": {
+            "type": "string",
+            "nullable": true,
+            "description": "Opaque token for the next page; null when there are no more results."
+          }
+        }
+      },
+      "AdvanceSettings": {
+        "type": "object",
+        "properties": {
+          "ruleClassId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Travel policy rule class ID"
+          },
+          "allowCarRentals": {
+            "type": "boolean",
+            "default": true
+          },
+          "allowHotelBookings": {
+            "type": "boolean",
+            "default": true
+          },
+          "meetingMatch": {
+            "$ref": "#/components/schemas/MeetingMatch"
+          },
+          "rulesEnforcement": {
+            "$ref": "#/components/schemas/RulesEnforcement"
+          }
+        }
+      },
+      "MeetingMatch": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable meeting match feature"
+          },
+          "matchingStartDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Meeting match window start (required if enabled)"
+          },
+          "matchingEndDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Meeting match window end (required if enabled)"
+          }
+        }
+      },
+      "RulesEnforcement": {
+        "type": "object",
+        "properties": {
+          "notifyManagerArrival": {
+            "$ref": "#/components/schemas/NotificationWindow"
+          },
+          "notifyManagerDeparture": {
+            "$ref": "#/components/schemas/NotificationWindow"
+          }
+        }
+      },
+      "NotificationWindow": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "startDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDateTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Discount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "air",
+              "car",
+              "hotel",
+              "rail"
+            ],
+            "description": "Travel type the discount applies to"
+          },
+          "vendorCode": {
+            "type": "string",
+            "description": "Vendor IATA code (e.g., airline code, car rental company code)"
+          },
+          "discountCode": {
+            "type": "string"
+          },
+          "promoCode": {
+            "type": "string"
+          },
+          "validStartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "validEndDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "percentage",
+              "fixed",
+              "corporate"
+            ]
+          },
+          "allowCodeShares": {
+            "type": "boolean",
+            "default": false
+          },
+          "saturdayNightRequired": {
+            "type": "boolean",
+            "default": false
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "DiscountCreate": {
+        "type": "object",
+        "required": [
+          "type",
+          "vendorCode"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "air",
+              "car",
+              "hotel",
+              "rail"
+            ],
+            "description": "Travel type the discount applies to"
+          },
+          "vendorCode": {
+            "type": "string",
+            "description": "Vendor IATA code (e.g., airline code, car rental company code)"
+          },
+          "discountCode": {
+            "type": "string"
+          },
+          "promoCode": {
+            "type": "string"
+          },
+          "validStartDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "validEndDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "discountType": {
+            "type": "string",
+            "enum": [
+              "percentage",
+              "fixed",
+              "corporate"
+            ]
+          },
+          "allowCodeShares": {
+            "type": "boolean",
+            "default": false
+          },
+          "saturdayNightRequired": {
+            "type": "boolean",
+            "default": false
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "Attendee": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "meetingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "concurUuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Concur user profile UUID"
+          },
+          "concurLoginId": {
+            "type": "string",
+            "description": "Concur user login ID / email"
+          },
+          "profileType": {
+            "type": "string",
+            "enum": [
+              "employee",
+              "nonEmployee"
+            ]
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "bookingStatus": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "booked",
+              "cancelled"
+            ]
+          },
+          "tripId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "deepLink": {
+            "type": "string",
+            "format": "uri"
+          },
+          "partnerAttendeeId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Attendee ID in partner system (e.g., Cvent registrant ID)"
+          },
+          "createdOnUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdatedOnUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "attendeeCategory": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to the attendee category ID."
+          }
+        }
+      },
+      "AttendeeCreate": {
+        "type": "object",
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "profileType"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "profileType": {
+            "type": "string",
+            "enum": [
+              "employee",
+              "nonEmployee"
+            ]
+          },
+          "concurUuid": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Concur user profile UUID (if known)"
+          },
+          "concurLoginId": {
+            "type": "string",
+            "description": "Concur user login ID / email (if known)"
+          },
+          "partnerAttendeeId": {
+            "type": "string",
+            "description": "Attendee ID in partner system (e.g., Cvent registrant ID)"
+          },
+          "attendeeCategory": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Reference to the attendee category ID."
+          }
+        }
+      },
+      "AttendeeCreateResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Attendee"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "profileCreated": {
+                "type": "boolean",
+                "description": "Whether a new profile was created for this attendee"
+              }
+            }
+          }
+        ]
+      },
+      "AttendeeUpdate": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "partnerAttendeeId": {
+            "type": "string",
+            "description": "Updated partner attendee ID"
+          }
+        }
+      },
+      "BulkAttendeeResponse": {
+        "type": "object",
+        "properties": {
+          "totalRequested": {
+            "type": "integer"
+          },
+          "successful": {
+            "type": "integer"
+          },
+          "failed": {
+            "type": "integer"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "integer"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "success",
+                    "error"
+                  ]
+                },
+                "attendee": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "concurUuid": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "concurLoginId": {
+                          "type": "string"
+                        },
+                        "profileType": {
+                          "type": "string",
+                          "enum": [
+                            "employee",
+                            "nonEmployee"
+                          ]
+                        },
+                        "profileCreated": {
+                          "type": "boolean"
+                        },
+                        "deepLink": {
+                          "type": "string",
+                          "format": "uri"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "errorCode": {
+                      "type": "string"
+                    },
+                    "errorMessage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "LoginUrlResponse": {
+        "type": "object",
+        "properties": {
+          "loginUrl": {
+            "type": "string",
+            "description": "OTP login URL. Partner renders this as the \"Book Travel\" link.",
+            "example": "/oauth2/v0/otl_verify?otl=<otp>&targeturl=/travel/meetings/validate?meetingId=<uuid>&attendeeId=<uuid>"
+          },
+          "expiresInSeconds": {
+            "type": "integer",
+            "description": "Time in seconds before the OTP expires",
+            "example": 300
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "errors"
+        ],
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "errorCode",
+                "errorMessage"
+              ],
+              "properties": {
+                "errorCode": {
+                  "type": "string",
+                  "enum": [
+                    "MEETING_NOT_FOUND",
+                    "ATTENDEE_NOT_FOUND",
+                    "MEETING_CANCELLED",
+                    "DUPLICATE_ATTENDEE",
+                    "PROFILE_NOT_FOUND",
+                    "EMPLOYEE_NOT_FOUND",
+                    "INVALID_DATE_RANGE",
+                    "UNAUTHORIZED",
+                    "FORBIDDEN",
+                    "VALIDATION_ERROR",
+                    "HAS_BOOKINGS",
+                    "NOT_MEETING_TRAVELER",
+                    "PARTNER_NOT_AUTHORIZED",
+                    "OTP_GENERATION_FAILED"
+                  ]
+                },
+                "errorMessage": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "AttendeeCategory": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the attendee category"
+          },
+          "ruleClass": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelConfig": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fopConfig": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "AttendeeCategoryWrite": {
+        "type": "object",
+        "required": [
+          "displayName",
+          "ruleClass",
+          "travelConfig",
+          "fopConfig"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Present for updates; omit to create a new category."
+          },
+          "displayName": {
+            "type": "string",
+            "description": "Display name of the attendee category."
+          },
+          "ruleClass": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "travelConfig": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "fopConfig": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "CompanyFormDataResponse": {
+        "type": "object",
+        "properties": {
+          "travelConfigs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TravelConfigResponse"
+            }
+          }
+        }
+      },
+      "TravelConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Travel config UUID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name of the travel config"
+          },
+          "ruleClasses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RuleClass"
+            }
+          }
+        }
+      },
+      "RuleClass": {
+        "type": "object",
+        "properties": {
+          "ruleClassUuid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ruleClassName": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Invalid or missing authentication",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "errors": [
+                {
+                  "errorCode": "UNAUTHORIZED",
+                  "errorMessage": "Invalid or missing authentication"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Insufficient permissions",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "errors": [
+                {
+                  "errorCode": "FORBIDDEN",
+                  "errorMessage": "Insufficient permissions"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Request validation failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "errors": [
+                {
+                  "errorCode": "VALIDATION_ERROR",
+                  "errorMessage": "Request validation failed"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "MeetingNotFound": {
+        "description": "Meeting not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "errors": [
+                {
+                  "errorCode": "MEETING_NOT_FOUND",
+                  "errorMessage": "Meeting does not exist"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "AttendeeNotFound": {
+        "description": "Attendee not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "errors": [
+                {
+                  "errorCode": "ATTENDEE_NOT_FOUND",
+                  "errorMessage": "Attendee does not exist"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
