@@ -15,25 +15,7 @@ Access to this API requires registration as a partner and approval of the approp
 
 The most common partner flow is: obtain an access token, create a meeting, add its attendees (individually or in bulk), then read or update the meeting and attendees as needed. Removing attendees and deleting the meeting are optional end-of-lifecycle steps.
 
-```mermaid
-flowchart TD
-    A([Start]) --> B["Obtain OAuth 2.0 token (password grant, Bearer JWT) — prerequisite: OAuth token endpoint"]
-    B --> C["POST /meetings — scope meetings.write, returns meetingId"]
-    C --> D{"Add attendees"}
-    D -->|one| E["POST /meetings/:meetingId/attendees — scope meetings.write"]
-    D -->|many| F["POST /meetings/:meetingId/attendees/bulk — scope meetings.write, 207 Multi-Status"]
-    E --> G["GET meeting / attendees — scope meetings.read"]
-    F --> G
-    G --> H{"Updates needed?"}
-    H -->|yes| I["PATCH meeting / attendee — merge-patch+json, scope meetings.write"]
-    I --> G
-    H -->|no| J{"End of lifecycle?"}
-    J -->|remove attendee| K["DELETE /meetings/:meetingId/attendees/:attendeeId"]
-    J -->|delete meeting| L["DELETE /meetings/:meetingId — soft delete"]
-    K --> M([End])
-    L --> M
-    J -->|no| M
-```
+![Meetings v4 Process Flow](v4.meetings-process-flow.png)
 
 ## <a name="products-editions"></a>Products and Editions
 
