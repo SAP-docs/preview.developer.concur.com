@@ -28,7 +28,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-reference/travel/v4.meetings-get-started.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-reference/travel/meetings-v4/v4.meetings-get-started.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -915,6 +915,35 @@
 
 
   
+
+    
+
+    
+
+    
+
+    <li class="list-group-item list-toggle active">
+      <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-meetings-v4">
+        Meetings v4
+      </a>
+      <ul id="collapse-meetings-v4" class="collapse in">
+        
+          <li  class="active" >
+            <a href="/api-reference/travel/meetings-v4/v4.meetings-get-started.html">Getting Started</a>
+          </li>
+        
+          <li >
+            <a href="/api-reference/travel/meetings-v4/v4.meetings-endpoints.html">Endpoints</a>
+          </li>
+        
+      </ul>
+    </li>
+
+  
+
+
+
+  
     <li class="list-group-item ">
       <a href="/api-reference/expense/quick-expense/v4.quick-expense.html">Quick Expense v4</a>
     </li>
@@ -1099,11 +1128,11 @@
 
     
 
-    <li class="list-group-item list-toggle active">
+    <li class="list-group-item list-toggle ">
       <a data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-travel">
         Travel
       </a>
-      <ul id="collapse-travel" class="collapse in">
+      <ul id="collapse-travel" class="collapse ">
         
           <li >
             <a href="/api-reference/travel/itinerary/itinerary.html">Itinerary v1 – Getting Started</a>
@@ -1123,14 +1152,6 @@
         
           <li >
             <a href="/api-reference/travel/itinerary-v4/v4.itinerary.html">Itinerary v4</a>
-          </li>
-        
-          <li  class="active" >
-            <a href="/api-reference/travel/v4.meetings-get-started.html">Meetings v4 – Getting Started</a>
-          </li>
-        
-          <li >
-            <a href="/api-reference/travel/v4.meetings-endpoints.html">Meetings v4 Endpoints</a>
           </li>
         
       </ul>
@@ -1310,48 +1331,19 @@
            class="col-md-8 markdown-body">
         
 
-        <div id="attn-prerelease">
-  <p><strong>Important</strong>: This API is currently in pre-release status and is only available to approved early access participants. The API is under development and might change before being generally released. To become an early access participant, contact your SAP Concur Representative.</p>
-</div>
-
-<p>The Meetings API lets you create and manage meetings and their attendees within SAP Concur. It supports two primary use cases: <strong>Concur Meetings</strong> created directly within Concur (via the Meetings Admin UI or Joule), and <strong>Third-Party Meetings</strong> created by external partners (for example, Cvent) through API integration.</p>
+        <p>With the Meetings API, you can create and manage meetings and their attendees within Concur Travel. It supports two primary use cases: meetings created natively within the SAP Concur platform using the Meetings Admin UI or Joule, and meetings created by external partners through API integration.</p>
 
 <h2 id="limitations"><a name="limitations"></a>Limitations</h2>
 
-<ul>
-  <li>Access to this documentation does not provide access to the API. Partner applications must be registered and granted the appropriate scopes.</li>
-  <li>This is the partner-facing edition of the API. Internal-only operations are not exposed.</li>
-  <li>The API is versioned at <code class="language-plaintext highlighter-rouge">v4</code>. Breaking changes will be delivered in a new version.</li>
-</ul>
+<p>Access to this documentation does not provide access to the API.</p>
+
+<p>Access to this API requires registration as a partner and approval of the appropriate scopes. Please contact your SAP Concur representative for more information.</p>
 
 <h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
 
 <p>The most common partner flow is: obtain an access token, create a meeting, add its attendees (individually or in bulk), then read or update the meeting and attendees as needed. Removing attendees and deleting the meeting are optional end-of-lifecycle steps.</p>
 
-<blockquote>
-  <p><strong>Note to tech writers:</strong> basic flow below (Mermaid). Please restyle to the dev-portal diagram standard.</p>
-</blockquote>
-
-<pre><code class="language-mermaid">flowchart TD
-    A([Start]) --&gt; B["Obtain OAuth 2.0 token (password grant, Bearer JWT) — prerequisite: OAuth token endpoint"]
-    B --&gt; C["POST /meetings — scope meetings.write, returns meetingId"]
-    C --&gt; D{"Add attendees"}
-    D --&gt;|one| E["POST /meetings/:meetingId/attendees — scope meetings.write"]
-    D --&gt;|many| F["POST /meetings/:meetingId/attendees/bulk — scope meetings.write, 207 Multi-Status"]
-    E --&gt; G["GET meeting / attendees — scope meetings.read"]
-    F --&gt; G
-    G --&gt; H{"Updates needed?"}
-    H --&gt;|yes| I["PATCH meeting / attendee — merge-patch+json, scope meetings.write"]
-    I --&gt; G
-    H --&gt;|no| J{"End of lifecycle?"}
-    J --&gt;|remove attendee| K["DELETE /meetings/:meetingId/attendees/:attendeeId"]
-    J --&gt;|delete meeting| L["DELETE /meetings/:meetingId — soft delete"]
-    K --&gt; M([End])
-    L --&gt; M
-    J --&gt;|no| M
-</code></pre>
-
-<p><strong>Prerequisite calls (other APIs):</strong> the OAuth 2.0 token endpoint is required before any Meetings API call to obtain the Bearer token. No other cross-API prerequisites are required for the core flow.</p>
+<p><img src="v4.meetings-process-flow.png" alt="Meetings v4 Process Flow" /></p>
 
 <h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
@@ -1386,9 +1378,9 @@
 
 <h2 id="dependencies"><a name="dependencies"></a>Dependencies</h2>
 
-<ul>
-  <li><strong>OAuth 2.0 token endpoint</strong> — required to obtain the bearer token used on every request. Partners obtain a User JWT via the OAuth password grant, consistent with other enterprise applications.</li>
-</ul>
+<p>SAP Concur clients must purchase Concur Travel in order to use this API.</p>
+
+<p>Partner applications must be registered on App Center with the <code class="language-plaintext highlighter-rouge">meetings.read</code> and/or <code class="language-plaintext highlighter-rouge">meetings.write</code> scopes approved. Please contact your SAP Concur representative for more information.</p>
 
 <h2 id="access-token-usage"><a name="access-token-usage"></a>Access Token Usage</h2>
 
@@ -1416,7 +1408,7 @@
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>See the <a href="/api-reference/travel/v4.meetings-endpoints.html">Meetings v4 Endpoints</a> page for the full list of operations, payloads, and schemas.</p>
+<p>See the <a href="/api-reference/travel/meetings-v4/v4.meetings-endpoints.html">Meetings v4 Endpoints</a> page for the full list of operations, payloads, and schemas.</p>
 
       </div>
       <!--/col-md-8-->
@@ -1470,7 +1462,7 @@
       <a href="https://help.sap.com/doc/sap-api-policy/">SAP API Policy</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/travel/v4.meetings-get-started.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-reference/travel/meetings-v4/v4.meetings-get-started.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
