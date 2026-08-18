@@ -1,0 +1,63 @@
+---
+title: Meetings v4
+layout: reference
+---
+
+With the Meetings API, you can create and manage meetings and their attendees within Concur Travel. It supports two primary use cases: meetings created natively within the SAP Concur platform using the Meetings Admin UI or Joule, and meetings created by external partners through API integration.
+
+## <a name="limitations"></a>Limitations
+
+Access to this documentation does not provide access to the API.
+
+Access to this API requires registration as a partner and approval of the appropriate scopes. Please contact your SAP Concur representative for more information.
+
+## <a name="process-flow"></a>Process Flow
+
+The most common partner flow is: obtain an access token, create a meeting, add its attendees (individually or in bulk), then read or update the meeting and attendees as needed. Removing attendees and deleting the meeting are optional end-of-lifecycle steps.
+
+![Meetings v4 Process Flow](v4.meetings-process-flow.png)
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Travel Professional Edition
+* Concur Travel Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name|Description|Endpoint
+---|---|---
+`meetings.read`|Read meetings, attendees, and history|All `GET` endpoints
+`meetings.write`|Create, update, and delete meetings, attendees, and login URLs|All `POST`, `PATCH`, and `DELETE` endpoints
+
+## <a name="dependencies"></a>Dependencies
+
+SAP Concur clients must purchase Concur Travel in order to use this API.
+
+Partner applications must be registered on App Center with the `meetings.read` and/or `meetings.write` scopes approved. Please contact your SAP Concur representative for more information.
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+All requests require an OAuth 2.0 bearer token in the `Authorization: Bearer <token>` header. The API accepts a **User JWT** or **Company JWT**; the company is resolved from the token's company claim.
+
+Meeting-scoped endpoints also accept an optional `companyId` query parameter. When omitted, the company is resolved from the token. When supplied, it **must** match the token's company — a mismatch returns `403`, and a malformed value returns `400`.
+
+## <a name="base-uris"></a>Base URIs
+
+* US Production: `https://us.api.concursolutions.com/meetings/v4`
+* EMEA Production: `https://emea.api.concursolutions.com/meetings/v4`
+
+Refer to [Base URIs](/platform/base-uris.html) for details on selecting the correct instance URL.
+
+## <a name="errors"></a>Error Handling
+
+Errors are returned using the standard SAP Concur error envelope. Handle `errorCode` programmatically; `errorMessage` is intended for logging.
+
+```json
+{
+  "errors": [
+    { "errorCode": "ATTENDEE_NOT_FOUND", "errorMessage": "Attendee does not exist: <id>" }
+  ]
+}
+```
+
+See the [Meetings v4 Endpoints](/api-reference/travel/meetings-v4/v4.meetings-endpoints.html) page for the full list of operations, payloads, and schemas.
