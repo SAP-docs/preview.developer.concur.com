@@ -20,7 +20,7 @@ This guide describes how third-party meeting partners, such as event and meeting
 * `/meetings/{meetingId}/attendees/bulk`
 * `/meetings/{meetingId}/attendees/{attendeeId}`
 
-See the [Meetings API reference](https://developer.concur.com/api-reference/travel/meetings-v4/v4.meetings-get-started.html) for the full list of operations, request/response schemas, and error codes.
+See the [Meetings API reference](/api-reference/travel/meetings-v4/v4.meetings-get-started.html) for the full list of operations, request/response schemas, and error codes.
 
 ## Authentication and Scopes
 
