@@ -6,9 +6,11 @@ layout: reference
 
 # Meetings - Third-Party Meetings Integration Guide
 
-This guide describes how third-party meeting partners (for example, event and meeting-management providers) integrate with the SAP Concur **Meetings API** to create and manage meetings and their attendees. It assumes you are familiar with the SAP Concur Platform, that you have registered your application, and that you know how to obtain an OAuth bearer token and call SAP Concur APIs.
+This guide describes how third-party meeting partners, such as event and meeting-management providers, integrate with the SAP Concur Meetings API to create and manage meetings and their attendees.
 
-## APIs Used in This Guide
+**Note:** You must have a registered application on App Center and a valid OAuth 2.0 bearer token.
+
+## APIs Used in this Guide
 
 `Base URL: https://us.api.concursolutions.com/meetings/v4` (US) / `https://emea.api.concursolutions.com/meetings/v4` (EMEA)
 
@@ -18,7 +20,7 @@ This guide describes how third-party meeting partners (for example, event and me
 * `/meetings/{meetingId}/attendees/bulk`
 * `/meetings/{meetingId}/attendees/{attendeeId}`
 
-See the [Meetings API reference](/api-explorer/v4-0/Meetings.html) for the full list of operations, request/response schemas, and error codes.
+See the [Meetings API reference](/api-reference/travel/meetings-v4/v4.meetings-get-started.html) for the full list of operations, request/response schemas, and error codes.
 
 ## Authentication and Scopes
 

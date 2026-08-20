@@ -79,6 +79,8 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `locate.location.read` <a name="locate-location-read"></a> |Allows the application to only view the SAP  Concur Locate user location|[User Location v4](/api-reference/locate/v4.userLocations.html)
 `locate.location.write` <a name="locate-location-write"></a> |Allows the application to write user location information using SAP Concur Locate API service|[User Location v4](/api-reference/locate/v4.userLocations.html)
 `MEDIC` <a name="medic"></a> |Medical alerts|[Travel Profile v2 Medical Alerts](/api-reference/travel-profile/v2.profile-resource.html#General)
+`meetings.read` <a name="meetings-read"></a> |Read meetings, attendees, and history|[Meetings v4](/api-reference/travel/meetings-v4/v4.meetings-get-started.html)
+`meetings.write` <a name="meetings-write"></a> |Create, update, and delete meetings, attendees, and login URLs|[Meetings v4](/api-reference/travel/meetings-v4/v4.meetings-get-started.html)
 `NOTIF` <a name="notif"></a> |Receive notifications when expense reports change|[Event Notification Callout](/api-reference/callouts/event-notification.html), [Get Notification](/api-reference/callouts/get-notifications-status.html), [Delete Notification](/api-reference/callouts/delete-notification.html), [Post Notification](/api-reference/callouts/post-event-notification.html)
 `PASSV` <a name="passv"></a> |Passport visa information|[Travel Profile v2 Passport](/api-reference/travel-profile/v2.profile-resource.html#Passports), [Travel Profile v2 Visa](/api-reference/travel-profile/v2.profile-resource.html#Visas)
 `PAYBAT` <a name="paybat"></a> |Close and export payment batches|[Payment Batches v1.1](/api-reference/expense/payment-batch/v1.payment-batches.html)
