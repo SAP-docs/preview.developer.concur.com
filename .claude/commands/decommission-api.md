@@ -4,6 +4,8 @@ description: Decommission an API — adds banner, adds release notes entry, and 
 
 # Decommission API
 
+> **Files are never deleted.** The `.markdown` files in `src/api-reference/` and `src/api-explorer/` must remain in the repository. They stay published with the decommission banner so existing links continue to work.
+
 Use this command to fully process an API decommission. Provide the details when invoking:
 
 ```
@@ -19,7 +21,9 @@ Replacement: <replacement API name + link, or "none">
 
 | File | Change |
 |------|--------|
-| API `.markdown` file | Add or update decommission banner |
+| API `.markdown` file in `src/api-reference/` | Add or update decommission banner — **do not delete** |
+| API `.markdown` file in `src/api-explorer/` | Add or update decommission banner (if file exists) — **do not delete** |
+| `src/_data/sidebars/api-explorer.yml` | Remove entry (if not already removed during deprecation) |
 | `src/tools-support/release-notes/api/YYYY-MM-DD.md` | Add `### Decommission of` under `## New This Month` |
 
 ---
@@ -44,6 +48,8 @@ If a replacement exists, add before the closing `</div>`:
 ```html
   <p>This API has been replaced by <a href="<REPLACEMENT_URL>"><REPLACEMENT_NAME></a>.</p>
 ```
+
+Apply to **both** the `src/api-reference/` file and the `src/api-explorer/` file if it exists.
 
 ---
 
@@ -75,6 +81,14 @@ Update any references found to point to the replacement API, or remove them if n
 
 ---
 
+## Step 4 — Remove from api-explorer sidebar (if not already removed)
+
+If the API was not removed from `src/_data/sidebars/api-explorer.yml` during deprecation, remove the entry now.
+
+The `src/api-reference` left nav entry should already have been removed during deprecation. If not, remove it now.
+
+---
+
 ## Next month — Deprecations and Decommissions table
 
 Starting the month after the decommission is announced, add to the **Deprecations and Decommissions** table in every subsequent monthly RN file:
@@ -88,7 +102,7 @@ Starting the month after the decommission is announced, add to the **Deprecation
 ## Rules
 
 - Date format: `Month DD, YYYY` (e.g. `June 23, 2026`) — never use numeric-only format in user-facing text
-- Never remove the `.markdown` file — it stays published with the decommission banner
+- **Never delete `.markdown` files** — they stay in the repo and remain published with the decommission banner
 - Do NOT add the API to `src/api-reference/deprecated.markdown` — decommissioned APIs do not go on the deprecated list
 - If the API was previously in `deprecated.markdown` (deprecated before decommission), **remove it** from that list
 - Do NOT remove the API from the left nav if it was not already removed during deprecation — check first

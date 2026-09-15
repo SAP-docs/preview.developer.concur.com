@@ -4,6 +4,8 @@ description: Deprecate an API — adds banner, removes from nav, updates depreca
 
 # Deprecate API
 
+> **Files are never deleted.** The `.markdown` files in `src/api-reference/` and `src/api-explorer/` must remain in the repository. They stay published with the deprecation banner so existing links continue to work.
+
 Use this command to fully process an API deprecation. Provide the details when invoking:
 
 ```
@@ -18,8 +20,8 @@ Replacement: <replacement API name + link, or "none">
 
 | File | Change |
 |------|--------|
-| API `.markdown` file in `src/api-reference/` | Add deprecation banner |
-| API `.markdown` file in `src/api-explorer/` | Add deprecation banner (if file exists) |
+| API `.markdown` file in `src/api-reference/` | Add deprecation banner — **do not delete** |
+| API `.markdown` file in `src/api-explorer/` | Add deprecation banner (if file exists) — **do not delete** |
 | `src/_data/sidebars/api-reference.yml` | Remove entry (and parent group if now empty) |
 | `src/_data/sidebars/api-explorer.yml` | Remove entry (if present) |
 | `src/api-reference/deprecated.markdown` | Add entry under correct alphabetical section |
