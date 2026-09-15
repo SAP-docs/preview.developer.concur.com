@@ -4,7 +4,7 @@ description: Deprecate an API — adds banner, removes from nav, updates depreca
 
 # Deprecate API
 
-> **Files are never deleted.** The `.markdown` and `.json` swagger files in `src/api-reference/` and `src/api-explorer/` must remain in the repository. They stay published with the deprecation banner so existing links continue to work.
+> **Files are never deleted.** The `.markdown` and `.json` swagger files in `src/api-reference/` and `src/api-explorer/` must remain in the repository — the `.markdown` drives the build and renders the banner; the `.json` is the swagger definition required for the page to render. Deprecation banners go in the `.markdown` file only.
 
 Use this command to fully process an API deprecation. Provide the details when invoking:
 

@@ -4,7 +4,7 @@ description: Decommission an API — adds banner, adds release notes entry, and 
 
 # Decommission API
 
-> **Files are never deleted.** The `.markdown` and `.json` swagger files in `src/api-reference/` and `src/api-explorer/` must remain in the repository. They stay published with the decommission banner so existing links continue to work.
+> **Files are never deleted.** The `.markdown` and `.json` swagger files in `src/api-reference/` and `src/api-explorer/` must remain in the repository — the `.markdown` drives the build and renders the banner; the `.json` is the swagger definition required for the page to render. Decommission banners go in the `.markdown` file only.
 
 Use this command to fully process an API decommission. Provide the details when invoking:
 
