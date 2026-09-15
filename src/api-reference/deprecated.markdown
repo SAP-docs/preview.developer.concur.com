@@ -43,6 +43,9 @@ The following application programming interfaces (APIs) and other resources have
   * [Expense Report Full Details](/api-reference/expense/expense-report/v1dot1.report-full-details.html)
 * [Report Details](/api-reference/expense/expense-report/expense-report-get.html)
 * [Expense Report v2](/api-reference/expense/expense-report/v2.reports.html)
+* Insights
+  * [Latest Bookings](/api-reference/insights/latest-bookings-resource.html)
+  * [Opportunities](/api-reference/insights/opportunities-resource.html)
 * List Item Web Service v1
   * [List Item Web Service](/api-reference/common/list-item/v1.list-item.html)
   * [List Resource](/api-reference/common/list-item/v1.list-resource.html)
