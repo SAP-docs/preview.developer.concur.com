@@ -18,8 +18,10 @@ Replacement: <replacement API name + link, or "none">
 
 | File | Change |
 |------|--------|
-| API `.markdown` file | Add deprecation banner |
+| API `.markdown` file in `src/api-reference/` | Add deprecation banner |
+| API `.markdown` file in `src/api-explorer/` | Add deprecation banner (if file exists) |
 | `src/_data/sidebars/api-reference.yml` | Remove entry (and parent group if now empty) |
+| `src/_data/sidebars/api-explorer.yml` | Remove entry (if present) |
 | `src/api-reference/deprecated.markdown` | Add entry under correct alphabetical section |
 | `src/tools-support/release-notes/api/YYYY-MM-DD.md` | Add `### Deprecation of` under `## New This Month` |
 
@@ -27,7 +29,7 @@ Replacement: <replacement API name + link, or "none">
 
 ## Step 1 — Add deprecation banner
 
-Insert immediately after the front matter (before the `# Title` heading):
+Insert immediately after the front matter (before the `# Title` heading or swagger include):
 
 ```html
 <div class="alert alert-danger">
@@ -43,6 +45,8 @@ If a replacement exists, add before the closing `</div>`:
   <p>This API has been replaced by <a href="<REPLACEMENT_URL>"><REPLACEMENT_NAME></a>.</p>
 ```
 
+Apply to **both** the `src/api-reference/` file and the `src/api-explorer/` file if it exists. Check `src/api-explorer/v3-0/` (and other version folders) for a matching `.markdown` file.
+
 ---
 
 ## Step 2 — Remove from left nav
@@ -50,6 +54,8 @@ If a replacement exists, add before the closing `</div>`:
 In `src/_data/sidebars/api-reference.yml`, remove the `- title / url` entry for this API.
 
 If the parent group becomes empty (no children left), remove the parent group too.
+
+If the API has an entry in `src/_data/sidebars/api-explorer.yml`, remove it there as well.
 
 ---
 
