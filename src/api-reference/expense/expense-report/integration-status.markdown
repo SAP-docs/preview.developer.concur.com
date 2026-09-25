@@ -26,6 +26,10 @@ Access to this documentation does not provide access to the API. 
 |-----------------|--------|-----------------------------|
 | report/{ReportID} | required | The report keyword and the ReportID for the report that has been successfully integrated into the financial system. The ReportID is returned in the **ReportID** element by the Get List of Reports and the Get Report Details responses.
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 ### Headers
 
 #### Authorization Header

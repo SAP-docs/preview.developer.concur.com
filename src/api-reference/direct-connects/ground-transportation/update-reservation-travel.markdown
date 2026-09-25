@@ -1,12 +1,14 @@
----
+﻿---
 title: Direct Connect - Ground Transportation - Update reservation with Travel
 layout: reference
 ---
 
 # Update reservation with Travel
-
-{% include deprecation-alert.html %}
-
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 This request is sent when the ground transportation service provider needs to send an update to the reservation to Travel.
 
 ## Limitations

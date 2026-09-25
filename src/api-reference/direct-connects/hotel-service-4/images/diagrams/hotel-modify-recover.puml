@@ -1,0 +1,22 @@
+@startuml hotel-modify
+
+participant "User" as user
+
+participant ConcurHotel as cHotel #Lightcyan
+participant "CHSSupplier" as supply #LightBlue
+
+activate cHotel
+loop until booking status is `RESERVED` or transaction timeout
+  cHotel->supply++: Read reservation
+  supply --> cHotel--: Return reservation
+end
+cHotel -> cHotel: Validate that the returned dates match the\nnew dates
+alt Dates do not match
+  cHotel -->user: Notify user that hotel booking\nwas not modified
+else
+  cHotel -->user: Notify user that hotel booking\nhas been modified
+end
+deactivate cHotel
+
+
+@enduml

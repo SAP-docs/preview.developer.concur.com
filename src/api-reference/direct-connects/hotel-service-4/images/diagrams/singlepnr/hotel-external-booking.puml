@@ -1,0 +1,16 @@
+@startuml hotel-external-booking
+
+actor "User" as user #LightYellow
+participant "GDS" as gds #LightYellow
+participant Concur as concur #Lightcyan
+participant "CHSSupplier" as supply #LightBlue
+
+== GDS add external booking ==
+gds -> concur++: GDS PNR Changed
+concur -> concur: Identify TravelConfig CHS configuration
+concur -> supply++: Read reservation \n<b>/hotels/reservation/read</b> \nwith GDS PNR and Hotel Confirmation Number only
+supply --> concur--: Return reservation details \nwith confirmation numbers
+concur --> concur: Update storage
+concur -> user: Display reservation details \nwith confirmation numbers
+
+@enduml

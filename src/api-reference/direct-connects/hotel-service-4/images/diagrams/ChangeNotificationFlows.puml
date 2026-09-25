@@ -1,0 +1,35 @@
+@startuml ChangeNotificationAPI
+
+participant "End User" as user
+participant "SAP Concur" as concur
+participant "Supplier" as supplier
+
+user -> concur: Selects and books hotel - Regular or OnRequest \n (OnRequest are hotels that cannot be booked online)
+concur -> supplier: Reservation request
+
+alt OnRequest hotel booking
+supplier --> concur: Acknowledges with confirmation number with \n `reservationStatus` as `PENDING_CONFIRMATION`
+concur --> user: Booking details with "PENDING" status
+
+note over supplier: When booking is confirmed offline
+supplier -> concur: Change notification to update \n `reservationStatus` to `RESERVED` \n using `changeTypeCode` as 'UPDATE'
+concur -> user: Booking details with "RESERVED" status \n (no notifications currently)
+end
+
+note over supplier: If booking is canceled offline
+supplier -> concur: Change notification to cancel booking \n using `changeTypeCode` as 'CANCEL'
+concur -> user: Booking details with `CANCELED` status
+
+note over supplier: If booking is replaced with \n different booking(s) or hotel(s)
+supplier -> concur: Change notification to replace booking \n using `changeTypeCode` as `REPLACE`
+concur -> user: Booking details with \n original booking with `CANCELED` status \n and new booking added with `RESERVED` status
+
+note over supplier: If new booking added offline on existing trip
+supplier -> concur: Change notification to add booking \n using `changeTypeCode` as `ADD`
+concur -> user: Booking details with new booking \n added with `RESERVED` status
+
+note over supplier: If booking updated offline
+supplier -> concur: Change notification to update existing booking \n using `changeTypeCode` as `UPDATE`
+concur -> user: Updated booking details (no notifications currently)
+
+@enduml

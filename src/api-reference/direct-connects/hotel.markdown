@@ -1,12 +1,14 @@
----
+﻿---
 title: Direct Connect - Hotel v1
 layout: reference
 ---
 
 # Direct Connect - Hotel v1
-
-{% include deprecation-alert.html %}
-
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest versions.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle &amp; Deprecation Policy.</a></p>
+</div>
 ## Description
 
 The Hotel Services Direct Connect provides a method for Travel users to access hotel inventory.

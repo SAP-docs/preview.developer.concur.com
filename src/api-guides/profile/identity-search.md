@@ -63,7 +63,7 @@ Authorization: BEARER {token}
 
 ### Search for Active User(s) Who Have an Email Address that Ends with Company Domain
 
-Retrieve one or more users who are active and have an @sap email address.
+Retrieve one or more users who are active and have an email address ending with @sap.com.
 
 ```
 POST https://us.api.concursolutions.com/profile/identity/v4.1/Users/.search

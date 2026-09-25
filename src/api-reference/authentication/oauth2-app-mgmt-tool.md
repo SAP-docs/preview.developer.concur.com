@@ -18,21 +18,21 @@ The OAuth 2.0 Application Management tool enables clients to do the following:
 * Generate Client IDs (App IDs) and Client Secrets.
 *	Generate new Client Secrets for previously created apps.
 *	Search for and sort OAuth 2.0 applications.
-*	View information about previously created apps such as Client ID, app description, creation date.
+*	View information about previously created apps such as Client ID, App Name, App Description, Date Created, and Last Modified.
 
-## Limitations
+## Data Center Availability
 
-This tool is currently only available in the US (North America) and EMEA data centers. All other data centers can contact Client Web Services for assistance.
+This tool is currently available in the US2, EU2, and APJ1 data centers.
 
 ## Using the Tool
 
 When the tool is enabled, the Web Services Admin has a link to the OAuth 2.0 Application Management tool when they navigate to the **Administration** > **Company** > **Authentication Admin** page.
 
-![Product screen showing the Authentication Administration page](./tool-images/app-manage-tool-01.png)
+![Product screen showing the Authentication Administration page](./tool-images/1-Oauth-admin.png)
 
 Clicking OAuth 2.0 Application Management opens the **Application List** page.
 
-![Product screen showing the Application List page](./tool-images/app-manage-tool-02.png)
+![Product screen showing the Application List page](./tool-images/2-Application-List.png)
 
 On the **Application List** page, is a list of previously created applications. Clicking the **Client ID** for an application opens the **App Details** page for that app.
 
@@ -40,23 +40,22 @@ On the **Application List** page, is a list of previously created applications. 
 
 Click **Create New App**.
 
-![Product screen showing the Create New App page](./tool-images/app-manage-tool-03.png)
-
->**NOTE**: The App Type is read-only.
+![Product screen showing the Create New App page](./tool-images/3-Create-New-app.png)
 
 Populate the fields as indicated below.
 
 Field Name|	Definition|	Required|	Description
 ---|---|---|---
 `App Name`|	String|	Y	|Name of the App. NOTE: Include Company, Partner, or Team Name
-`App Type`|	NA|	NA|	This field defaults to Client and is read-only.
+`App Description`|	String|	Y |Provide the purpose of the App. Describe how you plan to use the app.
+`App Stage`|	Drop-down list|	Y |Specify the current phase of the App - Development, or Test, or Production.
+`Application Type`|	Drop-down list|	Y |Specify the configuration of the App - Web Services (WS) Client or Integration with Concur Solutions (ICS) Client.
 `Allowed Grants`|	Selected Grants|	Y	|In order to obtain a token, the client application needs to call the OAuth2 endpoint using various grants depending on the authentication scenarios required. NOTE: For more information, refer to [Authorization Grants](https://developer.concur.com/api-reference/authentication/apidoc.html#auth_grant).
 `Allowed Scopes`|	Selected Scopes|	Y	|Scopes limit access to the APIs required for your application. All scopes listed on the Developer Center are available in the tool. Scopes that are not listed can be requested. NOTE: For more information, refer to [Scopes](https://developer.concur.com/api-reference/authentication/scopes.html)
-SAP Detokenizer|	SAP Integration Cloud Suite (ICS) Only|	N|	This checkbox is only enabled for SAP ICS client apps.
 
 Click **Submit**. The **App Credentials** page appears.
 
-![Product screen showing the Create New App page](./tool-images/company-refresh-tool-04.png)
+![Product screen showing the Create New App page](./tool-images/4-Client-id-secret.png)
 
 The **App Credentials** page displays the **Client ID** and **Client Secret**. Before clicking **OK**, record the **Client ID** and **Client Secret**. They will be required to obtain a **Company Request Token**.
 

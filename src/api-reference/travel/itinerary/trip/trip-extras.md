@@ -1,0 +1,510 @@
+---
+title: Trip Extras v5
+layout: reference
+---
+
+{% include prerelease.html %}
+
+The Trip Extras API allows you to append, manage, and cancel extra bookings from external partners.
+
+## <a name="limitations"></a>Limitations
+
+Access to this documentation does not provide access to the API.
+
+## <a name="products-editions"></a>Products and Editions
+
+- Concur Travel Professional Edition
+- Concur Travel Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+To use this API, the OAuth token must include the following scopes: `travel.trips.read`; `travel.trips.booking.write`
+
+| Name                         | Description                                              | Endpoint                                                                           |
+| ---------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `travel.trips.read`          | Read only access to trip information                     | Append Trip Extras Booking, Update Trip Extras Booking, Cancel Trip Extras Booking |
+| `travel.trips.booking.write` | Read and write access to add, modify and cancel bookings | Append Trip Extras Booking, Update Trip Extras Booking, Cancel Trip Extras Booking |
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+This API supports only company level access tokens.
+
+## <a name="append-trip-extras-booking"></a>Append Trip Extras Booking
+
+Append extras booking content to an existing trip.
+
+### Scopes
+
+`travel.trips.read`, `travel.trips.booking.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+POST https://{region}.api.concursolutions.com/travel/v5/trips/{trip_uuid}/trip-extras
+```
+
+### Parameters
+
+| Name        | Type     | Format | Description                                                              |
+| ----------- | -------- | ------ | ------------------------------------------------------------------------ |
+| `region`    | `string` | -      | **Required**: Region of the trip. Supported values: `us2`, `eu2`, `apj1` |
+| `trip_uuid` | `string` | -      | **Required** The trip ID.                                                |
+
+### Payloads
+
+- Request: [Update or Append Trip Extras Booking Request](#update-or-append-trip-extras-booking-request)
+- Response: [Update or Append Trip Extras Booking Response](#update-or-append-trip-extras-booking-response)
+
+### Examples
+
+#### Request
+
+```shell
+POST https://us2.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras
+Authorization: Bearer {access_token}
+Content-Type: application/json
+```
+
+```json
+{
+    "extRef": "48fb4cd3-2ef6-4479-bea1-7c92721b988c",
+    "userId": "12345678-1234-5678-1234-567812345678",
+    "initiator": "agent",
+    "booking": {
+        "type": "ground",
+        "metadata": {
+            "version": 2,
+            "timestamp": "2025-07-25T16:30:00-04:00"
+        },
+        "partner": {
+            "name": "Partner Name",
+            "logo": "https://example.com/partner-logo.jpg"
+        },
+        "vendor": {
+            "name": "Vendor Name",
+            "phoneNumber": "1-800-555-1212",
+            "email": "foo@bar.com"
+        },
+        "details": {
+            "url": "https://partner-url.com",
+            "termsAndConditions": "Terms and conditions apply.",
+            "cancellationPolicy": "Free cancellation up to 24 hours before pickup.",
+            "vendorConfirmation": "ABC123456",
+            "partnerConfirmation": "XYZ789012",
+            "vehicle": {
+                "model": "Luxury Sedan",
+                "acrissCode": "FDMR",
+                "imageUrl": "https://example.com/vehicle-image.jpg",
+                "seatingCapacity": 4,
+                "luggageCapacity": 2
+            },
+            "pickup": {
+                "datetime": "2025-07-25T16:30:00",
+                "datetimeUtc": "2025-07-25T20:30:00Z",
+                "locationName": "Marriott Hotel",
+                "address": {
+                    "address1": "123 Main St",
+                    "localityName": "New York",
+                    "postalCode": "10017",
+                    "country": "US"
+                },
+                "geolocation": {
+                    "latitude": 40.7128,
+                    "longitude": -74.006
+                }
+            },
+            "dropoff": {
+                "datetime": "2025-07-25T18:00:00",
+                "datetimeUtc": "2025-07-25T22:00:00Z",
+                "locationName": "JFK Airport",
+                "iataCode": "JFK"
+            },
+            "stops": [
+                {
+                    "iataCode": "LGA"
+                }
+            ],
+            "price": {
+                "totalAmount": 135.96,
+                "currency": "USD",
+                "hourlyRate": 45.00,
+                "estimatedDuration": "PT3H30M",
+                "minimumDuration": "PT45M"
+            },
+            "payment": {
+                "cardName": "A card",
+                "fopType": "ghost",
+                "last4digits": "1234"
+            }
+        }
+    }
+}
+```
+
+#### Response
+
+Trip Extras API responds with **202 Accepted** and a JSON object containing the UUID of the created trip extras booking; meanwhile, the booking is being processed.
+
+```shell
+HTTP/1.1 202 Accepted
+Content-Type: application/json; charset=utf-8
+Content-Length: 55
+Date: Mon, 29 Sep 2025 19:46:57 GMT
+```
+
+```json
+{
+  "bookingUuid": "abcdef12-3456-7890-abcd-ef1234567890"
+}
+```
+
+Check out [Error Responses](#error-schema).
+
+## <a name="update-trip-extras-booking"></a>Update Trip Extras Booking
+
+Update an existing extras booking content to an existing trip.
+
+### Scopes
+
+`travel.trips.read`, `travel.trips.booking.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+PUT https://{region}.api.concursolutions.com/travel/v5/trips/{trip_uuid}/trip-extras/{booking_uuid}
+```
+
+### Parameters
+
+| Name           | Type     | Format | Description                                                              |
+| -------------- | -------- | ------ | ------------------------------------------------------------------------ |
+| `region`       | `string` | -      | **Required**: Region of the trip. Supported values: `us2`, `eu2`, `apj1` |
+| `trip_uuid`    | `string` | -      | **Required**: The trip ID.                                               |
+| `booking_uuid` | `string` | -      | **Required**: The booking ID.                                            |
+
+### Payloads
+
+- Request: [Update or Append Trip Extras Booking Request](#update-or-append-trip-extras-booking-request)
+- Response: [Update or Append Trip Extras Booking Response](#update-or-append-trip-extras-booking-response)
+
+### Examples
+
+#### Request
+
+```shell
+PUT https://us2.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras/abcdef12-3456-7890-abcd-ef1234567890
+Authorization: Bearer {access_token}
+Content-Type: application/json
+```
+
+```json
+{
+    "extRef": "48fb4cd3-2ef6-4479-bea1-7c92721b988c",
+    "userId": "12345678-1234-5678-1234-567812345678",
+    "initiator": "agent",
+    "booking": {
+        "type": "ground",
+        "metadata": {
+            "version": 2,
+            "timestamp": "2025-07-25T16:30:00-04:00"
+        },
+        "partner": {
+            "name": "Partner Name",
+            "logo": "https://example.com/partner-logo.jpg"
+        },
+        "vendor": {
+            "name": "Vendor Name",
+            "phoneNumber": "1-800-555-1212",
+            "email": "foo@bar.com"
+        },
+        "details": {
+            "url": "https://partner-url.com",
+            "termsAndConditions": "Terms and conditions apply.",
+            "cancellationPolicy": "Free cancellation up to 24 hours before pickup.",
+            "vendorConfirmation": "ABC123456",
+            "partnerConfirmation": "XYZ789012",
+            "vehicle": {
+                "model": "Luxury Sedan",
+                "acrissCode": "FDMR",
+                "imageUrl": "https://example.com/vehicle-image.jpg",
+                "seatingCapacity": 4,
+                "luggageCapacity": 2
+            },
+            "pickup": {
+                "datetime": "2025-07-25T16:30:00",
+                "datetimeUtc": "2025-07-25T20:30:00Z",
+                "locationName": "Marriott Hotel",
+                "address": {
+                    "address1": "123 Main St",
+                    "localityName": "New York",
+                    "postalCode": "10017",
+                    "country": "US"
+                },
+                "geolocation": {
+                    "latitude": 40.7128,
+                    "longitude": -74.006
+                }
+            },
+            "dropoff": {
+                "datetime": "2025-07-25T18:00:00",
+                "datetimeUtc": "2025-07-25T22:00:00Z",
+                "locationName": "JFK Airport",
+                "iataCode": "JFK"
+            },
+            "stops": [
+                {
+                    "iataCode": "LGA"
+                }
+            ],
+            "price": {
+                "totalAmount": 135.96,
+                "currency": "USD",
+                "hourlyRate": 45.00,
+                "estimatedDuration": "PT3H30M",
+                "minimumDuration": "PT45M"
+            },
+            "payment": {
+                "cardName": "A card",
+                "fopType": "ghost",
+                "last4digits": "1234"
+            }
+        }
+    }
+}
+```
+
+#### Response
+
+Trip Extras API responds with **202 Accepted** and a JSON object containing the UUID of the updated trip extras booking; meanwhile, the booking is being processed.
+
+```shell
+HTTP/1.1 202 Accepted
+Content-Type: application/json; charset=utf-8
+Content-Length: 55
+Date: Mon, 29 Sep 2025 19:46:57 GMT
+```
+
+```json
+{
+  "bookingUuid": "abcdef12-3456-7890-abcd-ef1234567890"
+}
+```
+
+Check out [Error Responses](#error-schema).
+
+## <a name="cancel-trip-extras-booking"></a>Cancel Trip Extras Booking
+
+Cancel the extras booking.
+
+### Scopes
+
+`travel.trips.read`, `travel.trips.booking.write` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### URI
+
+```shell
+POST https://{region}.api.concursolutions.com/travel/v5/trips/{trip_uuid}/trip-extras/{booking_uuid}/cancel
+```
+
+### Parameters
+
+| Name           | Type     | Format | Description                                                              |
+| -------------- | -------- | ------ | ------------------------------------------------------------------------ |
+| `region`       | `string` | -      | **Required**: Region of the trip. Supported values: `us2`, `eu2`, `apj1` |
+| `trip_uuid`    | `string` | GUID   | **Required** The trip ID.                                                |
+| `booking_uuid` | `string` | GUID   | **Required** The booking ID.                                             |
+
+### Payloads
+
+- Request: [Cancel Trip Extras Booking Request](#cancel-trip-extras-booking-request-schema)
+- Response: None
+
+### Examples
+
+#### Request
+
+```shell
+POST https://us2.api.concursolutions.com/travel/v5/trips/26c9943d-5233-4a75-a0e5-5402e996113a/trip-extras/86d4dd26-e032-4e02-982b-04032de329f6/cancel
+Authorization: Bearer {access_token}
+Content-Type: application/json
+```
+
+```json
+{
+  "extRef": "ea725b66-6256-4f78-abcb-1f34bcdaed0c",
+  "userId": "5820764c-8a07-4da7-8eb0-5cac9a9ccb3b",
+  "initiator": "user"
+}
+```
+
+#### Response
+
+The API responds with 204 No Content when the cancellation has been successful.
+
+```shell
+HTTP/1.1 204 No Content
+```
+
+## <a name="schema"></a> Schema
+
+### <a name="update-append-trip-extras-booking-request-schema"></a>Update or Append Trip Extras Booking Request
+
+| Name        | Type     | Format                                | Description                                                                                                                                                                       |
+| ----------- | -------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `extRef`    | `string` | GUID                                  | **Required**. UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
+| `userId`    | `string` | GUID                                  | **Required**. UUID of the user to whom the trip extras is being appended.                                                                                                         |
+| `initiator` | `string` | Enum: `"user"` `"agent"` `"supplier"` | **Required**. Type of initiator. Indicates who initiated the booking request.                                                                                                     |
+| `booking`   | `object` | [Booking Schema](#booking-schema)     | **Required**. Detailed information in [Booking](#booking-schema).                                                                                                                 |
+
+### <a name="booking-schema"></a> Booking
+
+| Name       | Type     | Format                                          | Description                                                                                   |
+| ---------- | -------- | ----------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `type`     | `string` | -                                               | **Required**. Type of partner reservation (e.g., `ground`.)                                   |
+| `metadata` | `object` | [Metadata Schema](#metadata-schema)             | **Required**. Detailed information in [Metadata](#metadata-schema).                           |
+| `partner`  | `object` | [Partner Schema](#partner-schema)               | **Required**. Detailed information in [Partner](#partner-schema).                             |
+| `vendor`   | `object` | [Vendor Schema](#vendor-schema)                 | Detailed information in [Vendor](#vendor-schema).                                             |
+| `details`  | `object` | [Details Schema](#groundbooking-details-schema) | **Required**. Detailed information in [GroundBooking Details](#groundbooking-details-schema). |
+
+### <a name="metadata-schema"></a> Ground Metadata
+
+Additional ground metadata related to the booking.
+
+| Name        | Type                | Format | Description                                                                                                     |
+| ----------- | ------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| `version`   | `integer`           | -      | **Required**. Version of the booking. Changes with an older version are stale. Must be greater than or equal 1. |
+| `timestamp` | `string<date-time>` | -      | Timestamp of the changes in ISO 8601 format.                                                                    |
+
+### <a name="partner-schema"></a> Partner
+
+A partner is an aggregator or intermediary that provides access to one or more vendors.
+
+| Name   | Type     | Format | Description                        |
+| ------ | -------- | ------ | ---------------------------------- |
+| `name` | `string` | -      | **Required**. Name of the partner. |
+| `logo` | `string` | `uri`  | URL to the partner logo image.     |
+
+### <a name="vendor-schema"></a> Vendor
+
+Vendor is the actual service provider fulfilling the reservation.
+
+| Name          | Type     | Format | Description                                                  |
+| ------------- | -------- | ------ | ------------------------------------------------------------ |
+| `name`        | `string` | -      | **Required**. Name of the vendor fulfilling the reservation. |
+| `phoneNumber` | `string` | -      | Phone number of the vendor.                                  |
+| `email`       | `string` | -      | Email address of the vendor.                                 |
+| `logo`        | `string` | `uri`  | URL to the vendor logo image.                                |
+
+### <a name="groundbooking-details-schema"></a> GroundBooking Details
+
+| Name                  | Type     | Format                            | Description                                                                                                |
+| --------------------- | -------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `url`                 | `string` | `uri`                             | **Required**. URL to redirect user to the booking on the partner's page.                                   |
+| `partnerConfirmation` | `string` | -                                 | **Required**. Confirmation number from partner.                                                            |
+| `vehicle`             | `object` | [Vehicle Schema](#vehicle-schema) | **Required**. Detailed information in [Vehicle](#vehicle-schema).                                          |
+| `pickup`              | `object` | [Pickup Schema](#pickup-schema)   | **Required**. Detailed information in [Pickup](#pickup-schema).                                            |
+| `price`               | `object` | [Price Schema](#price-schema)     | **Required**. Detailed information in [Price](#price-schema).                                              |
+| `cancellationPolicy`  | `string` | -                                 | Cancellation policy information.                                                                           |
+| `dropoff`             | `object` | [Stop Schema](#stop-schema)       | Detailed information in [Stop](#stop-schema).                                                              |
+| `payment`             | `object` | [Payment Schema](#payment-schema) | Monetary payment made toward a booking. Detailed information in [Payment](#payment-schema).                |
+| `stops`               | `array`  | [Stop Schema](#stop-schema)       | A list of intermediate stops.                                                                              |
+| `meetingInstructions` | `string` | -                                 | Special instructions from the vendor to the user (e.g., "Meet the driver holding a sign with your name."). |
+| `termsAndConditions`  | `string` | -                                 | Terms and conditions for the booking.                                                                      |
+| `vendorConfirmation`  | `string` | -                                 | Confirmation number from vendor.                                                                           |
+
+### <a name="vehicle-schema"></a> Vehicle
+
+Information about the vehicle assigned for the ground transportation.
+
+| Name              | Type      | Format          | Description                                         |
+| ----------------- | --------- | --------------- | --------------------------------------------------- |
+| `model`           | `string`  | -               | **Required**. Vehicle model (e.g., "Toyota Camry"). |
+| `acrissCode`      | `string`  | `^[A-Z0-9]{4}$` | ACRISS code for the vehicle (e.g., "FDMR").         |
+| `imageUrl`        | `string`  | `uri`           | URL to an image of the vehicle.                     |
+| `luggageCapacity` | `integer` | -               | Number of luggage pieces the vehicle can hold.      |
+| `seatingCapacity` | `integer` | -               | Number of passengers the vehicle can seat.          |
+
+### <a name="pickup-schema"></a> Pickup
+
+A stop with required datetime fields. Extends [Stop](#stop-schema).
+
+| Name           | Type     | Format                                    | Description                                                                                                 |
+| -------------- | -------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `datetime`     | `string` | `string<date-time>`                       | **Required**. Local date and time of pickup according to RFC 3339.                                          |
+| `datetimeUtc`  | `string` | `string<date-time>`                       | **Required**. UTC date and time of pickup according to RFC 3339.                                            |
+| `address`      | `object` | [Address Schema](#address-schema)         | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).              |
+| `iataCode`     | `string` | `^[A-Z]{3}$`                              | **Required if no `address` is informed**. Airport code of the pickup location (e.g., "JFK").                |
+| `geolocation`  | `object` | [Geolocation Schema](#geolocation-schema) | Geolocation coordinates of the pickup location. Detailed information in [Geolocation](#geolocation-schema). |
+| `instructions` | `string` | -                                         | Special instructions from the user to the vendor.                                                           |
+| `locationName` | `string` | -                                         | Name of the pickup location.                                                                                |
+
+### <a name="stop-schema"></a> Stop
+
+| Name           | Type     | Format                                    | Description                                                                                          |
+| -------------- | -------- | ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `address`      | `object` | [Address Schema](#address-schema)         | **Required if no `iataCode` is informed**. Detailed information in [Address](#address-schema).       |
+| `datetime`     | `string` | `string<date-time>`                       | Local date and time according to RFC 3339.                                                           |
+| `datetimeUtc`  | `string` | `string<date-time>`                       | UTC date and time according to RFC 3339.                                                             |
+| `geolocation`  | `object` | [Geolocation Schema](#geolocation-schema) | Geolocation coordinates of the location. Detailed information in [Geolocation](#geolocation-schema). |
+| `iataCode`     | `string` | `^[A-Z]{3}$`                              | **Required if no `address` is informed**. Airport code of the location (e.g., "JFK").                |
+| `instructions` | `string` | -                                         | Special instructions from the user to the vendor.                                                    |
+| `locationName` | `string` | -                                         | Name of the location, such as a hotel or restaurant.                                                 |
+
+### <a name="address-schema"></a> Address
+
+| Name                     | Type     | Format       | Description                                                                                                |
+| ------------------------ | -------- | ------------ | ---------------------------------------------------------------------------------------------------------- |
+| `address1`               | `string` | -            | **Required**. First line of the address. Also stands for thoroughfare name of the address - xNal standard. |
+| `address2`               | `string` | -            | Stands for premise name of the address on xNal standard.                                                   |
+| `localityName`           | `string` | -            | **Required**. City or locality name.                                                                       |
+| `administrativeAreaName` | `string` | -            | State, province or region.                                                                                 |
+| `postalCode`             | `string` | -            | **Required**. Postal Code.                                                                                 |
+| `country`                | `string` | `^[A-Z]{2}$` | **Required**. Two-letter ISO 3166-1 alpha-2 country code.                                                  |
+
+### <a name="geolocation-schema"></a> Geolocation
+
+| Name        | Type     | Format | Description                                  |
+| ----------- | -------- | ------ | -------------------------------------------- |
+| `latitude`  | `number` | -      | **Required**. The latitude of the location.  |
+| `longitude` | `number` | -      | **Required**. The longitude of the location. |
+
+### <a name="price-schema"></a> Price
+
+| Name                | Type     | Format | Description                                                            |
+| ------------------- | -------- | ------ | ---------------------------------------------------------------------- |
+| `totalAmount`       | `number` | -      | **Required**. Cost of the vendor reservation.                          |
+| `currency`          | `string` | -      | **Required**. Currency in which the total amount is specified.         |
+| `estimatedDuration` | `string` | -      | Estimated duration of the service in ISO 8601 duration format.         |
+| `hourlyRate`        | `number` | -      | Hourly rate for the service, if applicable.                            |
+| `minimumDuration`   | `string` | -      | Minimum duration required for the booking in ISO 8601 duration format. |
+
+### <a name="payment-schema"></a> Payment
+
+| Name          | Type     | Format                       | Description                    |
+| ------------- | -------- | ---------------------------- | ------------------------------ |
+| `cardName`    | `string` | -                            | Card name used for payment.    |
+| `fopType`     | `string` | Enum: `"ghost"` `"personal"` | Form of payment type.          |
+| `last4digits` | `string` | `^[0-9]{4}$`                 | Last four digits of card used. |
+
+### <a name="update-append-trip-extras-booking-response-schema"></a>Update or Append Trip Extras Booking Response
+
+| Name          | Type     | Format | Description                                         |
+| ------------- | -------- | ------ | --------------------------------------------------- |
+| `bookingUuid` | `string` | GUID   | UUID of the created or updated trip extras booking. |
+
+### <a name="cancel-trip-extras-booking-request-schema"></a> Cancel Trip Extras Booking Request
+
+| Name        | Type     | Format | Description                                                                                                                                                         |
+| ----------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `extRef`    | `string` | -      | UUID for relating messages exchanged between Concur and Partner. The same value should be used on all incoming and outgoing requests for the same business process. |
+| `userId`    | `string` | -      | **Required**. UUID of the user.                                                                                                                                     |
+| `initiator` | `string` | Enum: `"user"` `"agent"` | **Required**. Type of initiator. Indicates who initiated the cancellation request. |
+
+### <a name="error-schema"></a> Error Schema
+
+Error responses include a JSON body with additional details about the error.
+
+| Name           | Type     | Format | Description            |
+| -------------- | -------- | ------ | ---------------------- |
+| `errorCode`    | `string` | -      | Code for the error.    |
+| `errorMessage` | `string` | -      | Message for the error. |

@@ -5,6 +5,13 @@ layout: reference
 
 # Company Card Transactions
 
+<div class="alert alert-danger">
+  <p><strong>This API has been deprecated.</strong></p>
+  <p>Deprecation Date: 06/08/2026</p>
+  <p>Partners and customers using a deprecated API should contact SAP Concur and discuss moving to the latest version.</p>
+  <p>Learn more in the <a href="/tools-support/deprecation-policy.html">API Lifecycle & Deprecation Policy.</a></p>
+</div>
+
 The corporate or credit card charges that are available for use in expense reports for the OAuth consumer.
 
 Retrieves a list of unassigned company card charges for the user specified in the OAuth access token.

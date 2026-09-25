@@ -1,0 +1,649 @@
+---
+title: Maestro v4 - Ground Transportation
+layout: reference
+---
+
+{% include prerelease.html %}
+
+# Maestro v4 - Ground Transportation
+
+This document provides specific implementation details for ground transportation alerts using the [Maestro v4 API](/api-reference/common/maestro/v4.maestro.html). Partners can use Maestro to deliver ground transportation booking alerts and notifications to SAP Concur users. 
+
+## Important Notes
+
+- All URLs (`partnerLogoUrl`, `variantLogoUrl`, `userActions.href`) must be from an allowed domain: `groundspan.com`
+- Date fields should be in ISO 8601 format (e.g., `"2025-08-19T10:00:00Z"`)
+- The `msgType` field can be an empty string for ground transportation alerts
+- HTTPS is recommended for all URLs
+
+## Scope Usage <a name="scope-usage"></a>
+
+|Name|Description|Endpoints|
+|---|---|---|
+|`maestro.alerts.writeonly`|Write-only access to submit and edit partner alerts.|POST, PUT (alerts)|
+|`maestro.partner.read`|Access for partner authorization JWKs|
+
+## Dependencies <a name="dependencies"></a>
+
+Partners must have:
+- Valid Company JWT tokens with appropriate scopes
+- Configured templates for alert rendering
+- Proper application registration in the SAP Concur ecosystem
+
+## Access Token Usage <a name="access-token-usage"></a>
+
+This API requires Company JWT tokens for partner submissions.
+
+## Submit Partner Alert <a name="submit-partner-alert"></a>
+
+Accepts alert payloads from external partners, validates and transforms the data, then persists the alert and triggers downstream processes.
+
+### Scopes
+
+`maestro.alerts.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+POST /maestro/v4/alerts
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Content-Type`|`string`|**Required** Must be `application/json`|
+|`Authorization`|`string`|**Required** Bearer Company JWT Token|
+
+#### Headers
+
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [Alert Request](#schema-alert-request)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) - Alert processed successfully
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Malformed JSON or missing required fields
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - Missing or invalid JWT
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) - Valid JWT but insufficient scope
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4) - Resource doesn't exist or is not associated with your company
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+* [503 Service Unavailable](https://tools.ietf.org/html/rfc7231#section-6.6.4) - Service is temporarily down or overloaded
+* [504 Gateway Timeout](https://tools.ietf.org/html/rfc7231#section-6.6.5) - Server did not receive a timely response from an upstream service
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Alert Response](#schema-alert-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/maestro/v4/alerts
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {company-jwt-token}
+```
+
+```json
+{
+  "extRef": "b2fd900a-5935-46fc-8d29-599de9864e21",
+  "userId": "b7d12989-0489-471a-81cd-175f8b78afa5",
+  "companyId": "b7d12989-0489-471a-81cd-175f8b78afa5",
+  "createdAt": "2025-08-19T10:00:00Z",
+  "metadata": {
+    "partnerProvider": "Partner Name",
+    "partnerLogoUrl": "https://groundspan.com/img/logo.png",
+    "partnerAccessibilityTextPrompt": "Groundspan logo",
+    "packages": [
+      {
+        "packageId": "gs-package-001",
+        "packageTitle": "Downtown Car Rental - Aug 1",
+        "travelDate": "2025-08-01",
+        "location": {
+          "origin": "Downtown Garage",
+          "destination": ""
+        },
+        "variants": [
+          {
+            "variantId": "enterprise-suv-001",
+            "variantTitle": "Enterprise SUV",
+            "variantDesc": "Unlimited miles Standard SUV",
+            "variantProvider": "Enterprise",
+            "variantLogoUrl": "https://groundspan.com/img/enterprise.png",
+            "variantAccessibilityTextPrompt": "Enterprise logo",
+            "variantStartDate": "2025-08-01T10:00:00Z",
+            "variantEndDate": "2025-08-07T10:00:00Z",
+            "price": {
+              "amount": 300.0,
+              "currency": "USD"
+            },
+            "userActions": {
+              "label": "Reserve SUV",
+              "href": "https://groundspan.com/reserve/suv"
+            }
+          },
+          {
+            "variantId": "hertz-compact-001",
+            "variantTitle": "Hertz Compact",
+            "variantDesc": "Economy car with good fuel efficiency",
+            "variantProvider": "Hertz",
+            "variantLogoUrl": "https://groundspan.com/img/hertz.png",
+            "variantAccessibilityTextPrompt": "Hertz logo",
+            "variantStartDate": "2025-08-01T10:00:00Z",
+            "variantEndDate": "2025-08-07T10:00:00Z",
+            "price": {
+              "amount": 180.0,
+              "currency": "USD"
+            },
+            "userActions": {
+              "label": "Reserve Compact",
+              "href": "https://groundspan.com/reserve/compact"
+            }
+          }
+        ]
+      },
+      {
+        "packageId": "ground-transport-20250920",
+        "packageTitle": "Ground Transportation Options",
+        "travelDate": "2025-09-20",
+        "location": {
+          "origin": "Airport",
+          "destination": "Downtown"
+        },
+        "variants": [
+          {
+            "variantTitle": "Shuttle Service",
+            "variantId": "shuttle-001",
+            "variantDesc": "Shared shuttle service to downtown",
+            "variantStartDate": "2025-09-20T14:00:00Z",
+            "variantEndDate": "2025-09-20T15:00:00Z",
+            "variantProvider": "Groundspan",
+            "variantLogoUrl": "https://groundspan.com/img/shuttle.png",
+            "variantAccessibilityTextPrompt": "Shuttle service logo",
+            "price": {
+              "amount": 25.0,
+              "currency": "USD"
+            },
+            "userActions": {
+              "label": "Book Shuttle",
+              "href": "https://groundspan.com/book/shuttle"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "templateId": "NOTIFY_TEMPLATE_ID",
+  "msgType": "",
+  "expiresAt": "2025-12-31T23:59:59Z"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 89
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "alertId": "A123456",
+  "status": "received",
+  "message": "Alert created successfully"
+}
+```
+
+## Update Partner Alert <a name="edit-partner-alert"></a>
+
+Updates an existing alert with new payload data. Uses the same payload structure as the POST endpoint. The alert must exist and be associated with the requesting partner's company.
+
+### Scopes
+
+`maestro.alerts.writeonly` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+PUT /maestro/v4/alerts/{alertId}
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`alertId`|`string`|**Required** The unique identifier of the alert to update|
+|`Content-Type`|`string`|**Required** Must be `application/json`|
+|`Authorization`|`string`|**Required** Bearer Company JWT Token|
+
+#### Headers
+
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+#### Payload
+
+* [Alert Request](#schema-alert-request) - Same payload structure as POST endpoint
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) - Alert updated successfully
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Malformed JSON or missing required fields
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - Missing or invalid JWT
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) - Valid JWT but insufficient scope
+* [404 Not Found](https://tools.ietf.org/html/rfc7231#section-6.5.4) - Alert doesn't exist or is not associated with your company
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1)
+* [503 Service Unavailable](https://tools.ietf.org/html/rfc7231#section-6.6.4) - Service is temporarily down or overloaded
+* [504 Gateway Timeout](https://tools.ietf.org/html/rfc7231#section-6.6.5) - Server did not receive a timely response from an upstream service
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Alert Response](#schema-alert-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+PUT https://us.api.concursolutions.com/maestro/v4/alerts/A123456
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {company-jwt-token}
+```
+
+```json
+{
+  "extRef": "b2fd900a-5935-46fc-8d29-599de9864e21",
+  "userId": "b7d12989-0489-471a-81cd-175f8b78afa5",
+  "companyId": "b7d12989-0489-471a-81cd-175f8b78afa5",
+  "createdAt": "2025-08-19T10:00:00Z",
+  "metadata": {
+    "partnerProvider": "Groundspan",
+    "partnerLogoUrl": "https://groundspan.com/img/logo.png",
+    "partnerAccessibilityTextPrompt": "Groundspan logo",
+    "packages": [
+      {
+        "packageId": "gs-package-001",
+        "packageTitle": "Updated: Downtown Car Rental - Aug 1",
+        "travelDate": "2025-08-01",
+        "location": {
+          "origin": "Downtown Garage",
+          "destination": ""
+        },
+        "variants": [
+          {
+            "variantId": "enterprise-suv-001",
+            "variantTitle": "Enterprise SUV",
+            "variantDesc": "Unlimited miles Standard SUV - Updated pricing",
+            "variantProvider": "Enterprise",
+            "variantLogoUrl": "https://concur.com/img/enterprise.png",
+            "variantAccessibilityTextPrompt": "Enterprise logo",
+            "variantStartDate": "2025-08-01T10:00:00Z",
+            "variantEndDate": "2025-08-07T10:00:00Z",
+            "price": {
+              "amount": 275.0,
+              "currency": "USD"
+            },
+            "userActions": {
+              "label": "Reserve SUV",
+              "href": "https://groundspan.com/reserve/suv"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "templateId": "NOTIFY_TEMPLATE_ID",
+  "msgType": "",
+  "expiresAt": "2025-12-31T23:59:59Z"
+}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 89
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "alertId": "A123456",
+  "status": "updated",
+  "message": "Alert updated successfully"
+}
+```
+
+## Generate Partner Signed Message <a name="generate-partner-signed-message"></a>
+
+Generate signed message tokens for partner offer authorization. This endpoint prevents unauthorized access to partner offers by validating user context and minting short-lived signed tokens with RS256 signature.
+
+### Scopes
+
+`maestro.partner.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+POST /maestro/v4/partner/signed-message?tripId={tripId}
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`tripId`|`string`|**Required** Concur Trip ID for context validation|
+|`Content-Type`|`string`|**Required** Must be `application/json`|
+|`Authorization`|`string`|**Required** Bearer User JWT Token|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) - Signed message generated successfully
+* [400 Bad Request](https://tools.ietf.org/html/rfc7231#section-6.5.1) - Invalid or missing parameters
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - User JWT validation failed
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) - Valid user JWT but user not entitled to offer
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1) - Message generation failed
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [Partner Signed Message Response](#schema-partner-signed-message-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+POST https://us.api.concursolutions.com/maestro/v4/partner/signed-message?tripId=trip-uuid-456
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {user-jwt-token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 450
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "signedMessage": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImNvbmN1ci1rZXktMSJ9.eyJpc3MiOiJjb25jdXJzb2x1dGlvbnMuY29tIiwiYXVkIjoiZ3JvdW5kc3Bhbi5jb20iLCJpYXQiOjE2NDI3ODU2MDAsImV4cCI6MTY0Mjc4NTcyMCwianRpIjoidXVpZC0xMjM0IiwidXNlcklkIjoiMTcxYTY2MDctYzk0ZS00MGE3LWE3YzktZGFjMDI5OGMyODE3IiwidHJpcElkIjoidHJpcC11dWlkLTQ1NiJ9..."
+}
+```
+
+## Retrieve Public Keys (JWKS) <a name="retrieve-public-keys"></a>
+
+Authenticated endpoint for partners to retrieve Concur's public keys for validating signed message tokens. Requires company JWT authentication to ensure only authorized partners can access public key information.
+
+### Scopes
+
+`maestro.partner.readwrite` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### Request
+
+#### URI
+
+##### Template
+
+```shell
+GET /maestro/v4/jwks
+```
+
+##### Parameters
+
+|Name|Type|Description|
+|---|---|---|
+|`Authorization`|`string`|**Required** Bearer Company JWT Token|
+
+#### Headers
+
+* [RFC 7231 Accept](https://tools.ietf.org/html/rfc7231#section-5.3.2)
+* [RFC 7235 Authorization](https://tools.ietf.org/html/rfc7235#section-4.2)
+
+### Response
+
+#### Status Codes
+
+* [200 OK](https://tools.ietf.org/html/rfc7231#section-6.3.1) - JWKs response with public keys for signature verification
+* [401 Unauthorized](https://tools.ietf.org/html/rfc7235#section-3.1) - Company JWT validation failed or missing
+* [403 Forbidden](https://tools.ietf.org/html/rfc7231#section-6.5.3) - Valid company JWT but not authorized for key access
+* [500 Internal Server Error](https://tools.ietf.org/html/rfc7231#section-6.6.1) - Key retrieval failures
+
+#### Headers
+
+* `concur-correlationid` is a Concur specific custom header used for technical support in the form of a [RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace](https://tools.ietf.org/html/rfc4122)
+* [RFC 7230 Content-Length](https://tools.ietf.org/html/rfc7230#section-3.3.2)
+* [RFC 7231 Content-Type](https://tools.ietf.org/html/rfc7231#section-3.1.1.5)
+* [RFC 7231 Date](https://tools.ietf.org/html/rfc7231#section-7.1.1.2)
+* [RFC 7234 Cache-Control](https://tools.ietf.org/html/rfc7234#section-5.2)
+
+#### Payload
+
+* [JWKS Response](#schema-jwks-response)
+* [Error Message](#schema-error-message)
+
+### Example
+
+#### Request
+
+```shell
+GET https://us.api.concursolutions.com/maestro/v4/jwks
+Accept: application/json
+Authorization: Bearer {company-jwt-token}
+```
+
+#### Response
+
+```shell
+HTTP/1.1 200
+concur-correlationid: 5512c7be-3fab-4d65-ae69-8a74a04a0c7f
+content-length: 650
+content-type: application/json;charset=UTF-8
+date: Wed, 08 Jul 2020 03:00:42 GMT
+cache-control: no-cache, private
+```
+
+```json
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "kid": "concur-key-1",
+      "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+      "e": "AQAB",
+      "alg": "RS256"
+    }
+  ]
+}
+```
+
+## Schema <a name="schema"></a>
+
+### <a name="schema-alert-request"></a>Alert Request
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`extRef`|`string`|-|**Required** External reference ID for session tracking|
+|`userId`|`string`|-|**Required** Identifier for the target user|
+|`companyId`|`string`|-|Identifier for the user's company (only if company ID is not part of JWT)|
+|`createdAt`|`string`|`date-time`|**Required** Creation timestamp in ISO 8601 format|
+|`metadata`|`object`|-|**Required** Alert content and context data|
+|`templateId`|`string`|-|**Required** Template identifier for rendering|
+|`msgType`|`string`|-|**Required** Message type (can be an empty string for ground transportation)|
+|`expiresAt`|`string`|`date-time`|**Required** Expiration timestamp in ISO 8601 format|
+
+### <a name="schema-alert-response"></a>Alert Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`alertId`|`string`|-|Unique identifier of the created alert|
+|`status`|`string`|-|Processing status (e.g., "received")|
+|`message`|`string`|-|Success message|
+
+### <a name="schema-metadata-ground-transportation"></a>Metadata - Ground Transportation
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`partnerProvider`|`string`|-|**Required** Partner provider name (e.g., "Groundspan")|
+|`partnerLogoUrl`|`string`|-|**Required** Partner logo URL (must be from groundspan.com or concur.com domain)|
+|`partnerAccessibilityTextPrompt`|`string`|-|**Required** Accessibility text for the partner logo|
+|`packages`|`array`|[`Package`](#schema-package)|**Required** Array of ground transportation packages|
+
+### <a name="schema-package"></a>Package
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`packageId`|`string`|-|**Required** Unique package identifier|
+|`packageTitle`|`string`|-|Package title/description|
+|`travelDate`|`string`|`date`|Travel date in ISO format|
+|`location`|[`Location`](#schema-location)|-|Location object with origin and destination|
+|`variants`|`array`|[`Variant`](#schema-variant)|Array of variant objects|
+|`offerData`|`array`|-|Array of offer data|
+
+### <a name="schema-variant"></a>Variant
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`variantTitle`|`string`|-|**Required** Variant title|
+|`variantId`|`string`|-|**Required** Unique variant identifier|
+|`variantDesc`|`string`|-|**Required** Variant description|
+|`variantProvider`|`string`|-|**Required** Variant provider name|
+|`variantLogoUrl`|`string`|-|**Required** Variant logo URL (must be from groundspan.com or concur.com domain)|
+|`variantAccessibilityTextPrompt`|`string`|-|**Required** Accessibility text for the variant logo|
+|`variantStartDate`|`string`|`date-time`|Variant start date in ISO format|
+|`variantEndDate`|`string`|`date-time`|Variant end date in ISO format|
+|`price`|[`Price`](#schema-price)|-|Price object|
+|`userActions`|[`UserAction`](#schema-user-action)|-|**Required** User actions object|
+
+### <a name="schema-location"></a>Location
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`origin`|`string`|-|**Required** Origin location (can be an empty string)|
+|`destination`|`string`|-|**Required** Destination location (can be an empty string)|
+
+### <a name="schema-price"></a>Price
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`amount`|`number`|-|**Required** Price amount|
+|`currency`|`string`|-|**Required** Currency code (can be an empty string)|
+
+### <a name="schema-user-action"></a>User Action
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`label`|`string`|-|**Required** Action button label|
+|`href`|`string`|-|**Required** Action URL (must be from groundspan.com or concur.com domain)|
+
+### <a name="schema-error-message"></a>Error Message
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`errors`|`array`|[`Error`](#schema-error)|-|
+
+### <a name="schema-error"></a>Error
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`errorCode`|`string`|-|Error code identifier|
+|`errorMessage`|`string`|-|Detailed error message|
+|`details`|`object`|-|Field-specific information|
+
+### <a name="schema-partner-signed-message-response"></a>Partner Signed Message Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`signedMessage`|`string`|-|**Required** RS256-signed JWT token containing user and trip context|
+
+### <a name="schema-jwks-response"></a>JWKS Response
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`keys`|`array`|[`JWK`](#schema-jwk)|**Required** Array of JSON Web Keys for signature verification|
+
+### <a name="schema-jwk"></a>JWK (JSON Web Key)
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+|`kty`|`string`|-|**Required** Key type (RSA)|
+|`use`|`string`|-|**Required** Key usage (sig for signature)|
+|`kid`|`string`|-|**Required** Key identifier for rotation support|
+|`n`|`string`|-|**Required** RSA public key modulus|
+|`e`|`string`|-|**Required** RSA public key exponent|
+|`alg`|`string`|-|**Required** Algorithm (RS256)|

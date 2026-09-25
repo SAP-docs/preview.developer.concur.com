@@ -43,6 +43,10 @@ The Approver role is used when the workflow action should be completed by a part
 
 ### Request Parameters
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Path Parameters
 
 | Parameter |Required/Optional| Description |

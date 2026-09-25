@@ -5,6 +5,8 @@ layout: reference
 
 # Financial Documents Schemas
 
+> **Note:** In accordance with [RFC 8259](https://tools.ietf.org/html/rfc8259), the order of fields within JSON objects returned by FIS APIs is not guaranteed and is not part of the API contract. This applies to all FIS document types (expense, invoice, cash advance, payroll, request obligation, and report obligation). Consumers must deserialize and process JSON payloads using property names and must not rely on field position or serialization order. Any dependency on field ordering is outside the supported integration contract and may result in failures when valid service changes are introduced.
+
 ## Expense <a name="scexpense"></a>
 
 ### <a name="scexpemploy"></a>Expense - Employee
@@ -51,6 +53,7 @@ Name|Type|Format|Description
 `revisionNumber`|`Number`|-|Report revision number. This will be used to track changes made to posted expenses. Default value is 1. Maximum length 32 characters.
 `totalApprovedAmount`|`Number`|Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field.|Total approved amount of the report.
 `versionId`|`Number`|-|The version of the FI Document, which is the same as the version of the API endpoint. Maximum length 32 characters.
+`lastApproverId`|`String`|-|Alphanumeric. UUID of the last employee to approve the expense report.
 
 ### <a name="scexpent"></a>Expense - expenseEntry
 
@@ -87,8 +90,8 @@ Name|Type|Format|Description
 `entryOrgUnit1Code` through `entryOrgUnit6Code`|`CustomField`|-|The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.
 `entryReceiptId`|`String`|-|GUUID. Non-electronic receipt image. Maximum length 32 characters.
 `entryReceiptType`|`String`|T/R/N|Alphanumeric. One of these: T = Tax receipt, R = Regular receipt, or N = No receipt.
-`entrySupplierTaxID`|`String`|-|Alphanumeric. Report entry XML receipt supplier tax ID. Maximum length 64 characters.
-`entryUuid`|`String`|-|Report Entry XML Receipt UUID. Maximum length 32 characters.
+`entrySupplierTaxID`|`String`| Alphanumeric. Maximum length 64 characters.| Unique identifier assigned to the Merchant/Supplier by the tax authority for purposes of collecting and reporting taxes. This field applies to Mexico CFDI feature only. For other digital tax compliance countries see "merchantTaxId".
+`entryUuid`|`String`| Maximum length 32 characters| Report Entry XML Receipt UUID. Unique identifier assigned by the supplier/merchant to the invoice. This field applies to Mexico CFDI feature only. For other digital tax compliance countries see "supplierInvoiceId".
 `entryVendorCode`|`String`|-|Alphanumeric. Vendor name list short code. Maximum length 32 characters.
 `entryVendorDescription`|`String`|-|Alphanumeric. Vendor description. Maximum length 64 characters.
 `expensePayAccountingIndicator`|`String`|Y/N|Either: Y = The reimbursement method is Expense Pay or N = Expense Pay is not a reimbursement method (future use)
@@ -97,7 +100,12 @@ Name|Type|Format|Description
 `expenseTypeName`|`String`|-|Alphanumeric. Expense type name. Maximum length 64 characters.
 `legacyEntryId`|`Number`|-|Legacy report entry key. Maximum length 11 characters.
 `liabilityAccountCode`|`String`|-|Alphanumeric. The liability account code assigned to the funding account paying this entry. Maximum length 48 characters.
-`merchantTaxId`|`String`|-|Alphanumeric. Merchant Tax ID is populated by the following (in order of precedence): EReceipt v4 with tax data, Company card transaction, and ExpenseIt OCR transaction. Maximum length 64 characters.
+`merchantTaxId`|`String`|Alphanumeric. Maximum length 64 characters.|Unique identifier assigned to the Merchant/Supplier by the tax authority for purposes of collecting and reporting taxes. Merchant Tax ID is populated by the following (in order of precedence): Electronic Receipt v4 with tax data, Company card transaction, and ExpenseIt OCR transaction. For Mexico CFDI see "entrySupplierTaxID".
+`supplierInvoiceId`|`String`|Alphanumeric. Maximum length 64 characters.|Unique identifier assigned by the supplier/merchant to the invoice. Used for tax compliance reconciliation between tax authority and customer ERP. This field applies to digital tax compliance countries except Mexico. For Mexico CFDI see "entryUuid".
+`govInvoiceId`|`String`|Alphanumeric. Maximum length 64 characters.|Unique identifier assigned by the tax authority in certain jurisdictions. Used for tax compliance reconciliation between tax authority and customer ERP. This value populated in payload only for digital compliance countries where it is available/required.
+`companyTaxId`|`String`|-|The official tax Goods and Services Tax Identification Number (GSTIN) of the company/legal entity responsible for the expense, used for tax calculation and compliance purposes.
+`hsnSacCode`|`String`|-|A code that identifies the type of goods or services for tax calculation and compliance purposes. HSN applies to goods. SAC applies to services.
+`placeOfSupplyState`|`String`|-|Identifies the state or territory where a good or service is considered to be supplied for GST purposes. Used to determine the applicable GST rate and type (IGST, CGST, SGST).
 `offsetPayType`|`String`|Y/N|Use Offsets. Y = Yes, N= No.
 `reportEntryPatKey`|`String`|-|Alphanumeric. Report Entry Payment Code. Maximum length 4 characters.
 `reportEntryPaymentTypeCode`|`String`|-|Alphanumeric. Localized Report Entry Payment Code Name. Name labels that are managed by SAP Concur may change over time; it is strongly recommended that any programming use the Payment Type Code field and then refer to the FI equivalent which is "reportEntryPatKey". Maximum length 80 characters.
@@ -105,6 +113,10 @@ Name|Type|Format|Description
 `reportEntryTransactionAmount`|`Number`|Maximum 23 digits to the left of the decimal; maximum 8 digits to the right of the decimal; with a maximum of 23 digits for the entire field.|Currency.  Amount of transaction in the spend currency.
 `requestEntryId`|`String`|-|Alphanumeric. The travel request entry ID that the expense entry is associated with. Maximum length 32 characters.
 `requestId`|`String`|-|Alphanumeric. An array of travel request IDs associated with the Expense Report. A single expense report can be associated with more than one travel request. Maximum length 20 characters.
+`cardProcessorReferenceNumber`|`String`|-|Alphanumeric. Card Processor Reference Number. Support for feeds that utilize the credit card Processor Reference number provided to and used by the client for reconciliation.
+`entryLocationFrom`|`String`|-|Alphanumeric. Report entry "From Location" used to determine distance related to mileage entry.
+`entryLocationTo`|`String`|-|Alphanumeric. Report entry "To Location" used to determine distance related to mileage entry.
+`mileage`|`Object`|[Mileage](#scmileage)| A Collection of Mileage related information.
 
 ### <a name="scexpall"></a>Expense - Allocation
 
@@ -246,7 +258,7 @@ Name|Type|Format|Description
 `endDate`| `String`  | -   |End time in UTC of the itinerary. Used to calculate allowances when time-based constraints are configured.
 `endTime`| `String`  | -  |End date of the reimbursement interval. Used to calculate allowances when time-based constraints are configured.
 `numberOfDays`| `Number`  | -   |Represents number of calendar days in the trip.
-`domestic`| `Boolean` | true/false |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
+`domestic`| `Boolean` | `true/false` |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
 
 ### Payroll - TravelAllowances - Daily Allowance Details
 
@@ -389,7 +401,7 @@ Name|Type|Format|Description
 `endDate`| `String`  | - |End time in UTC of the itinerary. Used to calculate allowances when time-based constraints are configured.
 `endTime`| `String`  | - |End date of the reimbursement interval. Used to calculate allowances when time-based constraints are configured.
 `numberOfDays`| `Number`  | - |Represents number of calendar days in the trip.
-`domestic`| `Boolean` | true/false |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
+`domestic`| `Boolean` | `true/false` |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
 
 ### Payroll - TravelAllowances - ItineraryResultHeader - ItineraryDerivedData
 
@@ -405,7 +417,7 @@ Name|Type|Format|Description
 `endTimeUtc`| `String`  | - |End time in UTC of the itinerary.
 `numberOfDays`| `Number`  | - |Represents number of calendar days in the trip.
 `userProfile`| `Object` | [Payroll - UserProfile](#payroll---userprofile) | User Profile information
-`domestic`| `Boolean` | true/false |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
+`domestic`| `Boolean` | `true/false` |If a trip has only domestic destinations it is considered to be a domestic trip. When a trip has at least one foreign destination it is considered a foreign trip.
 
 ### Payroll - UserProfile
 
@@ -835,8 +847,7 @@ This data comes during confirmation posting document Details [`Event Data Schema
 | `entryOrgUnit1Value` through `entryOrgUnit6Value` | `CustomField`| \- | The details from the custom fields. These fields may not have data, depending on the configuration. If configured as a list, this field contains the name of the list item. Maximum length 64 characters. |
 | `entryOrgUnit1Code` through `entryOrgUnit6Code` | `CustomField` | \- | The details from the custom fields. These fields may not have data, depending on the configuration. Maximum length 48 characters.|
 | `entryReceiptId`| `String`| \- | GUUID. Non-electronic receipt image. Maximum length 32 characters. |
-| `entryReceiptType`| `String`
-| T/R/N | Alphanumeric. One of these: T = Tax receipt, R = Regular receipt, or N = No receipt.|
+| `entryReceiptType`| `String`| T/R/N | Alphanumeric. One of these: T = Tax receipt, R = Regular receipt, or N = No receipt.|
 | `entrySupplierTaxID`| `String`| \- | Alphanumeric. Report entry XML receipt supplier tax ID. Maximum length 64 characters.|
 | `entryUuid`| `String`| \- | Report Entry XML Receipt UUID. Maximum length 32 characters.|
 | `entryVendorCode`| `String`| \- | Alphanumeric. Vendor name list short code. Maximum length 32 characters.|
@@ -911,6 +922,25 @@ This data comes during confirmation posting document Details [`Event Data Schema
 | `documentNumber` | `string` | \- | External system document identifier. Maximum 80 characters.|
 | `fiscalYear` | `int32`  | \-  | External system fiscal year.|
 | `postingDate`| `string` | `YYYY-MM-DD` | External system posting date.|
+
+## Mileage <a name="scmileage"></a>
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `odometerStart` | `Number` | \- | Represents odometer reading at start of trip. |
+| `odometerEnd` | `Number` | \- | Represents odometer reading at end of trip.|
+| `passengerCount` | `Number`  | \-  | Represents count of passengers not including the driver.|
+| `personalDistance`| `Number` | \- | Represents portion of total miles which is not business related.|
+| `routeId` | `String` | \- | Alphanumeric. Route ID. |
+| `totalDistance` | `Number` | \- | Represents total miles driven for the trip.|
+| `hasMobileCanteenOrHeavyLoadAttached` | `Boolean`  |`true/false` |Indicates whether a mobile canteen or heavy load is attached.|
+| `hasCaravanAttached` | `Boolean`  | `true/false` | Indicates whether a caravan is attached.|
+| `hasDogIncluded` | `Boolean`  | `true/false`  | Indicates whether a dog is included.|
+| `hasForestOrConstructionSiteRoadInRoute` | `Boolean`  | `true/false` | Indicates whether there are forest or construction site roads on the route.|
+| `hasForestRoadInRoute` | `Boolean`  | `true/false`  | Indicates whether there is a forest road in the route.|
+| `isMarkedAsHigherRate` | `Boolean`  | `true/false`  | Indicates that the mileage amount is set as the higher rate.|
+| `hasMachinery` | `Boolean`  | `true/false`  | Indicates whether machinery is included.|
+| `hasTrailerAttached` | `Boolean`  | `true/false` | Indicates whether a trailer is attached.|
 
 
 

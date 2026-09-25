@@ -17,7 +17,7 @@ Once you sign the partnership agreement with the SAP Concur Business Development
 
 4. You develop and test the Development App in your development environment.
 
-5. You send an email to the CPM to schedule the Development App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](user-app-certification-calender.pdf).
+5. You send an email to the CPM to schedule the Development App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](/api-guides/app-certification-calendar.pdf).
 
 6. The CPM conducts the Development App certification walkthrough on the scheduled date. If your app fails in the Development App certification walkthrough, you'll need to fix the issues and goes back to step 6 to reschedule the certification walkthrough. Please refer to the [Certification Check List](#certification-check-list) for the certification requirements. 
 
@@ -25,11 +25,11 @@ Once you sign the partnership agreement with the SAP Concur Business Development
 
 8. You deploy and test the Production App in your production environment. 
 
-9.  Your marketing team submits App listing documents and images to [Concur_AppcenterMarketing@sap.com](mailto:Concur_AppcenterMarketing@sap.com). This step could happen at anytime before step 9. Please refer to [App Center Listing](/api-guides/e-receipts-new.html#creating-and-updating-an-app-center-listing) for more information.
+9.  Your marketing team submits App listing documents and images to the CPM. This step could happen at anytime before step 9. Please refer to [App Center Listing](/api-guides/e-receipts-user-app-integration-guide.html#creating-and-updating-an-app-center-listing) for more information.
 
-10. The App Center marketing team reviews and approves the listing documents and sends the confirmation to your marketing team, and also copies the CPM. You need the App Center marketing team's approval before moving to step 12. 
+10. The CPM and marketing team review and approve the listing documents, and send the confirmation to your marketing team. You need this approval before moving to step 12. 
 
-11. You email the CPM to schedule the Production App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](user-app-certification-calender.pdf).
+11. You email the CPM to schedule the Production App certification one month before the certification week. The CPM will send the meeting invitation to your technical contact. Please find your certification date on the [certification calendar](/api-guides/app-certification-calendar.pdf).
 
 12. The CPM conducts the Production App certification walkthrough on the scheduled date. If your app fails in the Production App certification walkthrough, you'll need to fix the issues and goes back to step 12 to schedule the next certification walkthrough. Please refer to [Certification Check List](#certification-check-list) for the certification requirements. 
 
@@ -67,18 +67,19 @@ You must meet following certification requirements before proceeding to the cert
 |Requirement | Description |
 | --- | --- |
 |Error Codes |Must log Error Code / Error Description. |
-|Correlation ID|The API call's HTTP Response header contains a field `concur-correlationid` which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
-|User ID |Should log `UserID` (User who clicked the Connect button).|
-|Response Header |For the eReceipt App, should log the `concur-correlationid`,`link`, and `location` data. |
-|Response Body |For the Quick Expense App, should log response body. |
+|Correlation ID|The API response header contains `concur-correlationid` field which is an unique id for each API call. Some legacy APIs do not. You must log this correlation id when provided.  |
+|User UUID |Log user's UUID (extracted from user's access_token or id_token).|
+|Request Body |Log the complete API request body raw data. |
+|Response Header |For the eReceipt integration,log response header `link` and `location` data in addition to `concur-correlationid`. |
+|Response Body |For the Quick Expense App,log the response body. |
 
 **Production Readiness**
 
 |Requirement | Description |
 | --- | --- |
-|Documentation |You will produce a Technical Guide that includes: Solution’s architecture, functions, and schema. Detailed token management (obtaining, refreshing, and storing tokens). API scopes with corresponding parameters used.​ API Logging. |
-|Register Authorized Support Contacts |You must have registered Authorized Support Contacts​. |
-|Submit Support Case |You must submit at least one Support Case at Partner Support Portal. |
+|Documentation |You need to create a technical document for SAP Concur internal archiving. This document should include your solution architecture, functions, and design. It should also cover API calls with specific parameters, ways users can connect to your App, token management (obtaining, refreshing, and storing tokens), and other technical integration aspects.|
+|Register Authorized Support Contacts |You must have registered authorized support contacts​. Please provide the support contact list to [PlatformCertification@sap.com](mailto:platformcertification@sap.com) before your SAP Concur App Center launch.|
+|Submit Support Case |You must submit at least one support case at partner support portal. Please refer to [How to Log a Support Case](https://developer.concur.com/tools-support/support.html#log-a-support-case).|
 
 **Certified APIs**
 

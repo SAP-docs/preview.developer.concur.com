@@ -37,7 +37,7 @@ A development app will be created for you by your assigned Certification Project
 
 ## SAP Concur Expense Setup Guide
 
-[SAP Concur Expense: Receipt Handling – Digital Tax Receipts for Mexico](http://www.concurtraining.com/customers/tech_pubs/Docs/_Current/SG_Exp/Exp_SG_Rec_Hand_Digital_Tax_Mexico.pdf)
+[SAP Concur Expense: Receipt Handling – Digital Tax Receipts for Mexico](https://help.sap.com/docs/CONCUR_EXPENSE/bb83754b1c5541808d50c09901e11475/1885cebc6f091014acafe14873f2a01b.html)
 
 ### Production App
 

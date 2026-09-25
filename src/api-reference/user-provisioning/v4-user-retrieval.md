@@ -1,0 +1,435 @@
+---
+title: User Retrieval v4
+layout: reference
+---
+
+{% include prerelease.html %}
+
+# User Retrieval v4
+
+The User Retrieval API provides a single, streamlined endpoint that retrieves multiple users identity and spend attributes all at once, eliminating the need to manage multiple integrations. This reduces engineering effort, improves performance, and ensures more consistent data across your workflows. With one unified call, you get faster insights and a simpler, more reliable path for enhanced customer experiences.
+
+## <a name="limitations"></a>Limitations
+
+Access to this documentation does not provide access to the API.
+
+**Important**: These APIs are not intended for real-time data retrieval. The data returned may be delayed and should not be expected to reflect live/current state. These endpoints are suitable for use cases that don't require immediate data freshness.
+
+### Multi-Valued Attribute Limitations
+
+The following operations are NOT supported within multi-valued attributes.
+
+#### Unsupported Multi-Valued Examples
+
+Complex filtering inside multi-valued attributes is not supported, as follows: 
+
+```shell
+// NOT SUPPORTED - NOT within multi-valued attribute
+emails[type eq "work" AND NOT (value sw "test.com")]
+
+// NOT SUPPORTED - NE within multi-valued attribute
+emails[type eq "work" AND value ne "test@company.com"]
+```
+
+#### Other Limitations
+
+* Maximum search request payload size is 10 KB
+* Maximum count per request is 1000
+* The latency of search requests may vary based on filter complexity and result set size
+* The search endpoint does not support sorting of results
+* Due to indexing latency, search data and results may be up to a few minutes behind real-time updates
+
+## <a name="products-editions"></a>Products and Editions
+
+* Concur Expense Professional Edition
+* Concur Expense Standard Edition
+* Concur Travel Professional Edition
+* Concur Travel Standard Edition
+* Concur Invoice Professional Edition
+* Concur Invoice Standard Edition
+* Concur Request Professional Edition
+* Concur Request Standard Edition
+
+## <a name="scope-usage"></a>Scope Usage
+
+Name|Description|Endpoint 
+---|---|---
+`user.profile.search.read`|Read and filter user profiles|GET Search 
+
+## <a name="access-token-usage"></a>Access Token Usage
+
+All SCIM User Search requests must be using Company JWT authentication with required scope ( user.profile.search.read) and the results are scoped to the company associated with the JWT.
+
+## <a name="create-resource"></a>Retrieve and Filter Users
+
+`/Users/search` allows to retrieve users by filtering on identity/spend user attributes based on [SCIM RFC 7644](https://datatracker.ietf.org/doc/html/rfc7644). 
+
+### Scopes
+
+`user.profile.search.read` - Refer to [Scope Usage](#scope-usage) for full details.
+
+### <a name="uri-template-scope-usage"></a>URI Template
+
+```shell
+https://{datacenterURI}/profile/v4/Users/.search
+```
+
+### Supported Extensions
+
+The following extensions are supported in the search response:
+
+```shell
+Core User (urn:ietf:params:scim:schemas:core:2.0:User)
+Enterprise User (urn:ietf:params:scim:schemas:extension:enterprise:2.0:User)
+Spend User (urn:ietf:params:scim:schemas:extension:spend:2.0:User)
+```
+
+### Filterable Fields
+
+#### <a name="core-user-fields-schema-one"></a>Core User Fields
+
+Name|Type|Format|Description
+---|---|---|---
+id|`string`|-|User UUID
+userName|`string`|-|Login username
+active|`boolean`|-|User active status 
+nickName|`string`|-|User nickname
+name.givenName|`string`|-|First name 
+name.familyName|`string`|-|Last name
+emails.value|`string, part of multi-valued field`|-|Email address 
+emails.type|`string, part of multi-valued field`|-|Email type
+emails.verified|`boolean, part of multi-valued field`|-|Email verification status
+addresses.locality|`string, part of multi-valued field`|-|Address city 
+addresses.region|`string, part of multi-valued field`|-|address state/region 
+addresses.country|`string, part of multi-valued field`|-|Address country code
+addresses.type|`string, part of multi-valued field`|-|Address type
+meta.created|`dateTime`|-|Creation timestamp 
+meta.lastModified|`dateTime`|-|Last modified timestamp 
+
+#### <a name="enterprise-extension-fields-schema-one"></a>Enterprise Extension Fields
+
+Name|Type|Format|Description
+---|---|---|---
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:employeeNumber`|`string`|-|Employee number 
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:companyId `|`string`|-|Company ID
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department`|`string`|-|Department
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:division`|`string`|-|Division
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:startDate`|`dateTime`|-|Start Date
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:costCenter`|`string`|-|Cost Center
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:manager.value`|`string`|-|Manager UUID
+`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:terminationDate`|`dateTime`|-|Termination Date
+
+#### <a name="spend-User-extension-fields-schema-one"></a>Spend User Extension Fields
+
+Name|Type|Format|Description
+---|---|---|---
+`urn:ietf:params:scim:schemas:extension:spend:2.0:User:country`|`string`|-|Spend Country Code
+`urn:ietf:params:scim:schemas:extension:spend:2.0:User:customData.id `|`string, part of multi-valued field)`|-|Custom Field ID
+`urn:ietf:params:scim:schemas:extension:spend:2.0:User:customData.value`|`string, part of multi-valued field`|-|Custom Field value
+`urn:ietf:params:scim:schemas:extension:spend:2.0:User:customData.syncGuid`|`string, part of multi-valued field`|-|Custom field sync GUID
+
+### Payloads
+
+### Examples
+
+#### Request
+
+```shell
+curl -X POST "https://us.api.concursolutions.com/profile/v4/Users/.search" \
+     -H "Authorization: Bearer {your_jwt_token}" \
+     -H "Content-Type: application/scim+json" \
+{
+    "schemas": [
+        "urn:ietf:params:scim:api:messages:2.0:SearchRequest"
+    ],
+    "filter": "userName eq \"john.doe@company.com\"",
+    "attributes": ["name", "emails", "userName"],
+    "excludedAttributes": [],
+    "count": 10,
+    "cursor": null
+}
+```
+
+#### Response
+
+```shell
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+  ],
+  "total": 1,
+  "itemsPerPage": 1,
+  "Resources": [
+    {
+      "emails": [
+        {
+          "type": "work",
+          "value": "john.doe@company.com",
+          "verified": false
+        },
+        {
+          "type": "home",
+          "value": "john.doe@gmail.com",
+          "verified": false
+        }
+      ],
+      "userName": "john.doe@company.com",
+      "id": "1f3124bf-f147-499b-9557-3d7672173de3",
+      "name": {
+        "givenName": "Blah",
+        "honorificPrefix": "Mr",
+        "familyName": "Smith"
+      }
+    }
+  ]
+}
+```
+
+## <a name="schema"></a>Pagination
+
+The SCIM User Search endpoint supports [cursor-based pagination](https://datatracker.ietf.org/doc/rfc9865/). Use the count parameter to specify the number of results per page and the cursor parameter to navigate through pages.
+
+### <a name="schema-one"></a>SCIM Filter Operators
+
+####  Comparison Operators
+
+Operator Name|Operator Description
+---|---
+`eq`|`Equal to`|User UUID 
+`ne`|`Not equal to`|Login username
+`co`|`Contains substring`|User active status 
+`sw`|`Starts with`|User nickname
+`ew`|`Ends with`|First name
+`pr`|`Present ( attribute has a value)`|Last name 
+`gt`|`Greater than`|Email address
+`ge`|`Greater than or equal to`|Email type
+`lt`|`Less than`| Email verification status
+`le`|`Less than or equal to`|Address city
+
+####  Logical Operators
+
+Operator Name|Operator Description
+---|---
+`and`| Logical AND. All combined expressions must be true.
+`or`|Logical OR. At least one combined expression must be true.
+`not`|Logical NOT. The expression is true if the filtered expression is false.
+
+### <a name="use-cases-by-operator-schema-one"></a>Use Cases by Operator
+
+Below are example filters for search request payloads, organized by common use cases.
+
+####  1. Equal To (eq)
+
+* Find users with a specific username.
+
+```shell
+"userName eq \"john.doe@company.com\""
+```
+
+* Find active users only
+
+```shell
+"active eq true"
+```
+
+* Find users with verified work email
+
+```shell
+"emails[type eq \"work\" and verified eq true]"
+```
+
+#### 2. Not Equal To (ne)
+
+* Find users not in a specific department
+
+```shell
+"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department ne \"Sales\""
+```
+
+* Find inactive users
+
+```shell
+"active ne true"
+```
+
+#### 3. Contains (co)
+
+* Find users with names containing specific substring
+
+```shell
+"name.givenName co \"John\""
+```
+
+* Find users with work email addresses containing domain
+
+```shell
+"emails[type eq \"work\" and value co \"@company.com\"]"
+
+```
+
+#### 4. Starts With (sw)
+
+* Find users with last names starting with "A"
+
+```shell
+"name.familyName sw \"A\""
+```
+
+#### 5. Ends With (ew)
+
+* Find users with email addresses ending with specific domain
+
+```shell
+"emails.value ew \"@company.com\""
+"emails[value ew \"@company.com\"]"
+```
+
+* Find users with work email addresses ending with specific domain
+
+```shell
+"emails[type eq \"work\" and value ew \"@company.com\"]"
+```
+
+#### 6. Present (pr)
+
+* Find users who have a nickname defined
+
+```shell
+"nickName pr"
+```
+
+* Find users with manager assigned
+
+```shell
+"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:manager.value pr"
+```
+
+#### 7. Greater Than (gt)
+
+* Find users updated after specific date
+
+```shell
+"meta.lastModified gt \"2025-01-01T00:00:00Z\""
+```
+
+#### 8. Greater Than or Equal (ge)
+
+* Find users created on or after specific date
+
+```shell
+"meta.created ge \"2025-01-01T00:00:00Z\""
+```
+
+#### 9. Less Than (lt)
+
+* Find users created before specific date
+
+```shell
+"meta.created lt \"2025-01-31T23:59:59Z\""
+```
+
+* Find users with start date before specific date
+
+```shell
+"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:startDate lt \"2025-01-31T23:59:59Z\""
+```
+
+#### 10 .Less Than or Equal (le)
+
+* Find users last modified on or before specific date
+
+```shell
+"meta.lastModified le \"2025-01-31T23:59:59Z\""
+```
+
+### <a name="complex-logical-operations-schema-one"></a>Complex Logical Operations
+
+#### AND Operations
+
+* Find active users in specific department
+
+```shell
+"active eq true and urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department eq \"Sales\""
+```
+* Find users created within date range
+
+```shell
+"meta.created ge \"2023-01-01T00:00:00Z\" and meta.created le \"2023-12-31T23:59:59Z\""
+```
+
+#### OR Operations
+
+* Find users in multiple departments
+
+```shell
+"urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department eq \"Engineering\" or urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department eq \"Marketing\""
+```
+
+* Find users in multiple countries
+
+```shell
+"urn:ietf:params:scim:schemas:extension:spend:2.0:User:country eq \"US\" or urn:ietf:params:scim:schemas:extension:spend:2.0:User:country eq \"CA\""
+```
+
+* Find users with work or home addresses in specific city
+
+```shell
+"addresses[type eq \"work\" and locality eq \"Seattle\"] or addresses[type eq \"home\" and locality eq \"Seattle\"]"
+```
+
+#### NOT Operations
+
+* Find users not in a specific department
+
+```shell
+"not (urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:department eq \"Contractors\")"
+```
+
+* Find users without termination date
+
+```shell
+"not (urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:terminationDate pr)"
+```
+
+* Find users contain work email but not home email
+
+```shell
+"emails[type eq \"work\"] and NOT (emails[type eq \"home\"])"
+```
+
+### <a name="complex-multi-attribute-scenarios-schema-one"></a>Complex Multi-Attribute Scenarios
+
+#### Employee Search Scenarios
+
+* Find users with specific custom field values
+
+```shell
+"urn:ietf:params:scim:schemas:extension:spend:2.0:User:customData[id eq \"custom1\" and value eq \"VIP\"]"
+```
+
+* Find users with verified work emails from specific domain
+
+```shell
+"emails[type eq \"work\" and verified eq true and value ew \"@company.com\"]"
+```
+
+### <a name="schema-error"></a>Error Sample
+
+```shell
+{
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:Error",
+    "urn:ietf:params:scim:api:messages:concur:2.0:Error"
+  ],
+  "status": "400",
+  "urn:ietf:params:scim:api:messages:concur:2.0:Error": {
+    "messages": [
+      {
+        "code": "INVALID_INPUT",
+        "message": "Invalid attribute path [:test]",
+        "type": "error"
+      }
+    ]
+  }
+}
+```

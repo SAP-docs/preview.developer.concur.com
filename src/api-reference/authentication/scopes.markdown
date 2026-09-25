@@ -33,4 +33,4 @@ Action|Description|Examples
 
 ## List of API Scopes <a name="v4apiscopes"></a>
 
-A list of the various scopes and the APIs that use them is available [here](/api-reference/authentication/app-center-learn-more.html).
+A list of the various scopes and the APIs that use them is available [Learn More About Scopes](/api-reference/authentication/app-center-learn-more.html).

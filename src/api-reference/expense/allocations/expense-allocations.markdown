@@ -14,6 +14,10 @@ Access to this documentation does not provide access to the API. 
 ## Retrieve All Allocations Per Entry or Report <a name="get"></a>
 
     GET  /api/v3.0/expense/allocations
+    
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -32,7 +36,6 @@ Note: userId is not a supported query string parameter for this API.
 ```
 https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 ```
-
 
 ### JSON Example of a Successful Response
 
@@ -112,6 +115,9 @@ https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 
     GET  /api/v3.0/expense/allocations/{id}
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
 
 ### Parameters
 
@@ -137,11 +143,11 @@ https://www.concursolutions.com/api/v3.0/expense/allocations?limit=10
 |-----|------|--------|------------ |
 |`AccountNumber`|`string`|-|The primary accounting code assigned to the expense type associated with this allocation. Typically, expense types have only a primary account code.
 |`AccountCode2`|`string`|-|The secondary or alternative accounting code assigned to the expense type associated with this allocation.
-|`Custom1 through Custom20`|`CustomFieldExtension`|-|A custom field associated with the allocation. This field may or may not have data, depending on how Expense is configured. Format: Text field. Maximum length: 64 characters.
+|`Custom1 through Custom20`|`CustomFieldExtension`|-|A custom field associated with the allocation. These fields may not contain data unless they are explicitly added to the allocation form configuration. Format: Text field. Maximum length: 64 characters.
 |`EntryID`|`string`|-|The unique identifier for the expense entry.
 |`ID`|`string`|-|The unique identifier of the resource.
-|`IsHidden`|`Boolean`|-|Indicates whether the allocation is hidden. Format: true or false
-|`IsPercentEdited`|`Boolean`|-|Indicates whether the percentage has been edited. Format: true or false
+|`IsHidden`|`Boolean`|`true`/`false`|Indicates whether the allocation is hidden.
+|`IsPercentEdited`|`Boolean`|`true`/`false`|Indicates whether the percentage has been edited.
 |`Percentage`|`string`|-|The percentage of the expense that is included in this allocation.
 |`URI`|`string`|-|The URI to the resource.|
 

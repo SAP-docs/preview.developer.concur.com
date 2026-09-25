@@ -29,6 +29,8 @@ For details regarding planned releases, see the [SAP Concur Release Calendar](ht
 
 If you are an existing partner and need support from SAP Concur, please click the link below to open a support case. If you do not have login credentials to the partner support portal, please ask a member of your team that does have access to open a support case requesting to have credentials generated for you. If there is no longer anyone on your team who is an Authorized Support Contact (ASC), please email [App Center Alliance](mailto:concur_appcenteralliance@sap.com?Subject=Support%20Portal%20Credentials).
 
+>**NOTE:** If you are an SAP Concur CUSTOMER seeking support, be aware that this link and alias are meant for App Center, Endorsed Apps, and Solution Extensions PARTNERS only. Please instead reach out to your SAP Concur account owner for customer support access.
+
 [Login and open a partner support case](https://sapconcur.my.salesforce.com/secur/login_portal.jsp?orgId=00D600000007Dq3&portalId=06060000000PrEi)
 
 Partner cases must include the following:

@@ -60,6 +60,10 @@ Clone the repository.  You can have multiple clones of the same repository on yo
 
 1. Go to your `pullmerge` copy of the `developer.concur.com` repository
 
+        cd ~/pullmerges/developer.concur.com
+
+* Mac Users
+
         cd pullmerges/developer.concur.com
 
 2. Ensure you're on `main` branch, and it's up to date
@@ -93,6 +97,8 @@ Clone the repository.  You can have multiple clones of the same repository on yo
         git branch -d pullmerge_0710
 
 10. Done!
+
+>**Note:** After pushing (step 6), you can you get this message: “error: RPC failed RPC failed; HTTP 400 curl 22. The requested URL returned error: 400 | send-pack: unexpected disconnect while reading sideband packet”. So, run the `git config http.postBuffer 524288000` command to increase the buffer size. Then, repeat step 6 to push it again and continue with the steps to finish the pull merge.
 
 ## Selective pullmerges (optional)
 

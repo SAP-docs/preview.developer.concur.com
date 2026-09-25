@@ -15,6 +15,10 @@ Access to this documentation does not provide access to the API. 
 
 ### Request Parameters
 
+### Scopes
+
+`EXPRPT` - get, add, approve, or update expense reports.
+
 #### Path Parameters
 
 | Parameter |Required/Optional| Description |

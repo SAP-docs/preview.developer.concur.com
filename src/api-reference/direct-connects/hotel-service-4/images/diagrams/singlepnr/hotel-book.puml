@@ -1,0 +1,41 @@
+@startuml hotel-book
+
+participant "User" as user
+
+participant ConcurHotel as cHotel #Lightcyan
+participant ConcurGDS as cGDS
+participant "CHSSupplier" as supply #LightBlue
+participant "GDS" as gds #LightYellow
+participant "OtherSupplierSource" as other #LightYellow
+
+
+== Book ==
+user -> cHotel++: Book request
+cHotel -> cHotel:  Determine if PNR is managed by Concur \n for this CHS connector
+alt Concur Managed PNR
+    cHotel -> cGDS++: Lookup existing PNR or \n create a new shell PNR in GDS \n and lock
+    alt PNR does not exist
+        cGDS -> gds: Create a new shell PNR \n (PNR with misc segment)
+        gds --> cGDS--: New PNR
+    end
+    cGDS --> cHotel--: PNR Reclocator
+end
+cHotel -> supply++: Book hotel request with PNR RecLocator
+alt Source is GDS
+    supply -> gds: Add active segment to PNR pointed by RecLocator
+else Other direct connect source
+    supply -> other: Book hotel request
+    supply -> gds: Add passive segment to PNR pointed by RecLocator
+    note left: Needs to meet Concur's standard passive format
+end
+supply -> gds: Add remarks to PNR
+supply --> cHotel--: Book response with flag denoting if "ActiveSegmentInConcurPNR"
+cHotel -> cGDS: Release PNR Lock
+alt "ActiveSegmentInConcurPNR" is true
+    cHotel -> cHotel: Store booking as GDS (for read/cancel)
+else "ActiveSegmentInConcurPNR" is false
+    cHotel -> cHotel: Store booking as CHS (same as today)
+end
+cHotel --> user--: Booking Confirmation
+
+@enduml

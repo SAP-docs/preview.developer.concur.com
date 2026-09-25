@@ -102,10 +102,16 @@ File Type|File Name|Mapping
 310 |User Primary Field Addendum|[310 User Primary Field Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/310.html)
 320|Update ID Information Import|[320 Update ID Information Import](https://developer.concur.com/api-reference/user-provisioning/mapping/320.html)
 350|File Type Travel Addendum|[350 File type Travel Addendum](https://developer.concur.com/api-reference/user-provisioning/mapping/350.html)
+360|Invoice Employee Import (|[360 Invoice Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/360.html)
 370|Statement Employee Import|[370 Statement Employee Import](https://developer.concur.com/api-reference/user-provisioning/mapping/370.html)
 400|Role Import|[400 Role Import](https://developer.concur.com/api-reference/user-provisioning/mapping/400.html)
 500|Delegate Import|[500 Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/500.html)
 550|Enhanced Delegate Import|[550 Enhanced Delegate Import](https://developer.concur.com/api-reference/user-provisioning/mapping/550.html)
+700|Authorized Approver Import|[700 Authorized Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/700.html)
+710|Cost Object Approver Import|[710 Cost Object Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/710.html)
+720|Authorized Approver With Level Import|[720 Authorized Approver With Level Import](https://developer.concur.com/api-reference/user-provisioning/mapping/720.html)
+750|Delete Authorized Approver Import|[750 Delete Authorized Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/750.html)
+760|Delete Cost Object Approver Import|[760 Delete Cost Object Approver Import](https://developer.concur.com/api-reference/user-provisioning/mapping/760.html)
 
 ## <a name="API_mapping_guides"></a>Mapping guides between User V1 and V4 APIs 
 
@@ -128,18 +134,20 @@ schemas:extension:spend:2.0:Approver|Supporting information for spend approvers.
 schemas:extension:spend:2.0:Delegate|Supporting information for spend delegates.|schemas:extension:concur:2.0:Provision:ServiceProviderConfig
 schemas:extension:spend:2.0:UserPreference|Supporting information for spend users user preferences.|schemas:extension:concur:2.0:Provision:ResourceType
 schemas:extension:spend:2.0:WorkflowPreference|Supporting information for spend users workflow preferences.|-
+schemas:extension:spend:2.0:InvoicePreference|Supporting information for invoice employee import.|-
 schemas:extension:spend:2.0:Role|Supporting information for spend role provisioning.|-
 schemas:extension:spend:2.0:Payroll|Supporting information for spend payroll provisioning.|-
+schemas:extension:spend:2.0:ApproverLimit|Supporting information for authorized approver import.|-
 schemas:extension:travel:2.0:User|Supporting information for travel users.|-
 
 ## Sample Postman Collection
-A [sample postman collection](/api-guides/postman/concur-user-provisioning-postman-collection.zip) that has examples of use creation, updating identity, spend and travel profile information. 
+A [sample postman collection](/api-guides/postman/concur-user-provisioning-postman-collection.zip) with examples of use creation, updating identity, spend and travel profile information. 
 
 ## Helpful Hints
 
 ### Travel Extension Roles
 
-Group and Rule Classes are set up in advance during company set up and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes, (and individuals) by an Admin User in the UI at any time.
+Group and Rule Classes are set up in advance during company configuration and desired Roles are assigned to each Group and Rule class at that time. Then users can be provisioned into Rule Class and Group(s) from which they inherit their Roles. Roles can be added to/removed from Groups, Rule Classes, (and individuals) by an Admin User in the UI at any time.
 
 Groups are generally related to how the software behaves and what part of the application a user can access (for example, reporting). A user can be a member of one or more Groups, though this is not required in provisioning. Every user is assigned a default "All" Group by default. Rule Class generally relates to what travel options the user has (for example, what fares they are able to see, what travel policies are enforced). An individual MUST be in one and only one Rule Class. This is the only field required to provision a user within the travel extension.
 

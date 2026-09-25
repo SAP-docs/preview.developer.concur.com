@@ -14,11 +14,11 @@ Most common use cases for this API involve two major workflows:
 
 ## Prior Versions
 
-* Attendees v3 documentation is available [here](/api-reference/expense/attendees/v3.attendees.html).
+Attendees v3 documentation is available [here](/api-reference/expense/attendees/v3.attendees.html).
 
 ## Limitations
 
-This API is only available to partners who have been granted access by SAP Concur. Access to this documentation does not provide access to the API.
+Access to this documentation does not provide access to the API.
 
 ## <a name="products-editions"></a>Products and Editions
 
@@ -143,6 +143,7 @@ https://{datacenterUri}/v4/attendees/{id}
 `id`|`string`|`uuid`| **Required** The attendee ID.|
 `userId`|`string`|`uuid`  |The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html)  to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
 `versionNumber`|`number`|`int32` | The attendee's version number. Otherwise, this defaults to the latest attendee version. This must be a positive integer.|
+`includeDeleted`|`boolean`|`true / false`| When `true`, this permits retrieval of a deleted attendee. By default, this value is `false`.|
 
 ### Payloads
 
@@ -218,6 +219,7 @@ https://{datacenterUri}/v4/attendees?id={id}
 |---|---|---|---|
 `id`|`string`|-| **Required** The attendee ID. Up to 10 comma-separated attendee IDs may be specified.|
 `userId` |`string`|`uuid`|The unique identifier of the SAP Concur user that owns the attendee. Use [Identity v4.1 API](/api-reference/profile/v4.1.identity.html) to retrieve the `userId`. The user who is performing this API request must have the Web Services Administrator user role (Professional) or Can Administer permission (Standard) to use this parameter.|
+`includeDeleted`|`boolean`|`true / false`| When `true`, this permits retrieval of a deleted attendee. By default, this value is `false`.|
 
 ### Payloads
 
@@ -303,7 +305,12 @@ Content-Type: application/json
 
 ## Create Attendee<a name="create-attendee"></a>
 
-Creates a new attendee.
+Creates a new attendee. 
+
+When adding a new attendee, the system checks for duplicates based on specific fields. These fields are defined by the attendee type's "Fields for Duplicate Search" criteria.
+
+If the new attendee matches all the duplicate search fields of an existing attendee with the same type, it is considered a duplicate and the system will show an error message.
+If "Search Across Attendee Types" is enabled, the system will check for duplicate attendees across all attendee types that use the same fields for duplicate search.
 
 ### Scopes
 
