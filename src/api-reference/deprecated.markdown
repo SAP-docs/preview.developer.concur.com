@@ -32,6 +32,7 @@ The following application programming interfaces (APIs) and other resources have
   * [Virtual Payment](/api-reference/direct-connects/hotel-service-2/V-payment.html)
   * [Appendix](/api-reference/direct-connects/hotel-service-2/Appendix.html)
   * [XSD Schema](/api-reference/direct-connects/hotel-service-2/xsd-schema.html)
+* [Expense Entries v3](/api-reference/expense/expense-report/expense-entry.html)
 * Expense Entry v1.1
   * [Expense Entry Itemization](/api-reference/expense/expense-report/v1dot1.expense-itemization.html)
 * [Expense Entry Attendee v2](/api-reference/expense/expense-report/v2.expense-entry-attendee.html)
