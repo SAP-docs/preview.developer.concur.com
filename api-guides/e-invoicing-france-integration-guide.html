@@ -5,7 +5,7 @@
   
 
 
-  <title> SAP Concur Developer Center | Poland e-Invoicing Integration</title>
+  <title> SAP Concur Developer Center | France e-Invoicing Integration</title>
 
 
 <!-- Meta -->
@@ -28,7 +28,7 @@
 <script src="https://assets.adobedtm.com/e1226b306979/aeb854337dc8/launch-85c98625c1e8.min.js" async></script>
 
 <!-- Canonical link-->
-<link rel="canonical" href="https://preview.developer.concur.com/api-guides/e-invoicing-poland-integration-guide.html" data-proofer-ignore>
+<link rel="canonical" href="https://preview.developer.concur.com/api-guides/e-invoicing-france-integration-guide.html" data-proofer-ignore>
 
 <!-- CSS Global Compulsory -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400">
@@ -303,11 +303,11 @@
       </a>
       <ul id="collapse-einvoicing" class="collapse in">
         
-          <li >
+          <li  class="active" >
             <a href="/api-guides/e-invoicing-france-integration-guide.html">France Integration Guide</a>
           </li>
         
-          <li  class="active" >
+          <li >
             <a href="/api-guides/e-invoicing-poland-integration-guide.html">Poland Integration Guide</a>
           </li>
         
@@ -661,31 +661,36 @@
            class="col-md-8 markdown-body">
         
 
-        <h1 id="poland-e-invoicing-solution-implementation-approach-for-customers-and-partners">Poland e-Invoicing Solution: Implementation Approach for Customers and Partners</h1>
+        <h1 id="france-e-invoicing-solution-implementation-approach-for-customers-and-partners">France e-invoicing solution: Implementation Approach for Customers and Partners</h1>
 
 <h2 id="overview">Overview</h2>
 
-<p>This document presents a high-level overview of the proposed solution and implementation approach required by customers and partners to enable e-invoicing for Poland within Concur Expense.</p>
+<p>This document presents a high-level overview of the proposed solution and implementation approach required by customers and partners to enable e-invoicing for France within Concur Expense.</p>
 
-<p>The document provides the technical approach for external partners to implement the PULL-based approach.</p>
+<p>The document provides the technical approach for external partners to implement PULL based approach.</p>
+
+<hr />
 
 <h2 id="solution-approach-pull-model">Solution Approach (Pull Model)</h2>
 
-<p><img src="/assets/img/api-guides/e-invoicing-poland/Solution_Approach_PullModel.png" alt="Pull-Model" /></p>
+<p><img src="/assets/img/api-guides/e-invoicing-france/Solution_Approach_PullModel.png" alt="Pull-Model" /></p>
 
-<h2 id="solution-from-concur">Solution from Concur</h2>
+<hr />
 
-<p>The following enhancements outline the proposed system behaviour to support Poland e-invoicing within Concur Expense.</p>
+<h2 id="solution-from-concur-expense">Solution from Concur Expense</h2>
+
+<p>The following enhancements outline the proposed system behaviour to support France e-invoicing within Concur Expense.</p>
 
 <h3 id="1-introduction-of-standard-fields">1. Introduction of Standard Fields</h3>
 
-<p>Concur will introduce standard fields to capture:</p>
+<p>Concur Expense will introduce standard fields to capture:</p>
 
 <ul>
   <li>Merchant Tax ID</li>
   <li>Invoice ID</li>
-  <li>Government Invoice ID (KSeF ID)</li>
 </ul>
+
+<p>Prior to September 2026, the Invoice ID and Merchant Tax ID fields were not added automatically to the expense entry form. To enable these fields, contact your SAP Concur Account Executive or submit a Support ticket. From September 2026, these fields are added automatically when France is selected as the digital compliance country.</p>
 
 <h3 id="2-field-availability-and-data-entry">2. Field Availability and Data Entry</h3>
 
@@ -693,85 +698,101 @@
 
 <ul>
   <li><em>Merchant Tax ID</em> and <em>Invoice ID</em> will be editable fields, allowing employees to manually input the relevant values.</li>
-  <li><em>Government Invoice ID (KSeF ID)</em> will be a read-only field.</li>
 </ul>
 
-<p><strong>Note:</strong> Additional configuration is required within Concur Expense to enable the Invoice ID and Government Invoice ID (KSeF ID) on the entry forms. See <a href="#concur-expense-configuration">Concur Expense Configuration</a> below.</p>
+<blockquote>
+  <p><strong>Note:</strong> Additional configuration is required within Concur Expense to enable the Invoice ID and Merchant Tax ID on the entry forms. See <strong>Concur Expense Configuration</strong> below, from September 2026.</p>
+</blockquote>
 
 <h3 id="3-trigger-for-external-partner-integration">3. Trigger for External Partner Integration</h3>
 
-<p>When both the <em>Merchant Tax ID</em> and <em>Invoice ID</em> are provided by the employee, Concur will trigger an external event to notify subscribed partners.</p>
+<p>When both the Merchant Tax ID and Invoice ID are provided by the employee, SAP Concur platform will trigger an external event to notify subscribed partners.</p>
 
-<p>This event indicates to the partner that the employee has triggered an expense creation and the relevant e-invoice is to be retrieved.</p>
+<p>This event is to indicate partner that employee has triggered an expense creation and relevant e-invoice is to be retrieved.</p>
 
-<p>The event-based mechanism provides a near real-time experience to the employee. The expense report remains in processing status while the partner responds to the event by calling the API with the e-invoice document.</p>
+<p>The event-based mechanism is to provide near real-time experience to the employee, the expense report remains in processing status for the time partner responds to the event by calling the API with e-invoice document.</p>
 
 <h3 id="4-inbound-data-from-partner">4. Inbound Data from Partner</h3>
 
-<p>Concur will provide an API to accept the e-invoice (KSeF XML invoice) and the associated KSeF ID from the connected partner system.</p>
+<p>SAP Concur platform will provide an API to accept the e-invoice in supported formats UBL, CII and Factur-X from the connected partner system.</p>
 
-<p>The API will also accept other tokens such as amount and date, as read from the XML invoice by the partner.</p>
+<p>The API would also accept other tokens like amount, date as read from XML invoice by the partner.</p>
 
 <h3 id="5-expense-and-invoice-linking">5. Expense and Invoice Linking</h3>
 
 <p>The retrieved e-invoice document will be automatically linked to the corresponding expense item created by the employee.</p>
 
-<p>The Government Invoice ID (KSeF ID) will be displayed on the expense item as read-only information.</p>
+<hr />
 
 <h2 id="partner-implementation">Partner Implementation</h2>
 
 <h3 id="1-event-subscription">1. Event Subscription</h3>
 
-<p>The partner must subscribe to the external event and provide a designated endpoint to receive event notifications from Concur.</p>
+<p>The partner must subscribe to the external event and provide a designated endpoint to receive event notifications from Concur Expense.</p>
 
 <h3 id="2-invoice-retrieval-and-submission">2. Invoice Retrieval and Submission</h3>
 
 <p>Upon receiving the event, the partner is responsible for identifying the corresponding e-invoice using the Merchant Tax ID and Invoice ID provided in the event payload.</p>
 
-<p>The partner will then transmit the e-invoice to Concur through the provided API.</p>
+<p>The partner will then transmit the e-invoice to Concur Expense through the provided API.</p>
 
-<p>Additionally, the partner must extract the necessary data elements (tokens) from the XML invoice, including the Government Invoice ID (KSeF ID), and include these values in the API request to populate the relevant expense item.</p>
+<p>Additionally, the partner must extract the necessary data elements (tokens) from the XML invoice and include these values in the API request to populate the relevant expense item.</p>
 
-<p>If the partner cannot find the corresponding e-invoice, it should provide the relevant error message to Concur.</p>
+<p>If the partner could not find the corresponding e-invoice, it should provide the relevant error message to Concur Expense.
+The expectation would be to receive response from partners in real real-time on raising the events.</p>
 
-<p>The expectation is to receive a response from partners in real time upon raising the events. The SLA can be discussed.</p>
+<hr />
 
-<h2 id="technical-steps-for-partner-integration"><a name="technical-steps"></a>Technical Steps for Partner Integration</h2>
+<h2 id="technical-steps-for-partner-integration">Technical Steps for Partner Integration</h2>
 
-<h3 id="1-generate-appid-client-id"><a name="generate-app-id"></a>1. Generate AppID (Client ID)</h3>
+<h3 id="1-generate-appid-client-id">1. Generate AppID (Client ID)</h3>
 
-<p>Clients who have Client Web Services can generate Client IDs (App IDs) and Client Secrets as described in:
-<a href="/api-reference/authentication/apidoc.html">OAuth 2.0 Application Management Tool</a></p>
+<p>Clients who have Client Web Services can generate Client IDs (App IDs) and Client Secrets as described in the document:</p>
 
-<p>Specify the following scopes when creating a new app:</p>
+<table>
+  <tbody>
+    <tr>
+      <td>[SAP Concur Developer Center</td>
+      <td>OAuth 2.0 Application Management Tool](https://developer.concur.com/api-reference/authentication/apidoc.html)</td>
+    </tr>
+  </tbody>
+</table>
 
+<p>Specify the following scopes while creating new app:</p>
 <blockquote>
   <p><strong>Required Scopes:</strong> <code class="language-plaintext highlighter-rouge">events.topic.read</code>, <code class="language-plaintext highlighter-rouge">receipts.read</code>, <code class="language-plaintext highlighter-rouge">receipts.write</code></p>
 </blockquote>
 
-<p>This provides a <code class="language-plaintext highlighter-rouge">ClientID</code> and <code class="language-plaintext highlighter-rouge">clientSecret</code>.</p>
+<p>This would provide <code class="language-plaintext highlighter-rouge">ClientID</code> and <code class="language-plaintext highlighter-rouge">clientSecret</code>.</p>
 
-<p><em>This activity can be performed by the Concur customer admin and does not require action from the integration partner.</em></p>
+<p><em>This activity can be performed by SAP Concur platform customer admin and does not require action from integration partner.</em></p>
 
-<h3 id="2-authentication-generate-company-request-token"><a name="generate-company-token"></a>2. Authentication: Generate Company Request Token</h3>
+<h3 id="2-authentication-generate-company-request-token">2. Authentication: Generate Company Request Token</h3>
 
 <p>A Company Request Token is required to request an Access/Refresh Token (JSON web token or JWT) for connecting to APIs in the SAP Concur platform.</p>
 
-<p><a href="/api-reference/authentication/company-auth.html">Company Request Token Self-Service Tool</a></p>
+<table>
+  <tbody>
+    <tr>
+      <td>[SAP Concur Developer Center</td>
+      <td>Company Request Token Self-Service Tool](https://developer.concur.com/api-reference/authentication/company-auth.html)</td>
+    </tr>
+  </tbody>
+</table>
 
-<p><em>This activity can be performed by the Concur customer admin and does not require action from the integration partner.</em></p>
+<p><em>This activity can be performed by SAP Concur platform customer admin and does not require action from integration partner.</em></p>
 
-<h3 id="3-event-subscription"><a name="event-subscription"></a>3. Event Subscription</h3>
+<h3 id="3-event-subscription">3. Event Subscription</h3>
 
-<p><em>This activity must be performed by the integration partner.</em></p>
+<p><em>This activity needs to be performed by integration partner.</em></p>
 
-<p>The partner must subscribe to the event with an endpoint to receive event notifications. Steps to subscribe to events are detailed here:
-<a href="/api-reference/ess/v4.event-subscription.html">Event Subscription Service v4</a></p>
+<p>Partner needs to subscribe to the event with an endpoint to receive event notification. Steps to subscribe to events are detailed here:
+<a href="https://developer.concur.com/api-reference/ess/v4.event-subscription.html">SAP Concur Developer Center | Event Subscription Service v4</a></p>
 
-<p>The details of the specific event are described here:
-<a href="/event-topics/expense/v4.document-compliance-events.html">Document Tax Compliance Event</a></p>
+<p>The details of the specific event are mentioned here:
+<a href="https://developer.concur.com/api-reference/document-compliance-gateway/v4.document-tax-compliance-event.html">SAP Concur Developer Center | Document Tax Compliance Event</a></p>
 
-<p><em>Steps to be performed by the integration partner for event subscription:</em></p>
+<p><em>Steps to be performed by integration partner for event subscription:</em></p>
 
 <h4 id="a-obtain-an-access-token-using-the-client_credentials-grant">a. Obtain an access token using the <code class="language-plaintext highlighter-rouge">client_credentials</code> grant</h4>
 
@@ -784,9 +805,9 @@ client_id={your-app-client-id}
 &amp;grant_type=client_credentials
 </code></pre></div></div>
 
-<p>This generates an access token.</p>
+<p>This will generate an access token.</p>
 
-<h4 id="b-create-a-subscription-to-a-topic-with-a-webhook-app-endpoint">b. Create a subscription to a topic with a webhook app endpoint</h4>
+<h4 id="b-create-a-subscription-to-topic-with-a-web-hook-app-endpoint">b. Create a subscription to topic with a web hook app endpoint</h4>
 
 <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">PUT</span> <span class="nn">/v4/subscriptions/webhook</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">www-us2.api.concursolutions.com</span>
@@ -794,36 +815,36 @@ client_id={your-app-client-id}
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
 <span class="p">{</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;unique subscription id for customer&gt;"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PL.compliance"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;unqiue subscription id for customer&gt;"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"filter"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR.compliance"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.document.tax.compliance"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"webHookConfig"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;webhook endpoint for event processing&gt;"</span><span class="w">
+    </span><span class="nl">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;web hook endpoint for event processing&gt;"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h4 id="c-call-concur-auth-api">c. Call Concur Auth API</h4>
+<h4 id="c-call-sap-concur-auth-api">c. Call SAP Concur Auth API</h4>
 
 <div class="language-http highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">POST</span> <span class="nn">/oauth2/v0/token</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/x-www-form-urlencoded</span>
 <span class="na">Host</span><span class="p">:</span> <span class="s">us.api.concursolutions.com</span>
 
 client_id=&lt;your-client_id&gt;
-&amp;client_secret=&lt;your-client_secret&gt;
+&amp;client_secret=your-client_secret
 &amp;grant_type=password
 &amp;username=&lt;companyId&gt;
 &amp;password=&lt;company request token&gt;
 &amp;credtype=authtoken
 </code></pre></div></div>
 
-<p>The partner will be able to receive events after completing these steps.</p>
+<p><em>Partner would be able to receive events after performing these steps.</em></p>
 
-<h4 id="example-event-for-poland">Example Event for Poland</h4>
+<h4 id="example-event-for-fr">Example event for FR</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"polandteststandard"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PL.compliance"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"correlationId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"franceteststandard"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR.compliance"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"topic"</span><span class="p">:</span><span class="w"> </span><span class="s2">"public.concur.document.tax.compliance"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"subtopic"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
   </span><span class="nl">"timeStamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-01-06T17:16:22.235Z"</span><span class="p">,</span><span class="w">
@@ -832,34 +853,42 @@ client_id=&lt;your-client_id&gt;
     </span><span class="nl">"companyId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"8e093375-2319-435e-95d1-9482d17b3d65"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"isDisplayVersionRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="nl">"isComplianceDocRequired"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"taxId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MerchantTaxStandard"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"complianceCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PL"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"taxId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dcgmerD233"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"complianceCountryCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"documentId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"d91c624a-d152-45e3-8331-5b611e97c1eb"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"invoiceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"InvoiceStandard"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"invoiceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dcginv233"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us2.api.concursolutions.com/document-compliance-gateway/v4/taxdocuments/d91c624a-d152-45e3-8331-5b611e97c1eb"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"63f5b366-63d5-4343-8f15-ed7246da9b67"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p>For Poland, the <code class="language-plaintext highlighter-rouge">complianceCountryCode</code> is <code class="language-plaintext highlighter-rouge">PL</code>. The event is enhanced to include Merchant Tax ID (<code class="language-plaintext highlighter-rouge">taxId</code>) and Invoice ID (<code class="language-plaintext highlighter-rouge">invoiceId</code>).</p>
+<p>For France, the complianceCountryCode would be FR and the event is enhanced to include Merchant Tax ID (taxId) and Invoice ID (invoiceId).</p>
 
-<h3 id="4-implement-document-compliance-gateway-api-to-accept-xml-document-and-token-data"><a name="document-compliance-gateway-api"></a>4. Implement Document Compliance Gateway API to Accept XML Document and Token Data</h3>
+<hr />
 
-<p><strong>API Details:</strong> <a href="/api-reference/document-compliance-gateway/V4.document-compliance-gateway.html">Document Compliance Gateway v4</a></p>
+<h3 id="4-implement-document-compliance-gateway-api-to-accept-xml-document-and-token-data">4. Implement Document Compliance Gateway API to accept XML document and token data</h3>
 
-<p>The API accepts an XML document in addition to tokenized data. The e-invoice retrieved from the KSeF portal should be sent as an XML document.</p>
+<table>
+  <tbody>
+    <tr>
+      <td><strong>API Details:</strong> [SAP Concur Developer Center</td>
+      <td>Document Compliance Gateway v4](https://developer.concur.com/api-reference/document-compliance-gateway/v4.document-compliance-gateway.html)</td>
+    </tr>
+  </tbody>
+</table>
 
-<p><img src="/assets/img/api-guides/e-invoicing-poland/DocComplianceGateway_Flow.png" alt="Document Compliance Gateway V4" /></p>
+<p>The API can accept XML document in addition to the tokenized data. The e-invoice retrieved from KSeF portal should be sent as an XML document.</p>
+
+<p><img src="/assets/img/api-guides/e-invoicing-france/DocComplianceGateway_Flow.png" alt="Document Compliance Gateway V4" /></p>
 
 <h4 id="example">Example</h4>
 
-<p><strong>PUT API Call</strong></p>
+<p><strong>PUT API CALL</strong></p>
 
 <p><strong>Scopes:</strong> <code class="language-plaintext highlighter-rouge">receipts.write</code></p>
 
 <p><strong>Request:</strong></p>
-
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT https://{region}.api.concursolutions.com/document-compliance-gateway/v4/tax-documents/{documentId}
 </code></pre></div></div>
 
@@ -879,7 +908,7 @@ client_id=&lt;your-client_id&gt;
       <td>documentId</td>
       <td>string</td>
       <td> </td>
-      <td>Unique ID assigned to a document.</td>
+      <td>Unique id assigned to a document.</td>
     </tr>
   </tbody>
 </table>
@@ -887,22 +916,22 @@ client_id=&lt;your-client_id&gt;
 <p><strong>Headers</strong></p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">Authorization</code> — provided through an App for Business and the company JWT.</li>
-  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> — used to track the workflow for every step.</li>
+  <li>Authorization is provided through an App for Business and the company JWT.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is used to track the workflow for every step.</li>
 </ul>
 
 <p><strong>Payload</strong></p>
 
 <ul>
   <li>
-    <p><strong><code class="language-plaintext highlighter-rouge">digitalTaxDocument</code></strong> — A <code class="language-plaintext highlighter-rouge">digitalTaxDocument</code> file in JSON format. <strong>Required.</strong></p>
+    <p><strong><code class="language-plaintext highlighter-rouge">digitalTaxDocument</code></strong> — A digitalTaxDocument file in JSON format that is <strong>required</strong>.</p>
   </li>
   <li><strong><code class="language-plaintext highlighter-rouge">displayedVersion</code></strong> — A multipart compliant document in human-readable PDF format.
     <ul>
       <li>If the end user only uploads the XML file, the partner will receive the event with <code class="language-plaintext highlighter-rouge">isDisplayVersionRequired = true</code>.
         <ul>
-          <li>If the XML file is valid and processed, the partner must convert the XML file to PDF and upload it in the <code class="language-plaintext highlighter-rouge">displayedVersion</code> field.</li>
-          <li>If the XML file is invalid or has failed, uploading <code class="language-plaintext highlighter-rouge">displayedVersion</code> is optional.</li>
+          <li>In such scenarios, if the xml file is valid and processed, the partner needs to convert the XML file into PDF format and upload it in the <code class="language-plaintext highlighter-rouge">displayedVersion</code> field <strong>mandatorily</strong>.</li>
+          <li>If the XML file is invalid or has failed, uploading the <code class="language-plaintext highlighter-rouge">displayedVersion</code> is <strong>optional</strong>.</li>
         </ul>
       </li>
     </ul>
@@ -911,8 +940,8 @@ client_id=&lt;your-client_id&gt;
     <ul>
       <li>The partner will receive the event with <code class="language-plaintext highlighter-rouge">isComplianceDocRequired = true</code>.
         <ul>
-          <li>If the partner can fetch the compliance document from the official authorities (status: <em>processed</em>), it must be provided in the <code class="language-plaintext highlighter-rouge">complianceDocument</code> field as a multipart attachment.</li>
-          <li>If the partner cannot fetch the compliance document from the official authorities (status: <em>failed</em>), uploading <code class="language-plaintext highlighter-rouge">complianceDocument</code> is optional.</li>
+          <li>In such scenarios, if the partner is able to fetch the compliance document from the official authorities (status: <em>processed</em>), it must be provided in the <code class="language-plaintext highlighter-rouge">complianceDocument</code> field as a multipart attachment.</li>
+          <li>If the partner is not able to fetch the compliance document from the official authorities (status: <em>failed</em>), uploading the <code class="language-plaintext highlighter-rouge">complianceDocument</code> is <strong>optional</strong>.</li>
         </ul>
       </li>
     </ul>
@@ -925,7 +954,7 @@ client_id=&lt;your-client_id&gt;
   <span class="nt">-H</span> <span class="s1">'Authorization: Bearer &lt;JWT token&gt;'</span> <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"concur-correlationid: {LogicalId}"</span> <span class="se">\</span>
   <span class="nt">--form</span> <span class="s2">"digitalTaxDocument"</span><span class="o">=</span>@<span class="s2">"DigitalTaxToken.json"</span> <span class="se">\</span>
-  <span class="nt">--form</span> <span class="nv">complianceDocument</span><span class="o">=</span>@<span class="s2">"PL-CompliantDoc.xml"</span>
+  <span class="nt">--form</span> <span class="nv">complianceDocument</span><span class="o">=</span>@<span class="s2">"FR-CompliantDoc.xml"</span>
 </code></pre></div></div>
 
 <h4 id="response-example">Response Example</h4>
@@ -941,7 +970,7 @@ concur-correlationid: "polandteststandard"
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"Status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"processed"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"Description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PL Validation"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"Description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FR Validation"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"DocumentData"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"FormatVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"4.0"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"Code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AQ"</span><span class="p">,</span><span class="w">
@@ -949,18 +978,18 @@ concur-correlationid: "polandteststandard"
     </span><span class="nl">"IssueDateTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2022-10-19T07:24:53"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"GrossAmount"</span><span class="p">:</span><span class="w"> </span><span class="mf">517.24</span><span class="p">,</span><span class="w">
     </span><span class="nl">"Discount"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"Currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PLN"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EUR"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"NetAmount"</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="p">,</span><span class="w">
     </span><span class="nl">"PaymentMethod"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PUE"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"DocumentPostalCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"Vendor"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"CertificateNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00001000000508021176"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"TaxNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MerchantTaxStandard"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Poland Vendor Name"</span><span class="w">
+      </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"France Vendor Name"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"Buyer"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
       </span><span class="nl">"TaxNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Buyer1234"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SAP Poland Buyer"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"Name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SAP France Buyer"</span><span class="p">,</span><span class="w">
       </span><span class="nl">"PostalCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"12345"</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"TotalSalesTax"</span><span class="p">:</span><span class="w"> </span><span class="mf">82.76</span><span class="p">,</span><span class="w">
@@ -1002,7 +1031,9 @@ concur-correlationid: "polandteststandard"
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h2 id="schema"><a name="schema"></a>Schema</h2>
+<hr />
+
+<h2 id="schema">Schema</h2>
 
 <h3 id="digitaltaxdocument-schema">DigitalTaxDocument Schema</h3>
 
@@ -1026,7 +1057,7 @@ concur-correlationid: "polandteststandard"
       <td>documentData</td>
       <td>object</td>
       <td>DocumentData Schema</td>
-      <td><strong>Required</strong> — Document details and Tax Token info (can be null for failed status).</td>
+      <td><strong>Required</strong> — Document details and Tax Token info (Can be null for failed status).</td>
     </tr>
     <tr>
       <td>code</td>
@@ -1065,7 +1096,7 @@ concur-correlationid: "polandteststandard"
       <td>uuid</td>
       <td>string</td>
       <td>-</td>
-      <td><strong>Required</strong> — Document UUID — field present in compliance document / Government doc unique ID.</td>
+      <td><strong>Required</strong> — Document UUID - field present in compliance document/Government doc unique id.</td>
     </tr>
     <tr>
       <td>grossAmount</td>
@@ -1077,13 +1108,13 @@ concur-correlationid: "polandteststandard"
       <td>currency</td>
       <td>string</td>
       <td><code class="language-plaintext highlighter-rouge">"enum": ["INR","MXN","USD",..]</code></td>
-      <td><strong>Required</strong> — Currency used to express amounts (ISO 4217 codes).</td>
+      <td><strong>Required</strong> — Currency used to express amounts (According to the ISO 4217 codes).</td>
     </tr>
     <tr>
       <td>exchangeRate</td>
       <td>string</td>
       <td>-</td>
-      <td><strong>Required</strong> — Exchange rate according to currency used.</td>
+      <td><strong>Required</strong> — Exchange Rate according to currency used.</td>
     </tr>
     <tr>
       <td>netAmount</td>
@@ -1095,13 +1126,13 @@ concur-correlationid: "polandteststandard"
       <td>paymentMethod</td>
       <td>string</td>
       <td>-</td>
-      <td><strong>Required</strong> — Payment method code: <code class="language-plaintext highlighter-rouge">PUE</code> (single payment), <code class="language-plaintext highlighter-rouge">PPD</code> (partial payments), <code class="language-plaintext highlighter-rouge">PIP</code> (initial payment and partialities).</td>
+      <td><strong>Required</strong> — Specify the code of payment method: PUE - only one payment, PPD - payment done in partial payments, PIP - Initial payment and partialities.</td>
     </tr>
     <tr>
       <td>vendor</td>
       <td>object</td>
       <td>Vendor schema</td>
-      <td><strong>Required</strong> — Details of the vendor.</td>
+      <td><strong>Required</strong> — details of the vendor.</td>
     </tr>
     <tr>
       <td>formatVersion</td>
@@ -1119,13 +1150,13 @@ concur-correlationid: "polandteststandard"
       <td>number</td>
       <td>string</td>
       <td>-</td>
-      <td>Number/Supplier Document ID of the receipt.</td>
+      <td>Number/Supplier Document Id of the receipt.</td>
     </tr>
     <tr>
       <td>code</td>
       <td>string</td>
       <td>-</td>
-      <td>Prefix of receipt — alphanumeric field referring to a physical place (POS, branch, factory, warehouse, office) or another criteria.</td>
+      <td>Prefix of receipt, an alphanumeric field that can refer to a physical place (POS, branch, factory, warehouse, office, etc.) or any other criteria (like business, line of product, etc.)</td>
     </tr>
     <tr>
       <td>documentPostalCode</td>
@@ -1137,7 +1168,7 @@ concur-correlationid: "polandteststandard"
       <td>paymentType</td>
       <td>string</td>
       <td><code class="language-plaintext highlighter-rouge">"enum": ["01", "02", "03"]</code></td>
-      <td>Means of payment: <code class="language-plaintext highlighter-rouge">01</code> (Cash), <code class="language-plaintext highlighter-rouge">02</code> (Cheque), <code class="language-plaintext highlighter-rouge">03</code> (Bank Transfer/Digital Wallet).</td>
+      <td>Means of payment (01 (Cash), 02 (Cheque), 03 (Bank Transfer/Digital Wallet)).</td>
     </tr>
     <tr>
       <td>discount</td>
@@ -1155,7 +1186,7 @@ concur-correlationid: "polandteststandard"
       <td>totalWithholdingTax</td>
       <td>number</td>
       <td>-</td>
-      <td>Sum of all withholding tax amounts of line items.</td>
+      <td>Sum of all withhold tax amounts of line items.</td>
     </tr>
     <tr>
       <td>lineItems</td>
@@ -1236,7 +1267,7 @@ concur-correlationid: "polandteststandard"
       <td>addressLine</td>
       <td>string</td>
       <td>-</td>
-      <td>Address line of receipt issuer.</td>
+      <td>AddressLine of receipt issuer.</td>
     </tr>
   </tbody>
 </table>
@@ -1260,7 +1291,7 @@ concur-correlationid: "polandteststandard"
       <td><strong>Required</strong> — Buyer Tax Number.</td>
     </tr>
     <tr>
-      <td>postalCode</td>
+      <td>PostalCode</td>
       <td>string</td>
       <td>-</td>
       <td>Postal code of tax domicile of recipient.</td>
@@ -1296,31 +1327,33 @@ concur-correlationid: "polandteststandard"
       <td>description</td>
       <td>string</td>
       <td>-</td>
-      <td>Product description.</td>
+      <td>Product Description.</td>
     </tr>
     <tr>
       <td>productCode</td>
       <td>string</td>
       <td>-</td>
-      <td><strong>Required</strong> — Key of product or service (catalogue: <code class="language-plaintext highlighter-rouge">c_ClaveProdServ</code>).</td>
+      <td><strong>Required</strong> — Key of product or service covered - 10101502 (Dogs), 10101506 (Horses) (Catalogue: c_ClaveProdServ)</td>
     </tr>
   </tbody>
 </table>
 
-<h2 id="concur-expense-configuration"><a name="concur-expense-configuration"></a>Concur Expense Configuration</h2>
+<hr />
+
+<h2 id="concur-expense-configuration">Concur Expense Configuration</h2>
 
 <ol>
-  <li>Navigate to <strong>Administration &gt; Expense &gt; Group Configurations</strong>.</li>
-  <li>Select the <strong>Expense Group Configuration</strong> applicable to Poland and click <strong>Modify</strong>.</li>
-  <li>Under <strong>Digital Compliance Country/Region Rule</strong>, click the drop-down and select <strong>Poland</strong>.</li>
-  <li>Click <strong>Save</strong>.</li>
+  <li>Navigate to <strong>Administration&gt;Expense&gt;Group Configurations</strong>.</li>
+  <li>Select the <strong>Expense Group Configuration</strong> applicable to France and click Modify.</li>
+  <li>Under the <strong>Digital Compliance Country/Region Rule</strong>, click on the drop-down and select <strong>France</strong>.</li>
+  <li><strong>Save</strong> changes.</li>
 </ol>
 
-<p><img src="/assets/img/api-guides/e-invoicing-poland/ExpenseGroupConfig_setting.png" alt="Expense Group Configuration Setting" /></p>
+<p><img src="/assets/img/api-guides/e-invoicing-france/ExpenseGroupConfig_setting.png" alt="Expense Group Configuration Setting" /></p>
 
 <h2 id="disclaimer">Disclaimer</h2>
 
-<p>This document is provided for customers and partners to plan the implementation to support the e-invoicing regulation for Poland within Concur Expense. The document should not be considered a final solution.</p>
+<p>The document is provided for customers and partners to plan the implementation to support e-invoicing regulation for France for Concur Expense.</p>
 
       </div>
       <!--/col-md-8-->
@@ -1374,7 +1407,7 @@ concur-correlationid: "polandteststandard"
       <a href="https://help.sap.com/doc/sap-api-policy/">SAP API Policy</a> |
       <a href="/tools-support/deprecation-policy.html">API Deprecation Policy</a> |
       <a href="/legal-disclosure.html">Legal Disclosure</a> |
-      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-guides/e-invoicing-poland-integration-guide.markdown">Edit this page on GitHub</a>
+      <a href="https://github.com/SAP-docs/preview.developer.concur.com/blob/main/src/api-guides/e-invoicing-france-integration-guide.markdown">Edit this page on GitHub</a>
     </p>
   </div>
 
