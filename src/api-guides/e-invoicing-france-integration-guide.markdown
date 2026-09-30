@@ -30,7 +30,7 @@ Concur Expense will introduce standard fields to capture:
 - Merchant Tax ID
 - Invoice ID
 
-Prior to September 2026, the Invoice ID and Merchant Tax ID fields were not added automatically to the expense entry form. To enable these fields, contact your SAP Concur Account Executive or submit a Support ticket. From September 2026, these fields are added automatically when France is selected as the digital compliance country.
+Prior to September 2026, the Invoice ID and Merchant Tax ID fields were not added automatically to the expense entry form. From September 2026, these fields are added automatically when France is selected as the digital compliance country.
 
 ### 2. Field Availability and Data Entry
 
