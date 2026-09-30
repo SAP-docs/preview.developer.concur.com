@@ -19,18 +19,18 @@ The document provides the technical approach for external partners to implement 
 
 ---
 
-## Solution from Concur
+## Solution from Concur Expense
 
 The following enhancements outline the proposed system behaviour to support France e-invoicing within Concur Expense.
 
 ### 1. Introduction of Standard Fields
 
-Concur will introduce standard fields to capture:
+Concur Expense will introduce standard fields to capture:
 
 - Merchant Tax ID
 - Invoice ID
 
-During August 2026, the Invoice ID and Merchant Tax ID fields are not added automatically to the expense entry form. To enable these fields, contact your SAP Concur Account Executive or submit a Support ticket. After August 2026, these fields are added automatically when France is selected as the digital compliance country.
+Prior to September 2026, the Invoice ID and Merchant Tax ID fields were not added automatically to the expense entry form. To enable these fields, contact your SAP Concur Account Executive or submit a Support ticket. From September 2026, these fields are added automatically when France is selected as the digital compliance country.
 
 ### 2. Field Availability and Data Entry
 
@@ -38,11 +38,11 @@ These fields will be available at the expense entry level.
 
 - *Merchant Tax ID* and *Invoice ID* will be editable fields, allowing employees to manually input the relevant values.
 
-Note: Additional configuration is required within Concur Expense to enable the Invoice ID and Merchant Tax ID on the entry forms. See **Concur Expense Configuration** below (after August 2026).
+> **Note:** Additional configuration is required within Concur Expense to enable the Invoice ID and Merchant Tax ID on the entry forms. See **Concur Expense Configuration** below, from September 2026.
 
 ### 3. Trigger for External Partner Integration
 
-When both the Merchant Tax ID and Invoice ID are provided by the employee, Concur will trigger an external event to notify subscribed partners.
+When both the Merchant Tax ID and Invoice ID are provided by the employee, SAP Concur platform will trigger an external event to notify subscribed partners.
 
 This event is to indicate partner that employee has triggered an expense creation and relevant e-invoice is to be retrieved.
 
@@ -50,7 +50,7 @@ The event-based mechanism is to provide near real-time experience to the employe
 
 ### 4. Inbound Data from Partner
 
-Concur will provide an API to accept the e-invoice in supported formats UBL, CII and Factur-X from the connected partner system.
+SAP Concur platform will provide an API to accept the e-invoice in supported formats UBL, CII and Factur-X from the connected partner system.
 
 The API would also accept other tokens like amount, date as read from XML invoice by the partner.
 
@@ -64,17 +64,17 @@ The retrieved e-invoice document will be automatically linked to the correspondi
 
 ### 1. Event Subscription
 
-The partner must subscribe to the external event and provide a designated endpoint to receive event notifications from Concur.
+The partner must subscribe to the external event and provide a designated endpoint to receive event notifications from Concur Expense.
 
 ### 2. Invoice Retrieval and Submission
 
 Upon receiving the event, the partner is responsible for identifying the corresponding e-invoice using the Merchant Tax ID and Invoice ID provided in the event payload.
 
-The partner will then transmit the e-invoice to Concur through the provided API.
+The partner will then transmit the e-invoice to Concur Expense through the provided API.
 
 Additionally, the partner must extract the necessary data elements (tokens) from the XML invoice and include these values in the API request to populate the relevant expense item.
 
-If the partner could not find the corresponding e-invoice, it should provide the relevant error message to Concur.
+If the partner could not find the corresponding e-invoice, it should provide the relevant error message to Concur Expense.
 The expectation would be to receive response from partners in real real-time on raising the events.
 
 ---
@@ -92,7 +92,7 @@ Specify the following scopes while creating new app:
 
 This would provide `ClientID` and `clientSecret`.
 
-*This activity can be performed by concur customer admin and does not require action from integration partner.*
+*This activity can be performed by SAP Concur platform customer admin and does not require action from integration partner.*
 
 ### 2. Authentication: Generate Company Request Token
 
@@ -100,7 +100,7 @@ A Company Request Token is required to request an Access/Refresh Token (JSON web
 
 [SAP Concur Developer Center | Company Request Token Self-Service Tool](https://developer.concur.com/api-reference/authentication/company-auth.html)
 
-*This activity can be performed by concur customer admin and does not require action from integration partner.*
+*This activity can be performed by SAP Concur platform customer admin and does not require action from integration partner.*
 
 ### 3. Event Subscription
 
@@ -146,7 +146,7 @@ Content-Type: application/json
 }
 ```
 
-#### c. Call Concur Auth API
+#### c. Call SAP Concur Auth API
 
 ```http
 POST /oauth2/v0/token HTTP/1.1
