@@ -30,7 +30,7 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
 2. **Clean up previous month's content:**
    - Delete all `### Now Available` sections
    - Move `### Preview` items to the **Previews table** — unless promoting to Now Available (then delete from table instead)
-   - Move last month's new Deprecation/Decommission notices to the **Deprecations and Decommissions table** — add a row with a link to last month's RN, the API name, and the details sentence. Exception: if the notice was published in the last week of the month, keep it in Ongoing for one additional month first.
+   - Move last month's new Deprecation/Decommission notices to **## Ongoing** (keep for at least 2 months so readers don't miss them)
    - Move last month's new cert updates to **## Ongoing**
 3. **Add new content** to `## New This Month` (new items go at the top)
 4. **Update indexes** (see below)
