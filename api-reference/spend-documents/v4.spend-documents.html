@@ -1300,15 +1300,22 @@
 
         <h1 id="spend-documents-v4---getting-started">Spend Documents v4 - Getting Started</h1>
 
-<p>Spend Documents v4 offers APIs for ingesting and retrieving receipt documents which will be made available in Expense. The APIs allow for the creation and retrieval of a simple receipts. The document of the receipt should be uploaded with the request along with the metadata. The uploaded receipt will be processed and the receipt will be visible in Available Receipts/Documents within Expense.</p>
+<p>Spend Documents v4 offers APIs for ingesting and retrieving receipt documents which will be made available in Expense. The APIs support two workflows:</p>
+
+<ul>
+  <li><strong>Simple Receipt</strong>: Upload a receipt image with basic metadata. The uploaded receipt will be processed and visible in Available Receipts/Documents within Expense.</li>
+  <li><strong>eReceipt</strong>: Submit structured electronic receipt data from partner/vendor systems directly into the Concur Expense platform, eliminating the need for users to manually capture and upload receipt images.</li>
+</ul>
 
 <h2 id="prior-versions">Prior Versions</h2>
 
-<p>The Spend Documents v4 API coexists with another set of Receipts V4 APIs. The latter is currently used for facilitating the submission of electronic receipts (eReceipts) to the SAP Concur platform.</p>
+<ul>
+  <li><a href="/api-reference/receipts/get-started.html">Receipts v4</a> was previously used for eReceipt submissions. New integrations should use Spend Documents v4.</li>
+</ul>
 
 <h2 id="limitations">Limitations</h2>
 
-<p>Access to this documentation does not provide access to the API. To submit electronic receipts (eReceipts) please use the <a href="https://developer.concur.com/api-reference/receipts/endpoints.html">Receipts v4 APIs</a>.</p>
+<p>Access to this documentation does not provide access to the API.</p>
 
 <h2 id="products-and-editions">Products and Editions</h2>
 
@@ -1320,6 +1327,14 @@
 <h2 id="prerequisites"><a name="prerequisites"></a>Prerequisites</h2>
 
 <p>Read the <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">Getting Started</a> section of <a href="https://developer.concur.com/api-reference/authentication/apidoc.html">Authentication API</a>. Once you have registered your application, you must <a href="https://developer.concur.com/api-reference/authentication/getting-started.html">obtain an access token from the Authentication API</a>.</p>
+
+<p>For eReceipt partner/vendor integrations, you also need:</p>
+
+<ul>
+  <li>An active partnership agreement with SAP Concur</li>
+  <li>OAuth 2.0 client credentials with the appropriate scopes</li>
+  <li>The ability to identify Concur users by <code class="language-plaintext highlighter-rouge">userId</code> and <code class="language-plaintext highlighter-rouge">companyId</code></li>
+</ul>
 
 <h2 id="scope-usage">Scope Usage</h2>
 
@@ -1333,19 +1348,70 @@
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <br /> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeonly</code></td>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <br /> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeOnly</code></td>
       <td>Post receipt for the user</td>
       <td>POST</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.read</code></td>
-      <td>Retrieve Receipt and its representations either by Receipt Id or Image Id and company Id</td>
+      <td>Retrieve receipt and its representations either by Receipt Id or Image Id and Company Id</td>
       <td>GET</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.write</code></td>
+      <td>Post a compliance document alongside the receipt</td>
+      <td>POST</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.read</code></td>
       <td>Retrieve compliance representation of the receipt</td>
       <td>GET</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="ereceipt-categories">eReceipt Categories</h2>
+
+<p>The eReceipt workflow supports the following receipt categories. Each category has specific schema requirements for the <code class="language-plaintext highlighter-rouge">receiptData</code> object.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Category</th>
+      <th>Use Case</th>
+      <th>Category-Specific Details Object</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">general</code></td>
+      <td>Restaurants, retail, and general purchases</td>
+      <td>None</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">groundTransport</code></td>
+      <td>Taxi, rideshare, and ground transportation</td>
+      <td><code class="language-plaintext highlighter-rouge">tripDetails.rideDetails</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">lodge</code></td>
+      <td>Hotels and accommodations</td>
+      <td><code class="language-plaintext highlighter-rouge">tripDetails.lodgeDetails</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">air</code></td>
+      <td>Airline tickets and flight bookings</td>
+      <td><code class="language-plaintext highlighter-rouge">tripDetails.airDetails</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">carRental</code></td>
+      <td>Vehicle rental transactions</td>
+      <td><code class="language-plaintext highlighter-rouge">tripDetails.carRentalDetails</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rail</code></td>
+      <td>Train and rail travel</td>
+      <td><code class="language-plaintext highlighter-rouge">tripDetails.railDetails</code></td>
     </tr>
   </tbody>
 </table>
@@ -1356,6 +1422,7 @@
   <li><a href="/api-reference/spend-documents/post-receipt.html">Upload Receipt</a></li>
   <li><a href="/api-reference/spend-documents/get-receipt.html">Get Receipt</a></li>
   <li><a href="/api-reference/spend-documents/schema.html">Schema</a></li>
+  <li><a href="/api-reference/spend-documents/v4.sample-receipts.html">Sample Receipts</a></li>
 </ul>
 
 
