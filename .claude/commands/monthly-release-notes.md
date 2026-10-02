@@ -28,10 +28,13 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
 
 1. **Create the file** — copy previous month's `.md`, save with the new publication date (second Thursday of the month, unless something new needs to go out sooner)
 2. **Clean up previous month's content:**
-   - Delete all `### Now Available` sections
-   - Move `### Preview` items to the **Previews table** — unless promoting to Now Available (then delete from table instead)
+   - Delete all `### Now Available:` sections
+   - Move `### Preview:` items from New This Month: API previews go to the **Previews table**; cert/infrastructure previews go to **## Ongoing** — keep the `### Preview:` prefix in both cases
    - Move last month's new Deprecation/Decommission notices to the **Deprecations and Decommissions table** — add a row with a link to last month's RN, the API name, and the details sentence. Exception: if the notice was published in the last week of the month, keep it in Ongoing for one additional month first.
    - Move last month's new cert updates to **## Ongoing**
+   - **Check due dates across all carried-forward items**: before finalizing the new file, scan every `### Preview:`, `### Important!`, and Ongoing item for any date mentioned in the text. If that date falls within or before the new month, alert the requester:
+     > *"'[heading]' mentions a date of [date] which is on or before this month. Should I: (1) remove it, (2) keep it one more month, or (3) promote it to Now Available?"*
+     Do not remove or change it without confirmation.
 3. **Add new content** to `## New This Month` (new items go at the top)
 4. **Update indexes** (see below)
 5. **Validate** the `.yml` with YAMLlint before committing
@@ -39,7 +42,13 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
 ## Mid-month update
 
 1. Add new RN at the **top** of `## New This Month` — returning readers see it immediately
-2. If it's a Now Available: find and remove the matching entry from the Previews table
+2. **Always confirm the heading prefix** before writing — if unclear, ask:
+   - `### Now Available: [Name]` — feature is GA
+   - `### Preview: [Name]` — feature is not yet GA
+   - `### Deprecation: [Name]` — API is being deprecated
+   - `### Important! [Notice]` — high-impact operational notice (cert renewals, shutdowns)
+   - If the requester doesn't specify, ask: *"Is this Now Available or a Preview?"*
+3. If it's a Now Available that was previously in the Previews table: find and remove the matching row from the table
 
 ## Index updates (new month only)
 
@@ -84,6 +93,21 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
 ```
 
 If `## New This Month` has nothing new, write `Not applicable.` — never leave it blank or remove the heading.
+
+### Heading prefixes — always required
+
+Every `###` heading in `## New This Month` and `## Ongoing` must have a prefix:
+
+| Prefix | When to use |
+|---|---|
+| `### Now Available: [Name]` | Feature/API is generally available |
+| `### Preview: [Name]` | Feature/API is not yet GA — keep prefix when moving to Ongoing |
+| `### Deprecation: [Name]` | API deprecation announcement |
+| `### Important! [Notice]` | High-impact operational notice (cert renewals, shutdowns) |
+
+**If the requester does not specify Preview or Now Available, always ask before writing.**
+
+When a `### Preview:` item promotes to Now Available: change the prefix to `### Now Available:` and remove the matching row from the Previews table.
 
 ### Key capabilities bullets
 
