@@ -22,11 +22,11 @@ These two different resources are sent/fetched from the Receipts V4 API via diff
 * E-Receipts (Receipts With Data) - Use E-Receipt Endpoints
 * Image-Only Receipts (Standalone Images Without Data) - Use Image-Only Receipt Endpoints
 
-> **Note**: The Receipts V4 API only provides GET access to individual or user’s receipts that have been submitted through this API, and, therefore the response will not be comprehensive of every user receipt within SAP Concur. All other images should be obtained via the [Image v1 API](https://developer.concur.com/api-reference/image/v1.image.html). Additionally, only the receipts will be returned, there will not be any corresponding entry data. Examples of Enterprise apps that should use the Image v1 API include: ERP integrations for financial journal entry postings, VAT reclaim integrations that obtain transactions to calculate VAT reclaim, project billing integrations used to substantiate expenses billed back, etc.
+> **Note**: The Receipts V4 API only provides GET access to individual or user’s receipts that have been submitted through this API, and, therefore the response will not be comprehensive of every user receipt within the SAP Concur platform. All other images should be obtained via the [Image v1 API](https://developer.concur.com/api-reference/image/v1.image.html). Additionally, only the receipts will be returned, there will not be any corresponding entry data. Examples of Enterprise apps that should use the Image v1 API include: ERP integrations for financial journal entry postings, VAT reclaim integrations that obtain transactions to calculate VAT reclaim, project billing integrations used to substantiate expenses billed back, etc.
 
 ## Migration to Spend Documents v4
 
-The [Spend Documents v4 API](/api-reference/spend-documents/v4.spend-documents.html) now supports eReceipt submissions and is the recommended API for new partner and vendor integrations. Clients using the Receipts v4 API for eReceipt submissions are encouraged to begin migrating to Spend Documents v4.
+The [Spend Documents v4 API](/api-reference/spend-documents/v4.spend-documents.html) supports eReceipt submissions and is the recommended API for new partner and vendor integrations. Clients using the Receipts v4 API for eReceipt submissions are encouraged to begin migrating to Spend Documents v4.
 
 ## Limitations
 
