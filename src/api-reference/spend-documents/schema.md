@@ -9,28 +9,29 @@ layout: reference
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-| `metadata`     | `object` |-| Receipt API schema for metadata, receipt-data, `enrichmentData` and document (& representations). |
-| `receiptData`  | `object` |-| Receipt API schema for receipt data.                                                              |
+| `metadata`     | `object` |-| Receipt metadata. |
+| `receiptData`  | `object` |-| Receipt transaction data. |
+| `documents`    | `array`  |-| Array of document objects associated with the receipt. |
 
 ## Metadata
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-| `userId`              | `string` |-| User's UUID.|
-| `forwardId`           | `string` |-| Forward Id that clients provide.|
-| `imageId`             | `string` |-| Imaging Id in Imaging Service.|
-| `id`                  | `string` |-| Receipt Id.|
-| `companyId`           | `string` |-| Company UUID.|
-| `dateTimeReceived`    | `string` |-| Date time of receipt uploaded.|
-| `origin`              | `string` |-| Origin of the request - supported origins listed below.|
-| `captureMethod`       | `string` |-| Type of the receipt capture method.|
-| `provider`            | `string` |-| Provider of the request - supported providers listed below.|
-| `complianceCountryCode` | `string` |-| Compliance country code based on user group configuration.|
-| `feature`             | `string` |-| Feature enrichment for the receipt.|
-| `status`              | `string` |-| Receipt status.|
-| `compliance`          | `object` |-| Compliance information for the receipt.|
-| `entityId`            | `string` |-| Entity Code.|
-| `category`            | `string` |-| eReceipt category.|
+| `userId`              | `string` |-| User's UUID. |
+| `forwardId`           | `string` |-| Forward Id that clients provide. |
+| `imageId`             | `string` |-| Imaging Id in Imaging Service. |
+| `id`                  | `string` |-| Receipt Id. |
+| `companyId`           | `string` |-| Company UUID. |
+| `dateTimeReceived`    | `string` |-| Date time of receipt uploaded. System-generated; do not include in POST requests. |
+| `origin`              | `string` |-| Origin of the request. Supported values: `web`, `mobile`, `email`, `vendor`, `partner`. Use `vendor` for external partner/vendor submissions. |
+| `captureMethod`       | `string` |-| Type of the receipt capture method. Supported values: `upload`, `cameraCapture`. |
+| `provider`            | `string` |-| Provider of the request. Supported values: `user`, `vendor`. Use `vendor` for external partner/vendor submissions. |
+| `complianceCountryCode` | `string` |-| Compliance country code based on user group configuration. |
+| `feature`             | `string` |-| Feature type for the receipt. Supported values for external callers: `simpleReceipt`, `eReceipt`. |
+| `status`              | `string` |-| Receipt status. Supported values: `accepted`, `processing`, `processed`, `failed`. |
+| `compliance`          | `object` |-| Compliance information for the receipt. |
+| `entityId`            | `string` |-| Entity Code. |
+| `category`            | `string` |-| eReceipt category. Supported values: `general`, `groundTransport`, `lodge`, `air`, `carRental`, `rail`. |
 
 ## ReceiptData
 
@@ -63,6 +64,8 @@ layout: reference
 | `currency`    | `string` | -      | Transaction Currency Code, required for EReceipt.  |
 | `netAmount`   | `string` | -      | Total Net Amount.                                  |
 | `subTotal`    | `string` | -      | Transaction Amount - Sub Total.                    |
+| `taxesTotal`  | `string` | -      | Total tax amount.                                  |
+| `discountsTotal` | `string` | -   | Total discount amount.                             |
 
 
 ## LineItems
@@ -70,19 +73,25 @@ layout: reference
 |Name|Type|Format|Description|
 |---|---|---|---|
 | `itemId`                  | `string` | -      | Line Identifier.                                                             |
+| `reference`               | `string` | -      | Item SKU or identifier used by the merchant to reference the item.           |
 | `productCode`             | `string` | -      | Product Code of goods and services.                                          |
 | `quantity`                | `string` | -      | Item Quantity.                                                               |
 | `unitPrice`               | `string` | -      | Item Unit Price.                                                             |
 | `taxRate`                 | `string` | -      | Item Tax Rate.                                                               |
 | `subTotal`                | `string` | -      | Item Sub Total.                                                              |
+| `taxesTotal`              | `string` | -      | Taxes Total for the line item.                                               |
 | `description`             | `string` | -      | Description, required for EReceipt.                                          |
 | `date`                    | `string` | -      | Date.                                                                        |
 | `type`                    | `string` | -      | Type.                                                                        |
 | `amount`                  | `string` | -      | Amount, required for EReceipt.                                               |
+| `vatApplicable`           | `boolean`| -      | If the line item was subject to a value added tax then `true`, otherwise `false`. |
+| `amountIncludesVat`       | `boolean`| -      | Indicates whether the amount includes VAT.                                   |
 | `taxes`                   | `array`  | -      | The taxes applied on this LineItem transaction.                              |
 | `discounts`               | `array`  | -      | The discounts offered on this LineItem transaction.                          |
+| `unitOfMeasure`           | `string` | -      | Unit of measure (e.g. `dozen`, `case`, `box`).                               |
 | `additionalDescription`   | `string` | -      | Additional Description.                                                      |
-| `semanticsCode`           | `string` | -      | Indicates the charge category for the line item. Example: 'MOVIE', 'PARKING', 'OTHER', etc. |
+| `semanticsCode`           | `string` | -      | Charge category for the line item. Example: `MOVIE`, `PARKING`, `OTHER`.    |
+| `semanticsType`           | `string` | -      | Charge type for the line item; can be mapped to an expense type.             |
 
 ## Tax
 
@@ -125,10 +134,17 @@ layout: reference
 
 |Name|Type|Format|Description|
 |---|---|---|---|
-| `method`                    | `string` | -      | Payment type method, required for EReceipt.                                  |
+| `method`                    | `string` | -      | Payment type method, required for EReceipt. Supported values: `Cash`, `Credit Card`, `Digital Wallet`, `Company Paid`, `Unused Ticket`, `Unknown`. |
+| `amount`                    | `string` | -      | Amount paid with this payment method.                                        |
 | `creditCard.type`           | `string` | -      | Name of the card type ex: American Express, MasterCard, Discover, etc.       |
 | `creditCard.lastFour`       | `string` | -      | Last 4 digits of credit card number if the payment method is credit card.   |
+| `creditCard.authorizationCode` | `string` | -   | Authorization code for the credit card transaction.                          |
 | `digitalWallet`             | `string` | -      | If the payment method is digitalWallet, type of digital wallet. ex: ApplePay, PayTM, Rupay, GooglePay etc. |
+| `companyPaid.source`        | `string` | -      | Type of company paid. Supported values: `GhostCard`, `LodgeCard`, `DirectPay`, `Invoice`. |
+| `companyPaid.creditCard`    | `object` | -      | Credit card details when company paid via card.                              |
+| `unusedTicket.ticketNumber` | `string` | -      | Ticket number when payment method is `Unused Ticket`.                        |
+
+For eReceipt submissions, use `paymentTypes` as an **array**. This applies to both POST requests and GET responses.
 
 ## Document Data
 
@@ -139,3 +155,190 @@ layout: reference
 | `name`| `string` |-| File name of the receipt document.|
 | `renderable`  | `boolean`| `true` / `false`|Boolean indicating whether the document can be rendered in UI.|
 | `href`| `string` |-| Href to download the document.|
+
+## TripDetails
+
+Used for eReceipt categories that involve travel. Contains category-specific sub-objects.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `confirmationNumber` | `string` | - | Booking confirmation number. |
+| `itineraryLocator`   | `string` | - | Unique identifier of an itinerary in Concur Itinerary Service. |
+| `segmentLocator`     | `string` | - | Unique identifier for a trip segment. |
+| `startDate`          | `string` | ISO 8601 | Trip start date/time. |
+| `endDate`            | `string` | ISO 8601 | Trip end date/time. |
+| `numberInParty`      | `integer` | - | Number of travelers in the party. |
+| `guests`             | `array` | - | List of guest objects (see Guests below). |
+| `source`             | `object` | - | Source/pickup address (see Address below). Required for `groundTransport`. |
+| `destination`        | `object` | - | Destination/drop-off address (see Address below). |
+| `rideDetails`        | `object` | - | Ground transport specific details. Present when `category` is `groundTransport`. |
+| `lodgeDetails`       | `object` | - | Lodge specific details. Present when `category` is `lodge`. |
+| `airDetails`         | `object` | - | Air travel specific details. Present when `category` is `air`. |
+| `carRentalDetails`   | `object` | - | Car rental specific details. Present when `category` is `carRental`. |
+| `railDetails`        | `object` | - | Rail travel specific details. Present when `category` is `rail`. |
+
+## Address
+
+Used within `TripDetails` for source, destination, and hotel property locations.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `name`           | `string` | - | Location name (e.g. airport name, hotel name). |
+| `addressLine`    | `string` | - | Street address. |
+| `city`           | `string` | - | City. |
+| `state`          | `string` | - | State or province. |
+| `country`        | `string` | ISO 3166 | Country code. Required for `groundTransport` source. |
+| `postalCode`     | `string` | - | Postal code. |
+| `internetAddress`| `string` | - | Internet address (URL) for the location. |
+
+## Guests
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `firstName`        | `string` | - | Guest first name. |
+| `lastName`         | `string` | - | Guest last name. |
+| `guestNameRecord`  | `string` | - | Loyalty or membership number. |
+| `address`          | `object` | - | Guest address (see Address above). |
+| `emailAddress`     | `string` | email | Guest email address. |
+
+## RideDetails
+
+Present in `tripDetails` when `category` is `groundTransport`.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `driverNumber`   | `string` | - | Unique identifier assigned by the ride company to the driver. |
+| `duration`       | `string` | ISO 8601 duration | Duration of the ride (e.g. `PT15M`). |
+| `mapUrl`         | `string` | - | Google Map URL documenting the route taken. |
+| `classOfService` | `string` | - | Class or tier of the ride service (e.g. `UberX`). |
+| `distance`       | `object` | - | Trip distance (see Distance below). |
+
+## LodgeDetails
+
+Present in `tripDetails` when `category` is `lodge`.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `hotelProperty`          | `object` | - | Hotel property address (see Address). |
+| `nightsStayed`           | `string` | - | Number of nights stayed. |
+| `room.roomNumber`        | `string` | - | Room number. |
+| `room.roomType`          | `string` | - | Room type description (e.g. `Deluxe King`). |
+| `room.ratePlanType`      | `string` | - | Rate plan type (e.g. `Corporate Rate`). |
+| `room.averageDailyRoomRate` | `string` | - | Average nightly room rate. |
+
+## AirDetails
+
+Present in `tripDetails` when `category` is `air`.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `bookingId`   | `string` | - | Booking identifier. |
+| `airTickets`  | `array`  | - | Array of air ticket objects (see AirTicket below). |
+
+## AirTicket
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `number`            | `string` | - | Ticket number. |
+| `issueDateTime`     | `string` | ISO 8601 | Date and time ticket was issued. |
+| `recordLocator`     | `string` | - | PNR record locator. |
+| `pseudoCityCode`    | `string` | - | 3-letter IATA city code of the issuing agency. |
+| `IATAAgencyNumber`  | `string` | - | 8-character IATA agency number. |
+| `agencyName`        | `string` | - | Issuing agency name. |
+| `passengerName`     | `string` | - | Passenger name as shown on ticket. |
+| `comparisonFare`    | `string` | - | Comparison fare amount. |
+| `fare`              | `object` | - | Fare for the ticket (see Fare below). |
+| `airCoupons`        | `array`  | - | Array of flight coupon/segment objects (see AirCoupon below). |
+
+## AirCoupon
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `couponNumber`                  | `string` | - | Coupon number. **Required**. |
+| `originationAirportIATACode`    | `string` | - | IATA code of the departure airport. |
+| `originationDateTime`           | `string` | ISO 8601 | Scheduled departure date/time. |
+| `destinationAirportIATACode`    | `string` | - | IATA code of the arrival airport. |
+| `destinationDateTime`           | `string` | ISO 8601 | Scheduled arrival date/time. |
+| `flightNumber`                  | `string` | - | Flight number. |
+| `operatingAirlineCode`          | `string` | - | IATA code of the operating airline. |
+| `marketingCarrier`              | `string` | - | Marketing carrier code. |
+| `operatingCarrier`              | `string` | - | Operating carrier code. |
+| `classOfServiceCode`            | `string` | - | Booking class code (e.g. `Y`). |
+| `fareBasisCode`                 | `string` | - | Fare basis code. |
+| `ticketDesignatorCode`          | `string` | - | Ticket designator code. |
+| `fare`                          | `object` | - | Fare for this segment (see Fare below). |
+| `taxes`                         | `array`  | - | Taxes applied to this coupon. |
+| `lineItems`                     | `array`  | - | Additional charges for this segment (e.g. baggage fees). |
+
+## CarRentalDetails
+
+Present in `tripDetails` when `category` is `carRental`.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `rentalDays`              | `string` | - | Number of rental days. |
+| `rentalAgreementNumber`   | `string` | - | Rental agreement number. |
+| `averageDailyRate`        | `string` | - | Average daily rental rate. |
+| `fuelServiceCharge`       | `string` | - | Fuel service charge amount. |
+| `driverName`              | `string` | - | Primary driver name. |
+| `additionalDriver`        | `boolean` | `true` / `false` | Whether an additional driver was included. |
+| `odometerReadingOut`      | `number` | - | Odometer reading at pickup. |
+| `odometerReadingIn`       | `number` | - | Odometer reading at return. |
+| `vehicle.description`     | `string` | - | Vehicle description (e.g. `2026 Toyota Camry`). |
+| `vehicle.registrationNumber` | `string` | - | Vehicle registration/license plate. |
+| `vehicle.classReservedCode`  | `string` | - | ACRISS class code of the reserved vehicle. |
+| `vehicle.classRentedCode`    | `string` | - | ACRISS class code of the rented vehicle. |
+| `vehicle.classChargedCode`   | `string` | - | ACRISS class code used for billing. |
+| `distance`                | `object` | - | Total distance driven (see Distance below). |
+
+## RailDetails
+
+Present in `tripDetails` when `category` is `rail`.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `railTickets` | `array` | - | Array of rail ticket objects (see RailTicket below). |
+
+## RailTicket
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `ticketNumber`   | `string` | - | Ticket number. |
+| `recordLocator`  | `string` | - | Booking record locator. |
+| `issueDateTime`  | `string` | ISO 8601 | Date and time ticket was issued. |
+| `passengerName`  | `string` | - | Passenger name. |
+| `fare`           | `object` | - | Fare amount and currency (see Fare below). |
+| `segments`       | `array`  | - | Array of rail segment objects (see RailSegment below). |
+
+## RailSegment
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `departureStation`   | `string` | - | Name of the departure station. |
+| `departureDateTime`  | `string` | ISO 8601 | Scheduled departure date/time. |
+| `arrivalStation`     | `string` | - | Name of the arrival station. |
+| `arrivalDateTime`    | `string` | ISO 8601 | Scheduled arrival date/time. |
+| `trainNumber`        | `string` | - | Train identifier. |
+| `trainType`          | `string` | - | Train type (e.g. `ICE`, `TGV`). |
+| `classOfServiceCode` | `string` | - | Class of service code. |
+| `fare`               | `object` | - | Fare for this segment (see Fare below). |
+| `taxes`              | `array`  | - | Taxes applied to this segment. |
+| `lineItems`          | `array`  | - | Additional fees specific to this segment. |
+
+## Fare
+
+Used within air and rail schemas.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `amount`   | `string` | - | Fare amount. **Required** when fare object is present. |
+| `currency` | `string` | ISO 4217 | Currency code. **Required** when fare object is present. |
+
+## Distance
+
+Used within ground transport and car rental schemas.
+
+|Name|Type|Format|Description|
+|---|---|---|---|
+| `totalDistance` | `number` | - | Total distance. **Required** when distance object is present. |
+| `unit`          | `string` | `km` or `mi` | Unit of distance. **Required** when distance object is present. |
