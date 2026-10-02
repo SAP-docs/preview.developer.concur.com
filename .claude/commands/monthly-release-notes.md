@@ -32,6 +32,9 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
    - Move `### Preview:` items from New This Month: API previews go to the **Previews table**; cert/infrastructure previews go to **## Ongoing** — keep the `### Preview:` prefix in both cases
    - Move last month's new Deprecation/Decommission notices to the **Deprecations and Decommissions table** — add a row with a link to last month's RN, the API name, and the details sentence. Exception: if the notice was published in the last week of the month, keep it in Ongoing for one additional month first.
    - Move last month's new cert updates to **## Ongoing**
+   - **Check due dates across all carried-forward items**: before finalizing the new file, scan every `### Preview:`, `### Important!`, and Ongoing item for any date mentioned in the text. If that date falls within or before the new month, alert the requester:
+     > *"'[heading]' mentions a date of [date] which is on or before this month. Should I: (1) remove it, (2) keep it one more month, or (3) promote it to Now Available?"*
+     Do not remove or change it without confirmation.
 3. **Add new content** to `## New This Month` (new items go at the top)
 4. **Update indexes** (see below)
 5. **Validate** the `.yml` with YAMLlint before committing
