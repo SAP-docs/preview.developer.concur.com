@@ -34,6 +34,7 @@ Method: `GET`
 |---|---|---|---|
 | `receiptId` or `companyId` + `imageId` | string |-| **Required**. The unique identifier (UUID) of the receipt OR the unique identifier (UUID) of the company and identifier for the `imageId`. |
 
+
 ### Response
 #### Success
 
@@ -65,7 +66,7 @@ Method: `GET`
 
 Receipt Response
 
-### Examples
+### Example
 
 #### Request
 
@@ -85,7 +86,7 @@ curl --location --request GET 'https://us.api.concursolutions.com/spend-document
 --header 'Content-Type: application/json'
 ```
 
-#### Response (Simple Receipt)
+#### Response
 
 200 OK
 
@@ -100,14 +101,39 @@ curl --location --request GET 'https://us.api.concursolutions.com/spend-document
     "origin": "mobile",
     "captureMethod": "cameraCapture",
     "provider": "user",
-    "feature": "simpleReceipt",
-    "status": "processed"
+    "feature": "expenseit",
+    "status": "processed",
+    "compliance": {
+      "status": "processed"
+    }
+  },
+  "receiptData": {
+    "transactionDateTime": "2023-12-30T11:30:00",
+    "amount": {
+      "total": "30.0",
+      "currency": "USD"
+    },
+    "vendor": {
+      "name": "KIRKLAND PERFORMANCE CENTER",
+      "city": "KIRKLAND",
+      "state": "WASHINGTON",
+      "country": "US"
+    },
+    "paymentType": {
+      "creditCard": {
+        "type": "$$",
+        "lastFour": "1006"
+      }
+    },
+    "expenseData": {
+      "expenseType": "PARKG"
+    }
   },
   "documents": [
     {
       "representation": "display",
       "type": "application/pdf",
-      "name": "receipt.pdf",
+      "name": "fr_expenseit.pdf",
       "renderable": true,
       "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=display"
     },
@@ -117,55 +143,6 @@ curl --location --request GET 'https://us.api.concursolutions.com/spend-document
       "name": "4d3a8d80-0f93-4b0b-bed1-2724a354858c.pdf",
       "renderable": true,
       "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/4d3a8d80-0f93-4b0b-bed1-2724a354858c/representations?type=compliance"
-    }
-  ]
-}
-```
-
-#### Response (eReceipt)
-
-```json
-{
-  "metadata": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "userId": "660e8400-e29b-41d4-a716-446655440001",
-    "companyId": "770e8400-e29b-41d4-a716-446655440002",
-    "status": "processed",
-    "dateTimeReceived": "2026-05-12T14:30:00Z",
-    "origin": "vendor",
-    "provider": "vendor",
-    "feature": "eReceipt",
-    "category": "groundTransport"
-  },
-  "receiptData": {
-    "transactionDateTime": "2026-05-12T16:30:00Z",
-    "referenceNumber": "RIDE-ABC123XYZ",
-    "amount": {
-      "total": "32.50",
-      "currency": "USD"
-    },
-    "vendor": {
-      "name": "Uber",
-      "country": "US"
-    },
-    "paymentTypes": [
-      {
-        "method": "Credit Card",
-        "amount": "32.50",
-        "creditCard": {
-          "type": "Visa",
-          "lastFour": "1234"
-        }
-      }
-    ]
-  },
-  "documents": [
-    {
-      "representation": "display",
-      "type": "application/pdf",
-      "name": "receipt.pdf",
-      "renderable": true,
-      "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/550e8400-e29b-41d4-a716-446655440000/representations?type=display"
     }
   ]
 }
