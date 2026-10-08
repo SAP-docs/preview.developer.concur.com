@@ -1300,25 +1300,16 @@
 
         <h2 id="upload-a-new-receipt">Upload a New Receipt</h2>
 
-<p>This endpoint supports two receipt submission workflows:</p>
-
-<ul>
-  <li><strong>Simple Receipt</strong>: Upload a receipt image with basic metadata.</li>
-  <li><strong>eReceipt</strong>: Submit structured electronic receipt data from a partner/vendor system.</li>
-</ul>
+<p>This endpoint facilitates the creation of a new receipt for ‘<em>simpleReceipt</em>’ .</p>
 
 <h3 id="scopes">Scopes</h3>
-<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeOnly</code> - Refer to <a href="/api-reference/spend-documents/v4.spend-documents.html#scope-usage">Scope Usage</a> for full details.</p>
-
-<p>When submitting a <code class="language-plaintext highlighter-rouge">complianceDocument</code> part, the token must additionally include <code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.write</code>.</p>
+<p><code class="language-plaintext highlighter-rouge">spenddocs.receipts.write</code> <code class="language-plaintext highlighter-rouge">spenddocs.receipts.writeOnly</code>  - Refer to <a href="/api-reference/spend-documents/v4.spend-documents.html#scope-usage">Scope Usage</a> for full details.</p>
 
 <p><strong>URI Template:</strong>  <code class="language-plaintext highlighter-rouge">/spend-documents/v4/receipts</code></p>
 
 <p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">POST</code></p>
 
 <h3 id="request">Request</h3>
-
-<p>The endpoint accepts <code class="language-plaintext highlighter-rouge">multipart/form-data</code> with the following named parts:</p>
 
 <table>
   <thead>
@@ -1333,82 +1324,19 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">receipt</code></td>
       <td><code class="language-plaintext highlighter-rouge">object</code></td>
-      <td><code class="language-plaintext highlighter-rouge">application/json</code></td>
-      <td><strong>Required</strong>. The receipt data in JSON format. Refer to the <a href="/api-reference/spend-documents/schema.html">Receipt Schema</a>.</td>
+      <td>-</td>
+      <td><strong>Required</strong>. The receipt data in JSON format.</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">document</code></td>
-      <td>binary</td>
-      <td>PDF, JPEG, JPG, PNG, GIF</td>
-      <td>The receipt image file. Required for simple receipts and eReceipts.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">complianceDocument</code></td>
-      <td>binary</td>
-      <td>XML</td>
-      <td>Optional compliance document (e.g. XML e-invoice). Requires <code class="language-plaintext highlighter-rouge">spenddocs.receipts.compliance.write</code> scope.</td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The receipt document to be uploaded. Compatible formats are: PDF, JPEG, PNG, GIF, JPG.</td>
     </tr>
   </tbody>
 </table>
 
-<h4 id="ereceipt-metadata-fields">eReceipt Metadata Fields</h4>
-
-<p>For eReceipt submissions, the <code class="language-plaintext highlighter-rouge">metadata</code> object in the <code class="language-plaintext highlighter-rouge">receipt</code> part must include:</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Required</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">userId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code> (UUID)</td>
-      <td><strong>Required</strong></td>
-      <td>Concur user identifier.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">companyId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code> (UUID)</td>
-      <td><strong>Required</strong></td>
-      <td>Concur company identifier.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">feature</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong></td>
-      <td>Must be <code class="language-plaintext highlighter-rouge">"eReceipt"</code> for eReceipt submissions.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">provider</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong></td>
-      <td>Must be <code class="language-plaintext highlighter-rouge">"vendor"</code> for partner/vendor submissions.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">origin</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong></td>
-      <td>Receipt source channel: <code class="language-plaintext highlighter-rouge">web</code>, <code class="language-plaintext highlighter-rouge">mobile</code>, <code class="language-plaintext highlighter-rouge">email</code>, or <code class="language-plaintext highlighter-rouge">vendor</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">category</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td><strong>Required</strong></td>
-      <td>Receipt category: <code class="language-plaintext highlighter-rouge">general</code>, <code class="language-plaintext highlighter-rouge">groundTransport</code>, <code class="language-plaintext highlighter-rouge">lodge</code>, <code class="language-plaintext highlighter-rouge">air</code>, <code class="language-plaintext highlighter-rouge">carRental</code>, or <code class="language-plaintext highlighter-rouge">rail</code>.</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">entityId</code></td>
-      <td><code class="language-plaintext highlighter-rouge">string</code></td>
-      <td>Optional</td>
-      <td>Entity code for multi-entity companies.</td>
-    </tr>
-  </tbody>
-</table>
+<p>Refer to the <a href="/api-reference/spend-documents/schema.html">Receipt Schema</a> for the structure of the receipt object.</p>
 
 <h3 id="response">Response</h3>
 <h4 id="success">Success</h4>
@@ -1443,11 +1371,6 @@
     </tr>
   </tbody>
 </table>
-
-<p>A <code class="language-plaintext highlighter-rouge">Location</code> header is included in the response pointing to the receipt resource URI:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Location: /spend-documents/v4/receipts/{id}
-</code></pre></div></div>
 
 <h4 id="error">Error</h4>
 
@@ -1485,7 +1408,7 @@
 <h4 id="status-codes">Status Codes</h4>
 
 <ul>
-  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/202">202 Accepted</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200">200 OK</a></li>
   <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400">400 Bad Request</a></li>
   <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401">401 Unauthorized</a></li>
   <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403">403 Forbidden</a></li>
@@ -1494,85 +1417,36 @@
   <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503">503 Internal Service Unavailable</a></li>
 </ul>
 
-<h3 id="examples">Examples</h3>
+<h3 id="example">Example</h3>
 
 <h4 id="simple-receipt">Simple Receipt</h4>
 
 <h5 id="request-1">Request</h5>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-L</span> <span class="nt">-X</span> POST <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts'</span> <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-L</span> <span class="nt">-X</span> POST <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts'</span> <span class="se">\ </span>
 <span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
 <span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
-<span class="nt">-F</span> <span class="s1">'document=@"receipt.jpg"'</span> <span class="se">\</span>
-<span class="nt">-F</span> <span class="s1">'receipt="{
-    \"metadata\": {
-      \"userId\": \"a9abaa60-38a0-46be-9736-bc9c1e317e41\",
-      \"companyId\": \"fb7c8157-16d6-4dfd-b970-8c2a39d81790\",
-      \"origin\": \"mobile\",
-      \"provider\": \"user\",
-      \"feature\": \"simpleReceipt\"
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">-F</span> <span class="s1">'image=@"1.jpg"'</span> <span class="se">\</span>
+<span class="nt">--F</span> <span class="s1">'receipt="{
+    "metadata": {
+      "userId": "a9abaa60-38a0-46be-9736-bc9c1e317e41",
+      "companyId": "fb7c8157-16d6-4dfd-b970-8c2a39d81790",
+      "origin": "vendor",
+      "provider": "vendor"
+      "feature": "simplereceipt"
     }
-}"'</span>
+}"
+'</span> 
 </code></pre></div></div>
 
-<h5 id="response-1">Response</h5>
+<h4 id="response-1">Response</h4>
 
 <p>202 Accepted</p>
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"imageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"341D9EFCDC4E3833B76F75CFC53FF2E9"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/spend-documents/v4/receipts/3602e892-f463-497a-8654-8b2e802f4d65"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"3602e892-f463-497a-8654-8b2e802f4d65"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre></div></div>
-
-<h4 id="ereceipt-ground-transportation">eReceipt (Ground Transportation)</h4>
-
-<h5 id="request-2">Request</h5>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST <span class="s1">'https://us.api.concursolutions.com/spend-documents/v4/receipts'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Authorization: Bearer {access_token}'</span> <span class="se">\</span>
-<span class="nt">--header</span> <span class="s1">'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034'</span> <span class="se">\</span>
-<span class="nt">-F</span> <span class="s1">'document=@"receipt.pdf"'</span> <span class="se">\</span>
-<span class="nt">-F</span> <span class="s1">'receipt="{
-    \"metadata\": {
-      \"userId\": \"a9abaa60-38a0-46be-9736-bc9c1e317e41\",
-      \"companyId\": \"fb7c8157-16d6-4dfd-b970-8c2a39d81790\",
-      \"origin\": \"vendor\",
-      \"provider\": \"vendor\",
-      \"feature\": \"eReceipt\",
-      \"category\": \"groundTransport\"
-    },
-    \"receiptData\": {
-      \"transactionDateTime\": \"2026-05-12T16:30:00Z\",
-      \"referenceNumber\": \"RIDE-ABC123XYZ\",
-      \"amount\": {
-        \"total\": \"32.50\",
-        \"currency\": \"USD\"
-      },
-      \"vendor\": {
-        \"name\": \"Uber\",
-        \"country\": \"US\"
-      },
-      \"paymentTypes\": [
-        {
-          \"method\": \"Credit Card\",
-          \"creditCard\": {
-            \"type\": \"Visa\",
-            \"lastFour\": \"1234\"
-          }
-        }
-      ]
-    }
-}"'</span>
-</code></pre></div></div>
-
-<h5 id="response-2">Response</h5>
-
-<p>202 Accepted</p>
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"imageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"img-550e8400-e29b-41d4-a716-446655440000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"href"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://us.api.concursolutions.com/spend-documents/v4/receipts/550e8400-e29b-41d4-a716-446655440000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"550e8400-e29b-41d4-a716-446655440000"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
