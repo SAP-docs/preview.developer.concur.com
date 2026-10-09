@@ -1362,19 +1362,26 @@
 <h4 id="gds-booking">GDS Booking</h4>
 
 <ul>
-  <li>User initiates a cancel request and we cancel the active segment/trip in GDS and update storage with <code class="language-plaintext highlighter-rouge">Canceled</code> status with cancellation number.</li>
-  <li>We send the <code class="language-plaintext highlighter-rouge">cancel</code> request to CHS supplier with cancel number. Note that this request is just acting as a notification to the CHS supplier as booking is already canceled in GDS.</li>
-  <li>The <code class="language-plaintext highlighter-rouge">cancel</code> request can trigger any post-booking processing in CHS supplier system.</li>
+  <li>User initiates a cancel request so Concur cancels the active segment/trip in GDS and update storage with <code class="language-plaintext highlighter-rouge">Canceled</code> status with cancellation number.</li>
+  <li>Concur sends the <code class="language-plaintext highlighter-rouge">cancel/notify</code> request to CHS supplier with cancellation number. Note that this request is just acting as a notification to the CHS supplier as booking is already canceled in GDS.</li>
+  <li>The <code class="language-plaintext highlighter-rouge">cancel/notify</code> request can trigger any post-booking processing in CHS supplier system.</li>
 </ul>
 
 <h4 id="direct-connect-booking">Direct Connect Booking</h4>
 
 <ul>
-  <li>User initiates a cancel request and we forward this cancel request to the CHS supplier.</li>
+  <li>User initiates a cancel request and Concur forwards this <code class="language-plaintext highlighter-rouge">cancel</code> request to the CHS supplier.</li>
   <li>Supplier sends the cancel request to their direct connect source and also deletes any related passive segment if they created one for the booking.</li>
-  <li>Cancel response with cancellation number is returned to us which is then stored and displayed to user.</li>
+  <li>Cancel response with cancellation number is returned to Concur which is then stored and displayed to user.</li>
 </ul>
 
+<h3 id="add-external-booking">Add External Booking</h3>
+
+<p>When a GDS PNR is modified, Concur detects the new booking and calls the CHS Supplier through <a href="./v4.endpoints.html#read-">read endpoint</a> to fetch its details. The Supplier looks up the reservation and returns confirmation numbers being the primary target. Concur then augments its internal storage with the returned data so that confirmation numbers can be displayed to users and included in future calls, especially cancellation requests.</p>
+
+<p>Note: In this scenario for the read call, Concur will not provide <code class="language-plaintext highlighter-rouge">SUPPLIER_CONFIRMATION</code> code in request body but only <code class="language-plaintext highlighter-rouge">CONCUR_GDS_REFERENCE</code> and <code class="language-plaintext highlighter-rouge">HOTEL_CONFIRMATION</code> ones. A failure of this request will also make subsequent calls to have the same limitation(e.g.:Cancellation call).</p>
+
+<p><img src="images/diagrams/singlepnr/hotel_external_booking.png" alt="" /></p>
 
       </div>
       <!--/col-md-8-->
