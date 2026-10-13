@@ -9,8 +9,13 @@ participant "CHSSupplier" as supply #LightBlue
 gds -> concur++: GDS PNR Changed
 concur -> concur: Identify TravelConfig CHS configuration
 concur -> supply++: Read reservation \n<b>/hotels/reservation/read</b> \nwith GDS PNR and Hotel Confirmation Number only
-supply --> concur--: Return reservation details \nwith confirmation numbers
-concur --> concur: Update storage
-concur -> user: Display reservation details \nwith confirmation numbers
+alt success
+    supply --> concur: Return reservation details \nwith confirmation numbers
+    concur -> concur: Update storage
+else error
+    supply --> concur--: Any error or malformed data
+    note right: Concur will not be able to send\n Supplier Confirmation in subsequent calls 
+end
+concur -> user: Display reservation details
 
 @enduml
