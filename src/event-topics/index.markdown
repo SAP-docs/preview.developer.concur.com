@@ -40,7 +40,7 @@ To create a subscription you need to:
 * Know and have the sufficient access to the topic by having the correct scopes.
 * Get your receiving endpoint running, see the [endpoint requirements](/api-reference/ess/v4.event-subscription.html#endpoint-requirements-).   
 * Come up with unique name (id) of your subscription. Subscription names are globally unique, and you will get an error if the name is already in use.
-* We strongly recommend configuring the filter with a specific eventType value e.g., `eventCreated` (you can combine values according to regexp syntax, eg `"eventCreated|eventDeleted"`) to ensure that only events of that type are delivered, while all other event types are skipped. We do not recommend using `".*"` to receive all events from the topic unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
+* We strongly recommend configuring the filter with a specific eventType value e.g., `eventCreated` (you can combine values according to regexp syntax, eg `"eventCreated|eventDeleted"`) to ensure that only events of that type are delivered, while all other event types are skipped. We do not recommend using `".*"` or omitting the filter, to receive all events from the topic unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
 
 **Request**
 ```
