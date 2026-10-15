@@ -8,7 +8,7 @@ layout: reference
 This endpoint facilitates the creation of a new receipt for '_simpleReceipt_' .
 
 ### Scopes
-`spenddocs.receipts.write` `spenddocs.receipts.writeOnly`  - Refer to [Scope Usage](/api-reference/spend-documents/v4.spend-documents.html#scope-usage) for full details.
+`spenddocs.receipts.write` `spenddocs.receipts.writeonly`  - Refer to [Scope Usage](/api-reference/spend-documents/v4.spend-documents.html#scope-usage) for full details.
 
 **URI Template:**  `/spend-documents/v4/receipts`
 
