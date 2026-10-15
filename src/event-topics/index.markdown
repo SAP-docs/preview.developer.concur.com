@@ -40,7 +40,7 @@ To create a subscription you need to:
 * Know and have the sufficient access to the topic by having the correct scopes.
 * Get your receiving endpoint running, see the [endpoint requirements](/api-reference/ess/v4.event-subscription.html#endpoint-requirements-).   
 * Come up with unique name (id) of your subscription. Subscription names are globally unique, and you will get an error if the name is already in use.
-* We strongly recommend configuring the filter with a specific eventType value e.g., `eventCreated` (you can combine values according to regexp syntax, eg `"eventCreated|eventDeleted"`) to ensure that only events of that type are delivered, while all other event types are skipped. We do not recommend using `".*"` or omitting the filter, to receive all events from the topic unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
+* We strongly recommend configuring the filter with a specific eventType value e.g., `eventCreated` (you can combine values according to regexp syntax, e.g., `"eventCreated|eventDeleted"`) to ensure that only events of that type are delivered, while all other event types are skipped. We do not recommend using `".*"` or omitting the filter, to receive all events from the topic unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
 
 **Request**
 ```
@@ -61,8 +61,8 @@ PUT /events/v4/subscriptions/webhook
 
 Name | Type | Format | Description
 ------- |----- |----|-----
-`Id` |`String` |Lowercase letters, numbers, "." and  "-"| Your unique subscription name. It is suggested that you use something self explanatory. For example: `my-company.my-scenario.env.version`
-`Filter` |`String` | regular expression  | Allows you to reduce the number of delivered events to a certain type. Example, setting to `eventCreated` will only get this event type delivered, other event types will be skipped. Seting to ".*" to receive ALL events in the topic is not recomended unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
+`Id` |`String` |Lowercase letters, numbers, "." and  "-"| Your unique subscription name. It is suggested that you use something self-explanatory. For example: `my-company.my-scenario.env.version`
+`Filter` |`String` | regular expression  | Allows you to reduce the number of delivered events to a certain type. For example, setting to `eventCreated` will only get this event type delivered, other event types will be skipped. Setting to ".*" to receive ALL events in the topic is not recommended unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
 `Topic` |`String` | -  | Topic, stream of events you are subscribing to.
 `Endpoint` |`String` | URL  | Your endpoint where events will be delivered.                |
 
@@ -103,8 +103,8 @@ GET /events/v4/subscriptions/my-unique-subscription-id
 
 Name  |Type |Format | Description
 --------|------|------|------
-`Id` | `String` | Lowercase and . - \d | YYour unique subscription name. It is suggested that you use something self explanatory. For example: `my-company.my-scenario.env.version`
-`Filter` |`String` | regular expression  | Allows you to reduce the number of delivered events to a certain type. Example, setting to `eventCreated` will only get this event type delivered, other event types will be skipped. Seting to ".*" to receive ALL events in the topic is not recomended unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
+`Id` | `String` | Lowercase and . - \d | Your unique subscription name. It is suggested that you use something self-explanatory. For example: `my-company.my-scenario.env.version`
+`Filter` |`String` | regular expression  | Allows you to reduce the number of delivered events to a certain type. For example, setting to `eventCreated` will only get this event type delivered, other event types will be skipped. Setting to ".*" to receive ALL events in the topic is not recommended unless your endpoint is resilient to new event types being introduced to the topic stream in the future.
 `Topic` |`String` | -  | Topic, stream of events you are subscribing to.
 `Endpoint` |`String` | URL  | Your endpoint where events will be delivered.                |
 `applicationId` |`String` | UUID  | The partner application that was used to generate the JWT. Application is used to establish subscription owner. |
