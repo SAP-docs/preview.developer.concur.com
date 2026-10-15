@@ -1,0 +1,35 @@
+---
+layout: null
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title | xml_escape }} - Release Notes</title>
+    <description>SAP Concur Developer Center Release Notes</description>
+    <link>{{ site.url }}{{ site.baseurl }}/tools-support/release-notes/</link>
+    <atom:link href="{{ site.url }}{{ site.baseurl }}/tools-support/release-notes/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
+    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
+    {% assign rn_pages = site.pages
+        | where_exp: "p", "p.path contains 'tools-support/release-notes'"
+        | where_exp: "p", "p.name contains '.md'"
+        | where_exp: "p", "p.path contains '/api/' or p.path contains '/app-center/'"
+        | where_exp: "p", "p.name >= '2026-09-04'"
+        | sort: "name" | reverse %}
+    {% for page in rn_pages limit:20 %}
+    {% assign date_str = page.name | split: '.' | first | split: '-' %}
+    {% assign year = date_str[0] %}
+    {% assign month = date_str[1] %}
+    {% assign day = date_str[2] %}
+    {% if year and month and day %}
+    <item>
+      <title>{{ page.title | xml_escape }}</title>
+      <link>{{ site.url }}{{ site.baseurl }}{{ page.url }}</link>
+      <guid isPermaLink="true">{{ site.url }}{{ site.baseurl }}{{ page.url }}</guid>
+      <description>{{ page.content | strip_html | truncatewords: 100 | xml_escape }}</description>
+      <pubDate>{{ year }}-{{ month }}-{{ day }} 00:00:00 +0000</pubDate>
+    </item>
+    {% endif %}
+    {% endfor %}
+  </channel>
+</rss>
