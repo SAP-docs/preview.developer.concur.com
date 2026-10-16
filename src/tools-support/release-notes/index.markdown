@@ -4,8 +4,6 @@ layout: reference
 ---
 # Release Notes
 
-[Subscribe to Developer Platform Release Notes via RSS](./feed.xml)
-
 ## Developer Platform Release Notes
 
 * [October 2026](./api/2026-10-08.html)
@@ -35,6 +33,7 @@ layout: reference
 * [2022 Release Notes](./api/archive/2022-archive-dev.html)
 * [2021 Release Notes](./api/archive/2021-archive-dev.html)
 * [2020 Release Notes](./api/archive/2020-archive-dev.html)
+* [Subscribe via RSS](./feed.xml) — To subscribe, refer to your RSS reader or email client documentation.
   
 ## Client Release Notes
 
