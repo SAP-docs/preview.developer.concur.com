@@ -185,7 +185,7 @@ Retrieves the receipt using the `companyId` and `imageId`.
 
 ### Scopes
 
-`spenddocs.receipts.read, spenddocs.compliance.read`  
+`spenddocs.receipts.read, spenddocs.receipts.compliance.read`  
 Refer to [Scope Usage](/api-reference/spend-documents/v4.spend-documents.html#scope-usage) for full details.
 
 ### Request
