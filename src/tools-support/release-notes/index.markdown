@@ -4,6 +4,8 @@ layout: reference
 ---
 # Release Notes
 
+[Subscribe to Developer Platform Release Notes via RSS](./feed.xml)
+
 ## Developer Platform Release Notes
 
 * [October 2026](./api/2026-10-08.html)
