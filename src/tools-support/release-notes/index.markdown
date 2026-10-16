@@ -33,8 +33,7 @@ layout: reference
 * [2022 Release Notes](./api/archive/2022-archive-dev.html)
 * [2021 Release Notes](./api/archive/2021-archive-dev.html)
 * [2020 Release Notes](./api/archive/2020-archive-dev.html)
-* [Subscribe via RSS](./feed.xml) — To subscribe, refer to your RSS reader or email client documentation.
-  
+
 ## Client Release Notes
 
 * [Professional Edition](https://help.sap.com/docs/SAP_CONCUR?task=whats_new_task#whats_new_task-professional-edition)
@@ -49,4 +48,8 @@ layout: reference
 * [2022 Release Notes](./app-center/AppCenter_RN_Client_2022.pdf)
 * [2021 Release Notes](./app-center/AppCenter_RN_Client_2021.pdf)
 * [2020 Release Notes](./app-center/AppCenter_RN_Client_2020.pdf)
+
+## Subscribe to Release Notes via RSS
+
+* [Subscribe to Release Notes via RSS](./rss.html)
 
