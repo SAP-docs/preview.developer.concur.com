@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "swagger": "2.0",
   "info": {
     "title": "Spend Documents",
     "description": "Allows certified vendors to submit compliant receipts and compliance documents to the SAP Concur platform on behalf of users. The workflow involves posting a display version of the receipt with the required data, then uploading the compliance document via PUT. Suited for certified receipt providers and tax compliance integrations.",
@@ -10,21 +10,21 @@
     "url": "https://developer.concur.com/api-reference/spend-documents/v4.spend-documents.html"
   },
   "x-sap-shortText": "Ingests and retrieves compliance receipts and spend documents",
-  "servers": [
+  "host": "eu2.api.concursolutions.com",
+  "basePath": "/spend-documents/v4",
+  "schemes": [
+    "https"
+  ],
+  "security": [
     {
-      "url": "https://{region}.api.concursolutions.com/spend-documents/v4/receipts",
-      "description": "Production Endpoint",
-      "variables": {
-        "region": {
-          "description": "Region where the API is being accessed. Valid values include us2, eu2, apj1 or usg.",
-          "default": "eu2"
-        }
-      }
-    },
-    {
-      "url": "https://us2.api.concursolutions.com/spend-documents/v4/receipts",
-      "description": "Production URL [US2]"
+      "JWT-Authentication": []
     }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/hal+json"
   ],
   "tags": [
     {
@@ -33,7 +33,7 @@
     }
   ],
   "paths": {
-    "/spend-documents/v4/receipts/{receiptId}": {
+    "/receipts/{receiptId}": {
       "get": {
         "tags": [
           "Spend Documents"
@@ -47,147 +47,42 @@
             "in": "path",
             "description": "Receipt UUID",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "concur-correlationid",
             "in": "header",
             "description": "Concur Correlation ID",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "ris_swagger_test_1"
-            }
+            "type": "string",
+            "default": "ris_swagger_test_1"
           },
           {
             "name": "concur-forwarded-for",
             "in": "header",
             "description": "Concur forward-for cert name",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "com.concur.qa.platform.receipts"
-            }
+            "type": "string",
+            "default": "com.concur.qa.platform.receipts"
           }
         ],
         "responses": {
           "200": {
             "description": "Receipt Retrieved",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseReceipt_Public"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/BaseReceipt_Public"
             }
           },
-          "4XX": {
+          "default": {
             "description": "Error",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage_Public"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Spend Documents"
-        ],
-        "summary": "Upload supporting document for an existing receipt.",
-        "description": "This API will update a receipt with the supporting document.",
-        "operationId": "putReceipt",
-        "parameters": [
-          {
-            "name": "receiptId",
-            "in": "path",
-            "description": "Receipt UUID",
-            "required": true,
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "Document Type",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "compliance"
-            }
-          },
-          {
-            "name": "concur-correlationid",
-            "in": "header",
-            "description": "Concur Correlation ID",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "ris_swagger_test_1"
-            }
-          },
-          {
-            "name": "concur-forwarded-for",
-            "in": "header",
-            "description": "Concur forward-for cert name",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "default": "com.concur.qa.platform.receipts"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Document Image",
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "image"
-                ],
-                "type": "object",
-                "properties": {
-                  "image": {
-                    "type": "string",
-                    "description": "Compatible formats: 'PDF, OFD'",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "202": {
-            "description": "Compliance Accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseReceiptResponse"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
+              "$ref": "#/definitions/ErrorMessage_Public"
             }
           }
         }
       }
     },
-    "/spend-documents/v4/receipts": {
+    "/receipts": {
       "get": {
         "tags": [
           "Spend Documents"
@@ -201,68 +96,50 @@
             "in": "query",
             "description": "Forward Id UUID",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "imageId",
             "in": "query",
             "description": "Image UUID",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "companyId",
             "in": "query",
             "description": "Company UUID",
             "required": false,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "concur-correlationid",
             "in": "header",
             "description": "Concur Correlation ID",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "ris_swagger_test_1"
-            }
+            "type": "string",
+            "default": "ris_swagger_test_1"
           },
           {
             "name": "concur-forwarded-for",
             "in": "header",
             "description": "Concur forward-for cert name",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "com.concur.qa.platform.receipts"
-            }
+            "type": "string",
+            "default": "com.concur.qa.platform.receipts"
           }
         ],
         "responses": {
           "200": {
             "description": "Receipt Retrieved",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseReceipt"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/BaseReceipt"
             }
           },
-          "4XX": {
+          "default": {
             "description": "Error",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
             }
           }
         }
@@ -280,69 +157,52 @@
             "in": "header",
             "description": "Concur Correlation ID",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "ris_swagger_test_1"
-            }
+            "type": "string",
+            "default": "ris_swagger_test_1"
           },
           {
             "name": "concur-forwarded-for",
             "in": "header",
             "description": "Concur forward-for cert name",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "com.concur.qa.platform.receipts"
-            }
+            "type": "string",
+            "default": "com.concur.qa.platform.receipts"
+          },
+          {
+            "name": "receipt",
+            "in": "formData",
+            "description": " (JSON string)",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "document",
+            "in": "formData",
+            "description": "Receipt image to upload. Compatible formats: PDF, JPEG, PNG, GIF, JPG",
+            "required": false,
+            "type": "file"
           }
         ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "receipt"
-                ],
-                "type": "object",
-                "properties": {
-                  "receipt": {
-                    "$ref": "#/components/schemas/ReceiptRequest"
-                  },
-                  "document": {
-                    "type": "string",
-                    "description": "Receipt image to upload. Compatible formats: PDF, JPEG, PNG, GIF, JPG",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "202": {
             "description": "Receipt Accepted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/BaseReceiptResponse"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/BaseReceiptResponse"
             }
           },
-          "4XX": {
+          "default": {
             "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
             }
           }
-        }
+        },
+        "consumes": [
+          "multipart/form-data"
+        ]
       }
     },
-    "/spend-documents/v4/receipts/{receiptId}/representations": {
+    "/receipts/{receiptId}/representations": {
       "get": {
         "tags": [
           "Spend Documents"
@@ -356,67 +216,51 @@
             "in": "path",
             "description": "Receipt UUID",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "type",
             "in": "query",
             "description": "Representation Type",
             "required": false,
-            "schema": {
-              "type": "string",
-              "default": "display"
-            }
+            "type": "string",
+            "default": "display"
           },
           {
             "name": "concur-correlationid",
             "in": "header",
             "description": "Concur Correlation ID",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "ris_swagger_test_1"
-            }
+            "type": "string",
+            "default": "ris_swagger_test_1"
           },
           {
             "name": "concur-forwarded-for",
             "in": "header",
             "description": "Concur forward-for cert name",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "com.concur.qa.platform.receipts"
-            }
+            "type": "string",
+            "default": "com.concur.qa.platform.receipts"
           }
         ],
         "responses": {
           "200": {
             "description": "Receipt Representations Retrieved",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
+            "schema": {
+              "type": "string",
+              "format": "binary"
             }
           },
-          "4XX": {
+          "default": {
             "description": "Error",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
             }
           }
         }
       }
     },
-    "/spend-documents/v4/receipts/representations": {
+    "/receipts/representations": {
       "get": {
         "tags": [
           "Spend Documents"
@@ -430,1688 +274,1650 @@
             "in": "query",
             "description": "Image UUID",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "companyId",
             "in": "query",
             "description": "Company UUID",
             "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "type": "string"
           },
           {
             "name": "type",
             "in": "query",
             "description": "Representation Type",
             "required": false,
-            "schema": {
-              "type": "string",
-              "default": "display"
-            }
+            "type": "string",
+            "default": "display"
           },
           {
             "name": "concur-correlationid",
             "in": "header",
             "description": "Concur Correlation ID",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "ris_swagger_test_1"
-            }
+            "type": "string",
+            "default": "ris_swagger_test_1"
           },
           {
             "name": "concur-forwarded-for",
             "in": "header",
             "description": "Concur forward-for cert name",
             "required": true,
-            "schema": {
-              "type": "string",
-              "default": "com.concur.qa.platform.receipts"
-            }
+            "type": "string",
+            "default": "com.concur.qa.platform.receipts"
           }
         ],
         "responses": {
           "200": {
             "description": "Receipt Representations Retrieved",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
+            "schema": {
+              "type": "string",
+              "format": "binary"
             }
           },
-          "4XX": {
+          "default": {
             "description": "Error",
-            "content": {
-              "application/hal+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorMessage"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ErrorMessage"
             }
           }
         }
       }
     }
   },
-  "components": {
-    "schemas": {
-      "BaseReceiptResponse": {
-        "required": [
-          "href"
-        ],
-        "type": "object",
-        "properties": {
-          "imageId": {
-            "type": "string",
-            "description": "imageId"
-          },
-          "href": {
-            "type": "string",
-            "description": "Uri of the receipt"
-          },
-          "id": {
-            "type": "string",
-            "description": "id"
-          }
-        }
-      },
-      "ErrorMessage": {
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "validationErrors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            }
-          }
-        }
-      },
-      "ValidationError": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        }
-      },
-      "Address": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "addressLine": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          }
-        }
-      },
-      "Amount": {
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "string"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "netAmount": {
-            "type": "string"
-          },
-          "subTotal": {
-            "type": "string"
-          }
-        }
-      },
-      "Authority": {
-        "type": "object",
-        "properties": {
-          "addressCountry": {
-            "type": "string"
-          },
-          "addressRegion": {
-            "type": "string"
-          }
-        }
-      },
-      "Compliance": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "noProcessingRequired",
-              "processing",
-              "failed",
-              "processed"
-            ]
-          },
-          "errorType": {
-            "type": "string",
-            "enum": [
-              "processing",
-              "validation"
-            ]
-          },
-          "errorMessage": {
-            "type": "string"
-          },
-          "certificationDateTime": {
-            "type": "string"
-          }
-        }
-      },
-      "CreditCard": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string"
-          },
-          "lastFour": {
-            "type": "string"
-          }
-        }
-      },
-      "Discount": {
-        "type": "object",
-        "properties": {
-          "discountName": {
-            "type": "string"
-          },
-          "discountCode": {
-            "type": "string"
-          },
-          "discountRate": {
-            "type": "string"
-          },
-          "discountAmount": {
-            "type": "string"
-          }
-        }
-      },
-      "Distance": {
-        "type": "object",
-        "properties": {
-          "totalDistance": {
-            "type": "number",
-            "format": "double"
-          },
-          "unit": {
-            "type": "string",
-            "enum": [
-              "km",
-              "mi"
-            ]
-          }
-        }
-      },
-      "DocumentCompliance": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string"
-          },
-          "formatVersion": {
-            "type": "string"
-          },
-          "number": {
-            "type": "string"
-          },
-          "typeCode": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "verificationCode": {
-            "type": "string"
-          }
-        }
-      },
-      "ExpenseData": {
-        "type": "object",
-        "properties": {
-          "expenseType": {
-            "type": "string"
-          },
-          "expensePaymentType": {
-            "type": "string"
-          }
-        }
-      },
-      "LineItem": {
-        "type": "object",
-        "properties": {
-          "itemId": {
-            "type": "string"
-          },
-          "productCode": {
-            "type": "string"
-          },
-          "quantity": {
-            "type": "string"
-          },
-          "unitPrice": {
-            "type": "string"
-          },
-          "taxRate": {
-            "type": "string"
-          },
-          "subTotal": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "date": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "string"
-          },
-          "taxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tax"
-            }
-          },
-          "discounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Discount"
-            }
-          },
-          "additionalDescription": {
-            "type": "string"
-          },
-          "semanticsCode": {
-            "type": "string"
-          }
-        }
-      },
-      "Metadata": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string"
-          },
-          "forwardId": {
-            "type": "string"
-          },
-          "imageId": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "companyId": {
-            "type": "string"
-          },
-          "dateTimeReceived": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "origin": {
-            "type": "string",
-            "enum": [
-              "web",
-              "mobile",
-              "email",
-              "vendor"
-            ]
-          },
-          "captureMethod": {
-            "type": "string",
-            "enum": [
-              "upload",
-              "cameraCapture"
-            ]
-          },
-          "provider": {
-            "type": "string",
-            "enum": [
-              "user",
-              "vendor"
-            ]
-          },
-          "feature": {
-            "type": "string",
-            "enum": [
-              "simpleReceipt",
-              "expenseIt",
-              "cfdi",
-              "eReceipt"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "accepted",
-              "processing",
-              "processed",
-              "failed"
-            ]
-          },
-          "compliance": {
-            "$ref": "#/components/schemas/Compliance"
-          },
-          "entityId": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "general",
-              "groundTransport"
-            ]
-          }
-        }
-      },
-      "PaymentType": {
-        "type": "object",
-        "properties": {
-          "method": {
-            "type": "string",
-            "enum": [
-              "Cash",
-              "Credit Card",
-              "Digital Wallet"
-            ]
-          },
-          "creditCard": {
-            "$ref": "#/components/schemas/CreditCard"
-          },
-          "digitalWallet": {
-            "type": "string"
-          }
-        }
-      },
-      "ReceiptData": {
-        "type": "object",
-        "properties": {
-          "receiveDateTime": {
-            "type": "string"
-          },
-          "transactionDateTime": {
-            "type": "string"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/Amount"
-          },
-          "vendor": {
-            "$ref": "#/components/schemas/Vendor"
-          },
-          "comments": {
-            "type": "string"
-          },
-          "paymentType": {
-            "$ref": "#/components/schemas/PaymentType"
-          },
-          "documentCompliance": {
-            "$ref": "#/components/schemas/DocumentCompliance"
-          },
-          "lineItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LineItem"
-            }
-          },
-          "expenseData": {
-            "$ref": "#/components/schemas/ExpenseData"
-          },
-          "referenceNumber": {
-            "type": "string"
-          },
-          "discounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Discount"
-            }
-          },
-          "discountsTotal": {
-            "type": "string"
-          },
-          "taxesTotal": {
-            "type": "string"
-          },
-          "tripDetails": {
-            "$ref": "#/components/schemas/TripDetails"
-          },
-          "programName": {
-            "type": "string"
-          },
-          "networkTransactionId": {
-            "type": "string"
-          },
-          "taxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tax"
-            }
-          }
-        }
-      },
-      "ReceiptRequest": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "The unique identifier of the associated userId within Concur",
-            "deprecated": true
-          },
-          "companyId": {
-            "type": "string",
-            "description": "The unique identifier of the associated companyId within Concur",
-            "deprecated": true
-          },
-          "forwardId": {
-            "type": "string",
-            "description": "forwardId",
-            "deprecated": true
-          },
-          "origin": {
-            "type": "string",
-            "description": "The origin of the receipt.",
-            "deprecated": true
-          },
-          "feature": {
-            "type": "string",
-            "description": "feature",
-            "deprecated": true
-          },
-          "captureMethod": {
-            "type": "string",
-            "description": "captureMethod",
-            "deprecated": true
-          },
-          "category": {
-            "type": "string",
-            "description": "category"
-          },
-          "imageId": {
-            "type": "string",
-            "description": "imageId",
-            "deprecated": true
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/Metadata"
-          },
-          "receiptData": {
-            "$ref": "#/components/schemas/ReceiptData"
-          }
+  "definitions": {
+    "BaseReceiptResponse": {
+      "required": [
+        "href"
+      ],
+      "type": "object",
+      "properties": {
+        "imageId": {
+          "type": "string",
+          "description": "imageId"
         },
-        "description": "Receipt JSON"
-      },
-      "Tax": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "string"
-          },
-          "rate": {
-            "type": "number",
-            "format": "double"
-          },
-          "rateType": {
-            "type": "string"
-          },
-          "authority": {
-            "$ref": "#/components/schemas/Authority"
-          }
+        "href": {
+          "type": "string",
+          "description": "Uri of the receipt"
+        },
+        "id": {
+          "type": "string",
+          "description": "id"
         }
-      },
-      "TripDetails": {
-        "type": "object",
-        "properties": {
-          "itineraryLocator": {
-            "type": "string"
-          },
-          "driverNumber": {
-            "type": "string"
-          },
-          "travelDuration": {
-            "type": "string"
-          },
-          "mapUrl": {
-            "type": "string"
-          },
-          "startDate": {
-            "type": "string"
-          },
-          "endDate": {
-            "type": "string"
-          },
-          "classOfService": {
-            "type": "string"
-          },
-          "distance": {
-            "$ref": "#/components/schemas/Distance"
-          },
-          "source": {
-            "$ref": "#/components/schemas/Address"
-          },
-          "destination": {
-            "$ref": "#/components/schemas/Address"
-          }
-        }
-      },
-      "Vendor": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "taxId": {
-            "type": "string"
-          },
-          "addressLine": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          }
-        }
-      },
-      "BaseReceipt": {
-        "type": "object",
-        "properties": {
-          "metadata": {
-            "$ref": "#/components/schemas/Metadata"
-          },
-          "receiptData": {
-            "$ref": "#/components/schemas/ReceiptData"
-          },
-          "documents": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Document"
-            }
-          }
-        }
-      },
-      "Document": {
-        "type": "object",
-        "properties": {
-          "representation": {
-            "type": "string",
-            "enum": [
-              "display",
-              "compliance"
-            ]
-          },
-          "type": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "renderable": {
-            "type": "boolean"
-          },
-          "href": {
-            "type": "string"
-          }
-        }
-      },
-      "Address_Public": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "addressLine": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          },
-          "internetAddress": {
-            "type": "string",
-            "description": "Website URL"
-          }
-        }
-      },
-      "Amount_Public": {
-        "type": "object",
-        "properties": {
-          "total": {
-            "type": "string"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "netAmount": {
-            "type": "string"
-          },
-          "subTotal": {
-            "type": "string"
-          }
-        }
-      },
-      "Authority_Public": {
-        "type": "object",
-        "properties": {
-          "addressCountry": {
-            "type": "string"
-          },
-          "addressRegion": {
-            "type": "string"
-          }
-        }
-      },
-      "BaseReceipt_Public": {
-        "type": "object",
-        "properties": {
-          "metadata": {
-            "$ref": "#/components/schemas/Metadata_Public"
-          },
-          "receiptData": {
-            "$ref": "#/components/schemas/ReceiptData_Public"
-          },
-          "documents": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Document_Public"
-            }
-          }
-        }
-      },
-      "Compliance_Public": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "noProcessingRequired",
-              "processing",
-              "failed",
-              "processed"
-            ]
-          },
-          "errorType": {
-            "type": "string",
-            "enum": [
-              "processing",
-              "validation"
-            ]
-          },
-          "errorMessage": {
-            "type": "string"
-          },
-          "certificationDateTime": {
-            "type": "string"
-          }
-        }
-      },
-      "CreditCard_Public": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string"
-          },
-          "lastFour": {
-            "type": "string"
-          },
-          "authorizationCode": {
-            "type": "string",
-            "description": "Authorization code"
-          }
-        }
-      },
-      "Discount_Public": {
-        "type": "object",
-        "properties": {
-          "discountName": {
-            "type": "string"
-          },
-          "discountCode": {
-            "type": "string"
-          },
-          "discountRate": {
-            "type": "string"
-          },
-          "discountAmount": {
-            "type": "string"
-          }
-        }
-      },
-      "Distance_Public": {
-        "type": "object",
-        "properties": {
-          "totalDistance": {
-            "type": "number",
-            "format": "double"
-          },
-          "unit": {
-            "type": "string",
-            "enum": [
-              "km",
-              "mi"
-            ]
-          }
-        }
-      },
-      "DocumentCompliance_Public": {
-        "type": "object",
-        "properties": {
-          "uuid": {
-            "type": "string"
-          },
-          "formatVersion": {
-            "type": "string"
-          },
-          "number": {
-            "type": "string"
-          },
-          "typeCode": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "verificationCode": {
-            "type": "string"
-          }
-        }
-      },
-      "Document_Public": {
-        "type": "object",
-        "properties": {
-          "representation": {
-            "type": "string",
-            "enum": [
-              "display",
-              "compliance"
-            ]
-          },
-          "type": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "renderable": {
-            "type": "boolean"
-          },
-          "href": {
-            "type": "string"
-          }
-        }
-      },
-      "ExpenseData_Public": {
-        "type": "object",
-        "properties": {
-          "expenseType": {
-            "type": "string"
-          },
-          "expensePaymentType": {
-            "type": "string"
-          }
-        }
-      },
-      "LineItem_Public": {
-        "type": "object",
-        "properties": {
-          "itemId": {
-            "type": "string"
-          },
-          "productCode": {
-            "type": "string"
-          },
-          "quantity": {
-            "type": "string"
-          },
-          "unitPrice": {
-            "type": "string"
-          },
-          "taxRate": {
-            "type": "string"
-          },
-          "subTotal": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "date": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "string"
-          },
-          "taxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tax_Public"
-            }
-          },
-          "discounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Discount_Public"
-            }
-          },
-          "additionalDescription": {
-            "type": "string"
-          },
-          "semanticsCode": {
-            "type": "string"
-          }
-        }
-      },
-      "Metadata_Public": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string"
-          },
-          "forwardId": {
-            "type": "string"
-          },
-          "imageId": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "companyId": {
-            "type": "string"
-          },
-          "dateTimeReceived": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "origin": {
-            "type": "string",
-            "enum": [
-              "web",
-              "mobile",
-              "email",
-              "vendor",
-              "partner"
-            ]
-          },
-          "captureMethod": {
-            "type": "string",
-            "enum": [
-              "upload",
-              "cameraCapture"
-            ]
-          },
-          "provider": {
-            "type": "string",
-            "enum": [
-              "user",
-              "vendor"
-            ]
-          },
-          "feature": {
-            "type": "string",
-            "enum": [
-              "simpleReceipt",
-              "eReceipt"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "accepted",
-              "processing",
-              "processed",
-              "failed"
-            ]
-          },
-          "compliance": {
-            "$ref": "#/components/schemas/Compliance_Public"
-          },
-          "entityId": {
-            "type": "string"
-          },
-          "category": {
-            "type": "string",
-            "enum": [
-              "general",
-              "groundTransport",
-              "lodge",
-              "air",
-              "carRental",
-              "rail"
-            ]
-          }
-        }
-      },
-      "PaymentType_Public": {
-        "type": "object",
-        "properties": {
-          "method": {
-            "type": "string",
-            "enum": [
-              "Cash",
-              "Credit Card",
-              "Digital Wallet",
-              "Company Paid",
-              "Unused Ticket",
-              "Unknown"
-            ]
-          },
-          "creditCard": {
-            "$ref": "#/components/schemas/CreditCard_Public",
-            "description": "Present when method is 'Credit Card'"
-          },
-          "digitalWallet": {
-            "type": "string"
-          },
-          "companyPaid": {
-            "$ref": "#/components/schemas/CompanyPaid_Public"
-          },
-          "unusedTicket": {
-            "$ref": "#/components/schemas/UnusedTicket_Public"
-          },
-          "amount": {
-            "type": "string",
-            "description": "Amount charged via this payment method"
-          },
-          "authorizationCode": {
-            "type": "string",
-            "description": "Authorization code for the payment"
-          }
-        }
-      },
-      "ReceiptData_Public": {
-        "type": "object",
-        "properties": {
-          "receiveDateTime": {
-            "type": "string"
-          },
-          "transactionDateTime": {
-            "type": "string"
-          },
-          "amount": {
-            "$ref": "#/components/schemas/Amount_Public"
-          },
-          "vendor": {
-            "$ref": "#/components/schemas/Vendor_Public"
-          },
-          "comments": {
-            "type": "string"
-          },
-          "documentCompliance": {
-            "$ref": "#/components/schemas/DocumentCompliance_Public"
-          },
-          "lineItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LineItem_Public"
-            }
-          },
-          "expenseData": {
-            "$ref": "#/components/schemas/ExpenseData_Public"
-          },
-          "referenceNumber": {
-            "type": "string"
-          },
-          "discounts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Discount_Public"
-            }
-          },
-          "discountsTotal": {
-            "type": "string"
-          },
-          "taxesTotal": {
-            "type": "string"
-          },
-          "tripDetails": {
-            "$ref": "#/components/schemas/TripDetails_Public"
-          },
-          "programName": {
-            "type": "string"
-          },
-          "networkTransactionId": {
-            "type": "string"
-          },
-          "taxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tax_Public"
-            }
-          },
-          "paymentTypes": {
-            "type": "array",
-            "description": "Payment methods used. Supported for eReceipt submissions.",
-            "items": {
-              "$ref": "#/components/schemas/PaymentType_Public"
-            }
-          }
-        }
-      },
-      "Tax_Public": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "string"
-          },
-          "rate": {
-            "type": "number",
-            "format": "double"
-          },
-          "rateType": {
-            "type": "string"
-          },
-          "authority": {
-            "$ref": "#/components/schemas/Authority_Public"
-          }
-        }
-      },
-      "TripDetails_Public": {
-        "type": "object",
-        "description": "Trip details for travel-related receipts. Populate the appropriate sub-object based on the receipt category.",
-        "properties": {
-          "confirmationNumber": {
-            "type": "string"
-          },
-          "itineraryLocator": {
-            "type": "string"
-          },
-          "segmentLocator": {
-            "type": "string"
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "endDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "numberInParty": {
-            "type": "integer"
-          },
-          "guests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Guests_Public"
-            }
-          },
-          "rideDetails": {
-            "description": "Ground transport details (category: groundTransport)",
-            "$ref": "#/components/schemas/RideDetails_Public"
-          },
-          "lodgeDetails": {
-            "description": "Lodging details (category: lodge)",
-            "$ref": "#/components/schemas/LodgeDetails_Public"
-          },
-          "airDetails": {
-            "description": "Air travel details (category: air)",
-            "$ref": "#/components/schemas/AirDetails_Public"
-          },
-          "carRentalDetails": {
-            "description": "Car rental details (category: carRental)",
-            "$ref": "#/components/schemas/CarRentalDetails_Public"
-          },
-          "railDetails": {
-            "description": "Rail travel details (category: rail)",
-            "$ref": "#/components/schemas/RailDetails_Public"
-          }
-        }
-      },
-      "Vendor_Public": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "taxId": {
-            "type": "string"
-          },
-          "addressLine": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          }
-        }
-      },
-      "ErrorMessage_Public": {
-        "type": "object",
-        "properties": {
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "validationErrors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationError_Public"
-            }
-          }
-        }
-      },
-      "ValidationError_Public": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          }
-        }
-      },
-      "CompanyPaid_Public": {
-        "type": "object",
-        "description": "Details for company-paid transactions",
-        "properties": {
-          "source": {
-            "type": "string",
-            "description": "The source of the company payment",
-            "enum": [
-              "GhostCard",
-              "LodgeCard",
-              "DirectPay",
-              "Invoice"
-            ]
-          },
-          "creditCard": {
-            "$ref": "#/components/schemas/CreditCard_Public"
-          }
-        }
-      },
-      "UnusedTicket_Public": {
-        "type": "object",
-        "description": "Details for unused ticket payments",
-        "properties": {
-          "ticketNumber": {
-            "type": "string",
-            "description": "The unused ticket number"
-          }
-        }
-      },
-      "Guests_Public": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "guestNameRecord": {
-            "type": "string"
-          },
-          "address": {
-            "$ref": "#/components/schemas/Address_Public"
-          },
-          "emailAddress": {
-            "type": "string"
-          }
-        }
-      },
-      "RideDetails_Public": {
-        "type": "object",
-        "description": "Details specific to ground transport receipts",
-        "properties": {
-          "source": {
-            "$ref": "#/components/schemas/Address_Public"
-          },
-          "destination": {
-            "$ref": "#/components/schemas/Address_Public"
-          },
-          "driverNumber": {
-            "type": "string"
-          },
-          "duration": {
-            "type": "string",
-            "description": "Trip duration in ISO 8601 duration format (e.g. PT15M)"
-          },
-          "classOfService": {
-            "type": "string"
-          },
-          "mapUrl": {
-            "type": "string"
-          },
-          "distance": {
-            "$ref": "#/components/schemas/Distance_Public"
-          }
-        }
-      },
-      "HotelProperty_Public": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "addressLine": {
-            "type": "string"
-          },
-          "city": {
-            "type": "string"
-          },
-          "state": {
-            "type": "string"
-          },
-          "country": {
-            "type": "string"
-          },
-          "postalCode": {
-            "type": "string"
-          }
-        }
-      },
-      "Room_Public": {
-        "type": "object",
-        "properties": {
-          "roomNumber": {
-            "type": "string"
-          },
-          "roomType": {
-            "type": "string"
-          },
-          "ratePlanType": {
-            "type": "string"
-          },
-          "averageDailyRoomRate": {
-            "type": "string"
-          }
-        }
-      },
-      "LodgeDetails_Public": {
-        "type": "object",
-        "description": "Details specific to lodging receipts",
-        "properties": {
-          "hotelProperty": {
-            "$ref": "#/components/schemas/HotelProperty_Public"
-          },
-          "nightsStayed": {
-            "type": "string"
-          },
-          "room": {
-            "$ref": "#/components/schemas/Room_Public"
-          }
-        }
-      },
-      "Fare_Public": {
-        "type": "object",
-        "properties": {
-          "amount": {
-            "type": "string"
-          },
-          "currency": {
-            "type": "string"
-          }
-        }
-      },
-      "AirCoupon_Public": {
-        "type": "object",
-        "description": "A single flight segment within an air ticket",
-        "properties": {
-          "couponNumber": {
-            "type": "string"
-          },
-          "originationAirportIATACode": {
-            "type": "string"
-          },
-          "originationDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "destinationAirportIATACode": {
-            "type": "string"
-          },
-          "destinationDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "flightNumber": {
-            "type": "string"
-          },
-          "operatingAirlineCode": {
-            "type": "string"
-          },
-          "marketingCarrier": {
-            "type": "string"
-          },
-          "operatingCarrier": {
-            "type": "string"
-          },
-          "classOfServiceCode": {
-            "type": "string"
-          },
-          "fareBasisCode": {
-            "type": "string"
-          },
-          "ticketDesignatorCode": {
-            "type": "string"
-          },
-          "fare": {
-            "$ref": "#/components/schemas/Fare_Public"
-          },
-          "taxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tax_Public"
-            }
-          },
-          "lineItems": {
-            "type": "array",
-            "description": "Additional charges for this flight segment (e.g. baggage fees)",
-            "items": {
-              "$ref": "#/components/schemas/LineItem_Public"
-            }
-          }
-        }
-      },
-      "AirTicket_Public": {
-        "type": "object",
-        "properties": {
-          "number": {
-            "type": "string",
-            "description": "Ticket number"
-          },
-          "issueDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "recordLocator": {
-            "type": "string"
-          },
-          "pseudoCityCode": {
-            "type": "string",
-            "description": "IATA city/airport code of the point of sale"
-          },
-          "IATAAgencyNumber": {
-            "type": "string"
-          },
-          "agencyName": {
-            "type": "string"
-          },
-          "passengerName": {
-            "type": "string"
-          },
-          "comparisonFare": {
-            "type": "string"
-          },
-          "fare": {
-            "$ref": "#/components/schemas/Fare_Public"
-          },
-          "airCoupons": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AirCoupon_Public"
-            }
-          }
-        }
-      },
-      "AirDetails_Public": {
-        "type": "object",
-        "description": "Details specific to air travel receipts",
-        "properties": {
-          "bookingId": {
-            "type": "string"
-          },
-          "airTickets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AirTicket_Public"
-            }
-          }
-        }
-      },
-      "Vehicle_Public": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string"
-          },
-          "registrationNumber": {
-            "type": "string"
-          },
-          "classReservedCode": {
-            "type": "string"
-          },
-          "classRentedCode": {
-            "type": "string"
-          },
-          "classChargedCode": {
-            "type": "string"
-          }
-        }
-      },
-      "CarRentalDetails_Public": {
-        "type": "object",
-        "description": "Details specific to car rental receipts",
-        "properties": {
-          "rentalDays": {
-            "type": "string"
-          },
-          "rentalAgreementNumber": {
-            "type": "string"
-          },
-          "averageDailyRate": {
-            "type": "string"
-          },
-          "fuelServiceCharge": {
-            "type": "string"
-          },
-          "driverName": {
-            "type": "string"
-          },
-          "additionalDriver": {
-            "type": "boolean"
-          },
-          "vehicle": {
-            "$ref": "#/components/schemas/Vehicle_Public"
-          },
-          "distance": {
-            "$ref": "#/components/schemas/Distance_Public"
-          },
-          "odometerReadingOut": {
-            "type": "number",
-            "format": "double"
-          },
-          "odometerReadingIn": {
-            "type": "number",
-            "format": "double"
-          }
-        }
-      },
-      "RailSegment_Public": {
-        "type": "object",
-        "properties": {
-          "departureStation": {
-            "type": "string"
-          },
-          "departureDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "arrivalStation": {
-            "type": "string"
-          },
-          "arrivalDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "trainNumber": {
-            "type": "string"
-          },
-          "trainType": {
-            "type": "string"
-          },
-          "classOfServiceCode": {
-            "type": "string"
-          },
-          "fare": {
-            "$ref": "#/components/schemas/Fare_Public"
-          },
-          "taxes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Tax_Public"
-            }
-          },
-          "lineItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LineItem_Public"
-            }
-          }
-        }
-      },
-      "RailTicket_Public": {
-        "type": "object",
-        "properties": {
-          "ticketNumber": {
-            "type": "string"
-          },
-          "recordLocator": {
-            "type": "string"
-          },
-          "issueDateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "passengerName": {
-            "type": "string"
-          },
-          "fare": {
-            "$ref": "#/components/schemas/Fare_Public"
-          },
-          "segments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RailSegment_Public"
-            }
-          }
-        }
-      },
-      "RailDetails_Public": {
-        "type": "object",
-        "description": "Details specific to rail travel receipts",
-        "properties": {
-          "railTickets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RailTicket_Public"
-            }
+      }
+    },
+    "ErrorMessage": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "validationErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationError"
           }
         }
       }
     },
-    "parameters": {
-      "concur-forwarded-for": {
-        "name": "concur-forwarded-for",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "description": "concur-forwarded-for"
-        }
-      },
-      "concur-correlationid": {
-        "name": "concur-correlationid",
-        "in": "header",
-        "required": false,
-        "schema": {
+    "ValidationError": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "id": {
           "type": "string"
         }
       }
     },
-    "securitySchemes": {
-      "JWT-Authentication": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+    "Address": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        }
       }
+    },
+    "Amount": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "netAmount": {
+          "type": "string"
+        },
+        "subTotal": {
+          "type": "string"
+        }
+      }
+    },
+    "Authority": {
+      "type": "object",
+      "properties": {
+        "addressCountry": {
+          "type": "string"
+        },
+        "addressRegion": {
+          "type": "string"
+        }
+      }
+    },
+    "Compliance": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "noProcessingRequired",
+            "processing",
+            "failed",
+            "processed"
+          ]
+        },
+        "errorType": {
+          "type": "string",
+          "enum": [
+            "processing",
+            "validation"
+          ]
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "certificationDateTime": {
+          "type": "string"
+        }
+      }
+    },
+    "CreditCard": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "lastFour": {
+          "type": "string"
+        }
+      }
+    },
+    "Discount": {
+      "type": "object",
+      "properties": {
+        "discountName": {
+          "type": "string"
+        },
+        "discountCode": {
+          "type": "string"
+        },
+        "discountRate": {
+          "type": "string"
+        },
+        "discountAmount": {
+          "type": "string"
+        }
+      }
+    },
+    "Distance": {
+      "type": "object",
+      "properties": {
+        "totalDistance": {
+          "type": "number",
+          "format": "double"
+        },
+        "unit": {
+          "type": "string",
+          "enum": [
+            "km",
+            "mi"
+          ]
+        }
+      }
+    },
+    "DocumentCompliance": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "formatVersion": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "typeCode": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "verificationCode": {
+          "type": "string"
+        }
+      }
+    },
+    "ExpenseData": {
+      "type": "object",
+      "properties": {
+        "expenseType": {
+          "type": "string"
+        },
+        "expensePaymentType": {
+          "type": "string"
+        }
+      }
+    },
+    "LineItem": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "type": "string"
+        },
+        "productCode": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        },
+        "unitPrice": {
+          "type": "string"
+        },
+        "taxRate": {
+          "type": "string"
+        },
+        "subTotal": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax"
+          }
+        },
+        "discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Discount"
+          }
+        },
+        "additionalDescription": {
+          "type": "string"
+        },
+        "semanticsCode": {
+          "type": "string"
+        }
+      }
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "forwardId": {
+          "type": "string"
+        },
+        "imageId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "companyId": {
+          "type": "string"
+        },
+        "dateTimeReceived": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "web",
+            "mobile",
+            "email",
+            "vendor"
+          ]
+        },
+        "captureMethod": {
+          "type": "string",
+          "enum": [
+            "upload",
+            "cameraCapture"
+          ]
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "user",
+            "vendor"
+          ]
+        },
+        "feature": {
+          "type": "string",
+          "enum": [
+            "simpleReceipt",
+            "expenseIt",
+            "cfdi",
+            "eReceipt"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "processing",
+            "processed",
+            "failed"
+          ]
+        },
+        "compliance": {
+          "$ref": "#/definitions/Compliance"
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "general",
+            "groundTransport"
+          ]
+        }
+      }
+    },
+    "PaymentType": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "Cash",
+            "Credit Card",
+            "Digital Wallet"
+          ]
+        },
+        "creditCard": {
+          "$ref": "#/definitions/CreditCard"
+        },
+        "digitalWallet": {
+          "type": "string"
+        }
+      }
+    },
+    "ReceiptData": {
+      "type": "object",
+      "properties": {
+        "receiveDateTime": {
+          "type": "string"
+        },
+        "transactionDateTime": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        },
+        "vendor": {
+          "$ref": "#/definitions/Vendor"
+        },
+        "comments": {
+          "type": "string"
+        },
+        "paymentType": {
+          "$ref": "#/definitions/PaymentType"
+        },
+        "documentCompliance": {
+          "$ref": "#/definitions/DocumentCompliance"
+        },
+        "lineItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineItem"
+          }
+        },
+        "expenseData": {
+          "$ref": "#/definitions/ExpenseData"
+        },
+        "referenceNumber": {
+          "type": "string"
+        },
+        "discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Discount"
+          }
+        },
+        "discountsTotal": {
+          "type": "string"
+        },
+        "taxesTotal": {
+          "type": "string"
+        },
+        "tripDetails": {
+          "$ref": "#/definitions/TripDetails"
+        },
+        "programName": {
+          "type": "string"
+        },
+        "networkTransactionId": {
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax"
+          }
+        }
+      }
+    },
+    "ReceiptRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The unique identifier of the associated userId within Concur",
+          "deprecated": true
+        },
+        "companyId": {
+          "type": "string",
+          "description": "The unique identifier of the associated companyId within Concur",
+          "deprecated": true
+        },
+        "forwardId": {
+          "type": "string",
+          "description": "forwardId",
+          "deprecated": true
+        },
+        "origin": {
+          "type": "string",
+          "description": "The origin of the receipt.",
+          "deprecated": true
+        },
+        "feature": {
+          "type": "string",
+          "description": "feature",
+          "deprecated": true
+        },
+        "captureMethod": {
+          "type": "string",
+          "description": "captureMethod",
+          "deprecated": true
+        },
+        "category": {
+          "type": "string",
+          "description": "category"
+        },
+        "imageId": {
+          "type": "string",
+          "description": "imageId",
+          "deprecated": true
+        },
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "receiptData": {
+          "$ref": "#/definitions/ReceiptData"
+        }
+      },
+      "description": "Receipt JSON"
+    },
+    "Tax": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "rateType": {
+          "type": "string"
+        },
+        "authority": {
+          "$ref": "#/definitions/Authority"
+        }
+      }
+    },
+    "TripDetails": {
+      "type": "object",
+      "properties": {
+        "itineraryLocator": {
+          "type": "string"
+        },
+        "driverNumber": {
+          "type": "string"
+        },
+        "travelDuration": {
+          "type": "string"
+        },
+        "mapUrl": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        },
+        "classOfService": {
+          "type": "string"
+        },
+        "distance": {
+          "$ref": "#/definitions/Distance"
+        },
+        "source": {
+          "$ref": "#/definitions/Address"
+        },
+        "destination": {
+          "$ref": "#/definitions/Address"
+        }
+      }
+    },
+    "Vendor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "taxId": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "BaseReceipt": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata"
+        },
+        "receiptData": {
+          "$ref": "#/definitions/ReceiptData"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document"
+          }
+        }
+      }
+    },
+    "Document": {
+      "type": "object",
+      "properties": {
+        "representation": {
+          "type": "string",
+          "enum": [
+            "display",
+            "compliance"
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "renderable": {
+          "type": "boolean"
+        },
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "Address_Public": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "internetAddress": {
+          "type": "string",
+          "description": "Website URL"
+        }
+      }
+    },
+    "Amount_Public": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "netAmount": {
+          "type": "string"
+        },
+        "subTotal": {
+          "type": "string"
+        }
+      }
+    },
+    "Authority_Public": {
+      "type": "object",
+      "properties": {
+        "addressCountry": {
+          "type": "string"
+        },
+        "addressRegion": {
+          "type": "string"
+        }
+      }
+    },
+    "BaseReceipt_Public": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/Metadata_Public"
+        },
+        "receiptData": {
+          "$ref": "#/definitions/ReceiptData_Public"
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Document_Public"
+          }
+        }
+      }
+    },
+    "Compliance_Public": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "noProcessingRequired",
+            "processing",
+            "failed",
+            "processed"
+          ]
+        },
+        "errorType": {
+          "type": "string",
+          "enum": [
+            "processing",
+            "validation"
+          ]
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "certificationDateTime": {
+          "type": "string"
+        }
+      }
+    },
+    "CreditCard_Public": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "lastFour": {
+          "type": "string"
+        },
+        "authorizationCode": {
+          "type": "string",
+          "description": "Authorization code"
+        }
+      }
+    },
+    "Discount_Public": {
+      "type": "object",
+      "properties": {
+        "discountName": {
+          "type": "string"
+        },
+        "discountCode": {
+          "type": "string"
+        },
+        "discountRate": {
+          "type": "string"
+        },
+        "discountAmount": {
+          "type": "string"
+        }
+      }
+    },
+    "Distance_Public": {
+      "type": "object",
+      "properties": {
+        "totalDistance": {
+          "type": "number",
+          "format": "double"
+        },
+        "unit": {
+          "type": "string",
+          "enum": [
+            "km",
+            "mi"
+          ]
+        }
+      }
+    },
+    "DocumentCompliance_Public": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "formatVersion": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "typeCode": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "verificationCode": {
+          "type": "string"
+        }
+      }
+    },
+    "Document_Public": {
+      "type": "object",
+      "properties": {
+        "representation": {
+          "type": "string",
+          "enum": [
+            "display",
+            "compliance"
+          ]
+        },
+        "type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "renderable": {
+          "type": "boolean"
+        },
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "ExpenseData_Public": {
+      "type": "object",
+      "properties": {
+        "expenseType": {
+          "type": "string"
+        },
+        "expensePaymentType": {
+          "type": "string"
+        }
+      }
+    },
+    "LineItem_Public": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "type": "string"
+        },
+        "productCode": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "string"
+        },
+        "unitPrice": {
+          "type": "string"
+        },
+        "taxRate": {
+          "type": "string"
+        },
+        "subTotal": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax_Public"
+          }
+        },
+        "discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Discount_Public"
+          }
+        },
+        "additionalDescription": {
+          "type": "string"
+        },
+        "semanticsCode": {
+          "type": "string"
+        }
+      }
+    },
+    "Metadata_Public": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "forwardId": {
+          "type": "string"
+        },
+        "imageId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "companyId": {
+          "type": "string"
+        },
+        "dateTimeReceived": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "origin": {
+          "type": "string",
+          "enum": [
+            "web",
+            "mobile",
+            "email",
+            "vendor",
+            "partner"
+          ]
+        },
+        "captureMethod": {
+          "type": "string",
+          "enum": [
+            "upload",
+            "cameraCapture"
+          ]
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "user",
+            "vendor"
+          ]
+        },
+        "feature": {
+          "type": "string",
+          "enum": [
+            "simpleReceipt",
+            "eReceipt"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "accepted",
+            "processing",
+            "processed",
+            "failed"
+          ]
+        },
+        "compliance": {
+          "$ref": "#/definitions/Compliance_Public"
+        },
+        "entityId": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "general",
+            "groundTransport",
+            "lodge",
+            "air",
+            "carRental",
+            "rail"
+          ]
+        }
+      }
+    },
+    "PaymentType_Public": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": [
+            "Cash",
+            "Credit Card",
+            "Digital Wallet",
+            "Company Paid",
+            "Unused Ticket",
+            "Unknown"
+          ]
+        },
+        "creditCard": {
+          "$ref": "#/definitions/CreditCard_Public",
+          "description": "Present when method is 'Credit Card'"
+        },
+        "digitalWallet": {
+          "type": "string"
+        },
+        "companyPaid": {
+          "$ref": "#/definitions/CompanyPaid_Public"
+        },
+        "unusedTicket": {
+          "$ref": "#/definitions/UnusedTicket_Public"
+        },
+        "amount": {
+          "type": "string",
+          "description": "Amount charged via this payment method"
+        },
+        "authorizationCode": {
+          "type": "string",
+          "description": "Authorization code for the payment"
+        }
+      }
+    },
+    "ReceiptData_Public": {
+      "type": "object",
+      "properties": {
+        "receiveDateTime": {
+          "type": "string"
+        },
+        "transactionDateTime": {
+          "type": "string"
+        },
+        "amount": {
+          "$ref": "#/definitions/Amount_Public"
+        },
+        "vendor": {
+          "$ref": "#/definitions/Vendor_Public"
+        },
+        "comments": {
+          "type": "string"
+        },
+        "documentCompliance": {
+          "$ref": "#/definitions/DocumentCompliance_Public"
+        },
+        "lineItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineItem_Public"
+          }
+        },
+        "expenseData": {
+          "$ref": "#/definitions/ExpenseData_Public"
+        },
+        "referenceNumber": {
+          "type": "string"
+        },
+        "discounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Discount_Public"
+          }
+        },
+        "discountsTotal": {
+          "type": "string"
+        },
+        "taxesTotal": {
+          "type": "string"
+        },
+        "tripDetails": {
+          "$ref": "#/definitions/TripDetails_Public"
+        },
+        "programName": {
+          "type": "string"
+        },
+        "networkTransactionId": {
+          "type": "string"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax_Public"
+          }
+        },
+        "paymentTypes": {
+          "type": "array",
+          "description": "Payment methods used. Supported for eReceipt submissions.",
+          "items": {
+            "$ref": "#/definitions/PaymentType_Public"
+          }
+        }
+      }
+    },
+    "Tax_Public": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string"
+        },
+        "rate": {
+          "type": "number",
+          "format": "double"
+        },
+        "rateType": {
+          "type": "string"
+        },
+        "authority": {
+          "$ref": "#/definitions/Authority_Public"
+        }
+      }
+    },
+    "TripDetails_Public": {
+      "type": "object",
+      "description": "Trip details for travel-related receipts. Populate the appropriate sub-object based on the receipt category.",
+      "properties": {
+        "confirmationNumber": {
+          "type": "string"
+        },
+        "itineraryLocator": {
+          "type": "string"
+        },
+        "segmentLocator": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "numberInParty": {
+          "type": "integer"
+        },
+        "guests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Guests_Public"
+          }
+        },
+        "rideDetails": {
+          "description": "Ground transport details (category: groundTransport)",
+          "$ref": "#/definitions/RideDetails_Public"
+        },
+        "lodgeDetails": {
+          "description": "Lodging details (category: lodge)",
+          "$ref": "#/definitions/LodgeDetails_Public"
+        },
+        "airDetails": {
+          "description": "Air travel details (category: air)",
+          "$ref": "#/definitions/AirDetails_Public"
+        },
+        "carRentalDetails": {
+          "description": "Car rental details (category: carRental)",
+          "$ref": "#/definitions/CarRentalDetails_Public"
+        },
+        "railDetails": {
+          "description": "Rail travel details (category: rail)",
+          "$ref": "#/definitions/RailDetails_Public"
+        }
+      }
+    },
+    "Vendor_Public": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "taxId": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorMessage_Public": {
+      "type": "object",
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "validationErrors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationError_Public"
+          }
+        }
+      }
+    },
+    "ValidationError_Public": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "CompanyPaid_Public": {
+      "type": "object",
+      "description": "Details for company-paid transactions",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The source of the company payment",
+          "enum": [
+            "GhostCard",
+            "LodgeCard",
+            "DirectPay",
+            "Invoice"
+          ]
+        },
+        "creditCard": {
+          "$ref": "#/definitions/CreditCard_Public"
+        }
+      }
+    },
+    "UnusedTicket_Public": {
+      "type": "object",
+      "description": "Details for unused ticket payments",
+      "properties": {
+        "ticketNumber": {
+          "type": "string",
+          "description": "The unused ticket number"
+        }
+      }
+    },
+    "Guests_Public": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "guestNameRecord": {
+          "type": "string"
+        },
+        "address": {
+          "$ref": "#/definitions/Address_Public"
+        },
+        "emailAddress": {
+          "type": "string"
+        }
+      }
+    },
+    "RideDetails_Public": {
+      "type": "object",
+      "description": "Details specific to ground transport receipts",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/Address_Public"
+        },
+        "destination": {
+          "$ref": "#/definitions/Address_Public"
+        },
+        "driverNumber": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "string",
+          "description": "Trip duration in ISO 8601 duration format (e.g. PT15M)"
+        },
+        "classOfService": {
+          "type": "string"
+        },
+        "mapUrl": {
+          "type": "string"
+        },
+        "distance": {
+          "$ref": "#/definitions/Distance_Public"
+        }
+      }
+    },
+    "HotelProperty_Public": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "postalCode": {
+          "type": "string"
+        }
+      }
+    },
+    "Room_Public": {
+      "type": "object",
+      "properties": {
+        "roomNumber": {
+          "type": "string"
+        },
+        "roomType": {
+          "type": "string"
+        },
+        "ratePlanType": {
+          "type": "string"
+        },
+        "averageDailyRoomRate": {
+          "type": "string"
+        }
+      }
+    },
+    "LodgeDetails_Public": {
+      "type": "object",
+      "description": "Details specific to lodging receipts",
+      "properties": {
+        "hotelProperty": {
+          "$ref": "#/definitions/HotelProperty_Public"
+        },
+        "nightsStayed": {
+          "type": "string"
+        },
+        "room": {
+          "$ref": "#/definitions/Room_Public"
+        }
+      }
+    },
+    "Fare_Public": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "string"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
+    "AirCoupon_Public": {
+      "type": "object",
+      "description": "A single flight segment within an air ticket",
+      "properties": {
+        "couponNumber": {
+          "type": "string"
+        },
+        "originationAirportIATACode": {
+          "type": "string"
+        },
+        "originationDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "destinationAirportIATACode": {
+          "type": "string"
+        },
+        "destinationDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "flightNumber": {
+          "type": "string"
+        },
+        "operatingAirlineCode": {
+          "type": "string"
+        },
+        "marketingCarrier": {
+          "type": "string"
+        },
+        "operatingCarrier": {
+          "type": "string"
+        },
+        "classOfServiceCode": {
+          "type": "string"
+        },
+        "fareBasisCode": {
+          "type": "string"
+        },
+        "ticketDesignatorCode": {
+          "type": "string"
+        },
+        "fare": {
+          "$ref": "#/definitions/Fare_Public"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax_Public"
+          }
+        },
+        "lineItems": {
+          "type": "array",
+          "description": "Additional charges for this flight segment (e.g. baggage fees)",
+          "items": {
+            "$ref": "#/definitions/LineItem_Public"
+          }
+        }
+      }
+    },
+    "AirTicket_Public": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "string",
+          "description": "Ticket number"
+        },
+        "issueDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "recordLocator": {
+          "type": "string"
+        },
+        "pseudoCityCode": {
+          "type": "string",
+          "description": "IATA city/airport code of the point of sale"
+        },
+        "IATAAgencyNumber": {
+          "type": "string"
+        },
+        "agencyName": {
+          "type": "string"
+        },
+        "passengerName": {
+          "type": "string"
+        },
+        "comparisonFare": {
+          "type": "string"
+        },
+        "fare": {
+          "$ref": "#/definitions/Fare_Public"
+        },
+        "airCoupons": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AirCoupon_Public"
+          }
+        }
+      }
+    },
+    "AirDetails_Public": {
+      "type": "object",
+      "description": "Details specific to air travel receipts",
+      "properties": {
+        "bookingId": {
+          "type": "string"
+        },
+        "airTickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AirTicket_Public"
+          }
+        }
+      }
+    },
+    "Vehicle_Public": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "registrationNumber": {
+          "type": "string"
+        },
+        "classReservedCode": {
+          "type": "string"
+        },
+        "classRentedCode": {
+          "type": "string"
+        },
+        "classChargedCode": {
+          "type": "string"
+        }
+      }
+    },
+    "CarRentalDetails_Public": {
+      "type": "object",
+      "description": "Details specific to car rental receipts",
+      "properties": {
+        "rentalDays": {
+          "type": "string"
+        },
+        "rentalAgreementNumber": {
+          "type": "string"
+        },
+        "averageDailyRate": {
+          "type": "string"
+        },
+        "fuelServiceCharge": {
+          "type": "string"
+        },
+        "driverName": {
+          "type": "string"
+        },
+        "additionalDriver": {
+          "type": "boolean"
+        },
+        "vehicle": {
+          "$ref": "#/definitions/Vehicle_Public"
+        },
+        "distance": {
+          "$ref": "#/definitions/Distance_Public"
+        },
+        "odometerReadingOut": {
+          "type": "number",
+          "format": "double"
+        },
+        "odometerReadingIn": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "RailSegment_Public": {
+      "type": "object",
+      "properties": {
+        "departureStation": {
+          "type": "string"
+        },
+        "departureDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "arrivalStation": {
+          "type": "string"
+        },
+        "arrivalDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "trainNumber": {
+          "type": "string"
+        },
+        "trainType": {
+          "type": "string"
+        },
+        "classOfServiceCode": {
+          "type": "string"
+        },
+        "fare": {
+          "$ref": "#/definitions/Fare_Public"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tax_Public"
+          }
+        },
+        "lineItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineItem_Public"
+          }
+        }
+      }
+    },
+    "RailTicket_Public": {
+      "type": "object",
+      "properties": {
+        "ticketNumber": {
+          "type": "string"
+        },
+        "recordLocator": {
+          "type": "string"
+        },
+        "issueDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "passengerName": {
+          "type": "string"
+        },
+        "fare": {
+          "$ref": "#/definitions/Fare_Public"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RailSegment_Public"
+          }
+        }
+      }
+    },
+    "RailDetails_Public": {
+      "type": "object",
+      "description": "Details specific to rail travel receipts",
+      "properties": {
+        "railTickets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RailTicket_Public"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "JWT-Authentication": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT token for authentication. Format: Bearer {token}"
     }
   }
 }
