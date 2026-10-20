@@ -26,7 +26,12 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
    ```
    This ensures Previews and Ongoing items from the previous month are already in main before you copy them forward.
 
-1. **Create the file** — copy previous month's `.md`, save with the new publication date (second Thursday of the month, unless something new needs to go out sooner)
+1. **Create the file** — copy previous month's `.md`, save with the new publication date (second Thursday of the month, unless something new needs to go out sooner). Update the frontmatter:
+   - `title`: update month and year
+   - `description`: semicolon-separated list of all `###` headings (without the `###` prefix) — this populates the RSS feed. Example:
+     ```
+     description: "Now Available: Hotel Service v4 accessViaMobile; Preview: New SSL Certificate for *.api.concursolutions.com"
+     ```
 2. **Clean up previous month's content:**
    - Delete all `### Now Available:` sections
    - Move `### Preview:` items from New This Month: API previews go to the **Previews table**; cert/infrastructure previews go to **## Ongoing** — keep the `### Preview:` prefix in both cases
@@ -42,6 +47,7 @@ Use this skill to create a new monthly RN file or add a mid-month update to an e
 ## Mid-month update
 
 1. Add new RN at the **top** of `## New This Month` — returning readers see it immediately
+2. **Update the frontmatter `description`** — prepend the new heading to the existing semicolon-separated list so the RSS feed reflects the latest update
 2. **Always confirm the heading prefix** before writing — if unclear, ask:
    - `### Now Available: [Name]` — feature is GA
    - `### Preview: [Name]` — feature is not yet GA
