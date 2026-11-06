@@ -175,8 +175,8 @@ Submits a receipt image along with an XML compliance document (e.g. an e-invoice
 curl -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \
 --header 'Authorization: Bearer {access_token}' \
 --header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
--F 'document=@"receipt.pdf"' \
--F 'complianceDocument=@"invoice.xml"' \
+-F 'image=@"receipt.pdf"' \
+-F 'complianceDoc=@"invoice.xml"' \
 -F 'receipt="{
     \"metadata\": {
       \"userId\": \"a9abaa60-38a0-46be-9736-bc9c1e317e41\",
