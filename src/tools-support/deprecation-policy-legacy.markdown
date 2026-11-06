@@ -11,7 +11,7 @@ layout: reference
 </div>
 
 
-The API Lifecycle & Deprecation Policy is part of our [API terms and conditions of use.](/Terms-of-Use.html) We may make periodic updates to this Policy, at which time we will notify those who have agreements with us.
+The API Lifecycle & Deprecation Policy is part of our [API terms and conditions of use.](/terms-of-use-2026.html) We may make periodic updates to this Policy, at which time we will notify those who have agreements with us.
 
 ## API Version Status  
 
