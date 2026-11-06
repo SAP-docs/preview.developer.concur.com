@@ -92,7 +92,7 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
     \"metadata\": {
       \"userId\": \"a9abaa60-38a0-46be-9736-bc9c1e317e41\",
       \"companyId\": \"fb7c8157-16d6-4dfd-b970-8c2a39d81790\",
-      \"origin\": \"mobile\",
+      \"origin\": \"vendor\",
       \"provider\": \"user\",
       \"feature\": \"simpleReceipt\"
     }
@@ -111,6 +111,8 @@ curl -L -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts'
 ```
 
 #### eReceipt (Ground Transportation)
+
+> **Note:** The example below shows a ground transportation eReceipt. For full payload samples across all supported categories (general, lodge, air, carRental, rail), see [Sample Receipts](/api-reference/spend-documents/v4.sample-receipts.html).
 
 ##### Request
 
@@ -160,5 +162,61 @@ curl -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \
     "imageId": "img-550e8400-e29b-41d4-a716-446655440000",
     "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/550e8400-e29b-41d4-a716-446655440000",
     "id": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+#### Receipt with Compliance Document
+
+Submits a receipt image along with an XML compliance document (e.g. an e-invoice). Requires the `spenddocs.receipts.compliance.write` scope in addition to the standard write scope.
+
+##### Request
+
+```bash
+curl -X POST 'https://us.api.concursolutions.com/spend-documents/v4/receipts' \
+--header 'Authorization: Bearer {access_token}' \
+--header 'Concur-CorrelationId: dc673e9a-1297-499d-beb4-0419d750a034' \
+-F 'image=@"receipt.pdf"' \
+-F 'complianceDoc=@"invoice.xml"' \
+-F 'receipt="{
+    \"metadata\": {
+      \"userId\": \"a9abaa60-38a0-46be-9736-bc9c1e317e41\",
+      \"companyId\": \"fb7c8157-16d6-4dfd-b970-8c2a39d81790\",
+      \"origin\": \"vendor\",
+      \"provider\": \"vendor\",
+      \"feature\": \"eReceipt\",
+      \"category\": \"general\"
+    },
+    \"receiptData\": {
+      \"transactionDateTime\": \"2026-05-12T19:15:00Z\",
+      \"referenceNumber\": \"INV-2026-0512-9876\",
+      \"amount\": {
+        \"total\": \"150.00\",
+        \"currency\": \"EUR\"
+      },
+      \"vendor\": {
+        \"name\": \"Acme GmbH\",
+        \"country\": \"DE\"
+      },
+      \"paymentTypes\": [
+        {
+          \"method\": \"Credit Card\",
+          \"creditCard\": {
+            \"type\": \"Visa\",
+            \"lastFour\": \"1234\"
+          }
+        }
+      ]
+    }
+}"'
+```
+
+##### Response
+
+202 Accepted
+```json
+{
+    "imageId": "img-661f9511-f37c-52e5-b827-557f913g5e11",
+    "href": "https://us.api.concursolutions.com/spend-documents/v4/receipts/661f9511-f37c-52e5-b827-557f913g5e11",
+    "id": "661f9511-f37c-52e5-b827-557f913g5e11"
 }
 ```
