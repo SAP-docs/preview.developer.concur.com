@@ -1,9 +1,9 @@
 ---
-title: Direct Connect - Ground Transportation
+title: Direct Connect - Ground Transportation v1
 layout: reference
 ---
 
-# Direct Connect - Ground Transportation
+# Direct Connect - Ground Transportation v1
 
 The Ground Transportation Direct Connect provides a method for Travel users to access the inventory of ground transportation service providers. This direct connect was originally designed for use by limo service providers, but can be used with all forms of ground transportation.
 

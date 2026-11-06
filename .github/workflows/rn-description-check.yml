@@ -1,0 +1,23 @@
+name: Release Notes Description Check
+
+on:
+  pull_request:
+    paths:
+      - 'src/tools-support/release-notes/api/**.md'
+
+jobs:
+  check-description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check description field in release notes frontmatter
+        run: |
+          missing=0
+          for file in $(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep 'src/tools-support/release-notes/api/[^/]*\.md$' | grep -v '/archive/'); do
+            if [ -f "$file" ] && ! grep -q '^description:' "$file"; then
+              echo "::error file=$file::Missing 'description:' in frontmatter. Add a semicolon-separated list of ### headings for the RSS feed."
+              missing=1
+            fi
+          done
+          exit $missing
