@@ -113,7 +113,7 @@ Scope|User Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 `travelallowance.itinerary.read` <a name="travelallowance-itinerary-read"></a> |Read Travel Allowance itinerary|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
 `travelallowance.itinerary.writeonly` <a name="travelallowance-itinerary-writeonly"></a>|Create Travel Allowance itinerary|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
 `travelallowance.itineraryresult.read` <a name="travelallowance-itineraryresult-read"></a>| Read Travel Allowance calculation results|[Travel Allowance v4](/api-reference/travelallowance/v4.travelallowance-get-started.html)
-`travel.hotel.write` <a name="travel-hotel-write"> |Read and update hotel bookings|[Hotel Service Change Notification v4](/api-reference/direct-connects/hotel-service-4/v4.change-notification-get-started.html)
+`travel.hotel.write` <a name="travel-hotel-write"></a> |Read and update hotel bookings|[Hotel Service Change Notification v4](/api-reference/direct-connects/hotel-service-4/v4.change-notification-get-started.html)
 `travel.itinerary.read` <a name="travel-itinerary-read"></a> |Read travel itinerary data|[Itinerary v4](/api-reference/travel/itinerary-v4/v4.itinerary.html)
 `travel.receipts.read` <a name="travel-receipts-read"></a>|Read travel receipt requests|[Travel Receipts](/api-reference/travel-receipts/getting-started.html), [Travel Receipts Sample](/api-reference/travel-receipts/sample.html)
 `travel.receipts.write` <a name="travel-receipts-write"></a> |Post travel receipts|[Travel Receipts](/api-reference/travel-receipts/getting-started.html), [Travel Receipts Sample](/api-reference/travel-receipts/sample.html)
