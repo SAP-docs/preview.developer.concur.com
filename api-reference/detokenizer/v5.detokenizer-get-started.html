@@ -1320,11 +1320,19 @@
 
         <h1 id="detokenizer-v5">Detokenizer v5</h1>
 
-<p>The Detokenizer v5 API allows clients to retrieve the user’s credit card number from Concur Expense in a secure way. It returns the user’s credit card number encrypted with a symmetric key that the client provides in the request. The client will be able to decrypt the user’s credit card number using their symmetric key. The Detokenizer v5 API is FIPS compliant so that customers with IBCP card programs can benefit with credit card detokenizer functionality in CCPS environment. This API ensures secure transmission of sensitive data (card number) to customers as part of the remittance file creation process running at caller applications like ICS and CWS, in which the full, unmasked credit card number is required for the correct application of payments.</p>
+<p>The Detokenizer v5 API allows clients to retrieve the user’s credit card number and bank account details from Concur Expense in a secure way. It returns sensitive data encrypted with a symmetric key that the client provides in the request. The client will be able to decrypt the data using their symmetric key. The Detokenizer v5 API is FIPS compliant so that customers with IBCP card programs can benefit with credit card detokenizer functionality in CCPS environment. This API ensures secure transmission of sensitive data (card number, bank account details) to customers as part of the remittance file creation process running at caller applications like ICS and CWS, in which the full, unmasked data is required for the correct application of payments.</p>
 
 <h2 id="authentication"><a name="authentication"></a>Authentication</h2>
 
-<p>Authentication is done via company JWT with required scope <code class="language-plaintext highlighter-rouge">creditcardaccount.read</code>. The company JWT refers to the token belonging to the company whose data is being accessed. If a company is accessing data on behalf of another company, then the calling company should invoke the detokenizer API using the JWT of the company that owns the card data. For example, if a company XYZ wants to call the detokenizer API on behalf of another company ABC, then the company XYZ should access the API using ABC’s company JWT.</p>
+<p>Authentication is done via company JWT. The required scope depends on the resource being accessed:</p>
+
+<ul>
+  <li>Credit card endpoints require scope <code class="language-plaintext highlighter-rouge">creditcardaccount.read</code></li>
+  <li>Banking info endpoint requires scope <code class="language-plaintext highlighter-rouge">bankaccount.details.read</code></li>
+  <li>The <code class="language-plaintext highlighter-rouge">/v5/publickey</code> endpoint accepts either scope, as it is a shared prerequisite for both flows</li>
+</ul>
+
+<p>The company JWT refers to the token belonging to the company whose data is being accessed. If a company is accessing data on behalf of another company, then the calling company should invoke the detokenizer API using the JWT of the company that owns the data. For example, if a company XYZ wants to call the detokenizer API on behalf of another company ABC, then the company XYZ should access the API using ABC’s company JWT.</p>
 
 <h2 id="overview"><a name="overview"></a>Overview</h2>
 
@@ -1346,6 +1354,10 @@
       <td>Credit Card Account Details</td>
       <td>Retrieve credit card number via Detokenizer API.</td>
     </tr>
+    <tr>
+      <td>Banking Info</td>
+      <td>Retrieve bank account details via banking info API.</td>
+    </tr>
   </tbody>
 </table>
 
@@ -1358,7 +1370,13 @@
 <p>These APIs are available in US2, EU2, APJ1 and CCPS environments.</p>
 <h2 id="process-flow"><a name="process-flow"></a>Process Flow</h2>
 
+<h3 id="credit-card-detokenization-flow">Credit Card Detokenization Flow</h3>
+
 <p><img src="./v5.detokenizer-get-started-process-flow.png" alt="DetokenizerV5ProcessFlow" /></p>
+
+<h3 id="banking-info-detokenization-flow">Banking Info Detokenization Flow</h3>
+
+<p><img src="./v5.detokenizer-banking-process-flow.png" alt="DetokenizerV5BankingProcessFlow" /></p>
 
 <h2 id="products-and-editions"><a name="products-editions"></a>Products and Editions</h2>
 
@@ -1381,6 +1399,11 @@
     <tr>
       <td><code class="language-plaintext highlighter-rouge">creditcardaccount.read</code></td>
       <td>Reads credit card data from Concur Expense.</td>
+      <td>POST</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bankaccount.details.read</code></td>
+      <td>Reads bank account data from Concur Expense.</td>
       <td>POST</td>
     </tr>
   </tbody>
@@ -1614,6 +1637,133 @@ Content-Type: application/json
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
+<h2 id="get-banking-info-">Get Banking Info <a name="get-banking-info"></a></h2>
+
+<p>Returns the most recently modified active bank account for the given <code class="language-plaintext highlighter-rouge">loginId</code>, with sensitive fields (accountNumber, routingNumber, taxId, secondaryRoutingNumber) decrypted and the full payload re-encrypted with the caller’s AES symmetric key.</p>
+
+<h3 id="prerequisite-1">Prerequisite</h3>
+
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">/v5/publickey</code> endpoint must be called first to obtain the RSA public key. The caller wraps their AES symmetric key with it before making this request.</li>
+</ul>
+
+<h3 id="scopes-2">Scopes</h3>
+
+<p><code class="language-plaintext highlighter-rouge">bankaccount.details.read</code> - Refer to <a href="#scope-usage">Scope Usage</a> for full details.</p>
+
+<h3 id="request-4">Request</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://<span class="o">{</span>region<span class="o">}</span>.api.concursolutions.com/detokenizer/v5/bankaccounts/<span class="o">{</span>loginId<span class="o">}</span>
+</code></pre></div></div>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">loginId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td><code class="language-plaintext highlighter-rouge">path</code></td>
+      <td><strong>Required</strong> The employee LOGIN_ID (LOGIN_ID column in CT_EMPLOYEE table).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="headers-4">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7235#section-4.2">RFC 7235 Authorization</a> : Header used for authorization. Should be specified in the format <code class="language-plaintext highlighter-rouge">Bearer JWT_Token</code>. This is a Company JWT token.</li>
+  <li><code class="language-plaintext highlighter-rouge">concur-correlationid</code> is a specific custom header used for technical support in the form of a <a href="https://tools.ietf.org/html/rfc4122">RFC 4122 A Universally Unique IDentifier (UUID) URN Namespace</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+</ul>
+
+<h4 id="payload-4">Payload</h4>
+
+<ul>
+  <li><a href="#banking-info-detokenizer-request">Banking Info Detokenizer Request</a></li>
+</ul>
+
+<h3 id="response-3">Response</h3>
+
+<h4 id="status-codes-2">Status Codes</h4>
+
+<p>In case of success, HTTP status code <code class="language-plaintext highlighter-rouge">200 (OK) - Banking Info</code> is returned.</p>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">400 Bad Request</a></li>
+  <li><a href="https://datatracker.ietf.org/doc/html/rfc7235#section-3.1">401 Unauthorized</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">403 Forbidden</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">500 Internal Server Error</a></li>
+</ul>
+
+<h4 id="headers-5">Headers</h4>
+
+<ul>
+  <li><a href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">RFC 7231 Content-Type</a></li>
+  <li><a href="https://tools.ietf.org/html/rfc7230#section-3.3.2">RFC 7230 Content-Length</a></li>
+</ul>
+
+<h4 id="payload-5">Payload</h4>
+
+<ul>
+  <li><a href="#banking-encrypted-payload-response">Banking Encrypted Payload Response</a></li>
+</ul>
+
+<h3 id="example-2">Example</h3>
+
+<h4 id="request-5">Request</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://usg.api.concursolutions.com/detokenizer/v5/bankaccounts/john.doe@example.com
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Authorization: Bearer JWT_TOKEN
+Accept: application/json
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"symmetricKey"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R7zgrcT6rpJjtGPXIBSODGDblzPnhQgQ+CKCcwyn7rE8j7FImmNhtETqihB0WQhm1+6v70tKzJsaAMLeucVBEEDcz2sOXgED9WmG6BzhiKgiIJgGcSRTR0QZvdY5LgyI67mhLUT87xsGtUv2ZNkKTR9xkWn3cPrD3tB4bDE296gIRXDLpSadcQAK8gNUfLsuv5c3dfRUdc+B4QdWw8E+hxXR682DIfnpJFSWwoGp9uIao7nJeunXuvkvKfGz0SU1DDu8T4FVlpHJpwuf4a/Kgi+rI/JY0UBOYaW7B5Ne+F7ohcu3Np7SOr2FsSzTAX1X4GH63EstBPtPQr1sTd2yYA=="</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"keyVersion"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="success-response-1">Success Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+concur-correlationid: 87de8598-dbd5-4aea-af9d-988efb61c468
+Content-Type: application/json
+Content-Length: 512
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"encryptedPayload"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dPp0l3xtLvucH+md:EUjJp2eIWgIpjdHjTg0EhJjawdEek5M8gSrJBKHCOtY="</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Decrypt <code class="language-plaintext highlighter-rouge">encryptedPayload</code> with your AES symmetric key (AES/GCM/NoPadding, 128-bit auth tag) to obtain the full <a href="#banking-account-details">BankingAccountDetails</a> JSON.</p>
+
+<h4 id="error-response-2">Error Response</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>400 Bad Request
+Content-Type: application/json
+</code></pre></div></div>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-07-29T10:00:00.000+00:00"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"httpStatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"400 - Bad Request"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"errorMessage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bad request [loginId] received."</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"errorId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BAD_REQUEST"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/detokenizer/v5/bankaccounts/john.doe@example.com"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
 <h2 id="schemas-">Schemas <a name="schemas"></a></h2>
 
 <h3 id="rsa-public-key-response"><a name="rsa-public-key-response"></a>RSA Public Key Response</h3>
@@ -1691,7 +1841,7 @@ Content-Type: application/json
   </tbody>
 </table>
 
-<h3 id="error-response-2"><a name="error-response"></a>Error Response</h3>
+<h3 id="error-response-3"><a name="error-response"></a>Error Response</h3>
 
 <table>
   <thead>
@@ -1738,6 +1888,179 @@ Content-Type: application/json
       <td>-</td>
       <td>The URI of the attempted request.</td>
       <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="banking-info-detokenizer-request-">Banking Info Detokenizer Request <a name="banking-info-detokenizer-request"></a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">symmetricKey</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>AES Symmetric Key (256-bit, AES/GCM/NoPadding) wrapped with the RSA public key (RSA/ECB/OAEPWithSHA-256AndMGF1Padding). Note: Symmetric key has to be refreshed frequently on the caller side.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">keyVersion</code></td>
+      <td><code class="language-plaintext highlighter-rouge">long</code></td>
+      <td>-</td>
+      <td>Version of the RSA public key used to wrap the symmetric key.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="banking-encrypted-payload-response-">Banking Encrypted Payload Response <a name="banking-encrypted-payload-response"></a></h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">encryptedPayload</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The complete bank account payload encrypted with the caller’s AES symmetric key. Format: <code class="language-plaintext highlighter-rouge">Base64(IV):Base64(ciphertext)</code>. Decrypt with AES/GCM/NoPadding (128-bit auth tag) to obtain the <a href="#banking-account-details">BankingAccountDetails</a> JSON.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="banking-account-details-">Banking Account Details <a name="banking-account-details"></a></h3>
+
+<p>This is the structure obtained after decrypting <code class="language-plaintext highlighter-rouge">encryptedPayload</code>.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Format</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isActive</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Indicates whether the bank account is active and eligible for transactions.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">accountTypeLangName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The localized account type (e.g., Checking, Savings) based on user’s language preference.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">nameOnAccount</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The name associated with the bank account as registered with the financial institution.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bankName</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The name of the financial institution or bank.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">branchLocation</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The physical location or branch identifier of the bank.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine1</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The primary address line for the bank account holder.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">addressLine2</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The secondary address line (e.g., apartment, suite) for the bank account holder.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">city</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The city where the bank account is registered.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">region</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The state, province, or region where the bank account is registered.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">postalCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The postal or ZIP code for the bank account address.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">countryCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The ISO 2-letter country code where the bank account is registered.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">taxId</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The tax identification number associated with the bank account holder.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">isResident</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>Indicates whether the account holder is a resident of the registered country.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">statusCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The current status code of the bank account (e.g., CONF, FAIL, PEND).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">currencyCode</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The ISO 4217 currency code for the bank account (e.g., USD, EUR, GBP).</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">accountNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The bank account number.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">routingNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The routing number for domestic fund transfers.</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">secondaryRoutingNumber</code></td>
+      <td><code class="language-plaintext highlighter-rouge">string</code></td>
+      <td>-</td>
+      <td>The secondary routing number, used in some countries for alternate transfer rails.</td>
     </tr>
   </tbody>
 </table>
