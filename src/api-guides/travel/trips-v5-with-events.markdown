@@ -3,8 +3,6 @@ title: Travel Trips API v5 with Business Events
 layout: reference
 ---
 
-{% include prerelease.html %}
-
 # Travel Trips API v5 with Business Events
 
 ## <a name="introduction"></a>Introduction
@@ -23,7 +21,7 @@ Some travel sources can represent traveler intent rather than a completed reserv
 
 ## <a name="event-details"></a>Event Details
 
-The Event Subscription Service (ESS) enables a partner to create a subscription for a webhook. Configure the subscription with the trip event topic and the event filters appropriate for the integration. The available filters and event payload details are provided by SAP Concur during the Trips v5 preview and onboarding process.
+The Event Subscription Service (ESS) enables a partner to create a subscription for a webhook. Configure the subscription with the trip event topic and the event filters appropriate for the integration. The available filters and event payload details are provided by SAP Concur during the Trips v5 onboarding process.
 
 Use the following resources to set up and manage an event subscription:
 
